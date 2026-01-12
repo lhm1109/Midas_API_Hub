@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divide Elements - OPE</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Divide Elements</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> OPE</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35994694310937</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T02:27:45Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:20:01Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35994694310937-Divide-Elements" target="_blank">https://support.midasuser.com/hc/en-us/articles/35994694310937-Divide-Elements</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4JR734K7CSSWZK458TN30VX"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>{base url} + ope/DIVIDEELEM</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JR734KVYTMQZPF616ZW5YW"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JR734KYW87F2MWEP1RQ0ZA"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"DIVIDEELEM"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"TARGETS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"START_NUMBER"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"NODE_NUMBER"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"NUMBER_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                        <span style="color: #c31b1b;">"enum"</span>: [<br>                                            <span style="color: #055bcc;">"Smallest"</span>,<br>                                            <span style="color: #055bcc;">"Largest"</span>,<br>                                            <span style="color: #055bcc;">"User"</span><br>                                        ]<br>                                    },<br>                                    <span style="color: #c31b1b;">"USER_NUM"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    }<br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"ELEM_NUMBER"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"NUMBER_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                        <span style="color: #c31b1b;">"enum"</span>: [<br>                                            <span style="color: #055bcc;">"Smallest"</span>,<br>                                            <span style="color: #055bcc;">"Largest"</span>,<br>                                            <span style="color: #055bcc;">"User"</span><br>                                        ]<br>                                    },<br>                                    <span style="color: #c31b1b;">"USER_NUM"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    }<br>                                }<br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Frame"</span>,<br>                                    <span style="color: #055bcc;">"Wall"</span>,<br>                                    <span style="color: #055bcc;">"Planar"</span>,<br>                                    <span style="color: #055bcc;">"Solid"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"DIV_METHOD"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Equal"</span>,<br>                                    <span style="color: #055bcc;">"Unequal"</span>,<br>                                    <span style="color: #055bcc;">"ParametricUnequal"</span>,<br>                                    <span style="color: #055bcc;">"ParallelBracing"</span>,<br>                                    <span style="color: #055bcc;">"DividebyNode"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"EQUAL_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"NUM_X"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"NUM_Y"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"NUM_Z"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            }<br>                                        }<br>                                    },<br>                                    <span style="color: #c31b1b;">"UNEQUAL_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"DIST_X"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"DIST_Y"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"DIST_Z"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            }<br>                                        }<br>                                    },<br>                                    <span style="color: #c31b1b;">"PARAMETRIC_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"RATIO_X"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"RATIO_Y"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"RATIO_Z"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            }<br>                                        }<br>                                    },<br>                                    <span style="color: #c31b1b;">"PARALLEL_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"NUM_OF_DIVISIONS"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"MAIN_POST_ELEM"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                                <span style="color: #c31b1b;">"items"</span>: {<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                }<br>                                            }<br>                                        }<br>                                    },<br>                                    <span style="color: #c31b1b;">"BY_NODE_OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"ELEM_NUM"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"NODE_NUM"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            }<br>                                        }<br>                                    }<br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"SUBDIVIDE_ELEM"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span style="color: #c31b1b;">"MERGE_DUPLICATE_NODES"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"OPT_CHECK"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"TOLERANCE"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                    }<br>                                }<br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JR734K873146ZBX3B02T39"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Frame - Equal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Frame"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Equal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"EQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"NUM_X"</span>: <span style="color: #0ab66c;">10</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Frame - Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Frame"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Unequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"UNEQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"DIST_X"</span>: <span style="color: #055bcc;">"3@2.0"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Frame - Parametric Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Frame"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"ParametricUnequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"PARAMETRIC_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"RATIO_X"</span>: <span style="color: #055bcc;">"3@0.3"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Frame - Parallel Bracing</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Frame"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"ParallelBracing"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"PARALLEL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"NUM_OF_DIVISIONS"</span>: <span style="color: #0ab66c;">3</span>,<br>                    <span style="color: #c31b1b;">"MAIN_POST_ELEM"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">3</span><br>                    ]<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Frame - Divide by Node</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Frame"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"DividebyNode"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"BY_NODE_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"ELEM_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"NODE_NUM"</span>: <span style="color: #0ab66c;">10</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Planar - Equal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Planar"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Equal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"EQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"NUM_X"</span>: <span style="color: #0ab66c;">3</span>,<br>                    <span style="color: #c31b1b;">"NUM_Y"</span>: <span style="color: #0ab66c;">2</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Planar - Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Planar"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Unequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"UNEQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"DIST_X"</span>: <span style="color: #055bcc;">"2@2.5"</span>,<br>                    <span style="color: #c31b1b;">"DIST_Y"</span>: <span style="color: #055bcc;">"2@3.0"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Planar - Parametric Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget9')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget9" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Planar"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"ParametricUnequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"PARAMETRIC_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"RATIO_X"</span>: <span style="color: #055bcc;">"2@0.2"</span>,<br>                    <span style="color: #c31b1b;">"RATIO_Y"</span>: <span style="color: #055bcc;">"3@0.3"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Wall - Equal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget10')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget10" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Wall"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Equal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"EQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"NUM_X"</span>: <span style="color: #0ab66c;">2</span>,<br>                    <span style="color: #c31b1b;">"NUM_Z"</span>: <span style="color: #0ab66c;">3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Wall - Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget11')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget11" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Wall"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Unequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"UNEQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"DIST_X"</span>: <span style="color: #055bcc;">"3@2.0"</span>,<br>                    <span style="color: #c31b1b;">"DIST_Z"</span>: <span style="color: #055bcc;">"4@1.5"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Wall - Parametric Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget12')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget12" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Wall"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"ParametricUnequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"PARAMETRIC_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"RATIO_X"</span>: <span style="color: #055bcc;">"3@0.2"</span>,<br>                    <span style="color: #c31b1b;">"RATIO_Z"</span>: <span style="color: #055bcc;">"4@0.2"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid - Equal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget13')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget13" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Solid"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Equal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"EQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"NUM_X"</span>: <span style="color: #0ab66c;">2</span>,<br>                    <span style="color: #c31b1b;">"NUM_Y"</span>: <span style="color: #0ab66c;">3</span>,<br>                    <span style="color: #c31b1b;">"NUM_Z"</span>: <span style="color: #0ab66c;">4</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid - Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget14')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget14" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Solid"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"Unequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"UNEQUAL_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"DIST_X"</span>: <span style="color: #055bcc;">"3@2.5"</span>,<br>                    <span style="color: #c31b1b;">"DIST_Y"</span>: <span style="color: #055bcc;">"4@1.0"</span>,<br>                    <span style="color: #c31b1b;">"DIST_Z"</span>: <span style="color: #055bcc;">"1,2,3"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid - Parametric Unequal Distance</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget15')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget15" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TARGETS"</span>: [<br>            <span style="color: #0ab66c;">1</span><br>        ],<br>        <span style="color: #c31b1b;">"DIVIDE"</span>: {<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"Solid"</span>,<br>            <span style="color: #c31b1b;">"DIV_METHOD"</span>: <span style="color: #055bcc;">"ParametricUnequal"</span>,<br>            <span style="color: #c31b1b;">"OPTION"</span>: {<br>                <span style="color: #c31b1b;">"PARAMETRIC_OPTION"</span>: {<br>                    <span style="color: #c31b1b;">"RATIO_X"</span>: <span style="color: #055bcc;">"3@0.3"</span>,<br>                    <span style="color: #c31b1b;">"RATIO_Y"</span>: <span style="color: #055bcc;">"4@0.2"</span>,<br>                    <span style="color: #c31b1b;">"RATIO_Z"</span>: <span style="color: #055bcc;">"0.1,0.2,0.3"</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JR734KRNX24TB2TKP3B56D"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Retrun Created Element</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget16')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget16" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"DIVIDEELEM"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"SECT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"NODE"</span>: [<br>                <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #0ab66c;">5</span>,<br>                <span style="color: #0ab66c;">8</span>,<br>                <span style="color: #0ab66c;">7</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JR734KRWXV2HA3QDRV3BQG"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Divide Element ID Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TARGETS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Starting Node/Element Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"START_NUMBER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Starting Node Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_NUMBER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Node Numbering Option</p>
+<p> • Smallest Unused Number: "Smallest"</p>
+<p> • Largest Used Number+1: "Largest"</p>
+<p> • User-Defined Number: "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUMBER_OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. User-Defined Node Number</p>
+<p> • When "NUMBER_OPTION" is "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USER_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Starting Element Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELEM_NUMBER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Element Numbering Option</p>
+<p> • Smallest Unused Number: "Smallest"</p>
+<p> • Largest Used Number+1: "Largest"</p>
+<p> • User-Defined Number: "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUMBER_OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. User-Defined Element Number</p>
+<p> • When "NUMBER_OPTION" is "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USER_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="31">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Setting Divide</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIVIDE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Element Type</p>
+<p> • Line Element: "Frame"</p>
+<p> • Wall Element <img src="https://support.midasuser.com/hc/article_attachments/52116687660313">: "Wall"</p>
+<p> • Planar Element: "Planar"</p>
+<p> • Solid Element: "Solid"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELEM_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Divide Methods</p>
+<p> • Equal Distance: "Equal"</p>
+<p> • Unequal Distance: "Unequal"</p>
+<p> • Parametric Unequal Distance: "Parametric Unequal"</p>
+<p> • Parallel Bracing: "Parallel Bracing"</p>
+<p> • Divide by Node: "Divide by Node"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIV_METHOD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="24">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Divide Option</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"> </td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"> </td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="5">
+<p><span style="color: #4c9aff;">Equal Distance</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Divide at Equal Distances</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EQUAL_OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-1. Number of Divisions in ECS x-Direction</p>
+<p> • Frame, Wall, Solid, Planar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUM_X"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-2. Number of Divisions in ECS y-Direction</p>
+<p> • Solid, Planar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUM_Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-3. Number of Divisions in ECS z-Direction</p>
+<p> • Solid, Wall</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUM_Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="5">
+<p><span style="color: #4c9aff;">Unequal Distance</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Divide at Unequal Distances</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNEQUAL_OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-1. Unequal Distances as Many Times as Desired in ECS x-direction</p>
+<p> • Frame, Wall, Solid, Planar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST_X"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-2. Unequal Distances as Many Times as Desired in ECS y-direction</p>
+<p> • Solid, Planar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST_Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-3. Unequal Distances as Many Times as Desired in ECS z-direction</p>
+<p> • Solid, Wall</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST_Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="5">
+<p><span style="color: #4c9aff;">Parametric Unequal Distance</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Unequal Distances Defined in Terms of Distance Ratios</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PARAMETRIC_OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-1. Relative Unequal Distance Ratios in ECS x-Direction</p>
+<p> • Frame, Wall, Solid, Planar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RATIO_X"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-2. Relative Unequal Distance Ratios in ECS y-Direction</p>
+<p> • Solid, Planar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RATIO_Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-3. Relative Unequal Distance Ratios in ECS z-Direction</p>
+<p> • Solid, Wall</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RATIO_Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="5">
+<p><span style="color: #4c9aff;">Parallel Bracing</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Parallel Bracing Keeps Braces between Two Posts Parallel, Regardless of Post Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PARALLEL_OPTION</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-1. Number of Divisions</p>
+<p> • Frame</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUM_OF_DIVISIONS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-2. Relative Unequal Distance Ratios in ECS y-Direction</p>
+<p> • Frame</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MAIN_POST_ELEM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="5">
+<p><span style="color: #4c9aff;">Divide by Node</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Divide the Element into Two New Elements using the Node.</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BY_NODE_OPTION</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-1. Element Number</p>
+<p> • Frame</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELEM_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i-2. Node Number to Divide Element</p>
+<p> • Frame</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Subdivide Frame Elements</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBDIVIDE_ELEM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Merge Duplicate Nodes</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MERGE_DUPLICATE_NODES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Activation Option</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_CHECK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Merging Tolerance</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TOLERANCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br>
+<div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116702044441"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116687660313"> : <em>MIDAS GEN NX only</em>
+</div>
+</div>
+</div>
+    </div>
+</body>
+</html>

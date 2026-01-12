@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC Design Code - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>RC Design Code</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35993633394969</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T02:06:10Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:20:00Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35993633394969-RC-Design-Code" target="_blank">https://support.midasuser.com/hc/en-us/articles/35993633394969-RC-Design-Code</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4JQ0QK67DMJRKERNNQ7AN9B"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/DCON</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JQ0QK6XKT1VG7ZGSKB6KRZ"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JQ0QK6NKXBKQ1WZTMDZGXQ"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"DCON"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"DGNCODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DesignCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JQ0QK658H1GFWZCRJTC4K7"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">RC Design Code</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"DGNCODE"</span>: <span style="color: #055bcc;">"KCI-USD12"</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JQ0QK69A74VJ81HR7XPKVQ"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 50.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Design Code <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DGNCODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> Available Design Code</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%; height: 1477px;" border="1">
+<colgroup> <col style="width: 6.0%;"> <col style="width: 47.00%;"> <col style="width: 47.00%;"> </colgroup>
+<tbody>
+<tr style="height: 22px;">
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;"><strong>No.</strong></p>
+</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;"><strong>Design Code</strong></p>
+</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;"><strong>DGNCODE</strong></p>
+</th>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 6%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">KDS 24 14 21 : 2021 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"KDS 24 14 21 : 2021"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">KDS 41 30 : 2018 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"KDS 41 30 : 2018"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KSCE-LSD15 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KSCE-LSD15"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KSCE-USD10 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KSCE-USD10"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KSCE-USD05 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KSCE-USD05"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KSCE-USD96</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KSCE-USD96"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KSCE-RAIL-USD11 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KSCE-RAIL-USD11"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KSCE-RAIL-USD04 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KSCE-RAIL-USD04"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KCI-USD12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KCI-USD12"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KCI-USD07</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KCI-USD07"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">KCI-USD03 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"KCI-USD03"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">KCI-USD99</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"KCI-USD99"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">AIK-USD94 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"AIK-USD94"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">AIK-WSD2K <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"AIK-WSD2K"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-19 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-19"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318M-19 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318M-19"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-14 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-14"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318M-14 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318M-14"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">19</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-11 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-11"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">20</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-08 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-08"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">21</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-05 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-05"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">22</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-02</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-02"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">23</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-99 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-99"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">24</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-95 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-95"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">
+<p style="text-align: center;">25</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">ACI318-89 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"ACI318-89"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">26</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LRFD20(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LRFD20"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">27</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LRFD17(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LRFD17"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">28</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LRFD16(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LRFD16"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">29</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LRFD12(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LRFD12"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">30</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LRFD07(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LRFD07"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">31</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LRFD02(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LRFD02"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">32</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">AASHTO-LFD96(US) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"AASHTO-LFD96"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">33</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">CSA-S6-00 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"CSA-S6-00"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">34</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">CSA-S6-14 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"CSA-S6-14"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">35</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">CSA-S6-19 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"CSA-S6-19"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">36</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">CSA-A23.3-94 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"CSA-A23.3-94"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">37</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">JTJ023-85 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"JTJ023-85"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">38</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">GB/T50010-10 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"GB/T50010-10"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">39</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">GB50010-02 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"GB50010-02"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">40</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">Eurocode2-2:05 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"Eurocode2-2:05"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">41</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">Eurocode2:04 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"Eurocode2:04"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">42</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">Eurocode2 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"Eurocode2"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">43</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">BS8110-97 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"BS8110-97"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">44</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">BS 5400-4:1990 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"BS 5400-4:1990"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">45</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">NSR-10 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"NSR-10"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">46</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">AIJ-WSD99 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"AIJ-WSD99"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">47</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">IRC:21-2000 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"IRC:21-2000"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">48</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">IRC:112-2011 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"IRC:112-2011"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">49</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">IRC:112-2020 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"IRC:112-2020"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">50</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">IS456:2000</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"IS456:2000"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">51</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">IRS <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"IRS"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">52</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">NSCP 2015 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"NSCP 2015"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 22px;">53</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">NSCP-DCEC(2023) <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"NSCP-DCEC(2023)"</p>
+</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">54</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">NSCP-DCEC(2017) <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"NSCP-DCEC(2017)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">55</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">TWN-BRG-LSD90 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"TWN-BRG-LSD90"</p>
+</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">56</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">TWN-USD112 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"> </p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"TWN-USD112"</p>
+</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">57</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">TWN-USD100 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"TWN-USD100"</p>
+</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">58</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">TWN-USD92 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"TWN-USD92"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">59</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">SNiP 2.05.03-84* <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"SNiP 2.05.03-84*"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">60</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">SP 35.13330.2011 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"SP 35.13330.2011"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">61</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">SNiP 2.05.03-84*(MKS) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"SNiP 2.05.03-84*(MKS)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">62</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">SP 35.13330.2011(MKS) <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 46.8571%;">
+<p style="text-align: center;">"SP 35.13330.2011(MKS)"</p>
+</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">63</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">SP 63.13330.2018 <img src="https://support.midasuser.com/hc/article_attachments/52116702037273"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"SP 63.13330.2018"</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td class="wysiwyg-text-align-center" style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 27px;">64</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">AREMA-2023 <img src="https://support.midasuser.com/hc/article_attachments/52116687651353"></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 27px; width: 46.8571%;">
+<p style="text-align: center;">"AREMA-2023"</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br>
+<div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116687651353"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116702037273"> : <em>MIDAS GEN NX only</em>
+</div>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

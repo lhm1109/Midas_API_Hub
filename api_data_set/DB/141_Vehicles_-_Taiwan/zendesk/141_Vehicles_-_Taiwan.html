@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicles - Taiwan - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Vehicles - Taiwan</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35958804436633</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T06:45:09Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-03-07T02:02:32Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35958804436633-Vehicles-Taiwan" target="_blank">https://support.midasuser.com/hc/en-us/articles/35958804436633-Vehicles-Taiwan</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01J4GMHNS5JG69K1S4X1N6J5T9"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/MVHL</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GMHNS5A99T2PXR4NQ2K7CN"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GMHNS5JF8NZCS6XN4P0BBH"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"MVHL"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MovingLoadCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularLoadName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularLoadNumber"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularTypeName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StandardCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserLoadType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UniformLoad"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynamicUserAllowance"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"W1"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"W1"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"W2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"W2"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"D1"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"D1"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"D2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"D2"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PL"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PL"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PLM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PLM"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PLV"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PLV"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"CENT_F"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AddCentrifugalForce"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"POINT_LOAD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointLoad"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"POINT_DIST"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointDistance"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GMHNS5GA2WHVZF585567QW"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle - Standard</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_HS20-44(MS18)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS20-44(MS18)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_HS15-44(MS13.5)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS15-44(MS13.5)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_H20-44(M18)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H20-44(M18)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"4"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_H15-44(M13.5)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H15-44(M13.5)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"5"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_H10-44(M9)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H10-44(M9)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"6"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_HS-20-44(MS18)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS-20-44(MS18)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"7"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_HS-15-44(MS13.5)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS-15-44(MS13.5)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"8"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_H-20-44(M18)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H-20-44(M18)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"9"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_H-15-44(M13.5)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H-15-44(M13.5)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"10"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_H-10-44(M9)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H-10-44(M9)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"11"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"TW_C-AML"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"C-AML"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CNS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle - User Defined</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"12"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_Truck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"Truck/Lane"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: <span style="color: #0ab66c;">12</span>,<br>                <span style="color: #c31b1b;">"PL"</span>: <span style="color: #0ab66c;">160</span>,<br>                <span style="color: #c31b1b;">"PLM"</span>: <span style="color: #0ab66c;">180</span>,<br>                <span style="color: #c31b1b;">"PLV"</span>: <span style="color: #0ab66c;">200</span><br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">120</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">3</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">140</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            ]<br>        },<br>        <span style="color: #c31b1b;">"13"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_Train"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"TrainLoad"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"W1"</span>: <span style="color: #0ab66c;">20</span>,<br>                <span style="color: #c31b1b;">"W2"</span>: <span style="color: #0ab66c;">30</span>,<br>                <span style="color: #c31b1b;">"D1"</span>: <span style="color: #0ab66c;">3.5</span>,<br>                <span style="color: #c31b1b;">"D2"</span>: <span style="color: #0ab66c;">7</span><br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">120</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">3</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">140</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">5</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GMHNS642QYR4YTNEM50MES"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Function Name</p>
+<p> • Taiwan: 4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MVLD_CODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Load Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_LOAD_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Load Number</p>
+<p> • Standard: 1</p>
+<p> • User Defined: 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_LOAD_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Type Name<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_TYPE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Standard Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STANDARD_CODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>User Defined Load Type</p>
+<p> • Truck/Lane: "Truck/Lane"</p>
+<p> • Train: "Train Load"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USER_LOAD_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For User Defined Vehicle - Truck/Lane</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="6">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_DEFAULT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Uniform Distribution Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIFORM_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load for Member Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load for Moment</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load for Shear force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLV"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Add Centrifugal Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CENT_F"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Axle Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For User Defined Vehicle - Train</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_DEFAULT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distribution Load - dW1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"W1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing - dD1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"D1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distribution Load - dW2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"W2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing - dD2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"D2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Axle Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾ </span><em>Standard Code &amp; Vehicle Type Name</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 47.00%;"> <col style="width: 47.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>No.</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Standard Code</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Vehicle Type Name</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Taiwan</p>
+<p> • "CNS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "HS20-44(MS18)"</p>
+<p> • "HS15-44(MS13.5)"</p>
+<p> • "H20-44(M18)"</p>
+<p> • "H15-44(M13.5)"</p>
+<p> • "H10-44(M9)"</p>
+<p> • "HS-20-44(MS18)"</p>
+<p> • "HS-15-44(MS13.5)"</p>
+<p> • "H-20-44(M18)"</p>
+<p> • "H-15-44(M13.5)"</p>
+<p> • "H-10-44(M9)"</p>
+<p> • "C-AML"</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Properties - Common - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Section Properties - Common</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35808653964185</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-01T11:56:15Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:18:17Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35808653964185-Section-Properties-Common" target="_blank">https://support.midasuser.com/hc/en-us/articles/35808653964185-Section-Properties-Common</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J46WPZHS4YCXF1D13NPEXRVS"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/SECT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J46WPZHT8QGP18KRRA8XY8S2"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J46WPZHTDD94Z017C81N11TK"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SECT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SectName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SectBefore"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"OFFSET_PT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CardinalPoint"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"OffsetCenter"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetRef"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HorizonoffsetOption"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetYI"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetYJ"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VerticalOffsetOption"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetZI"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetZJ"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseConsiderShearDeform"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseConsiderWarpingEffect"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Shape"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J46WPZHTKDZHJTZQYJB2S3W4"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Left-Top</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6001"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"LT_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"LT"</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6002"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"LT_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"LT"</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">2.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: <span style="color: #0ab66c;">2.2</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Center-Top</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6003"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"CT_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CT"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6004"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"CT_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CT"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">2.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: <span style="color: #0ab66c;">2.2</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Right-Top</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6005"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"RT_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"RT"</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6006"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"RT_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"RT"</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">2.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: <span style="color: #0ab66c;">2.2</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Left-Center</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6007"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"LC_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"LC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6008"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"LC_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"LC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Center-Center</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6009"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"CC_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6010"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"CC_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Right-Center</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6011"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"RC_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"RC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6012"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"RC_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"RC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Left-Bottom</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6013"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"LB_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"LB"</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6014"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"LB_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"LB"</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">2.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: <span style="color: #0ab66c;">2.2</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Center-Bottom</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget9')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget9" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6015"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"CB_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CB"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6016"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"CB_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CB"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">2.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: <span style="color: #0ab66c;">2.2</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Offset : Right-Bottom</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget10')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget10" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6017"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"DBUSER"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"RB_Const"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"RB"</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"DATATYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6018"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"TAPERED"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"RB_Tapared"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"RB"</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YJ"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">2.1</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZJ"</span>: <span style="color: #0ab66c;">2.2</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"SECT_J"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ]<br>                },<br>                <span style="color: #c31b1b;">"Y_VAR"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"Z_VAR"</span>: <span style="color: #0ab66c;">1</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J46WPZHTW6KA8MQ5VVFS4XR6"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Section Data Type <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SECTTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Section Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SECT_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="15">
+<p style="text-align: center;">3</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Section Data - Before</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SECT_BEFORE"</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Section Shape <span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SHAPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Offset Setting </span><span style="font-size: 16px; color: #bf2600;">³⁾</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Offset Direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OFFSET_PT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Center Location</p>
+<p> • Centroid: 0</p>
+<p> • Center of Section: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OFFSET_CENTER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Horizontal Offset Option</p>
+<p> • to Extreme Fiber: 0</p>
+<p> • User: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HORZ_OFFSET_OPT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Horizontal Offset Value for I</p>
+<p> • for User Type</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USERDEF_OFFSET_YI"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Horizontal Offset Value for J</p>
+<p> • for User Type and Tapered Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USERDEF_OFFSET_YJ"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Vertical Offset Option</p>
+<p> • to Extreme Fiber: 0</p>
+<p> • User: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VERT_OFFSET_OPT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Vertical Offset Value for I</p>
+<p> • for User Type</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USERDEF_OFFSET_ZI"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Vertical Offset Value for J</p>
+<p> • for User Type and Tapered Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USERDEF_OFFSET_ZJ"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(10)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>User Type Offset Reference Position</p>
+<p> • Centroid: 0</p>
+<p> • Extreme Fiber(s): 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USER_OFFSET_REF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Additional Option</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Consider Shear Deformation</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USE_SHEAR_DEFORM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(10)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Consider Warping Effect</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USE_WARPING_EFFECT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> Section Type</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 49.21%;"> <col style="width: 50.79%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Section Data Type</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>"SECTTYPE"</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">DB/User</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DBUSER"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Value</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VALUE"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SRC</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SRC"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Combined</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMBINED"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC<img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSC"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Tapered</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TAPERED"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel &amp; PSC Composite</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMPOSITE"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel Girder<img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SOD"</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">²⁾</span><em> Shape Type</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 34.43%;"> <col style="width: 15.57%;"> <col style="width: 32.59%;"> <col style="width: 17.41%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Shape Type</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>"SHAPE"</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Shape Type</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>"SHAPE"</strong></p>
+</th>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">DB/User</span></p>
+</td>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">Combined</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2H Combined Shape</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2H"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"C"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-C Combined Shape</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HC1"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"H"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-C Combined Shape2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HC2"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">T-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"T"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-T Combined Shape</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Box</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"B"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2T (Web Opened H)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2T1"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Pipe</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"P"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2T (Web Opened H) 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2T2"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H - Shape with 2T or Web</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"H2T"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Star-Battened Angle <img src="https://support.midasuser.com/hc/article_attachments/52116662205081"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Web Opened H with Stiffener</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"WOH"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2C"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2C with Web Plate1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2CW1"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Rectangle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2C with Web Plate2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2CW2"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Round</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">C with Web Plate1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"1CW1"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Octagon</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OCT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">C with Web Plate2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"1CW2"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SOCT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4-Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"4L"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">R-Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ROCT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-shape with Plate</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HP"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TRK"</p>
+</td>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">Tapered</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STRK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"L"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Half Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HTRK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"C"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Cold Formed Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"H"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Z-Section <img src="https://support.midasuser.com/hc/article_attachments/52116662205081"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">T-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"T"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Upright</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Box</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"B"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">U-RIB</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"URIB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Pipe</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"P"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Box with Stiffener <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BSTF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2L"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Pipe with Stiffener <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSTF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2C"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Invert-T Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UDT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Rectangle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SB"</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">Value</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Round</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SR"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OCT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"C"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SOCT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"H"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TRK"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">T-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"T"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STRK"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Box</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"B"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Half Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HTRK"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Pipe</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"P"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">General Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GEN"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-1CELL <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"1CEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2C"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-2CELL <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2CEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Rectangle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-3CELL <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"3CEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Round</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-nCELL <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NCEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OCT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-nCELL2 <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NCE2"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SOCT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-MID <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCM"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">R-Octagon <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ROCT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-I <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCI"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TRK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-HALF <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCH"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STRK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-TEE <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Half Track <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HTRK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-PLAT <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCB"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">General</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GEN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-VALUE <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VALU"</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">SRC</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-CMPWEB <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CMPW"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-Box-Open</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RBO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel-Box (Type1) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CP_B"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-Box-Close</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RBC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel-I (Type1) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CP_I"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-Pipe-Open</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RPO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel_Tub (Type1) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CP_T"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-Pipe-Close</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RPC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel-Box (Type2) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CSGB"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Circle-Box-Open</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CBO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel-I (Type2) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CSGI"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Circle-Box-Close</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CBC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel_Tub (Type2) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CSGT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Circle-Pipe-Open</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CPO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite PSC-I <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CPCI"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Circle-Pipe-Close</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CPC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite PSC-T <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CPCT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SRC-Box</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EBC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite General Section <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CP_G"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SRC-Pipe</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EPC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel Girder Box <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STLB"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-HBeam</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RHB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel Girder I <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STLI"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Circle-HBeam</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CHB"</p>
+</td>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">PSC</span> <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-Cross H</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RH2T"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-1CELL</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"1CEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Rect-Combined T</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RHT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-2CELL</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2CEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SRC-Box-Stiffener</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBSF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-3CELL</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"3CEL"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SRC-Pipe-Stiffener</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SPSF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-nCELL</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NCEL"</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">Steel &amp; PSC Composite</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-nCELL2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NCEL2"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel-Box / Steel-Box (Type1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"B"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-MID</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCM"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel-I / Steel-I (Type1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"I"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-I</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCI"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel-Tub / Steel-Tub (Type1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Tub"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-HALF</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCH"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel-Box (Type2) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-TEE</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCT"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel-I (Type2) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GI"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-PLAT</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PSCB"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite Steel_Tub (Type2) <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-Value</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VALU"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite-I <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CI"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PSC-CMPWEB</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CMPW"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite-T <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CT"</p>
+</td>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><span style="color: #4c9aff;">Steel Girder</span> <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite-PSC <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel Girder Box</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STLB"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Composite-General <img src="https://support.midasuser.com/hc/article_attachments/52116676673945"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CP_G"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel Girder I</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STLI"</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">³⁾</span><em> Change Offset</em></p>
+<p><em>The usage of input data related to the offset is determined by the direction and conditions of the offset.</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 17.42%;"> <col style="width: 15.16%;"> <col style="width: 20.74%;"> <col style="width: 23.54%;"> <col style="width: 23.14%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Offset Direction</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>"OFFSET_PT"</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>"OFFSET_CENTER"</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>“HORZ_OFFSET_OPT”</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>“VERT_OFFSET_OPT”</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Left-Top</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Center-Top</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Right-Top</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Left-Center</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Center-Center</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Right-Center</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Left-Bottom</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Center-Bottom</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Right-Bottom</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116676673945"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116662205081"> : <em>MIDAS GEN NX only</em>
+</div>
+</div>
+    </div>
+</body>
+</html>

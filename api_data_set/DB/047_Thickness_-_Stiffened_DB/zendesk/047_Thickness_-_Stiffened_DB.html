@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thickness - Stiffened DB - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Thickness - Stiffened DB</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35942342783769</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T01:30:08Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:15:02Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35942342783769-Thickness-Stiffened-DB" target="_blank">https://support.midasuser.com/hc/en-us/articles/35942342783769-Thickness-Stiffened-DB</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4G2P6AH2BTN7EWBYVB9VK1R"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/THIK</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4G2P6AHE6EBGCMV4N8M8YEK"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4G2P6AH7ERT21DY6Z7YW260"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"THIK"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"STYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SubType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RibPosition"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"THIKNESS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"thicknessdataofplateelement"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DBNAME"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"NameofDB"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"XZ"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"bRIB"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseRibAttached"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SHAPE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Shape"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"NAME"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SectName"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Distance"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"YZ"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"bRIB"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseRibAttached"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SHAPE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Shape"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"NAME"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SectName"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Distance"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4G2P6AJXPYJ4NKPWYY98324"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 1</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"101"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"KS21"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"C"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"C75x40x5/7"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"L25x3"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 2</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"102"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"KS21"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"T"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"T50x50x5/7"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"H"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"H100x50x5/7"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 3</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"103"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"KS21"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"P"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"P21.7x2"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"B"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"B40x40x1.6"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 4</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"104"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"ICHA"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"2C"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"IC30X86.8"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"2L"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"TL20X93.9"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 5</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"105"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"SS"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"FB3x12"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SB"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"FB3x12"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 6</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"106"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"KS21"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SR"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"SR6"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"SR"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"SR6"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Stiffened DB Example 7</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"107"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"STIFFENED"</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #055bcc;">"DB"</span>,<br>            <span style="color: #c31b1b;">"RIB_POS"</span>: <span style="color: #055bcc;">"LOWER"</span>,<br>            <span style="color: #c31b1b;">"SECTION"</span>: {<br>                <span style="color: #c31b1b;">"THIKNESS"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"DBNAME"</span>: <span style="color: #055bcc;">"KS21"</span>,<br>                <span style="color: #c31b1b;">"XZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"URIB"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"URIB320x240x6-40"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.4</span><br>                },<br>                <span style="color: #c31b1b;">"YZ"</span>: {<br>                    <span style="color: #c31b1b;">"bRIB"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                    <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC-250x75x25x4.5"</span>,<br>                    <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4G2P6AJH0G01HCJMQR4N156"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Thickness Type</p>
+<p> • Value: "VALUE"</p>
+<p> • Stiffened: "STIFFENED"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Stiffened Thickness Type</p>
+<p> • Value: "VALUE"</p>
+<p> • Use: "USER"</p>
+<p> • DB: "DB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Rib Position</p>
+<p> • "LOWER"</p>
+<p> • "UPPER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"RIB_POS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="13">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Defined Stiffener</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SECTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Thickness</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"THIKNESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>DB Name <span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DBNAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>XZ Section</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"XZ"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Use Rib Attached</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"bRIB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">False</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Shape<span data-colorid="mrppc25vzx"> </span><span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SHAPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Section Name</p>
+<p> • Refer to Product</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Distance</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>YZ Section</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"YZ"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Use Rib Attached</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"bRIB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">False</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Shape<span data-colorid="pcidpk9h8f"> </span><span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SHAPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Section Name</p>
+<p> • Refer to Product</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Distance</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> DB Section Shape</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 13.00%;"> <col style="width: 15.00%;"> <col style="width: 11.00%;"> <col style="width: 11.00%;"> <col style="width: 11.00%;"> <col style="width: 11.00%;"> <col style="width: 11.00%;"> <col style="width: 11.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="2">
+<p style="text-align: center;"><strong>No.</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="2">
+<p style="text-align: center;"><strong>Shape Type</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="2">
+<p style="text-align: center;"><strong>Key</strong></p>
+<p style="text-align: center;"><strong>("SHAPE")</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p style="text-align: center;"><strong>Value Type ("SIZE")</strong></p>
+</th>
+</tr>
+<tr>
+<td style="background-color: #f4f5f7; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Size1</strong></p>
+</td>
+<td style="background-color: #f4f5f7; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Size2</strong></p>
+</td>
+<td style="background-color: #f4f5f7; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Size3</strong></p>
+</td>
+<td style="background-color: #f4f5f7; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Size4</strong></p>
+</td>
+<td style="background-color: #f4f5f7; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Size5</strong></p>
+</td>
+<td style="background-color: #f4f5f7; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Size6</strong></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"C"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"H"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">T-Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"T"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">BOX</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"B"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">PIPE</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"P"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Double Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"2C"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Rectangle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Solid Round</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Cold Formed Channel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">U-RIB</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"URIB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">²⁾</span><em> DB Name</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%; height: 726px;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 72.00%;"> <col style="width: 22.00%;"> </colgroup>
+<tbody>
+<tr style="height: 22px;">
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;"><strong>No.</strong></p>
+</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;"><strong>Shape Type</strong></p>
+</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;"><strong>Value</strong></p>
+</th>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Korean Industrial Standards 2021</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"KS21"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Korean Industrial Standards</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"KS"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction 2010(US Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC10(US)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction 2010(SI Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC10(SI)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction 2005(US Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC05(US)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction 2005(SI Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC05(SI)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction 2000(US Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC2K(US)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction 2000(SI Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC2K(SI)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">American Institute of Steel Construction</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"AISC"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Canadian Institute of Steel Construction 2002(US Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"CISC02(US)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Canadian Institute of Steel Construction 2002(SI Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"CISC02(SI)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">British Standard</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"BS"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">British Standard / BS 4-1: 1993</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"BS4-93"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">British Standard / BS EN 10365 : 2017</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"BS_EN_10365-2017"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">British Standard / EN 10365 : 2017</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"EN_10365-2017"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Deutches Institut fur Normung e.v</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"DIN"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Italian National Unification Body</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"UNI"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Russian National Standards</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"GOST"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">19</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Russian Standards / Rolled Steel Sections</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"STO_ASCHM"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">20</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Japanese Industrial Standards 2000</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"JIS2K"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">21</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Japanese Industrial Standards</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"JIS"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">22</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Guojia Biao Zhun-Yejin Bu Biao Zhun</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"GB-YB"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">23</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Guojia Biao Zhun-Yejin Bu Biao Zhun 2005</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"GB-YB05"</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 44px; width: 6%;">
+<p style="text-align: center;">24</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Technical code of cold-formed thin-wall steel structures 2002</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"GB50018-02" <img src="https://support.midasuser.com/hc/article_attachments/52116561691033"></p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">25</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Bentley Pacific Standards (SI Unit)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"Pacific(SI)"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">26</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Indian Standards</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"IS"</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 44px; width: 6%;">
+<p style="text-align: center;">27</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 44px; width: 71.8571%;">
+<p style="text-align: center;">Indian Standards (HOT ROLLED STEEL BEAM, COLUMN, CHANNEL AND ANGLE SECTIONS)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 44px; width: 22%;">
+<p style="text-align: center;">"IS808"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">28</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Indian Standards (Steel Tube)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"IS1161"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">29</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Chinese National Standard</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"CNS91"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">30</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Chinese National Standard 2020</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"CNS2020" <img src="https://support.midasuser.com/hc/article_attachments/52116561691033"></p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 22px;">
+<p style="text-align: center;">31</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 71.8571%; height: 22px;">
+<p style="text-align: center;">Code for design of photovoltaic modules support structures</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 22%; height: 22px;">
+<p style="text-align: center;">"NBT_10115-2018" <img src="https://support.midasuser.com/hc/article_attachments/52116561691033"></p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">32</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Singapore Standards</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"SS"</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 6%;">
+<p style="text-align: center;">33</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Chilean Steel Institute</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"ICHA"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">34</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 71.8571%;">
+<p style="text-align: center;">Thai Industrial Standards Institute (TISI) (2015)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 22%;">
+<p style="text-align: center;">"TIS-1227-2558" <img src="https://support.midasuser.com/hc/article_attachments/52116561691033"></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">35</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 71.8571%;">
+<p style="text-align: center;">Thai Industrial Standards Institute (TISI) (2018)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 22%;">
+<p style="text-align: center;">"TIS-1228(2018)"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">36</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 71.8571%;">
+<p style="text-align: center;">Russian National Standard</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 22%;">
+<p class="wysiwyg-text-align-center">"GOST_8293-89"<br>"GOST_26020-83"<br>"GOST_19425-74"<br>"GOST_P_57837-2017"<br>"GOST_8240-97"<br>"GOST_8278-83"<br>"GOST_8239-72"<br>"GOST_8509-93"<br>"GOST_8510-72"<br>"GOST_30245-2003"<br>"GOST_8639-82"<br>"GOST_8732-78"<br>"GOST_Р_54157-2010"<br>"GOST_10704-91"<br>"GOST_54929-2012"<br>"STO_ASCHM_20-93"<br>"TU_14-2-24-72"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">37</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 71.8571%;">
+<p style="text-align: center;">Canadian Institute of Steel Construction 12th</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; height: 22px; width: 22%;">
+<p style="text-align: center;">"CISC(SST12)" <img src="https://support.midasuser.com/hc/article_attachments/52116561691033"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116576086937"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116561691033"> : <em>MIDAS GEN NX only</em>
+</div>
+<br><br>
+</div>
+<div></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Properties - Steel Girder - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Section Properties - Steel Girder</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35939506348697</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T00:39:17Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-08-20T07:59:18Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35939506348697-Section-Properties-Steel-Girder" target="_blank">https://support.midasuser.com/hc/en-us/articles/35939506348697-Section-Properties-Steel-Girder</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+</p>
+<div>
+<h3 id="h_01J4FZRFJFBG429BBSEDXGZB0T"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/SECT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4FZRFJFQD5X04RBM85XMNDJ"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4FZRFJFBNK5TD3KC4VZZPG5"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SECT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SectName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"OFFSET_PT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CardinalPoint"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"OffsetCenter"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetRef"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HorizonoffsetOption"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetYI"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VerticalOffsetOption"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserOffsetZI"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseConsiderShearDeform"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseConsiderWarpingEffect"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SHAPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Shape"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"vSIZE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Size"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"USE_SYM_CALC"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SymmetricAutoCalculator"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SODSTIFF"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"TOSTIFNOS"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Definedstiffenernumber"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"SHAPE"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                        <span style="color: #c31b1b;">"items"</span>: {<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                                <span style="color: #c31b1b;">"NAME"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Name"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Type"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"SIZE"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Size"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                                    <span style="color: #c31b1b;">"items"</span>: {<br>                                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                                        <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">8</span><br>                                                    }<br>                                                }<br>                                            }<br>                                        }<br>                                    },<br>                                    <span style="color: #c31b1b;">"DECKSTIFFNO"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Totaldeck&amp;Stiffnumber"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"SUB"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                        <span style="color: #c31b1b;">"items"</span>: {<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                                <span style="color: #c31b1b;">"DECK_POS"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DeckPosition"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"DECK_PART"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DeckPart"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"REF_POS"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ReferencePosition"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"NUM"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Stiffenernumber"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"DECK_NAME"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DeckName"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: {<br>                                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Appliedstiffenernumber"</span>,<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                },<br>                                                <span style="color: #c31b1b;">"DATA"</span>: {<br>                                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                                    <span style="color: #c31b1b;">"items"</span>: {<br>                                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                                            <span style="color: #c31b1b;">"USE_CALC"</span>: {<br>                                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseCalculation"</span>,<br>                                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                                            },<br>                                                            <span style="color: #c31b1b;">"SPACING"</span>: {<br>                                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spacing"</span>,<br>                                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                                            },<br>                                                            <span style="color: #c31b1b;">"STIF_POS"</span>: {<br>                                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Position"</span>,<br>                                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                                            },<br>                                                            <span style="color: #c31b1b;">"SHAPE_NAME"</span>: {<br>                                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ShapeName"</span>,<br>                                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                                            },<br>                                                            <span style="color: #c31b1b;">"STIF_NAME"</span>: {<br>                                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StiffName"</span>,<br>                                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                                            }<br>                                                        }<br>                                                    }<br>                                                }<br>                                            }<br>                                        }<br>                                    }<br>                                }<br>                            }<br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"SECT_AFTER"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"vSIZE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Size"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                }<br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4FZRFJFMW4P08B2T4MJGV6V"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Steel Girder Box</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"801"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"SOD"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"SteelGirderBox"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"STLB"</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.71</span>,<br>                        <span style="color: #0ab66c;">0.91</span>,<br>                        <span style="color: #0ab66c;">0.72</span>,<br>                        <span style="color: #0ab66c;">0.81</span>,<br>                        <span style="color: #0ab66c;">0.83</span>,<br>                        <span style="color: #0ab66c;">0.82</span>,<br>                        <span style="color: #0ab66c;">1.2</span>,<br>                        <span style="color: #0ab66c;">0.023</span>,<br>                        <span style="color: #0ab66c;">0.025</span>,<br>                        <span style="color: #0ab66c;">0.031</span>,<br>                        <span style="color: #0ab66c;">0.032</span><br>                    ],<br>                    <span style="color: #c31b1b;">"USE_SYM_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"SODSTIFF"</span>: {<br>                        <span style="color: #c31b1b;">"TOSTIFNOS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DECKSTIFFNO"</span>: <span style="color: #0ab66c;">0</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"SECT_AFTER"</span>: {<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.2</span>,<br>                        <span style="color: #0ab66c;">0.3</span><br>                    ]<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Steel Girder Box with Stiffener</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"802"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"SOD"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"SteelGirderBox-Stiff"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"STLB"</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.71</span>,<br>                        <span style="color: #0ab66c;">0.91</span>,<br>                        <span style="color: #0ab66c;">0.72</span>,<br>                        <span style="color: #0ab66c;">0.81</span>,<br>                        <span style="color: #0ab66c;">0.83</span>,<br>                        <span style="color: #0ab66c;">0.82</span>,<br>                        <span style="color: #0ab66c;">1.2</span>,<br>                        <span style="color: #0ab66c;">0.023</span>,<br>                        <span style="color: #0ab66c;">0.025</span>,<br>                        <span style="color: #0ab66c;">0.031</span>,<br>                        <span style="color: #0ab66c;">0.032</span><br>                    ],<br>                    <span style="color: #c31b1b;">"USE_SYM_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"SODSTIFF"</span>: {<br>                        <span style="color: #c31b1b;">"TOSTIFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                        <span style="color: #c31b1b;">"SHAPE"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"SIZE"</span>: [<br>                                    <span style="color: #0ab66c;">0.15</span>,<br>                                    <span style="color: #0ab66c;">0.018</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span><br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"SIZE"</span>: [<br>                                    <span style="color: #0ab66c;">0.12</span>,<br>                                    <span style="color: #0ab66c;">0.11</span>,<br>                                    <span style="color: #0ab66c;">0.021</span>,<br>                                    <span style="color: #0ab66c;">0.022</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span><br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"SIZE"</span>: [<br>                                    <span style="color: #0ab66c;">0.12</span>,<br>                                    <span style="color: #0ab66c;">0.14</span>,<br>                                    <span style="color: #0ab66c;">0.1</span>,<br>                                    <span style="color: #0ab66c;">0.016</span>,<br>                                    <span style="color: #0ab66c;">0.008</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span><br>                                ]<br>                            }<br>                        ],<br>                        <span style="color: #c31b1b;">"DECKSTIFFNO"</span>: <span style="color: #0ab66c;">8</span>,<br>                        <span style="color: #c31b1b;">"SUB"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Top-Left"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.11</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TL1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TL2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.23</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TL3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Top-Center"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TC1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TC2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.23</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TC3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Top-Right"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TR1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.23</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TR2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TR3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Web-Left"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"LW1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"LW2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.25</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"LW3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Web-Right"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.31</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"RW1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.25</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"RW2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.32</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"RW3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Bottom-Left"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BL1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BL2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.22</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BL3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Bottom-Center"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BC1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BC2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.22</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BC3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Bottom-Right"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BR1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BR2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.22</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BR3"</span><br>                                    }<br>                                ]<br>                            }<br>                        ]<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"SECT_AFTER"</span>: {<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.2</span>,<br>                        <span style="color: #0ab66c;">0.3</span><br>                    ]<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Steel Girder I</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"803"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"SOD"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"SteelGirderI"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"STLI"</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.78</span>,<br>                        <span style="color: #0ab66c;">0.79</span>,<br>                        <span style="color: #0ab66c;">0.81</span>,<br>                        <span style="color: #0ab66c;">0.82</span>,<br>                        <span style="color: #0ab66c;">1.1</span>,<br>                        <span style="color: #0ab66c;">0.023</span>,<br>                        <span style="color: #0ab66c;">0.024</span>,<br>                        <span style="color: #0ab66c;">0.025</span><br>                    ],<br>                    <span style="color: #c31b1b;">"USE_SYM_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"SODSTIFF"</span>: {<br>                        <span style="color: #c31b1b;">"TOSTIFNOS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DECKSTIFFNO"</span>: <span style="color: #0ab66c;">0</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"SECT_AFTER"</span>: {<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.41</span>,<br>                        <span style="color: #0ab66c;">0.62</span><br>                    ]<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Steel Girder I with Stiffener</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"804"</span>: {<br>            <span style="color: #c31b1b;">"SECTTYPE"</span>: <span style="color: #055bcc;">"SOD"</span>,<br>            <span style="color: #c31b1b;">"SECT_NAME"</span>: <span style="color: #055bcc;">"SteelGirderI-Stiff"</span>,<br>            <span style="color: #c31b1b;">"SECT_BEFORE"</span>: {<br>                <span style="color: #c31b1b;">"OFFSET_PT"</span>: <span style="color: #055bcc;">"CC"</span>,<br>                <span style="color: #c31b1b;">"OFFSET_CENTER"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USER_OFFSET_REF"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"HORZ_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_YI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"VERT_OFFSET_OPT"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USERDEF_OFFSET_ZI"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"USE_SHEAR_DEFORM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"USE_WARPING_EFFECT"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                <span style="color: #c31b1b;">"SHAPE"</span>: <span style="color: #055bcc;">"STLI"</span>,<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.78</span>,<br>                        <span style="color: #0ab66c;">0.79</span>,<br>                        <span style="color: #0ab66c;">0.81</span>,<br>                        <span style="color: #0ab66c;">0.82</span>,<br>                        <span style="color: #0ab66c;">1.1</span>,<br>                        <span style="color: #0ab66c;">0.023</span>,<br>                        <span style="color: #0ab66c;">0.024</span>,<br>                        <span style="color: #0ab66c;">0.025</span><br>                    ],<br>                    <span style="color: #c31b1b;">"USE_SYM_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"SODSTIFF"</span>: {<br>                        <span style="color: #c31b1b;">"TOSTIFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                        <span style="color: #c31b1b;">"SHAPE"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"SIZE"</span>: [<br>                                    <span style="color: #0ab66c;">0.15</span>,<br>                                    <span style="color: #0ab66c;">0.018</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span><br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"SIZE"</span>: [<br>                                    <span style="color: #0ab66c;">0.12</span>,<br>                                    <span style="color: #0ab66c;">0.11</span>,<br>                                    <span style="color: #0ab66c;">0.021</span>,<br>                                    <span style="color: #0ab66c;">0.022</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span><br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                <span style="color: #c31b1b;">"SHAPE_TYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"SIZE"</span>: [<br>                                    <span style="color: #0ab66c;">0.12</span>,<br>                                    <span style="color: #0ab66c;">0.14</span>,<br>                                    <span style="color: #0ab66c;">0.1</span>,<br>                                    <span style="color: #0ab66c;">0.016</span>,<br>                                    <span style="color: #0ab66c;">0.008</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span>,<br>                                    <span style="color: #0ab66c;">0</span><br>                                ]<br>                            }<br>                        ],<br>                        <span style="color: #c31b1b;">"DECKSTIFFNO"</span>: <span style="color: #0ab66c;">5</span>,<br>                        <span style="color: #c31b1b;">"SUB"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Top-Left"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TL1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TL2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TL3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Top-Right"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TR1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TR2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"TR3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Web"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"W1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"W2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"W3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Bottom-Left"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BL1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BL2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BL3"</span><br>                                    }<br>                                ]<br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"DECK_POS"</span>: <span style="color: #0ab66c;">2</span>,<br>                                <span style="color: #c31b1b;">"DECK_PART"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"REF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DECK_NAME"</span>: <span style="color: #055bcc;">"Bottom-Right"</span>,<br>                                <span style="color: #c31b1b;">"EACHSTIFFNOS"</span>: <span style="color: #0ab66c;">3</span>,<br>                                <span style="color: #c31b1b;">"DATA"</span>: [<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Flat"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BR1"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.15</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"Tee"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BR2"</span><br>                                    },<br>                                    {<br>                                        <span style="color: #c31b1b;">"USE_CALC"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.21</span>,<br>                                        <span style="color: #c31b1b;">"STIF_POS"</span>: <span style="color: #0ab66c;">0</span>,<br>                                        <span style="color: #c31b1b;">"SHAPE_NAME"</span>: <span style="color: #055bcc;">"U-Rib"</span>,<br>                                        <span style="color: #c31b1b;">"STIF_NAME"</span>: <span style="color: #055bcc;">"BR3"</span><br>                                    }<br>                                ]<br>                            }<br>                        ]<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"SECT_AFTER"</span>: {<br>                <span style="color: #c31b1b;">"SECT_I"</span>: {<br>                    <span style="color: #c31b1b;">"vSIZE"</span>: [<br>                        <span style="color: #0ab66c;">0.41</span>,<br>                        <span style="color: #0ab66c;">0.62</span><br>                    ]<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4FZRFJGS9PRNE8RQ39DD5BD"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">No.</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">Description</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">Key</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Value Type</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Default</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Common</p>
+<p> • <span><a href="https://support.midasuser.com/hc/en-us/articles/35808653964185" target="_blank" rel="noopener noreferrer">Refer to Common Page ↗</a></span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="5">
+<p style="text-align: center;">2</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Section Data</p>
+<p> • Steel Girder</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"SECT_BEFORE"</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="4">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Section Specifications</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"SECT_I"</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Dimension of Section <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"vSIZE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Array<br>[Number]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Symmetric Section Auto Calculation</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"USE_SYM_CALC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Stiffener<span data-colorid="n9kzrgfsyw"> </span><span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"SODSTIFF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="3">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Section Data</p>
+<p> • Reference Line</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"SECT_AFTER"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="2">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Section Specifications</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"SECT_I"</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Distance from Reference Line</p>
+<p> • [Top, Bottom]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"vSIZE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Array<br>[Number]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> Dimension Table for Steel Sections</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 12.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> <col style="width: 8.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Shape</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>0</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>1</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>2</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>3</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>4</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>5</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>6</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>7</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>8</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>9</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>10</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel-Box</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">t1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">t2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">tw1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">tw2</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Steel-I</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">B4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">H</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">t1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">t2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">tw</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">²⁾</span><em>Stiffener</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="20">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Stiffener</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SODSTIFF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number of defined Stiffeners Shape</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TOSTIFNOS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number of defined Stiffeners Positions</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DECKSTIFFNO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Stiffener Shape</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SHAPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Stiffener Name</p>
+<p> • User defined</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Stiffener Shape Type</p>
+<p> • Flat: 0</p>
+<p> • Tee: 1</p>
+<p> • U-Rib: 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SHAPE_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Stiffener Size</p>
+<p> • Flat: [H, B]</p>
+<p> • Tee: [H, B, tw, tf]</p>
+<p> • U-Rib: [H, B1, B2, t, R]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SIZE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Number]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="13">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Stiffener Positions</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUB"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array</p>
+<p style="text-align: center;">[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Deck Positions</p>
+<p> &lt;strong&gt;• &lt;/strong&gt;Steel-Box</p>
+<p>   ◦ Top flange: 0</p>
+<p>   ◦ Left web: 1</p>
+<p>   ◦ Right web: 2</p>
+<p>   ◦ Bottom flange: 3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DECK_POS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Deck Part</p>
+<p> • Deck1, Web: 0</p>
+<p> • Deck2: 1</p>
+<p> • Deck3: 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DECK_PART"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Reference Positions</p>
+<p> • Left, Top: 0</p>
+<p> • Right, Bottom: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"REF_POS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Number of Stiffeners</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>v. Deck Name</p>
+<p> • DECK_POS/DECK_PART: "Deck Name"</p>
+<p> • Steel Box</p>
+<p> • Steel-I</p>
+<p> • Steel-Tub</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DECK_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vi. Number of Stiffeners in a Deck Positions</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EACHSTIFFNOS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii. Stiffeners Data at Positions</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DATA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii-1. Considering for the section property calculations</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USE_CALC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii-2. Stiffener Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SPACING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii-3. Stiffener Positions</p>
+<p> • Top flange/Bottom: 1</p>
+<p> • Web/Left: 0</p>
+<p> • Web/Right: 1</p>
+<p> • Web/Both: 2</p>
+<p> • Bottom flange/Top: 0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STIF_POS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii-4. Stiffener Shape Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SHAPE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii-5. Stiffener Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STIF_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

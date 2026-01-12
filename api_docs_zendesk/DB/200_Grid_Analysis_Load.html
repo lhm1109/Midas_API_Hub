@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Analysis Load - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Grid Analysis Load</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 39236719728281</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-10-25T01:16:51Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-03-07T05:53:17Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/39236719728281-Grid-Analysis-Load" target="_blank">https://support.midasuser.com/hc/en-us/articles/39236719728281-Grid-Analysis-Load</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01JB0KZJFAQTM3JKWN80ZFCNTR"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/GALD</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01JB0KZJFAEC2RG3C9HFSFM6A3"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01JB0KZJFA8T01R66C3T999PDH"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"GALD"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Load Case Name"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Load Case Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SUBTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Sub Load Case Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"LOAD"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Define Dead Load"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"LTYPE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Dead Load Type"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"CLINE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Center Line"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SMLTYPE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Main Line Type - Start"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"EMLTYPE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Main Line Type - End"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SMLINE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Main Line - Start"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"EMLINE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Main Line - End"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SCROSS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Cross Beam - Start"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"ECROSS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Cross Line - End"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SMEDIAN"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Median - Start"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"EMEDIAN"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Median - End"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SLOAD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Load Value - Start"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"ELOAD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Load Value - End"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"MLRANGE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Main Load Width"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"LLOAD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Load Value"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01JB0KZJFA4Y6226EZV7K98ZVV"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Dead Load Type</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"DL"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"DL"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"LTYPE"</span>: <span style="color: #055bcc;">"POINT"</span>,<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G1"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C1"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C1"</span>,<br>                    <span style="color: #c31b1b;">"SLOAD"</span>: <span style="color: #0ab66c;">12</span>,<br>                    <span style="color: #c31b1b;">"ELOAD"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LTYPE"</span>: <span style="color: #055bcc;">"LINE"</span>,<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C1"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C1"</span>,<br>                    <span style="color: #c31b1b;">"SLOAD"</span>: <span style="color: #0ab66c;">13</span>,<br>                    <span style="color: #c31b1b;">"ELOAD"</span>: <span style="color: #0ab66c;">11</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LTYPE"</span>: <span style="color: #055bcc;">"AREA"</span>,<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L3"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C14"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C18"</span>,<br>                    <span style="color: #c31b1b;">"SLOAD"</span>: <span style="color: #0ab66c;">21</span>,<br>                    <span style="color: #c31b1b;">"ELOAD"</span>: <span style="color: #0ab66c;">24</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle Live Load Type_L-Load Type-A (Load Range 6m)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"VL01"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"VLL"</span>,<br>            <span style="color: #c31b1b;">"SUBTYPE"</span>: <span style="color: #055bcc;">"L-LOAD-A"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C2"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C3"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"MLRANGE"</span>: <span style="color: #0ab66c;">5.5</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G2"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C3"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C4"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"MLRANGE"</span>: <span style="color: #0ab66c;">5.5</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle Live Load Type_L-Load Type-B (Load Range 10m)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"VL02"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"VLL"</span>,<br>            <span style="color: #c31b1b;">"SUBTYPE"</span>: <span style="color: #055bcc;">"L-LOAD-B"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C10"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C12"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L3"</span>,<br>                    <span style="color: #c31b1b;">"MLRANGE"</span>: <span style="color: #0ab66c;">5.5</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C12"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C13"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L3"</span>,<br>                    <span style="color: #c31b1b;">"MLRANGE"</span>: <span style="color: #0ab66c;">5.5</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle Live Load Type_T-Load Type-A</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"VL03"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"VLL"</span>,<br>            <span style="color: #c31b1b;">"SUBTYPE"</span>: <span style="color: #055bcc;">"T-LOAD-A"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C13"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C11"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L2"</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle Live Load Type_T-Load Type-B</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"VL04"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"VLL"</span>,<br>            <span style="color: #c31b1b;">"SUBTYPE"</span>: <span style="color: #055bcc;">"T-LOAD-B"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G2"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G3"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C10"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C11"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L1"</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G3"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G4"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C11"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C12"</span>,<br>                    <span style="color: #c31b1b;">"SMEDIAN"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"EMEDIAN"</span>: <span style="color: #055bcc;">"L2"</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Crowd Live Load Type</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"CL"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"CLL"</span>,<br>            <span style="color: #c31b1b;">"SUBTYPE"</span>: <span style="color: #055bcc;">"JAPANHW"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C15"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C10"</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C10"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C12"</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Other Live Load Type</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"OL"</span>,<br>            <span style="color: #c31b1b;">"LCTYPE"</span>: <span style="color: #055bcc;">"OLL"</span>,<br>            <span style="color: #c31b1b;">"LOAD"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"G"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"G2"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"G3"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C7"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C9"</span>,<br>                    <span style="color: #c31b1b;">"LLOAD"</span>: <span style="color: #0ab66c;">12</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"CLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"EMLTYPE"</span>: <span style="color: #055bcc;">"L"</span>,<br>                    <span style="color: #c31b1b;">"SMLINE"</span>: <span style="color: #055bcc;">"L1"</span>,<br>                    <span style="color: #c31b1b;">"EMLINE"</span>: <span style="color: #055bcc;">"L2"</span>,<br>                    <span style="color: #c31b1b;">"SCROSS"</span>: <span style="color: #055bcc;">"C11"</span>,<br>                    <span style="color: #c31b1b;">"ECROSS"</span>: <span style="color: #055bcc;">"C12"</span>,<br>                    <span style="color: #c31b1b;">"LLOAD"</span>: <span style="color: #0ab66c;">23</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01JB0KZJFB2N7G07HQC6PRNFD8"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Load Case Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LCNAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Load Case Type</p>
+<p> • Dead Load : "DL"</p>
+<p> • Vehicles Live Load : "VLL"</p>
+<p> • Crowd Live Load : "CLL"</p>
+<p> • Other Live Load : "OLL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LCTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Sub Load Type</p>
+<p> &lt;strong&gt;• &lt;/strong&gt;When Load Case Type = "VLL"</p>
+<p>   ◦ L-Load Type-A (Load Range 6m) : "L-LOAD-A"</p>
+<p>   ◦ L-Load Type-B (Load Range 10m) : "L-LOAD-B"</p>
+<p>   ◦ T-Load Type-A : "T-LOAD-A"</p>
+<p>   ◦ T-Load Type-B : "T-LOAD-B"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Dead Load Type</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="11">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Define Dead Load</p>
+<p> • Insert data as object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Dead Load Type</p>
+<p> • Point : "POINT"</p>
+<p> • Line : "LINE"</p>
+<p> • Area : "AREA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Center Line</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - Start</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - End</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Beam - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SCROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ECROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load Value - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SLOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(10)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load Value - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Vehicle Live Load Type</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="11">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Define Dead Load</p>
+<p> • Insert data as object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Center Line</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - Start</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - End</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Beam - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SCROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ECROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Median - Start</p>
+<p> • None : "None"</p>
+<p> • Load Line : Load Line Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMEDIAN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Median - End</p>
+<p> • None : "None"</p>
+<p> • Load Line : Load Line Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMEDIAN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(10)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Load Width</p>
+<p> • When Sub Load Type is L-Load Type-A (Load Range 6m) or L-Load Type-B (Load Range 10m)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MLRANGE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Crowd Live Load Type</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="8">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Define Dead Load</p>
+<p> • Insert data as object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Center Line</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - Start</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - End</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Beam - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SCROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ECROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Other Live Load Type</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="9">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Define Dead Load</p>
+<p> • Insert data as object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Center Line</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - Start</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line Type - End</p>
+<p> • Main Girder : "G"</p>
+<p> • Load Line : "L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Main Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EMLINE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Beam - Start</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SCROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cross Line - End</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ECROSS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load Value</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LLOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

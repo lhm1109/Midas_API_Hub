@@ -1,0 +1,77 @@
+{
+  "endpoint": "/api/db/NODE",
+  "methods": ["POST", "GET", "PUT", "DELETE"],
+  "description": "Manage node coordinates in 3D space",
+  "examples": {
+    "POST": {
+      "description": "Create new nodes",
+      "request": {
+        "Assign": {
+          "1": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "2": {
+            "X": -2,
+            "Y": -2,
+            "Z": -2
+          },
+          "3": {
+            "X": -3,
+            "Y": -3,
+            "Z": -3
+          }
+        }
+      }
+    },
+    "GET": {
+      "description": "Retrieve node information",
+      "queryParams": {
+        "nodeId": "Optional node ID to retrieve specific node"
+      }
+    },
+    "PUT": {
+      "description": "Update existing nodes",
+      "request": {
+        "Assign": {
+          "1": {
+            "X": 10,
+            "Y": 20,
+            "Z": 30
+          }
+        }
+      }
+    },
+    "DELETE": {
+      "description": "Delete nodes",
+      "request": {
+        "nodeIds": ["1", "2", "3"]
+      }
+    }
+  },
+  "parameters": [
+    {
+      "name": "X",
+      "description": "Coordinates - x",
+      "type": "Number",
+      "default": 0,
+      "required": "Optional"
+    },
+    {
+      "name": "Y",
+      "description": "Coordinates - y",
+      "type": "Number",
+      "default": 0,
+      "required": "Optional"
+    },
+    {
+      "name": "Z",
+      "description": "Coordinates - z",
+      "type": "Number",
+      "default": 0,
+      "required": "Optional"
+    }
+  ]
+}
+

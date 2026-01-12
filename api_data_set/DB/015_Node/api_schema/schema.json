@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node API Schema",
+  "description": "Schema for Node endpoints in MIDAS Civil API",
+  "type": "object",
+  "properties": {
+    "NODE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {
+        "X": {
+          "description": "GLOBALX-POSITION",
+          "type": "number",
+          "default": 0
+        },
+        "Y": {
+          "description": "GLOBALY-POSITION",
+          "type": "number",
+          "default": 0
+        },
+        "Z": {
+          "description": "GLOBALZ-POSITION",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "NODE"
+  ]
+}

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Pressure Loads - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Assign Pressure Loads</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35953322434457</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T05:00:47Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:15:02Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35953322434457-Assign-Pressure-Loads" target="_blank">https://support.midasuser.com/hc/en-us/articles/35953322434457-Assign-Pressure-Loads</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4GEM39GNYEZH6SWJF003PWR"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/PRES</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GEM39GGJY34JF2WBMC057H"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GEM39GB9G6GDSD5RRJ92H0"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"PRES"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Items"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"ID"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ID"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                        },<br>                        <span style="color: #c31b1b;">"LCNAME"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LoadCaseName"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"GROUP_NAME"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LoadGroupName"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"CMD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CommandType"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"ELEM_TYPE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ElementType"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Face/Edge"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DIRECTION"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Direction"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"VECTORS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VectorArray"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                            <span style="color: #c31b1b;">"items"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        },<br>                        <span style="color: #c31b1b;">"OPT_PROJECTION"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ProjectionBoolean"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"FORCES"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ForceArray"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                            <span style="color: #c31b1b;">"items"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        },<br>                        <span style="color: #c31b1b;">"EDGE_LOADS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EdgeLoadArray"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                            <span style="color: #c31b1b;">"items"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        },<br>                        <span style="color: #c31b1b;">"PSLT_KEY"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PsltKey"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                        },<br>                        <span style="color: #c31b1b;">"EDGE_FACE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EdgeFace"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GEM39GHDSCV20SEN6BXE9H"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate/Plane Stress(Face) : Uniform</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"116"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type1"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"FACE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"LZ"</span>,<br>                    <span style="color: #c31b1b;">"FORCES"</span>: [<br>                        <span style="color: #0ab66c;">-10</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ]<br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate/Plane Stress(Face) : Linear</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"117"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type1"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"FACE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"LZ"</span>,<br>                    <span style="color: #c31b1b;">"FORCES"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">-5</span>,<br>                        <span style="color: #0ab66c;">-6</span>,<br>                        <span style="color: #0ab66c;">-7</span>,<br>                        <span style="color: #0ab66c;">-8</span><br>                    ]<br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate/Plane Stress(Face) : Linear in vectors direction</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"118"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type1"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"FACE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"VECTOR"</span>,<br>                    <span style="color: #c31b1b;">"VECTORS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">-1</span><br>                    ],<br>                    <span style="color: #c31b1b;">"FORCES"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">5</span>,<br>                        <span style="color: #0ab66c;">6</span>,<br>                        <span style="color: #0ab66c;">7</span>,<br>                        <span style="color: #0ab66c;">8</span><br>                    ]<br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate/Plane Stress(Edge) : Uniform</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"119"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type2"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"NORMAL"</span>,<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">5</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">3</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate/Plane Stress(Edge) : Linear in vectors direction</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"120"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type2"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"VECTOR"</span>,<br>                    <span style="color: #c31b1b;">"VECTORS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">-1</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">2</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">3</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate/Plane Stress(Edge) : Linear with projection</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"121"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type2"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"GZ"</span>,<br>                    <span style="color: #c31b1b;">"OPT_PROJECTION"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">-3</span>,<br>                        <span style="color: #0ab66c;">-4</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid(Face) : Uniform</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"316"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type3"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"SOLID"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"NORMAL"</span>,<br>                    <span style="color: #c31b1b;">"FORCES"</span>: [<br>                        <span style="color: #0ab66c;">1.2</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">6</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid(Face) : Linear in vector direction</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget9')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget9" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"317"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type3"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"SOLID"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"VECTOR"</span>,<br>                    <span style="color: #c31b1b;">"VECTORS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ],<br>                    <span style="color: #c31b1b;">"FORCES"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">2</span>,<br>                        <span style="color: #0ab66c;">3</span>,<br>                        <span style="color: #0ab66c;">4</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">5</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Strain(Edge) : Uniform in vector direction</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget10')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget10" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"416"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type4"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLANE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"VECTOR"</span>,<br>                    <span style="color: #c31b1b;">"VECTORS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">1</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">10</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Strain(Edge) : Linear</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget11')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget11" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"417"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type4"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLANE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"LY"</span>,<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">1.5</span>,<br>                        <span style="color: #0ab66c;">1.6</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">3</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Axisymmetric(Edge) : Unfiorm in vector direction</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget12')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget12" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"426"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type5"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLANE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"VECTOR"</span>,<br>                    <span style="color: #c31b1b;">"VECTORS"</span>: [<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">-12.5</span>,<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">0</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">4</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Axisymmetric(Edge) : Linear</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget13')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget13" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"427"</span>: {<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"ID"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"LCNAME"</span>: <span style="color: #055bcc;">"Element_Type5"</span>,<br>                    <span style="color: #c31b1b;">"GROUP_NAME"</span>: <span style="color: #055bcc;">""</span>,<br>                    <span style="color: #c31b1b;">"CMD"</span>: <span style="color: #055bcc;">"PRES"</span>,<br>                    <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"PLANE"</span>,<br>                    <span style="color: #c31b1b;">"FACE_EDGE_TYPE"</span>: <span style="color: #055bcc;">"EDGE"</span>,<br>                    <span style="color: #c31b1b;">"DIRECTION"</span>: <span style="color: #055bcc;">"LY"</span>,<br>                    <span style="color: #c31b1b;">"EDGE_LOADS"</span>: [<br>                        <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #0ab66c;">2</span><br>                    ],<br>                    <span style="color: #c31b1b;">"EDGE_FACE"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GEM39G2JP8Z21PPXHZSRBR"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="15">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Pressure Loads</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Serial Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ID"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load Case Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LCNAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load Group Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GROUP_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Command Type</p>
+<p> • Pressure Loads: "PRES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CMD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PRES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Element Type</p>
+<p> • Plate/Plane Stress: "PLATE"</p>
+<p> • Solid: "SOLID"</p>
+<p> • Plane Strain: "PLANE"</p>
+<p> • Axisymmetric: "PLANE"</p>
+<p> • Wall: "PLATE" <img src="https://support.midasuser.com/hc/article_attachments/52116576092953"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELEM_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLATE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Pressure Type</p>
+<p> • Pressure Face: "FACE"</p>
+<p> • Pressure Edge: "EDGE"</p>
+<p> • Solid: "PRES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FACE_EDGE_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Direction<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+<p> • Normal: "NORMAL"</p>
+<p> • Local x: "LX"</p>
+<p> • Local y: "LY"</p>
+<p> • Local z: "LZ"</p>
+<p> • Global X: "GX"</p>
+<p> • Global Y: "GY"</p>
+<p> • Global Z: "GZ"</p>
+<p> • Vector: "VECTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIRECTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NORMAL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Vector</p>
+<p> • if "DIRECTION" is "VECTOR"</p>
+<p> • [X, Y, Z]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VECTORS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Number, 3]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Projection Option</p>
+<p> • GX, GY, GZ only</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_PROJECTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">False</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(10)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Element Type: Solid</p>
+<p> • Face #1: 1</p>
+<p> • Face #2: 2</p>
+<p> • Face #3: 3</p>
+<p> • Face #4: 4</p>
+<p> • Face #5: 5</p>
+<p> • Face #6: 6</p>
+<p>Element Type: Plate/Plane</p>
+<p> • Edge #1: 1</p>
+<p> • Edge #2: 2</p>
+<p> • Edge #3: 3</p>
+<p> • Edge #4: 4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EDGE_FACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">When Pressure Type, "FACE_EDGE_TYPE" is "FACE" or "PRES"</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(11)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Uniform Load</p>
+<p> • [PU, 0, 0, 0, 0]</p>
+<p>Linear Load</p>
+<p> • [0, P1, P2, P3, P4]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORCES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Number, 5]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">When Pressure Type, "FACE_EDGE_TYPE" is "EDGE"</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(11)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Uniform Load</p>
+<p> • [EPU, 0, 0]</p>
+<p>Linear Load</p>
+<p> • [0, EP1, EP2]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EDGE_LOADS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Number, 3]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> Available direction by options</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p style="text-align: center;"><strong>Element Types</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Normal</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Local x</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Local y</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Local z</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Global X</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Global Y</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Global Z</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Vectors</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="2">
+<p style="text-align: center;">"PLATE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EDGE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SOLID"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PRES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLANE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EDGE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">O</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116576095385"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116576092953"> : <em>MIDAS GEN NX only</em>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

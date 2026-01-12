@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Current Stage As - DOC</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Save Current Stage As</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DOC</div>
+        <div class="info-item"><span class="label">Article ID:</span> 50707525717401</div>
+        <div class="info-item"><span class="label">Created:</span> 2025-09-15T08:04:08Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-09-15T08:11:43Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/50707525717401-Save-Current-Stage-As" target="_blank">https://support.midasuser.com/hc/en-us/articles/50707525717401-Save-Current-Stage-As</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+  function copyText(elementId) {
+    var text = document.getElementById(elementId).innerText;
+    text = text.replace(/&nbsp;/g, " ");
+    text = text.replace(/ /g, " ");
+    navigator.clipboard.writeText(text);
+  }
+</script>
+<div>
+<!-- Input URI -->
+<h3 id="id-SaveCurrentStageAs-InputURI"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>{base url} + doc/STAGAS</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Active Methods --> <br><br>
+<h3 id="id-SaveCurrentStageAs-ActiveMethods"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Examples --> <br><br>
+<h3 id="id-SaveCurrentStageAs-Examples"><strong>Examples</strong></h3>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 20px;">
+<div align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTargetSaveCurrentStageAs')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTargetSaveCurrentStageAs" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\MIDAS\FASE1.mcb"</span>,<br>        <span style="color: #c31b1b;">"STAGE_STEP"</span>: <span style="color: #055bcc;">"Fase1"</span><br>    }<br>}</div>
+</div>
+<!-- Specifications --> <br><br>
+<h3 id="id-SaveCurrentStageAs-Specifications"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">No.</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.9423%;">Description</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 15.7143%;">Key</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 5.00007%;">Value Type</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 11.4286%;">Default</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 33.9999%;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px; text-align: center;">1</td>
+<td style="padding: 10px 5px;">Save File Path</td>
+<td style="padding: 10px 5px; text-align: center;">"EXPORT_PATH"</td>
+<td style="padding: 10px 5px; text-align: center;">String</td>
+<td style="padding: 10px 5px; text-align: center;">-</td>
+<td style="padding: 10px 5px; text-align: center;">-</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; text-align: center;">2</td>
+<td style="padding: 10px 5px;">Stage Step Name</td>
+<td style="padding: 10px 5px; text-align: center;">"STAGE_STEP"</td>
+<td style="padding: 10px 5px; text-align: center;">String</td>
+<td style="padding: 10px 5px; text-align: center;">-</td>
+<td style="padding: 10px 5px; text-align: center;">Required</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+    </div>
+</body>
+</html>

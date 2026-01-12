@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-Mesh Planar Area - OPE</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Auto-Mesh Planar Area</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> OPE</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35736427971225</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-07-31T03:14:38Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-03-07T08:54:23Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35736427971225-Auto-Mesh-Planar-Area" target="_blank">https://support.midasuser.com/hc/en-us/articles/35736427971225-Auto-Mesh-Planar-Area</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01J4JRXS8YNC1GXN1TEPXCYJD0"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>{base url} + ope/AUTOMESH</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JRXS8YMNH1ZJE4A7J6AX35"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JRXS8YTS7BK11D1XEXKCZV"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"AUTOMESH"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"MESHER"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"METHOD"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TARGETS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"TYPE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"MESH_INNER_DOMAIN"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_NODES"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"OPT_CHECK"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"VALUE"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                        <span style="color: #c31b1b;">"items"</span>: {<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                        }<br>                                    }<br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_LINES"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"OPT_CHECK"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"OPTION"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"VALUE"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                        <span style="color: #c31b1b;">"items"</span>: {<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                        }<br>                                    }<br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"INCLUDE_BOUNDARY_CONNECTIVITY"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"LENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIV"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"ELEMENT_TYPE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"ELEMENT_SUB_TYPE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"TYPE"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"WITH_DRILLING_DOF"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                    }<br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"MATERIAL"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                            },<br>                            <span style="color: #c31b1b;">"THICKNESS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"NAME"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"ADDITIONAL_OPTION"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"DELETE_LINE_ELEM"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBDIVIDE_LINE_ELEM"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JRXS8YPTSJWGSC9FYEAXQN"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Line Elements Basic Meshing</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"MESHER"</span>: {<br>            <span style="color: #c31b1b;">"TARGETS"</span>: [<br>                <span style="color: #0ab66c;">1400</span>,<br>                <span style="color: #0ab66c;">1397</span>,<br>                <span style="color: #0ab66c;">1398</span>,<br>                <span style="color: #0ab66c;">1399</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>            <span style="color: #c31b1b;">"LENGTH"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>            <span style="color: #c31b1b;">"MATERIAL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"frame"</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Line Elements Basic Meshing + Quad&amp;Triangle mesh + User options + Div.+ Plate + additional options</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"MESHER"</span>: {<br>            <span style="color: #c31b1b;">"TARGETS"</span>: [<br>                <span style="color: #0ab66c;">1406</span>,<br>                <span style="color: #0ab66c;">1404</span>,<br>                <span style="color: #0ab66c;">1407</span>,<br>                <span style="color: #0ab66c;">1408</span><br>            ],<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"Quadandtriangle"</span>,<br>            <span style="color: #c31b1b;">"MESH_INNER_DOMAIN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_NODES"</span>: {<br>                <span style="color: #c31b1b;">"OPT_CHECK"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"OPTION"</span>: <span style="color: #055bcc;">"User"</span>,<br>                <span style="color: #c31b1b;">"VALUE"</span>: [<br>                    <span style="color: #0ab66c;">1</span><br>                ]<br>            },<br>            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_LINES"</span>: {<br>                <span style="color: #c31b1b;">"OPT_CHECK"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"OPTION"</span>: <span style="color: #055bcc;">"User"</span>,<br>                <span style="color: #c31b1b;">"VALUE"</span>: [<br>                    <span style="color: #0ab66c;">2</span><br>                ]<br>            },<br>            <span style="color: #c31b1b;">"INCLUDE_BOUNDARY_CONNECTIVITY"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        },<br>        <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>            <span style="color: #c31b1b;">"DIV"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>            <span style="color: #c31b1b;">"ELEMENT_TYPE"</span>: <span style="color: #055bcc;">"Plate"</span>,<br>            <span style="color: #c31b1b;">"ELEMENT_SUB_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"Thick"</span>,<br>                <span style="color: #c31b1b;">"WITH_DRILLING_DOF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            },<br>            <span style="color: #c31b1b;">"MATERIAL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"frame2"</span><br>        },<br>        <span style="color: #c31b1b;">"ADDITIONAL_OPTION"</span>: {<br>            <span style="color: #c31b1b;">"DELETE_LINE_ELEM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"SUBDIVIDE_LINE_ELEM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Planar Element Basic meshing</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"MESHER"</span>: {<br>            <span style="color: #c31b1b;">"METHOD"</span>: <span style="color: #055bcc;">"PlanarElements"</span>,<br>            <span style="color: #c31b1b;">"TARGETS"</span>: [<br>                <span style="color: #0ab66c;">1401</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>            <span style="color: #c31b1b;">"LENGTH"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>            <span style="color: #c31b1b;">"ELEMENT_TYPE"</span>: <span style="color: #055bcc;">"Plate"</span>,<br>            <span style="color: #c31b1b;">"MATERIAL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Planar"</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Planar Element Basic + Quad&amp;Triangle mesh + User options + Div., + Plate + additional options</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"MESHER"</span>: {<br>            <span style="color: #c31b1b;">"METHOD"</span>: <span style="color: #055bcc;">"PlanarElements"</span>,<br>            <span style="color: #c31b1b;">"TARGETS"</span>: [<br>                <span style="color: #0ab66c;">1402</span><br>            ],<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"Quadandtriangle"</span>,<br>            <span style="color: #c31b1b;">"MESH_INNER_DOMAIN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_NODES"</span>: {<br>                <span style="color: #c31b1b;">"OPT_CHECK"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"OPTION"</span>: <span style="color: #055bcc;">"User"</span>,<br>                <span style="color: #c31b1b;">"VALUE"</span>: [<br>                    <span style="color: #0ab66c;">1</span><br>                ]<br>            },<br>            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_LINES"</span>: {<br>                <span style="color: #c31b1b;">"OPT_CHECK"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"OPTION"</span>: <span style="color: #055bcc;">"User"</span>,<br>                <span style="color: #c31b1b;">"VALUE"</span>: [<br>                    <span style="color: #0ab66c;">2</span><br>                ]<br>            },<br>            <span style="color: #c31b1b;">"INCLUDE_BOUNDARY_CONNECTIVITY"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        },<br>        <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>            <span style="color: #c31b1b;">"DIV"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>            <span style="color: #c31b1b;">"ELEMENT_TYPE"</span>: <span style="color: #055bcc;">"Plate"</span>,<br>            <span style="color: #c31b1b;">"ELEMENT_SUB_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"Thick"</span>,<br>                <span style="color: #c31b1b;">"WITH_DRILLING_DOF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>            },<br>            <span style="color: #c31b1b;">"MATERIAL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Plate2"</span><br>        },<br>        <span style="color: #c31b1b;">"ADDITIONAL_OPTION"</span>: {<br>            <span style="color: #c31b1b;">"DELETE_LINE_ELEM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"SUBDIVIDE_LINE_ELEM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Nodes Basic Meshing</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"MESHER"</span>: {<br>            <span style="color: #c31b1b;">"METHOD"</span>: <span style="color: #055bcc;">"Nodes"</span>,<br>            <span style="color: #c31b1b;">"TARGETS"</span>: [<br>                <span style="color: #0ab66c;">502</span>,<br>                <span style="color: #0ab66c;">503</span>,<br>                <span style="color: #0ab66c;">504</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>            <span style="color: #c31b1b;">"LENGTH"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>            <span style="color: #c31b1b;">"MATERIAL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Node_basic"</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Nodes Basic + Quad&amp;Triangle mesh + User options + Div., + Plane Stress + additional options</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"MESHER"</span>: {<br>            <span style="color: #c31b1b;">"METHOD"</span>: <span style="color: #055bcc;">"Nodes"</span>,<br>            <span style="color: #c31b1b;">"TARGETS"</span>: [<br>                <span style="color: #0ab66c;">502</span>,<br>                <span style="color: #0ab66c;">503</span>,<br>                <span style="color: #0ab66c;">504</span><br>            ],<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"Quadandtriangle"</span>,<br>            <span style="color: #c31b1b;">"MESH_INNER_DOMAIN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_NODES"</span>: {<br>                <span style="color: #c31b1b;">"OPT_CHECK"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"OPTION"</span>: <span style="color: #055bcc;">"User"</span>,<br>                <span style="color: #c31b1b;">"VALUE"</span>: [<br>                    <span style="color: #0ab66c;">1</span><br>                ]<br>            },<br>            <span style="color: #c31b1b;">"INCLUDE_INTERIOR_LINES"</span>: {<br>                <span style="color: #c31b1b;">"OPT_CHECK"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"OPTION"</span>: <span style="color: #055bcc;">"User"</span>,<br>                <span style="color: #c31b1b;">"VALUE"</span>: [<br>                    <span style="color: #0ab66c;">2</span><br>                ]<br>            },<br>            <span style="color: #c31b1b;">"INCLUDE_BOUNDARY_CONNECTIVITY"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        },<br>        <span style="color: #c31b1b;">"MESH_SIZE"</span>: {<br>            <span style="color: #c31b1b;">"DIV"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"PROPERTY"</span>: {<br>            <span style="color: #c31b1b;">"ELEMENT_TYPE"</span>: <span style="color: #055bcc;">"PlaneStress"</span>,<br>            <span style="color: #c31b1b;">"ELEMENT_SUB_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"Thick"</span>,<br>                <span style="color: #c31b1b;">"WITH_DRILLING_DOF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>            },<br>            <span style="color: #c31b1b;">"MATERIAL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Plate2"</span><br>        },<br>        <span style="color: #c31b1b;">"ADDITIONAL_OPTION"</span>: {<br>            <span style="color: #c31b1b;">"DELETE_LINE_ELEM"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"SUBDIVIDE_LINE_ELEM"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JRXS8ZWBR9059B6DF7X906"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Retrun Created Element by Auto-Mesh</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"AUTOMESH"</span>: {<br>        <span style="color: #c31b1b;">"1794"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"SECT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"NODE"</span>: [<br>                <span style="color: #0ab66c;">1545</span>,<br>                <span style="color: #0ab66c;">1980</span>,<br>                <span style="color: #0ab66c;">1985</span>,<br>                <span style="color: #0ab66c;">1984</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"1795"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"SECT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"NODE"</span>: [<br>                <span style="color: #0ab66c;">1984</span>,<br>                <span style="color: #0ab66c;">1985</span>,<br>                <span style="color: #0ab66c;">1986</span>,<br>                <span style="color: #0ab66c;">1983</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"1796"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"SECT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"NODE"</span>: [<br>                <span style="color: #0ab66c;">1983</span>,<br>                <span style="color: #0ab66c;">1986</span>,<br>                <span style="color: #0ab66c;">1974</span>,<br>                <span style="color: #0ab66c;">1544</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"1797"</span>: {<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"PLATE"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"SECT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"NODE"</span>: [<br>                <span style="color: #0ab66c;">1980</span>,<br>                <span style="color: #0ab66c;">1981</span>,<br>                <span style="color: #0ab66c;">1987</span>,<br>                <span style="color: #0ab66c;">1985</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"STYPE"</span>: <span style="color: #0ab66c;">3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JRXS8ZRTV7EWHQ4X1NHETT"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="14">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Mesher</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MESHER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Auto Mesh Method</p>
+<p> • Nodes: "Nodes"</p>
+<p> • Line Elements: "Line Elements"</p>
+<p> • Planar Elements: "Planar Elements"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"METHOD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Line Elements"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Assign a Mesh Element</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TARGETS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Meshing Type</p>
+<p> • Quadrilateral: "Quadrilateral"</p>
+<p> • Quad and Triangle: "Quad and Triangle"</p>
+<p> • Triangle: "Triangle"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Quadrilateral"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Select Creating a Mesh in the Inner Domain</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MESH_INNER_DOMAIN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Select Whether a Mesh is Generated Considering the Node within the Area.</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INCLUDE_INTERIOR_NODES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Activation</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_CHECK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Detect Including Nodes</p>
+<p> • "Auto"</p>
+<p> • "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Auto"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Include Nodes Numbers</p>
+<p> • Only for "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VALUE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Select Whether a Mesh is Generated Considering the Line Elements within the Area.</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INCLUDE_INTERIOR_LINES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Activation</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_CHECK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Detect Including Line Elements</p>
+<p> • "Auto"</p>
+<p> • "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Auto"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Include Line Element Numbers</p>
+<p> • Only for "User"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VALUE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Decide Whether Connect Mesh Boundary</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INCLUDE_BOUNDARY_CONNECTIVITY"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Mesh Size</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MESH_SIZE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Based on Length</p>
+<p> • Do not use with "DIV"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LENGTH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Based on Division</p>
+<p> • Do not use with "LENGTH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIV"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Property</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PROPERTY"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Define Elements Type</p>
+<p> • "Plate"</p>
+<p> • "Plane Stress"</p>
+<p> • "Plane Strain"</p>
+<p> • "Axisymmetric"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELEMENT_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Plate"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Defining Elements Sub Type</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ELEMENT_SUB_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Plate thickness</p>
+<p> • When "ELEMENT_TYPE" is "Plate"</p>
+<p>   ◦ "Thick"</p>
+<p>   ◦ "Thin"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Thick"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. "With Drilling DOF" Option</p>
+<p> • When "ELEMENT_TYPE" is "Plate" or "Plane Stress"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"WITH_DRILLING_DOF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Select a Material for Mesh</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MATERIAL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Select a Thickness for Mesh</p>
+<p> • When "ELEMENT_TYPE" is "Plate" or "Plane Stress"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"THICKNESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="2">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Domain Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DOMAIN_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Domain Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Additional Option</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ADDITIONAL_OPTION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Delete Source/Boundary Elements</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DELETE_LINE_ELEM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Subdivide Source/Boundary Elements</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBDIVIDE_LINE_ELEM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

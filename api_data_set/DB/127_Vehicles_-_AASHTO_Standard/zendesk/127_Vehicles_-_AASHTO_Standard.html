@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicles - AASHTO Standard - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Vehicles - AASHTO Standard</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35957125531545</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T06:13:00Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:15:03Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35957125531545-Vehicles-AASHTO-Standard" target="_blank">https://support.midasuser.com/hc/en-us/articles/35957125531545-Vehicles-AASHTO-Standard</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4GJRWV43NRXQFRTHQVFE6E5"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/MVHL</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GJRWV4H5451AETDBG0PNNP"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GJRWV4PGRMKNDXD7CGVY9T"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"MVHL"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MovingLoadCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularLoadName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularLoadNumber"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularTypeName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StandardCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserLoadType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UniformLoad"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynamicUserAllowance"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"W1"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"W1"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"W2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"W2"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"D1"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"D1"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"D2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"D2"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PL"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PL"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PLM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PLM"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PLV"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PLV"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"CENT_F"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AddCentrifugalForce"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"POINT_LOAD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointLoad"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"POINT_DIST"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointDistance"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GJRWV4Z2R288NWCY582HQP"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle - Standard</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_H15-44"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H15-44"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_HS15-44"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS15-44"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_H15-44L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H15-44L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"4"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_HS15-44L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS15-44L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"5"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_H20-44"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H20-44"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"6"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_HS20-44"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS20-44"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"7"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_H20-44L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H20-44L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"8"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_HS20-44L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS20-44L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"9"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_HS-25"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS-25"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"10"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_HS-25L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"HS-25L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"11"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ASL)_AML"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"AML"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"AASHTO-STD"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"12"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ALL)_AASHTOLegalType3"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"AASHTOLegalType3"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"ASSHTO-LEGAL"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"13"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ALL)_AASHTOLegalType3S2"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"AASHTOLegalType3S2"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"ASSHTO-LEGAL"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"14"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ALL)_AASHTOLegalType3-3"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"AASHTOLegalType3-3"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"ASSHTO-LEGAL"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"15"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(ALL)_AASHTOLegalLaneType"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"AASHTOLegalLaneType"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"ASSHTO-LEGAL"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"16"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P5-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P5-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"17"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P7-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P7-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"18"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P9-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P9-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"19"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P11-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P11-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"20"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P13-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P13-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"21"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P15-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P15-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"22"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P5-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P5-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"23"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P7-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P7-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"24"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P9-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P9-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"25"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P11-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P11-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"26"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P13-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P13-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"27"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL17)_P15-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P15-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS_2017"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"28"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P5-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P5-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"29"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P7-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P7-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"30"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P9-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P9-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"31"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P11-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P11-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"32"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P13-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P13-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"33"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P15-Design"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P15-Design"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"34"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P5-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P5-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"35"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P7-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P7-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"36"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P9-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P9-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"37"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P11-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P11-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"38"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P13-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P13-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"39"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(CSL)_P15-VS"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"P15-VS"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CALTRANS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"40"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Turkey)_H30-S24"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H30-S24"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"TURKEY"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"41"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Turkey)_H30-S24L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H30-S24L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"TURKEY"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"42"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Turkey)_H20-S16"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H20-S16"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"TURKEY"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"43"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Turkey)_H20-S16L"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"H20-S16L"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"TURKEY"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"44"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Turkey)_KGM-45"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"KGM-45"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"TURKEY"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"45"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Ohters)_CE-80"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CE-80"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"OTHERS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"46"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Ohters)_UIC80"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"UIC80"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"OTHERS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"47"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Ohters)_M1600"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"M1600"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"OTHERS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"48"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"US(Ohters)_S1600"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"S1600"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"OTHERS"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"CENT_F"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle - User Defined</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"49"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_Tuck/Lane"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"Truck/Lane"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"PL"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"PLM"</span>: <span style="color: #0ab66c;">3</span>,<br>                <span style="color: #c31b1b;">"PLV"</span>: <span style="color: #0ab66c;">4</span><br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">2</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">3</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">3</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">4</span><br>                }<br>            ]<br>        },<br>        <span style="color: #c31b1b;">"50"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_Train"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"TrainLoad"</span>,<br>            <span style="color: #c31b1b;">"VEH_DEFAULT"</span>: {<br>                <span style="color: #c31b1b;">"W1"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"W2"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"D1"</span>: <span style="color: #0ab66c;">3</span>,<br>                <span style="color: #c31b1b;">"D2"</span>: <span style="color: #0ab66c;">3</span><br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">3</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">4</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">2</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">3</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GJRWV5J4JJBNA62X2R94YR"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Function Name</p>
+<p> • AASHTO Standard: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MVLD_CODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Load Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_LOAD_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Load Number</p>
+<p> • Standard <img src="https://support.midasuser.com/hc/article_attachments/52116561796377">: 1</p>
+<p> • User Defined: 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_LOAD_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Type Name<span style="font-size: 16px; color: #bf2600;"> <img src="https://support.midasuser.com/hc/article_attachments/52116561796377"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_TYPE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Standard Code <span style="font-size: 16px; color: #bf2600;"><img src="https://support.midasuser.com/hc/article_attachments/52116561796377"></span><span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STANDARD_CODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>User Defined Load Type</p>
+<p> • Truck/Lane: "Truck/Lane"</p>
+<p> • Train: "Train Load"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USER_LOAD_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For Standard Vehicle <img src="https://support.midasuser.com/hc/article_attachments/52116561796377"></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="2">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_DEFAULT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Dynamic Load Allowance (%)</p>
+<p> • Only for Turkey - KGM-45</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYN_LOAD_ALLOWANCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For User Defined Vehicle - Truck/Lane</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_DEFAULT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Uniform Distribution Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIFORM_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load for Member Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load for Moment</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load for Shear force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLV"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Axle Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For User Defined Vehicle - Train</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_DEFAULT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distribution Load - dW1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"W1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing - dD1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"D1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distribution Load - dW2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"W2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing - dD2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"D2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Axle Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾ </span><em>Standard Code &amp; Vehicle Type Name <img src="https://support.midasuser.com/hc/article_attachments/52116561796377"></em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 50.00%;"> <col style="width: 44.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>No.</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Standard Code</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Vehicle Type Name</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>AASHTO Standard Load</p>
+<p> • "AASHTO-STD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "H15-44"</p>
+<p> • "HS15-44"</p>
+<p> • "H15-44L"</p>
+<p> • "HS15-44L"</p>
+<p> • "H20-44"</p>
+<p> • "HS20-44"</p>
+<p> • "H20-44L"</p>
+<p> • "HS20-44L"</p>
+<p> • "HS-25"</p>
+<p> • "HS-25L"</p>
+<p> • "AML"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>AASHTO Legal Load</p>
+<p> • "ASSHTO-LEGAL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "AASHTO Legal Type 3"</p>
+<p> • "AASHTO Legal Type 3S2"</p>
+<p> • "AASHTO Legal Type 3-3"</p>
+<p> • "AASHTO Legal Lane Type"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Caltrans Standard Load (2017_drift)</p>
+<p> • "CALTRANS_2017"</p>
+<p>Caltrans Standard Load</p>
+<p> • "CALTRANS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "P5-Design"</p>
+<p> • "P7-Design"</p>
+<p> • "P9-Design"</p>
+<p> • "P11-Design"</p>
+<p> • "P13-Design"</p>
+<p> • "P15-Design"</p>
+<p> • "P5-VS"</p>
+<p> • "P7-VS"</p>
+<p> • "P9-VS"</p>
+<p> • "P11-VS"</p>
+<p> • "P13-VS"</p>
+<p> • "P15-VS"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Turkey</p>
+<p> • "TURKEY"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "H30-S24"</p>
+<p> • "H30-S24L"</p>
+<p> • "H20-S16"</p>
+<p> • "H20-S16L"</p>
+<p> • "KGM-45"</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Others</p>
+<p> • "OTHERS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "CE-80"</p>
+<p> • "UIC80"</p>
+<p> • "M1600"</p>
+<p> • "S1600"</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116561796377"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116561800217"> : <em>MIDAS GEN NX only</em>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

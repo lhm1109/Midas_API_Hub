@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time History Text - Element Result(Truss, Beam, Plane Stress/Strain, Solid) - POST</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Time History Text - Element Result(Truss, Beam, Plane Stress/Strain, Solid)</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> POST</div>
+        <div class="info-item"><span class="label">Article ID:</span> 36705161290649</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-22T06:17:55Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-08-14T05:00:31Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/36705161290649-Time-History-Text-Element-Result-Truss-Beam-Plane-Stress-Strain-Solid" target="_blank">https://support.midasuser.com/hc/en-us/articles/36705161290649-Time-History-Text-Element-Result-Truss-Beam-Plane-Stress-Strain-Solid</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+</p>
+<div>
+<h3 id="h_01J5WBWWK8JXB3HQX78NANJ3YF"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + post/TEXT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J5WBWWK8MXQA8V9JZ9P1W23V"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J5WBWWK8NP6RZ8SW10TQW7RN"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TEXT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"TABLE_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableType"</span>,<br>                        <span style="color: #c31b1b;">"enum"</span>: [<br>                            <span style="color: #055bcc;">"TH_BEAMFORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_TRUSSFORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_PLANE_STRESS_FORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_PLANE_STRAIN_FORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_SOLIDFORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_BEAMSTRESS"</span>,<br>                            <span style="color: #055bcc;">"TH_TRUSSSTRESS"</span>,<br>                            <span style="color: #055bcc;">"TH_PLANESTRESS"</span>,<br>                            <span style="color: #055bcc;">"TH_PLANE_STRAIN_STRESS"</span>,<br>                            <span style="color: #055bcc;">"TH_SOLIDSTRESS"</span><br>                        ]<br>                    },<br>                    <span style="color: #c31b1b;">"EXPORT_PATH"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableSavePath"</span><br>                    },<br>                    <span style="color: #c31b1b;">"UNIT"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseUnitSetting"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORCE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Force"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Length"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HEAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Heat"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TEMP"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Temperature"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STYLES"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseNumberFormat"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORMAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Numberformat"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Fixed"</span>,<br>                                    <span style="color: #055bcc;">"Exponential"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"PLACE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Digitplace"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"COMPONENTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ComponentsofResultTable"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Node/ElementNo.Input"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"KEYS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method1:SpecifyEachID"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method2:SpecifyIDRange"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"PARTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ElementPart"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                            <span style="color: #c31b1b;">"enum"</span>: [<br>                                <span style="color: #055bcc;">"PartI"</span>,<br>                                <span style="color: #055bcc;">"PartJ"</span>,<br>                                <span style="color: #055bcc;">"PartC"</span>,<br>                                <span style="color: #055bcc;">"PartK"</span>,<br>                                <span style="color: #055bcc;">"PartL"</span>,<br>                                <span style="color: #055bcc;">"PartM"</span>,<br>                                <span style="color: #055bcc;">"PartN"</span>,<br>                                <span style="color: #055bcc;">"PartO"</span>,<br>                                <span style="color: #055bcc;">"PartP"</span><br>                            ]<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TimeHistoryLoadCases"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STEP"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"OutputTimeStep"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FROM"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StartTime"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EndTime"</span><br>                            },<br>                            <span style="color: #c31b1b;">"STEPS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TimeInterval"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WBWWK8TK8AWB9CCTN3NX4Z"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Beam Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_BEAMFORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_BeamForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Axial"</span>,<br>            <span style="color: #055bcc;">"Shear-y"</span>,<br>            <span style="color: #055bcc;">"Shear-z"</span>,<br>            <span style="color: #055bcc;">"Torsion"</span>,<br>            <span style="color: #055bcc;">"Moment-y"</span>,<br>            <span style="color: #055bcc;">"Moment-z"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">5</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.5</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Truss Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_TRUSSFORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_TrussForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Force-I"</span>,<br>            <span style="color: #055bcc;">"Force-J"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">55</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.5</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Stress Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLANE_STRESS_FORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlaneStressForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fx"</span>,<br>            <span style="color: #055bcc;">"Fy"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">50</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Strain Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLANE_STRAIN_FORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlaneStrainForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fx"</span>,<br>            <span style="color: #055bcc;">"Fy"</span>,<br>            <span style="color: #055bcc;">"Fz"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">49</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_SOLIDFORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_SolidForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fx"</span>,<br>            <span style="color: #055bcc;">"Fy"</span>,<br>            <span style="color: #055bcc;">"Fz"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">53</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span>,<br>            <span style="color: #055bcc;">"PartM"</span>,<br>            <span style="color: #055bcc;">"PartN"</span>,<br>            <span style="color: #055bcc;">"PartO"</span>,<br>            <span style="color: #055bcc;">"PartP"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.2</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Beam Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_BEAMSTRESS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_BeamStress_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"MM"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Axial"</span>,<br>            <span style="color: #055bcc;">"Shear-y"</span>,<br>            <span style="color: #055bcc;">"Shear-z"</span>,<br>            <span style="color: #055bcc;">"Bend(+y)"</span>,<br>            <span style="color: #055bcc;">"Bend(-y)"</span>,<br>            <span style="color: #055bcc;">"Bend(+z)"</span>,<br>            <span style="color: #055bcc;">"Bend(-z)"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">5</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.4</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Truss Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_TRUSSSTRESS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_TrussStress_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"MM"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Stress-I"</span>,<br>            <span style="color: #055bcc;">"Stress-J"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">55</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.5</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Stress Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget9')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget9" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLANESTRESS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlaneStress_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"MM"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">50</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartC"</span>,<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Strain Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget10')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget10" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLANE_STRAIN_STRESS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlaneStrainStress_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"MM"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">49</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartC"</span>,<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget11')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget11" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_SOLIDSTRESS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_SolidStress_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"MM"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span>,<br>            <span style="color: #055bcc;">"Sig-yz"</span>,<br>            <span style="color: #055bcc;">"Sig-xz"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">53</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span>,<br>            <span style="color: #055bcc;">"PartM"</span>,<br>            <span style="color: #055bcc;">"PartN"</span>,<br>            <span style="color: #055bcc;">"PartO"</span>,<br>            <span style="color: #055bcc;">"PartP"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.2</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WBWWK8C2FW83QXQEQ8D3PF"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Beam Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget12')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget12" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_BEAMFORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Axial"</span>,<br>            <span style="color: #055bcc;">"Shear-y"</span>,<br>            <span style="color: #055bcc;">"Shear-z"</span>,<br>            <span style="color: #055bcc;">"Torsion"</span>,<br>            <span style="color: #055bcc;">"Moment-y"</span>,<br>            <span style="color: #055bcc;">"Moment-z"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"2.856739"</span>,<br>                <span style="color: #055bcc;">"-1.766507"</span>,<br>                <span style="color: #055bcc;">"0.146287"</span>,<br>                <span style="color: #055bcc;">"-0.353369"</span>,<br>                <span style="color: #055bcc;">"0.592988"</span>,<br>                <span style="color: #055bcc;">"-2.089716"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"2.856739"</span>,<br>                <span style="color: #055bcc;">"-1.766507"</span>,<br>                <span style="color: #055bcc;">"0.146287"</span>,<br>                <span style="color: #055bcc;">"-0.353369"</span>,<br>                <span style="color: #055bcc;">"0.519845"</span>,<br>                <span style="color: #055bcc;">"-1.206463"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"11.636477"</span>,<br>                <span style="color: #055bcc;">"-6.609388"</span>,<br>                <span style="color: #055bcc;">"0.440853"</span>,<br>                <span style="color: #055bcc;">"-1.620535"</span>,<br>                <span style="color: #055bcc;">"3.932866"</span>,<br>                <span style="color: #055bcc;">"-7.363094"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"11.636477"</span>,<br>                <span style="color: #055bcc;">"-6.609388"</span>,<br>                <span style="color: #055bcc;">"0.440853"</span>,<br>                <span style="color: #055bcc;">"-1.620535"</span>,<br>                <span style="color: #055bcc;">"3.712440"</span>,<br>                <span style="color: #055bcc;">"-4.058400"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.300"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"33.900870"</span>,<br>                <span style="color: #055bcc;">"-19.318299"</span>,<br>                <span style="color: #055bcc;">"0.641085"</span>,<br>                <span style="color: #055bcc;">"-6.169947"</span>,<br>                <span style="color: #055bcc;">"14.066895"</span>,<br>                <span style="color: #055bcc;">"-19.718525"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.300"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"33.900870"</span>,<br>                <span style="color: #055bcc;">"-19.318299"</span>,<br>                <span style="color: #055bcc;">"0.641085"</span>,<br>                <span style="color: #055bcc;">"-6.169947"</span>,<br>                <span style="color: #055bcc;">"13.746352"</span>,<br>                <span style="color: #055bcc;">"-10.059376"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.400"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"42.826233"</span>,<br>                <span style="color: #055bcc;">"-30.829974"</span>,<br>                <span style="color: #055bcc;">"2.386950"</span>,<br>                <span style="color: #055bcc;">"-12.546940"</span>,<br>                <span style="color: #055bcc;">"31.347827"</span>,<br>                <span style="color: #055bcc;">"-26.000125"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.400"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"42.826233"</span>,<br>                <span style="color: #055bcc;">"-30.829974"</span>,<br>                <span style="color: #055bcc;">"2.386950"</span>,<br>                <span style="color: #055bcc;">"-12.546940"</span>,<br>                <span style="color: #055bcc;">"30.154351"</span>,<br>                <span style="color: #055bcc;">"-10.585138"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Truss Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget13')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget13" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_TRUSSFORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Force-I"</span>,<br>            <span style="color: #055bcc;">"Force-J"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"0.167490"</span>,<br>                <span style="color: #055bcc;">"0.167490"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"0.311177"</span>,<br>                <span style="color: #055bcc;">"0.311177"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.300"</span>,<br>                <span style="color: #055bcc;">"0.690081"</span>,<br>                <span style="color: #055bcc;">"0.690081"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.400"</span>,<br>                <span style="color: #055bcc;">"0.435015"</span>,<br>                <span style="color: #055bcc;">"0.435015"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Stress Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget14')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget14" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLANE_STRESS_FORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fx"</span>,<br>            <span style="color: #055bcc;">"Fy"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"0.822978"</span>,<br>                <span style="color: #055bcc;">"2.600283"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"0.173916"</span>,<br>                <span style="color: #055bcc;">"0.217219"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.640359"</span>,<br>                <span style="color: #055bcc;">"-2.211008"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.356535"</span>,<br>                <span style="color: #055bcc;">"-0.606495"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"1.249097"</span>,<br>                <span style="color: #055bcc;">"4.013192"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"0.192815"</span>,<br>                <span style="color: #055bcc;">"0.606894"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.945623"</span>,<br>                <span style="color: #055bcc;">"-3.490718"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.496289"</span>,<br>                <span style="color: #055bcc;">"-1.129368"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Strain Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget15')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget15" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLANE_STRAIN_FORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fx"</span>,<br>            <span style="color: #055bcc;">"Fy"</span>,<br>            <span style="color: #055bcc;">"Fz"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"16.514663"</span>,<br>                <span style="color: #055bcc;">"8.480727"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"12.350606"</span>,<br>                <span style="color: #055bcc;">"-2.741355"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-21.333742"</span>,<br>                <span style="color: #055bcc;">"-6.880402"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-7.531527"</span>,<br>                <span style="color: #055bcc;">"1.141030"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"55.745580"</span>,<br>                <span style="color: #055bcc;">"28.599298"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"41.017411"</span>,<br>                <span style="color: #055bcc;">"-8.042578"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-73.906095"</span>,<br>                <span style="color: #055bcc;">"-24.211753"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-22.856896"</span>,<br>                <span style="color: #055bcc;">"3.655032"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget16')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget16" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_SOLIDFORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fx"</span>,<br>            <span style="color: #055bcc;">"Fy"</span>,<br>            <span style="color: #055bcc;">"Fz"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"5.562736"</span>,<br>                <span style="color: #055bcc;">"-6.079793"</span>,<br>                <span style="color: #055bcc;">"14.689480"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-4.002502"</span>,<br>                <span style="color: #055bcc;">"8.906684"</span>,<br>                <span style="color: #055bcc;">"-4.397633"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-5.838659"</span>,<br>                <span style="color: #055bcc;">"5.763317"</span>,<br>                <span style="color: #055bcc;">"-15.186198"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"22.711239"</span>,<br>                <span style="color: #055bcc;">"-22.722392"</span>,<br>                <span style="color: #055bcc;">"21.899801"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"M"</span>,<br>                <span style="color: #055bcc;">"0.084229"</span>,<br>                <span style="color: #055bcc;">"3.891180"</span>,<br>                <span style="color: #055bcc;">"-2.818333"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"N"</span>,<br>                <span style="color: #055bcc;">"-18.517043"</span>,<br>                <span style="color: #055bcc;">"10.241003"</span>,<br>                <span style="color: #055bcc;">"-14.187118"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"O"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"P"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Beam Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget17')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget17" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_BEAMSTRESS"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Axial"</span>,<br>            <span style="color: #055bcc;">"Shear-y"</span>,<br>            <span style="color: #055bcc;">"Shear-z"</span>,<br>            <span style="color: #055bcc;">"Bend(+y)"</span>,<br>            <span style="color: #055bcc;">"Bend(-y)"</span>,<br>            <span style="color: #055bcc;">"Bend(+z)"</span>,<br>            <span style="color: #055bcc;">"Bend(-z)"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"0.011427"</span>,<br>                <span style="color: #055bcc;">"-0.010599"</span>,<br>                <span style="color: #055bcc;">"0.000878"</span>,<br>                <span style="color: #055bcc;">"0.100306"</span>,<br>                <span style="color: #055bcc;">"-0.100306"</span>,<br>                <span style="color: #055bcc;">"-0.028463"</span>,<br>                <span style="color: #055bcc;">"0.028463"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"0.011427"</span>,<br>                <span style="color: #055bcc;">"-0.010599"</span>,<br>                <span style="color: #055bcc;">"0.000878"</span>,<br>                <span style="color: #055bcc;">"0.057910"</span>,<br>                <span style="color: #055bcc;">"-0.057910"</span>,<br>                <span style="color: #055bcc;">"-0.024953"</span>,<br>                <span style="color: #055bcc;">"0.024953"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"0.046546"</span>,<br>                <span style="color: #055bcc;">"-0.039656"</span>,<br>                <span style="color: #055bcc;">"0.002645"</span>,<br>                <span style="color: #055bcc;">"0.353429"</span>,<br>                <span style="color: #055bcc;">"-0.353429"</span>,<br>                <span style="color: #055bcc;">"-0.188778"</span>,<br>                <span style="color: #055bcc;">"0.188778"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"0.046546"</span>,<br>                <span style="color: #055bcc;">"-0.039656"</span>,<br>                <span style="color: #055bcc;">"0.002645"</span>,<br>                <span style="color: #055bcc;">"0.194803"</span>,<br>                <span style="color: #055bcc;">"-0.194803"</span>,<br>                <span style="color: #055bcc;">"-0.178197"</span>,<br>                <span style="color: #055bcc;">"0.178197"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.300"</span>,<br>                <span style="color: #055bcc;">"I[10]"</span>,<br>                <span style="color: #055bcc;">"0.135603"</span>,<br>                <span style="color: #055bcc;">"-0.115910"</span>,<br>                <span style="color: #055bcc;">"0.003847"</span>,<br>                <span style="color: #055bcc;">"0.946489"</span>,<br>                <span style="color: #055bcc;">"-0.946489"</span>,<br>                <span style="color: #055bcc;">"-0.675211"</span>,<br>                <span style="color: #055bcc;">"0.675211"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.300"</span>,<br>                <span style="color: #055bcc;">"J[34]"</span>,<br>                <span style="color: #055bcc;">"0.135603"</span>,<br>                <span style="color: #055bcc;">"-0.115910"</span>,<br>                <span style="color: #055bcc;">"0.003847"</span>,<br>                <span style="color: #055bcc;">"0.482850"</span>,<br>                <span style="color: #055bcc;">"-0.482850"</span>,<br>                <span style="color: #055bcc;">"-0.659825"</span>,<br>                <span style="color: #055bcc;">"0.659825"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Truss Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget18')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget18" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_TRUSSSTRESS"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Stress-I"</span>,<br>            <span style="color: #055bcc;">"Stress-J"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"0.000853"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"0.001585"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.300"</span>,<br>                <span style="color: #055bcc;">"0.003515"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"55"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.400"</span>,<br>                <span style="color: #055bcc;">"0.002216"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Stress Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget19')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget19" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLANESTRESS"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"C"</span>,<br>                <span style="color: #055bcc;">"-0.000777"</span>,<br>                <span style="color: #055bcc;">"-0.009392"</span>,<br>                <span style="color: #055bcc;">"-0.003323"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.001691"</span>,<br>                <span style="color: #055bcc;">"-0.013284"</span>,<br>                <span style="color: #055bcc;">"-0.003323"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.001691"</span>,<br>                <span style="color: #055bcc;">"-0.005499"</span>,<br>                <span style="color: #055bcc;">"-0.003323"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"0.000136"</span>,<br>                <span style="color: #055bcc;">"-0.005499"</span>,<br>                <span style="color: #055bcc;">"-0.003323"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"0.000136"</span>,<br>                <span style="color: #055bcc;">"-0.013284"</span>,<br>                <span style="color: #055bcc;">"-0.003323"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"C"</span>,<br>                <span style="color: #055bcc;">"-0.001255"</span>,<br>                <span style="color: #055bcc;">"-0.015400"</span>,<br>                <span style="color: #055bcc;">"-0.004806"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.002772"</span>,<br>                <span style="color: #055bcc;">"-0.020625"</span>,<br>                <span style="color: #055bcc;">"-0.004806"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.002772"</span>,<br>                <span style="color: #055bcc;">"-0.010176"</span>,<br>                <span style="color: #055bcc;">"-0.004806"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"9"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"0.000263"</span>,<br>                <span style="color: #055bcc;">"-0.010176"</span>,<br>                <span style="color: #055bcc;">"-0.004806"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"10"</span>,<br>                <span style="color: #055bcc;">"50"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"0.000263"</span>,<br>                <span style="color: #055bcc;">"-0.020625"</span>,<br>                <span style="color: #055bcc;">"-0.004806"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plane Strain Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget20')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget20" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLANE_STRAIN_STRESS"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"C"</span>,<br>                <span style="color: #055bcc;">"-0.912253"</span>,<br>                <span style="color: #055bcc;">"-5.542211"</span>,<br>                <span style="color: #055bcc;">"-1.161804"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.997598"</span>,<br>                <span style="color: #055bcc;">"-9.018643"</span>,<br>                <span style="color: #055bcc;">"-1.802923"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.997598"</span>,<br>                <span style="color: #055bcc;">"-2.065778"</span>,<br>                <span style="color: #055bcc;">"-0.551408"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.826909"</span>,<br>                <span style="color: #055bcc;">"-2.065778"</span>,<br>                <span style="color: #055bcc;">"-0.520684"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.826909"</span>,<br>                <span style="color: #055bcc;">"-9.018643"</span>,<br>                <span style="color: #055bcc;">"-1.772199"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"C"</span>,<br>                <span style="color: #055bcc;">"-0.912253"</span>,<br>                <span style="color: #055bcc;">"-5.542211"</span>,<br>                <span style="color: #055bcc;">"-1.161804"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.997598"</span>,<br>                <span style="color: #055bcc;">"-9.018643"</span>,<br>                <span style="color: #055bcc;">"-1.802923"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.997598"</span>,<br>                <span style="color: #055bcc;">"-2.065778"</span>,<br>                <span style="color: #055bcc;">"-0.551408"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"9"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.826909"</span>,<br>                <span style="color: #055bcc;">"-2.065778"</span>,<br>                <span style="color: #055bcc;">"-0.520684"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"10"</span>,<br>                <span style="color: #055bcc;">"49"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.826909"</span>,<br>                <span style="color: #055bcc;">"-9.018643"</span>,<br>                <span style="color: #055bcc;">"-1.772199"</span>,<br>                <span style="color: #055bcc;">"-5.047183"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget21')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget21" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_SOLIDSTRESS"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span>,<br>            <span style="color: #055bcc;">"Sig-yz"</span>,<br>            <span style="color: #055bcc;">"Sig-xz"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.004696"</span>,<br>                <span style="color: #055bcc;">"0.001659"</span>,<br>                <span style="color: #055bcc;">"0.000911"</span>,<br>                <span style="color: #055bcc;">"0.003004"</span>,<br>                <span style="color: #055bcc;">"-0.004568"</span>,<br>                <span style="color: #055bcc;">"0.007762"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.003632"</span>,<br>                <span style="color: #055bcc;">"0.002723"</span>,<br>                <span style="color: #055bcc;">"0.005757"</span>,<br>                <span style="color: #055bcc;">"0.003004"</span>,<br>                <span style="color: #055bcc;">"0.019484"</span>,<br>                <span style="color: #055bcc;">"0.007762"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.007804"</span>,<br>                <span style="color: #055bcc;">"-0.001449"</span>,<br>                <span style="color: #055bcc;">"-0.013248"</span>,<br>                <span style="color: #055bcc;">"0.003004"</span>,<br>                <span style="color: #055bcc;">"-0.002163"</span>,<br>                <span style="color: #055bcc;">"0.000546"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.012658"</span>,<br>                <span style="color: #055bcc;">"-0.002378"</span>,<br>                <span style="color: #055bcc;">"0.000911"</span>,<br>                <span style="color: #055bcc;">"-0.018096"</span>,<br>                <span style="color: #055bcc;">"-0.004568"</span>,<br>                <span style="color: #055bcc;">"0.007762"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"M"</span>,<br>                <span style="color: #055bcc;">"-0.011595"</span>,<br>                <span style="color: #055bcc;">"-0.001315"</span>,<br>                <span style="color: #055bcc;">"0.005757"</span>,<br>                <span style="color: #055bcc;">"-0.018096"</span>,<br>                <span style="color: #055bcc;">"0.019484"</span>,<br>                <span style="color: #055bcc;">"0.007762"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"N"</span>,<br>                <span style="color: #055bcc;">"-0.015766"</span>,<br>                <span style="color: #055bcc;">"-0.005486"</span>,<br>                <span style="color: #055bcc;">"-0.013248"</span>,<br>                <span style="color: #055bcc;">"-0.018096"</span>,<br>                <span style="color: #055bcc;">"-0.002163"</span>,<br>                <span style="color: #055bcc;">"0.000546"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"O"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"53"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"P"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WBWWKAW2CXP2QQRGSVAWZS"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Text Type</p>
+<p> • Beam Force: "TH_BEAMFORCE"</p>
+<p> • Truss Froce: "TH_TRUSSFORCE"</p>
+<p> • Plane Stress Force: "TH_PLANE_STRESS_FORCE"</p>
+<p> • Plane Strain Force: "TH_PLANE_STRAIN_FORCE"</p>
+<p> • Solid Force: "TH_SOLIDFORCE"</p>
+<p> • Beam Stress: "TH_BEAMSTRESS"</p>
+<p> • Truss Stress: "TH_TRUSSSTRESS"</p>
+<p> • Plane Stress Stress: "TH_PLANESTRESS"</p>
+<p> • Plane Strain Stress: "TH_PLANE_STRAIN_STRESS"</p>
+<p> • Solid Stress: "TH_SOLIDSTRESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEXT_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Save Path</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EXPORT_PATH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Unit Setting</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Length</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Heat</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HEAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Temperature</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEMP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Number Format</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STYLES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number Format</p>
+<p> • "Default"</p>
+<p> • "Fixed"</p>
+<p> • "Scientific"</p>
+<p> • "General"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORMAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Digit Place</p>
+<p> • 0 to 15</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Components of Result Table</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMPONENTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Node / Element No. Input</p>
+<p> • Use Only One of the Two Methods</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_ELEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 1: Specify Each ID</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "KEYS": [101, 102, 103]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"KEYS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 2: Specify ID Range</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "TO": "101 to 105"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Element Part</p>
+<p> • Beam Force/Stress</p>
+<p>   ◦ "Part I"</p>
+<p>   ◦ "Part J"</p>
+<p> • Plane Stress/Strain Force</p>
+<p>   ◦ "Part I"</p>
+<p>   ◦ "Part J"</p>
+<p>   ◦ "Part K"</p>
+<p>   ◦ "Part L"</p>
+<p> • Plane Stress/Strain Stress</p>
+<p>   ◦ "Part C"</p>
+<p>   ◦ "Part I"</p>
+<p>   ◦ "Part J"</p>
+<p>   ◦ "Part K"</p>
+<p>   ◦ "Part L"</p>
+<p> • Solid Force/Stress</p>
+<p>   ◦ "Part I"</p>
+<p>   ◦ "Part J"</p>
+<p>   ◦ "Part K"</p>
+<p>   ◦ "Part L"</p>
+<p>   ◦ "Part M"</p>
+<p>   ◦ "Part N"</p>
+<p>   ◦ "Part O"</p>
+<p>   ◦ "Part P"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PARTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Time History Load Case</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TH_CASE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Output Time Step</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STEP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Start Time</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FROM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>End Time</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Time Interval</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STEPS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tendon Property - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Tendon Property</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35954451663513</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T05:21:01Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:15:04Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35954451663513-Tendon-Property" target="_blank">https://support.midasuser.com/hc/en-us/articles/35954451663513-Tendon-Property</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4GFT0VDBE37EEXBQGE712KP"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/TDNT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GFT0VD7A9XKQX40D73DP3K"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GFT0VD4ZM5Q0CZP4XCS0XX"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TDNT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Name"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"MATL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MatlKey"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"AREA"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TendonArea"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"D_AREA"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DuctArea"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"RM"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RelaxMethod"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"RV"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RelaxValue"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"US"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UltimateStrength"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"YS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"YieldStrength"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"LT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LoadType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"ASB"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AnchoSlipBegin"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"ASE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AnchoSlipEnd"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bBONDED"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseBonded"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"ALPHA"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AlphaExternalCable"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bOSRF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseOverStressRedFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"FT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"JTG04Factor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"LR"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LowRelaxation-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"FPK"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Fpk"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bRELAX"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Relaxationcoefficient-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"TDMFNAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Timedependentmaterial-Relaxationfunctionname"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"TDMFK"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TDMFKey"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"FF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"FrictionFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"WobbleType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"WF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"WobbleFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"W_ANGLE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"WobbleAngle"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GFT0VEQ2N5XM1T0NSZJ1WQ"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Magura</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_Magura"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">45</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_Magura"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">45</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_Magura"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">10</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">IRC:18-2000</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"7"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_IRC:18_2000"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"8"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_IRC:18_2000"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"9"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_IRC:18_2000"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">KSCE_LSD15</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"10"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_KSCE_LSD15"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"11"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_KSCE_LSD15"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"12"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_KSCE_LSD15"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">IRC:112-2011</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"4"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_IRC:112_2011"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">7</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"5"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_IRC:112_2011"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">7</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"6"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_IRC:112_2011"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">7</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">CEB-FIP 1978</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"24"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_CEB_FIP_1978"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"25"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos1_CEB_FIP_1978"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0015</span><br>        },<br>        <span style="color: #c31b1b;">"26"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos2_CEB_FIP_1978"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"W_ANGLE"</span>: <span style="color: #0ab66c;">0.005</span><br>        },<br>        <span style="color: #c31b1b;">"27"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_CEB_FIP_1978"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">European</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"28"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_European"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"29"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos1_European"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0015</span><br>        },<br>        <span style="color: #c31b1b;">"30"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos2_European"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"W_ANGLE"</span>: <span style="color: #0ab66c;">0.005</span><br>        },<br>        <span style="color: #c31b1b;">"31"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_European"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">CEB-FIP 1990</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"20"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_CEB_FIP_1990"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span><br>        },<br>        <span style="color: #c31b1b;">"21"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos1_CEB_FIP_1990"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0015</span><br>        },<br>        <span style="color: #c31b1b;">"22"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos2_CEB_FIP_1990"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"W_ANGLE"</span>: <span style="color: #0ab66c;">0.005</span><br>        },<br>        <span style="color: #c31b1b;">"23"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_CEB_FIP_1990"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">CEB-FIP 2010</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget9')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget9" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"16"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_CEB_FIP_2010"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">9</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"TDMFK"</span>: <span style="color: #0ab66c;">1</span><br>        },<br>        <span style="color: #c31b1b;">"17"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos1_CEB_FIP_2010"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">9</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"TDMFK"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0015</span><br>        },<br>        <span style="color: #c31b1b;">"18"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pos2_CEB_FIP_2010"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">9</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"TDMFK"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"W_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"W_ANGLE"</span>: <span style="color: #0ab66c;">0.005</span><br>        },<br>        <span style="color: #c31b1b;">"19"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_CEB_FIP_2010"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">9</span>,<br>            <span style="color: #c31b1b;">"RV"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"TDMFK"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">TB05</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget10')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget10" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"38"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_TB05"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span><br>        },<br>        <span style="color: #c31b1b;">"39"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_TB05"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.06</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"40"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_TB05"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.07</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">TB10092-17</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget11')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget11" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"47"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_TB10092_17"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">10</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span><br>        },<br>        <span style="color: #c31b1b;">"48"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_TB10092_17"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">10</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.06</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"49"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_TB10092_17"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">10</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.07</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Q/CR 9300-18</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget12')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget12" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"41"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_QCR_9300_18"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">12</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span><br>        },<br>        <span style="color: #c31b1b;">"42"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_QCR_9300_18"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">12</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.06</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"43"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_QCR_9300_18"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">12</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.07</span>,<br>            <span style="color: #c31b1b;">"LR"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">AS 5100.5-2017</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget13')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget13" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"13"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_AS51005_2017"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">11</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">3</span><br>        },<br>        <span style="color: #c31b1b;">"14"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_AS51005_2017"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">11</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">4</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"15"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_AS51005_2017"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">11</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">JTJ023-85</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget14')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget14" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"35"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_JTJ023_85"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">13</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span><br>        },<br>        <span style="color: #c31b1b;">"36"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_JTJ023_85"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">13</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.06</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"37"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_JTJ023_85"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">13</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.07</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">JTG18/JTG04</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget15')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget15" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"32"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_JTG18_JTG04"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span><br>        },<br>        <span style="color: #c31b1b;">"33"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_JTG18_JTG04"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.4</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"34"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_JTG18_JTG04"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"bOSRF"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"FT"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"FPK"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.4</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">User Defined</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget16')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget16" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"44"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Pre_User"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.0152</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">100</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"PRE"</span>,<br>            <span style="color: #c31b1b;">"TDMFNAME"</span>: <span style="color: #055bcc;">"User_Relaxation"</span><br>        },<br>        <span style="color: #c31b1b;">"45"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"In_Post_User"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"INTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"D_AREA"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">100</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"LT"</span>: <span style="color: #055bcc;">"POST"</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"bBONDED"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"TDMFNAME"</span>: <span style="color: #055bcc;">"User_Relaxation"</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"WF"</span>: <span style="color: #0ab66c;">0.0066</span><br>        },<br>        <span style="color: #c31b1b;">"46"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Ext_User"</span>,<br>            <span style="color: #c31b1b;">"TYPE"</span>: <span style="color: #055bcc;">"EXTERNAL"</span>,<br>            <span style="color: #c31b1b;">"MATL"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"AREA"</span>: <span style="color: #0ab66c;">0.00504</span>,<br>            <span style="color: #c31b1b;">"RM"</span>: <span style="color: #0ab66c;">100</span>,<br>            <span style="color: #c31b1b;">"US"</span>: <span style="color: #0ab66c;">1860000</span>,<br>            <span style="color: #c31b1b;">"YS"</span>: <span style="color: #0ab66c;">1570000</span>,<br>            <span style="color: #c31b1b;">"ASB"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ASE"</span>: <span style="color: #0ab66c;">0.006</span>,<br>            <span style="color: #c31b1b;">"ALPHA"</span>: <span style="color: #0ab66c;">3000</span>,<br>            <span style="color: #c31b1b;">"TDMFNAME"</span>: <span style="color: #055bcc;">"User_Relaxation"</span>,<br>            <span style="color: #c31b1b;">"FF"</span>: <span style="color: #0ab66c;">0.3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GFT0VFADH64BTRM4P8GHB2"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 50.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">No.</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">Description</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">Key</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Value Type</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Default</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Tendon Name</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Tendon Type</p>
+<p> • Internal: "INTERAL"</p>
+<p> • External: "EXTERNAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"TYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">"EXTERNAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Tensioning Type</p>
+<p> • Post-Tension: "POST"</p>
+<p> • Pre-Tension: "PRE"</p>
+<p> • External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"LT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">"PRE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Tendon Material No.</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"MATL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Total Tendon Area</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"AREA"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Dimeter</p>
+<p> • Post-Tension: Duct diameter</p>
+<p> • Pre-Tension: Strand diameter</p>
+<p> • External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"D_AREA"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Anchorage Slip - Begin</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"ASB"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Anchorage Slip - End</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"ASE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Bond Type</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bBONDED"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>External Cable Moment Magnifier <img src="https://support.midasuser.com/hc/article_attachments/52116561829145"></p>
+<p> • External: Use</p>
+<p> • Pre/Post-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"ALPHA"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">Magura, IRC:18-2000, KSCE LSD15 <img src="https://support.midasuser.com/hc/article_attachments/52116561829145">, IRC:112-2011</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Factor<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RV"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Ultimate strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"US"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Yield strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"YS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">CEB-FIP 1978, 1990, 2010, European</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Factor<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RV"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Ultimate strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"US"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Yield strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"YS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Type</p>
+<p> • Wobble Fraction Factor: 0</p>
+<p> • Unintentional Angular Disp.: 1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"W_TYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p>• "W_TYPE": 0</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Unintentional Angular Disp.</p>
+<p> • "W_TYPE": 1</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"W_ANGLE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient Class<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+<p> • Only for CEB-FIP 2010</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"TDMFK"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">TB05, TB10092-17, Q/CR 9300-18</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation coefficient - Factor (ξ)<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Low Relaxation</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"LR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Application of Overstress Reduction Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bOSRF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Characteristic Value of Strength (fpk)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FPK"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">AS 5100.5-2017</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation coefficient - Factor (ξ)<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Ultimate strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"US"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Yield strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"YS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">JTJ023-85</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation coefficient - Factor (ξ)<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Characteristic Value of Strength (fpk)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FPK"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">JTG18/JTG04</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation coefficient - Factor (ξ)<span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Application of Overstress Reduction Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bOSRF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Characteristic Value of Strength (fpk)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FPK"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%;" colspan="6">
+<p><span style="color: #4c9aff;">User Defined</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Coefficient - Code<span style="font-size: 16px; color: #bf2600;"> ¹⁾ </span></p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"RM"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Relaxation Function Name</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"TDMFNAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Ultimate strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"US"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Yield strength</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"YS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Curvature Friction Factor</p>
+<p> • Post-Tension/External: Use</p>
+<p> • Pre-Tension: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%;">
+<p>Wobble Friction Factor</p>
+<p> • Post-Tension: Use</p>
+<p> • Pre-Tension/External: Not use</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"WF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> Coefficients and Factor for Relaxation Coefficients</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 24.00%;"> <col style="width: 19.00%;"> <col style="width: 19.00%;"> <col style="width: 19.00%;"> <col style="width: 19.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Standard</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>RM</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>RV</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>FT</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>TDMFK</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Magura</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">10 or 45</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">IRC:18-2000</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • Normal: 1</p>
+<p> • Row: 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">KSCE LSD15 <img src="https://support.midasuser.com/hc/article_attachments/52116561829145"></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • Ordinary: 1</p>
+<p> • Low: 2</p>
+<p> • Hot rolled: 3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">IRC:112-2011</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • Normal: 1</p>
+<p> • Row: 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">CEB-FIP 1978</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">European</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • Ordinary: 1</p>
+<p> • Low: 2</p>
+<p> • Hot rolled: 3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">CEB-FIP 1990</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">CEB-FIP 2010</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • Class 1 - Slow: 1</p>
+<p> • Class 2 - Mean: 2</p>
+<p> • Class 3 - Rapid: 3</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">TB05</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">TB10092-17</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Q/CR 9300-18</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">AS 5100.5-2017</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">JTJ023-85</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">JTG18/JTG04</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1 or 0.3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">User Defined</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">100</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116561829145"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116561834777"> : <em>MIDAS GEN NX only</em>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pushover Text - Element Result(Wall) - POST</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Pushover Text - Element Result(Wall)</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> POST</div>
+        <div class="info-item"><span class="label">Article ID:</span> 36706217576217</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-22T06:38:21Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-08-14T04:51:10Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/36706217576217-Pushover-Text-Element-Result-Wall" target="_blank">https://support.midasuser.com/hc/en-us/articles/36706217576217-Pushover-Text-Element-Result-Wall</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+</p>
+<div>
+<h3 id="h_01J5WCYKBXCQKGJ5S34JBMB56M"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + post/TEXT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J5WCYKBXEJBR3BA8BAEB6ZP8"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J5WCYKBXH3832JKWP5QWG3R2"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TEXT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"TABLE_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableType"</span>,<br>                        <span style="color: #c31b1b;">"enum"</span>: [<br>                            <span style="color: #055bcc;">"PO_WALLFORCE"</span><br>                        ]<br>                    },<br>                    <span style="color: #c31b1b;">"EXPORT_PATH"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableSavePath"</span><br>                    },<br>                    <span style="color: #c31b1b;">"UNIT"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseUnitSetting"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORCE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Force"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Length"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HEAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Heat"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TEMP"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Temperature"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STYLES"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseNumberFormat"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORMAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Numberformat"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Fixed"</span>,<br>                                    <span style="color: #055bcc;">"Exponential"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"PLACE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Digitplace"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"COMPONENTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ComponentsofResultTable"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Node/ElementNo.Input"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"KEYS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method1:SpecifyEachID"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method2:SpecifyIDRange"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"PARTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ElementPart"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                            <span style="color: #c31b1b;">"enum"</span>: [<br>                                <span style="color: #055bcc;">"Top"</span>,<br>                                <span style="color: #055bcc;">"Bot"</span><br>                            ]<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"PO_CASE_NAME"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PushoverLoadCases"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STEP"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"OutputStep"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FROM"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StartStep"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EndStep"</span><br>                            },<br>                            <span style="color: #c31b1b;">"STEPS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StepInterval"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WCYKBYRC39W8CWJ9H9AMEK"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Wall Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"PO_WALLFORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\PO_WallForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"KN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Exponential"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"WallID"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Axial"</span>,<br>            <span style="color: #055bcc;">"Shear-y"</span>,<br>            <span style="color: #055bcc;">"Shear-z"</span>,<br>            <span style="color: #055bcc;">"Torsion"</span>,<br>            <span style="color: #055bcc;">"Moment-y"</span>,<br>            <span style="color: #055bcc;">"Moment-z"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">466</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"Top"</span>,<br>            <span style="color: #055bcc;">"Bot"</span><br>        ],<br>        <span style="color: #c31b1b;">"PO_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"PX"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">5</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WCYKBYF1FR0V40F6TWSTCH"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Wall Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"PO_WALLFORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"WallID"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Axial"</span>,<br>            <span style="color: #055bcc;">"Shear-y"</span>,<br>            <span style="color: #055bcc;">"Shear-z"</span>,<br>            <span style="color: #055bcc;">"Torsion"</span>,<br>            <span style="color: #055bcc;">"Moment-y"</span>,<br>            <span style="color: #055bcc;">"Moment-z"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"I[308]"</span>,<br>                <span style="color: #055bcc;">"-2.045e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"6.953e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"-6.679e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"J[314]"</span>,<br>                <span style="color: #055bcc;">"-2.045e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"6.953e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.279e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"I[308]"</span>,<br>                <span style="color: #055bcc;">"-5.294e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.152e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"-1.675e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"J[314]"</span>,<br>                <span style="color: #055bcc;">"-5.294e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.152e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.551e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"I[308]"</span>,<br>                <span style="color: #055bcc;">"1.225e+00"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.407e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"-2.012e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"J[314]"</span>,<br>                <span style="color: #055bcc;">"1.225e+00"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.407e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.927e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"I[308]"</span>,<br>                <span style="color: #055bcc;">"2.328e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.775e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"-2.568e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"PX"</span>,<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"J[314]"</span>,<br>                <span style="color: #055bcc;">"2.328e+01"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"1.775e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span>,<br>                <span style="color: #055bcc;">"2.403e+02"</span>,<br>                <span style="color: #055bcc;">"0.000e+00"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WCYKBY45WX2MPDWGAWYAP5"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Text Type</p>
+<p> • Wall Force: "PO_WALLFORCE" <span style="font-size: 18px; color: #bf2600;">ᴳ</span><span style="color: #bf2600;">⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEXT_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Save Path</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EXPORT_PATH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Unit Setting</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Length</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Heat</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HEAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Temperature</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEMP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Number Format</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STYLES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number Format</p>
+<p> • "Default"</p>
+<p> • "Fixed"</p>
+<p> • "Scientific"</p>
+<p> • "General"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORMAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Digit Place</p>
+<p> • 0 to 15</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Components of Result Table</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMPONENTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Node / Element No. Input</p>
+<p> • Use Only One of the Two Methods</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_ELEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 1: Specify Each ID</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "KEYS": [101, 102, 103]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"KEYS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 2: Specify ID Range</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "TO": "101 to 105"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Element Part</p>
+<p> • Beam Force/Stress</p>
+<p>   ◦ "Top"</p>
+<p>   ◦ "Bot"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PARTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Pushover Load Case</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PO_CASE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Output Step</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STEP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Start Step</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FROM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>End Step</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Step Interval</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STEPS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 18px; color: #bf2600;">ᴳ</span><span style="color: #bf2600;">⁾</span><em> MIDAS GEN NX only</em></p>
+</div>
+    </div>
+</body>
+</html>

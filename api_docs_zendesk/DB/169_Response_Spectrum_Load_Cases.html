@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Spectrum Load Cases - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Response Spectrum Load Cases</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35963719599641</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T08:17:26Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:19:06Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35963719599641-Response-Spectrum-Load-Cases" target="_blank">https://support.midasuser.com/hc/en-us/articles/35963719599641-Response-Spectrum-Load-Cases</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4GSTN91XC1J7NKCEA3NGBAV"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/SPLC</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GSTN91X2D4KEJEQ2E4FTDK"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GSTN91HZBZAE99TZ5YV2XA"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SPLC"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SpectrumLoadCaseName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"DIR"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Direction"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"ANGLE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Excitationangle"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"SCALE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ScaleFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"PMFT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PeriodModificationFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bDAMP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ApplyDampingMethod-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"INTERP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Interpolationofspectraldata"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"DESC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Desctiprion"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Modalcombinationtype"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Addsignstotheresults-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Addsignstotheresultstype"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"bMODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Selectmodeshapes-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"bAUTO"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AutoSearchAngle"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"iAUTOTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AutoType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"bNDP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"NonDissipative"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"NDP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"NonDissipative"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SpectrumNameList"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseModeList"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"bUSE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BooleanUseMode"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"MSFACTOR"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ModeShapeFactor"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"bCDAMP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CorrectDamping"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"iMDTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Dampingratiomethodtype"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"DALL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Dampingratioforallmodes"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"aDAMPING"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Modaldampingoverrides-dampingratioList"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"iMODE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Mode"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DAMPING"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ModeShapeFactor"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"iCOEF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DampingType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"bMASSP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Massproportional-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"MASSC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Massproportional-Value"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bSTIFFP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Stiffnessproportional-CheckBox"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"STIFFC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Stiffnessproportional-Value"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"iCALC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Coefficientscalculationmethod"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"FP1"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Frequency/Period-Mode1"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"FP2"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Frequency/Period-Mode2"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"DR1"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Dampingratio-Mode1"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"DR2"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DampingRatio-Mode2"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bACCECC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AccidentalEccentricity"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"bACCECC_AUTO"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EccentricityData-Automatic"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"ACCECC_PERCENT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EccentricityData-Eccentricity"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"bACCECC_CONSIDER_GL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EccentricityData-ConsiderbelowG.L"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"bACCECC_MINIMUM_TORSION"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EccentricityData-LimitMinimumTorsion"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"aACCECC_ECCEN_LIST"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EccentricityData-EccentricityList"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"STORY"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Story"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        },<br>                        <span style="color: #c31b1b;">"CROSS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Cross"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"ALONG"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Along"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GSTN910YTSYVNZF1BAJGCS"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">RS Load Cases</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"6"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC00"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"XY"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PMFT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"INTERP"</span>: <span style="color: #055bcc;">"LOG"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: <span style="color: #055bcc;">"CQC"</span>,<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"bMODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: [<br>                <span style="color: #055bcc;">"RS_func"</span><br>            ],<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Damping Method - Modal</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC01"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"XY"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PMFT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INTERP"</span>: <span style="color: #055bcc;">"LOG"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: <span style="color: #055bcc;">"CQC"</span>,<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"bMODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: [<br>                <span style="color: #055bcc;">"RS_func"</span><br>            ],<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"bCDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iMDTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"DALL"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"aDAMPING"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"iMODE"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DAMPING"</span>: <span style="color: #0ab66c;">0.06</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"iMODE"</span>: <span style="color: #0ab66c;">2</span>,<br>                    <span style="color: #c31b1b;">"DAMPING"</span>: <span style="color: #0ab66c;">0.07</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Damping Method - Mass &amp; Stiffness Proportional (Direction Specifications)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC02"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"XY"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">90</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PMFT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INTERP"</span>: <span style="color: #055bcc;">"LOG"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: <span style="color: #055bcc;">"CQC"</span>,<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"bMODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: [<br>                <span style="color: #055bcc;">"RS_func"</span><br>            ],<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"bCDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"iMDTYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"iCOEF"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bMASSP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"MASSC"</span>: <span style="color: #0ab66c;">1.1</span>,<br>            <span style="color: #c31b1b;">"bSTIFFP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"STIFFC"</span>: <span style="color: #0ab66c;">1.2</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Damping Method - Mass &amp; Stiffness Proportional (Calc. from Modal Damping/Frequency)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC03"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"XY"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">90</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PMFT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INTERP"</span>: <span style="color: #055bcc;">"LOG"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: <span style="color: #055bcc;">"CQC"</span>,<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"bMODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: [<br>                <span style="color: #055bcc;">"RS_func"</span><br>            ],<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"bCDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"iMDTYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"iCOEF"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"bMASSP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"bSTIFFP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iCALC"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"FP1"</span>: <span style="color: #0ab66c;">0.6</span>,<br>            <span style="color: #c31b1b;">"FP2"</span>: <span style="color: #0ab66c;">0.7</span>,<br>            <span style="color: #c31b1b;">"DR1"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DR2"</span>: <span style="color: #0ab66c;">0.06</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Damping Method - Mass &amp; Stiffness Proportional (Calc. from Modal Damping/Period)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"4"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC04"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"XY"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">90</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PMFT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INTERP"</span>: <span style="color: #055bcc;">"LOG"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: <span style="color: #055bcc;">"CQC"</span>,<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"bMODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: [<br>                <span style="color: #055bcc;">"RS_func"</span><br>            ],<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"bCDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"iMDTYPE"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"iCOEF"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"bMASSP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"bSTIFFP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iCALC"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"FP1"</span>: <span style="color: #0ab66c;">0.01</span>,<br>            <span style="color: #c31b1b;">"FP2"</span>: <span style="color: #0ab66c;">0.02</span>,<br>            <span style="color: #c31b1b;">"DR1"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DR2"</span>: <span style="color: #0ab66c;">0.06</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Damping Method - Strain Energy Proportional</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"5"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"LC05"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"Z"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PMFT"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"bDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"INTERP"</span>: <span style="color: #055bcc;">"LOG"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"COMTYPE"</span>: <span style="color: #055bcc;">"CQC"</span>,<br>            <span style="color: #c31b1b;">"bADDSIGN"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"iSIGNTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"bMODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"aFUNCNAME"</span>: [<br>                <span style="color: #055bcc;">"RS_func"</span><br>            ],<br>            <span style="color: #c31b1b;">"aUSEMODE"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"bUSE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                    <span style="color: #c31b1b;">"MSFACTOR"</span>: <span style="color: #0ab66c;">1</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"bCDAMP"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"iMDTYPE"</span>: <span style="color: #0ab66c;">3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GSTN91T2VTEXD33X1YGBYW"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">No.</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">Description</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">Key</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Value Type</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Default</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Spectrum Load Case Name</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Description</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"DESC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Direction</p>
+<p> • X-Y: "XY"</p>
+<p> • Z: "Z"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"DIR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">"XY"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Excitation angle</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"ANGLE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Scale Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"SCALE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Period Modification Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"PMFT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Spectrum Name List</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"aFUNCNAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Array<br>[String]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Interpolation of spectral data</p>
+<p> • Linear: "LINEAR"</p>
+<p> • Logarithm: "LOG"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"INTERP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">"LINEAR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Modal Combination Type</p>
+<p> • SRSS: "SRSS"</p>
+<p> • CQC: "CQC"</p>
+<p> • ABS: "ABS"</p>
+<p> • Linear: "Linear"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"COMTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">"CQC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Add signs to the results</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bADDSIGN"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">False</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Add signs to the results type</p>
+<p> • Along the Major Mode Direction: 0</p>
+<p> • Along the Absolute Maximum Value: 1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"iSIGNTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Select mode shapes</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bMODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="3">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Use Mode List</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"aUSEMODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Boolean Use Mode</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bUSE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Mode Shape Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"MSFACTOR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Apply Damping Method</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bDAMP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">False</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Correction by Damping Ratio</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bCDAMP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">False</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Damping Method</p>
+<p> • Modal: 1</p>
+<p> • Mass &amp; Stiffness Proportional: 2</p>
+<p> • Strain Energy Proportional: 3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"iMDTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%;" colspan="7">
+<p><span style="color: #4c9aff;">Damping Method - Modal</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Damping ratio for all modes</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"DALL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="3">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Modal damping overrides - damping ratio List</p>
+</td>
+<td style="background-color: #ffffff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"aDAMPING"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Mode Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"iMODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Mode Shape Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"DAMPING"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%;" colspan="7">
+<p><span style="color: #4c9aff;">Damping Method - Mass &amp; Stiffness Proportional (Direction Specifications)</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Damping Type</p>
+<p> • Direct Specification: 1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"iCOEF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Mass Proportional</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bMASSP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">19</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Stiffness Proportional</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bSTIFFP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">20</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Direction Specification for Mass Proportional</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"MASSC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">21</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Direction Specification for Stiffness Proportional</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"STIFFC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%;" colspan="7">
+<p><span style="color: #4c9aff;">Damping Method - Mass &amp; Stiffness Proportional (Calc. from Modal Damping)</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Damping Type</p>
+<p> • Calculation from Modal Damping: 2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"iCOEF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Mass Proportional</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bMASSP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">19</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Stiffness Proportional</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bSTIFFP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;"> </td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Coefficients Calculation method</p>
+<p> • Frequency: 1</p>
+<p> • Period: 2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"iCALC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">20</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Frequency / Period - Mode1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FP1"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">21</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Frequency / Period - Mode2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"FP2"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">22</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Damping ratio - Mode1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"DR1"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">23</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Damping Ratio - Mode2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"DR2"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%;" colspan="7">
+<p><span style="color: #4c9aff;">Accidental Eccentricity for Response Spectrum <img src="https://support.midasuser.com/hc/article_attachments/52116666331545"></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">24</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Accidental Eccentricity</p>
+<p> • Active: true</p>
+<p> • InActive: fasle</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bACCECC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">25</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Eccentricity Data</p>
+<p> • Automatic: true</p>
+<p> • User Defined: fasle</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bACCECC_AUTO"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">26</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Eccentricitiy Percentage</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"ACCECC_PERTCENT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">27</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Consider Eccentricity below G.L</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bACCECC_CONSIDER_GL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">28</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Limit Minimum Accidental Torsional Moment</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bACCECC_CONSIDER_GL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="4">
+<p style="text-align: center;">29</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Accidental Eccentricity User List</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"aACCECC_ECCEN_LIST"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Story</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"STORY"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Cross Position</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"CROSS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Along Position</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"Along"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%;" colspan="7">
+<p><span style="color: #4c9aff;">Non-Dissipative element design <img src="https://support.midasuser.com/hc/article_attachments/52116666331545"></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;" rowspan="2">
+<p style="text-align: center;">30</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">Non-dissipative element design</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"bNDP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Value for Non-dissipative</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%;">
+<p style="text-align: center;">"NDP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116666336025" width="14" height="22"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116666331545"> : <em>MIDAS GEN NX only</em>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

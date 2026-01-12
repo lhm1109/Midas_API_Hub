@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effective Span Length - Analysis Result Table - POST</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Effective Span Length - Analysis Result Table</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> POST</div>
+        <div class="info-item"><span class="label">Article ID:</span> 36017771824281</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T09:54:47Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-04-25T10:33:34Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/36017771824281-Effective-Span-Length-Analysis-Result-Table" target="_blank">https://support.midasuser.com/hc/en-us/articles/36017771824281-Effective-Span-Length-Analysis-Result-Table</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01J4KHSMPDGE5YRWCJFB9PM5AW"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + post/TABLE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4KHSMPD14DXHJ7XAYR2RNQG"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4KHSMPDW8VZEY9V7XPHYDJ6"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TABLE"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"title"</span>: <span style="color: #055bcc;">"EffectiveSpanLength"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"TABLE_NAME"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseTableTitle"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TABLE_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableType"</span>,<br>                        <span style="color: #c31b1b;">"enum"</span>: [<br>                            <span style="color: #055bcc;">"EFFECTIVE_LENGTH_TRUSS"</span>,<br>                            <span style="color: #055bcc;">"EFFECTIVE_LENGTH_BEAM"</span>,<br>                            <span style="color: #055bcc;">"EFFECTIVE_LENGTH_PLATE"</span><br>                        ]<br>                    },<br>                    <span style="color: #c31b1b;">"EXPORT_PATH"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableSavePath"</span><br>                    },<br>                    <span style="color: #c31b1b;">"UNIT"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseUnitSetting"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORCE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Force"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Length"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HEAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Heat"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TEMP"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Temperature"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STYLES"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseNumberFormat"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORMAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Numberformat"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Default"</span>,<br>                                    <span style="color: #055bcc;">"Fixed"</span>,<br>                                    <span style="color: #055bcc;">"Scientific"</span>,<br>                                    <span style="color: #055bcc;">"General"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"PLACE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Digitplace"</span>,<br>                                <span style="color: #c31b1b;">"minimum"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"maximum"</span>: <span style="color: #0ab66c;">15</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"COMPONENTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ComponentsofResultTable"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4KHSMPD8WHG846Y6EXAFXQ8"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Effective Span Length-Truss</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TABLE_NAME"</span>: <span style="color: #055bcc;">"EffectiveSpanLength-Truss"</span>,<br>        <span style="color: #c31b1b;">"TABLE_TYPE"</span>: <span style="color: #055bcc;">"EFFECTIVE_LENGTH_TRUSS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\Output.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">12</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Element"</span>,<br>            <span style="color: #055bcc;">"Lane"</span>,<br>            <span style="color: #055bcc;">"Max"</span>,<br>            <span style="color: #055bcc;">"Min"</span><br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Effective Span Length-Beam</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TABLE_NAME"</span>: <span style="color: #055bcc;">"EffectiveSpanLength-Beam"</span>,<br>        <span style="color: #c31b1b;">"TABLE_TYPE"</span>: <span style="color: #055bcc;">"EFFECTIVE_LENGTH_BEAM"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\Output.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">12</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Element"</span>,<br>            <span style="color: #055bcc;">"Lane"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"My_max"</span>,<br>            <span style="color: #055bcc;">"My_min"</span>,<br>            <span style="color: #055bcc;">"Mz_max"</span>,<br>            <span style="color: #055bcc;">"Mz_min"</span>,<br>            <span style="color: #055bcc;">"Fx_max"</span>,<br>            <span style="color: #055bcc;">"Fx_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span><br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Effective Span Length-Plate</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TABLE_NAME"</span>: <span style="color: #055bcc;">"EffectiveSpanLength-Plate"</span>,<br>        <span style="color: #c31b1b;">"TABLE_TYPE"</span>: <span style="color: #055bcc;">"EFFECTIVE_LENGTH_PLATE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\Output.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">12</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Element"</span>,<br>            <span style="color: #055bcc;">"Lane"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"Mxx_max"</span>,<br>            <span style="color: #055bcc;">"Mxx_min"</span>,<br>            <span style="color: #055bcc;">"Myy_max"</span>,<br>            <span style="color: #055bcc;">"Myy_min"</span>,<br>            <span style="color: #055bcc;">"Fxx_max"</span>,<br>            <span style="color: #055bcc;">"Fxx_min"</span>,<br>            <span style="color: #055bcc;">"Fyy_max"</span>,<br>            <span style="color: #055bcc;">"Fyy_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span><br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4KHSMPDA2SCZ842JGDEYMA7"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Effective Span Length-Truss</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"EffectiveSpanLength-Truss"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Element"</span>,<br>            <span style="color: #055bcc;">"Lane"</span>,<br>            <span style="color: #055bcc;">"Max"</span>,<br>            <span style="color: #055bcc;">"Min"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"327"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"29.093330383301"</span>,<br>                <span style="color: #055bcc;">"30.662572860718"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"328"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"17.065862655640"</span>,<br>                <span style="color: #055bcc;">"30.806716918945"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"329"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"29.448398590088"</span>,<br>                <span style="color: #055bcc;">"30.999086380005"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"330"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"29.602096557617"</span>,<br>                <span style="color: #055bcc;">"31.021806716919"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Effective Span Length-Beam</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"EffectiveSpanLength-Beam"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Element"</span>,<br>            <span style="color: #055bcc;">"Lane"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"My_max"</span>,<br>            <span style="color: #055bcc;">"My_min"</span>,<br>            <span style="color: #055bcc;">"Mz_max"</span>,<br>            <span style="color: #055bcc;">"Mz_min"</span>,<br>            <span style="color: #055bcc;">"Fx_max"</span>,<br>            <span style="color: #055bcc;">"Fx_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"My_max"</span>,<br>            <span style="color: #055bcc;">"My_min"</span>,<br>            <span style="color: #055bcc;">"Mz_max"</span>,<br>            <span style="color: #055bcc;">"Mz_min"</span>,<br>            <span style="color: #055bcc;">"Fx_max"</span>,<br>            <span style="color: #055bcc;">"Fx_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"My_max"</span>,<br>            <span style="color: #055bcc;">"My_min"</span>,<br>            <span style="color: #055bcc;">"Mz_max"</span>,<br>            <span style="color: #055bcc;">"Mz_min"</span>,<br>            <span style="color: #055bcc;">"Fx_max"</span>,<br>            <span style="color: #055bcc;">"Fx_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"My_max"</span>,<br>            <span style="color: #055bcc;">"My_min"</span>,<br>            <span style="color: #055bcc;">"Mz_max"</span>,<br>            <span style="color: #055bcc;">"Mz_min"</span>,<br>            <span style="color: #055bcc;">"Fx_max"</span>,<br>            <span style="color: #055bcc;">"Fx_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"My_max"</span>,<br>            <span style="color: #055bcc;">"My_min"</span>,<br>            <span style="color: #055bcc;">"Mz_max"</span>,<br>            <span style="color: #055bcc;">"Mz_min"</span>,<br>            <span style="color: #055bcc;">"Fx_max"</span>,<br>            <span style="color: #055bcc;">"Fx_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"0.191279277205"</span>,<br>                <span style="color: #055bcc;">"29.755615234375"</span>,<br>                <span style="color: #055bcc;">"31.169471740723"</span>,<br>                <span style="color: #055bcc;">"58.730529785156"</span>,<br>                <span style="color: #055bcc;">"29.762704849243"</span>,<br>                <span style="color: #055bcc;">"0.264897286892"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"1/4"</span>,<br>                <span style="color: #055bcc;">"0.108969882131"</span>,<br>                <span style="color: #055bcc;">"0.119683347642"</span>,<br>                <span style="color: #055bcc;">"29.775735855102"</span>,<br>                <span style="color: #055bcc;">"30.720029830933"</span>,<br>                <span style="color: #055bcc;">"29.762704849243"</span>,<br>                <span style="color: #055bcc;">"0.264897286892"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"1/2"</span>,<br>                <span style="color: #055bcc;">"0.115155965090"</span>,<br>                <span style="color: #055bcc;">"0.134036958218"</span>,<br>                <span style="color: #055bcc;">"29.775785446167"</span>,<br>                <span style="color: #055bcc;">"30.720037460327"</span>,<br>                <span style="color: #055bcc;">"29.762704849243"</span>,<br>                <span style="color: #055bcc;">"0.264897286892"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"3/4"</span>,<br>                <span style="color: #055bcc;">"30.765277862549"</span>,<br>                <span style="color: #055bcc;">"30.130084991455"</span>,<br>                <span style="color: #055bcc;">"29.775802612305"</span>,<br>                <span style="color: #055bcc;">"30.720039367676"</span>,<br>                <span style="color: #055bcc;">"29.762704849243"</span>,<br>                <span style="color: #055bcc;">"0.264897286892"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"30.709918975830"</span>,<br>                <span style="color: #055bcc;">"30.175632476807"</span>,<br>                <span style="color: #055bcc;">"29.775810241699"</span>,<br>                <span style="color: #055bcc;">"30.720041275024"</span>,<br>                <span style="color: #055bcc;">"29.762704849243"</span>,<br>                <span style="color: #055bcc;">"0.264897286892"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"0.037728607655"</span>,<br>                <span style="color: #055bcc;">"0.288700938225"</span>,<br>                <span style="color: #055bcc;">"24.931282043457"</span>,<br>                <span style="color: #055bcc;">"5.864111423492"</span>,<br>                <span style="color: #055bcc;">"6.163604736328"</span>,<br>                <span style="color: #055bcc;">"0.337865054607"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"1/4"</span>,<br>                <span style="color: #055bcc;">"0.018981337547"</span>,<br>                <span style="color: #055bcc;">"0.344051897526"</span>,<br>                <span style="color: #055bcc;">"24.788684844971"</span>,<br>                <span style="color: #055bcc;">"5.992788314819"</span>,<br>                <span style="color: #055bcc;">"6.163604736328"</span>,<br>                <span style="color: #055bcc;">"0.337865054607"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"1/2"</span>,<br>                <span style="color: #055bcc;">"0.114104285836"</span>,<br>                <span style="color: #055bcc;">"0.337574899197"</span>,<br>                <span style="color: #055bcc;">"24.624288558960"</span>,<br>                <span style="color: #055bcc;">"6.142559528351"</span>,<br>                <span style="color: #055bcc;">"6.163604736328"</span>,<br>                <span style="color: #055bcc;">"0.337865054607"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"3/4"</span>,<br>                <span style="color: #055bcc;">"0.241120323539"</span>,<br>                <span style="color: #055bcc;">"0.378061115742"</span>,<br>                <span style="color: #055bcc;">"24.458116531372"</span>,<br>                <span style="color: #055bcc;">"6.293346881866"</span>,<br>                <span style="color: #055bcc;">"6.163604736328"</span>,<br>                <span style="color: #055bcc;">"0.337865054607"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"0.467901885509"</span>,<br>                <span style="color: #055bcc;">"0.384000271559"</span>,<br>                <span style="color: #055bcc;">"24.290094375610"</span>,<br>                <span style="color: #055bcc;">"6.445161342621"</span>,<br>                <span style="color: #055bcc;">"6.163604736328"</span>,<br>                <span style="color: #055bcc;">"0.337865054607"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"0.090889587998"</span>,<br>                <span style="color: #055bcc;">"0.370849847794"</span>,<br>                <span style="color: #055bcc;">"24.290128707886"</span>,<br>                <span style="color: #055bcc;">"6.445128440857"</span>,<br>                <span style="color: #055bcc;">"11.433344841003"</span>,<br>                <span style="color: #055bcc;">"0.382448524237"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"1/4"</span>,<br>                <span style="color: #055bcc;">"0.793539702892"</span>,<br>                <span style="color: #055bcc;">"0.379059672356"</span>,<br>                <span style="color: #055bcc;">"24.033523559570"</span>,<br>                <span style="color: #055bcc;">"6.708457946777"</span>,<br>                <span style="color: #055bcc;">"11.433344841003"</span>,<br>                <span style="color: #055bcc;">"0.382448524237"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"1/2"</span>,<br>                <span style="color: #055bcc;">"2.534597396851"</span>,<br>                <span style="color: #055bcc;">"0.387370228767"</span>,<br>                <span style="color: #055bcc;">"23.773052215576"</span>,<br>                <span style="color: #055bcc;">"6.976361751556"</span>,<br>                <span style="color: #055bcc;">"11.433344841003"</span>,<br>                <span style="color: #055bcc;">"0.382448524237"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"3/4"</span>,<br>                <span style="color: #055bcc;">"29.703187942505"</span>,<br>                <span style="color: #055bcc;">"0.395783394575"</span>,<br>                <span style="color: #055bcc;">"23.508718490601"</span>,<br>                <span style="color: #055bcc;">"7.248959541321"</span>,<br>                <span style="color: #055bcc;">"11.433344841003"</span>,<br>                <span style="color: #055bcc;">"0.382448524237"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"29.779031753540"</span>,<br>                <span style="color: #055bcc;">"0.404031515121"</span>,<br>                <span style="color: #055bcc;">"23.221227645874"</span>,<br>                <span style="color: #055bcc;">"7.545688152313"</span>,<br>                <span style="color: #055bcc;">"11.433344841003"</span>,<br>                <span style="color: #055bcc;">"0.382448524237"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Effective Span Length-Plate</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"EffectiveSpanLength-Plate"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Element"</span>,<br>            <span style="color: #055bcc;">"Lane"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"Mxx_max"</span>,<br>            <span style="color: #055bcc;">"Mxx_min"</span>,<br>            <span style="color: #055bcc;">"Myy_max"</span>,<br>            <span style="color: #055bcc;">"Myy_min"</span>,<br>            <span style="color: #055bcc;">"Fxx_max"</span>,<br>            <span style="color: #055bcc;">"Fxx_min"</span>,<br>            <span style="color: #055bcc;">"Fyy_max"</span>,<br>            <span style="color: #055bcc;">"Fyy_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"Mxx_max"</span>,<br>            <span style="color: #055bcc;">"Mxx_min"</span>,<br>            <span style="color: #055bcc;">"Myy_max"</span>,<br>            <span style="color: #055bcc;">"Myy_min"</span>,<br>            <span style="color: #055bcc;">"Fxx_max"</span>,<br>            <span style="color: #055bcc;">"Fxx_min"</span>,<br>            <span style="color: #055bcc;">"Fyy_max"</span>,<br>            <span style="color: #055bcc;">"Fyy_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"Mxx_max"</span>,<br>            <span style="color: #055bcc;">"Mxx_min"</span>,<br>            <span style="color: #055bcc;">"Myy_max"</span>,<br>            <span style="color: #055bcc;">"Myy_min"</span>,<br>            <span style="color: #055bcc;">"Fxx_max"</span>,<br>            <span style="color: #055bcc;">"Fxx_min"</span>,<br>            <span style="color: #055bcc;">"Fyy_max"</span>,<br>            <span style="color: #055bcc;">"Fyy_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"Mxx_max"</span>,<br>            <span style="color: #055bcc;">"Mxx_min"</span>,<br>            <span style="color: #055bcc;">"Myy_max"</span>,<br>            <span style="color: #055bcc;">"Myy_min"</span>,<br>            <span style="color: #055bcc;">"Fxx_max"</span>,<br>            <span style="color: #055bcc;">"Fxx_min"</span>,<br>            <span style="color: #055bcc;">"Fyy_max"</span>,<br>            <span style="color: #055bcc;">"Fyy_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span>,<br>            <span style="color: #055bcc;">"Parts"</span>,<br>            <span style="color: #055bcc;">"Mxx_max"</span>,<br>            <span style="color: #055bcc;">"Mxx_min"</span>,<br>            <span style="color: #055bcc;">"Myy_max"</span>,<br>            <span style="color: #055bcc;">"Myy_min"</span>,<br>            <span style="color: #055bcc;">"Fxx_max"</span>,<br>            <span style="color: #055bcc;">"Fxx_min"</span>,<br>            <span style="color: #055bcc;">"Fyy_max"</span>,<br>            <span style="color: #055bcc;">"Fyy_min"</span>,<br>            <span style="color: #055bcc;">"ImpactFactor"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"339"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"cent"</span>,<br>                <span style="color: #055bcc;">"8.194928169250"</span>,<br>                <span style="color: #055bcc;">"3.990395784378"</span>,<br>                <span style="color: #055bcc;">"16.432098388672"</span>,<br>                <span style="color: #055bcc;">"44.075096130371"</span>,<br>                <span style="color: #055bcc;">"0.289318472147"</span>,<br>                <span style="color: #055bcc;">"0.110953427851"</span>,<br>                <span style="color: #055bcc;">"10.210454940796"</span>,<br>                <span style="color: #055bcc;">"3.109512567520"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"20.367460250854"</span>,<br>                <span style="color: #055bcc;">"40.312923431396"</span>,<br>                <span style="color: #055bcc;">"19.770799636841"</span>,<br>                <span style="color: #055bcc;">"40.934535980225"</span>,<br>                <span style="color: #055bcc;">"30.207958221436"</span>,<br>                <span style="color: #055bcc;">"30.833641052246"</span>,<br>                <span style="color: #055bcc;">"9.251276969910"</span>,<br>                <span style="color: #055bcc;">"3.376792669296"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"20.538070678711"</span>,<br>                <span style="color: #055bcc;">"0.144980564713"</span>,<br>                <span style="color: #055bcc;">"21.649600982666"</span>,<br>                <span style="color: #055bcc;">"39.096378326416"</span>,<br>                <span style="color: #055bcc;">"30.207958221436"</span>,<br>                <span style="color: #055bcc;">"30.833641052246"</span>,<br>                <span style="color: #055bcc;">"11.539132118225"</span>,<br>                <span style="color: #055bcc;">"2.641301631927"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"k"</span>,<br>                <span style="color: #055bcc;">"39.278167724609"</span>,<br>                <span style="color: #055bcc;">"21.461851119995"</span>,<br>                <span style="color: #055bcc;">"39.036582946777"</span>,<br>                <span style="color: #055bcc;">"21.714025497436"</span>,<br>                <span style="color: #055bcc;">"37.399719238281"</span>,<br>                <span style="color: #055bcc;">"23.596715927124"</span>,<br>                <span style="color: #055bcc;">"11.539132118225"</span>,<br>                <span style="color: #055bcc;">"2.641301631927"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"l"</span>,<br>                <span style="color: #055bcc;">"40.664421081543"</span>,<br>                <span style="color: #055bcc;">"20.028676986694"</span>,<br>                <span style="color: #055bcc;">"40.946784973145"</span>,<br>                <span style="color: #055bcc;">"19.759052276611"</span>,<br>                <span style="color: #055bcc;">"37.399719238281"</span>,<br>                <span style="color: #055bcc;">"23.596715927124"</span>,<br>                <span style="color: #055bcc;">"9.251276969910"</span>,<br>                <span style="color: #055bcc;">"3.376792669296"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"340"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"cent"</span>,<br>                <span style="color: #055bcc;">"0.833887219429"</span>,<br>                <span style="color: #055bcc;">"0.343698084354"</span>,<br>                <span style="color: #055bcc;">"15.838577270508"</span>,<br>                <span style="color: #055bcc;">"44.656791687012"</span>,<br>                <span style="color: #055bcc;">"0.346579194069"</span>,<br>                <span style="color: #055bcc;">"0.338133722544"</span>,<br>                <span style="color: #055bcc;">"12.353896141052"</span>,<br>                <span style="color: #055bcc;">"2.192885875702"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"22.068010330200"</span>,<br>                <span style="color: #055bcc;">"38.647983551025"</span>,<br>                <span style="color: #055bcc;">"21.693302154541"</span>,<br>                <span style="color: #055bcc;">"39.051540374756"</span>,<br>                <span style="color: #055bcc;">"0.357556343079"</span>,<br>                <span style="color: #055bcc;">"0.123849913478"</span>,<br>                <span style="color: #055bcc;">"11.643419265747"</span>,<br>                <span style="color: #055bcc;">"2.554860353470"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"21.633064270019"</span>,<br>                <span style="color: #055bcc;">"39.114875793457"</span>,<br>                <span style="color: #055bcc;">"22.323507308960"</span>,<br>                <span style="color: #055bcc;">"38.429588317871"</span>,<br>                <span style="color: #055bcc;">"0.357556343079"</span>,<br>                <span style="color: #055bcc;">"0.123849913478"</span>,<br>                <span style="color: #055bcc;">"13.108088493347"</span>,<br>                <span style="color: #055bcc;">"1.770145893097"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"k"</span>,<br>                <span style="color: #055bcc;">"39.911121368408"</span>,<br>                <span style="color: #055bcc;">"20.847139358521"</span>,<br>                <span style="color: #055bcc;">"38.400314331055"</span>,<br>                <span style="color: #055bcc;">"22.359739303589"</span>,<br>                <span style="color: #055bcc;">"43.762157440185"</span>,<br>                <span style="color: #055bcc;">"17.726825714111"</span>,<br>                <span style="color: #055bcc;">"13.108088493347"</span>,<br>                <span style="color: #055bcc;">"1.770145893097"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"l"</span>,<br>                <span style="color: #055bcc;">"36.910839080810"</span>,<br>                <span style="color: #055bcc;">"23.815031051636"</span>,<br>                <span style="color: #055bcc;">"38.972236633301"</span>,<br>                <span style="color: #055bcc;">"21.777887344360"</span>,<br>                <span style="color: #055bcc;">"43.762157440185"</span>,<br>                <span style="color: #055bcc;">"17.726825714111"</span>,<br>                <span style="color: #055bcc;">"11.643419265747"</span>,<br>                <span style="color: #055bcc;">"2.554860353470"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"341"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"cent"</span>,<br>                <span style="color: #055bcc;">"26.133829116821"</span>,<br>                <span style="color: #055bcc;">"0.375847131014"</span>,<br>                <span style="color: #055bcc;">"16.451019287109"</span>,<br>                <span style="color: #055bcc;">"44.120464324951"</span>,<br>                <span style="color: #055bcc;">"0.383964627981"</span>,<br>                <span style="color: #055bcc;">"29.946046829224"</span>,<br>                <span style="color: #055bcc;">"13.805335998535"</span>,<br>                <span style="color: #055bcc;">"1.529893159866"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"0.547343730927"</span>,<br>                <span style="color: #055bcc;">"29.925048828125"</span>,<br>                <span style="color: #055bcc;">"21.305864334106"</span>,<br>                <span style="color: #055bcc;">"39.260505676270"</span>,<br>                <span style="color: #055bcc;">"0.380776822567"</span>,<br>                <span style="color: #055bcc;">"1.294615387917"</span>,<br>                <span style="color: #055bcc;">"12.385931015015"</span>,<br>                <span style="color: #055bcc;">"2.184647560120"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"30.084039688110"</span>,<br>                <span style="color: #055bcc;">"31.028837203979"</span>,<br>                <span style="color: #055bcc;">"25.375816345215"</span>,<br>                <span style="color: #055bcc;">"35.468116760254"</span>,<br>                <span style="color: #055bcc;">"0.380776822567"</span>,<br>                <span style="color: #055bcc;">"1.294615387917"</span>,<br>                <span style="color: #055bcc;">"14.907189369202"</span>,<br>                <span style="color: #055bcc;">"1.230780839920"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"k"</span>,<br>                <span style="color: #055bcc;">"20.361610412598"</span>,<br>                <span style="color: #055bcc;">"10.287482261658"</span>,<br>                <span style="color: #055bcc;">"37.442798614502"</span>,<br>                <span style="color: #055bcc;">"23.197538375854"</span>,<br>                <span style="color: #055bcc;">"0.430020511150"</span>,<br>                <span style="color: #055bcc;">"29.004285812378"</span>,<br>                <span style="color: #055bcc;">"14.907189369202"</span>,<br>                <span style="color: #055bcc;">"1.230780839920"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"l"</span>,<br>                <span style="color: #055bcc;">"31.022487640381"</span>,<br>                <span style="color: #055bcc;">"30.161306381226"</span>,<br>                <span style="color: #055bcc;">"37.257297515869"</span>,<br>                <span style="color: #055bcc;">"23.595695495606"</span>,<br>                <span style="color: #055bcc;">"0.430020511150"</span>,<br>                <span style="color: #055bcc;">"29.004285812378"</span>,<br>                <span style="color: #055bcc;">"12.385931015015"</span>,<br>                <span style="color: #055bcc;">"2.184647560120"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"342"</span>,<br>                <span style="color: #055bcc;">"Lane"</span>,<br>                <span style="color: #055bcc;">"cent"</span>,<br>                <span style="color: #055bcc;">"29.845573425293"</span>,<br>                <span style="color: #055bcc;">"0.384712785482"</span>,<br>                <span style="color: #055bcc;">"29.585195541382"</span>,<br>                <span style="color: #055bcc;">"31.146570205689"</span>,<br>                <span style="color: #055bcc;">"0.436751663685"</span>,<br>                <span style="color: #055bcc;">"29.880912780762"</span>,<br>                <span style="color: #055bcc;">"15.834495544434"</span>,<br>                <span style="color: #055bcc;">"1.952278614044"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"i"</span>,<br>                <span style="color: #055bcc;">"2.897219896317"</span>,<br>                <span style="color: #055bcc;">"27.674240112305"</span>,<br>                <span style="color: #055bcc;">"23.361423492432"</span>,<br>                <span style="color: #055bcc;">"37.307735443115"</span>,<br>                <span style="color: #055bcc;">"0.456818223000"</span>,<br>                <span style="color: #055bcc;">"29.835124969482"</span>,<br>                <span style="color: #055bcc;">"30.335161209106"</span>,<br>                <span style="color: #055bcc;">"6.911101818085"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"j"</span>,<br>                <span style="color: #055bcc;">"30.150735855102"</span>,<br>                <span style="color: #055bcc;">"30.924144744873"</span>,<br>                <span style="color: #055bcc;">"29.887788772583"</span>,<br>                <span style="color: #055bcc;">"30.896802902222"</span>,<br>                <span style="color: #055bcc;">"0.456818223000"</span>,<br>                <span style="color: #055bcc;">"29.835124969482"</span>,<br>                <span style="color: #055bcc;">"29.891567230225"</span>,<br>                <span style="color: #055bcc;">"31.353021621704"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"k"</span>,<br>                <span style="color: #055bcc;">"16.665954589844"</span>,<br>                <span style="color: #055bcc;">"13.994219779968"</span>,<br>                <span style="color: #055bcc;">"30.865278244019"</span>,<br>                <span style="color: #055bcc;">"29.833909988403"</span>,<br>                <span style="color: #055bcc;">"30.901102066040"</span>,<br>                <span style="color: #055bcc;">"30.348457336426"</span>,<br>                <span style="color: #055bcc;">"29.891567230225"</span>,<br>                <span style="color: #055bcc;">"31.353021621704"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span>,<br>                <span style="color: #055bcc;">"l"</span>,<br>                <span style="color: #055bcc;">"31.037590026856"</span>,<br>                <span style="color: #055bcc;">"30.119352340698"</span>,<br>                <span style="color: #055bcc;">"35.723594665527"</span>,<br>                <span style="color: #055bcc;">"25.107400894165"</span>,<br>                <span style="color: #055bcc;">"30.901102066040"</span>,<br>                <span style="color: #055bcc;">"30.348457336426"</span>,<br>                <span style="color: #055bcc;">"30.335161209106"</span>,<br>                <span style="color: #055bcc;">"6.911101818085"</span>,<br>                <span style="color: #055bcc;">"0.299999952316"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4KHSMPED7GV0W5P44PEMA7Z"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Table Name</p>
+<p> • Response Table Title</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TABLE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Empty</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Type</p>
+<p> • Truss: "EFFECTIVE_LENGTH_TRUSS"</p>
+<p> • Beam: "EFFECTIVE_LENGTH_BEAM"</p>
+<p> • Plate: "EFFECTIVE_LENGTH_PLATE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TABLE_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Save Path</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EXPORT_PATH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Unit Setting</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Length</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Heat</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HEAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Temperature</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEMP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Number Format</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STYLES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number Format</p>
+<p> • "Default"</p>
+<p> • "Fixed"</p>
+<p> • "Scientific"</p>
+<p> • "General"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORMAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Digit Place</p>
+<p> • 0 to 15</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Components of Result Table</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMPONENTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

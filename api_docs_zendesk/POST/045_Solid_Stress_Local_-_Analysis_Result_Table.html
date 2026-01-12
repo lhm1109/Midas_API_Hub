@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solid Stress (Local) - Analysis Result Table - POST</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Solid Stress (Local) - Analysis Result Table</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> POST</div>
+        <div class="info-item"><span class="label">Article ID:</span> 36015236608281</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T09:02:19Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-04-22T11:44:52Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/36015236608281-Solid-Stress-Local-Analysis-Result-Table" target="_blank">https://support.midasuser.com/hc/en-us/articles/36015236608281-Solid-Stress-Local-Analysis-Result-Table</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+</p>
+<div>
+<h3 id="h_01J4KESK2GQVTFV8H7TZ2J79XB"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + post/TABLE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4KESK2G6XM3GVB93KDR60FM"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4KESK2GCA1PC00NDRG2AD22"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TABLE"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"title"</span>: <span style="color: #055bcc;">"SolidStress-Local"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"TABLE_NAME"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseTableTitle"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TABLE_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableType"</span>,<br>                        <span style="color: #c31b1b;">"enum"</span>: [<br>                            <span style="color: #055bcc;">"SOLIDSL"</span><br>                        ]<br>                    },<br>                    <span style="color: #c31b1b;">"EXPORT_PATH"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableSavePath"</span><br>                    },<br>                    <span style="color: #c31b1b;">"UNIT"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseUnitSetting"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORCE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Force"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Length"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HEAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Heat"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TEMP"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Temperature"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STYLES"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseNumberFormat"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORMAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Numberformat"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Default"</span>,<br>                                    <span style="color: #055bcc;">"Fixed"</span>,<br>                                    <span style="color: #055bcc;">"Scientific"</span>,<br>                                    <span style="color: #055bcc;">"General"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"PLACE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Digitplace"</span>,<br>                                <span style="color: #c31b1b;">"minimum"</span>: <span style="color: #0ab66c;">0</span>,<br>                                <span style="color: #c31b1b;">"maximum"</span>: <span style="color: #0ab66c;">15</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"COMPONENTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ComponentsofResultTable"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Node/ElementNo.Input"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"KEYS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SpecifyEachID"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SpecifyIDRange"</span><br>                            },<br>                            <span style="color: #c31b1b;">"STRUCTURE_GROUP_NAME"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SpecifyStructureGroupName"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"LOAD_CASE_NAMES"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StaticLoad/LoadCombinationName&amp;Type"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"NODE_FLAG"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"NodeFlag"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"CENTER"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Center"</span><br>                            },<br>                            <span style="color: #c31b1b;">"NODES"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Nodes"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"OPT_CS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Activation-ConstructionStageStep"</span><br>                    },<br>                    <span style="color: #c31b1b;">"STAGE_STEP"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StageStepName"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4KESK2GDF55SYB8HZM7R112"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Stress(Local) - General/Post CS</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TABLE_NAME"</span>: <span style="color: #055bcc;">"SolidStress(Local)"</span>,<br>        <span style="color: #c31b1b;">"TABLE_TYPE"</span>: <span style="color: #055bcc;">"SOLIDSL"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\Output.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">12</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Node"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span>,<br>            <span style="color: #055bcc;">"Sig-yz"</span>,<br>            <span style="color: #055bcc;">"Sig-xz"</span>,<br>            <span style="color: #055bcc;">"Sig-P1"</span>,<br>            <span style="color: #055bcc;">"Sig-P2"</span>,<br>            <span style="color: #055bcc;">"Sig-P3"</span>,<br>            <span style="color: #055bcc;">"Max-Shear"</span>,<br>            <span style="color: #055bcc;">"Sig-EFF"</span>,<br>            <span style="color: #055bcc;">"Sig-OCT"</span>,<br>            <span style="color: #055bcc;">"Sig-P1/ux"</span>,<br>            <span style="color: #055bcc;">"Sig-P1/uy"</span>,<br>            <span style="color: #055bcc;">"Sig-P1/uz"</span>,<br>            <span style="color: #055bcc;">"Sig-P2/ux"</span>,<br>            <span style="color: #055bcc;">"Sig-P2/uy"</span>,<br>            <span style="color: #055bcc;">"Sig-P2/uz"</span>,<br>            <span style="color: #055bcc;">"Sig-P3/ux"</span>,<br>            <span style="color: #055bcc;">"Sig-P3/uy"</span>,<br>            <span style="color: #055bcc;">"Sig-P3/uz"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">3381</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"LOAD_CASE_NAMES"</span>: [<br>            <span style="color: #055bcc;">"DL(ST)"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_FLAG"</span>: {<br>            <span style="color: #c31b1b;">"CENTER"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"NODES"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Stress(Local) - Construction Stage</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TABLE_NAME"</span>: <span style="color: #055bcc;">"SolidStress(Local)"</span>,<br>        <span style="color: #c31b1b;">"TABLE_TYPE"</span>: <span style="color: #055bcc;">"SOLIDSL"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\Output.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">12</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Stage"</span>,<br>            <span style="color: #055bcc;">"Step"</span>,<br>            <span style="color: #055bcc;">"Node"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span>,<br>            <span style="color: #055bcc;">"Sig-yz"</span>,<br>            <span style="color: #055bcc;">"Sig-xz"</span>,<br>            <span style="color: #055bcc;">"Sig-P1"</span>,<br>            <span style="color: #055bcc;">"Sig-P2"</span>,<br>            <span style="color: #055bcc;">"Sig-P3"</span>,<br>            <span style="color: #055bcc;">"Max-Shear"</span>,<br>            <span style="color: #055bcc;">"Sig-EFF"</span>,<br>            <span style="color: #055bcc;">"Sig-OCT"</span>,<br>            <span style="color: #055bcc;">"ux"</span>,<br>            <span style="color: #055bcc;">"uy"</span>,<br>            <span style="color: #055bcc;">"uz"</span>,<br>            <span style="color: #055bcc;">"ux"</span>,<br>            <span style="color: #055bcc;">"uy"</span>,<br>            <span style="color: #055bcc;">"uz"</span>,<br>            <span style="color: #055bcc;">"ux"</span>,<br>            <span style="color: #055bcc;">"uy"</span>,<br>            <span style="color: #055bcc;">"uz"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">3381</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"LOAD_CASE_NAMES"</span>: [<br>            <span style="color: #055bcc;">"Summation(CS)"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_FLAG"</span>: {<br>            <span style="color: #c31b1b;">"CENTER"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"NODES"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        },<br>        <span style="color: #c31b1b;">"OPT_CS"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>        <span style="color: #c31b1b;">"STAGE_STEP"</span>: [<br>            <span style="color: #055bcc;">"CS1:001(first)"</span>,<br>            <span style="color: #055bcc;">"CS1:002(last)"</span><br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4KESK2GC2F8CNB48H25DJ7S"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Stress(Local) - General/Post CS</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SolidStress(Local)"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Node"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span>,<br>            <span style="color: #055bcc;">"Sig-yz"</span>,<br>            <span style="color: #055bcc;">"Sig-xz"</span>,<br>            <span style="color: #055bcc;">"Sig-P1"</span>,<br>            <span style="color: #055bcc;">"Sig-P2"</span>,<br>            <span style="color: #055bcc;">"Sig-P3"</span>,<br>            <span style="color: #055bcc;">"Max-Shear"</span>,<br>            <span style="color: #055bcc;">"Sig-EFF"</span>,<br>            <span style="color: #055bcc;">"Sig-OCT"</span>,<br>            <span style="color: #055bcc;">"Sig-P1/ux"</span>,<br>            <span style="color: #055bcc;">"Sig-P1/uy"</span>,<br>            <span style="color: #055bcc;">"Sig-P1/uz"</span>,<br>            <span style="color: #055bcc;">"Sig-P2/ux"</span>,<br>            <span style="color: #055bcc;">"Sig-P2/uy"</span>,<br>            <span style="color: #055bcc;">"Sig-P2/uz"</span>,<br>            <span style="color: #055bcc;">"Sig-P3/ux"</span>,<br>            <span style="color: #055bcc;">"Sig-P3/uy"</span>,<br>            <span style="color: #055bcc;">"Sig-P3/uz"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"Cent"</span>,<br>                <span style="color: #055bcc;">"-0.009540404177"</span>,<br>                <span style="color: #055bcc;">"-0.009754688093"</span>,<br>                <span style="color: #055bcc;">"-0.067613370680"</span>,<br>                <span style="color: #055bcc;">"0.000000149510"</span>,<br>                <span style="color: #055bcc;">"-0.000003700681"</span>,<br>                <span style="color: #055bcc;">"-0.003643177715"</span>,<br>                <span style="color: #055bcc;">"-0.009312743454"</span>,<br>                <span style="color: #055bcc;">"-0.009754688186"</span>,<br>                <span style="color: #055bcc;">"-0.067841031311"</span>,<br>                <span style="color: #055bcc;">"0.029264143929"</span>,<br>                <span style="color: #055bcc;">"0.058308571635"</span>,<br>                <span style="color: #055bcc;">"0.027486924270"</span>,<br>                <span style="color: #055bcc;">"0.998052857758"</span>,<br>                <span style="color: #055bcc;">"0.000859886913"</span>,<br>                <span style="color: #055bcc;">"-0.062367890106"</span>,<br>                <span style="color: #055bcc;">"-0.000862168620"</span>,<br>                <span style="color: #055bcc;">"0.999999628286"</span>,<br>                <span style="color: #055bcc;">"-0.000009672638"</span>,<br>                <span style="color: #055bcc;">"0.062367858606"</span>,<br>                <span style="color: #055bcc;">"0.000063425441"</span>,<br>                <span style="color: #055bcc;">"0.998053228135"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"4052"</span>,<br>                <span style="color: #055bcc;">"-0.013838327481"</span>,<br>                <span style="color: #055bcc;">"-0.013478536002"</span>,<br>                <span style="color: #055bcc;">"-0.066872393336"</span>,<br>                <span style="color: #055bcc;">"0.000021833190"</span>,<br>                <span style="color: #055bcc;">"-0.000004351627"</span>,<br>                <span style="color: #055bcc;">"-0.003358801061"</span>,<br>                <span style="color: #055bcc;">"-0.013475314823"</span>,<br>                <span style="color: #055bcc;">"-0.013629672358"</span>,<br>                <span style="color: #055bcc;">"-0.067084269638"</span>,<br>                <span style="color: #055bcc;">"0.026804477408"</span>,<br>                <span style="color: #055bcc;">"0.053531942955"</span>,<br>                <span style="color: #055bcc;">"0.025235199916"</span>,<br>                <span style="color: #055bcc;">"0.144164958982"</span>,<br>                <span style="color: #055bcc;">"0.989511374996"</span>,<br>                <span style="color: #055bcc;">"-0.009148953744"</span>,<br>                <span style="color: #055bcc;">"0.987549006828"</span>,<br>                <span style="color: #055bcc;">"-0.144454960753"</span>,<br>                <span style="color: #055bcc;">"-0.062287425914"</span>,<br>                <span style="color: #055bcc;">"0.062955728215"</span>,<br>                <span style="color: #055bcc;">"0.000055375982"</span>,<br>                <span style="color: #055bcc;">"0.998016319114"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"4048"</span>,<br>                <span style="color: #055bcc;">"-0.013909754357"</span>,<br>                <span style="color: #055bcc;">"-0.013742522430"</span>,<br>                <span style="color: #055bcc;">"-0.068381739733"</span>,<br>                <span style="color: #055bcc;">"0.000022410716"</span>,<br>                <span style="color: #055bcc;">"-0.000007811843"</span>,<br>                <span style="color: #055bcc;">"-0.003446550765"</span>,<br>                <span style="color: #055bcc;">"-0.013683672199"</span>,<br>                <span style="color: #055bcc;">"-0.013751399817"</span>,<br>                <span style="color: #055bcc;">"-0.068598944504"</span>,<br>                <span style="color: #055bcc;">"0.027457636152"</span>,<br>                <span style="color: #055bcc;">"0.054881439838"</span>,<br>                <span style="color: #055bcc;">"0.025871358847"</span>,<br>                <span style="color: #055bcc;">"0.930307430662"</span>,<br>                <span style="color: #055bcc;">"0.362057757942"</span>,<br>                <span style="color: #055bcc;">"-0.058670813605"</span>,<br>                <span style="color: #055bcc;">"-0.361347746328"</span>,<br>                <span style="color: #055bcc;">"0.932155655649"</span>,<br>                <span style="color: #055bcc;">"0.022663624270"</span>,<br>                <span style="color: #055bcc;">"0.062895871714"</span>,<br>                <span style="color: #055bcc;">"0.000116428207"</span>,<br>                <span style="color: #055bcc;">"0.998020087857"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"4047"</span>,<br>                <span style="color: #055bcc;">"-0.013909491250"</span>,<br>                <span style="color: #055bcc;">"-0.013742554703"</span>,<br>                <span style="color: #055bcc;">"-0.068380322694"</span>,<br>                <span style="color: #055bcc;">"-0.000022298951"</span>,<br>                <span style="color: #055bcc;">"0.000000545806"</span>,<br>                <span style="color: #055bcc;">"-0.003447104985"</span>,<br>                <span style="color: #055bcc;">"-0.013683762839"</span>,<br>                <span style="color: #055bcc;">"-0.013751004924"</span>,<br>                <span style="color: #055bcc;">"-0.068597600885"</span>,<br>                <span style="color: #055bcc;">"0.027456919023"</span>,<br>                <span style="color: #055bcc;">"0.054880247899"</span>,<br>                <span style="color: #055bcc;">"0.025870796962"</span>,<br>                <span style="color: #055bcc;">"0.933205130133"</span>,<br>                <span style="color: #055bcc;">"-0.354497993462"</span>,<br>                <span style="color: #055bcc;">"-0.058816304925"</span>,<br>                <span style="color: #055bcc;">"0.353794946991"</span>,<br>                <span style="color: #055bcc;">"0.935056774954"</span>,<br>                <span style="color: #055bcc;">"-0.022315086763"</span>,<br>                <span style="color: #055bcc;">"0.062907237879"</span>,<br>                <span style="color: #055bcc;">"0.000015641964"</span>,<br>                <span style="color: #055bcc;">"0.998019378157"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"4049"</span>,<br>                <span style="color: #055bcc;">"-0.013838327344"</span>,<br>                <span style="color: #055bcc;">"-0.013478826730"</span>,<br>                <span style="color: #055bcc;">"-0.066872289685"</span>,<br>                <span style="color: #055bcc;">"-0.000022189504"</span>,<br>                <span style="color: #055bcc;">"-0.000001832574"</span>,<br>                <span style="color: #055bcc;">"-0.003359385020"</span>,<br>                <span style="color: #055bcc;">"-0.013475607560"</span>,<br>                <span style="color: #055bcc;">"-0.013629596384"</span>,<br>                <span style="color: #055bcc;">"-0.067084239816"</span>,<br>                <span style="color: #055bcc;">"0.026804316128"</span>,<br>                <span style="color: #055bcc;">"0.053531803955"</span>,<br>                <span style="color: #055bcc;">"0.025235134390"</span>,<br>                <span style="color: #055bcc;">"-0.144298851091"</span>,<br>                <span style="color: #055bcc;">"0.989492819590"</span>,<br>                <span style="color: #055bcc;">"0.009044421124"</span>,<br>                <span style="color: #055bcc;">"0.987528751304"</span>,<br>                <span style="color: #055bcc;">"0.144582005649"</span>,<br>                <span style="color: #055bcc;">"-0.062313794545"</span>,<br>                <span style="color: #055bcc;">"0.062966712810"</span>,<br>                <span style="color: #055bcc;">"0.000060183061"</span>,<br>                <span style="color: #055bcc;">"0.998015625858"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"3211"</span>,<br>                <span style="color: #055bcc;">"-0.005237129980"</span>,<br>                <span style="color: #055bcc;">"-0.005817891791"</span>,<br>                <span style="color: #055bcc;">"-0.066834538799"</span>,<br>                <span style="color: #055bcc;">"-0.000021915655"</span>,<br>                <span style="color: #055bcc;">"-0.000001095126"</span>,<br>                <span style="color: #055bcc;">"-0.003836790451"</span>,<br>                <span style="color: #055bcc;">"-0.004998483100"</span>,<br>                <span style="color: #055bcc;">"-0.005818471979"</span>,<br>                <span style="color: #055bcc;">"-0.067072605490"</span>,<br>                <span style="color: #055bcc;">"0.031037061195"</span>,<br>                <span style="color: #055bcc;">"0.061668216791"</span>,<br>                <span style="color: #055bcc;">"0.029070676185"</span>,<br>                <span style="color: #055bcc;">"0.997727384377"</span>,<br>                <span style="color: #055bcc;">"-0.026602176155"</span>,<br>                <span style="color: #055bcc;">"-0.061906305723"</span>,<br>                <span style="color: #055bcc;">"0.026548638003"</span>,<br>                <span style="color: #055bcc;">"0.999646098689"</span>,<br>                <span style="color: #055bcc;">"-0.001687363750"</span>,<br>                <span style="color: #055bcc;">"0.061929284548"</span>,<br>                <span style="color: #055bcc;">"0.000040000920"</span>,<br>                <span style="color: #055bcc;">"0.998080538892"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"3208"</span>,<br>                <span style="color: #055bcc;">"-0.005177124102"</span>,<br>                <span style="color: #055bcc;">"-0.005979802148"</span>,<br>                <span style="color: #055bcc;">"-0.068365927427"</span>,<br>                <span style="color: #055bcc;">"-0.000021730639"</span>,<br>                <span style="color: #055bcc;">"-0.000001545047"</span>,<br>                <span style="color: #055bcc;">"-0.003933205835"</span>,<br>                <span style="color: #055bcc;">"-0.004932796480"</span>,<br>                <span style="color: #055bcc;">"-0.005980247355"</span>,<br>                <span style="color: #055bcc;">"-0.068609809842"</span>,<br>                <span style="color: #055bcc;">"0.031838506681"</span>,<br>                <span style="color: #055bcc;">"0.063159802412"</span>,<br>                <span style="color: #055bcc;">"0.029773816389"</span>,<br>                <span style="color: #055bcc;">"0.997871014792"</span>,<br>                <span style="color: #055bcc;">"-0.020619543060"</span>,<br>                <span style="color: #055bcc;">"-0.061873033555"</span>,<br>                <span style="color: #055bcc;">"0.020577166506"</span>,<br>                <span style="color: #055bcc;">"0.999787393559"</span>,<br>                <span style="color: #055bcc;">"-0.001322081444"</span>,<br>                <span style="color: #055bcc;">"0.061887139665"</span>,<br>                <span style="color: #055bcc;">"0.000046095039"</span>,<br>                <span style="color: #055bcc;">"0.998083152758"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"3209"</span>,<br>                <span style="color: #055bcc;">"-0.005176399772"</span>,<br>                <span style="color: #055bcc;">"-0.005979507232"</span>,<br>                <span style="color: #055bcc;">"-0.068364909192"</span>,<br>                <span style="color: #055bcc;">"0.000022980930"</span>,<br>                <span style="color: #055bcc;">"-0.000004110462"</span>,<br>                <span style="color: #055bcc;">"-0.003929954952"</span>,<br>                <span style="color: #055bcc;">"-0.004932404172"</span>,<br>                <span style="color: #055bcc;">"-0.005980020752"</span>,<br>                <span style="color: #055bcc;">"-0.068608391272"</span>,<br>                <span style="color: #055bcc;">"0.031837993550"</span>,<br>                <span style="color: #055bcc;">"0.063158695473"</span>,<br>                <span style="color: #055bcc;">"0.029773294573"</span>,<br>                <span style="color: #055bcc;">"0.997841508306"</span>,<br>                <span style="color: #055bcc;">"0.022142467267"</span>,<br>                <span style="color: #055bcc;">"-0.061822612728"</span>,<br>                <span style="color: #055bcc;">"-0.022102739598"</span>,<br>                <span style="color: #055bcc;">"0.999754824600"</span>,<br>                <span style="color: #055bcc;">"0.001326496196"</span>,<br>                <span style="color: #055bcc;">"0.061836827243"</span>,<br>                <span style="color: #055bcc;">"0.000042816146"</span>,<br>                <span style="color: #055bcc;">"0.998086271303"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"9"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"DL"</span>,<br>                <span style="color: #055bcc;">"3210"</span>,<br>                <span style="color: #055bcc;">"-0.005236679132"</span>,<br>                <span style="color: #055bcc;">"-0.005817863706"</span>,<br>                <span style="color: #055bcc;">"-0.066834844577"</span>,<br>                <span style="color: #055bcc;">"0.000022105994"</span>,<br>                <span style="color: #055bcc;">"-0.000009404575"</span>,<br>                <span style="color: #055bcc;">"-0.003833628652"</span>,<br>                <span style="color: #055bcc;">"-0.004998380354"</span>,<br>                <span style="color: #055bcc;">"-0.005818488444"</span>,<br>                <span style="color: #055bcc;">"-0.067072518618"</span>,<br>                <span style="color: #055bcc;">"0.031037069132"</span>,<br>                <span style="color: #055bcc;">"0.061668174252"</span>,<br>                <span style="color: #055bcc;">"0.029070656131"</span>,<br>                <span style="color: #055bcc;">"0.997702626331"</span>,<br>                <span style="color: #055bcc;">"0.027623448956"</span>,<br>                <span style="color: #055bcc;">"-0.061858018713"</span>,<br>                <span style="color: #055bcc;">"-0.027578612095"</span>,<br>                <span style="color: #055bcc;">"0.999618391153"</span>,<br>                <span style="color: #055bcc;">"0.001578677881"</span>,<br>                <span style="color: #055bcc;">"0.061878021673"</span>,<br>                <span style="color: #055bcc;">"0.000130907235"</span>,<br>                <span style="color: #055bcc;">"0.998083710566"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Solid Stress(Local) - Construction Stage</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SolidStress(Local)"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Stage"</span>,<br>            <span style="color: #055bcc;">"Step"</span>,<br>            <span style="color: #055bcc;">"Node"</span>,<br>            <span style="color: #055bcc;">"Sig-xx"</span>,<br>            <span style="color: #055bcc;">"Sig-yy"</span>,<br>            <span style="color: #055bcc;">"Sig-zz"</span>,<br>            <span style="color: #055bcc;">"Sig-xy"</span>,<br>            <span style="color: #055bcc;">"Sig-yz"</span>,<br>            <span style="color: #055bcc;">"Sig-xz"</span>,<br>            <span style="color: #055bcc;">"Sig-P1"</span>,<br>            <span style="color: #055bcc;">"Sig-P2"</span>,<br>            <span style="color: #055bcc;">"Sig-P3"</span>,<br>            <span style="color: #055bcc;">"Max-Shear"</span>,<br>            <span style="color: #055bcc;">"Sig-EFF"</span>,<br>            <span style="color: #055bcc;">"Sig-OCT"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"Cent"</span>,<br>                <span style="color: #055bcc;">"-0.009540404177"</span>,<br>                <span style="color: #055bcc;">"-0.009754688093"</span>,<br>                <span style="color: #055bcc;">"-0.067613370680"</span>,<br>                <span style="color: #055bcc;">"0.000000149510"</span>,<br>                <span style="color: #055bcc;">"-0.000003700681"</span>,<br>                <span style="color: #055bcc;">"-0.003643177715"</span>,<br>                <span style="color: #055bcc;">"-0.009312743454"</span>,<br>                <span style="color: #055bcc;">"-0.009754688186"</span>,<br>                <span style="color: #055bcc;">"-0.067841031311"</span>,<br>                <span style="color: #055bcc;">"0.029264143929"</span>,<br>                <span style="color: #055bcc;">"0.058308571635"</span>,<br>                <span style="color: #055bcc;">"0.027486924270"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"Cent"</span>,<br>                <span style="color: #055bcc;">"-0.129717308249"</span>,<br>                <span style="color: #055bcc;">"-0.125429386797"</span>,<br>                <span style="color: #055bcc;">"-1.025274451333"</span>,<br>                <span style="color: #055bcc;">"0.004969755673"</span>,<br>                <span style="color: #055bcc;">"0.017762303115"</span>,<br>                <span style="color: #055bcc;">"-0.242924194156"</span>,<br>                <span style="color: #055bcc;">"-0.068063455385"</span>,<br>                <span style="color: #055bcc;">"-0.125079419052"</span>,<br>                <span style="color: #055bcc;">"-1.087278271942"</span>,<br>                <span style="color: #055bcc;">"0.509607408278"</span>,<br>                <span style="color: #055bcc;">"0.991936564228"</span>,<br>                <span style="color: #055bcc;">"0.467603380715"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"4052"</span>,<br>                <span style="color: #055bcc;">"-0.013838327481"</span>,<br>                <span style="color: #055bcc;">"-0.013478536002"</span>,<br>                <span style="color: #055bcc;">"-0.066872393336"</span>,<br>                <span style="color: #055bcc;">"0.000021833190"</span>,<br>                <span style="color: #055bcc;">"-0.000004351627"</span>,<br>                <span style="color: #055bcc;">"-0.003358801061"</span>,<br>                <span style="color: #055bcc;">"-0.013475314823"</span>,<br>                <span style="color: #055bcc;">"-0.013629672358"</span>,<br>                <span style="color: #055bcc;">"-0.067084269638"</span>,<br>                <span style="color: #055bcc;">"0.026804477408"</span>,<br>                <span style="color: #055bcc;">"0.053531942955"</span>,<br>                <span style="color: #055bcc;">"0.025235199916"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"4052"</span>,<br>                <span style="color: #055bcc;">"-0.195146534853"</span>,<br>                <span style="color: #055bcc;">"-0.208167566564"</span>,<br>                <span style="color: #055bcc;">"-1.054238985422"</span>,<br>                <span style="color: #055bcc;">"0.000218496886"</span>,<br>                <span style="color: #055bcc;">"0.018946946246"</span>,<br>                <span style="color: #055bcc;">"-0.242927463625"</span>,<br>                <span style="color: #055bcc;">"-0.130935022641"</span>,<br>                <span style="color: #055bcc;">"-0.208073052562"</span>,<br>                <span style="color: #055bcc;">"-1.118545011635"</span>,<br>                <span style="color: #055bcc;">"0.493804994497"</span>,<br>                <span style="color: #055bcc;">"0.951389235349"</span>,<br>                <span style="color: #055bcc;">"0.448489186576"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"4048"</span>,<br>                <span style="color: #055bcc;">"-0.013909754357"</span>,<br>                <span style="color: #055bcc;">"-0.013742522430"</span>,<br>                <span style="color: #055bcc;">"-0.068381739733"</span>,<br>                <span style="color: #055bcc;">"0.000022410716"</span>,<br>                <span style="color: #055bcc;">"-0.000007811843"</span>,<br>                <span style="color: #055bcc;">"-0.003446550765"</span>,<br>                <span style="color: #055bcc;">"-0.013683672199"</span>,<br>                <span style="color: #055bcc;">"-0.013751399817"</span>,<br>                <span style="color: #055bcc;">"-0.068598944504"</span>,<br>                <span style="color: #055bcc;">"0.027457636152"</span>,<br>                <span style="color: #055bcc;">"0.054881439838"</span>,<br>                <span style="color: #055bcc;">"0.025871358847"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"4048"</span>,<br>                <span style="color: #055bcc;">"-0.195443736730"</span>,<br>                <span style="color: #055bcc;">"-0.199254359762"</span>,<br>                <span style="color: #055bcc;">"-1.000609558036"</span>,<br>                <span style="color: #055bcc;">"0.000009956215"</span>,<br>                <span style="color: #055bcc;">"0.017073705568"</span>,<br>                <span style="color: #055bcc;">"-0.239693079442"</span>,<br>                <span style="color: #055bcc;">"-0.129198037618"</span>,<br>                <span style="color: #055bcc;">"-0.199234744656"</span>,<br>                <span style="color: #055bcc;">"-1.066874872255"</span>,<br>                <span style="color: #055bcc;">"0.468838417318"</span>,<br>                <span style="color: #055bcc;">"0.904693975211"</span>,<br>                <span style="color: #055bcc;">"0.426476829847"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"4047"</span>,<br>                <span style="color: #055bcc;">"-0.013909491250"</span>,<br>                <span style="color: #055bcc;">"-0.013742554703"</span>,<br>                <span style="color: #055bcc;">"-0.068380322694"</span>,<br>                <span style="color: #055bcc;">"-0.000022298951"</span>,<br>                <span style="color: #055bcc;">"0.000000545806"</span>,<br>                <span style="color: #055bcc;">"-0.003447104985"</span>,<br>                <span style="color: #055bcc;">"-0.013683762839"</span>,<br>                <span style="color: #055bcc;">"-0.013751004924"</span>,<br>                <span style="color: #055bcc;">"-0.068597600885"</span>,<br>                <span style="color: #055bcc;">"0.027456919023"</span>,<br>                <span style="color: #055bcc;">"0.054880247899"</span>,<br>                <span style="color: #055bcc;">"0.025870796962"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"4047"</span>,<br>                <span style="color: #055bcc;">"-0.194678722578"</span>,<br>                <span style="color: #055bcc;">"-0.199316251309"</span>,<br>                <span style="color: #055bcc;">"-0.995929835543"</span>,<br>                <span style="color: #055bcc;">"0.000534649871"</span>,<br>                <span style="color: #055bcc;">"0.016956521639"</span>,<br>                <span style="color: #055bcc;">"-0.235604241339"</span>,<br>                <span style="color: #055bcc;">"-0.130309573422"</span>,<br>                <span style="color: #055bcc;">"-0.199225750008"</span>,<br>                <span style="color: #055bcc;">"-1.060389486000"</span>,<br>                <span style="color: #055bcc;">"0.465039956289"</span>,<br>                <span style="color: #055bcc;">"0.897608228395"</span>,<br>                <span style="color: #055bcc;">"0.423136576765"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"9"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"4049"</span>,<br>                <span style="color: #055bcc;">"-0.013838327344"</span>,<br>                <span style="color: #055bcc;">"-0.013478826730"</span>,<br>                <span style="color: #055bcc;">"-0.066872289685"</span>,<br>                <span style="color: #055bcc;">"-0.000022189504"</span>,<br>                <span style="color: #055bcc;">"-0.000001832574"</span>,<br>                <span style="color: #055bcc;">"-0.003359385020"</span>,<br>                <span style="color: #055bcc;">"-0.013475607560"</span>,<br>                <span style="color: #055bcc;">"-0.013629596384"</span>,<br>                <span style="color: #055bcc;">"-0.067084239816"</span>,<br>                <span style="color: #055bcc;">"0.026804316128"</span>,<br>                <span style="color: #055bcc;">"0.053531803955"</span>,<br>                <span style="color: #055bcc;">"0.025235134390"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"10"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"4049"</span>,<br>                <span style="color: #055bcc;">"-0.194692048477"</span>,<br>                <span style="color: #055bcc;">"-0.208527410283"</span>,<br>                <span style="color: #055bcc;">"-1.051121851184"</span>,<br>                <span style="color: #055bcc;">"0.000735128589"</span>,<br>                <span style="color: #055bcc;">"0.019117462839"</span>,<br>                <span style="color: #055bcc;">"-0.238997671068"</span>,<br>                <span style="color: #055bcc;">"-0.132289543612"</span>,<br>                <span style="color: #055bcc;">"-0.208363387488"</span>,<br>                <span style="color: #055bcc;">"-1.113688378844"</span>,<br>                <span style="color: #055bcc;">"0.490699417616"</span>,<br>                <span style="color: #055bcc;">"0.945659622563"</span>,<br>                <span style="color: #055bcc;">"0.445788221206"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"11"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"3211"</span>,<br>                <span style="color: #055bcc;">"-0.005237129980"</span>,<br>                <span style="color: #055bcc;">"-0.005817891791"</span>,<br>                <span style="color: #055bcc;">"-0.066834538799"</span>,<br>                <span style="color: #055bcc;">"-0.000021915655"</span>,<br>                <span style="color: #055bcc;">"-0.000001095126"</span>,<br>                <span style="color: #055bcc;">"-0.003836790451"</span>,<br>                <span style="color: #055bcc;">"-0.004998483100"</span>,<br>                <span style="color: #055bcc;">"-0.005818471979"</span>,<br>                <span style="color: #055bcc;">"-0.067072605490"</span>,<br>                <span style="color: #055bcc;">"0.031037061195"</span>,<br>                <span style="color: #055bcc;">"0.061668216791"</span>,<br>                <span style="color: #055bcc;">"0.029070676185"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"12"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"3211"</span>,<br>                <span style="color: #055bcc;">"-0.066296093599"</span>,<br>                <span style="color: #055bcc;">"-0.049505842756"</span>,<br>                <span style="color: #055bcc;">"-1.053452726809"</span>,<br>                <span style="color: #055bcc;">"0.009745244134"</span>,<br>                <span style="color: #055bcc;">"0.016672965293"</span>,<br>                <span style="color: #055bcc;">"-0.252331765348"</span>,<br>                <span style="color: #055bcc;">"-0.004836491985"</span>,<br>                <span style="color: #055bcc;">"-0.049884479503"</span>,<br>                <span style="color: #055bcc;">"-1.114533691676"</span>,<br>                <span style="color: #055bcc;">"0.554848599846"</span>,<br>                <span style="color: #055bcc;">"1.087872957005"</span>,<br>                <span style="color: #055bcc;">"0.512828229978"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"13"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"3208"</span>,<br>                <span style="color: #055bcc;">"-0.005177124102"</span>,<br>                <span style="color: #055bcc;">"-0.005979802148"</span>,<br>                <span style="color: #055bcc;">"-0.068365927427"</span>,<br>                <span style="color: #055bcc;">"-0.000021730639"</span>,<br>                <span style="color: #055bcc;">"-0.000001545047"</span>,<br>                <span style="color: #055bcc;">"-0.003933205835"</span>,<br>                <span style="color: #055bcc;">"-0.004932796480"</span>,<br>                <span style="color: #055bcc;">"-0.005980247355"</span>,<br>                <span style="color: #055bcc;">"-0.068609809842"</span>,<br>                <span style="color: #055bcc;">"0.031838506681"</span>,<br>                <span style="color: #055bcc;">"0.063159802412"</span>,<br>                <span style="color: #055bcc;">"0.029773816389"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"14"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"3208"</span>,<br>                <span style="color: #055bcc;">"-0.065935767526"</span>,<br>                <span style="color: #055bcc;">"-0.044789779148"</span>,<br>                <span style="color: #055bcc;">"-1.000482136896"</span>,<br>                <span style="color: #055bcc;">"0.009903124103"</span>,<br>                <span style="color: #055bcc;">"0.018351066966"</span>,<br>                <span style="color: #055bcc;">"-0.249208030971"</span>,<br>                <span style="color: #055bcc;">"-0.002992586871"</span>,<br>                <span style="color: #055bcc;">"-0.045031030229"</span>,<br>                <span style="color: #055bcc;">"-1.063184066470"</span>,<br>                <span style="color: #055bcc;">"0.530095739800"</span>,<br>                <span style="color: #055bcc;">"1.039809792544"</span>,<br>                <span style="color: #055bcc;">"0.490171036968"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"15"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"3209"</span>,<br>                <span style="color: #055bcc;">"-0.005176399772"</span>,<br>                <span style="color: #055bcc;">"-0.005979507232"</span>,<br>                <span style="color: #055bcc;">"-0.068364909192"</span>,<br>                <span style="color: #055bcc;">"0.000022980930"</span>,<br>                <span style="color: #055bcc;">"-0.000004110462"</span>,<br>                <span style="color: #055bcc;">"-0.003929954952"</span>,<br>                <span style="color: #055bcc;">"-0.004932404172"</span>,<br>                <span style="color: #055bcc;">"-0.005980020752"</span>,<br>                <span style="color: #055bcc;">"-0.068608391272"</span>,<br>                <span style="color: #055bcc;">"0.031837993550"</span>,<br>                <span style="color: #055bcc;">"0.063158695473"</span>,<br>                <span style="color: #055bcc;">"0.029773294573"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"16"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"3209"</span>,<br>                <span style="color: #055bcc;">"-0.062414008205"</span>,<br>                <span style="color: #055bcc;">"-0.044424720251"</span>,<br>                <span style="color: #055bcc;">"-0.995904463598"</span>,<br>                <span style="color: #055bcc;">"0.009380631666"</span>,<br>                <span style="color: #055bcc;">"0.018182842783"</span>,<br>                <span style="color: #055bcc;">"-0.240638526813"</span>,<br>                <span style="color: #055bcc;">"-0.003458031242"</span>,<br>                <span style="color: #055bcc;">"-0.044607977804"</span>,<br>                <span style="color: #055bcc;">"-1.054677183008"</span>,<br>                <span style="color: #055bcc;">"0.525609575883"</span>,<br>                <span style="color: #055bcc;">"1.031260108421"</span>,<br>                <span style="color: #055bcc;">"0.486140677221"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"17"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"001(first)"</span>,<br>                <span style="color: #055bcc;">"3210"</span>,<br>                <span style="color: #055bcc;">"-0.005236679132"</span>,<br>                <span style="color: #055bcc;">"-0.005817863706"</span>,<br>                <span style="color: #055bcc;">"-0.066834844577"</span>,<br>                <span style="color: #055bcc;">"0.000022105994"</span>,<br>                <span style="color: #055bcc;">"-0.000009404575"</span>,<br>                <span style="color: #055bcc;">"-0.003833628652"</span>,<br>                <span style="color: #055bcc;">"-0.004998380354"</span>,<br>                <span style="color: #055bcc;">"-0.005818488444"</span>,<br>                <span style="color: #055bcc;">"-0.067072518618"</span>,<br>                <span style="color: #055bcc;">"0.031037069132"</span>,<br>                <span style="color: #055bcc;">"0.061668174252"</span>,<br>                <span style="color: #055bcc;">"0.029070656131"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"18"</span>,<br>                <span style="color: #055bcc;">"3381"</span>,<br>                <span style="color: #055bcc;">"Summation"</span>,<br>                <span style="color: #055bcc;">"CS1"</span>,<br>                <span style="color: #055bcc;">"002(last)"</span>,<br>                <span style="color: #055bcc;">"3210"</span>,<br>                <span style="color: #055bcc;">"-0.063131554023"</span>,<br>                <span style="color: #055bcc;">"-0.049449164303"</span>,<br>                <span style="color: #055bcc;">"-1.050456053175"</span>,<br>                <span style="color: #055bcc;">"0.009230813922"</span>,<br>                <span style="color: #055bcc;">"0.016796913586"</span>,<br>                <span style="color: #055bcc;">"-0.243992774639"</span>,<br>                <span style="color: #055bcc;">"-0.005514083043"</span>,<br>                <span style="color: #055bcc;">"-0.049739332885"</span>,<br>                <span style="color: #055bcc;">"-1.107783355573"</span>,<br>                <span style="color: #055bcc;">"0.551134636265"</span>,<br>                <span style="color: #055bcc;">"1.080835458299"</span>,<br>                <span style="color: #055bcc;">"0.509510721273"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4KESK2HKZPCG0V020FG2XZS"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Table Name</p>
+<p> • Response Table Title</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TABLE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Empty</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Type</p>
+<p> • Solid Stress - Local: "SOLIDSL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TABLE_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Save Path</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EXPORT_PATH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Unit Setting</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Length</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Heat</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HEAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Temperature</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEMP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Number Format</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STYLES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number Format</p>
+<p> • "Default"</p>
+<p> • "Fixed"</p>
+<p> • "Scientific"</p>
+<p> • "General"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORMAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Digit Place</p>
+<p> • 0 to 15</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Components of Result Table</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMPONENTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Node / Element No. Input</p>
+<p> • Use Only One of the Three Methods</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_ELEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 1: Specify Each ID</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "KEYS": [101, 102, 103]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"KEYS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 2: Specify ID Range</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "TO": "101 to 105"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 3: Specify Structure Group Name</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "STRUCTURE_GROUP_NAME": "SG1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STRUCTURE_GROUP_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Load Name &amp; Type</p>
+<p> • Static Load Cases</p>
+<p>   ◦ NAME + "(ST)"</p>
+<p> • Load Combinations</p>
+<p>   ◦ NAME + "(CB)"</p>
+<p>   ◦ NAME + "(CB:all)"</p>
+<p>   ◦ NAME + "(CB:max)"</p>
+<p>   ◦ NAME + "(CB:min)"</p>
+<p> • Construction Stage</p>
+<p>   ◦ NAME + "(CS)"</p>
+<p> • Response Spectrum</p>
+<p>   ◦ NAME + "(RS)"</p>
+<p> • Moving Load</p>
+<p>   ◦ NAME + "(MV:all)"</p>
+<p>   ◦ NAME + "(MV:max)"</p>
+<p>   ◦ NAME + "(MV:min)"</p>
+<p> • Settlement Load</p>
+<p>   ◦ NAME + "(SM:all)"</p>
+<p>   ◦ NAME + "(SM:max)"</p>
+<p>   ◦ NAME + "(SM:min)"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD_CASE_NAMES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Node Flag</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_FLAG"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Center</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CENTER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Nodes</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Construction Stage</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Activation - Construction Stage Step</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_CS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Stage Step Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STAGE_STEP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

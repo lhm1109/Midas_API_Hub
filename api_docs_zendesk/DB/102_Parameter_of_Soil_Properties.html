@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter of Soil Properties - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Parameter of Soil Properties</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 49510865840537</div>
+        <div class="info-item"><span class="label">Created:</span> 2025-08-05T05:01:51Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:15:02Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/49510865840537-Parameter-of-Soil-Properties" target="_blank">https://support.midasuser.com/hc/en-us/articles/49510865840537-Parameter-of-Soil-Properties</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01K1W9N2HXAWTJJD3Y4W0G8WA3"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto;">
+<colgroup> <col style="width: 100%;"> </colgroup>
+<thead>
+<tr>
+<th style="padding: 10px 5px; text-align: center;">
+<p class="wysiwyg-text-align-center"><strong>{base url} + db/POSP</strong></p>
+</th>
+</tr>
+</thead>
+</table>
+</div>
+<br><br>
+<h3 id="h_01K1W9N2HYMYGNW6MCPN9J5VDK"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto;">
+<colgroup> <col style="width: 100%;"> </colgroup>
+<thead>
+<tr>
+<th style="padding: 10px 5px; text-align: center;">
+<p class="wysiwyg-text-align-center"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</thead>
+</table>
+</div>
+<br><br>
+<h3 id="h_01K2C3P1DS08QBHXEQ46QTR021"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PropertyName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"DESC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PropertyDescription"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT_USE_N"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseN"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"GROUND_LEVEL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"GroundLevel"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"BEDROCK_LEVEL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BedlockLevel"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"FOOTING_LEVEL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"FootingLevel"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SoilParam"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"HEIGHT"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Height"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AngleOrN"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DENSITY"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Density"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"VS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Vs"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"KH"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Kh"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DISP"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Disp"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01K2C3P1DSR8TE5CQTE3PQHE96"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Import to Json</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Soil-1"</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"OPT_USE_N"</span>: <span style="color: #055bcc;"><strong>false</strong></span>,<br>            <span style="color: #c31b1b;">"GROUND_LEVEL"</span>: <span style="color: #0ab66c;">6</span>,<br>            <span style="color: #c31b1b;">"BEDROCK_LEVEL"</span>: <span style="color: #0ab66c;">-21</span>,<br>            <span style="color: #c31b1b;">"FOOTING_LEVEL"</span>: <span style="color: #0ab66c;">-17.5</span>,<br>            <span style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">7</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">11449</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">11449</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">11449</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">15913</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">15913</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">15913</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">15913</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">17</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">187</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">20511</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">193</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">21533</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">210</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">25565</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">215</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">26986</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">221</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">28690</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">224</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">45496</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">228</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">47246</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">215</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">41559</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">181</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">30014</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">171</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">27391</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">167</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">26342</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">169</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">26867</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">18</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">479</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">213426</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"HEIGHT"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"ANGLE_OR_N"</span>: <span style="color: #0ab66c;">30</span>,<br>                    <span style="color: #c31b1b;">"DENSITY"</span>: <span style="color: #0ab66c;">24</span>,<br>                    <span style="color: #c31b1b;">"VS"</span>: <span style="color: #0ab66c;">736</span>,<br>                    <span style="color: #c31b1b;">"KH"</span>: <span style="color: #0ab66c;">476345</span>,<br>                    <span style="color: #c31b1b;">"DISP"</span>: <span style="color: #0ab66c;">0.001</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01K1WEF55X53D80X4FJEP5V6Y7"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto; border-collapse: collapse; border-style: solid; border-width: 1px;">
+<colgroup> <col style="width: 6%;"> <col style="width: 6%;"> <col style="width: 44%;"> <col style="width: 14%;"> <col style="width: 10%;"> <col style="width: 10%;"> <col style="width: 10%;"> </colgroup>
+<thead>
+<tr>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">No.</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;" colspan="2">Description</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Key</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Value Type</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Default</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">1</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">Parameters of Soil Properties Name</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"NAME"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">2</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">Description</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"DESC"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Blank</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">3</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">
+<p>Use N Value</p>
+<p> • True : Use N Value of soil</p>
+<p> • False : Internal friction angle of soil</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"OPT_USE_N"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">False</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">4</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">Level of ground surface</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"GROUND_LEVEL"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">5</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">Level of Bedrock</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"BEDROCK_LEVEL"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">6</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">Level of footing bottom</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"FOOTING_LEVEL"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" rowspan="7">
+<p class="wysiwyg-text-align-center">7</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;" colspan="2">
+<p>Soil Characteristic</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"ITEMS"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Arrary</p>
+<p class="wysiwyg-text-align-center">[Object]</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">(1)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Soil layer thickness</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"HEIGHT"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">(2)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Internal friction angle of soil or N Value</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"ANGLE_OR_N"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">(3)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Unit volume weight of soil</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"DENSITY"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">(4)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Shear Wave Velocity</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"VS"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">(5)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Coeff.of Horizontal Ground Reaction</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"KH"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">(6)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Relative Displacement</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">"DISP"</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+    </div>
+</body>
+</html>

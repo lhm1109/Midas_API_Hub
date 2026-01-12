@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Spectrum Functions - Other Countries - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Response Spectrum Functions - Other Countries</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 39508838720153</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-11-01T06:04:46Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:20:03Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/39508838720153-Response-Spectrum-Functions-Other-Countries" target="_blank">https://support.midasuser.com/hc/en-us/articles/39508838720153-Response-Spectrum-Functions-Other-Countries</a></div>
+    </div>
+    
+    <div class="content">
+        <p><strong style="font-size: 1.2em;">Input URI</strong></p>
+<div>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/SPFC</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01JBK57RA0D4BAZPSDWCTQS4TS"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01JBK57RA0ENPEQGRW3A9MNZ7M"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SPFC"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RS Functio Name"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"iTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spectral Data Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Scaling Method"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"SCALE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Scale Factor or Maximum Value"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"GRAV"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Gravity"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"DRATIO"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Damping Ratio"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"DESC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Description"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"String Data By Code"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"SPEC_CODE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>:
+<p><span style="color: #055bcc;">"Design Spectrum Type"</span></p>
+,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SFI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Fortification"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SC_"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Site Class or Seismic Criterion"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"EQ_"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Earth Response"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DIV"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Division"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"BT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Bridge Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ZM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ZoningMap"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ST"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Site Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Intensity"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SPECTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spectrum Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"GROUTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Ground Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PARATYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Parameter Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"RESIONTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Resion Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"NATIONALANNEX"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"National Annex"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"REGION"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Region"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"METHOD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Type or Option Data By Code"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"NSC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Design Category"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"nLForce"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"nLForce"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"LARGEBRIDEGE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Large Bridege"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"bVACC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Vertical Acceleration Spec"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iVACC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Vertical Acceleration Spec Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"bE2_005"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Think E2 0.05"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SCCOPT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Coefficients Calculation Option"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSPTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Soil Profile Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSEISZONEFACTOR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Zone Factor(Z)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSEISSOURCETYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Source Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SOILCLASS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Soil class"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"KD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Ductility class"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"KR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Structural Regularity in Elevation(Kr)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SC_"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Site Class"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SFI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Fortification Intensity"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ZA"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Acceleration Zone(Za)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ZV"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Velocity Zone(Zv)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSEISZONE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Zone"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iEQMETHOD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Earthquake Input Method"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"bRELIEVE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Relieve"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSPECTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spectrum Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSPECUSE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spectrum Use Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iSUBZONE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Sub Zone"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"iGROUTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Ground Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"IMPORTANT_BRIDGE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Important bridge"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"RESION_SEISMICITY"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Region Seismicity"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SOIL_CATEGORY"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Soil Category"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    },<br>                    <span style="color: #c31b1b;">"BYCODE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"By code"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"RISK_CATEGORY"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Risk Category"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Factor or Value Data By Code"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"aTG"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Design Characteristic Period of Ground Motion (TG, TG1, TG2)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">3</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aIF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Importance Factor (Ci, Cs, Cd)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">3</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aSRA"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spectral Response Acceleration (Sds, Sd1, Sms, Sm1)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">4</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aSRA_T"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spectral Response Acceleration (Sds_t, Sd1_t, Sms_t, Sm1_t)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">4</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aNSF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Near Source Factor (Nda, Ndv, Nma, Nmv)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">4</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aSC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Coefficient (Ca, Cv)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">2</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aMSRACC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Mapped Spectral Response Acceleration at Short Periods (Ss, S1)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">2</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aSMF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Site Magnify Factor (Fda, Fdv, Fma, Fmv)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">4</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aSCP"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Site Coeff. at Short/1sec Period (Fa, Fv)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">2</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"aEP"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Effective Peak Acc/Vel (Aa, Av)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                            <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">2</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"DP"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Damping Ratio"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"MaxEQ"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Maximum Effect Coefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"G"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Basic horizontal seismic acceleration alpha(g)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"EPA"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Earthquake Area"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SMAX"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">""</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PERIOD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Max Period"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DP2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Damping Ratio (By Code)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ETA1"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Eta1"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ETA2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Eta2"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"GAMMA"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Gamma"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"A"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Area"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SOILFACTOR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Soil Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TB"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Tb"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Tc"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Td"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"AGR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Design Ground Acc. (Agr)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"I_"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Importance Factor(I)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"XI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Viscous Damping Ratio(Xi)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"Q"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Behavior Factor(q)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"B"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Lower Bound Factor(h)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Site Natural Period"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SPTYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Soil Profile Type"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"IE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Importance Factor (Ie)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"R_"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Response Modification Coef. (R)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"CDISTANCE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Closest Distance to Known Seismic Source(km)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"Q0"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Basic Behavior Factor(Q0)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"KW"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Failure Mode Factor (Kw)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ALPHA"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Ratio of design ground acceleration to gravity acceleration"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"CO"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Base Shear Factor(Co)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"KH"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Horizontal Seismic Coef.(Kh)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"CZ"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"General Effect Factor(Cz)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"V"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Zonal Velocity Ratio(V)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"AG"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Design Ground Acceleration(g)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DPFAC"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Damping Multiplying Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"IF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Importance Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"SMFACTOR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Seismic Magnify Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"RMFACTOR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Response Modify Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ZONEFACTOR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Zone Factor (S)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TL"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Long Tran. Period(TL)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PGA"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PGA"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PHI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Phi"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"DEPTH"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Depth to MR"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"FO"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Amplification Factor (Fo)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"TCSTAR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Period of constant Hor. Acc. (Tc*)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"KP"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"kp"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"Z"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Z"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"MU"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Mu"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"USERDEFSEISZONE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"User Defined Seismic Zone"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"FUNDAMENTAL_PERIOD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Fundamental Period (T1)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"K1"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"K1 Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"K2"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"K2 Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"K3"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"K3 Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"K4"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"K4 Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"KPSI"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"KPsi Factor"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"aFUNC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Function Data List"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"PERIOD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Period"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"VALUE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Value"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01JBK57RA1CF9P2XE29PCCVW0J"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Canada_NBC(1995)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"NBC1995"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"NBC1995 : v=0.15, Za=2, Zv=3"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"NBC95"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"ZA"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"ZV"</span>: <span style="color: #0ab66c;">3</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"V"</span>: <span style="color: #0ab66c;">0.15</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Italy_NTC2018</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"NBC1995"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"NBC1995 : v=0.15, Za=2, Zv=3"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"NBC95"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"ZA"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"ZV"</span>: <span style="color: #0ab66c;">3</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"V"</span>: <span style="color: #0ab66c;">0.15</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Philippines_DPWH-LRFD BSDS(2013)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"DPWH-LRFD BSDS(2013)"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"DPWH-LRFD BSDS(2013): GT=II, PGA=0.50, Ss=1.10, S1=0.60, RMF=1.50"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"DPWH-LRFD BSDS(2013)"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"iGROUTYPE"</span>: <span style="color: #0ab66c;">1</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"aMSRACC"</span>: [<br>                    <span style="color: #0ab66c;">1.1</span>,<br>                    <span style="color: #0ab66c;">0.6</span><br>                ],<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"R_"</span>: <span style="color: #0ab66c;">1.5</span>,<br>                <span style="color: #c31b1b;">"PGA"</span>: <span style="color: #0ab66c;">0.5</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Australia_AS 5100.2(2017)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"AS 5100.2(2017)"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"AS 5100.2(2017): SC=Be, kp=1.30, Z=0.08, μ=1.50"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"AS 5100.2(2017)"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"SOILCLASS"</span>: <span style="color: #0ab66c;">1</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"KP"</span>: <span style="color: #0ab66c;">1.3</span>,<br>                <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.08</span>,<br>                <span style="color: #c31b1b;">"MU"</span>: <span style="color: #0ab66c;">1.5</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Colombia_NSR-10</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"NSR-10"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"NSR-10: Site=C,Ss=0.25,S1=0.15,Fa=1.15,Fv=1.65,I=1.0,R=4.0"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"NSR-10"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"SC_"</span>: <span style="color: #0ab66c;">2</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"aSCP"</span>: [<br>                    <span style="color: #0ab66c;">1.15</span>,<br>                    <span style="color: #0ab66c;">1.65</span><br>                ],<br>                <span style="color: #c31b1b;">"aEP"</span>: [<br>                    <span style="color: #0ab66c;">0.25</span>,<br>                    <span style="color: #0ab66c;">0.15</span><br>                ],<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"IE"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"R_"</span>: <span style="color: #0ab66c;">4</span>,<br>                <span style="color: #c31b1b;">"PHI"</span>: <span style="color: #0ab66c;">1</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Romania_P100-1(2013)</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"P100-1(2013) V-ELASTIC"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"P100-1(2013) V-ELA: Tb=0.07,Tc=0.72,Td=2.00,Ag=0.30g,γI,e=1.2,Damping=5.00"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"P100-1(2013)"</span>,<br>                <span style="color: #c31b1b;">"SPECTYPE"</span>: <span style="color: #055bcc;">"VER_ELA"</span>,<br>                <span style="color: #c31b1b;">"PARATYPE"</span>: <span style="color: #055bcc;">"Tc=1.6s"</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"TB"</span>: <span style="color: #0ab66c;">0.072</span>,<br>                <span style="color: #c31b1b;">"TC"</span>: <span style="color: #0ab66c;">0.72</span>,<br>                <span style="color: #c31b1b;">"TD"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"AGR"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                <span style="color: #c31b1b;">"I_"</span>: <span style="color: #0ab66c;">1.2</span>,<br>                <span style="color: #c31b1b;">"XI"</span>: <span style="color: #0ab66c;">5</span>,<br>                <span style="color: #c31b1b;">"Q"</span>: <span style="color: #0ab66c;">4</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Russia_SP 268.1325800.2016</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"SP 268.1325800.2016"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"SP 268.1325800.2016: Region=9,Soil=S2,K1=0.50,K2=1.00,K3=1.00,K4=1.00,KPsi=1.0"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"SP 268.1325800.2016"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"RESION_SEISMICITY"</span>: <span style="color: #0ab66c;">2</span>,<br>                <span style="color: #c31b1b;">"SOIL_CATEGORY"</span>: <span style="color: #0ab66c;">1</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"K1"</span>: <span style="color: #0ab66c;">0.5</span>,<br>                <span style="color: #c31b1b;">"K2"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"K3"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"K4"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"KPSI"</span>: <span style="color: #0ab66c;">1</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Thailand_DPT.1301/1302-61:2018</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"DPT.1301/1302-61:2018"</span>,<br>            <span style="color: #c31b1b;">"iTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"iMETHOD"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"SCALE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"GRAV"</span>: <span style="color: #0ab66c;">9.806</span>,<br>            <span style="color: #c31b1b;">"DRATIO"</span>: <span style="color: #0ab66c;">0.05</span>,<br>            <span style="color: #c31b1b;">"DESC"</span>: <span style="color: #055bcc;">"DPT.1301/1302-61:2018 : Site=Se,Ss=0.750,S1=0.300,Fa=1.20,Fv=2.80,Sds=0.71,Sd1=0.66,I=1.0,R=4.0,Damping=0.025"</span>,<br>            <span style="color: #c31b1b;">"STR"</span>: {<br>                <span style="color: #c31b1b;">"SPEC_CODE"</span>: <span style="color: #055bcc;">"DPT.1301/1302-61:2018"</span>,<br>                <span style="color: #c31b1b;">"SC_"</span>: <span style="color: #055bcc;">"Se"</span>,<br>                <span style="color: #c31b1b;">"REGION"</span>: <span style="color: #055bcc;">"Regeion except Bangkok"</span>,<br>                <span style="color: #c31b1b;">"METHOD"</span>: <span style="color: #055bcc;">"By Table 1.4-4-5"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT"</span>: {<br>                <span style="color: #c31b1b;">"iSEISZONE"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"BYCODE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                <span style="color: #c31b1b;">"RISK_CATEGORY"</span>: <span style="color: #0ab66c;">1</span><br>            },<br>            <span style="color: #c31b1b;">"VAL"</span>: {<br>                <span style="color: #c31b1b;">"aSRA"</span>: [<br>                    <span style="color: #0ab66c;">0.7058823529411765</span>,<br>                    <span style="color: #0ab66c;">0.6588235294117647</span>,<br>                    <span style="color: #0ab66c;">0</span>,<br>                    <span style="color: #0ab66c;">0</span><br>                ],<br>                <span style="color: #c31b1b;">"aMSRACC"</span>: [<br>                    <span style="color: #0ab66c;">0.75</span>,<br>                    <span style="color: #0ab66c;">0.3</span><br>                ],<br>                <span style="color: #c31b1b;">"aSCP"</span>: [<br>                    <span style="color: #0ab66c;">1.2</span>,<br>                    <span style="color: #0ab66c;">2.8</span><br>                ],<br>                <span style="color: #c31b1b;">"DP"</span>: <span style="color: #0ab66c;">0.025</span>,<br>                <span style="color: #c31b1b;">"PERIOD"</span>: <span style="color: #0ab66c;">6</span>,<br>                <span style="color: #c31b1b;">"IF"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"RMFACTOR"</span>: <span style="color: #0ab66c;">4</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: <span style="color: #055bcc; font-weight: bold;">true</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01JBK57RA2AGPMSPQEHKYZZ4V1"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%; height: 6866px;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr style="height: 44px;">
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">No.</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">Description</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">Key</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">Value Type</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">Default</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">Required</th>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>RS Function Name</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 139px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 139px;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 139px;" colspan="2">
+<p>Spectral Data Type</p>
+<p> • Normalized Accel.: 1</p>
+<p> • Acceleration: 2</p>
+<p> • Velocity: 3</p>
+<p> • Displacement: 4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 139px;">
+<p style="text-align: center;">"iTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 81px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 81px;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 81px;" colspan="2">
+<p>Scaling Method</p>
+<p> • Scale Factor: 0</p>
+<p> • Maximum Value: 1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 81px;">
+<p style="text-align: center;">"iMETHOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 81px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 81px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 81px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Scaling Value</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"SCALE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 51px;" colspan="2">
+<p>Gravity</p>
+<p> • Only for Normalized Accel.</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"GRAV"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 22px;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Damping Ratio</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"DRATIO"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 22px;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Description</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"DESC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 22px;" colspan="7">
+<p><span style="color: #4c9aff;">Canada_NBC(1995)</span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 95px;" rowspan="2">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "NBC95"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 124px;" rowspan="3">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Type or Option Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Acceleration Zone(Za)</p>
+<p> • Value: 0, 1, 2, 3, 4, 5, 6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"ZA"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Velocity Zone(Zv)</p>
+<p> • Value: 0, 1, 2, 3, 4, 5, 6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"ZV"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 165px;" rowspan="3">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 77px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 77px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 77px;">
+<p>Zonal Velocity Ratio(v)<span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 0.00, 0.05, 0.10, 0.15, 0.20, 0.30, 0.40</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 77px;">
+<p style="text-align: center;">"V"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 77px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 77px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 77px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 27px;" colspan="7">
+<p><span style="color: #4c9aff;">Italy_NTC2018 H-ELASTIC</span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 212px;" rowspan="5">
+<p style="text-align: center;">8</p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "NTC2018"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 73px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 73px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 73px;">
+<p>Spectrum Type</p>
+<p> • Horizontal Elastic Spectrum: "HOR_ELA"</p>
+<p> • Vertical Elastic Spectrum: "VER_ELA"</p>
+<p> • Horizontal Design Spectrum: "HOR_DGN"</p>
+<p> • Vertical Design Spectrum: "VER_DGN"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 73px;">
+<p style="text-align: center;">"SPECTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 73px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 73px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 73px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 22px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 22px;">
+<p>Ground Type</p>
+<p> • Ground Type: "A", "B", "C", "D", "E"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"GROUTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 22px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 22px;">
+<p>Spectrum Parameters</p>
+<p> • Standard Parameters: "T1", "T2", "T3", "T4"</p>
+<p> • User Defined: "USER"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"PARATYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 445px;" rowspan="14">
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;">9</p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+<p style="text-align: center;"> </p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Maximum Horizontal Acc. (ag)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"AG"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Amplification Factor (Fo)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"FO"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Period of Constant Hor.Acc. (Tc*)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"TCSTAR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 94%; height: 27px;" colspan="6">
+<p><span style="color: #4c9aff;">Elastic Spectrum Type</span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Behavior Factor (q)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"Q"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 94%; height: 27px;" colspan="6">
+<p><span style="color: #4c9aff;">Design Spectrum Type</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%;">
+<p>Viscous Damping Ratio (q)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"XI"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 94%; height: 27px;" colspan="6">
+<p><span style="color: #4c9aff;">User Define of Spectrum Parameter</span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Soil Factors</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Period of Constant Acceleration</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"TB"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Period of Constant Velocity</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"TC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Period of Constant Displacement</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"TD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 27px;" colspan="7">
+<p><span style="color: #4c9aff;">Philippines</span>_<span style="color: #4c9aff;">DPWH-LRFD BSDS(2013) <img src="https://support.midasuser.com/hc/article_attachments/52116687777305" width="14" height="22"></span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 95px;" rowspan="2">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "DPWH-LRFD BSDS(2013)"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 132px;" rowspan="2">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Type or Option Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 110px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 110px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 110px;">
+<p>Ground Type</p>
+<p> • I: 0</p>
+<p> • II: 1</p>
+<p> • III: 2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 110px;">
+<p style="text-align: center;">"iGROUTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 276px;" rowspan="5">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 67px;">
+<p>Spectral Acceleration Coefficient at Period</p>
+<p> • [Ss, S1]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"aMSRACC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Array<br>[Number,2]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 77px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 77px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 77px;">
+<p>Response Modification Factor(R) <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 0.8, 1.0, 1.5, 2.0, 3.0, 3.5, 5.0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 77px;">
+<p style="text-align: center;">"R_"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 77px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 77px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 77px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Peak Ground Acceleration Coefficient(PGA)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PGA"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 27px;" colspan="7">
+<p><span style="color: #4c9aff;">Australia_AS 5100.2(2017) <img src="https://support.midasuser.com/hc/article_attachments/52116687777305" width="14" height="22"></span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 95px;" rowspan="2">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "AS 5100.2(2017)"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 191px;" rowspan="2">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Type or Option Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 169px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 169px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 169px;">
+<p>Site Sub Soil Class</p>
+<p> • Ae: 0</p>
+<p> • Be: 1</p>
+<p> • Ce: 2</p>
+<p> • De: 3</p>
+<p> • Ee: 4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 169px;">
+<p style="text-align: center;">"SOILCLASS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 169px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 169px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 169px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 220px;" rowspan="5">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Probability Factor(kp)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"KP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Hazard Factor(Z)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"Z"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Design Ductility Factor(μ)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"MU"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 27px;" colspan="7">
+<p><span style="color: #4c9aff;">Colombia_NSR-10 <img src="https://support.midasuser.com/hc/article_attachments/52116687782809"></span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 95px;" rowspan="2">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "NSR-10"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 191px;" rowspan="2">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Type or Option Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 169px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 169px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 169px;">
+<p>Site Class</p>
+<p> • A: 0</p>
+<p> • B: 1</p>
+<p> • C: 2</p>
+<p> • D: 3</p>
+<p> • E: 4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 169px;">
+<p style="text-align: center;">"SC_"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 169px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 169px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 169px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 436px;" rowspan="7">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 67px;">
+<p>Site Coefficient at Short/1sec Period</p>
+<p> • [Fa, Fv]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"aSCP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Array<br>[Number,2]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 84px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 84px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 84px;">
+<p>Effective Peak Acc./Vel. <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • [Aa, Av]</p>
+<p> • Preset Value</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 84px;">
+<p style="text-align: center;">"aEP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 84px;">
+<p style="text-align: center;">Array<br>[Number,2]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 84px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 84px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 54px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 54px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 54px;">
+<p>Importance Factor(I) <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 1.0, 1.1, 1.25, 1.5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 54px;">
+<p style="text-align: center;">"IE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 99px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 99px;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 99px;">
+<p>Basic Ductility Factor <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 1.5, 2.0, 2.5, 3.0, 3.25, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 99px;">
+<p style="text-align: center;">"R_"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 99px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 99px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 99px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Phi</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PHI"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 22px;" colspan="7">
+<p><span style="color: #4c9aff;">Romania_P100-1(2013)</span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 418px;" rowspan="4">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "P100-1(2013)"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 184px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 184px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 184px;">
+<p>Spectrum Type</p>
+<p> • Horizontal Elastic Spectrum: "HOR_ELA"</p>
+<p> • Vertical Elastic Spectrum: "VER_ELA"</p>
+<p> • Horizontal Design Spectrum: "HOR_DGN"</p>
+<p> • Vertical Design Spectrum: "VER_DGN"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 184px;">
+<p style="text-align: center;">"SPECTYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 184px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 184px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 184px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 139px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 139px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 139px;">
+<p>Spectrum Parameters</p>
+<p> • Tc=0.7s: "Tc=0.7s"</p>
+<p> • Tc=1.0s: "Tc=1.0s"</p>
+<p> • Tc=1.6s: "Tc=1.6s"</p>
+<p> • User Defined: "USER"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 139px;">
+<p style="text-align: center;">"PARATYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 652px;" rowspan="9">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 106px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 106px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 106px;">
+<p>Tb <span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+<p> • "Tc=0.7s", "Tc=1.0s", "Tc=1.6s": Value calculated</p>
+<p> • User Defined: Value input required</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 106px;">
+<p style="text-align: center;">"TB"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 106px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 106px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 106px;">
+<p>Tc <span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+<p> • "Tc=0.7s", "Tc=1.0s", "Tc=1.6s": Value calculated</p>
+<p> • User Defined: Value input required</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 106px;">
+<p style="text-align: center;">"TC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 106px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 106px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 106px;">
+<p>Td <span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+<p> • "Tc=0.7s", "Tc=1.0s", "Tc=1.6s": Value calculated</p>
+<p> • User Defined: Value input required</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 106px;">
+<p style="text-align: center;">"TD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 106px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Design Ground Acceleration</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"AGR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 54px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 54px;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 54px;">
+<p>Importance Factor <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 0.8, 1.0, 1.2, 1.4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 54px;">
+<p style="text-align: center;">"I_"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 74px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 74px;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 74px;">
+<p>Viscous Damping Ratio(xi)</p>
+<p> • When Spectrum Type is Horizontal(Vertical) Elastic Spectrum</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 74px;">
+<p style="text-align: center;">"XI"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 74px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 74px;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 74px;">
+<p>Behavior Factor(q)</p>
+<p> • When Spectrum Type is Horizontal(Vertical) Design Spectrum</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 74px;">
+<p style="text-align: center;">"Q"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 27px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 27px;" colspan="7">
+<p><span style="color: #4c9aff;">Russia_SP 268.1325800.2016 <img src="https://support.midasuser.com/hc/article_attachments/52116687777305" width="14" height="22"></span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 95px;" rowspan="2">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "SP 268.1325800.2016"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 271px;" rowspan="3">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Type or Option Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 139px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 139px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 139px;">
+<p>Region Seismicity</p>
+<p> • 7: 0</p>
+<p> • 8: 1</p>
+<p> • 9: 2</p>
+<p> • 10: 3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 139px;">
+<p style="text-align: center;">"RESION_SEISMICITY"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 110px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 110px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 110px;">
+<p>Soil Category</p>
+<p> • I: 0</p>
+<p> • II: 1</p>
+<p> • III: 2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 110px;">
+<p style="text-align: center;">"SOIL_CATEGORY"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 308px;" rowspan="7">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>K1 Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"K1"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>K2 Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"K2"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>K3 Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"K3"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>K4 Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"K4"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>KPsi Factor</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"KPSI"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 100%; height: 22px;" colspan="7">
+<p><span style="color: #4c9aff;">Thailand_DPT.1301/1302-61:2018</span></p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 470px;" rowspan="5">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>String Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"STR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Design Spectrum Type</p>
+<p> • Code: "DPT.1301/1302-61:2018"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"SPEC_CODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 221px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 221px;">
+<p>(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 221px;">
+<p>Site Class</p>
+<p> • When Region is Regeion except Bangkok</p>
+<p> • Sa: "Sa"</p>
+<p> • Sb: "Sb"</p>
+<p> • Sc: "Sc"</p>
+<p> • Sd: "Sd"</p>
+<p> • Se: "Se"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 221px;">
+<p style="text-align: center;">"SC_"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 221px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 221px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 221px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 103px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 103px;">
+<p>(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 103px;">
+<p>Region</p>
+<p> • Bangkok: "Bangkok"</p>
+<p> • Regeion except Bangkok: "Regeion except Bangkok"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 103px;">
+<p style="text-align: center;">"REGION"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 103px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 103px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 103px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p>(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 51px;">
+<p>Method</p>
+<p> • "By Table 1.4-4-5"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"METHOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 316px;" rowspan="4">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 22px;" colspan="2">
+<p>Type or Option Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 22px;">
+<p style="text-align: center;">"OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 22px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 81px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 81px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 81px;">
+<p>Seismic Zone</p>
+<p> • When Region is Bangkok</p>
+<p> • Value: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 81px;">
+<p style="text-align: center;">"iSEISZONE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 81px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 81px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 81px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 74px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 74px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 74px;">
+<p>By Code</p>
+<p> • When Region is Regeion except Bangkok</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 74px;">
+<p style="text-align: center;">"BYCODE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 139px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 139px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 139px;">
+<p>Risk Category</p>
+<p> • I: 0</p>
+<p> • II: 1</p>
+<p> • III: 2</p>
+<p> • IV: 3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 139px;">
+<p style="text-align: center;">"RISK_CATEGORY"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 608px;" rowspan="8">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Factor or Value Data By Code</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"VAL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 74px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 74px;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 74px;">
+<p>[Sds, Sd1]</p>
+<p> • When Region is Regeion except Bangkok</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 74px;">
+<p style="text-align: center;">"aSRA"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Array<br>[Number,2]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 165px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 165px;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 165px;">
+<p>[Ss, S1] <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • When Region is Regeion except Bangkok</p>
+<p> &lt;strong&gt;• &lt;/strong&gt;Preset Value</p>
+<p>   ◦ Ss: 0.25, 0.50, 0.75, 1.00, 1.25</p>
+<p>   ◦ S1: 0.10, 0.20, 0.30, 0.40, 0.50</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 165px;">
+<p style="text-align: center;">"aMSRACC"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 165px;">
+<p style="text-align: center;">Array<br>[Number,2]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 165px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 165px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 74px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 74px;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 74px;">
+<p>[Fa, Fv]</p>
+<p> • When Region is Regeion except Bangkok</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 74px;">
+<p style="text-align: center;">"aSCP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Array<br>[Number,2]</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 74px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 54px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 54px;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 54px;">
+<p>Damping Ratio <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 0.025, 0.050</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 54px;">
+<p style="text-align: center;">"DP"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 44px;">
+<p>Max Period</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"PERIOD"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 54px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 54px;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 54px;">
+<p>Importance <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 1.00, 1.25, 1.50</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 54px;">
+<p style="text-align: center;">"IF"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 54px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 99px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 99px;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 44%; height: 99px;">
+<p>Response Mod.Factor <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Preset Value: 1.50, 2.00, 2.50, 3.00, 3.50, 4.00, 4.50, 5.00, 5.50, 6.00, 6.50, 7.00, 7.50, 8.00</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 99px;">
+<p style="text-align: center;">"RMFACTOR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 99px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 99px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 99px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 50%; height: 44px;" colspan="2">
+<p>Calculation Options</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"CALC_OPT"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">true</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Create<br>Only</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><span style="font-size: 16px; color: #bf2600;"> </span><em>Preset Value: The value provided by the dialog.</em></p>
+<p><em>When requesting API, even if a value other than the Preset Value is entered, the result will reflect that input.</em></p>
+<p><span style="font-size: 16px; color: #bf2600;">²⁾ </span><em>The value of this Key is calculated by MIDAS CIVIL NX based on the value of another keys, so even if a value is entered, it will not be reflected. Instead, the value calculated by MIDAS CIVIL NX will be applied.</em></p>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116687777305" width="14" height="22"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116687782809"> : <em>MIDAS GEN NX only</em>
+</div>
+</div>
+    </div>
+</body>
+</html>

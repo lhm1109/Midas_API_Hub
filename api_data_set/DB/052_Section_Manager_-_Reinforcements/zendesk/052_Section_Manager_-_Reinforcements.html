@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Manager - Reinforcements - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Section Manager - Reinforcements</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35943227821465</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T01:48:02Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-03-05T11:04:26Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35943227821465-Section-Manager-Reinforcements" target="_blank">https://support.midasuser.com/hc/en-us/articles/35943227821465-Section-Manager-Reinforcements</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01J4G3PWPJND2K4QT7KJZVBYGK"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>{base url} + db/RPSC</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4G3PWPJTV05WMAVZ14JECFM"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4G3PWPJGPFTVQ0VNGZHEK79"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"RPSC"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"OPT_MBAR_J"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MBarJBoolean"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT_SBAR_J"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SBarJBoolean"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT_CRACKED"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CrackedBoolean"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"SBAR_ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ShearReinforcementProperties"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"OPT_DR"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DiagonalReinforcement"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DR_PITCH"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[DR]Pitch"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DR_THETA"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[DR]Angle"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"DR_AW"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[DR]Aw"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"OPT_SBW"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SteelBarforWeb"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SBW_PITCH"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SBW]Pitch"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SBW_ANGLE"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SBW]Angle"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SBW_AP"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SBW]Ap"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SBW_PS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SBW]Pe"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SBW_FACTOR"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SBW]ShearReductionFactor"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"OPT_TR"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TorsionalReinforcement"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"TR_PITCH"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[TR]Pitch"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"TR_AWT"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[TR]Awt"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"TR_ALT"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[TR]Alt"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"OPT_SR"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StirExist"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SR_PITCH"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SR]Pitch"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SR_AW"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"[SR]Aw"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"OPT_LBAR_FLG"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EnclosingStirrup"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                        },<br>                        <span style="color: #c31b1b;">"LBAR_THICK"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"forEnclosedSectionAreaCoverThickness"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"LBAR_INC_FC"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"IncludeFlange/Cantilever"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"MBARS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LongitudinalReinforcementProperties"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"MBAR_ITEMS"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LongitudinalReinforcementPropertyDetail"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                            <span style="color: #c31b1b;">"items"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                    <span style="color: #c31b1b;">"IJ"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"I/J"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"NAME"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BarName"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"REF_Y"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Ref.Y"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"Y"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Y"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"REF_Z"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Ref.Z"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"Z"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Z"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"NUM"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Num"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"SPACING"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spacing"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                    },<br>                                    <span style="color: #c31b1b;">"PART"</span>: {<br>                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Part"</span>,<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                    }<br>                                }<br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4G3PWPKRSBYP8JA6YG93MFX"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Longitudinal Reinforcements</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"401"</span>: {<br>            <span style="color: #c31b1b;">"OPT_MBAR_J"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"OPT_SBAR_J"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"OPT_CRACKED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"SBAR_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"OPT_DR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_SBW"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_TR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_SR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_LBAR_FLG"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"MBARS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"MBAR_ITEMS"</span>: [<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.148120340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.53</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.73</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4611</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.131480340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4492353743496362</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.8353731826151332</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.6839</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.016350340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.7871</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.166015640131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.837429326148554</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.736770673851446</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.840814080204331</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7753208240021041</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.802493302814122</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.607298953906575</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.643314689039411</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7222612860772002</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        }<br>                    ]<br>                },<br>                {<br>                    <span style="color: #c31b1b;">"MBAR_ITEMS"</span>: [<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.148120340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.53</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.73</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4611</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.131480340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4492353743496362</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.8353731826151332</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.6839</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.016350340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.7871</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.166015640131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.837429326148554</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.736770673851446</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.840814080204331</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7753208240021041</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.802493302814122</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.607298953906575</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.643314689039411</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7222612860772002</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        }<br>                    ]<br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Shear Reinforcements</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"401"</span>: {<br>            <span style="color: #c31b1b;">"OPT_MBAR_J"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"OPT_SBAR_J"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"OPT_CRACKED"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"SBAR_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"OPT_DR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_SBW"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_TR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_SR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span style="color: #c31b1b;">"OPT_LBAR_FLG"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>                }<br>            ],<br>            <span style="color: #c31b1b;">"MBARS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"MBAR_ITEMS"</span>: [<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.148120340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.53</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.73</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4611</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.131480340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4492353743496362</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.8353731826151332</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.6839</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.016350340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.7871</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.166015640131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.837429326148554</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.736770673851446</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.840814080204331</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7753208240021041</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.802493302814122</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.607298953906575</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"I"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.643314689039411</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7222612860772002</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        }<br>                    ]<br>                },<br>                {<br>                    <span style="color: #c31b1b;">"MBAR_ITEMS"</span>: [<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.148120340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#18"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.53</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.63</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#11"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">3.73</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">0.04812034013186328</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4611</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.131480340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.4492353743496362</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.8353731826151332</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">1.6839</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.016350340131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.7871</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.166015640131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.837429326148554</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.736770673851446</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">2.078842690131863</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.840814080204331</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7753208240021041</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.802493302814122</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.607298953906575</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"IJ"</span>: <span style="color: #055bcc;">"J"</span>,<br>                            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"#10"</span>,<br>                            <span style="color: #c31b1b;">"REF_Y"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Y"</span>: <span style="color: #0ab66c;">5.643314689039411</span>,<br>                            <span style="color: #c31b1b;">"REF_Z"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"Z"</span>: <span style="color: #0ab66c;">1.7222612860772002</span>,<br>                            <span style="color: #c31b1b;">"NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"PART"</span>: <span style="color: #0ab66c;">0</span><br>                        }<br>                    ]<br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4G3PWPMCGB32M095GQPSGNV"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Same Rebar Data at i and j-end (Longitudinal)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_MBAR_J"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"> -</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Same Shear Rebar Data at i and j-end (Shear)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_SBAR_J"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Cracked Section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_CRACKED"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="21">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Shear Reinforcement Data</p>
+<p> • Insert the data as an object</p>
+<p>   ◦ Index 0: i-section</p>
+<p>   ◦ Index 1: j-section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBAR_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Diagonal Reinforcement (DR)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_DR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[DR] Pitch</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DR_PITCH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[DR] Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DR_THETA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[DR] Area</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DR_AW"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Steel Bar for Web (SBW)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_SBW"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SBW] Pitch</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBW_PITCH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SBW] Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBW_ANGLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SBW] Area</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBW_AP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SBW] Pre-force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBW_PS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(10)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SBW] Shear Reduction Factor</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SBW_FACTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(11)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Torsional Reinforcement (TR)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_TR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(12)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[TR] Pitch</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TR_PITCH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(13)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[TR] Area (Web)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TR_AWT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(14)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[TR] Area (Long.)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TR_ALT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(15)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Stir Exist</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_SR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(16)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SR] Pitch</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SR_PITCH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(17)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>[SR] Aw</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SR_AW"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(18)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Enclosing Stirrup</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_LBAR_FLG"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(19)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>for Enclosed Section Area Cover Thickness</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LBAR_THICK"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(20)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Include Flange/Cantilever</p>
+<p> • Check off: 0</p>
+<p> • Check on: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LBAR_INC_FC"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="10">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Longitudinal Reinforcement Data</p>
+<p> • Insert the data as an object</p>
+<p>   ◦ Index 0: i-section</p>
+<p>   ◦ Index 1: j-section</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MBAR_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Section Positions - I / J</p>
+<p> • "I" or "J"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"IJ"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Bar Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Reference Y</p>
+<p> • Centroid: 0</p>
+<p> • Left: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"REF_Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distance from Reference in Y direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Reference Z</p>
+<p> • Top: 0</p>
+<p> • Bottom: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"REF_Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distance from Reference in Z Direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number of Rebar</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(8)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing between Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SPACING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(9)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Part</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PART"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

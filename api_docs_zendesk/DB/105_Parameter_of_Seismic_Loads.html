@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter of Seismic Loads - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Parameter of Seismic Loads</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 49511410691609</div>
+        <div class="info-item"><span class="label">Created:</span> 2025-08-05T05:16:53Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:18:19Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/49511410691609-Parameter-of-Seismic-Loads" target="_blank">https://support.midasuser.com/hc/en-us/articles/49511410691609-Parameter-of-Seismic-Loads</a></div>
+    </div>
+    
+    <div class="content">
+        <div>
+<h3 id="h_01K1WA9X3N2GHNYEK57XZQDZ31"><strong>Input URI</strong></h3>
+<div class="table-wrap"><figure class="wysiwyg-table" style="width: 100%;"><table class="wysiwyg-table-resized">
+<colgroup><col style="width: 100%;"></colgroup>
+<thead><tr><th style="padding: 10px 5px; text-align: center;"><p class="wysiwyg-text-align-center"><strong>{base url} + db/POSL</strong></p></th></tr></thead>
+</table></figure></div>
+<p><br><br> </p>
+<h3 id="h_01K1WA9X3N5Z4YJYZ4GHFRYHDP"><strong>Active Methods</strong></h3>
+<div class="table-wrap"><figure class="wysiwyg-table" style="width: 100%;"><table class="wysiwyg-table-resized">
+<colgroup><col style="width: 100%;"></colgroup>
+<thead><tr><th style="padding: 10px 5px; text-align: center;"><p class="wysiwyg-text-align-center"><strong>POST, GET, PUT, DELETE</strong></p></th></tr></thead>
+</table></figure></div>
+<p><br><br> </p>
+<h3 id="h_01K1WA9X3N0G6JTMKCSMGTV4Y0"><strong>JSON Schema</strong></h3>
+<div class="mgt32">
+<p style="font-size: 15px;" class="btn_dropdown mgt4">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;"></div>
+<div style="font-size: 15px; letter-spacing: 0.01em;" id="copyTarget1">{<br>    <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LoadCaseName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SeismicLoadCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"METHOD"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SZ"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SeismicZone"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"EPA"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EPA(S)"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"SC"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SiteClass"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"FA"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Fa"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"FV"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Fv"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"SDS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Sds"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"SD1"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Sd1"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"USER_GROUP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SeismicUserGroup"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"IF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ImportanceFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"RMF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseModifyFactor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"CALC_OPT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CalculateData"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<p><br><br> </p>
+<h3 id="h_01K1WA9X3P4P78JFMV4P8XQ820"><strong>Examples</strong></h3>
+<div class="mgt32">
+<p style="font-size: 15px;" class="btn_dropdown mgt4">Element Stiffness Scale Factor - Single</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;"></div>
+<div style="font-size: 15px; letter-spacing: 0.01em;" id="copyTarget2">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"KDS(2019)"</span>,<br>            <span style="color: #c31b1b;">"CODE"</span>: <span style="color: #055bcc;">"KDS(41-17-00:2019)"</span>,<br>            <span style="color: #c31b1b;">"METHOD"</span>: <span style="color: #055bcc;">"RES_DISP"</span>,<br>            <span style="color: #c31b1b;">"SZ"</span>: <span style="color: #055bcc;">"1"</span>,<br>            <span style="color: #c31b1b;">"EPA"</span>: <span style="color: #0ab66c;">0.22</span>,<br>            <span style="color: #c31b1b;">"SC"</span>: <span style="color: #055bcc;">"S1"</span>,<br>            <span style="color: #c31b1b;">"FA"</span>: <span style="color: #0ab66c;">1.12</span>,<br>            <span style="color: #c31b1b;">"FV"</span>: <span style="color: #0ab66c;">0.84</span>,<br>            <span style="color: #c31b1b;">"SDS"</span>: <span style="color: #0ab66c;">0.41066666666666674</span>,<br>            <span style="color: #c31b1b;">"SD1"</span>: <span style="color: #0ab66c;">0.12319999999999999</span>,<br>            <span style="color: #c31b1b;">"USER_GROUP"</span>: <span style="color: #055bcc;">"1"</span>,<br>            <span style="color: #c31b1b;">"IF"</span>: <span style="color: #0ab66c;">1.2</span>,<br>            <span style="color: #c31b1b;">"RMF"</span>: <span style="color: #0ab66c;">3</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<p><br><br> </p>
+<h3 id="h_01K1WA9X3PCJSECERCDCXDYR4G"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<figure class="wysiwyg-table" style="width: 100%;"><table class="wysiwyg-table-resized" style="border-collapse: collapse; border-style: solid; border-width: 1px;">
+<colgroup>
+<col style="width: 6%;">
+<col style="width: 49%;">
+<col style="width: 16%;">
+<col style="width: 9%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+</colgroup>
+<thead><tr>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">No.</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Description</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Key</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Value Type</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Default</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center;">Required</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">1</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Parameters of Seismic Earth Name</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"NAME"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">String</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">-</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Required</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">2</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Seismic Load Code</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"CODE"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">String</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">-</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Optional</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">3</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">
+<p>Seismic Calculation Method</p>
+<p> • RES_DISP: Response Displacement Method</p>
+<p> • EQV_STATIC: Equivalent Static Method</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"METHOD"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">String</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">-</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Optional</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">4</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Seismic Zone</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"SZ"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">String</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">-</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Required</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">5</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Effective Peak Ground Acceleration</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"EPA"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">-</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Required</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">6</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Site Class</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"SC"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">String</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">-</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Required</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">7</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Short-period site coefficient</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"FA"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">-</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Required</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">8</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Soil layer thickness</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"FV"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">-</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Requirel</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">9</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Design spectral acceleration at short period</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"SDS"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Require</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">10</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Design spectral acceleration at 1-second period</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"SD1"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Require</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px;"><p class="wysiwyg-text-align-center">11</p></td>
+<td style="border-style: solid; border-width: 1px;">Seismic User Group</td>
+<td style="border-style: solid; border-width: 1px;">"USER_GROUP"</td>
+<td style="border-style: solid; border-width: 1px;"><p class="wysiwyg-text-align-center">String</p></td>
+<td style="border-style: solid; border-width: 1px;"> </td>
+<td style="border-style: solid; border-width: 1px;"> </td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">12</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Importance Factor</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"IF"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Require</p></td>
+</tr>
+<tr>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">13</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;">Response Modification Factor</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">"RMF"</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Number</p></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"></td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px;"><p class="wysiwyg-text-align-center">Require</p></td>
+</tr>
+</tbody>
+</table></figure><p> </p>
+</div>
+<p><br><br> </p>
+</div>
+    </div>
+</body>
+</html>

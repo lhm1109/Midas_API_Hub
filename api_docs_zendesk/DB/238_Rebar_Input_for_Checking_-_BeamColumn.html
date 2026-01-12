@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebar Input for Checking - Beam/Column - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Rebar Input for Checking - Beam/Column</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35993850335897</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T02:09:43Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2024-11-08T08:05:18Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35993850335897-Rebar-Input-for-Checking-Beam-Column" target="_blank">https://support.midasuser.com/hc/en-us/articles/35993850335897-Rebar-Input-for-Checking-Beam-Column</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01J4JQ630Q4XBFYBPSGFSG9FR2"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/RCHK</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JQ630QN2J40PV1JAPKAPYC"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4JQ630R1XS09810G4VMH2E9"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"RCHK"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"MEMBTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MEMBTYPE"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"ENVTYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EnvironmentType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"BEAM"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BEAM"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"OPTION_IMJSAME"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"IMJSameOption(itneedsonlyI)"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                    },<br>                    <span style="color: #c31b1b;">"vMAIN"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MainRebarDatas"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                <span style="color: #c31b1b;">"SECTOR"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Sector"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                },<br>                                <span style="color: #c31b1b;">"POS_TOP_LAYERS"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PositionTopLayers"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                    <span style="color: #c31b1b;">"items"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"LAYER"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LayerIndex"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"dD"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dD"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NUM"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NUM"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NAME1"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NAME1"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NAME2"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NAME2"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            }<br>                                        }<br>                                    }<br>                                },<br>                                <span style="color: #c31b1b;">"POS_BOT_LAYERS"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PositionBotLayers"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                    <span style="color: #c31b1b;">"items"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"LAYER"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LayerIndex"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"dD"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dD"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NUM"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NUM"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NAME1"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NAME1"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NAME2"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NAME2"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            }<br>                                        }<br>                                    }<br>                                }<br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"vSUB_BAR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SubRebarData"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                <span style="color: #c31b1b;">"SECTOR"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SECTOR"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dSUB_BARNUM"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dSUB_BARNUM"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"SUB_BARNAME"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUB_BARNAME"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dSUB_BARDIST"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dSUB_BARDIST"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dSUB_BARANGLE"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dSUB_BARANGLE"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"bTORSIONAL_BAR"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"bTORSIONAL_BAR"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                },<br>                                <span style="color: #c31b1b;">"sTRTORBARNA"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"sTRTORBARNA"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dTORBAR_SPACING"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dTORBAR_SPACING"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"bBUNDLEDBAR"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"bBUNDLEDBAR"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dBUNDLEDBARNUM"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dBUNDLEDBARNUM"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"LONGIBARNA"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"LONGIBARNA"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dLONGIBARNUM"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dLONGIBARNUM"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                }<br>                            }<br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"COLM"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"COLM"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"vLAYER"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"vMAIN"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                <span style="color: #c31b1b;">"INDEX"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"INDEX"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                },<br>                                <span style="color: #c31b1b;">"dDc"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"dDc"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"vPOSITION"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"vPOSITION"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                    <span style="color: #c31b1b;">"items"</span>: {<br>                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                        <span style="color: #c31b1b;">"properties"</span>: {<br>                                            <span style="color: #c31b1b;">"POSITION"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"POSITION"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NUM"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NUM"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NAME1"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NAME1"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            },<br>                                            <span style="color: #c31b1b;">"BAR_NAME2"</span>: {<br>                                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BAR_NAME2"</span>,<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                            }<br>                                        }<br>                                    }<br>                                }<br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"SUB_BAR"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUB_BAR"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"SUBBAR_NAME"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_NAME"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBBAR_DIST"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_DIST"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBBAR_NUM"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_NUM"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBBAR_NAME_Y"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_NAME_Y"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBBAR_NAME_Z"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_NAME_Z"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBBAR_NUM_Y"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_NUM_Y"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SUBBAR_NUM_Z"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SUBBAR_NUM_Z"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JQ630RVWKAPR05MM7QCQ7Q"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Rebar Input for Checking</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"MEMBTYPE"</span>: <span style="color: #055bcc;">"COLUMN"</span>,<br>            <span style="color: #c31b1b;">"ENVTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"COLM"</span>: {<br>                <span style="color: #c31b1b;">"vLAYER"</span>: [<br>                    {<br>                        <span style="color: #c31b1b;">"INDEX"</span>: <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #c31b1b;">"dDc"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                        <span style="color: #c31b1b;">"vPOSITION"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"POSITION"</span>: <span style="color: #055bcc;">"P1"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">24</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#4"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ]<br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INDEX"</span>: <span style="color: #0ab66c;">2</span>,<br>                        <span style="color: #c31b1b;">"dDc"</span>: <span style="color: #0ab66c;">0.2</span>,<br>                        <span style="color: #c31b1b;">"vPOSITION"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"POSITION"</span>: <span style="color: #055bcc;">"P1"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">24</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#4"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ]<br>                    }<br>                ],<br>                <span style="color: #c31b1b;">"SUB_BAR"</span>: {<br>                    <span style="color: #c31b1b;">"SUBBAR_NAME"</span>: <span style="color: #055bcc;">"#4"</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_DIST"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NAME_Y"</span>: <span style="color: #055bcc;">"#4"</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NAME_Z"</span>: <span style="color: #055bcc;">"#4"</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NUM_Y"</span>: <span style="color: #0ab66c;">12</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NUM_Z"</span>: <span style="color: #0ab66c;">12</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"MEMBTYPE"</span>: <span style="color: #055bcc;">"BEAM"</span>,<br>            <span style="color: #c31b1b;">"ENVTYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"BEAM"</span>: {<br>                <span style="color: #c31b1b;">"vMAIN"</span>: [<br>                    {<br>                        <span style="color: #c31b1b;">"SECTOR"</span>: <span style="color: #055bcc;">"I"</span>,<br>                        <span style="color: #c31b1b;">"POS_TOP_LAYERS"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"LAYER"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"dD"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#5"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ],<br>                        <span style="color: #c31b1b;">"POS_BOT_LAYERS"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"LAYER"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"dD"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#7"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ]<br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"SECTOR"</span>: <span style="color: #055bcc;">"M"</span>,<br>                        <span style="color: #c31b1b;">"POS_TOP_LAYERS"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"LAYER"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"dD"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#5"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ],<br>                        <span style="color: #c31b1b;">"POS_BOT_LAYERS"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"LAYER"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"dD"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#7"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ]<br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"SECTOR"</span>: <span style="color: #055bcc;">"J"</span>,<br>                        <span style="color: #c31b1b;">"POS_TOP_LAYERS"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"LAYER"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"dD"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#5"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ],<br>                        <span style="color: #c31b1b;">"POS_BOT_LAYERS"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"LAYER"</span>: <span style="color: #0ab66c;">1</span>,<br>                                <span style="color: #c31b1b;">"dD"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#7"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ]<br>                    }<br>                ],<br>                <span style="color: #c31b1b;">"vSUB_BAR"</span>: [<br>                    {<br>                        <span style="color: #c31b1b;">"SECTOR"</span>: <span style="color: #055bcc;">"I"</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARNUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                        <span style="color: #c31b1b;">"SUB_BARNAME"</span>: <span style="color: #055bcc;">"#6"</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARDIST"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARANGLE"</span>: <span style="color: #0ab66c;">90</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"SECTOR"</span>: <span style="color: #055bcc;">"M"</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARNUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                        <span style="color: #c31b1b;">"SUB_BARNAME"</span>: <span style="color: #055bcc;">"#6"</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARDIST"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARANGLE"</span>: <span style="color: #0ab66c;">90</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"SECTOR"</span>: <span style="color: #055bcc;">"J"</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARNUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                        <span style="color: #c31b1b;">"SUB_BARNAME"</span>: <span style="color: #055bcc;">"#6"</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARDIST"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                        <span style="color: #c31b1b;">"dSUB_BARANGLE"</span>: <span style="color: #0ab66c;">90</span><br>                    }<br>                ]<br>            }<br>        },<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"MEMBTYPE"</span>: <span style="color: #055bcc;">"COLUMN"</span>,<br>            <span style="color: #c31b1b;">"ENVTYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"COLM"</span>: {<br>                <span style="color: #c31b1b;">"vLAYER"</span>: [<br>                    {<br>                        <span style="color: #c31b1b;">"INDEX"</span>: <span style="color: #0ab66c;">1</span>,<br>                        <span style="color: #c31b1b;">"dDc"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                        <span style="color: #c31b1b;">"vPOSITION"</span>: [<br>                            {<br>                                <span style="color: #c31b1b;">"POSITION"</span>: <span style="color: #055bcc;">"P1"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">8</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#6"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            },<br>                            {<br>                                <span style="color: #c31b1b;">"POSITION"</span>: <span style="color: #055bcc;">"P2"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NUM"</span>: <span style="color: #0ab66c;">12</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME1"</span>: <span style="color: #055bcc;">"#6"</span>,<br>                                <span style="color: #c31b1b;">"BAR_NAME2"</span>: <span style="color: #055bcc;">""</span><br>                            }<br>                        ]<br>                    }<br>                ],<br>                <span style="color: #c31b1b;">"SUB_BAR"</span>: {<br>                    <span style="color: #c31b1b;">"SUBBAR_NAME"</span>: <span style="color: #055bcc;">"#5"</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_DIST"</span>: <span style="color: #0ab66c;">0.1</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NAME_Y"</span>: <span style="color: #055bcc;">"#5"</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NAME_Z"</span>: <span style="color: #055bcc;">"#5"</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NUM_Y"</span>: <span style="color: #0ab66c;">10</span>,<br>                    <span style="color: #c31b1b;">"SUBBAR_NUM_Z"</span>: <span style="color: #0ab66c;">8</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4JQ630R0VK2JAPPRS7SGZA7"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Member Type</p>
+<p> • Beam: "BEAM"</p>
+<p> • Column: "COLUMN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MEMBTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Crack Checking</p>
+<p> • Class 1 Exposure Condition: 0</p>
+<p> • Class 2 Exposuse Condition: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ENVTYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">When Member Type is Beam</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="11">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Rebar Infomation for Beam</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BEAM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Longitudinal Rebar</p>
+<p> • Insert the data as an object</p>
+<p> • [I, J, M]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"vMAIN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Sector</p>
+<p> • I-End: "I"</p>
+<p> • J-End: "J"</p>
+<p> • Mid: "M"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SECTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Top Layer <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Rebar Information for Top Surface</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POS_TOP_LAYERS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Obejct]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Bottom Layer <span style="font-size: 16px; color: #bf2600;">¹⁾</span></p>
+<p> • Rebar Information for Top Surface</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POS_BOT_LAYERS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Obejct]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="6">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Transverse Rebar</p>
+<p> • Insert the data as an Obejct</p>
+<p> • [I, J, M]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"vSUB_BAR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Sector</p>
+<p> • I-End: "I"</p>
+<p> • J-End: "J"</p>
+<p> • Mid: "M"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SECTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Number of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"dSUB_BARNUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Rebar Size</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUB_BARNAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Spacing of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"dSUB_BARDIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>v. Angle with Member</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"dSUB_BARANGLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">When Member Type is Column</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="13">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Rebar Infomation for Column</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COLM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Longitudinal Rebar</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"vLAYER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Index of Layers</p>
+<p> • 1 to 5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INDEX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Cover Distance from Surface to Center of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"dDc"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Rebar Layer <span style="font-size: 16px; color: #bf2600;">²⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"vPOSITION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Obejct]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="8">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Transverse Rebar</p>
+<p> • Insert the data as an Obejct</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUB_BAR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Rebar Size</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Rebar Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Number of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Rebar Size for Y direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_NAME_Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>v. Rebar Size for Z direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_NAME_Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vi. Number of Rebar for Y direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_NUM_Y"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vii. Number of Rebar for Z direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SUBBAR_NUM_Z"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> JSON Structure - Rebear Layer for Beam</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="6">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Longitudinal Rebar Layer</p>
+<p> • Insert data as object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POS_TOP_LAYERS"</p>
+<p style="text-align: center;">"POS_BOT_LAYERS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number of Layers</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LAYER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Cover Distance from Surface to Center of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"dD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BAR_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Size of Rebar 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BAR_NAME1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Size of Rebar 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BAR_NAME2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">²⁾</span><em> JSON Structure - Rebear Layer for Column</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Longitudinal Rebar Layer</p>
+<p> • Insert data as object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"vPOSITION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Surface Positions</p>
+<p> • Circle: "P1"</p>
+<p> • Rectangle: "P1"/"P2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POSITION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number of Rebars</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BAR_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Size of Rebar 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BAR_NAME1"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Size of Rebar 2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BAR_NAME2"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

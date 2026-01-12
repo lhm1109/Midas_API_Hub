@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beam Stresses - Result Display - VIEW</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Beam Stresses - Result Display</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> VIEW</div>
+        <div class="info-item"><span class="label">Article ID:</span> 36001119330969</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T04:34:50Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-12-05T07:18:48Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/36001119330969-Beam-Stresses-Result-Display" target="_blank">https://support.midasuser.com/hc/en-us/articles/36001119330969-Beam-Stresses-Result-Display</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+  function copyText(elementId) {
+      var text = document.getElementById(elementId).innerText;
+      text = text.replace(/&nbsp;/g, " ");
+      text = text.replace(/ /g, " ");
+      navigator.clipboard.writeText(text);
+  }
+</script>
+<div>
+  <h3 id="h_01J4K00HKQSGDGF9J4NF9QF4NA">
+    <strong>Input URI</strong>
+  </h3>
+  <div class="table-wrap">
+    <table style="width: 100%; margin-left: 0px; margin-right: auto;">
+      <colgroup>
+
+        <col style="width: 100.00%;">
+
+      </colgroup>
+      <tbody>
+        <tr>
+          <th style="padding: 10px 5px 10px 5px;">
+            <p style="text-align: center;">
+              <strong> {base url} + view/RESULTGRAPHIC</strong>
+            </p>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <br>
+  <h3 id="h_01J4K00HKQ9BY2AJSQKGJXEG9A">
+    <strong>Active Methods</strong>
+  </h3>
+  <div class="table-wrap">
+    <table style="width: 100%; margin-left: 0px; margin-right: auto;">
+      <colgroup>
+
+        <col style="width: 100.00%;">
+
+      </colgroup>
+      <tbody>
+        <tr>
+          <th style="padding: 10px 5px 10px 5px;">
+            <p style="text-align: center;">
+              <strong>POST</strong>
+            </p>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <br>
+  <h3 id="h_01J4K00HKQZ7EWAFXSK1JKSSQP">
+    <strong>JSON Schema</strong>
+  </h3>
+  <div class="mgt32" style="margin: 10px;">
+    <p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+    <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+      <div style="background-color: #f5f7fa;" align="right">
+        <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
+      </div>
+      <div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">
+        {<br>
+            <span style="color: #c31b1b;">"RESULTGRAPHIC"</span>:
+        {<br>
+                <span style="color: #c31b1b;">"$schema"</span>:
+        <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>
+                <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                <span style="color: #c31b1b;">"properties"</span>:
+        {<br>
+                    <span style="color: #c31b1b;">"Argument"</span>:
+        {<br>
+                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                        <span style="color: #c31b1b;">"properties"</span>:
+        {<br>
+                            <span style="color: #c31b1b;">"CURRENT_MODE"</span>:
+        {<br>
+                                <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"ResultGraphicMode"</span>,<br>
+                                <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                    <span style="color: #055bcc;">"BeamStresses"</span><br>
+                                ]<br>
+                            },<br>
+                            <span style="color: #c31b1b;">"LOAD_CASE_COMB"</span>:
+        {<br>
+                                <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"LoadCaseandCombinations"</span>,<br>
+                                <span style="color: #c31b1b;">"properties"</span>:
+        {<br>
+                                    <span style="color: #c31b1b;">"TYPE"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"LoadCase"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"ST"</span>,<br>
+                                            <span style="color: #055bcc;">"CS"</span>,<br>
+                                            <span style="color: #055bcc;">"RS"</span>,<br>
+                                            <span style="color: #055bcc;">"TH"</span>,<br>
+                                            <span style="color: #055bcc;">"MV"</span>,<br>
+                                            <span style="color: #055bcc;">"SM"</span>,<br>
+                                            <span style="color: #055bcc;">"CB"</span><br>
+                                        ]<br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"MINMAX"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"LoadType"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"Max"</span>,<br>
+                                            <span style="color: #055bcc;">"Min"</span>,<br>
+                                            <span style="color: #055bcc;">"All"</span><br>
+                                        ]<br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"NAME"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"LoadName"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"STEP_INDEX"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"integer"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"StepofLoadCase"</span><br>
+                                    }<br>
+                                }<br>
+                            },<br>
+                            <span style="color: #c31b1b;">"COMPONENTS"</span>:
+        {<br>
+                                <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"Components"</span>,<br>
+                                <span style="color: #c31b1b;">"properties"</span>:
+        {<br>
+                                    <span style="color: #c31b1b;">"PART"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"PartsNamedefinedintheCompositeSectionforConstructionStage"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"Total"</span><br>
+                                        ]<br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"COMP"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"ComponentsName"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"Sax"</span>,<br>
+                                            <span style="color: #055bcc;">"Ssy"</span>,<br>
+                                            <span style="color: #055bcc;">"Ssz"</span>,<br>
+                                            <span style="color: #055bcc;">"Sby"</span>,<br>
+                                            <span style="color: #055bcc;">"Sbz"</span>,<br>
+                                            <span style="color: #055bcc;">"Combined"</span>,<br>
+                                            <span style="color: #055bcc;">"7thDOF"</span><br>
+                                        ]<br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"COMP_7TH_DOF"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"When'COMP'is7thDOF"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"Sax(Warping)"</span>,<br>
+                                            <span style="color: #055bcc;">"Ssy(Mt)"</span>,<br>
+                                            <span style="color: #055bcc;">"Ssy(Mw)"</span>,<br>
+                                            <span style="color: #055bcc;">"Ssz(Mw)"</span>,<br>
+                                            <span style="color: #055bcc;">"Combined(Ssy)"</span>,<br>
+                                            <span style="color: #055bcc;">"Combined(Ssz)"</span><br>
+                                        ]<br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"COMP_SUB"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"When'COMP'is7thDOForCombined"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"Maximum"</span>,<br>
+                                            <span style="color: #055bcc;">"1(-y,+z)"</span>,<br>
+                                            <span style="color: #055bcc;">"2(+y,+z)"</span>,<br>
+                                            <span style="color: #055bcc;">"3(+y,-z)"</span>,<br>
+                                            <span style="color: #055bcc;">"4(-y,-z)"</span><br>
+                                        ]<br>
+                                    }<br>
+                                }<br>
+                            },<br>
+                            <span style="color: #c31b1b;">"TYPE_OF_DISPLAY"</span>:
+        {<br>
+                                <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"TypeofDisplay"</span>,<br>
+                                <span style="color: #c31b1b;">"properties"</span>:
+        {<br>
+                                    <span style="color: #c31b1b;">"CONTOUR"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"ContourDetails"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"DEFORM"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"DeformationDetails"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"VALUES"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"ValuesOutputDetails"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"LEGEND"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"LegendDetails"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"UNDEFORMED"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"boolean"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"DisplayUndeformedShape"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"MIRRORED"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"SymmetricModelMirrorDetail"</span><br>
+                                    }<br>
+                                }<br>
+                            },<br>
+                            <span style="color: #c31b1b;">"OUTPUT_SECT_LOCATION"</span>:
+        {<br>
+                                <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"object"</span>,<br>
+                                <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"OutputSectionLocation"</span>,<br>
+                                <span style="color: #c31b1b;">"properties"</span>:
+        {<br>
+                                    <span style="color: #c31b1b;">"OPT_I"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"boolean"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"OutputStartLocation"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"OPT_CENTER_MID"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"boolean"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"OutputCenterLocation"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"OPT_J"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"boolean"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"OutputEndLocation"</span><br>
+                                    },<br>
+                                    <span style="color: #c31b1b;">"OPT_MAX_MIN_MAX_ALL"</span>:
+        {<br>
+                                        <span style="color: #c31b1b;">"type"</span>:
+        <span style="color: #055bcc;">"string"</span>,<br>
+                                        <span style="color: #c31b1b;">"description"</span>:
+        <span style="color: #055bcc;">"OutputSectionLocation"</span>,<br>
+                                        <span style="color: #c31b1b;">"enum"</span>:
+        [<br>
+                                            <span style="color: #055bcc;">"Max"</span>,<br>
+                                            <span style="color: #055bcc;">"All"</span><br>
+                                        ]<br>
+                                    }<br>
+                                }<br>
+                            }<br>
+                        }<br>
+                    }<br>
+                }<br>
+            }<br>
+        }
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <h3 id="h_01J4K00HKQQTXSAW5XYCC6SQB7">
+    <strong>Examples</strong>
+  </h3>
+  <div class="mgt32" style="margin: 10px;">
+    <p class="btn_dropdown mgt4" style="font-size: 15px;">Beam Stresses</p>
+    <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+      <div style="background-color: #f5f7fa;" align="right">
+        <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
+      </div>
+      <div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">
+        {<br>
+            <span style="color: #c31b1b;">"Argument"</span>:
+        {<br>
+                <span style="color: #c31b1b;">"CURRENT_MODE"</span>:
+        <span style="color: #055bcc;">"BeamStresses"</span>,<br>
+                <span style="color: #c31b1b;">"LOAD_CASE_COMB"</span>:
+        {<br>
+                    <span style="color: #c31b1b;">"TYPE"</span>:
+        <span style="color: #055bcc;">"ST"</span>,<br>
+                    <span style="color: #c31b1b;">"NAME"</span>:
+        <span style="color: #055bcc;">"SelfWeight"</span>,<br>
+                    <span style="color: #c31b1b;">"STEP_INDEX"</span>:
+        <span style="color: #0ab66c;">10</span><br>
+                },<br>
+                <span style="color: #c31b1b;">"COMPONENTS"</span>:
+        {<br>
+                    <span style="color: #c31b1b;">"PART"</span>:
+        <span style="color: #055bcc;">"Total"</span>,<br>
+                    <span style="color: #c31b1b;">"COMP"</span>:
+        <span style="color: #055bcc;">"7thDOF"</span>,<br>
+                    <span style="color: #c31b1b;">"COMP_7TH_DOF"</span>:
+        <span style="color: #055bcc;">"Combined(Ssy)"</span>,<br>
+                    <span style="color: #c31b1b;">"COMP_SUB"</span>:
+        <span style="color: #055bcc;">"Maximum"</span><br>
+                },<br>
+                <span style="color: #c31b1b;">"TYPE_OF_DISPLAY"</span>:
+        {<br>
+                    <span style="color: #c31b1b;">"CONTOUR"</span>:
+        {<br>
+                        <span style="color: #c31b1b;">"OPT_CHECK"</span>:
+        <span style="color: #055bcc; font-weight: bold;">true</span><br>
+                    },<br>
+                    <span style="color: #c31b1b;">"VALUES"</span>:
+        {<br>
+                        <span style="color: #c31b1b;">"OPT_CHECK"</span>:
+        <span style="color: #055bcc; font-weight: bold;">true</span><br>
+                    }<br>
+                },<br>
+                <span style="color: #c31b1b;">"OUTPUT_SECT_LOCATION"</span>:
+        {<br>
+                    <span style="color: #c31b1b;">"OPT_MAX_ALL"</span>:
+        <span style="color: #055bcc;">"Max"</span><br>
+                }<br>
+            }<br>
+        }
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <h3 id="h_01J4K00HKQ3P5Q2Y8A1MXB6SEH">
+    <strong>Specifications</strong>
+  </h3>
+  <div class="table-wrap">
+    <table style="border-collapse: collapse; width: 100%; margin-left: 0px; margin-right: auto;" border="1">
+      <colgroup>
+
+        <col style="width: 6.00%;">
+
+        <col style="width: 6.00%;">
+
+        <col style="width: 44.00%;">
+
+        <col style="width: 14.00%;">
+
+        <col style="width: 10.00%;">
+
+        <col style="width: 10.00%;">
+
+        <col style="width: 10.00%;">
+
+      </colgroup>
+      <tbody>
+        <tr>
+          <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+          <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+          <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+          <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+          <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+          <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">1</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+            <p>Result Graphic Mode</p>
+            <p> • "Beam Stresses"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"CURRENT_MODE"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Required</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+            <p style="text-align: center;">2</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+            <p>Load Case and Combinations</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"LOAD_CASE_COMB"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Required</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(1)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Load Case</p>
+            <p> • Static Load: "ST"</p>
+            <p> • Construction Stage: "CS"</p>
+            <p> • Response Spectrum: "RS"</p>
+            <p> • Time History: "TH"</p>
+            <p> • Moving Load: "MV"</p>
+            <p> • Settlement: "SM"</p>
+            <p> • Load Combinations: "CB"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"TYPE"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Required</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(2)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Load Type</p>
+            <p> • Envelop Max: "Max"</p>
+            <p> • Envelop Min: "Min"</p>
+            <p> • Envelop Abs Max: "All"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"MINMAX"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"Max"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(3)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Load Name</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"NAME"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;"> -</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Required</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(4)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Step of Load Case</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"STEP_INDEX"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Integer</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;"> -</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Required</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+            <p style="text-align: center;">3</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+            <p>Components</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"COMPONENTS"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(1)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>
+              Parts Name defined in the Composite Section for Construction
+              Stage
+            </p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"PART"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"Total"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(2)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Components Name</p>
+            <p> • "Sax", "Ssy", "Ssz"</p>
+            <p> • "Sby","Sbz", "Combined"</p>
+            <p> • "7th DOF"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"COMP"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"Sax"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(3)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>When "COMP" is 7th DOF</p>
+            <p> • "Sax(Warping)"</p>
+            <p> • "Ssy(Mt)"</p>
+            <p> • "Ssy(Mw)"</p>
+            <p> • "Ssz(Mw)"</p>
+            <p> • "Combined(Ssy)"</p>
+            <p> • "Combined(Ssz)"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"COMP_7TH_DOF"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"Sax(Warping)"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(4)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>When "COMP" is 7th DOF or Combined</p>
+            <p> • "Maximum"</p>
+            <p> • "1 (-y, +z)"</p>
+            <p> • "2 (+y, +z)"</p>
+            <p> • "3 (+y, -z)"</p>
+            <p> • "4 (-y, -z)"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"COMP_SUB"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"Maximum"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+            <p style="text-align: center;">4</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+            <p>
+              Type of Display
+              <span style="font-size: 16px; color: #bf2600;">¹⁾</span>
+            </p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"TYPE_OF_DISPLAY"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(1)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Contour Details</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"CONTOUR"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(2)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Deformation Details</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"DEFORM"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(3)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Values Output Details</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"VALUES"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(4)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Legend Details</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"LEGEND"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(5)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Display Undeformed Shape</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"UNDEFORMED"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Boolean</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">false</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(6)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Symmetric Model Mirror Detail</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"MIRRORED"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+            <p style="text-align: center;">5</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+            <p>Output Section Location</p>
+            <p> • When "VALUES" is True</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"OUTPUT_SECT_LOCATION"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Object</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+            <p>
+              <span style="color: #4c9aff;">Output by Element Locations</span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(1)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Output Start Location</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"OPT_I"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Boolean</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">false</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(2)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Output Center Location</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"OPT_CENTER_MID"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Boolean</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">false</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(3)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Output End Location</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"OPT_J"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Boolean</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">false</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+            <p>
+              <span style="color: #4c9aff;">Output by Element Values</span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">(1)</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p>Output Section Location</p>
+            <p> • "Max"</p>
+            <p> • "All"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">"OPT_MAX_ALL"</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">String</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">-</p>
+          </td>
+          <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+            <p style="text-align: center;">Optional</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <br>
+  <p>
+    <span><a href="https://support.midasuser.com/hc/en-us/articles/35996812786841" target="_blank" rel="noopener noreferrer"><span style="font-size: 16px; color: #bf2600;">¹⁾</span><em> For more details, refer to the Type of Display ↗</em></a></span>
+  </p>
+</div>
+    </div>
+</body>
+</html>

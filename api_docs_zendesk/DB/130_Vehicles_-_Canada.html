@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicles - Canada - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Vehicles - Canada</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35957455014041</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-05T06:18:59Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:17:25Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35957455014041-Vehicles-Canada" target="_blank">https://support.midasuser.com/hc/en-us/articles/35957455014041-Vehicles-Canada</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J4GK2YZSC3RZDJ9KC1DES1AY"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/MVHL</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GK2YZSBJV8825MPZMRMH86"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J4GK2YZS579TW73QJFW7MCXR"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"MVHL"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MovingLoadCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularLoadName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularLoadNumber"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VehicularTypeName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StandardCode"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UserLoadType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynLoadAllowance"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UniformLoad"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"PERMIT_LOAD"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"IMPACT_FACTOR"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PermitLoadImpactFactor"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"AXLE_TYPES"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                    <span style="color: #c31b1b;">"properties"</span>: {<br>                                        <span style="color: #c31b1b;">"AXLE_TYPE"</span>: {<br>                                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AxleType"</span>,<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                        },<br>                                        <span style="color: #c31b1b;">"EVENLY_DIST_LOAD"</span>: {<br>                                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EvenlyDistanceLoad"</span>,<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                        },<br>                                        <span style="color: #c31b1b;">"SYMMETRIC_VEHICLE"</span>: {<br>                                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SymmetricVehicle"</span>,<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                        },<br>                                        <span style="color: #c31b1b;">"POINT_ITEMS"</span>: {<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                            <span style="color: #c31b1b;">"items"</span>: {<br>                                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                                <span style="color: #c31b1b;">"properties"</span>: {<br>                                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: {<br>                                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointLoad"</span>,<br>                                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                                    },<br>                                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: {<br>                                                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointDistance"</span>,<br>                                                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                                    }<br>                                                }<br>                                            }<br>                                        }<br>                                    }<br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"PERMIT_LOADS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                                    <span style="color: #c31b1b;">"properties"</span>: {<br>                                        <span style="color: #c31b1b;">"AXLE_TYPE"</span>: {<br>                                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AxleType"</span>,<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                                        },<br>                                        <span style="color: #c31b1b;">"SPACING"</span>: {<br>                                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Spacing"</span>,<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                        },<br>                                        <span style="color: #c31b1b;">"EQUAL_J_NVSIDX"</span>: {<br>                                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"j==nVsIdx"</span>,<br>                                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>                                        }<br>                                    }<br>                                }<br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"DYNA"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynaFactor"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynaFact1Axle"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynaFact2Axle"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DynaFact3Axle"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"POINT_LOAD"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointLoad"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"POINT_DIST"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PointDistance"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GK2YZS5AXPS5S34RJ5C4T3"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle - Standard</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"4"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"5"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL1-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"6"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL1-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"7"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL1-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"8"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL1-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"9"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL1-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"10"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL1-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"11"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL1-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"12"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL1-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL1-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"13"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL2-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"14"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL2-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"15"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL2-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"16"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL2-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"17"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL2-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"18"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL2-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"19"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL2-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"20"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL2-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL2-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"21"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL3-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"22"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL3-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTTruck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"23"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL3-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"24"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL3-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTLane(A)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"25"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL3-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"26"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL3-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTLane(B)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"27"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_CL3-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"28"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_CL3-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"CL3-625-ONTLane(CorD)"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"29"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_BCL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"BCL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"30"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_BCL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"BCL-625Truck"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"31"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(Auto)_BCL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"BCL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"32"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"CA(User)_BCL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_TYPE_NAME"</span>: <span style="color: #055bcc;">"BCL-625Lane"</span>,<br>            <span style="color: #c31b1b;">"STANDARD_CODE"</span>: <span style="color: #055bcc;">"CANADA"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"DYN_LOAD_ALLOWANCE"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.4</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.25</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Vehicle - User Defined</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"33"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_Truck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"Truck/Lane"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: <span style="color: #0ab66c;">12</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">120</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">2</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">140</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            ]<br>        },<br>        <span style="color: #c31b1b;">"34"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_Truck_User"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">2</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"Truck/Lane"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"UNIFORM_LOAD"</span>: <span style="color: #0ab66c;">12</span>,<br>                <span style="color: #c31b1b;">"DYNA"</span>: {<br>                    <span style="color: #c31b1b;">"DYNA_FACTOR"</span>: <span style="color: #0ab66c;">1</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_1_AXLE"</span>: <span style="color: #0ab66c;">0.46</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_2_AXLE"</span>: <span style="color: #0ab66c;">0.34</span>,<br>                    <span style="color: #c31b1b;">"DYNA_FACT_3_AXLE"</span>: <span style="color: #0ab66c;">0.3</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"LOAD_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">120</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">3</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">140</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">2</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">160</span>,<br>                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            ]<br>        },<br>        <span style="color: #c31b1b;">"35"</span>: {<br>            <span style="color: #c31b1b;">"MVLD_CODE"</span>: <span style="color: #0ab66c;">8</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NAME"</span>: <span style="color: #055bcc;">"UD_PermitTruck"</span>,<br>            <span style="color: #c31b1b;">"VEHICLE_LOAD_NUM"</span>: <span style="color: #0ab66c;">3</span>,<br>            <span style="color: #c31b1b;">"USER_LOAD_TYPE"</span>: <span style="color: #055bcc;">"PermitTruck"</span>,<br>            <span style="color: #c31b1b;">"VEH_CA"</span>: {<br>                <span style="color: #c31b1b;">"PERMIT_LOAD"</span>: {<br>                    <span style="color: #c31b1b;">"IMPACT_FACTOR"</span>: <span style="color: #0ab66c;">1.25</span>,<br>                    <span style="color: #c31b1b;">"AXLE_TYPES"</span>: [<br>                        {<br>                            <span style="color: #c31b1b;">"AXLE_TYPE"</span>: <span style="color: #055bcc;">"a1"</span>,<br>                            <span style="color: #c31b1b;">"EVENLY_DIST_LOAD"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                            <span style="color: #c31b1b;">"SYMMETRIC_VEHICLE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                            <span style="color: #c31b1b;">"POINT_ITEMS"</span>: [<br>                                {<br>                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">57.826899</span>,<br>                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0.9144000000000001</span><br>                                }<br>                            ]<br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"AXLE_TYPE"</span>: <span style="color: #055bcc;">"a2"</span>,<br>                            <span style="color: #c31b1b;">"EVENLY_DIST_LOAD"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                            <span style="color: #c31b1b;">"SYMMETRIC_VEHICLE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                            <span style="color: #c31b1b;">"POINT_ITEMS"</span>: [<br>                                {<br>                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">120.102021</span>,<br>                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0.9144000000000001</span><br>                                }<br>                            ]<br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"AXLE_TYPE"</span>: <span style="color: #055bcc;">"a3"</span>,<br>                            <span style="color: #c31b1b;">"EVENLY_DIST_LOAD"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>                            <span style="color: #c31b1b;">"SYMMETRIC_VEHICLE"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>                            <span style="color: #c31b1b;">"POINT_ITEMS"</span>: [<br>                                {<br>                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">33.3616725</span>,<br>                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0.19507200000000002</span><br>                                },<br>                                {<br>                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">33.3616725</span>,<br>                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0.588264</span><br>                                },<br>                                {<br>                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">33.3616725</span>,<br>                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">0.978408</span><br>                                },<br>                                {<br>                                    <span style="color: #c31b1b;">"POINT_LOAD"</span>: <span style="color: #0ab66c;">33.3616725</span>,<br>                                    <span style="color: #c31b1b;">"POINT_DIST"</span>: <span style="color: #0ab66c;">1.3716000000000002</span><br>                                }<br>                            ]<br>                        }<br>                    ],<br>                    <span style="color: #c31b1b;">"PERMIT_LOADS"</span>: [<br>                        {<br>                            <span style="color: #c31b1b;">"AXLE_TYPE"</span>: <span style="color: #055bcc;">"a1"</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">5.486400000000001</span>,<br>                            <span style="color: #c31b1b;">"EQUAL_J_NVSIDX"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"AXLE_TYPE"</span>: <span style="color: #055bcc;">"a2"</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">5.486400000000001</span>,<br>                            <span style="color: #c31b1b;">"EQUAL_J_NVSIDX"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>                        },<br>                        {<br>                            <span style="color: #c31b1b;">"AXLE_TYPE"</span>: <span style="color: #055bcc;">"a3"</span>,<br>                            <span style="color: #c31b1b;">"SPACING"</span>: <span style="color: #0ab66c;">0</span>,<br>                            <span style="color: #c31b1b;">"EQUAL_J_NVSIDX"</span>: <span style="color: #055bcc; font-weight: bold;">false</span><br>                        }<br>                    ]<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J4GK2YZTG39XXGDZVDJRPTRF"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Function Name</p>
+<p> • Canada: 8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MVLD_CODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Load Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_LOAD_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Load Number</p>
+<p> • Standard <img src="https://support.midasuser.com/hc/article_attachments/52116590899481">: 1</p>
+<p> • User Defined</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_LOAD_NUM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicular Type Name <img src="https://support.midasuser.com/hc/article_attachments/52116590899481"><span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEHICLE_TYPE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Standard Code <img src="https://support.midasuser.com/hc/article_attachments/52116590899481"><span style="font-size: 16px; color: #bf2600;"> ¹⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STANDARD_CODE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>User Defined Load Type</p>
+<p> • Truck/Lane: "Truck/Lane"</p>
+<p> • Train: "Train Load"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"USER_LOAD_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For Standard Vehicle <img src="https://support.midasuser.com/hc/article_attachments/52116590899481"></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="6">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_CA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Dynamic Load Allowance</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Dynamic Load Allowance Options</p>
+<p> • Auto: 0</p>
+<p> • User: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Dynamic Load Factor</p>
+<p> • Only one axle of the CL-W Truck is used</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACT_1_AXLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Dynamic Load Factor</p>
+<p> • Any two axle, or axles 1, 2 and 3 are used</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACT_2_AXLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Dynamic Load Factor</p>
+<p> • Three axles except for axles 1,2, and 3 or more than three axles are used</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACT_3_AXLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For User Defined Vehicle - Truck/Lane</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_CA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Uniform Distribution Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIFORM_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Dynamic Load Allowance</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Dynamic Load Allowance Options</p>
+<p> • Auto: 0</p>
+<p> • User: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Dynamic Load Factor</p>
+<p> • Only one axle of the CL-W Truck is used</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACT_1_AXLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Dynamic Load Factor</p>
+<p> • Any two axle, or axles 1, 2 and 3 are used</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACT_2_AXLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Dynamic Load Factor</p>
+<p> • Three axles except for axles 1,2, and 3 or more than three axles are used</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DYNA_FACT_3_AXLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Axle Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"LOAD_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">For User Defined Vehicle - Permit Truck</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VEH_CA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Permit Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PERMIT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Impact Factor</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"IMPACT_FACTOR"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Axle Types<span style="font-size: 16px; color: #bf2600;"> ²⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"AXLE_TYPES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Permit Load<span style="font-size: 16px; color: #bf2600;"> ²⁾</span></p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PERMIT_LOADS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">¹⁾ </span><em>Standard Code &amp; Vehicle Type Name <img src="https://support.midasuser.com/hc/article_attachments/52116590899481"></em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 50.00%;"> <col style="width: 44.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>No.</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Standard Code</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Vehicle Type Name</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Canadian Standard Load (CAN/CSA-S6)</p>
+<p> • "CANADA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "CL-625 Truck"</p>
+<p> • "CL-625 Lane"</p>
+<p> • "CL1-625-ONT Truck"</p>
+<p> • "CL1-625-ONT Lane(A)"</p>
+<p> • "CL1-625-ONT Lane(B)"</p>
+<p> • "CL1-625-ONT Lane(C or D)"</p>
+<p> • "CL2-625-ONT Truck"</p>
+<p> • "CL2-625-ONT Lane(A)"</p>
+<p> • "CL2-625-ONT Lane(B)"</p>
+<p> • "CL2-625-ONT Lane(C or D)"</p>
+<p> • "CL3-625-ONT Truck"</p>
+<p> • "CL3-625-ONT Lane(A)"</p>
+<p> • "CL3-625-ONT Lane(B)"</p>
+<p> • "CL3-625-ONT Lane(C or D)"</p>
+<p> • "BCL-625 Truck"</p>
+<p> • "BCL-625 Lane"</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<p><span style="font-size: 16px; color: #bf2600;">²⁾ </span><em>Permit Truck - JSON Structure</em></p>
+<div class="table-wrap" style="margin-top: 5px;">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Axle Types</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"AXLE_TYPES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"AXLE_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Evenly Distributed Wheel Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EVENLY_DIST_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Symmetric Vehicle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SYMMETRIC_VEHICLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Axle Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Axle Load</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_LOAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Spacing</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POINT_DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Permit Load</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PERMIT_LOADS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Defined Axle Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"AXLE_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Distance between axle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SPACING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Variable Spacing of Axle in Longitudinal Direction</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EQUAL_J_NVSIDX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div>
+<br><img src="https://support.midasuser.com/hc/article_attachments/52116590899481"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116605540249"> : <em>MIDAS GEN NX only</em>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

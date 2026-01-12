@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Beam Load - OPE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .info-item {
+            margin: 8px 0;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+            display: inline-block;
+            width: 150px;
+        }
+
+        .content {
+            margin-top: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Line Beam Load</h1>
+
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> OPE</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35994879160857</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-06T02:31:08Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-03-07T08:47:32Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a
+                href="https://support.midasuser.com/hc/en-us/articles/35994879160857-Line-Beam-Load"
+                target="_blank">https://support.midasuser.com/hc/en-us/articles/35994879160857-Line-Beam-Load</a></div>
+    </div>
+
+    <div class="content">
+        <script>
+            function copyText(elementId) {
+                var text = document.getElementById(elementId).innerText;
+                text = text.replace(/&nbsp;/g, " ");
+                text = text.replace(/ /g, " ");
+                navigator.clipboard.writeText(text);
+            }
+        </script>
+        <div>
+            <h3 id="h_01J4JRV65SPD7G0TD1A3TBE97P"><strong>Input URI</strong></h3>
+            <div class="table-wrap">
+                <table style="width: 100%;">
+                    <colgroup>
+                        <col style="width: 100.00%;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th style="padding: 10px 5px 10px 5px;">
+                                <p style="text-align: center;"><strong>{base url} + ope/LINEBMLD</strong></p>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br><br>
+            <h3 id="h_01J4JRV65SFJ6DG9FT61RNX59Z"><strong>Active Methods</strong></h3>
+            <div class="table-wrap">
+                <table style="width: 100%;">
+                    <colgroup>
+                        <col style="width: 100.00%;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th style="padding: 10px 5px 10px 5px;">
+                                <p style="text-align: center;"><strong> POST</strong></p>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br><br>
+            <h3 id="h_01J4JRV65S5NJDZK2AFRYW08EK"><strong>JSON Schema</strong></h3>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"LINEBMLD"</span>: {<br>        <span
+                            style="color: #c31b1b;">"$schema"</span>: <span
+                            style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>        <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>            <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>                <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>                    <span
+                            style="color: #c31b1b;">"LCNAME"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                    },<br>                    <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                    },<br>                    <span
+                            style="color: #c31b1b;">"TYPE"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                    },<br>                    <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>                        <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>                            <span
+                            style="color: #c31b1b;">"METHOD"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"integer"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"ELEM"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"array"</span>,<br>                                <span
+                            style="color: #c31b1b;">"items"</span>: {<br>                                    <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"integer"</span><br>                                }<br>                            },<br>                            <span
+                            style="color: #c31b1b;">"NODE"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"array"</span>,<br>                                <span
+                            style="color: #c31b1b;">"items"</span>: {<br>                                    <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"integer"</span><br>                                }<br>                            }<br>                        }<br>                    },<br>                    <span
+                            style="color: #c31b1b;">"ECCEN"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>                        <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>                            <span
+                            style="color: #c31b1b;">"USE"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"TYPE"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"integer"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"DIR"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"I_END"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"J_END"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"USE_J_END"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"boolean"</span><br>                            }<br>                        }<br>                    },<br>                    <span
+                            style="color: #c31b1b;">"ADD_H"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>                        <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>                            <span
+                            style="color: #c31b1b;">"USE"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"I_END"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"J_END"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"USE_J_END"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"boolean"</span><br>                            }<br>                        }<br>                    },<br>                    <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>                        <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>                            <span
+                            style="color: #c31b1b;">"DIR"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"TYPE"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"integer"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"D"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"array"</span>,<br>                                <span
+                            style="color: #c31b1b;">"items"</span>: {<br>                                    <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                                }<br>                            },<br>                            <span
+                            style="color: #c31b1b;">"P"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"array"</span>,<br>                                <span
+                            style="color: #c31b1b;">"items"</span>: {<br>                                    <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                                }<br>                            },<br>                            <span
+                            style="color: #c31b1b;">"A"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"B"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"C"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    },<br>                    <span
+                            style="color: #c31b1b;">"COPY"</span>: {<br>                        <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"object"</span>,<br>                        <span
+                            style="color: #c31b1b;">"properties"</span>: {<br>                            <span
+                            style="color: #c31b1b;">"USE"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"boolean"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"AXIS"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                            },<br>                            <span
+                            style="color: #c31b1b;">"DIST"</span>: {<br>                                <span
+                            style="color: #c31b1b;">"type"</span>: <span
+                            style="color: #055bcc;">"string"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <h3 id="h_01J4JRV65SPVXWNMSDFH8MZZNR"><strong>Request Examples</strong></h3>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Concentrated Forces</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"CONLOAD_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"CONLOAD"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">1.35</span>,<br>                <span
+                            style="color: #0ab66c;">1.95</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-1</span>,<br>                <span
+                            style="color: #0ab66c;">-2</span>,<br>                <span
+                            style="color: #0ab66c;">-3</span>,<br>                <span
+                            style="color: #0ab66c;">-4</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Concentrated Moments / Torsions</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"CONMOMENT_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"CONMOMENT"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">1.35</span>,<br>                <span
+                            style="color: #0ab66c;">1.95</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-1</span>,<br>                <span
+                            style="color: #0ab66c;">-2</span>,<br>                <span
+                            style="color: #0ab66c;">-3</span>,<br>                <span
+                            style="color: #0ab66c;">-4</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Uniform Loads</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"UNILOAD_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"UNILOAD"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-3</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Uniform Moments / Torsions</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"UNIMOMENT_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"UNIMOMENT"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-3</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Trapezoidal Loads</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"TRALOAD_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"TRALOAD"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">1.35</span>,<br>                <span
+                            style="color: #0ab66c;">1.95</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-1</span>,<br>                <span
+                            style="color: #0ab66c;">-2</span>,<br>                <span
+                            style="color: #0ab66c;">-3</span>,<br>                <span
+                            style="color: #0ab66c;">-4</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Trapezoidal Moments / Torsions</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"TRAMOMENT_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"TRAMOMENT"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">1.35</span>,<br>                <span
+                            style="color: #0ab66c;">1.95</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-1</span>,<br>                <span
+                            style="color: #0ab66c;">-2</span>,<br>                <span
+                            style="color: #0ab66c;">-3</span>,<br>                <span
+                            style="color: #0ab66c;">-4</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Uniform Pressure</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget8')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget8" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"UNIPRESSURE_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"UNIPRESSURE"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"LY"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-5</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Trapezoidal Pressure</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget9')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget9" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"TRAPRESSURE_03"</span>,<br>        <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">"LoadGroup1"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"TRAPRESSURE"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">23</span>,<br>                <span
+                            style="color: #0ab66c;">33</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"LY"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">1.35</span>,<br>                <span
+                            style="color: #0ab66c;">1.95</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-1</span>,<br>                <span
+                            style="color: #0ab66c;">-2</span>,<br>                <span
+                            style="color: #0ab66c;">-3</span>,<br>                <span
+                            style="color: #0ab66c;">-4</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Curved Loads</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget10')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget10" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"CURVED_02"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"CURVED"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">12</span>,<br>                <span
+                            style="color: #0ab66c;">22</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"A"</span>:
+                        <span style="color: #0ab66c;">-10</span>,<br>            <span
+                            style="color: #c31b1b;">"B"</span>: <span
+                            style="color: #0ab66c;">-5.5</span>,<br>            <span
+                            style="color: #c31b1b;">"C"</span>: <span
+                            style="color: #0ab66c;">-2</span><br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Eccentricity</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget11')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget11" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"CONLOAD_14"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"CONLOAD"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">56</span>,<br>                <span
+                            style="color: #0ab66c;">66</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"ECCEN"</span>: {<br>            <span
+                            style="color: #c31b1b;">"USE"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>:
+                        <span style="color: #055bcc;">"LZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"I_END"</span>: <span
+                            style="color: #0ab66c;">-0.15</span>,<br>            <span
+                            style="color: #c31b1b;">"J_END"</span>: <span
+                            style="color: #0ab66c;">0.15</span>,<br>            <span
+                            style="color: #c31b1b;">"USE_J_END"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span><br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.75</span>,<br>                <span
+                            style="color: #0ab66c;">1.35</span>,<br>                <span
+                            style="color: #0ab66c;">1.95</span>,<br>                <span
+                            style="color: #0ab66c;">2.55</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-1</span>,<br>                <span
+                            style="color: #0ab66c;">-2</span>,<br>                <span
+                            style="color: #0ab66c;">-3</span>,<br>                <span
+                            style="color: #0ab66c;">-4</span><br>            ]<br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Copy</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget12')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget12" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"UNILOAD_17"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"UNILOAD"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">78</span>,<br>                <span
+                            style="color: #0ab66c;">88</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.25</span>,<br>                <span
+                            style="color: #0ab66c;">0.85</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-3</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"COPY"</span>: {<br>            <span
+                            style="color: #c31b1b;">"USE"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"AXIS"</span>: <span
+                            style="color: #055bcc;">"Y"</span>,<br>            <span
+                            style="color: #c31b1b;">"DIST"</span>: <span
+                            style="color: #055bcc;">"10@3.0"</span><br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Selected Element Method</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget13')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget13" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"Argument"</span>: {<br>        <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"UNILOAD_17"</span>,<br>        <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"UNILOAD"</span>,<br>        <span
+                            style="color: #c31b1b;">"TARGET"</span>: {<br>            <span
+                            style="color: #c31b1b;">"METHOD"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span
+                            style="color: #c31b1b;">"NODE"</span>: [<br>                <span
+                            style="color: #0ab66c;">78</span>,<br>                <span
+                            style="color: #0ab66c;">88</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"LOAD"</span>: {<br>            <span
+                            style="color: #c31b1b;">"DIR"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>            <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"D"</span>:
+                        [<br>                <span style="color: #0ab66c;">0.25</span>,<br>                <span
+                            style="color: #0ab66c;">0.85</span><br>            ],<br>            <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                <span
+                            style="color: #0ab66c;">-3</span><br>            ]<br>        },<br>        <span
+                            style="color: #c31b1b;">"COPY"</span>: {<br>            <span
+                            style="color: #c31b1b;">"USE"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span
+                            style="color: #c31b1b;">"AXIS"</span>: <span
+                            style="color: #055bcc;">"Y"</span>,<br>            <span
+                            style="color: #c31b1b;">"DIST"</span>: <span
+                            style="color: #055bcc;">"10@3.0"</span><br>        }<br>    }<br>}</div>
+                </div>
+            </div>
+            <br><br>
+            <h3 id="h_01J4JRV65T8135R8KT82FNNFQF"><strong>Response Examples</strong></h3>
+            <div class="mgt32" style="margin: 10px;">
+                <p class="btn_dropdown mgt4" style="font-size: 15px;">Return Created Beam Load</p>
+                <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+                    <div style="background-color: #f5f7fa;" align="right"><button
+                            style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;"
+                            onclick="copyText('copyTarget14')" onmousedown="this.style.backgroundColor='#1D70B5'"
+                            onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+                    <div id="copyTarget14" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span
+                            style="color: #c31b1b;">"LINEBMLD"</span>: {<br>        <span
+                            style="color: #c31b1b;">"1"</span>: {<br>            <span
+                            style="color: #c31b1b;">"ITEMS"</span>: [<br>                {<br>                    <span
+                            style="color: #c31b1b;">"ID"</span>: <span
+                            style="color: #0ab66c;">1</span>,<br>                    <span
+                            style="color: #c31b1b;">"LCNAME"</span>: <span
+                            style="color: #055bcc;">"A"</span>,<br>                    <span
+                            style="color: #c31b1b;">"GROUP_NAME"</span>: <span
+                            style="color: #055bcc;">""</span>,<br>                    <span
+                            style="color: #c31b1b;">"CMD"</span>: <span
+                            style="color: #055bcc;">"LINE"</span>,<br>                    <span
+                            style="color: #c31b1b;">"TYPE"</span>: <span
+                            style="color: #055bcc;">"CONLOAD"</span>,<br>                    <span
+                            style="color: #c31b1b;">"DIRECTION"</span>: <span
+                            style="color: #055bcc;">"GZ"</span>,<br>                    <span
+                            style="color: #c31b1b;">"USE_PROJECTION"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span
+                            style="color: #c31b1b;">"USE_ECCEN"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span
+                            style="color: #c31b1b;">"D"</span>: [<br>                        <span
+                            style="color: #0ab66c;">0.075</span>,<br>                        <span
+                            style="color: #0ab66c;">0.135</span>,<br>                        <span
+                            style="color: #0ab66c;">0.195</span>,<br>                        <span
+                            style="color: #0ab66c;">0.255</span><br>                    ],<br>                    <span
+                            style="color: #c31b1b;">"P"</span>: [<br>                        <span
+                            style="color: #0ab66c;">-1</span>,<br>                        <span
+                            style="color: #0ab66c;">-2</span>,<br>                        <span
+                            style="color: #0ab66c;">-3</span>,<br>                        <span
+                            style="color: #0ab66c;">-4</span><br>                    ],<br>                    <span
+                            style="color: #c31b1b;">"USE_ADDITIONAL"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">false</span>,<br>                    <span
+                            style="color: #c31b1b;">"ADDITIONAL_I_END"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>                    <span
+                            style="color: #c31b1b;">"ADDITIONAL_J_END"</span>: <span
+                            style="color: #0ab66c;">0</span>,<br>                    <span
+                            style="color: #c31b1b;">"USE_ADDITIONAL_J_END"</span>: <span
+                            style="color: #055bcc; font-weight: bold;">false</span><br>                }<br>            ]<br>        }<br>    }<br>}
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <h3 id="h_01J4JRV65THEEBGHBQCZXDD0VT"><strong>Specifications</strong></h3>
+            <div class="table-wrap">
+                <table style="border-collapse: collapse; width: 100%;" border="1">
+                    <colgroup>
+                        <col style="width: 6.00%;">
+                        <col style="width: 6.00%;">
+                        <col style="width: 44.00%;">
+                        <col style="width: 14.00%;">
+                        <col style="width: 10.00%;">
+                        <col style="width: 10.00%;">
+                        <col style="width: 10.00%;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th
+                                style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                No.</th>
+                            <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">Description</th>
+                            <th
+                                style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                Key</th>
+                            <th
+                                style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                Value Type</th>
+                            <th
+                                style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                Default</th>
+                            <th
+                                style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                Required</th>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">1</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Load Case Name</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"LCNAME"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">2</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Load Group Name</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"GROUP_NAME"</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Optional</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">3</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Load Type</p>
+                                <p> • Concentrated Forces: "CONLOAD"</p>
+                                <p> • Concentrated Moments / Torsions: "CONMOMENT"</p>
+                                <p> • Uniform Loads: "UNILOAD"</p>
+                                <p> • Uniform Moments / Torsions: "UNIMOMENT"</p>
+                                <p> • Trapezoidal Loads: "TRALOAD"</p>
+                                <p> • Trapezoidal Moments / Torsions: "TRAMOMENT"</p>
+                                <p> • Uniform Pressure: "UNIPRESSURE"</p>
+                                <p> • Trapezoidal Pressure: "TRAPRESSURE"</p>
+                                <p> • Curved Loads: "CURVED"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"TYPE"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                rowspan="4">
+                                <p style="text-align: center;">4</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Method, Elements and Nodes Information to load</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"TARGET"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Object</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(1)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Select Method to Load</p>
+                                <p> • On the loading line: 0</p>
+                                <p> • Selected Element: 1</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"METHOD"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Integer</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(2)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Elements to load</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"ELEM"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Array<br>[Integer]</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(3)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Nodes for loading line</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"NODE"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Array<br>[Integer, 2]</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                rowspan="7">
+                                <p style="text-align: center;">5</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Option - Eccentricity</p>
+                                <p> • It is available when "TYPE" value is as follows;</p>
+                                <p>   ◦ "CONLOAD"</p>
+                                <p>   ◦ "UNILOAD"</p>
+                                <p>   ◦ "TRALOAD"</p>
+                                <p>   ◦ "CURVED"</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"ECCEN"</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Object</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Optional</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(1)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Activate option</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"USE"</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Boolean</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">false</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(2)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Type</p>
+                                <p> • Centroid: 0</p>
+                                <p> • Offset: 1</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"TYPE"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Integer</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(3)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Direction</p>
+                                <p> • Local y: "LY"</p>
+                                <p> • Local z: "LZ"</p>
+                                <p> • Global X: "GX"</p>
+                                <p> • Global Y: "GY"</p>
+                                <p> • Global Z: "GZ"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"DIR"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(4)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Eccentricity of I-node</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"I_END"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(5)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Eccentricity of J-node</p>
+                                <p> • Available when the value of "USE_J_END" is true</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"J_END"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(6)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Activate option for J-node</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"USE_J_END"</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Boolean</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                rowspan="5">
+                                <p style="text-align: center;">6</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Option - Additional H from Top</p>
+                                <p> • It is available when "TYPE" value is as follows;</p>
+                                <p>   ◦ "UNIPRESSURE"</p>
+                                <p>   ◦ "TRAPRESSURE"</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"ADD_H"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Object</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Optional</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(1)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Activate option</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"USE"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Boolean</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">false</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(2)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Eccentricity of I-node</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"I_END"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(3)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Eccentricity of J-node</p>
+                                <p> • Available when the value of "USE_J_END" is true</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"J_END"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(4)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Activate option for J-node</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"USE_J_END"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Boolean</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                rowspan="11">
+                                <p style="text-align: center;">7</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Load</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"LOAD"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Object</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(1)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Directions</p>
+                                <p> • Local x: "LX"</p>
+                                <p> • Local y: "LY"</p>
+                                <p> • Local z: "LZ"</p>
+                                <p> • Global X: "GX"</p>
+                                <p> • Global Y: "GY"</p>
+                                <p> • Global Z: "GZ"</p>
+                                <p>When the load type is "UNIPRESSURE" or "TRAPRESSURE", only "LY" or "LZ" are available
+                                    depending on the "ADD_H" options</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"DIR"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(2)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Projection</p>
+                                <p> • Defaults</p>
+                                <p>   ◦ "METHOD" = 0 then false</p>
+                                <p>   ◦ "METHOD" = 1 then true,</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"USE_PROJECTION"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Boolean</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Systems</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Optional</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(3)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Distance Type</p>
+                                <p> • Relative (P(x) = ax**0.5 + b): 0</p>
+                                <p> • Absolute (P(x) = ax**2 + bx + c): 1</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"TYPE"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Integer</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="6">
+                                <p><span style="color: #4c9aff;">For all load type except "CURVED" type</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(4)</p>
+                            </td>
+                            <td
+                                style="background-color: #ffffff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Distance</p>
+                                <p> • x1: index 0</p>
+                                <p> • x2: index 1</p>
+                                <p> • x3: index 2</p>
+                                <p> • x4: index 3</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"D"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Array<br>[Real, 4]</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(5)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Magnitude</p>
+                                <p> • P1/M1/W1/w/p: index 0</p>
+                                <p> • P1/M1/W2: index 1</p>
+                                <p> • P1/M1/W3: index 2</p>
+                                <p> • P4/M4/W4: index 3</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"P"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Array<br>[Real, 4]</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="6">
+                                <p><span style="color: #4c9aff;">Only for "CURVED" type</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(4)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Value a in formula</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"A"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(5)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Value b in formula</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"B"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(6)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Value c in formula</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"C"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Real</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Required</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                rowspan="4">
+                                <p style="text-align: center;">8</p>
+                            </td>
+                            <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;"
+                                colspan="2">
+                                <p>Copy Options</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"COPY"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Object</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Optional</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(1)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Activate option</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"USE"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">Boolean</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">false</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(2)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Axis</p>
+                                <p> • "X", "Y", "Z"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"AXIS"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">(3)</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p>Copy Distance</p>
+                                <p> • e.g.) 5, 3, 4.5, 3@5.0</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">"DIST"</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">String</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                            <td
+                                style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+                                <p style="text-align: center;">-</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br><br>
+        </div>
+    </div>
+</body>
+
+</html>

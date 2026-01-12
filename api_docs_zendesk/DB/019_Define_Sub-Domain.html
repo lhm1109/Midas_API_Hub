@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Define Sub-Domain - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Define Sub-Domain</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35807304820761</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-01T11:15:15Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:15:03Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35807304820761-Define-Sub-Domain" target="_blank">https://support.midasuser.com/hc/en-us/articles/35807304820761-Define-Sub-Domain</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<div>
+<h3 id="h_01J46TCJFGRZ2GEJM4EJHF9M3B"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + db/SBDO</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J46TCJFGM7NZS917RF26P8CQ"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J46TCJFG3H4945S7D9KMKMH5"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"SBDO"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"SUB_DOMAIN_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SubDomainName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"MEMBER_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MemberType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"V1"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V1"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"V2"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V2"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DomainName"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"bUseMt"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UseMt"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Thickness"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"OPT_BASIC_REBAR"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BasicRebarBoolean"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"TOP_REBAR_NAME_X"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TopRebarName:X-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"TOP_REBAR_SPACE_X"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TopRebarSpace:X-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_NAME_X"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BottomRebarName:X-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_SPACE_X"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BottomRebarSpace:X-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"TOP_REBAR_NAME_Y"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TopRebarName:Y-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"TOP_REBAR_SPACE_Y"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TopRebarSpace:Y-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_NAME_Y"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BottomRebarName:Y-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_SPACE_Y"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BottomRebarSpace:Y-Dir"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"AXIS_VECTOR"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AxisVector"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"OPT_REBAR_MATL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RebarMaterialBoolean"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"boolean"</span><br>            },<br>            <span style="color: #c31b1b;">"REBAR_MATL_KEY"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RebarMaterialKey"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"REBAR_AXIS_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"RebarAxisType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"STR_UCS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"UCS"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"MEMB_TYPE_CIVIL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"MemberTypeCivil"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J46TCJFG3B5W73YE7CBAJ8WK"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">CVL Example</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"SUB_DOMAIN_NAME"</span>: <span style="color: #055bcc;">"SDM1"</span>,<br>            <span style="color: #c31b1b;">"MEMBER_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"V1"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"V2"</span>: <span style="color: #0ab66c;">90</span>,<br>            <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: <span style="color: #055bcc;">"DM1"</span>,<br>            <span style="color: #c31b1b;">"AXIS_VECTOR"</span>: [<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"bUseMt"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"STR_UCS"</span>: <span style="color: #055bcc;">""</span>,<br>            <span style="color: #c31b1b;">"MEMB_TYPE_CIVIL"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">GEN Example</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"SUB_DOMAIN_NAME"</span>: <span style="color: #055bcc;">"SDM1"</span>,<br>            <span style="color: #c31b1b;">"MEMBER_TYPE"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"V1"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"V2"</span>: <span style="color: #0ab66c;">90</span>,<br>            <span style="color: #c31b1b;">"DOMAIN_NAME"</span>: <span style="color: #055bcc;">"DM1"</span>,<br>            <span style="color: #c31b1b;">"bUseMt"</span>: <span style="color: #055bcc; font-weight: bold;">true</span>,<br>            <span style="color: #c31b1b;">"THICKNESS"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"OPT_BASIC_REBAR"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"TOP_REBAR_NAME_X"</span>: <span style="color: #055bcc;">"D10"</span>,<br>            <span style="color: #c31b1b;">"TOP_REBAR_SPACE_X"</span>: <span style="color: #0ab66c;">0.4</span>,<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_NAME_X"</span>: <span style="color: #055bcc;">"D10"</span>,<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_SPACE_X"</span>: <span style="color: #0ab66c;">0.4</span>,<br>            <span style="color: #c31b1b;">"TOP_REBAR_NAME_Y"</span>: <span style="color: #055bcc;">"D10"</span>,<br>            <span style="color: #c31b1b;">"TOP_REBAR_SPACE_Y"</span>: <span style="color: #0ab66c;">0.4</span>,<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_NAME_Y"</span>: <span style="color: #055bcc;">"D10"</span>,<br>            <span style="color: #c31b1b;">"BOTTOM_REBAR_SPACE_Y"</span>: <span style="color: #0ab66c;">0.4</span>,<br>            <span style="color: #c31b1b;">"OPT_REBAR_MATL"</span>: <span style="color: #055bcc; font-weight: bold;">false</span>,<br>            <span style="color: #c31b1b;">"REBAR_MATL_KEY"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"REBAR_AXIS_TYPE"</span>: <span style="color: #0ab66c;">2</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J46TCJFGE7J1FRWRTC65WEG0"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%; height: 1478px;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 50.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr style="height: 44px;">
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">No.</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">Description</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">Key</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">Value Type</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">Default</th>
+<th style="padding: 15px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">Required</th>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Sub Domain Name</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"SUB_DOMAIN_NAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Rebar Dir.1</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"V1"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Rebar Dir.2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"V2"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Domain Name</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"DOMAIN_NAME"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%; height: 22px;" colspan="6">
+<p><span style="color: #4c9aff;">CIVIL NX<img src="https://support.midasuser.com/hc/article_attachments/52116561800857"> Only</span></p>
+</td>
+</tr>
+<tr style="height: 139px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 139px;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 139px;">
+<p>Member Type Civil</p>
+<p> • None: 0</p>
+<p> • Plate Beam (1D): 1</p>
+<p> • Plate Column (1D): 2</p>
+<p> • Shell: 3</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 139px;">
+<p style="text-align: center;">"MEMB_TYPE_CIVIL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 139px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 110px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 110px;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 110px;">
+<p>Rebar Direction</p>
+<p> • Local: 0</p>
+<p> • UCS: 1</p>
+<p> • Reference Axis: 2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 110px;">
+<p style="text-align: center;">"REBAR_AXIS_TYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 51px;">
+<p>UCS</p>
+<p> • When the Rebar Direction is UCS</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"STR_UCS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 51px;">
+<p>Axis Vector</p>
+<p> • When the Rebar Direction is Reference Axis</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"AXIS_VECTOR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="background-color: #e6fcff; padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 99.8571%; height: 22px;" colspan="6">
+<p><span style="color: #4c9aff;">GEN NX<img src="https://support.midasuser.com/hc/article_attachments/52116561809049"> Only</span></p>
+</td>
+</tr>
+<tr style="height: 110px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 110px;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 110px;">
+<p>Member Type</p>
+<p> • None: 0</p>
+<p> • Slab: 1</p>
+<p> • Mat: 2</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 110px;">
+<p style="text-align: center;">"MEMBER_TYPE"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 110px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Basic Rebar Option</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"OPT_BASIC_REBAR"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 51px;">
+<p>Top Rebar Name (X-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"TOP_REBAR_NAME_X"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 67px;">
+<p>Top Rebar Space (X-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"TOP_REBAR_SPACE_X"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 67px;">
+<p>Bottom Rebar Name (X-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"BOTTOM_REBAR_NAME_X"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">10</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 67px;">
+<p>Bottom Rebar Space (X-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"BOTTOM_REBAR_SPACE_X"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">11</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 51px;">
+<p>Top Rebar Name (Y-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"TOP_REBAR_NAME_Y"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">12</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 67px;">
+<p>Top Rebar Space (Y-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"TOP_REBAR_SPACE_Y"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">13</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 67px;">
+<p>Bottom Rebar Name (Y-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"BOTTOM_REBAR_NAME_Y"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Blank</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">14</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 67px;">
+<p>Bottom Rebar Space (Y-Dir)</p>
+<p> • When the Basic Rebar is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 67px;">
+<p style="text-align: center;">"BOTTOM_REBAR_SPACE_Y"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 67px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">15</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Rebar Material Option</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"OPT_REBAR_MATL"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">false</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 67px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 67px;">
+<p style="text-align: center;">16</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 51px;">
+<p>Rebar Material Key</p>
+<p> • When the Rebar Material is True</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 51px;">
+<p style="text-align: center;">"REBAR_MATL_KEY"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 51px;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 44px;">
+<p style="text-align: center;">17</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Use Mt</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"bUseMt"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Boolean</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr style="height: 51px;">
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 6%; height: 51px;">
+<p style="text-align: center;">18</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 49.8571%; height: 44px;">
+<p>Thickness</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 14%; height: 44px;">
+<p style="text-align: center;">"THICKNESS"</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px; overflow-wrap: break-word; word-break: break-word; width: 10%; height: 44px;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116561800857"> : <em>MIDAS CIVIL NX only</em>
+</div>
+<div>
+<img src="https://support.midasuser.com/hc/article_attachments/52116561809049"> : <em>MIDAS GEN NX only</em>
+</div>
+</div>
+    </div>
+</body>
+</html>

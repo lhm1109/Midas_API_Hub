@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastic Material - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Plastic Material</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 35808376517913</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-01T11:48:29Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-02-06T07:04:51Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/35808376517913-Plastic-Material" target="_blank">https://support.midasuser.com/hc/en-us/articles/35808376517913-Plastic-Material</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+<div>
+<h3 id="h_01J46WJ0147GNFTWMMWQWKX6D0"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>{base url} + db/EPMT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J46WJ01438CTJZ3FS9K6B83K"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J46WJ014T5FTE0H0AQBQRTWR"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"EPMT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Name"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ModelType"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"TRESCA"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Tresca"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InitialUnaxialYieldStress"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"OPT_HARDENING"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningBoolean"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningType"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BackStressCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"VMISES"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"VonMises"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InitialUnaxialYieldStress"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"OPT_HARDENING"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningBoolean"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningType"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BackStressCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"MOHRCL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Mohr-Coulomb"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"INIT_COHESION"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InitialCohesion"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InitialFrictionAngle"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"OPT_HARDENING"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningBoolean"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningType"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BackStressCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"DRUCKER"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Drucker-Prager"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"INIT_COHESION"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InitialCohesion"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InitialFrictionAngle"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"OPT_HARDENING"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningBoolean"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningType"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                    },<br>                    <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BackStressCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"HARDENING_COEF"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningCoefficient"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"MICROPL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Drucker-Prager"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"PARAM_K"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PARAM_K"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"PARAM_C"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"PARAM_C"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"MU"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Mu"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"MASONRY"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Mansonry"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"BM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BrickMaterialProperties"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Young'sModulus"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Possion'sRatio"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"COMP_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CompressionStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TensionStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"SOFTENING_PARAMETER"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"SofteningParameter"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"FRICTION_ANGLE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"FRICTION_ANGLE"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V1"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V1"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V2"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V2"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V3"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V3"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V4"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V4"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V5"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V5"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V6"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V6"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"V7"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"V7"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"BED_JOINT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BedJointMaterialProperties"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Young'sModulus"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Possion'sRatio"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"COMP_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CompressionStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TensionStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningParameter"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"BOND_WRENCH_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BondWrenchStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"HEAD_JOINT"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HeadJointMaterialProperties"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Young'sModulus"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Possion'sRatio"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"COMP_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CompressionStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TensionStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"HardeningParameter"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"BOND_WRENCH_STRENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BondWrenchStrength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"GEOM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"GeometricProperties"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"BRICK_LENGTH"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BrickLength"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"BRICK_HEIGHT"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"BrickHeight"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"THICKNESS_BED"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ThicknessofBed"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"THICKNESS_HEAD"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ThicknessofHead"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            },<br>                            <span style="color: #c31b1b;">"COORD_TYPE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Vertical:HorizontalType"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                            },<br>                            <span style="color: #c31b1b;">"COORD_ANGLE"</span>: {<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"AnglefromGlobalX"</span>,<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            },<br>            <span style="color: #c31b1b;">"CONCDMG"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Concrete-Damage"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"DILIATION_ANGLE"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"DiliationAngle"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"ECCEN"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Eccentricity"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"FBO_FCO"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"fbo/fco"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"K"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"K"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"VISCOSITY_PARAM"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ViscosityParameter"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                    },<br>                    <span style="color: #c31b1b;">"COMP_ITEMS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"CompressiveBehaviorArray"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InelasticStrain"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"YIELD_STRESS"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"YieldStress"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"DAMAGE"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Damage"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                }<br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"TENSILE_ITEMS"</span>: {<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TensileBehaviorArray"</span>,<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                            <span style="color: #c31b1b;">"properties"</span>: {<br>                                <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"InelasticStrain"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"YIELD_STRESS"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"YieldStress"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                },<br>                                <span style="color: #c31b1b;">"DAMAGE"</span>: {<br>                                    <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Damage"</span>,<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                                }<br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J46WJ014CGQQFC3Q927ZETVW"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Tresca</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Tresca_None"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"TR"</span>,<br>            <span style="color: #c31b1b;">"TRESCA"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">0</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"2"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Tresca_Isotropic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"TR"</span>,<br>            <span style="color: #c31b1b;">"TRESCA"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"ISO"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"3"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Tresca_Kinematic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"TR"</span>,<br>            <span style="color: #c31b1b;">"TRESCA"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"KIN"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"4"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Tresca_Mixed"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"TR"</span>,<br>            <span style="color: #c31b1b;">"TRESCA"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"MIX"</span>,<br>                <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: <span style="color: #0ab66c;">0.8</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Von Mises</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"5"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"VonMises_None"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"VM"</span>,<br>            <span style="color: #c31b1b;">"VMISES"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">0</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"6"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"VonMises_Isotropic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"VM"</span>,<br>            <span style="color: #c31b1b;">"VMISES"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"ISO"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"7"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"VonMises_Kinematic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"VM"</span>,<br>            <span style="color: #c31b1b;">"VMISES"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"KIN"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"8"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"VonMises_Mixed"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"VM"</span>,<br>            <span style="color: #c31b1b;">"VMISES"</span>: {<br>                <span style="color: #c31b1b;">"INIT_YIELD_STRESS"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"MIX"</span>,<br>                <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: <span style="color: #0ab66c;">0.8</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Mohr-Coulomb</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"9"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Mohr-Col_None"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MC"</span>,<br>            <span style="color: #c31b1b;">"MOHRCL"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">0</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"10"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Mohr-Col_Isotropic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MC"</span>,<br>            <span style="color: #c31b1b;">"MOHRCL"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"ISO"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"11"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Mohr-Col_Kinematic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MC"</span>,<br>            <span style="color: #c31b1b;">"MOHRCL"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"KIN"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"12"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Mohr-Col_Mixed"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MC"</span>,<br>            <span style="color: #c31b1b;">"MOHRCL"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"MIX"</span>,<br>                <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: <span style="color: #0ab66c;">0.75</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Drucker-Prager</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"13"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Drucker-P_None"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"DP"</span>,<br>            <span style="color: #c31b1b;">"DRUCKER"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">0</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"14"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Drucker-P_Isotropic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"DP"</span>,<br>            <span style="color: #c31b1b;">"DRUCKER"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"ISO"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"15"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Drucker-P_Kinematic"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"DP"</span>,<br>            <span style="color: #c31b1b;">"DRUCKER"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"KIN"</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        },<br>        <span style="color: #c31b1b;">"16"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Drucker-P_Mixed"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"DP"</span>,<br>            <span style="color: #c31b1b;">"DRUCKER"</span>: {<br>                <span style="color: #c31b1b;">"INIT_COHESION"</span>: <span style="color: #0ab66c;">30000</span>,<br>                <span style="color: #c31b1b;">"INIT_FRIC_ANGLE"</span>: <span style="color: #0ab66c;">15</span>,<br>                <span style="color: #c31b1b;">"OPT_HARDENING"</span>: <span style="color: #0ab66c;">1</span>,<br>                <span style="color: #c31b1b;">"HARDENING_TYPE"</span>: <span style="color: #055bcc;">"MIX"</span>,<br>                <span style="color: #c31b1b;">"BACK_STRESS_COEF"</span>: <span style="color: #0ab66c;">0.75</span>,<br>                <span style="color: #c31b1b;">"HARDENING_COEF"</span>: <span style="color: #0ab66c;">20000</span><br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Masonry</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"17"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Masonry_Lyx"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MA"</span>,<br>            <span style="color: #c31b1b;">"MASONRY"</span>: {<br>                <span style="color: #c31b1b;">"BM"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">22528000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.25</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">1850</span>,<br>                    <span style="color: #c31b1b;">"SOFTENING_PARAMETER"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"BED_JOINT"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">7400000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">320</span>,<br>                    <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"HEAD_JOINT"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">7400000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">1150</span>,<br>                    <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"GEOM"</span>: {<br>                    <span style="color: #c31b1b;">"BRICK_LENGTH"</span>: <span style="color: #0ab66c;">0.212</span>,<br>                    <span style="color: #c31b1b;">"BRICK_HEIGHT"</span>: <span style="color: #0ab66c;">0.065</span>,<br>                    <span style="color: #c31b1b;">"THICKNESS_BED"</span>: <span style="color: #0ab66c;">0.01</span>,<br>                    <span style="color: #c31b1b;">"THICKNESS_HEAD"</span>: <span style="color: #0ab66c;">0.01</span>,<br>                    <span style="color: #c31b1b;">"COORD_TYPE"</span>: <span style="color: #0ab66c;">0</span>,<br>                    <span style="color: #c31b1b;">"COORD_ANGLE"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"18"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Masonry_Syx"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MA"</span>,<br>            <span style="color: #c31b1b;">"MASONRY"</span>: {<br>                <span style="color: #c31b1b;">"BM"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">22528000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.25</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">1850</span>,<br>                    <span style="color: #c31b1b;">"SOFTENING_PARAMETER"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"BED_JOINT"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">7400000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">320</span>,<br>                    <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"HEAD_JOINT"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">7400000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">1150</span>,<br>                    <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"GEOM"</span>: {<br>                    <span style="color: #c31b1b;">"BRICK_LENGTH"</span>: <span style="color: #0ab66c;">0.212</span>,<br>                    <span style="color: #c31b1b;">"BRICK_HEIGHT"</span>: <span style="color: #0ab66c;">0.065</span>,<br>                    <span style="color: #c31b1b;">"THICKNESS_BED"</span>: <span style="color: #0ab66c;">0.01</span>,<br>                    <span style="color: #c31b1b;">"THICKNESS_HEAD"</span>: <span style="color: #0ab66c;">0.01</span>,<br>                    <span style="color: #c31b1b;">"COORD_TYPE"</span>: <span style="color: #0ab66c;">-1</span>,<br>                    <span style="color: #c31b1b;">"COORD_ANGLE"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            }<br>        },<br>        <span style="color: #c31b1b;">"19"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Masonry_Z"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"MA"</span>,<br>            <span style="color: #c31b1b;">"MASONRY"</span>: {<br>                <span style="color: #c31b1b;">"BM"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">22528000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.25</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">1850</span>,<br>                    <span style="color: #c31b1b;">"SOFTENING_PARAMETER"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"BED_JOINT"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">7400000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">320</span>,<br>                    <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"HEAD_JOINT"</span>: {<br>                    <span style="color: #c31b1b;">"YOUNG_S_MODULUS"</span>: <span style="color: #0ab66c;">7400000</span>,<br>                    <span style="color: #c31b1b;">"POSSIONS_S_RATIO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>                    <span style="color: #c31b1b;">"TENSION_STRENGTH"</span>: <span style="color: #0ab66c;">1150</span>,<br>                    <span style="color: #c31b1b;">"HARDENING_PARAM"</span>: <span style="color: #0ab66c;">1</span><br>                },<br>                <span style="color: #c31b1b;">"GEOM"</span>: {<br>                    <span style="color: #c31b1b;">"BRICK_LENGTH"</span>: <span style="color: #0ab66c;">0.212</span>,<br>                    <span style="color: #c31b1b;">"BRICK_HEIGHT"</span>: <span style="color: #0ab66c;">0.065</span>,<br>                    <span style="color: #c31b1b;">"THICKNESS_BED"</span>: <span style="color: #0ab66c;">0.01</span>,<br>                    <span style="color: #c31b1b;">"THICKNESS_HEAD"</span>: <span style="color: #0ab66c;">0.01</span>,<br>                    <span style="color: #c31b1b;">"COORD_TYPE"</span>: <span style="color: #0ab66c;">-4</span>,<br>                    <span style="color: #c31b1b;">"COORD_ANGLE"</span>: <span style="color: #0ab66c;">15</span><br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Concrete-Damage</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"20"</span>: {<br>            <span style="color: #c31b1b;">"NAME"</span>: <span style="color: #055bcc;">"Concrete-Damage"</span>,<br>            <span style="color: #c31b1b;">"MODEL_TYPE"</span>: <span style="color: #055bcc;">"DM"</span>,<br>            <span style="color: #c31b1b;">"CONCDMG"</span>: {<br>                <span style="color: #c31b1b;">"DILIATION_ANGLE"</span>: <span style="color: #0ab66c;">10</span>,<br>                <span style="color: #c31b1b;">"ECCEN"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"FBO_FCO"</span>: <span style="color: #0ab66c;">1.1</span>,<br>                <span style="color: #c31b1b;">"K"</span>: <span style="color: #0ab66c;">0.667</span>,<br>                <span style="color: #c31b1b;">"VISCOSITY_PARAM"</span>: <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #c31b1b;">"COMP_ITEMS"</span>: [<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">5850.54</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0.000673</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">19501.8</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0.266</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0.000993</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">18806.8</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0.342</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    }<br>                ],<br>                <span style="color: #c31b1b;">"TENSILE_ITEMS"</span>: [<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">684.483</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">1e-05</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">2278.28</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0.048</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">3.3e-05</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">2133.89</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0.148</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    },<br>                    {<br>                        <span style="color: #c31b1b;">"INELASTIC_STRAIN"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"YIELD_STRESS"</span>: <span style="color: #0ab66c;">0</span>,<br>                        <span style="color: #c31b1b;">"DAMAGE"</span>: <span style="color: #0ab66c;">0</span><br>                    }<br>                ]<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J46WJ015VHMRJZ7K98V9K048"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Plastic Material Name</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Model Type</p>
+<p> • Tresca: "TR"</p>
+<p> • Von-Mises: "VM"</p>
+<p> • Mohr-Coulomb: "MC"</p>
+<p> • Drucker: "DP"</p>
+<p> • Masonry: "MA"</p>
+<p> • Concrete Damage: "DM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MODEL_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Tresca</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Tresca Model</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TRESCA"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Initial Uniaxial Yield Stress</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INIT_YIELD_STRESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Option</p>
+<p> • Activated: 0</p>
+<p> • Inactivated: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_HARDENING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">When Hardening Option, "OPT_HARDENING" is 0 (Activated)</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Type</p>
+<p> • Isotropic: "ISO"</p>
+<p> • Kinematic: "KIN"</p>
+<p> • Mixed: "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ISO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Coefficient</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Back Stress Coefficient</p>
+<p> • When Hardening Type is "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BACK_STRESS_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Von Mises</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Von Mises Model</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VMISES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Initial Uniaxial Yield Stress</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INIT_YIELD_STRESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Option</p>
+<p> • Activated: 0</p>
+<p> • Inactivated: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_HARDENING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">When Hardening Option, "OPT_HARDENING" is 0 (Activated)</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Type</p>
+<p> • Isotropic: "ISO"</p>
+<p> • Kinematic: "KIN"</p>
+<p> • Mixed: "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ISO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Coefficient</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Back Stress Coefficient</p>
+<p> • When Hardening Type is "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BACK_STRESS_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Mohr-Coulomb</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="8">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Mohr-Coulomb Model</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MOHRCL"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Initial Cohesion</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INIT_COHESION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Initial Friction Angle (deg)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INIT_FRIC_ANGLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Option</p>
+<p> • Activated: 0</p>
+<p> • Inactivated: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_HARDENING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">When Hardening Option, "OPT_HARDENING" is 0 (Activated)</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Type</p>
+<p> • Isotropic: "ISO"</p>
+<p> • Kinematic: "KIN"</p>
+<p> • Mixed: "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ISO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Coefficient</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Back Stress Coefficient</p>
+<p> • When Hardening Type is "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BACK_STRESS_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Drucker-Prager</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="8">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Drucker-Prager Model</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DRUCKER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Initial Cohesion</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INIT_COHESION"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Initial Friction Angle (deg)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INIT_FRIC_ANGLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Option</p>
+<p> • Activated: 0</p>
+<p> • Inactivated: 1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"OPT_HARDENING"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">0</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">When Hardening Option, "OPT_HARDENING" is 0 (Activated)</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Type</p>
+<p> • Isotropic: "ISO"</p>
+<p> • Kinematic: "KIN"</p>
+<p> • Mixed: "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ISO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Hardening Coefficient</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Back Stress Coefficient</p>
+<p> • When Hardening Type is "MIX"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BACK_STRESS_COEF"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Masonry</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="23">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Masonry Model</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"MASONRY"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Brick Material</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Young’s Modulus</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"YOUNG_S_MODULUS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Poisson’s Ratio</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POSSIONS_S_RATIO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Tensile Strength</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TENSION_STRENGTH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Stiffness Reduction Factor</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"SOFTENING_PARAMETER"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Bed Joint Material</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BED_JOINT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Young’s Modulus</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"YOUNG_S_MODULUS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Poisson’s Ratio</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POSSIONS_S_RATIO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Tensile Strength</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TENSION_STRENGTH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Stiffness Reduction Factor</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_PARAM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Head Joint Material</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HEAD_JOINT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Young’s Modulus</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"YOUNG_S_MODULUS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Poisson’s Ratio</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"POSSIONS_S_RATIO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Tensile Strength</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TENSION_STRENGTH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Stiffness Reduction Factor</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HARDENING_PARAM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="7">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Geometry</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"GEOM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Brick Length</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BRICK_LENGTH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Brick Height</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"BRICK_HEIGHT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Thickness of Bed</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"THICKNESS_BED"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iv. Thickness of Head</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"THICKNESS_HEAD"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>v. Material Coordinates System - Vertical/Horizontal</p>
+<p> • Global-Y/Global X: 0</p>
+<p> • Local-y/Local-z: -1</p>
+<p> • Global-Z/Angle: -4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COORD_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>vi. Angle from Global X</p>
+<p> • When Coordinates System is Global-Z: Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COORD_ANGLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
+<p><span style="color: #4c9aff;">Concrete-Damage</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="14">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Concrete-Damage Model</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"CONCDMG"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Diliation Angle</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DILIATION_ANGLE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Eccentricity</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"ECCEN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>fbo/fco</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FBO_FCO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>K</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"K"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(5)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Viscosity Parameter</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"VISCOSITY_PARAM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(6)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Compressive Behavior</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMP_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Inelastic Strain</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INELASTIC_STRAIN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Yield Stress</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"YIELD_STRESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Damage</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DAMAGE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">(7)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Tensile Behavior</p>
+<p> • Insert the data as an object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TENSILE_ITEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Object]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>i. Inelastic Strain</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"INELASTIC_STRAIN"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>ii. Yield Stress</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"YIELD_STRESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>iii. Damage</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DAMAGE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Designing with Intent: The Vision Behind POST/TABLE - POST</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Designing with Intent: The Vision Behind POST/TABLE</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> POST</div>
+        <div class="info-item"><span class="label">Article ID:</span> 45171987915929</div>
+        <div class="info-item"><span class="label">Created:</span> 2025-03-31T05:00:01Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-03-31T05:02:00Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087527306649</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/45171987915929-Designing-with-Intent-The-Vision-Behind-POST-TABLE" target="_blank">https://support.midasuser.com/hc/en-us/articles/45171987915929-Designing-with-Intent-The-Vision-Behind-POST-TABLE</a></div>
+    </div>
+    
+    <div class="content">
+        <script>
+  function copyText(elementId) {
+      var text = document.getElementById(elementId).innerText;
+      text = text.replace(/&nbsp;/g, " ");
+      text = text.replace(/ /g, " ");
+      navigator.clipboard.writeText(text);
+  }
+</script>
+<div>
+<h2 id="POST/TABLEPlanningNote-Overview"><u>Overview</u></h2>
+<p>MIDAS CIVIL NX pursues user-friendly engineering solutions and provides various data in tables.</p>
+<p>The “post/table” command is intended to develop and extract various data efficiently and easily. However, it contains a lot of tables, and the user might not fully understand them; I will provide usage details and additional information here. This content focuses on people familiar with CIVIL or CIVIL NX but unfamiliar with APIs.</p>
+<p> </p>
+<h2 id="POST/TABLEPlanningNote-Pre-ProcessTable"><u>Pre-Process Table</u></h2>
+<p>The Pre-Process Tables were excluded from development in the Initial planning stage because they are almost the same as the DB data.</p>
+<p>For example, nodes can be viewed using the db/node command(API), and the product in the table is similar.</p>
+<p>Of course, API data formats and product tables are quite different, and we need some conversion. I will show you a Python example that converts API Response data to a table format.</p>
+<p> </p>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Python Example Code</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTargetPython')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'"> Copy </button></div>
+<div id="copyTargetPython" style="font-size: 15px; letter-spacing: 0.01em;">
+<pre>import pandas as pd
+
+def json_to_dataframe_with_units(data, unit_data):
+    """
+    Converts JSON data into a Pandas DataFrame and dynamically updates headers with unit information.
+    """
+    # Extract the main key dynamically (e.g., "NODE")
+    main_key = list(data.keys())[0]
+    nested_dict = data[main_key]
+
+    # Convert the nested dictionary into a DataFrame
+    df = pd.DataFrame.from_dict(nested_dict, orient='index')
+
+    # Set index name dynamically
+    df.index.name = main_key
+
+    # Extract unit dictionary dynamically
+    unit_main_key = list(unit_data.keys())[0]  # e.g., "UNIT"
+    units = unit_data[unit_main_key]["1"]  # Get unit mappings
+
+    # Identify the correct unit for distance-related columns
+    dist_unit = units.get("DIST", "").lower()  # Get DIST unit if available
+
+    # Update column names dynamically based on matching keys in unit_data
+    df.rename(columns={col: f"{col}({dist_unit})" for col in df.columns}, inplace=True)
+
+    return df
+
+# Example usage
+data = {
+    "NODE": {
+        "1": {"X": 0, "Y": 0, "Z": 0},
+        "2": {"X": 1, "Y": 0, "Z": 0},
+        "3": {"X": 2, "Y": 0, "Z": 0},
+        "4": {"X": 6.25, "Y": 0, "Z": 0},
+    }
+}
+
+unit_data = {
+    "UNIT": {
+        "1": {
+            "FORCE": "KN",
+            "DIST": "M",
+            "HEAT": "J",
+            "TEMPER": "C"
+        }
+    }
+}
+
+# Convert JSON to DataFrame with dynamic header updates
+df_final = json_to_dataframe_with_units(data, unit_data)
+
+# Display updated DataFrame
+print(df_final)
+
+# Save as CSV
+df_final.to_csv('output.csv')
+</pre>
+</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Python Results</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">NODE,X(m),Y(m),Z(m)<br>1,0.0,0,0<br>2,1.0,0,0<br>3,2.0,0,0<br>4,6.25,0,0</div>
+</div>
+</div>
+<p>Some of the Pre-Process Tables were developed when,</p>
+<p> • In the case of non-DB data (i.g, Mass summary)</p>
+<p> • Present DB data but print additional information (i.g, Section, Material)</p>
+<p>Based on these rules, we developed 20 tables; you can find the link below.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/33016922742937-MIDAS-API-Online-Manual" rel="nofollow">MIDAS API Online Manual – MIDAS Support</a></p>
+<p> </p>
+<h2 id="POST/TABLEPlanningNote-Post-ProcessTable"><u>Post-Process Table</u></h2>
+<p>Printing the analyzed results is the most crucial function within API commands, and we focused on developing as many functions as possible.</p>
+<p>For that, we now provide 147 tables, as below, and we’re still developing the rest.</p>
+<p> • Analysis Result Table (89)</p>
+<p> • Time History Result Table (52)</p>
+<p> • Heat of Hydration Result Table (6)</p>
+<p>We tried to maintain user experiences that enabled extracting basic results and accessing advanced functions in the table(Select Tendon, CS, etc.).</p>
+<p> </p>
+<h2 id="POST/TABLEPlanningNote-JSONStructure"><u>JSON Structure</u></h2>
+<p>The table command can have various JSON Structures because 147 tables use only one Endpoint, and it is essential to know the structure. The structure can be changed depending on the table, and we provide each table's structure. When you fully understand its structure, you can expand your usability.</p>
+<p>For this reason, I will write each "key" notion from this part.</p>
+<div class="confluence-information-macro confluence-information-macro-information">
+<span class="aui-icon aui-icon-small aui-iconfont-info confluence-information-macro-icon"></span>
+<div class="confluence-information-macro-body">
+<p>Before moving on to the JSON Structure, be well-acquainted with JSON.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/30119665104409-Terminology-JSON-JavaScript-Object-Notation" rel="nofollow">Terminology: JSON(JavaScript Object Notation) - MIDAS Support</a></p>
+<p> </p>
+</div>
+</div>
+<h4 id="POST/TABLEPlanningNote-TABLE_NAME"><em>TABLE_NAME</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key: </strong>TABLE_NAME<br><strong>Value Type:</strong> String<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"TABLE_NAME": "TABLE"</p>
+</div>
+</div>
+<p>The user can name an arbitrary “TABLE_NAME” and locate it at the top of the Response. It is not an essential key. The Response will print an “empty” message if the user inputs nothing.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-TABLE_TYPE"><em>TABLE_TYPE</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> TABLE_TYPE<br><strong>Value Type:</strong> String (Enum)<br><strong>Required:</strong> Yes<br><strong>Example:</strong><br>"TABLE_TYPE": "ELEMENTWEIGHT"</p>
+</div>
+</div>
+<p>The “TABLE_TYPE” is a significant key for specifying tables. Each table has matched string data(value); the user can find it in the API manual on the support website.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-EXPORT_PATH"><em>EXPORT_PATH</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> EXPORT_PATH<br><strong>Value Type:</strong> String (Directory Path)<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"EXPORT_PATH": "C:\\MIDAS\\Result\\Elements.json"</p>
+</div>
+</div>
+<p>The “EXPORT_PATH” key can save the Response JSON data. The direction Path and file extension should follow the JSON format.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-UNIT"><em>UNIT</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> UNIT<br><strong>Value Type:</strong> Object<br><strong>Required:</strong> No<br><strong>Keys within UNIT:</strong><br>᛫ FORCE, String, Enum: ["N", "KN", "KGF", "TONF", "LBF", "KIPS"]<br>᛫ DIST, String, Enum: ["M", "CM", "MM", "FT", "IN"]<br>᛫ HEAT, String, Enum: ["CAL", "KCAL", "J", "KJ", "BTU"]<br>᛫ TEMP, String, Enum: ["C", "F"]<br><strong>Example:</strong><br>"UNIT": {<br>"FORCE": "KN",<br>"DIST": "MM",<br>"HEAT": "J",<br>"TEMP": "C"<br>}</p>
+</div>
+</div>
+<p>For tables that need units, the user can choose four units. The “UNIT” key has the same structure as “DB/UNIT.” (Reference: Unit System—<a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35802155483801-Unit-System" rel="nofollow">MIDAS Support</a>) If the user inputs nothing, the API will generate a Response based on the product unit.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-STYLES"><em>STYLES</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> STYLES<br><strong>Value Type:</strong> Object<br><strong>Required:</strong> No<br><strong>Keys within STYLES:</strong><br>᛫ FORMAT, String, Enum: ["Default", "Fixed", "Scientific", "General"]<br>᛫ PLACE, Integer, Range 0 to 15<br><strong>Example:</strong><br>"STYLES": {<br>"FORMAT": "Fixed",<br>"PLACE": 3<br>}</p>
+</div>
+</div>
+<p>The “STYLES” key acts like the Style Dialog function(in the product). The user can print in a customized format and decimal when the type is a real number(refer to the figure below). One thing is different: the user can set up each row in the product, but the API sets the whole table.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-COMPONENTS"><em>COMPONENTS</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> COMPONENTS<br><strong>Value Type:</strong> Array[String], Enum: Depend on the TABLE_TYPE<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"COMPONENTS": [<br>"Elem",<br>"Load",<br>"Part",<br>"Axial"<br>]</p>
+</div>
+</div>
+<p>The “Components” is setting print components in the Response. There are basic rules as follows:</p>
+<p> • When omitting the “Components” key or emptying the value([ ]), print all data</p>
+<p> • The “HEAD” key prints the selected columns among the Response JSON keys.</p>
+<p> • The “Index” of “HEAD” is a default value indicating row numbers.</p>
+<p> • When the header has more than a double array, the header name expresses “/” separately.</p>
+<p> • In the case of a double(or higher) array header, the top header is a standard. Even if you specify only one of several, all applicable columns will be printed.</p>
+<p> • Systems of units don’t appear on the header.</p>
+<p>This key would be rarely used, so it was not contained in the manual, even if it is an Enum data. I highly recommend creating the minimum input data, requesting the COMPONENTS in the empty status, and copying it from the Response when needed.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-NODE_ELEMS"><em>NODE_ELEMS</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> NODE_ELEMS<br><strong>Value Type:</strong> Object<br><strong>Required:</strong> No<br><strong>Key within NODE_ELEMS:</strong><br>᛫ KEYS, Array[Integer]<br>᛫ TO, String<br>᛫ STRUCTURE_GROUP_NAME, String<br><strong>Example:</strong><br>"NODE_ELEMS": {<br>"KEYS": [<br>101, 102, 103, 104, 105<br>]<br>}<br>or<br>"NODE_ELEMS": {<br>"TO": "101to105"<br>}<br>or<br>"NODE_ELEMS": {<br>"STRUCTURE_GROUP_NAME": "Group1"<br>}</p>
+</div>
+</div>
+<p>This key is used for tables to select nodes or elements. Over half of the tables use this key; the user can input it as shown below in the product.</p>
+<p>To maintain user experience and convenience, the user can use three different formats.</p>
+<p> • “KEYS” → Request specific nodes or elements as an Integer array to print.</p>
+<p> • “TO” → Request range of print nodes or elements.</p>
+<p> • “STRUCTRUE_GROUP_NAME” → Designate structure group to print.</p>
+<p>The Response shows all data if a specific node or element is not designated.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-LOAD_CASE_NAMES"><em>LOAD_CASE_NAMES</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> LOAD_CASE_NAMES<br><strong>Value Type:</strong> Array[String]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"LOAD_CASE_NAMES": [<br>"DC(ST)",<br>"LC1(CB)",<br>"LC2(CB:all)",<br>"LC2(CB:max)",<br>"LC2(CB:min)",<br>"X-dir(RS)",<br>"MV_All(MV:all)",<br>"MV_All(MV:max)",<br>"MV_All(MV:min)",<br>"Settle(SM:all)",<br>"Settle(SM:max)",<br>"Settle(SM:min)",<br>]</p>
+</div>
+</div>
+<p>This key is used when tables need to consider load cases or load combinations. It is one of the essential keys, so over 80% of tables use it. This key indicated data on the product as follows.</p>
+<p>Print all available cases if the user doesn’t designate any cases or the value is empty.</p>
+<p>The user must obtain the case name through the DB and write the additional string that matches the case in parentheses to create the final string for the load case name.</p>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 28.61%;"> <col style="width: 29.01%;"> <col style="width: 42.38%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Load Case</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Additional String</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Related API Manual</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Static Load Cases</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(ST)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35952651947801-Static-Load-Cases" rel="nofollow">Static Load Cases - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Moving Load Cases</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(MV:all), (MV:max), (MV:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35959068573209-Moving-Load-Cases" rel="nofollow">Moving Load Cases - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Settlement Load Cases</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(SM:all), (SM:max), (SM:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35988560566425-Settlement-Load-Cases" rel="nofollow">Settlement Load Cases - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Response Spectrum Load Cases</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(RS)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35963719599641-Response-Spectrum-Load-Cases" rel="nofollow">Response Spectrum Load Cases - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Construction Stage</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CS)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>-</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Time History Load Cases</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(TH:all), (TH:max), (TH:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35963903917593-Time-History-Load-Cases" rel="nofollow">Time History Load Cases - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Load Combinations-General</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CB), (CB:all), (CB:max), (CB:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35990806887065-Load-Combinations-General" rel="nofollow">Load Combinations - General - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Load Combinations-Steel</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CBS), (CBS:all), (CBS:max), (CBS:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35990929861913-Load-Combinations-Steel-Design" rel="nofollow">Load Combinations - Steel Design - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Load Combinations-Concrete</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CBC), (CBC:all), (CBC:max), (CBC:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35990864052249-Load-Combinations-Concrete-Design" rel="nofollow">Load Combinations - Concrete Design - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Load Combinations-SRC</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CBR), (CBR:all), (CBR:max), (CBR:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35991038731161-Load-Combinations-SRC-Design" rel="nofollow">Load Combinations - SRC Design - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Load Combinations-Composite Steel Girder</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CBSC), (CBSC:all), (CBSC:max), (CBSC:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35991080923033-Load-Combinations-Composite-Steel-Girder-Design" rel="nofollow">Load Combinations - Composite Steel Girder Design - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Load Combinations-Sesimic</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(CBSM), (CBSM:all), (CBSM:max), (CBSM:min)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35991142266265-Load-Combinations-Seismic-Design" rel="nofollow">Load Combinations - Seismic Design - MIDAS Support</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The challenging part lies in handling Load Combination Cases. If a load combination does <strong>not</strong> include envelope cases, it can only be output as (CB). However, if envelope cases (e.g., load cases or combinations represented as envelopes) are included, the output must be (CB:all), (CB:max), or (CB:min).</p>
+<p>An additional key "bCB" is inserted into the Load Combinations database to distinguish these scenarios. When querying a load combination:</p>
+<p> • “bCB”: false indicates no envelope involvement (CB).</p>
+<p> • “bCB”: true indicates envelope-based combinations (CB:all/max/min).</p>
+<p>The product uses the load case names specifically designated for construction stages. Additionally, it can utilize the <strong>Dead Load for C.S.</strong> specified in the <strong>Construction Stage Analysis Control Data</strong> (<a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35990281053465-Construction-Stage-Analysis-Control-Data" rel="nofollow">Construction Stage Analysis Control Data - MIDAS Support</a>).</p>
+<p>The product's Record Activation Dialog is the most reliable method to verify this. Users familiar with the product should be able to utilize this feature efficiently.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-TH_LOAD_CASE_NAMES"><em>TH_LOAD_CASE_NAMES</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> TH_LOAD_CASE_NAMES<br><strong>Value Type:</strong> Array[String]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"TH_LOAD_CASE_NAMES": [<br>"DL(TH:all)",<br>"DL(TH:max)",<br>"DL(TH:min)",<br>]</p>
+</div>
+</div>
+<p>This feature is used to query the results of Inelastic Hinges and Fiber Sections during Time History Analysis.</p>
+<p>This key has characteristics similar to the LOAD_CASE_NAMES key.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-MODES"><em>MODES</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> MODES<br><strong>Value Type:</strong> Array[String], Enum: ["Mode 1", "Mode 2", ….., "Mode N"]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"MODES": [<br>"Mode 1",<br>"Mode 2"<br>]</p>
+</div>
+</div>
+<p>This is used to query tables related to vibration, bucketing mode shape, or nodal results<strong> for RS</strong>.</p>
+<p>If no specific modes are specified or an empty array is requested, data for all available modes will be output.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-PARTS"><em>PARTS</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> PARTS<br><strong>Value Type:</strong> Array[String], Enum: ["Part I", "Part 1/4", "Part 2/4", "Part 3/4", "Part J"]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"PARTS": [<br>"Part I",<br>"Part 1/4",<br>"Part 2/4",<br>"Part 3/4",<br>"Part J",<br>]</p>
+</div>
+</div>
+<p>This feature is used to request table data related to Beam element results.</p>
+<p>If not specified or requested with an empty array, data for all available Parts will be output.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-SECTION_POSITION"><em>SECTION_POSITION</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> SECTION_POSITION<br><strong>Value Type:</strong> Array[String], Enum: ["Pos-1", "Pos-2", …. , "Pos-16", "Max", "Max", "All"]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"SECTION_POSITION": [<br>"Pos-1",<br>"Pos-2",<br>"Max"<br>]</p>
+</div>
+</div>
+<p>This feature requests table data related to stress results for Beam elements.</p>
+<p>If not specified or requested with an empty array, data for all available Section Positions will be output.</p>
+<p>Depending on the table types, they have different section positions indicating names, so please be careful. (Checking it in the manual or product)</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-AVERAGE_NODAL_RESULT"><em>AVERAGE_NODAL_RESULT</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> AVERAGE_NODAL_RESULT<br><strong>Value Type:</strong> Boolean<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"AVERAGE_NODAL_RESULT": true</p>
+</div>
+</div>
+<p>This feature is used for querying result tables for elements of two dimensions or higher, including Plate, Plane Stress, Plane Strain, Axisymmetric, and Solid elements. The default value is False.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-NODE_FLAG"><em>NODE_FLAG</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> NODE_FLAG<br><strong>Value Type:</strong> Object<br><strong>Required:</strong> No<br><strong>Keys within NODE_FLAG:</strong><br>᛫ CENTER, Boolean<br>᛫ NODES, Boolean<br><strong>Example:</strong><br>"NODE_FLAG": {<br>"CENTER": false,<br>"NODES": true<br>}</p>
+</div>
+</div>
+<p>This feature queries result tables for Heat of Hydration and elements of two dimensions or higher, including Plate, Plane Stress, Plane Strain, Axisymmetric, and Solid elements. The default value is False.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-OPT_CS"><em>OPT_CS</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> OPT_CS<br><strong>Value Type:</strong> Boolean<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"OPT_CS": true</p>
+</div>
+</div>
+<p>This key is used to query result tables for construction stages.</p>
+<p>To understand its functionality, let's consider the product's behavior:</p>
+<ol start="1">
+<li>
+<p>After analysis, the Model View automatically sets to "POST CS" state.</p>
+</li>
+<li>
+<p>In this state, we can view results from the post-construction stage.</p>
+</li>
+<li>
+<p>Construction stage results are available through Load Combinations, but these represent the final results of the last stage.</p>
+</li>
+</ol>
+<p>To view results for specific construction stages or elements not active in POST CS:</p>
+<ol start="1">
+<li>
+<p>The Model View must be set to an arbitrary construction stage.</p>
+</li>
+<li>
+<p>Regardless of which construction stage Model View is selected, results for any desired stage can be obtained.</p>
+</li>
+</ol>
+<p>Thus, all results can be accessed by toggling between POST CS and any construction stage.</p>
+<p>Key functionality:</p>
+<ol start="1">
+<li>
+<p>It sets the internal state to either the construction or post-construction stages, independent of the visible Model View.</p>
+</li>
+<li>
+<p>When False: The product internally enters "POST CS" state.</p>
+</li>
+<li>
+<p>When True: The product internally switches to the first construction stage state.</p>
+</li>
+<li>
+<p>This change is internal and doesn't affect the product's external appearance.</p>
+</li>
+</ol>
+<p>Usage note:</p>
+<p> • The default value is false.</p>
+<p> • This key must be explicitly set to true to query construction stage results.</p>
+<p>This approach allows engineers to analyze structural behavior at various construction stages, which is crucial for planning safe and efficient construction processes.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-STAGE_STEP"><em>STAGE_STEP</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> STAGE_STEP<br><strong>Value Type:</strong> Array[String]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"STAGE_STEP": [<br>"CS1:001(first)",<br>"CS1:002(last)"<br>]</p>
+</div>
+</div>
+<p>This feature is activated when OPT_CS is true—input the construction stage name for access. If not specified or requested with an empty array, data for all available Construction Stages will be output.</p>
+<p>The construction stage designated name is given automatically based on the Construction Stage setting.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/35987578396697-Define-Construction-Stage" rel="nofollow">Define Construction Stage - MIDAS Support</a></p>
+<p>Let’s look into this rule. (CIVIL users would be familiar with it.)</p>
+<p>There are three kinds of data involved in composing a name.</p>
+<p>᛫ NAME<br>᛫ bSV_STEP<br>᛫ ADD_STEP</p>
+<p>If you create several datasets considering several cases, it would be helpful to understand the naming rule.</p>
+<p>“NAME” is essential, and let it be a fixed value; change bSV_STEP and ADD_STEP.</p>
+<ol start="1">
+<li>
+<p>In the case of only having NAME</p>
+</li>
+</ol>
+<ol start="2">
+<li>
+<p>In the case of having NAME and vSV_STEP</p>
+</li>
+</ol>
+<ol start="3">
+<li>
+<p>In the case of having NAME and ADD_STEP</p>
+</li>
+</ol>
+<ol start="4">
+<li>
+<p>In the case of having all data</p>
+</li>
+</ol>
+<p>To summarize, “NAME” and “:” are essential components and follow numbers and a string of construction stages. “(last)” is always activated. In front of the number, the total number will be decided by the number of total ADD_STEP, adding 1. If the duration day is 0, “001(last)” is created. When ADD_STEP exists, the stage of ADD_STEP is set as (user i), and the number will be designated 1+i.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-DISP_OPT"><em>DISP_OPT</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> DISP_OPT<br><strong>Value Type:</strong> String, Enum: ["Accumulative", "Current", "Real"]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"DISP_OPT": "Real"</p>
+</div>
+</div>
+<p>This key checks the node displacement results in the construction stages. Only two tables use this key.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/36009638400281-Displacements-Analysis-Result-Table" rel="nofollow">Displacements - Analysis Result Table - MIDAS Support</a></p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-ITEM_TO_DISPLAY"><em>ITEM_TO_DISPLAY</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> ITEM_TO_DISPLAY<br><strong>Value Type:</strong> Array[String], Enum: depends on the TABLE_TYPE<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"ITEM_TO_DISPLAY": [<br>"Axial",<br>"Shear-y",<br>"Shear-z",<br>]</p>
+</div>
+</div>
+<p>It uses tables that can generate a View by Max Value. The accessible items depend on the table type; please check the available keys in the manual or product.</p>
+<p> </p>
+<h4 id="POST/TABLEPlanningNote-ADDITIONAL"><em>ADDITIONAL</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> ADDITIONAL<br><strong>Value Type:</strong> Object<br><strong>Required:</strong> Yes<br><strong>Keys within ADDITIONAL:</strong><br>᛫ SET_TENDON_PARAMS, Object<br>᛫ TENDON_GROUP, String<br>᛫ STAGE, String<br>᛫ SET_STAGE, Object<br>᛫ STAGE, String<br><strong>Example:</strong><br>"ADDITIONAL": {<br>"SET_TENDON_PARAMS": {<br>"TENDON_GROUP": "TD01",<br>"STAGE": "CS16"<br>}<br>}<br>or<br>"ADDITIONAL": {<br>"SET_STAGE": {<br>"STAGE": "CS16"<br>}<br>}</p>
+</div>
+</div>
+<p>This key controls the data query setting for the tendon-related tables Arrangement, Loss Force/Stress, and Element Properties at Each Stage. The user's request must include this key to access results.</p>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 26.58%;"> <col style="width: 73.42%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Object</strong></p>
+</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;"><strong>Manual</strong></p>
+</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SET_TENDON_PARAMS</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/36018062664857-Tendon-Arrangement-Analysis-Result-Table" rel="nofollow">Tendon Arrangement - Analysis Result Table - MIDAS Support</a><br><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/36018150905881-Tendon-Loss-Analysis-Result-Table" rel="nofollow">Tendon Loss - Analysis Result Table - MIDAS Support</a></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">SET_STAGE</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/36018688503065-Element-Properties-at-Each-Stage-Analysis-Result-Table" rel="nofollow">Element Properties at Each Stage - Analysis Result Table - MIDAS Support</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="h_01JQN94PKA43X9M7Y25AYYCMCN"> </h4>
+<h4 id="POST/TABLEPlanningNote-PART"><em>PART</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> PART<br><strong>Value Type:</strong> Array[String], Enum: ["I", "J"]<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"PART": [<br>"I", "J"<br>]</p>
+</div>
+</div>
+<p>This key is only used when accessing the Beam Section Properties at the Last Stage table. (It is different from the PARTS key, notice it)</p>
+<p>It prints all available parts when no components are designated or a request is made with an empty array.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/36018718339353-Beam-Section-Properties-at-Last-Stage-Analysis-Result-Table" rel="nofollow">Beam Section Properties at Last Stage - Analysis Result Table - MIDAS Support</a></p>
+<h4 id="h_01JQN94PKAJDSCJS1CPV06YHXF"> </h4>
+<h4 id="POST/TABLEPlanningNote-FIBER_CELL_MINMAX"><em>FIBER_CELL_MINMAX</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> FIBER_CELL_MINMAX<br><strong>Value Type:</strong> Boolean<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"FIBER_CELL_MINMAX": true</p>
+</div>
+</div>
+<p>This key is only used for the Japanese version to access the Time History result of the Fiber Section.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/39237774129433-Fiber-Section-Maximum-Strain-of-The-Cell-TH-Result-Table" rel="nofollow">Fiber Section Maximum Strain of The Cell - TH Result Table - MIDAS Support</a></p>
+<h4 id="h_01JQN94PKAE45PT2G43NMZSWT2"> </h4>
+<h4 id="POST/TABLEPlanningNote-SECT_POSITION"><em>SECT_POSITION</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> SECT_POSITION<br><strong>Value Type:</strong> String<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"SECT_POSITION": “1to2”</p>
+</div>
+</div>
+<p>This key is only used for the Japanese version to access the Time History result of the Fiber Section.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/39237774129433-Fiber-Section-Maximum-Strain-of-The-Cell-TH-Result-Table" rel="nofollow">Fiber Section Maximum Strain of The Cell - TH Result Table - MIDAS Support</a></p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/39237785220505-Fiber-Section-Event-Step-TH-Result-Table" rel="nofollow">Fiber Section Event Step - TH Result Table - MIDAS Support</a></p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/39237854424601-Fiber-Section-Average-Compression-Strain-TH-Result-Table" rel="nofollow">Fiber Section Average Compression Strain - TH Result Table - MIDAS Support</a></p>
+<h4 id="h_01JQN94PKAFCN1GY0V993RGQCB"> </h4>
+<h4 id="POST/TABLEPlanningNote-OUTPUT_STEP"><em>OUTPUT_STEP</em></h4>
+<div class="panel" style="background-color: #f4f5f7; border-width: 1px;">
+<div class="panelContent" style="background-color: #f4f5f7;">
+<p><strong>Key:</strong> OUTPUT_STEP<br><strong>Value Type:</strong> String<br><strong>Required:</strong> No<br><strong>Example:</strong><br>"OUTPUT_STEP": “1,3”</p>
+</div>
+</div>
+<p>This key is only used for the Japanese version to access the Time History result of the Fiber Section.</p>
+<p><a class="external-link" href="https://support.midasuser.com/hc/en-us/articles/39237854424601-Fiber-Section-Average-Compression-Strain-TH-Result-Table" rel="nofollow">Fiber Section Average Compression Strain - TH Result Table - MIDAS Support</a></p>
+<p> </p>
+<h2 id="POST/TABLEPlanningNote-Conclusion"><u>Conclusion</u></h2>
+<p>As reviewed above, the functionality of POST/TABLE has been designed to reflect the user experience of our product closely.</p>
+<p>Of course, providing additional convenience features (e.g., fetching a list of available output cases) is expected to make the system even more accessible. These convenience features are always part of our development plan, and we are committed to delivering them as quickly as possible.</p>
+</div>
+    </div>
+</body>
+</html>

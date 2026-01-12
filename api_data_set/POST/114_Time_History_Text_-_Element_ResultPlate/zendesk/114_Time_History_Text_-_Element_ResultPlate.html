@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time History Text - Element Result(Plate) - POST</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Time History Text - Element Result(Plate)</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> POST</div>
+        <div class="info-item"><span class="label">Article ID:</span> 36705400674585</div>
+        <div class="info-item"><span class="label">Created:</span> 2024-08-22T06:23:19Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-08-14T04:55:48Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/36705400674585-Time-History-Text-Element-Result-Plate" target="_blank">https://support.midasuser.com/hc/en-us/articles/36705400674585-Time-History-Text-Element-Result-Plate</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+</script>
+</p>
+<div>
+<h3 id="h_01J5WC3GR2KHB7FW1S6D5ESNRA"><strong>Input URI</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> {base url} + post/TEXT</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J5WC3GR31FPD8DN4ZNM94WTS"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table style="width: 100%;">
+<colgroup> <col style="width: 100.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 10px 5px 10px 5px;">
+<p style="text-align: center;"><strong> POST</strong></p>
+</th>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+<h3 id="h_01J5WC3GR3YP3Y3WSVQQEWF4TG"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TEXT"</span>: {<br>        <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"Argument"</span>: {<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                <span style="color: #c31b1b;">"properties"</span>: {<br>                    <span style="color: #c31b1b;">"TABLE_TYPE"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableType"</span>,<br>                        <span style="color: #c31b1b;">"enum"</span>: [<br>                            <span style="color: #055bcc;">"TH_PLATEFORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_PLATE_UNIT_FORCE"</span>,<br>                            <span style="color: #055bcc;">"TH_PLATESTRESS"</span><br>                        ]<br>                    },<br>                    <span style="color: #c31b1b;">"EXPORT_PATH"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResultTableSavePath"</span><br>                    },<br>                    <span style="color: #c31b1b;">"UNIT"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseUnitSetting"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORCE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Force"</span><br>                            },<br>                            <span style="color: #c31b1b;">"DIST"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Length"</span><br>                            },<br>                            <span style="color: #c31b1b;">"HEAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Heat"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TEMP"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Temperature"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STYLES"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ResponseNumberFormat"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FORMAT"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Numberformat"</span>,<br>                                <span style="color: #c31b1b;">"enum"</span>: [<br>                                    <span style="color: #055bcc;">"Fixed"</span>,<br>                                    <span style="color: #055bcc;">"Exponential"</span><br>                                ]<br>                            },<br>                            <span style="color: #c31b1b;">"PLACE"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Digitplace"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"COMPONENTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ComponentsofResultTable"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Node/ElementNo.Input"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"KEYS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method1:SpecifyEachID"</span>,<br>                                <span style="color: #c31b1b;">"items"</span>: {<br>                                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                                }<br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"Method2:SpecifyIDRange"</span><br>                            }<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"PARTS"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"ElementPart"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span>,<br>                            <span style="color: #c31b1b;">"enum"</span>: [<br>                                <span style="color: #055bcc;">"PartC"</span>,<br>                                <span style="color: #055bcc;">"PartI"</span>,<br>                                <span style="color: #055bcc;">"PartJ"</span>,<br>                                <span style="color: #055bcc;">"PartK"</span>,<br>                                <span style="color: #055bcc;">"PartL"</span><br>                            ]<br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TimeHistoryLoadCases"</span>,<br>                        <span style="color: #c31b1b;">"items"</span>: {<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>                        }<br>                    },<br>                    <span style="color: #c31b1b;">"STEP"</span>: {<br>                        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                        <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"OutputTimeStep"</span>,<br>                        <span style="color: #c31b1b;">"properties"</span>: {<br>                            <span style="color: #c31b1b;">"FROM"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"StartTime"</span><br>                            },<br>                            <span style="color: #c31b1b;">"TO"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"EndTime"</span><br>                            },<br>                            <span style="color: #c31b1b;">"STEPS"</span>: {<br>                                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span>,<br>                                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">"TimeInterval"</span><br>                            }<br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WC3GR3CYB6P163D67W7H63"><strong>Request Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLATEFORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlateForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"KN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"FX"</span>,<br>            <span style="color: #055bcc;">"FY"</span>,<br>            <span style="color: #055bcc;">"FZ"</span>,<br>            <span style="color: #055bcc;">"MX"</span>,<br>            <span style="color: #055bcc;">"MY"</span>,<br>            <span style="color: #055bcc;">"MZ"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">51</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.3</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate Unit Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget3')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget3" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLATE_UNIT_FORCE"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlateUnitForce_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"KN"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"M"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fxx"</span>,<br>            <span style="color: #055bcc;">"Fyy"</span>,<br>            <span style="color: #055bcc;">"Fxy"</span>,<br>            <span style="color: #055bcc;">"Mxx"</span>,<br>            <span style="color: #055bcc;">"Myy"</span>,<br>            <span style="color: #055bcc;">"Mxy"</span>,<br>            <span style="color: #055bcc;">"Vxx"</span>,<br>            <span style="color: #055bcc;">"Vyy"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">51</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartC"</span>,<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.2</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget4')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget4" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"TEXT_TYPE"</span>: <span style="color: #055bcc;">"TH_PLATESTRESS"</span>,<br>        <span style="color: #c31b1b;">"EXPORT_PATH"</span>: <span style="color: #055bcc;">"C:\\MIDAS\\Result\\TH_PlateStress_Out.JSON"</span>,<br>        <span style="color: #c31b1b;">"UNIT"</span>: {<br>            <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>            <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"MM"</span><br>        },<br>        <span style="color: #c31b1b;">"STYLES"</span>: {<br>            <span style="color: #c31b1b;">"FORMAT"</span>: <span style="color: #055bcc;">"Fixed"</span>,<br>            <span style="color: #c31b1b;">"PLACE"</span>: <span style="color: #0ab66c;">6</span><br>        },<br>        <span style="color: #c31b1b;">"COMPONENTS"</span>: [<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx(Top)"</span>,<br>            <span style="color: #055bcc;">"Sig-yy(Top)"</span>,<br>            <span style="color: #055bcc;">"Sig-xy(Top)"</span>,<br>            <span style="color: #055bcc;">"Sig-xx(Bot)"</span>,<br>            <span style="color: #055bcc;">"Sig-yy(Bot)"</span>,<br>            <span style="color: #055bcc;">"Sig-xy(Bot)"</span><br>        ],<br>        <span style="color: #c31b1b;">"NODE_ELEMS"</span>: {<br>            <span style="color: #c31b1b;">"KEYS"</span>: [<br>                <span style="color: #0ab66c;">51</span><br>            ]<br>        },<br>        <span style="color: #c31b1b;">"PARTS"</span>: [<br>            <span style="color: #055bcc;">"PartC"</span>,<br>            <span style="color: #055bcc;">"PartI"</span>,<br>            <span style="color: #055bcc;">"PartJ"</span>,<br>            <span style="color: #055bcc;">"PartK"</span>,<br>            <span style="color: #055bcc;">"PartL"</span><br>        ],<br>        <span style="color: #c31b1b;">"TH_CASE_NAME"</span>: [<br>            <span style="color: #055bcc;">"Elcent"</span><br>        ],<br>        <span style="color: #c31b1b;">"STEP"</span>: {<br>            <span style="color: #c31b1b;">"FROM"</span>: <span style="color: #0ab66c;">0.1</span>,<br>            <span style="color: #c31b1b;">"TO"</span>: <span style="color: #0ab66c;">0.2</span>,<br>            <span style="color: #c31b1b;">"STEPS"</span>: <span style="color: #0ab66c;">1</span><br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WC3GR34RWAWMRQE1EBP0FX"><strong>Response Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget5')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget5" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLATEFORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"FX"</span>,<br>            <span style="color: #055bcc;">"FY"</span>,<br>            <span style="color: #055bcc;">"FZ"</span>,<br>            <span style="color: #055bcc;">"MX"</span>,<br>            <span style="color: #055bcc;">"MY"</span>,<br>            <span style="color: #055bcc;">"MZ"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"0.383964"</span>,<br>                <span style="color: #055bcc;">"1.085381"</span>,<br>                <span style="color: #055bcc;">"-0.000122"</span>,<br>                <span style="color: #055bcc;">"-0.000976"</span>,<br>                <span style="color: #055bcc;">"0.000148"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"0.376184"</span>,<br>                <span style="color: #055bcc;">"-0.912407"</span>,<br>                <span style="color: #055bcc;">"-0.000206"</span>,<br>                <span style="color: #055bcc;">"-0.000988"</span>,<br>                <span style="color: #055bcc;">"-0.000230"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.356719"</span>,<br>                <span style="color: #055bcc;">"-0.607889"</span>,<br>                <span style="color: #055bcc;">"0.000128"</span>,<br>                <span style="color: #055bcc;">"-0.000000"</span>,<br>                <span style="color: #055bcc;">"-0.000092"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.403429"</span>,<br>                <span style="color: #055bcc;">"0.434915"</span>,<br>                <span style="color: #055bcc;">"0.000200"</span>,<br>                <span style="color: #055bcc;">"-0.000000"</span>,<br>                <span style="color: #055bcc;">"-0.000059"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"0.582462"</span>,<br>                <span style="color: #055bcc;">"1.811201"</span>,<br>                <span style="color: #055bcc;">"-0.000164"</span>,<br>                <span style="color: #055bcc;">"-0.001353"</span>,<br>                <span style="color: #055bcc;">"0.000195"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"6"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"0.419585"</span>,<br>                <span style="color: #055bcc;">"-0.879284"</span>,<br>                <span style="color: #055bcc;">"-0.000289"</span>,<br>                <span style="color: #055bcc;">"-0.001368"</span>,<br>                <span style="color: #055bcc;">"-0.000328"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"7"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"-0.496155"</span>,<br>                <span style="color: #055bcc;">"-1.124809"</span>,<br>                <span style="color: #055bcc;">"0.000161"</span>,<br>                <span style="color: #055bcc;">"-0.000000"</span>,<br>                <span style="color: #055bcc;">"-0.000147"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"8"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.200"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"-0.505891"</span>,<br>                <span style="color: #055bcc;">"0.192892"</span>,<br>                <span style="color: #055bcc;">"0.000292"</span>,<br>                <span style="color: #055bcc;">"-0.000000"</span>,<br>                <span style="color: #055bcc;">"-0.000104"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate Unit Force</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget6')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget6" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLATE_UNIT_FORCE"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"kN"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"m"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Fxx"</span>,<br>            <span style="color: #055bcc;">"Fyy"</span>,<br>            <span style="color: #055bcc;">"Fxy"</span>,<br>            <span style="color: #055bcc;">"Mxx"</span>,<br>            <span style="color: #055bcc;">"Myy"</span>,<br>            <span style="color: #055bcc;">"Mxy"</span>,<br>            <span style="color: #055bcc;">"Vxx"</span>,<br>            <span style="color: #055bcc;">"Vyy"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"C"</span>,<br>                <span style="color: #055bcc;">"0.003244"</span>,<br>                <span style="color: #055bcc;">"-0.057658"</span>,<br>                <span style="color: #055bcc;">"-0.253383"</span>,<br>                <span style="color: #055bcc;">"0.000034"</span>,<br>                <span style="color: #055bcc;">"0.000327"</span>,<br>                <span style="color: #055bcc;">"0.000007"</span>,<br>                <span style="color: #055bcc;">"-0.000013"</span>,<br>                <span style="color: #055bcc;">"0.000108"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.010378"</span>,<br>                <span style="color: #055bcc;">"-0.535150"</span>,<br>                <span style="color: #055bcc;">"-0.253383"</span>,<br>                <span style="color: #055bcc;">"0.000116"</span>,<br>                <span style="color: #055bcc;">"0.000644"</span>,<br>                <span style="color: #055bcc;">"0.000011"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000104"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.010378"</span>,<br>                <span style="color: #055bcc;">"0.419834"</span>,<br>                <span style="color: #055bcc;">"-0.253383"</span>,<br>                <span style="color: #055bcc;">"0.000120"</span>,<br>                <span style="color: #055bcc;">"0.000665"</span>,<br>                <span style="color: #055bcc;">"0.000001"</span>,<br>                <span style="color: #055bcc;">"0.000000"</span>,<br>                <span style="color: #055bcc;">"0.000111"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"0.016867"</span>,<br>                <span style="color: #055bcc;">"0.419834"</span>,<br>                <span style="color: #055bcc;">"-0.253383"</span>,<br>                <span style="color: #055bcc;">"-0.000012"</span>,<br>                <span style="color: #055bcc;">"-0.000002"</span>,<br>                <span style="color: #055bcc;">"0.000002"</span>,<br>                <span style="color: #055bcc;">"-0.000026"</span>,<br>                <span style="color: #055bcc;">"0.000111"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"0.016867"</span>,<br>                <span style="color: #055bcc;">"-0.535150"</span>,<br>                <span style="color: #055bcc;">"-0.253383"</span>,<br>                <span style="color: #055bcc;">"-0.000086"</span>,<br>                <span style="color: #055bcc;">"0.000002"</span>,<br>                <span style="color: #055bcc;">"0.000013"</span>,<br>                <span style="color: #055bcc;">"-0.000026"</span>,<br>                <span style="color: #055bcc;">"0.000104"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Plate Stress</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget7')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget7" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"TH_PLATESTRESS"</span>: {<br>        <span style="color: #c31b1b;">"FORCE"</span>: <span style="color: #055bcc;">"N"</span>,<br>        <span style="color: #c31b1b;">"DIST"</span>: <span style="color: #055bcc;">"mm"</span>,<br>        <span style="color: #c31b1b;">"HEAD"</span>: [<br>            <span style="color: #055bcc;">"Index"</span>,<br>            <span style="color: #055bcc;">"Elem"</span>,<br>            <span style="color: #055bcc;">"Load"</span>,<br>            <span style="color: #055bcc;">"Time/Step"</span>,<br>            <span style="color: #055bcc;">"Part"</span>,<br>            <span style="color: #055bcc;">"Sig-xx(Top)"</span>,<br>            <span style="color: #055bcc;">"Sig-yy(Top)"</span>,<br>            <span style="color: #055bcc;">"Sig-xy(Top)"</span>,<br>            <span style="color: #055bcc;">"Sig-xx(Bot)"</span>,<br>            <span style="color: #055bcc;">"Sig-yy(Bot)"</span>,<br>            <span style="color: #055bcc;">"Sig-xy(Bot)"</span><br>        ],<br>        <span style="color: #c31b1b;">"DATA"</span>: [<br>            [<br>                <span style="color: #055bcc;">"1"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"C"</span>,<br>                <span style="color: #055bcc;">"0.000012"</span>,<br>                <span style="color: #055bcc;">"-0.000773"</span>,<br>                <span style="color: #055bcc;">"-0.002538"</span>,<br>                <span style="color: #055bcc;">"0.000053"</span>,<br>                <span style="color: #055bcc;">"-0.000380"</span>,<br>                <span style="color: #055bcc;">"-0.002529"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"2"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"I"</span>,<br>                <span style="color: #055bcc;">"-0.000173"</span>,<br>                <span style="color: #055bcc;">"-0.005738"</span>,<br>                <span style="color: #055bcc;">"-0.002541"</span>,<br>                <span style="color: #055bcc;">"-0.000034"</span>,<br>                <span style="color: #055bcc;">"-0.004965"</span>,<br>                <span style="color: #055bcc;">"-0.002527"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"3"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"J"</span>,<br>                <span style="color: #055bcc;">"-0.000176"</span>,<br>                <span style="color: #055bcc;">"0.003799"</span>,<br>                <span style="color: #055bcc;">"-0.002534"</span>,<br>                <span style="color: #055bcc;">"-0.000032"</span>,<br>                <span style="color: #055bcc;">"0.004598"</span>,<br>                <span style="color: #055bcc;">"-0.002533"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"4"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"K"</span>,<br>                <span style="color: #055bcc;">"0.000176"</span>,<br>                <span style="color: #055bcc;">"0.004199"</span>,<br>                <span style="color: #055bcc;">"-0.002535"</span>,<br>                <span style="color: #055bcc;">"0.000161"</span>,<br>                <span style="color: #055bcc;">"0.004197"</span>,<br>                <span style="color: #055bcc;">"-0.002532"</span><br>            ],<br>            [<br>                <span style="color: #055bcc;">"5"</span>,<br>                <span style="color: #055bcc;">"51"</span>,<br>                <span style="color: #055bcc;">"Elcent"</span>,<br>                <span style="color: #055bcc;">"0.100"</span>,<br>                <span style="color: #055bcc;">"L"</span>,<br>                <span style="color: #055bcc;">"0.000220"</span>,<br>                <span style="color: #055bcc;">"-0.005352"</span>,<br>                <span style="color: #055bcc;">"-0.002542"</span>,<br>                <span style="color: #055bcc;">"0.000117"</span>,<br>                <span style="color: #055bcc;">"-0.005351"</span>,<br>                <span style="color: #055bcc;">"-0.002526"</span><br>            ]<br>        ]<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01J5WC3GR3P9ESZPJR8XZCC91J"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<colgroup> <col style="width: 6.00%;"> <col style="width: 6.00%;"> <col style="width: 44.00%;"> <col style="width: 14.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> <col style="width: 10.00%;"> </colgroup>
+<tbody>
+<tr>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">1</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Text Type</p>
+<p> • Plate Force: "TH_PLATEFORCE"</p>
+<p> • Plate Unit Force: "TH_PLATE_UNIT_FORCE"</p>
+<p> • Plate Stress: "TH_PLATESTRESS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEXT_TYPE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">2</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Result Table Save Path</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"EXPORT_PATH"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">3</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Unit Setting</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"UNIT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Force</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORCE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Length</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"DIST"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Heat</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"HEAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(4)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Temperature</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TEMP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="3">
+<p style="text-align: center;">4</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Response Number Format</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STYLES"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">System</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Number Format</p>
+<p> • "Default"</p>
+<p> • "Fixed"</p>
+<p> • "Scientific"</p>
+<p> • "General"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FORMAT"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Digit Place</p>
+<p> • 0 to 15</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PLACE"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">5</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Components of Result Table</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"COMPONENTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="5">
+<p style="text-align: center;">6</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Node / Element No. Input</p>
+<p> • Use Only One of the Two Methods</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"NODE_ELEMS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 1: Specify Each ID</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "KEYS": [101, 102, 103]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"KEYS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array<br>[Integer]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="6">
+<p><span style="color: #4c9aff;">Method 2: Specify ID Range</span></p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p> • "TO": "101 to 105"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">String</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">7</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Element Part</p>
+<p> • Plate Force</p>
+<p>   ◦ "Part I"</p>
+<p>   ◦ "Part J"</p>
+<p>   ◦ "Part K"</p>
+<p>   ◦ "Part L"</p>
+<p> • Plate Unit Force/Plate Stress</p>
+<p>   ◦ "Part C"</p>
+<p>   ◦ "Part I"</p>
+<p>   ◦ "Part J"</p>
+<p>   ◦ "Part K"</p>
+<p>   ◦ "Part L"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"PARTS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">All</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Optional</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">8</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Time History Load Case</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TH_CASE_NAME"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Array [String]</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" rowspan="4">
+<p style="text-align: center;">9</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
+<p>Output Time Step</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STEP"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Object</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(1)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Start Time</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"FROM"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(2)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>End Time</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"TO"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Number</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">(3)</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p>Time Interval</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"STEPS"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Integer</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">-</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">Required</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<br><br>
+</div>
+    </div>
+</body>
+</html>

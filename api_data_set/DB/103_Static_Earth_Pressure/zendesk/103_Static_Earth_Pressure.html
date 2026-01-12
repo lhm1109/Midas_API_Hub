@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Earth Pressure - DB</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 0 20px; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        .info { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db; }
+        .info-item { margin: 8px 0; }
+        .label { font-weight: bold; color: #555; display: inline-block; width: 150px; }
+        .content { margin-top: 30px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Static Earth Pressure</h1>
+    
+    <div class="info">
+        <div class="info-item"><span class="label">Category:</span> DB</div>
+        <div class="info-item"><span class="label">Article ID:</span> 49511059178521</div>
+        <div class="info-item"><span class="label">Created:</span> 2025-08-05T05:06:54Z</div>
+        <div class="info-item"><span class="label">Updated:</span> 2025-11-04T00:19:06Z</div>
+        <div class="info-item"><span class="label">Author ID:</span> 30038347344025</div>
+        <div class="info-item"><span class="label">Section ID:</span> 30087500371097</div>
+        <div class="info-item"><span class="label">URL:</span> <a href="https://support.midasuser.com/hc/en-us/articles/49511059178521-Static-Earth-Pressure" target="_blank">https://support.midasuser.com/hc/en-us/articles/49511059178521-Static-Earth-Pressure</a></div>
+    </div>
+    
+    <div class="content">
+        <p>
+<script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+</p>
+<p><strong style="font-size: 1.2em;">Input URI</strong></p>
+<div>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto;">
+<colgroup> <col style="width: 100%;"> </colgroup>
+<thead>
+<tr>
+<th style="padding: 10px 5px; text-align: center;">
+<p class="wysiwyg-text-align-center"><strong>{base url} + db/EPST</strong></p>
+</th>
+</tr>
+</thead>
+</table>
+</div>
+<br><br>
+<h3 id="h_01K1W9VVX92P81BAN24QMY8SH9"><strong>Active Methods</strong></h3>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto;">
+<colgroup> <col style="width: 100%;"> </colgroup>
+<thead>
+<tr>
+<th style="padding: 10px 5px; text-align: center;">
+<p class="wysiwyg-text-align-center"><strong>POST, GET, PUT, DELETE</strong></p>
+</th>
+</tr>
+</thead>
+</table>
+</div>
+<br><br>
+<h3 id="h_01K2H1YN8G6STDPHQ2M77PMFDN"><strong>JSON Schema</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"$schema"</span>: <span style="color: #055bcc;">"http://json-schema.org/draft-07/schema#"</span>,<br>    <span style="color: #c31b1b;">"Argument"</span>: {<br>        <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>        <span style="color: #c31b1b;">"properties"</span>: {<br>            <span style="color: #c31b1b;">"LOADCASE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Load Case Name"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"DIR"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Direction"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"ANGLE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Angle"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"IN_PT"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Inner Points(x,y,z)"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span>,<br>                    <span style="color: #c31b1b;">"maxItems"</span>: <span style="color: #0ab66c;">3</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"SF"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Scale Factor"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"EP_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Static Earth Pressure Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SURCHARGE_LOAD"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" SurchargeMethod"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"WATER_LEVEL"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Water Level"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>            },<br>            <span style="color: #c31b1b;">"SOIL_PROP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Soil Property"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"SEL_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Selection Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Element Type"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"string"</span><br>            },<br>            <span style="color: #c31b1b;">"NODE_LIST"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Elements Defining Loading Area (Node)"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"ELEM_LIST"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Elements Defining Loading Area (Element)"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>                }<br>            },<br>            <span style="color: #c31b1b;">"LOADING_AREA_GROUP"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Load Area Group"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"integer"</span><br>            },<br>            <span style="color: #c31b1b;">"PRES_PROFILE_ITEMS"</span>: {<br>                <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Pressure Profile Items"</span>,<br>                <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"array"</span>,<br>                <span style="color: #c31b1b;">"items"</span>: {<br>                    <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"object"</span>,<br>                    <span style="color: #c31b1b;">"properties"</span>: {<br>                        <span style="color: #c31b1b;">"LEVEL"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Level"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"SOIL_PRES"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Soil Pressure"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        },<br>                        <span style="color: #c31b1b;">"ADD_PRES"</span>: {<br>                            <span style="color: #c31b1b;">"description"</span>: <span style="color: #055bcc;">" Additional Pressure"</span>,<br>                            <span style="color: #c31b1b;">"type"</span>: <span style="color: #055bcc;">"number"</span><br>                        }<br>                    }<br>                }<br>            }<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01K2H1YN8GD3P6XYTXWKFNV8JD"><strong>Examples</strong></h3>
+<div class="mgt32" style="margin: 10px;">
+<p class="btn_dropdown mgt4" style="font-size: 15px;">Import to Json</p>
+<div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+<div style="background-color: #f5f7fa;" align="right"><button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget2')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button></div>
+<div id="copyTarget2" style="font-size: 15px; letter-spacing: 0.01em;">{<br>    <span style="color: #c31b1b;">"Assign"</span>: {<br>        <span style="color: #c31b1b;">"1"</span>: {<br>            <span style="color: #c31b1b;">"LOADCASE"</span>: <span style="color: #055bcc;">"HsX(+)"</span>,<br>            <span style="color: #c31b1b;">"DIR"</span>: <span style="color: #055bcc;">"XY"</span>,<br>            <span style="color: #c31b1b;">"ANGLE"</span>: <span style="color: #0ab66c;">0</span>,<br>            <span style="color: #c31b1b;">"IN_PT"</span>: [<br>                <span style="color: #0ab66c;">5000</span>,<br>                <span style="color: #0ab66c;">0</span>,<br>                <span style="color: #0ab66c;">0</span><br>            ],<br>            <span style="color: #c31b1b;">"SF"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"EP_TYPE"</span>: <span style="color: #055bcc;">"AT_REST"</span>,<br>            <span style="color: #c31b1b;">"SURCHARGE_LOAD"</span>: <span style="color: #0ab66c;">16</span>,<br>            <span style="color: #c31b1b;">"WATER_LEVEL"</span>: <span style="color: #0ab66c;">-4.7</span>,<br>            <span style="color: #c31b1b;">"SOIL_PROP"</span>: <span style="color: #055bcc;">"Soil-1"</span>,<br>            <span style="color: #c31b1b;">"SEL_TYPE"</span>: <span style="color: #055bcc;">"GRUP"</span>,<br>            <span style="color: #c31b1b;">"ELEM_TYPE"</span>: <span style="color: #055bcc;">"FRAME"</span>,<br>            <span style="color: #c31b1b;">"LOADING_AREA_GROUP"</span>: <span style="color: #0ab66c;">1</span>,<br>            <span style="color: #c31b1b;">"PRES_PROFILE_ITEMS"</span>: [<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">6</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">8</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-1</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">67.5</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-2</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">76.00000000000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-3</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">84.50000000000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-4</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">93.00000000000003</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-4.700000000000001</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">98.95000000000003</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-5</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">102.97099750000002</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-6</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">116.37432250000005</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-7</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">129.77764750000003</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-8</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">143.18097250000005</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-9</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">157.08429750000005</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-10</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">170.98762250000007</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-11</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">184.89094750000007</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-12</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">198.7942725000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-13</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">212.6975975000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-14</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">226.6009225000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-15</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">240.5042475000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-16</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">254.40757250000013</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-17</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">268.31089750000007</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-18</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">282.2142225000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-19</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">296.11754750000006</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-20</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">310.0208725000001</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                },<br>                {<br>                    <span style="color: #c31b1b;">"LEVEL"</span>: <span style="color: #0ab66c;">-21</span>,<br>                    <span style="color: #c31b1b;">"SOIL_PRES"</span>: <span style="color: #0ab66c;">326.92419750000005</span>,<br>                    <span style="color: #c31b1b;">"ADD_PRES"</span>: <span style="color: #0ab66c;">0</span><br>                }<br>            ]<br>        }<br>    }<br>}</div>
+</div>
+</div>
+<br><br>
+<h3 id="h_01K1WEF55X53D80X4FJEP5V6Y7"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto; border-collapse: collapse; border-style: solid; border-width: 1px; height: 963px;">
+<colgroup> <col style="width: 6%;"> <col style="width: 6%;"> <col style="width: 44%;"> <col style="width: 14%;"> <col style="width: 10%;"> <col style="width: 10%;"> <col style="width: 10%;"> </colgroup>
+<thead>
+<tr style="height: 44px;">
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 6%;">No.</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 50%;" colspan="2">Description</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 14%;">Key</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 10%;">Value Type</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 10%;">Default</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 10%;">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">1</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Prameters of Soil Properties Name</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"LOADCASE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 81px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 6%;">
+<p class="wysiwyg-text-align-center">2</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 50%;" colspan="2">
+<p>Load Direction</p>
+<p> • XY: Apply load in horizontal direction</p>
+<p> • NORMAL: Apply load normal to surface</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 14%;">
+<p class="wysiwyg-text-align-center">"DIR"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Stringr</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">XY</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Optional</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 6%;">
+<p class="wysiwyg-text-align-center">3</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 50%;" colspan="2">Static Earth Pressure Angle</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ANGLE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">4</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Inner Point</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"IN_PT"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Array[Number]</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">5</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Scale Factor</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SF"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 81px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 6%;">
+<p class="wysiwyg-text-align-center">6</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 50%;" colspan="2">
+<p>Static Earth Pressure Type</p>
+<p> • At_Rest</p>
+<p> • Active</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 14%;">
+<p class="wysiwyg-text-align-center">"EP_TYPE":</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">7</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Surcharge Load</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SURCHARGE_LOAD"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">8</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Water Level</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"WATER_LEVEL"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">9</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Parameters of Soil Properties</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SOIL_PROP"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 103px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 6%;">
+<p class="wysiwyg-text-align-center">10</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 50%;" colspan="2">
+<p>Selection Type</p>
+<p> • GRUP: Use Area Group from Loading Area Plane</p>
+<p> • ELEMENT: Use selected boundary elements</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SEL_TYPE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 103px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 6%;">
+<p class="wysiwyg-text-align-center">11</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 50%;" colspan="2">
+<p>Element Type</p>
+<p> • FRAME: Apply loads to frame nodes</p>
+<p> • PLANAR: Apply loads to planar element nodes</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ELEM_TYPE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">12</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Node List</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"NODE_LIST"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Array(Integer)</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Optional</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">13</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Element List</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ELEM_LIST"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Array(Integer)</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Optional</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 6%;">14</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 50%;" colspan="2">Loading Area Group Name</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 14%;">
+<p class="wysiwyg-text-align-center">"LOADING_AREA_GROUP"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 10%;">Integer</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 10%;">Optional</td>
+</tr>
+<tr style="height: 67px;">
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 6%;">15</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 50%;" colspan="2">Pressure Profile Items</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 14%;">
+<p class="wysiwyg-text-align-center">"PRES_PROFILE_ITEMS"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 10%;">Array(Object)</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 10%;">Optional</td>
+</tr>
+<tr style="height: 22px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 6%;"> </td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 7%;">(1)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 43%;">Level of each pressure profile point</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 14%;">
+<p class="wysiwyg-text-align-center">"LEVEL"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">Number</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">Required</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;"> </td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 7%;">(2)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 43%;">Soil pressure at each level</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SOIL_PRES"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Number</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Required</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;"> </td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 7%;">(3)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 43%;">Additional pressure at each level</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ADD_PRES"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Number</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Required</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<h3 id="01K2H3QM7R0KKXPKFH95H0X7Y8"><strong>Specifications</strong></h3>
+<div class="table-wrap">
+<table class="wysiwyg-table wysiwyg-table-resized" style="width: 100%; margin-right: auto; margin-left: auto; border-collapse: collapse; border-style: solid; border-width: 1px; height: 963px;">
+<colgroup> <col style="width: 6%;"> <col style="width: 6%;"> <col style="width: 44%;"> <col style="width: 14%;"> <col style="width: 10%;"> <col style="width: 10%;"> <col style="width: 10%;"> </colgroup>
+<thead>
+<tr style="height: 44px;">
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 6%;">No.</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 50%;" colspan="2">Description</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 14%;">Key</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 10%;">Value Type</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 10%;">Default</th>
+<th style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 15px 5px; text-align: center; height: 44px; width: 10%;">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">1</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Prameters of Soil Properties Name</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"LOADCASE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 81px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 6%;">
+<p class="wysiwyg-text-align-center">2</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 50%;" colspan="2">
+<p>Load Direction</p>
+<p> • XY: Apply load in horizontal direction</p>
+<p> • NORMAL: Apply load normal to surface</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 14%;">
+<p class="wysiwyg-text-align-center">"DIR"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Stringr</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">XY</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Optional</p>
+</td>
+</tr>
+<tr style="height: 22px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 6%;">
+<p class="wysiwyg-text-align-center">3</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 50%;" colspan="2">Static Earth Pressure Angle</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ANGLE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">4</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Inner Point</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"IN_PT"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Array[Number]</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Optional</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">5</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Scale Factor</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SF"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 81px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 6%;">
+<p class="wysiwyg-text-align-center">6</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 50%;" colspan="2">
+<p>Static Earth Pressure Type</p>
+<p> • At_Rest</p>
+<p> • Active</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 14%;">
+<p class="wysiwyg-text-align-center">"EP_TYPE":</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 81px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">7</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Surcharge Load</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SURCHARGE_LOAD"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">-</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">8</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Water Level</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"WATER_LEVEL"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Number</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">9</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Parameters of Soil Properties</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SOIL_PROP"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 103px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 6%;">
+<p class="wysiwyg-text-align-center">10</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 50%;" colspan="2">
+<p>Selection Type</p>
+<p> • GRUP: Use Area Group from Loading Area Plane</p>
+<p> • ELEMENT: Use selected boundary elements</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SEL_TYPE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 103px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 6%;">
+<p class="wysiwyg-text-align-center">11</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 50%;" colspan="2">
+<p>Element Type</p>
+<p> • FRAME: Apply loads to frame nodes</p>
+<p> • PLANAR: Apply loads to planar element nodes</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ELEM_TYPE"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">String</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 103px; width: 10%;">
+<p class="wysiwyg-text-align-center">Required</p>
+</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">12</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Node List</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"NODE_LIST"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Array(Integer)</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Optional</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;">
+<p class="wysiwyg-text-align-center">13</p>
+</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 50%;" colspan="2">Element List</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ELEM_LIST"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Array(Integer)</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Optional</td>
+</tr>
+<tr>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 6%;">14</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 50%;" colspan="2">Loading Area Group Name</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 14%;">
+<p class="wysiwyg-text-align-center">"LOADING_AREA_GROUP"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 10%;">Integer</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; width: 10%;">Optional</td>
+</tr>
+<tr style="height: 67px;">
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 6%;">15</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 50%;" colspan="2">Pressure Profile Items</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 14%;">
+<p class="wysiwyg-text-align-center">"PRES_PROFILE_ITEMS"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 10%;">Array(Object)</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 67px; width: 10%;">Optional</td>
+</tr>
+<tr style="height: 22px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 6%;"> </td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 7%;">(1)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 43%;">Level of each pressure profile point</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 14%;">
+<p class="wysiwyg-text-align-center">"LEVEL"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">Number</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 22px; width: 10%;">Required</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;"> </td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 7%;">(2)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 43%;">Soil pressure at each level</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"SOIL_PRES"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Number</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Required</td>
+</tr>
+<tr style="height: 44px;">
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 6%;"> </td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 7%;">(3)</td>
+<td style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 43%;">Additional pressure at each level</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 14%;">
+<p class="wysiwyg-text-align-center">"ADD_PRES"</p>
+</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Number</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">-</td>
+<td class="wysiwyg-text-align-center" style="border-style: solid; border-width: 1px; overflow-wrap: break-word; padding: 10px 5px; height: 44px; width: 10%;">Required</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p> </p>
+<p> </p>
+<p> </p>
+</div>
+</div>
+    </div>
+</body>
+</html>
