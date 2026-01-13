@@ -1,7 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, ChevronRight, ChevronDown, FileText, FolderClosed, FolderOpen, Plus, Pencil, Trash2, MoreVertical, GripVertical, Copy } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +45,7 @@ interface SortableEndpointItemProps {
   onEdit: (endpoint: ApiEndpoint) => void;
   onDelete: (endpoint: ApiEndpoint) => void;
   onDuplicate: (endpoint: ApiEndpoint) => void;
-  getStatusIndicator: (status?: 'success' | 'error' | null) => JSX.Element | null;
+  getStatusIndicator: (endpointId: string) => JSX.Element | null;
 }
 
 function SortableEndpointItem({
@@ -92,7 +98,7 @@ function SortableEndpointItem({
       >
         <FileText className="w-3 h-3" />
         <span className="flex-1 text-left">{endpoint.name}</span>
-        {getStatusIndicator(endpoint.status)}
+        {getStatusIndicator(endpoint.id)}
       </button>
 
       {/* Actions Menu */}
@@ -386,6 +392,10 @@ interface APIListPanelProps {
 export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onEndpointsChange }: APIListPanelProps) {
   const [searchTerm, setSearchTerm] = useState('');
   
+  // 🔥 엔드포인트별 잠금 상태 관리
+  const [endpointLocks, setEndpointLocks] = useState<Record<string, { locked: boolean; lockedBy?: string }>>({});
+  const currentUserId = localStorage.getItem('userId') || `user_${Date.now()}`;
+  
   // localStorage에서 확장 상태 로드
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(() => {
     try {
@@ -413,6 +423,100 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const [productGroupDialogType, setProductGroupDialogType] = useState<'product' | 'group'>('product');
   const [productGroupDialogProductId, setProductGroupDialogProductId] = useState<string>('');
   const [activeDroppableId, setActiveDroppableId] = useState<string | null>(null);
+  const [isRefreshingLock, setIsRefreshingLock] = useState(false);
+
+  // 🔥 현재 선택된 엔드포인트의 잠금 상태 확인 함수 (안정화)
+  const checkLockStatusRef = useRef<Record<string, number>>({});
+  
+  const checkLockStatus = useCallback(async (endpointId: string) => {
+    if (!endpointId) {
+      return;
+    }
+
+    // 중복 호출 방지: 같은 엔드포인트를 1초 이내에 다시 호출하지 않음
+    const now = Date.now();
+    const lastCheck = checkLockStatusRef.current[endpointId];
+    if (lastCheck && now - lastCheck < 1000) {
+      return;
+    }
+    checkLockStatusRef.current[endpointId] = now;
+
+    try {
+      const response = await fetch(`http://localhost:9527/api/locks/endpoint/${encodeURIComponent(endpointId)}/lock`);
+      if (response.ok) {
+        const data = await response.json();
+        setEndpointLocks((prev) => ({
+          ...prev,
+          [endpointId]: {
+            locked: data.locked && data.lockedBy !== currentUserId,
+            lockedBy: data.lockedBy,
+          }
+        }));
+      } else {
+        setEndpointLocks((prev) => ({
+          ...prev,
+          [endpointId]: { locked: false }
+        }));
+      }
+    } catch (error) {
+      setEndpointLocks((prev) => ({
+        ...prev,
+        [endpointId]: { locked: false }
+      }));
+    }
+  }, [currentUserId]); // selectedEndpoint 제거 - 함수 파라미터로만 사용
+
+  // 🔥 모든 엔드포인트의 초기 상태 확인 (한 번만, products가 실제로 변경될 때만)
+  const productsRef = useRef<string>('');
+  useEffect(() => {
+    const productsKey = JSON.stringify(products.map(p => ({ id: p.id, groups: p.groups.map(g => ({ id: g.id, endpoints: g.endpoints.map(e => e.id) })) })));
+    
+    // products가 실제로 변경되었을 때만 실행
+    if (productsRef.current === productsKey) {
+      return;
+    }
+    productsRef.current = productsKey;
+
+    const checkAllLocks = async () => {
+      const allEndpoints: string[] = [];
+      products.forEach(product => {
+        product.groups.forEach(group => {
+          group.endpoints.forEach(endpoint => {
+            allEndpoints.push(endpoint.id);
+          });
+        });
+      });
+
+      // 병렬로 모든 엔드포인트 상태 확인
+      await Promise.all(allEndpoints.map(endpointId => checkLockStatus(endpointId)));
+    };
+
+    checkAllLocks();
+  }, [products, checkLockStatus]);
+
+  // 🔥 선택된 엔드포인트는 5분마다 자동 확인
+  const selectedEndpointRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!selectedEndpoint) {
+      selectedEndpointRef.current = null;
+      return;
+    }
+
+    // 선택된 엔드포인트가 변경되었을 때만 즉시 확인
+    if (selectedEndpointRef.current !== selectedEndpoint) {
+      selectedEndpointRef.current = selectedEndpoint;
+      checkLockStatus(selectedEndpoint);
+    }
+    
+    // 5분마다 확인
+    const interval = setInterval(() => {
+      if (selectedEndpointRef.current) {
+        checkLockStatus(selectedEndpointRef.current);
+      }
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [selectedEndpoint, checkLockStatus]);
 
   // 확장 상태가 변경될 때마다 localStorage에 저장
   useEffect(() => {
@@ -580,14 +684,38 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     setExpandedGroups(newExpanded);
   };
 
-  const getStatusIndicator = (status?: 'success' | 'error' | null) => {
-    if (!status) return null;
+  const getStatusIndicator = (endpointId: string) => {
+    const lockInfo = endpointLocks[endpointId];
+    
+    // 상태 정보가 없으면 초록색 (편집 가능)으로 표시
+    if (!lockInfo) {
+      return (
+        <span className="w-2 h-2 rounded-full bg-green-500 cursor-help" title="✅ 편집 가능" />
+      );
+    }
+    
+    const isLocked = lockInfo.locked;
+    const statusColor = isLocked ? 'bg-red-500' : 'bg-green-500';
+    const tooltipText = isLocked 
+      ? `🔒 편집 중\n다른 사용자(${lockInfo.lockedBy || 'Unknown'})가 편집하고 있습니다.\n읽기 전용 모드입니다.`
+      : '✅ 편집 가능\n이 엔드포인트를 편집할 수 있습니다.';
+    
     return (
-      <span
-        className={`w-2 h-2 rounded-full ${
-          status === 'success' ? 'bg-green-500' : 'bg-red-500'
-        }`}
-      />
+      <TooltipProvider>
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>
+            <span className={`w-2 h-2 rounded-full ${statusColor} cursor-help`} />
+          </TooltipTrigger>
+          <TooltipContent side="right" className="max-w-xs">
+            <div className="space-y-1">
+              <p className="font-semibold text-xs">
+                {isLocked ? '🔴 편집 중' : '🟢 편집 가능'}
+              </p>
+              <p className="text-xs text-zinc-300 whitespace-pre-line">{tooltipText}</p>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   };
 
@@ -930,15 +1058,36 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     <div className="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col">
       {/* Search */}
       <div className="p-3 border-b border-zinc-800">
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            type="text"
-            placeholder="Search API"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
-          />
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              type="text"
+              placeholder="Search API"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
+            />
+          </div>
+          {/* 🔄 잠금 상태 새로고침 버튼 */}
+          <button
+            onClick={() => {
+              if (!selectedEndpoint) return;
+              setIsRefreshingLock(true);
+              checkLockStatus(selectedEndpoint).finally(() => setIsRefreshingLock(false));
+            }}
+            disabled={isRefreshingLock || !selectedEndpoint}
+            className="h-8 w-8 flex items-center justify-center rounded border border-zinc-700 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            title="잠금 상태 새로고침 (5분마다 자동)"
+          >
+            {isRefreshingLock ? (
+              <div className="w-4 h-4 border-2 border-zinc-600 border-t-blue-500 rounded-full animate-spin" />
+            ) : (
+              <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 

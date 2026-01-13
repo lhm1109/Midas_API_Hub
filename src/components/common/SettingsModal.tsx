@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 interface SettingsModalProps {
@@ -18,11 +19,13 @@ interface SettingsModalProps {
     baseUrl: string;
     mapiKey: string;
     commonHeaders: string;
+    useAssignWrapper?: boolean;
   };
   onSettingsChange: (settings: {
     baseUrl: string;
     mapiKey: string;
     commonHeaders: string;
+    useAssignWrapper?: boolean;
   }) => void;
 }
 
@@ -97,6 +100,27 @@ export function SettingsModal({
             />
             <p className="text-xs text-zinc-400">
               Additional headers in JSON format. These will be included in all API requests.
+            </p>
+          </div>
+
+          {/* Use Assign Wrapper */}
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="useAssignWrapper"
+                checked={settings.useAssignWrapper !== false}
+                onCheckedChange={(checked) =>
+                  onSettingsChange({ ...settings, useAssignWrapper: checked === true })
+                }
+                className="border-zinc-700"
+              />
+              <Label htmlFor="useAssignWrapper" className="text-zinc-200 cursor-pointer">
+                Use Assign Wrapper
+              </Label>
+            </div>
+            <p className="text-xs text-zinc-400 ml-7">
+              Wrap request body with {"{"}"Assign": {"{"}"1": ...{"}"}{"}"} structure. 
+              This is the default format for MIDAS API endpoints.
             </p>
           </div>
         </div>

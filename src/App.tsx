@@ -8,6 +8,7 @@ import { DebugView } from '@/features/debug/components';
 import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint } from '@/types';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function App() {
   const { setRunnerData } = useAppStore();
@@ -50,6 +51,7 @@ export default function App() {
         null,
         2
       ),
+      useAssignWrapper: true, // 기본값: Assign 래퍼 사용
     };
   });
 
@@ -136,6 +138,9 @@ export default function App() {
         settings={settings}
         onSettingsChange={setSettings}
       />
+
+      {/* Toaster for toast notifications */}
+      <Toaster richColors position="top-right" />
     </div>
   );
 }

@@ -6,6 +6,7 @@ export interface ApiEndpoint {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   path: string;
   status?: 'success' | 'error' | null;
+  statusMessage?: string; // 🔥 상태 메시지 추가
   order_index?: number;
 }
 

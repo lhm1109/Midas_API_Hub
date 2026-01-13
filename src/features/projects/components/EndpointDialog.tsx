@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -42,6 +43,7 @@ export function EndpointDialog({
   const [path, setPath] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<string>('');
+  const [statusMessage, setStatusMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   const isEditMode = !!endpoint;
@@ -65,6 +67,7 @@ export function EndpointDialog({
         setPath(endpoint.path);
         setDescription('');
         setStatus(endpoint.status || '');
+        setStatusMessage(endpoint.statusMessage || '');
       } else {
         // 추가 모드
         setName('');
@@ -72,6 +75,7 @@ export function EndpointDialog({
         setPath('');
         setDescription('');
         setStatus('');
+        setStatusMessage('');
       }
     }
   }, [open, endpoint]);
@@ -96,6 +100,7 @@ export function EndpointDialog({
         group_name: groupId,
         description: description.trim() || null,
         status: status || null,
+        statusMessage: statusMessage.trim() || null,
       };
 
       if (isEditMode) {
@@ -195,11 +200,24 @@ export function EndpointDialog({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">없음</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="deprecated">Deprecated</SelectItem>
+                <SelectItem value="success">✅ Success</SelectItem>
+                <SelectItem value="error">❌ Error</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {status && status !== 'none' && (
+            <div className="space-y-2">
+              <Label htmlFor="statusMessage">상태 메시지</Label>
+              <Textarea
+                id="statusMessage"
+                value={statusMessage}
+                onChange={(e) => setStatusMessage(e.target.value)}
+                placeholder="상태에 대한 상세 설명을 입력하세요 (예: API 응답 오류, 연결 실패 등)"
+                className="min-h-[60px]"
+              />
+            </div>
+          )}
 
           <div className="text-xs text-zinc-500 space-y-1">
             <p>• 제품: {productId}</p>

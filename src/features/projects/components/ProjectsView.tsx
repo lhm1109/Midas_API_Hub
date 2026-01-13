@@ -1,4 +1,4 @@
-import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle } from 'lucide-react';
+import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab } from './tabs';
 import { LockBanner } from './LockBanner';
@@ -6,7 +6,7 @@ import type { ApiEndpoint } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface MainWorkspaceProps {
   endpoint: ApiEndpoint | null;
@@ -14,6 +14,7 @@ interface MainWorkspaceProps {
     baseUrl: string;
     mapiKey: string;
     commonHeaders: string;
+    useAssignWrapper?: boolean;
   };
 }
 
@@ -28,6 +29,9 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
     checkEndpointLock,
     endpointLock,
   } = useAppStore();
+
+  // 🔥 저장 중 상태
+  const [isSaving, setIsSaving] = useState(false);
 
   // 엔드포인트 변경 시 잠금 상태 확인
   useEffect(() => {
@@ -69,12 +73,31 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
 
   // 🔥 Save Version 핸들러 (toast 추가)
   const handleSaveVersion = async () => {
+    if (!currentVersionId) {
+      toast.error('❌ No version selected');
+      return;
+    }
+
+    if (!hasUnsavedChanges) {
+      toast.info('ℹ️ No changes to save');
+      return;
+    }
+
+    setIsSaving(true);
+    const startTime = Date.now();
+    
     try {
+      console.log('💾 Starting save...');
       await saveCurrentVersion();
-      toast.success('✅ Version saved successfully!');
+      const duration = Date.now() - startTime;
+      console.log('✅ Save completed in', duration, 'ms');
+      toast.success(`✅ Version saved successfully! (${duration}ms)`);
     } catch (error) {
-      console.error('Save version failed:', error);
+      const duration = Date.now() - startTime;
+      console.error('❌ Save version failed:', error);
       toast.error(`❌ Failed to save version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -111,12 +134,26 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
         {currentVersion && (
           <Button
             onClick={handleSaveVersion}
-            disabled={!hasUnsavedChanges || isReadOnly}
+            disabled={!hasUnsavedChanges || isReadOnly || isSaving}
             className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            title={isReadOnly ? '다른 사용자가 편집 중입니다' : ''}
+            title={
+              isReadOnly ? '다른 사용자가 편집 중입니다' 
+              : !hasUnsavedChanges ? '변경사항이 없습니다'
+              : isSaving ? '저장 중...'
+              : 'Click to save current version'
+            }
           >
-            <Save className="w-4 h-4 mr-2" />
-            {isReadOnly ? '읽기 전용' : 'Save Version'}
+            {isSaving ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                {isReadOnly ? '읽기 전용' : 'Save Version'}
+              </>
+            )}
           </Button>
         )}
       </div>
@@ -207,7 +244,11 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               </div>
             </div>
           ) : (
-            <BuilderTab key={`builder-${endpoint.id}-${currentVersionId || 'none'}`} endpoint={endpoint} />
+            <BuilderTab 
+              key={`builder-${endpoint.id}-${currentVersionId || 'none'}`} 
+              endpoint={endpoint}
+              settings={settings}
+            />
           )}
         </TabsContent>
 

@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CodeEditor } from '@/components/common';
 import { useAppStore } from '@/store/useAppStore';
+import { apiClient } from '@/lib/api-client';
 import {
   Dialog,
   DialogContent,
@@ -34,6 +35,7 @@ interface RunnerTabProps {
     baseUrl: string;
     mapiKey: string;
     commonHeaders: string;
+    useAssignWrapper?: boolean;
   };
 }
 
@@ -65,6 +67,48 @@ export function RunnerTab({
   // 🎯 선택된 Test Case 상태
   const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | null>(null);
 
+  // 🔥 Request Body를 Assign 래퍼로 변환하는 함수
+  const wrapWithAssign = (body: string, endpointName: string): string => {
+    if (!settings.useAssignWrapper) {
+      return body;
+    }
+
+    try {
+      const parsed = JSON.parse(body);
+      
+      // 이미 Assign 래퍼가 있으면 그대로 반환
+      if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
+        return body;
+      }
+
+      // rootKey 추출 (endpoint name을 대문자로)
+      const rootKey = endpointName.toUpperCase();
+      let dataToWrap = parsed;
+
+      // rootKey가 있으면 그것을 사용 (예: { "NODE": { ... } } -> { ... })
+      if (parsed && typeof parsed === 'object' && rootKey in parsed) {
+        dataToWrap = parsed[rootKey];
+      } else if (parsed && typeof parsed === 'object') {
+        // rootKey가 없으면 전체 객체를 사용
+        dataToWrap = parsed;
+      }
+
+      // Assign 래퍼로 감싸기
+      // 단일 객체인 경우 "1" 키로 감싸기
+      const wrapped = {
+        Assign: {
+          "1": dataToWrap
+        }
+      };
+
+      return JSON.stringify(wrapped, null, 2);
+    } catch (error) {
+      // JSON 파싱 실패 시 원본 반환
+      console.warn('Failed to parse request body for Assign wrapper:', error);
+      return body;
+    }
+  };
+
   const handleSend = async () => {
     setIsLoading(true);
     const startTime = Date.now();
@@ -89,11 +133,16 @@ export function RunnerTab({
         headers['MAPI-Key'] = settings.mapiKey;
       }
 
+      // 🔥 Assign 래퍼 적용 (설정에 따라)
+      const finalRequestBody = method !== 'GET' 
+        ? wrapWithAssign(requestBody, endpoint.name)
+        : undefined;
+
       // 🔥 실제 API 호출
       const response = await fetch(fullUrl, {
         method: method,
         headers: headers,
-        body: method !== 'GET' ? requestBody : undefined,
+        body: finalRequestBody,
       });
 
       const endTime = Date.now();
@@ -119,11 +168,26 @@ export function RunnerTab({
       // 응답을 runnerData에 저장
       updateRunnerData({ responseBody });
 
-      // 🎯 성공 토스트
+      // 🎯 엔드포인트 상태 자동 업데이트
+      const updateEndpointStatus = async (success: boolean, message: string) => {
+        try {
+          await apiClient.updateEndpoint(endpoint.id, {
+            status: success ? 'success' : 'error',
+            statusMessage: message,
+          });
+          console.log('✅ Endpoint status updated:', success ? 'success' : 'error', message);
+        } catch (error) {
+          console.error('Failed to update endpoint status:', error);
+        }
+      };
+
+      // 🎯 성공 토스트 및 상태 업데이트
       if (response.ok) {
         toast.success(`✅ Request successful (${response.status}) - ${endTime - startTime}ms`);
+        await updateEndpointStatus(true, `Last tested: ${new Date().toLocaleString()} - ${response.status} ${response.statusText} (${endTime - startTime}ms)`);
       } else {
         toast.error(`⚠️ Request failed (${response.status}) - ${response.statusText}`);
+        await updateEndpointStatus(false, `HTTP ${response.status}: ${response.statusText}\nLast tested: ${new Date().toLocaleString()}`);
       }
     } catch (error) {
       const endTime = Date.now();
@@ -140,6 +204,17 @@ export function RunnerTab({
           2
         ),
       });
+
+      // 🎯 엔드포인트 상태 자동 업데이트 (네트워크 오류)
+      try {
+        await apiClient.updateEndpoint(endpoint.id, {
+          status: 'error',
+          statusMessage: `Network Error: ${error instanceof Error ? error.message : 'Unknown error'}\nLast tested: ${new Date().toLocaleString()}`,
+        });
+        console.log('✅ Endpoint status updated: error');
+      } catch (updateError) {
+        console.error('Failed to update endpoint status:', updateError);
+      }
 
       // 🎯 실패 토스트
       toast.error(`❌ Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);

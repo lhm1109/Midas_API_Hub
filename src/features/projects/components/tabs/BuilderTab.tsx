@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Trash2, Save, FileText, Clock, AlertCircle, ChevronDown, ChevronRight } from 'lucide-react';
+import { Trash2, Save, FileText, Clock, AlertCircle, ChevronDown, ChevronRight, Plus, Edit, RefreshCw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -34,9 +34,15 @@ import {
 
 interface BuilderTabProps {
   endpoint: ApiEndpoint;
+  settings: {
+    baseUrl: string;
+    mapiKey: string;
+    commonHeaders: string;
+    useAssignWrapper?: boolean;
+  };
 }
 
-export function BuilderTab({ endpoint }: BuilderTabProps) {
+export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const { 
     updateRunnerData, 
     addTestCase,
@@ -102,6 +108,93 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
     return initialData;
   });
   
+  // 🔥 Assign 인스턴스 관리 (여러 노드를 위한 상태)
+  const [assignInstances, setAssignInstances] = useState<{ [key: string]: any }>(() => {
+    // 기본적으로 "1" 인스턴스 하나 생성
+    const initialData: any = {};
+    schemaFields.forEach(field => {
+      if (field.type === 'array' && field.items) {
+        initialData[field.name] = [];
+      } else if (field.type === 'object' && field.children) {
+        initialData[`${field.name}._enabled`] = false;
+        field.children.forEach(child => {
+          initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+        });
+      } else {
+        initialData[field.name] = field.default !== undefined ? field.default : '';
+      }
+    });
+    
+    return {
+      "1": initialData
+    };
+  });
+  
+  // Assign 인스턴스 추가
+  const addAssignInstance = () => {
+    const keys = Object.keys(assignInstances);
+    const nextKey = String(Math.max(...keys.map(k => parseInt(k) || 0)) + 1);
+    
+    // 새 인스턴스는 빈 데이터로 초기화
+    const newInstanceData: any = {};
+    schemaFields.forEach(field => {
+      if (field.type === 'array' && field.items) {
+        newInstanceData[field.name] = [];
+      } else if (field.type === 'object' && field.children) {
+        newInstanceData[`${field.name}._enabled`] = false;
+        field.children.forEach(child => {
+          newInstanceData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+        });
+      } else {
+        newInstanceData[field.name] = field.default !== undefined ? field.default : '';
+      }
+    });
+    
+    setAssignInstances(prev => ({
+      ...prev,
+      [nextKey]: newInstanceData
+    }));
+    setCurrentInstanceKey(nextKey);
+  };
+  
+  // Assign 인스턴스 삭제
+  const removeAssignInstance = (key: string) => {
+    if (Object.keys(assignInstances).length <= 1) {
+      toast.error('❌ At least one instance is required');
+      return;
+    }
+    
+    setAssignInstances(prev => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+    
+    // 삭제된 인스턴스가 현재 선택된 것이면 다른 인스턴스로 변경
+    if (currentInstanceKey === key) {
+      const remaining = Object.keys(assignInstances).filter(k => k !== key);
+      setCurrentInstanceKey(remaining[0]);
+    }
+  };
+  
+  // 현재 선택된 인스턴스
+  const [currentInstanceKey, setCurrentInstanceKey] = useState<string>("1");
+  
+  // 현재 인스턴스의 데이터를 dynamicFormData에 반영
+  useEffect(() => {
+    if (assignInstances[currentInstanceKey]) {
+      setDynamicFormData(assignInstances[currentInstanceKey]);
+    }
+  }, [currentInstanceKey]);
+  
+  // dynamicFormData 변경 시 현재 인스턴스에 저장
+  useEffect(() => {
+    setAssignInstances(prev => ({
+      ...prev,
+      [currentInstanceKey]: dynamicFormData
+    }));
+  }, [dynamicFormData, currentInstanceKey]);
+  
   // 🎯 아코디언 상태 관리
   const [expandedObjects, setExpandedObjects] = useState<Set<string>>(new Set());
   
@@ -153,6 +246,10 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
   // 🎯 선택된 Test Case 상태
   const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | null>(null);
   
+  // 🎯 인라인 편집 상태
+  const [editingTestCaseId, setEditingTestCaseId] = useState<string | null>(null);
+  const [editingTestCaseName, setEditingTestCaseName] = useState<string>('');
+  
   // 🎯 Resizable Panel 상태 - 초기값을 화면의 50%로 설정
   const [rightPanelWidth, setRightPanelWidth] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -173,7 +270,32 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
   // 🎯 JSON 에디터용 임시 상태 (편집 중인 JSON)
   const [editableJson, setEditableJson] = useState<string>(() => {
     const rootKey = endpoint.name.toUpperCase();
-    return JSON.stringify({ [rootKey]: {} }, null, 2);
+    const initialData = { [rootKey]: {} };
+    const rawJson = JSON.stringify(initialData, null, 2);
+    
+    // 🔥 초기값도 Assign 래퍼 적용
+    if (settings.useAssignWrapper) {
+      try {
+        const parsed = JSON.parse(rawJson);
+        let dataToWrap = parsed;
+        
+        if (parsed && typeof parsed === 'object' && rootKey in parsed) {
+          dataToWrap = parsed[rootKey];
+        }
+        
+        const wrapped = {
+          Assign: {
+            "1": dataToWrap
+          }
+        };
+        
+        return JSON.stringify(wrapped, null, 2);
+      } catch (error) {
+        console.warn('Failed to apply Assign wrapper to initial JSON:', error);
+      }
+    }
+    
+    return rawJson;
   });
   
   // 🎨 JSON 필드 메타데이터 정의 (스키마 기반)
@@ -456,19 +578,88 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
     return cleaned;
   };
 
+  // 🔥 Request Body를 Assign 래퍼로 변환하는 함수
+  const wrapWithAssign = (body: string): string => {
+    if (!settings.useAssignWrapper) {
+      return body;
+    }
+
+    try {
+      const parsed = JSON.parse(body);
+      
+      // 이미 Assign 래퍼가 있으면 그대로 반환
+      if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
+        return body;
+      }
+      
+      // 🔥 모든 인스턴스를 Assign 래퍼로 감싸기
+      const allInstances: any = {};
+      Object.keys(assignInstances).forEach(key => {
+        const instanceData = assignInstances[key];
+        const convertDotNotationToNested = (flatData: any) => {
+          const nested: any = {};
+          
+          Object.keys(flatData).forEach(fieldKey => {
+            if (fieldKey.endsWith('._enabled')) {
+              return;
+            }
+            
+            if (fieldKey.includes('.')) {
+              const parts = fieldKey.split('.');
+              const parentKey = parts[0];
+              
+              if (flatData[`${parentKey}._enabled`] === false) {
+                return;
+              }
+              
+              let current = nested;
+              for (let i = 0; i < parts.length - 1; i++) {
+                if (!current[parts[i]]) {
+                  current[parts[i]] = {};
+                }
+                current = current[parts[i]];
+              }
+              
+              current[parts[parts.length - 1]] = flatData[fieldKey];
+            } else {
+              nested[fieldKey] = flatData[fieldKey];
+            }
+          });
+          
+          return nested;
+        };
+        
+        allInstances[key] = convertDotNotationToNested(instanceData);
+      });
+
+      const wrapped = {
+        Assign: allInstances
+      };
+
+      return JSON.stringify(wrapped, null, 2);
+    } catch (error) {
+      // JSON 파싱 실패 시 원본 반환
+      console.warn('Failed to parse request body for Assign wrapper:', error);
+      return body;
+    }
+  };
+
   // formData 변경 시 JSON 업데이트 (Store에 직접 저장)
   useEffect(() => {
     const rootKey = endpoint.name.toUpperCase();
     const cleanData = buildCleanJSON();
     const result = { [rootKey]: cleanData };
-    const requestBody = JSON.stringify(result, null, 2);
+    const rawRequestBody = JSON.stringify(result, null, 2);
+    
+    // 🔥 Assign 래퍼 적용 (설정에 따라)
+    const requestBody = wrapWithAssign(rawRequestBody);
     
     // Store의 Runner 데이터 업데이트
     updateRunnerData({ requestBody });
     
     // 🎯 편집 가능한 JSON도 업데이트
     setEditableJson(requestBody);
-  }, [dynamicFormData, endpoint.name]);
+  }, [assignInstances, endpoint.name, settings.useAssignWrapper]);
   
   // Update modified state whenever data changes
   useEffect(() => {
@@ -482,29 +673,38 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
     }
   }, [dynamicFormData]);
 
-  // 🎯 Test Case 저장 핸들러
+  // 🎯 Test Case 저장 핸들러 (신규)
   const handleSaveTestCase = async () => {
     if (!caseName.trim()) {
       toast.error('❌ Please enter a test case name');
       return;
     }
     
-    // 🎯 현재 Builder의 폼 데이터 수집
-    const currentFormData = {
-      dynamicFormData,
-    };
+    // 🔥 실제 API 요청에 사용될 JSON 생성
+    const cleanData = buildCleanJSON();
+    const rawRequestBody = JSON.stringify(cleanData, null, 2);
+    const requestBody = wrapWithAssign(rawRequestBody);
     
-    // 🎯 JSON으로 변환하여 requestBody로 저장
-    const requestBody = JSON.stringify(currentFormData, null, 2);
+    console.log('💾 Saving New Test Case:', {
+      name: caseName,
+      assignInstances,
+      requestBody: requestBody.substring(0, 200)
+    });
     
-    // 🎯 Test Case 저장 (requestBody에 폼 데이터 포함)
-    updateRunnerData({ requestBody }); // 먼저 runnerData 업데이트
+    // 🎯 Test Case 저장 (실제 JSON requestBody 저장)
+    updateRunnerData({ requestBody }); // Runner에서 사용할 JSON
     addTestCase(caseName.trim(), caseDescription.trim() || undefined);
     
     // 🔥 글로벌 저장 (DB에 영구 저장)
     try {
       await saveCurrentVersion();
       toast.success(`✅ Test Case "${caseName}" saved successfully!`);
+      
+      // 새로 저장한 케이스를 선택 상태로 설정
+      const newTestCase = testCases[testCases.length]; // 가장 최근 추가된 케이스
+      if (newTestCase) {
+        setSelectedTestCaseId(newTestCase.id);
+      }
     } catch (error) {
       console.error('Failed to save version:', error);
       toast.error('❌ Failed to save test case');
@@ -515,6 +715,72 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
     setCaseDescription('');
     setShowSaveDialog(false);
   };
+
+  // 🎯 Test Case 업데이트 핸들러 (기존 케이스 수정)
+  const handleUpdateTestCase = async () => {
+    if (!selectedTestCaseId) {
+      toast.error('❌ No test case selected');
+      return;
+    }
+
+    const selectedTestCase = testCases.find(tc => tc.id === selectedTestCaseId);
+    if (!selectedTestCase) {
+      toast.error('❌ Test case not found');
+      return;
+    }
+
+    // 🔥 실제 API 요청에 사용될 JSON 생성
+    const cleanData = buildCleanJSON();
+    const rawRequestBody = JSON.stringify(cleanData, null, 2);
+    const requestBody = wrapWithAssign(rawRequestBody);
+
+    console.log('🔄 Updating Test Case:', {
+      id: selectedTestCaseId,
+      name: selectedTestCase.name,
+      requestBody: requestBody.substring(0, 200)
+    });
+
+    // 🎯 Test Case 업데이트
+    const { updateTestCase } = useAppStore.getState();
+    updateTestCase(selectedTestCaseId, { requestBody });
+    updateRunnerData({ requestBody });
+
+    // 🔥 글로벌 저장 (DB에 영구 저장)
+    try {
+      await saveCurrentVersion();
+      toast.success(`✅ Test Case "${selectedTestCase.name}" updated successfully!`);
+    } catch (error) {
+      console.error('Failed to save version:', error);
+      toast.error('❌ Failed to update test case');
+    }
+  };
+
+  // 🎯 현재 편집 중인 테스트케이스 초기화 (새로 시작)
+  const handleClearTestCase = () => {
+    setSelectedTestCaseId(null);
+    
+    // 폼 초기화
+    const initialData: any = {};
+    schemaFields.forEach(field => {
+      if (field.type === 'array' && field.items) {
+        initialData[field.name] = [];
+      } else if (field.type === 'object' && field.children) {
+        initialData[`${field.name}._enabled`] = false;
+        field.children.forEach(child => {
+          initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+        });
+      } else {
+        initialData[field.name] = field.default !== undefined ? field.default : '';
+      }
+    });
+    setDynamicFormData(initialData);
+    
+    // Assign 인스턴스 초기화
+    setAssignInstances({ '1': {} });
+    setCurrentInstanceKey('1');
+    
+    toast.info('📝 Ready to create new test case');
+  };
   
   // 🎯 Test Case 선택 시 폼에 로드
   const handleLoadTestCase = (testCaseId: string) => {
@@ -522,16 +788,87 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
     if (!testCase) return;
     
     try {
-      const formData = JSON.parse(testCase.requestBody);
+      console.log('📥 Loading Test Case:', testCase.requestBody.substring(0, 200));
       
-      // 폼 데이터 복원
-      if (formData.dynamicFormData) setDynamicFormData(formData.dynamicFormData);
+      // requestBody는 실제 JSON 형식
+      const parsed = JSON.parse(testCase.requestBody);
+      
+      // 🔥 Assign 래퍼가 있으면 벗겨내고 인스턴스별로 로드
+      if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
+        const assignData = parsed.Assign;
+        const loadedInstances: any = {};
+        
+        // Assign 내부의 각 인스턴스를 assignInstances로 변환
+        Object.keys(assignData).forEach(key => {
+          const instanceData = assignData[key];
+          
+          // 중첩 구조를 flat structure로 변환
+          const flatData: any = {};
+          
+          const flattenObject = (obj: any, prefix = '') => {
+            Object.keys(obj).forEach(key => {
+              const value = obj[key];
+              const newKey = prefix ? `${prefix}.${key}` : key;
+              
+              if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                // Object인 경우: _enabled를 true로 설정하고 자식들을 펼침
+                flatData[`${newKey}._enabled`] = true;
+                flattenObject(value, newKey);
+              } else {
+                flatData[newKey] = value;
+              }
+            });
+          };
+          
+          flattenObject(instanceData);
+          loadedInstances[key] = flatData;
+        });
+        
+        console.log('✅ Loaded instances:', loadedInstances);
+        setAssignInstances(loadedInstances);
+        
+        // 첫 번째 인스턴스를 현재 선택
+        const firstKey = Object.keys(loadedInstances)[0];
+        setCurrentInstanceKey(firstKey);
+        setDynamicFormData(loadedInstances[firstKey]);
+      } 
+      // rootKey 형식인 경우 (이전 버전 호환)
+      else {
+        const rootKey = endpoint.name.toUpperCase();
+        if (parsed && typeof parsed === 'object' && rootKey in parsed) {
+          const data = parsed[rootKey];
+          
+          // 중첩 구조를 flat structure로 변환
+          const flatData: any = {};
+          
+          const flattenObject = (obj: any, prefix = '') => {
+            Object.keys(obj).forEach(key => {
+              const value = obj[key];
+              const newKey = prefix ? `${prefix}.${key}` : key;
+              
+              if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                flatData[`${newKey}._enabled`] = true;
+                flattenObject(value, newKey);
+              } else {
+                flatData[newKey] = value;
+              }
+            });
+          };
+          
+          flattenObject(data);
+          
+          // "1" 인스턴스로 로드
+          setAssignInstances({ "1": flatData });
+          setCurrentInstanceKey("1");
+          setDynamicFormData(flatData);
+        }
+      }
       
       setSelectedTestCaseId(testCaseId);
-      toast.success(`Test Case "${testCase.name}"를 로드했습니다`);
+      toast.success(`✅ Test Case "${testCase.name}" loaded successfully!`);
     } catch (error) {
       console.error('Failed to load test case:', error);
-      toast.error('Test Case 로드에 실패했습니다');
+      toast.error('❌ Failed to load test case');
     }
   };
   
@@ -542,6 +879,9 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
       if (selectedTestCaseId === caseId) {
         setSelectedTestCaseId(null);
       }
+      if (editingTestCaseId === caseId) {
+        setEditingTestCaseId(null);
+      }
       
       // 🔥 글로벌 저장 (DB에 영구 저장)
       try {
@@ -551,6 +891,61 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
         console.error('Failed to save after delete:', error);
         toast.error('삭제 후 저장에 실패했습니다');
       }
+    }
+  };
+
+  // 🎯 테스트케이스 이름 편집 시작
+  const handleStartEditName = (testCaseId: string, currentName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingTestCaseId(testCaseId);
+    setEditingTestCaseName(currentName);
+  };
+
+  // 🎯 테스트케이스 이름 편집 취소
+  const handleCancelEditName = () => {
+    setEditingTestCaseId(null);
+    setEditingTestCaseName('');
+  };
+
+  // 🎯 테스트케이스 이름 저장
+  const handleSaveEditName = async (testCaseId: string) => {
+    const trimmedName = editingTestCaseName.trim();
+    
+    if (!trimmedName) {
+      toast.error('❌ Test Case 이름은 비어있을 수 없습니다');
+      return;
+    }
+
+    const testCase = testCases.find(tc => tc.id === testCaseId);
+    if (testCase && trimmedName === testCase.name) {
+      // 변경사항 없음
+      handleCancelEditName();
+      return;
+    }
+
+    // 이름 중복 체크
+    const isDuplicate = testCases.some(
+      tc => tc.id !== testCaseId && tc.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+    
+    if (isDuplicate) {
+      toast.error('❌ 같은 이름의 Test Case가 이미 존재합니다');
+      return;
+    }
+
+    // 업데이트
+    const { updateTestCase } = useAppStore.getState();
+    updateTestCase(testCaseId, { name: trimmedName });
+
+    // 🔥 글로벌 저장 (DB에 영구 저장)
+    try {
+      await saveCurrentVersion();
+      toast.success(`✅ Test Case 이름이 "${trimmedName}"로 변경되었습니다`);
+      setEditingTestCaseId(null);
+      setEditingTestCaseName('');
+    } catch (error) {
+      console.error('Failed to save after rename:', error);
+      toast.error('❌ 이름 변경 후 저장에 실패했습니다');
     }
   };
 
@@ -600,10 +995,38 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
                       selectedTestCaseId === testCase.id ? 'bg-blue-500' : 'bg-zinc-600'
                     }`} />
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-semibold text-zinc-100 truncate">
-                        {testCase.name}
-                      </h4>
-                      {testCase.description && (
+                      {editingTestCaseId === testCase.id ? (
+                        // 🔥 편집 모드
+                        <div className="flex items-center gap-1">
+                          <Input
+                            value={editingTestCaseName}
+                            onChange={(e) => setEditingTestCaseName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.stopPropagation();
+                                handleSaveEditName(testCase.id);
+                              } else if (e.key === 'Escape') {
+                                e.stopPropagation();
+                                handleCancelEditName();
+                              }
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            onBlur={() => handleSaveEditName(testCase.id)}
+                            autoFocus
+                            className="h-7 text-sm font-semibold bg-zinc-800 border-blue-500 text-white focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      ) : (
+                        // 🔥 일반 모드
+                        <h4 
+                          className="text-sm font-semibold text-zinc-100 truncate cursor-text hover:text-blue-300 transition-colors"
+                          onDoubleClick={(e) => handleStartEditName(testCase.id, testCase.name, e)}
+                          title="더블클릭하여 이름 변경"
+                        >
+                          {testCase.name}
+                        </h4>
+                      )}
+                      {testCase.description && !editingTestCaseId && (
                         <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
                           {testCase.description}
                         </p>
@@ -625,36 +1048,123 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
       {/* Center: Context-Aware Form Builder */}
       <div className="flex-1 flex flex-col border-r border-zinc-800 bg-zinc-950 overflow-hidden">
         <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
-          <h3 className="text-sm mb-1 flex items-center gap-2">
-            🏗️ Context-Aware Builder
-            {hasEnhancedSchema && (
-              <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
-                Enhanced Schema Active
-              </span>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm flex items-center gap-2">
+              🏗️ Context-Aware Builder
+              {hasEnhancedSchema && (
+                <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
+                  Enhanced Schema Active
+                </span>
+              )}
+            </h3>
+            {selectedTestCaseId && (
+              <Button
+                onClick={handleClearTestCase}
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs border-zinc-700 hover:bg-zinc-800"
+              >
+                <Plus className="w-3 h-3 mr-1" />
+                New Test Case
+              </Button>
             )}
-          </h3>
-          <p className="text-xs text-zinc-500">
-            Spec 기반 지능형 조립기 {hasEnhancedSchema && '(조건부 필드 지원)'}
-          </p>
+          </div>
+          
+          {/* 🔥 현재 상태 표시 배너 */}
+          {selectedTestCaseId ? (
+            <div className="flex items-center gap-2 px-3 py-2 bg-blue-900/20 border border-blue-700/50 rounded-lg">
+              <Edit className="w-4 h-4 text-blue-400" />
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-blue-300">
+                  Editing: {testCases.find(tc => tc.id === selectedTestCaseId)?.name || 'Unknown'}
+                </p>
+                <p className="text-[10px] text-blue-400/70">
+                  수정 후 "Update Test Case" 버튼을 눌러 저장하세요
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 px-3 py-2 bg-green-900/20 border border-green-700/50 rounded-lg">
+              <Plus className="w-4 h-4 text-green-400" />
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-green-300">
+                  Creating New Test Case
+                </p>
+                <p className="text-[10px] text-green-400/70">
+                  구성 완료 후 "Save as New Test Case" 버튼을 눌러 저장하세요
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <ScrollArea className="flex-1 h-0">
           <div className="p-6 space-y-6">
+            {/* 🔥 Assign Instance Selector */}
+            {settings.useAssignWrapper && (
+              <section className="bg-gradient-to-br from-blue-950/50 to-zinc-900 border-2 border-blue-800/50 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <span className="text-xl">🔢</span>
+                    Assign Instances
+                  </h3>
+                  <Button
+                    onClick={addAssignInstance}
+                    size="sm"
+                    className="h-7 text-xs bg-blue-600 hover:bg-blue-500"
+                  >
+                    + Add Instance
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {Object.keys(assignInstances).sort((a, b) => parseInt(a) - parseInt(b)).map((key) => (
+                    <div key={key} className="flex items-center gap-1">
+                      <button
+                        onClick={() => setCurrentInstanceKey(key)}
+                        className={`px-3 py-1 rounded text-sm transition-colors ${
+                          currentInstanceKey === key
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+                        }`}
+                      >
+                        {key}
+                      </button>
+                      {Object.keys(assignInstances).length > 1 && (
+                        <button
+                          onClick={() => removeAssignInstance(key)}
+                          className="p-1 rounded text-red-400 hover:bg-red-900/20"
+                          title="Remove instance"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-zinc-500 mt-2">
+                  Select an instance to edit. Each instance represents a separate item in the Assign wrapper.
+                </p>
+              </section>
+            )}
+
             {/* 🎯 Dynamic Schema-Based Form */}
             {schemaFields.length > 0 && (
               <section className="bg-gradient-to-br from-purple-950/50 to-zinc-900 border-2 border-purple-800/50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <span className="text-2xl">📝</span>
+                  <span className="text-xl">📝</span>
                   Schema-Based Fields
+                  {settings.useAssignWrapper && (
+                    <span className="px-2 py-0.5 bg-blue-600/20 text-blue-400 text-[10px] rounded border border-blue-600/50">
+                      Instance: {currentInstanceKey}
+                    </span>
+                  )}
                   {hasEnhancedSchema && (
                     <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
                       From Spec Tab
                     </span>
                   )}
                 </h3>
-                <p className="text-xs text-zinc-400 mb-4">
-                  ✨ 이 필드들은 Spec 탭에서 저장한 JSON Schema로부터 자동 생성되었습니다
-                </p>
+
                 
                 <div className="space-y-4">
                   {schemaFields.map((field) => (
@@ -954,7 +1464,55 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
               <ScrollArea className="h-full">
                 <div className="p-4">
                   <div className="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800">
-                    <JSONRenderer data={{ [endpoint.name.toUpperCase()]: buildCleanJSON() }} />
+                    <JSONRenderer data={(() => {
+                      // 🔥 Assign 래퍼 적용 (설정에 따라)
+                      if (settings.useAssignWrapper) {
+                        const allInstances: any = {};
+                        Object.keys(assignInstances).forEach(key => {
+                          const instanceData = assignInstances[key];
+                          const convertDotNotationToNested = (flatData: any) => {
+                            const nested: any = {};
+                            
+                            Object.keys(flatData).forEach(fieldKey => {
+                              if (fieldKey.endsWith('._enabled')) {
+                                return;
+                              }
+                              
+                              if (fieldKey.includes('.')) {
+                                const parts = fieldKey.split('.');
+                                const parentKey = parts[0];
+                                
+                                if (flatData[`${parentKey}._enabled`] === false) {
+                                  return;
+                                }
+                                
+                                let current = nested;
+                                for (let i = 0; i < parts.length - 1; i++) {
+                                  if (!current[parts[i]]) {
+                                    current[parts[i]] = {};
+                                  }
+                                  current = current[parts[i]];
+                                }
+                                
+                                current[parts[parts.length - 1]] = flatData[fieldKey];
+                              } else {
+                                nested[fieldKey] = flatData[fieldKey];
+                              }
+                            });
+                            
+                            return nested;
+                          };
+                          
+                          allInstances[key] = convertDotNotationToNested(instanceData);
+                        });
+                        
+                        return { Assign: allInstances };
+                      }
+                      
+                      const rootKey = endpoint.name.toUpperCase();
+                      const cleanData = buildCleanJSON();
+                      return { [rootKey]: cleanData };
+                    })()} />
                   </div>
                 </div>
               </ScrollArea>
@@ -1002,20 +1560,35 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
               variant="outline"
               size="sm"
               disabled={!isModified}
-              className="h-8 text-xs"
+              className="h-8 text-xs border-zinc-700 hover:bg-zinc-800"
             >
+              <RefreshCw className="w-3 h-3 mr-2" />
               Reset
             </Button>
             
-            <Button
-              onClick={() => setShowSaveDialog(true)}
-              size="sm"
-              disabled={!isModified}
-              className="h-8 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Save className="w-3 h-3 mr-2" />
-              Save as Test Case
-            </Button>
+            {selectedTestCaseId ? (
+              // 🔥 수정 모드: Update 버튼
+              <Button
+                onClick={handleUpdateTestCase}
+                size="sm"
+                disabled={!isModified}
+                className="h-8 text-xs bg-orange-600 hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <RefreshCw className="w-3 h-3 mr-2" />
+                Update Test Case
+              </Button>
+            ) : (
+              // 🔥 신규 모드: Save as New 버튼
+              <Button
+                onClick={() => setShowSaveDialog(true)}
+                size="sm"
+                disabled={!isModified}
+                className="h-8 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Save className="w-3 h-3 mr-2" />
+                Save as New Test Case
+              </Button>
+            )}
           </div>
         </div>
       </div>

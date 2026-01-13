@@ -160,7 +160,7 @@ router.get('/:id', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const { id, name, method, path, product, group_name, description, status } = req.body;
+    const { id, name, method, path, product, group_name, description, status, statusMessage } = req.body;
     const now = new Date().toISOString();
     
     // product_id, group_id 생성
@@ -180,6 +180,7 @@ router.post('/', async (req, res) => {
         group_id,      // ✅ 추가
         description: description || null,
         status: status || 'active',
+        status_message: statusMessage || null, // 🔥 상태 메시지 추가
         created_at: now,
         updated_at: now
       })
@@ -371,7 +372,7 @@ router.put('/:id/move', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, method, path, product, group_name, description, status } = req.body;
+    const { name, method, path, product, group_name, description, status, statusMessage } = req.body;
     const now = new Date().toISOString();
     
     // product_id, group_id 생성
@@ -390,6 +391,7 @@ router.put('/:id', async (req, res) => {
         group_id,      // ✅ 추가
         description,
         status,
+        status_message: statusMessage, // 🔥 상태 메시지 추가
         updated_at: now
       })
       .eq('id', id)
