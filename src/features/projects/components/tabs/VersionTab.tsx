@@ -74,12 +74,12 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     const maxSize = 100 * 1024 * 1024; // 100MB
 
     if (file.size > maxSize) {
-      toast.error('파일 크기는 100MB를 초과할 수 없습니다.');
+      toast.error('❌ File size cannot exceed 100MB');
       return;
     }
 
     setUploadingFiles(prev => new Set(prev).add(versionId));
-    toast.info(`${file.name} 업로드 중...`);
+    toast.info(`⏳ Uploading ${file.name}...`);
 
     try {
       // FormData 사용 - 스트리밍 방식으로 전송
@@ -101,7 +101,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
         const result = await response.json();
         console.log('✅ Upload success:', result);
         const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-        toast.success(`${file.name} (${fileSizeMB}MB) 파일이 업로드되었습니다`);
+        toast.success(`✅ ${file.name} (${fileSizeMB}MB) uploaded successfully`);
         await loadAttachments(versionId);
       } else {
         const errorText = await response.text();
@@ -110,7 +110,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       }
     } catch (error) {
       console.error('❌ Upload error:', error);
-      toast.error(`파일 업로드 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+      toast.error(`❌ Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploadingFiles(prev => {
         const next = new Set(prev);
@@ -138,19 +138,19 @@ export function VersionTab({ endpoint }: VersionTabProps) {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-        toast.success(`${fileName} 다운로드 완료`);
+        toast.success(`✅ ${fileName} downloaded successfully`);
       } else {
         throw new Error('Download failed');
       }
     } catch (error) {
       console.error('Download error:', error);
-      toast.error('파일 다운로드에 실패했습니다');
+      toast.error('❌ Failed to download file');
     }
   };
 
   // 파일 삭제
   const handleDeleteAttachment = async (versionId: string, attachmentId: string, fileName: string) => {
-    if (!confirm(`"${fileName}" 파일을 삭제하시겠습니까?`)) return;
+    if (!confirm(`Are you sure you want to delete "${fileName}"?`)) return;
 
     try {
       const response = await fetch(`http://localhost:9527/api/attachments/${attachmentId}`, {
@@ -158,14 +158,14 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       });
 
       if (response.ok) {
-        toast.success(`${fileName} 파일이 삭제되었습니다`);
+        toast.success(`✅ ${fileName} deleted successfully`);
         await loadAttachments(versionId);
       } else {
         throw new Error('Delete failed');
       }
     } catch (error) {
       console.error('Delete error:', error);
-      toast.error('파일 삭제에 실패했습니다');
+      toast.error('❌ Failed to delete file');
     }
   };
 
@@ -191,21 +191,36 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     });
   }, [endpointVersions.length]);
 
-  const handleCreateVersion = () => {
-    if (!newVersionNumber.trim()) return;
-    createVersion(endpoint.id, newVersionNumber.trim(), changeLog.trim() || undefined);
-    setNewVersionNumber('');
-    setChangeLog('');
-    setShowCreateDialog(false);
+  const handleCreateVersion = async () => {
+    if (!newVersionNumber.trim()) {
+      toast.error('❌ Please enter a version number');
+      return;
+    }
+    try {
+      await createVersion(endpoint.id, newVersionNumber.trim(), changeLog.trim() || undefined);
+      toast.success(`✅ Version ${newVersionNumber.trim()} created successfully`);
+      setNewVersionNumber('');
+      setChangeLog('');
+      setShowCreateDialog(false);
+    } catch (error) {
+      toast.error(`❌ Failed to create version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
-  const handleLoadVersion = (versionId: string) => {
-    loadVersion(versionId);
+  const handleLoadVersion = async (versionId: string) => {
+    try {
+      await loadVersion(versionId);
+      const version = versions.find(v => v.id === versionId);
+      toast.success(`✅ Version ${version?.version || versionId} loaded successfully`);
+    } catch (error) {
+      toast.error(`❌ Failed to load version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   };
 
   const handleDeleteVersion = (versionId: string) => {
     if (confirm('Are you sure you want to delete this version?')) {
       deleteVersion(versionId);
+      toast.success('✅ Version deleted successfully');
     }
   };
 

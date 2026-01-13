@@ -1,231 +1,22 @@
 import express from 'express';
-import db from '../database.js';
+import supabase from '../database.js';
 
 const router = express.Router();
 
-// 모든 버전 조회 (엔드포인트별 필터링 가능)
-router.get('/', (req, res) => {
-  try {
-    const { endpoint_id } = req.query;
-    
-    let query = 'SELECT * FROM versions';
-    let params = [];
-    
-    if (endpoint_id) {
-      query += ' WHERE endpoint_id = ?';
-      params.push(endpoint_id);
-    }
-    
-    query += ' ORDER BY created_at DESC';
-    
-    const versions = db.prepare(query).all(...params);
-    
-    // 각 버전에 연관 데이터 추가
-    const versionsWithData = versions.map(version => {
-      const manualData = db.prepare('SELECT * FROM manual_data WHERE version_id = ?').get(version.id);
-      const specData = db.prepare('SELECT * FROM spec_data WHERE version_id = ?').get(version.id);
-      const builderData = db.prepare('SELECT * FROM builder_data WHERE version_id = ?').get(version.id);
-      const runnerData = db.prepare('SELECT * FROM runner_data WHERE version_id = ?').get(version.id);
-      const testCases = db.prepare('SELECT * FROM test_cases WHERE version_id = ?').all(version.id);
-      
-      return {
-        id: version.id,
-        version: version.version,
-        endpointId: version.endpoint_id,
-        createdAt: version.created_at,
-        updatedAt: version.updated_at,
-        author: version.author,
-        changeLog: version.change_log,
-        manualData: manualData ? parseManualData(manualData) : {
-          title: '',
-          category: '',
-          inputUri: '',
-          activeMethods: '',
-          jsonSchema: {},
-          jsonSchemaOriginal: null,
-          jsonSchemaEnhanced: null,
-          examples: [],
-          specifications: '',
-          htmlContent: null,
-        },
-        specData: specData ? parseSpecData(specData) : {
-          jsonSchema: {},
-          jsonSchemaOriginal: null,
-          jsonSchemaEnhanced: null,
-          specifications: '',
-        },
-        builderData: builderData ? JSON.parse(builderData.form_data || '{}') : { formData: {} },
-        runnerData: runnerData ? parseRunnerData(runnerData, testCases) : {
-          requestBody: '{}',
-          responseBody: '',
-          testCases: [],
-        },
-      };
-    });
-    
-    res.json(versionsWithData);
-  } catch (error) {
-    console.error('Error fetching versions:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// 특정 버전 조회
-router.get('/:id', (req, res) => {
-  try {
-    const { id } = req.params;
-    const version = db.prepare('SELECT * FROM versions WHERE id = ?').get(id);
-    
-    if (!version) {
-      return res.status(404).json({ error: 'Version not found' });
-    }
-    
-    const manualData = db.prepare('SELECT * FROM manual_data WHERE version_id = ?').get(id);
-    const specData = db.prepare('SELECT * FROM spec_data WHERE version_id = ?').get(id);
-    const builderData = db.prepare('SELECT * FROM builder_data WHERE version_id = ?').get(id);
-    const runnerData = db.prepare('SELECT * FROM runner_data WHERE version_id = ?').get(id);
-    const testCases = db.prepare('SELECT * FROM test_cases WHERE version_id = ?').all(id);
-    
-    res.json({
-      id: version.id,
-      version: version.version,
-      endpointId: version.endpoint_id,
-      createdAt: version.created_at,
-      updatedAt: version.updated_at,
-      author: version.author,
-      changeLog: version.change_log,
-      manualData: manualData ? parseManualData(manualData) : {
-        title: '',
-        category: '',
-        inputUri: '',
-        activeMethods: '',
-        jsonSchema: {},
-        jsonSchemaOriginal: null,
-        jsonSchemaEnhanced: null,
-        examples: [],
-        specifications: '',
-        htmlContent: null,
-      },
-      specData: specData ? parseSpecData(specData) : {
-        jsonSchema: {},
-        jsonSchemaOriginal: null,
-        jsonSchemaEnhanced: null,
-        specifications: '',
-      },
-      builderData: builderData ? JSON.parse(builderData.form_data || '{}') : { formData: {} },
-      runnerData: runnerData ? parseRunnerData(runnerData, testCases) : {
-        requestBody: '{}',
-        responseBody: '',
-        testCases: [],
-      },
-    });
-  } catch (error) {
-    console.error('Error fetching version:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// 새 버전 생성
-router.post('/', (req, res) => {
-  try {
-    const { id, version, endpointId, changeLog, author, manualData, specData, builderData, runnerData } = req.body;
-    
-    const now = new Date().toISOString();
-    
-    // 버전 생성
-    db.prepare(`
-      INSERT INTO versions (id, version, endpoint_id, created_at, updated_at, author, change_log)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(id, version, endpointId, now, now, author || null, changeLog || null);
-    
-    // 연관 데이터 저장
-    if (manualData) {
-      saveManualData(id, manualData);
-    }
-    if (specData) {
-      saveSpecData(id, specData);
-    }
-    if (builderData) {
-      saveBuilderData(id, builderData);
-    }
-    if (runnerData) {
-      saveRunnerData(id, runnerData);
-    }
-    
-    res.status(201).json({ id, message: 'Version created successfully' });
-  } catch (error) {
-    console.error('Error creating version:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// 버전 업데이트
-router.put('/:id', (req, res) => {
-  try {
-    const { id } = req.params;
-    const { version, changeLog, author, manualData, specData, builderData, runnerData } = req.body;
-    
-    const now = new Date().toISOString();
-    
-    // 버전 업데이트
-    db.prepare(`
-      UPDATE versions
-      SET version = COALESCE(?, version),
-          change_log = COALESCE(?, change_log),
-          author = COALESCE(?, author),
-          updated_at = ?
-      WHERE id = ?
-    `).run(version, changeLog, author, now, id);
-    
-    // 연관 데이터 업데이트
-    if (manualData) {
-      saveManualData(id, manualData);
-    }
-    if (specData) {
-      saveSpecData(id, specData);
-    }
-    if (builderData) {
-      saveBuilderData(id, builderData);
-    }
-    if (runnerData) {
-      saveRunnerData(id, runnerData);
-    }
-    
-    res.json({ message: 'Version updated successfully' });
-  } catch (error) {
-    console.error('Error updating version:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// 버전 삭제
-router.delete('/:id', (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    db.prepare('DELETE FROM versions WHERE id = ?').run(id);
-    
-    res.json({ message: 'Version deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting version:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Helper functions
-function parseManualData(data) {
-  const safeParseJSON = (jsonString, defaultValue = {}) => {
-    if (!jsonString || jsonString === 'null' || jsonString === 'undefined') {
-      return defaultValue;
-    }
-    try {
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error('Failed to parse JSON:', error.message, 'Value:', jsonString);
-      return defaultValue;
-    }
-  };
+const safeParseJSON = (jsonString, defaultValue = {}) => {
+  if (!jsonString || jsonString === 'null' || jsonString === 'undefined') {
+    return defaultValue;
+  }
+  try {
+    return typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+  } catch (error) {
+    console.error('Failed to parse JSON:', error.message);
+    return defaultValue;
+  }
+};
 
+function parseManualData(data) {
   return {
     title: data.title || '',
     category: data.category || '',
@@ -247,18 +38,6 @@ function parseManualData(data) {
 }
 
 function parseSpecData(data) {
-  const safeParseJSON = (jsonString, defaultValue = {}) => {
-    if (!jsonString || jsonString === 'null' || jsonString === 'undefined') {
-      return defaultValue;
-    }
-    try {
-      return JSON.parse(jsonString);
-    } catch (error) {
-      console.error('Failed to parse JSON:', error.message, 'Value:', jsonString);
-      return defaultValue;
-    }
-  };
-
   return {
     jsonSchema: safeParseJSON(data.json_schema, {}),
     jsonSchemaOriginal: safeParseJSON(data.json_schema_original, null),
@@ -269,9 +48,9 @@ function parseSpecData(data) {
 
 function parseRunnerData(data, testCases) {
   return {
-    requestBody: data.request_body || '{}',
-    responseBody: data.response_body || '',
-    testCases: testCases.map(tc => ({
+    requestBody: data?.request_body || '{}',
+    responseBody: data?.response_body || '',
+    testCases: (testCases || []).map(tc => ({
       id: tc.id,
       name: tc.name,
       description: tc.description,
@@ -282,84 +61,340 @@ function parseRunnerData(data, testCases) {
   };
 }
 
-function saveManualData(versionId, data) {
-  db.prepare(`
-    INSERT OR REPLACE INTO manual_data 
-    (version_id, title, category, input_uri, active_methods, json_schema, json_schema_original, json_schema_enhanced, examples, request_examples, response_examples, specifications, html_content, article_id, section_id, author_id, url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    versionId,
-    data.title,
-    data.category,
-    data.inputUri,
-    data.activeMethods,
-    typeof data.jsonSchema === 'string' ? data.jsonSchema : JSON.stringify(data.jsonSchema || {}),
-    typeof data.jsonSchemaOriginal === 'string' ? data.jsonSchemaOriginal : (data.jsonSchemaOriginal ? JSON.stringify(data.jsonSchemaOriginal) : null),
-    typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
-    JSON.stringify(data.examples || []),
-    JSON.stringify(data.requestExamples || []),
-    JSON.stringify(data.responseExamples || []),
-    data.specifications,
-    data.htmlContent,
-    data.articleId,
-    data.sectionId,
-    data.authorId,
-    data.url
-  );
+async function saveManualData(versionId, data) {
+  const { error } = await supabase
+    .from('manual_data')
+    .upsert({
+      version_id: versionId,
+      title: data.title,
+      category: data.category,
+      input_uri: data.inputUri,
+      active_methods: data.activeMethods,
+      json_schema: typeof data.jsonSchema === 'string' ? data.jsonSchema : JSON.stringify(data.jsonSchema || {}),
+      json_schema_original: typeof data.jsonSchemaOriginal === 'string' ? data.jsonSchemaOriginal : (data.jsonSchemaOriginal ? JSON.stringify(data.jsonSchemaOriginal) : null),
+      json_schema_enhanced: typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
+      examples: JSON.stringify(data.examples || []),
+      request_examples: JSON.stringify(data.requestExamples || []),
+      response_examples: JSON.stringify(data.responseExamples || []),
+      specifications: data.specifications,
+      html_content: data.htmlContent,
+      article_id: data.articleId,
+      section_id: data.sectionId,
+      author_id: data.authorId,
+      url: data.url
+    }, { onConflict: 'version_id' });
+  
+  if (error) throw error;
 }
 
-function saveSpecData(versionId, data) {
-  db.prepare(`
-    INSERT OR REPLACE INTO spec_data 
-    (version_id, json_schema, json_schema_original, json_schema_enhanced, specifications)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(
-    versionId,
-    typeof data.jsonSchema === 'string' ? data.jsonSchema : JSON.stringify(data.jsonSchema || {}),
-    typeof data.jsonSchemaOriginal === 'string' ? data.jsonSchemaOriginal : (data.jsonSchemaOriginal ? JSON.stringify(data.jsonSchemaOriginal) : null),
-    typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
-    data.specifications
-  );
+async function saveSpecData(versionId, data) {
+  const { error } = await supabase
+    .from('spec_data')
+    .upsert({
+      version_id: versionId,
+      json_schema: typeof data.jsonSchema === 'string' ? data.jsonSchema : JSON.stringify(data.jsonSchema || {}),
+      json_schema_original: typeof data.jsonSchemaOriginal === 'string' ? data.jsonSchemaOriginal : (data.jsonSchemaOriginal ? JSON.stringify(data.jsonSchemaOriginal) : null),
+      json_schema_enhanced: typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
+      specifications: data.specifications
+    }, { onConflict: 'version_id' });
+  
+  if (error) throw error;
 }
 
-function saveBuilderData(versionId, data) {
-  db.prepare(`
-    INSERT OR REPLACE INTO builder_data (version_id, form_data)
-    VALUES (?, ?)
-  `).run(versionId, JSON.stringify(data.formData || {}));
+async function saveBuilderData(versionId, data) {
+  const { error } = await supabase
+    .from('builder_data')
+    .upsert({
+      version_id: versionId,
+      form_data: JSON.stringify(data.formData || {})
+    }, { onConflict: 'version_id' });
+  
+  if (error) throw error;
 }
 
-function saveRunnerData(versionId, data) {
+async function saveRunnerData(versionId, data) {
   // Runner data 저장
-  db.prepare(`
-    INSERT OR REPLACE INTO runner_data (version_id, request_body, response_body)
-    VALUES (?, ?, ?)
-  `).run(versionId, data.requestBody, data.responseBody);
+  const { error: runnerError } = await supabase
+    .from('runner_data')
+    .upsert({
+      version_id: versionId,
+      request_body: data.requestBody,
+      response_body: data.responseBody
+    }, { onConflict: 'version_id' });
+  
+  if (runnerError) throw runnerError;
   
   // Test cases 저장
   if (data.testCases && data.testCases.length > 0) {
     // 기존 test cases 삭제
-    db.prepare('DELETE FROM test_cases WHERE version_id = ?').run(versionId);
+    await supabase
+      .from('test_cases')
+      .delete()
+      .eq('version_id', versionId);
     
     // 새 test cases 삽입
-    const insertTestCase = db.prepare(`
-      INSERT INTO test_cases (id, version_id, name, description, request_body, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
+    const testCasesData = data.testCases.map(tc => ({
+      id: tc.id,
+      version_id: versionId,
+      name: tc.name,
+      description: tc.description,
+      request_body: tc.requestBody,
+      created_at: tc.createdAt,
+      updated_at: tc.updatedAt
+    }));
     
-    data.testCases.forEach(tc => {
-      insertTestCase.run(
-        tc.id,
-        versionId,
-        tc.name,
-        tc.description,
-        tc.requestBody,
-        tc.createdAt,
-        tc.updatedAt
-      );
-    });
+    const { error: testCasesError } = await supabase
+      .from('test_cases')
+      .insert(testCasesData);
+    
+    if (testCasesError) throw testCasesError;
   }
 }
 
-export default router;
+// 모든 버전 조회 (엔드포인트별 필터링 가능)
+router.get('/', async (req, res) => {
+  try {
+    const { endpoint_id } = req.query;
+    
+    let query = supabase
+      .from('versions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (endpoint_id) {
+      query = query.eq('endpoint_id', endpoint_id);
+    }
+    
+    const { data: versions, error } = await query;
+    if (error) throw error;
+    
+    // 각 버전에 연관 데이터 추가
+    const versionsWithData = await Promise.all((versions || []).map(async version => {
+      const [manualResult, specResult, builderResult, runnerResult, testCasesResult] = await Promise.all([
+        supabase.from('manual_data').select('*').eq('version_id', version.id).single(),
+        supabase.from('spec_data').select('*').eq('version_id', version.id).single(),
+        supabase.from('builder_data').select('*').eq('version_id', version.id).single(),
+        supabase.from('runner_data').select('*').eq('version_id', version.id).single(),
+        supabase.from('test_cases').select('*').eq('version_id', version.id)
+      ]);
+      
+      const manualData = manualResult.error ? null : manualResult.data;
+      const specData = specResult.error ? null : specResult.data;
+      const builderData = builderResult.error ? null : builderResult.data;
+      const runnerData = runnerResult.error ? null : runnerResult.data;
+      const testCases = testCasesResult.error ? [] : testCasesResult.data;
+      
+      return {
+        id: version.id,
+        version: version.version,
+        endpointId: version.endpoint_id,
+        createdAt: version.created_at,
+        updatedAt: version.updated_at,
+        author: version.author,
+        changeLog: version.change_log,
+        manualData: manualData ? parseManualData(manualData) : {
+          title: '',
+          category: '',
+          inputUri: '',
+          activeMethods: '',
+          jsonSchema: {},
+          jsonSchemaOriginal: null,
+          jsonSchemaEnhanced: null,
+          examples: [],
+          requestExamples: [],
+          responseExamples: [],
+          specifications: '',
+          htmlContent: null,
+        },
+        specData: specData ? parseSpecData(specData) : {
+          jsonSchema: {},
+          jsonSchemaOriginal: null,
+          jsonSchemaEnhanced: null,
+          specifications: '',
+        },
+        builderData: builderData ? { formData: safeParseJSON(builderData.form_data, {}) } : { formData: {} },
+        runnerData: parseRunnerData(runnerData, testCases),
+      };
+    }));
+    
+    res.json(versionsWithData);
+  } catch (error) {
+    console.error('Error fetching versions:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
+// 특정 버전 조회
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const { data: version, error } = await supabase
+      .from('versions')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Version not found' });
+      }
+      throw error;
+    }
+    
+    const [manualResult, specResult, builderResult, runnerResult, testCasesResult] = await Promise.all([
+      supabase.from('manual_data').select('*').eq('version_id', id).single(),
+      supabase.from('spec_data').select('*').eq('version_id', id).single(),
+      supabase.from('builder_data').select('*').eq('version_id', id).single(),
+      supabase.from('runner_data').select('*').eq('version_id', id).single(),
+      supabase.from('test_cases').select('*').eq('version_id', id)
+    ]);
+    
+    const manualData = manualResult.error ? null : manualResult.data;
+    const specData = specResult.error ? null : specResult.data;
+    const builderData = builderResult.error ? null : builderResult.data;
+    const runnerData = runnerResult.error ? null : runnerResult.data;
+    const testCases = testCasesResult.error ? [] : testCasesResult.data;
+    
+    res.json({
+      id: version.id,
+      version: version.version,
+      endpointId: version.endpoint_id,
+      createdAt: version.created_at,
+      updatedAt: version.updated_at,
+      author: version.author,
+      changeLog: version.change_log,
+      manualData: manualData ? parseManualData(manualData) : {
+        title: '',
+        category: '',
+        inputUri: '',
+        activeMethods: '',
+        jsonSchema: {},
+        jsonSchemaOriginal: null,
+        jsonSchemaEnhanced: null,
+        examples: [],
+        requestExamples: [],
+        responseExamples: [],
+        specifications: '',
+        htmlContent: null,
+      },
+      specData: specData ? parseSpecData(specData) : {
+        jsonSchema: {},
+        jsonSchemaOriginal: null,
+        jsonSchemaEnhanced: null,
+        specifications: '',
+      },
+      builderData: builderData ? { formData: safeParseJSON(builderData.form_data, {}) } : { formData: {} },
+      runnerData: parseRunnerData(runnerData, testCases),
+    });
+  } catch (error) {
+    console.error('Error fetching version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 새 버전 생성
+router.post('/', async (req, res) => {
+  try {
+    const { id, version, endpointId, changeLog, author, manualData, specData, builderData, runnerData } = req.body;
+    
+    const now = new Date().toISOString();
+    
+    // 버전 생성
+    const { error: versionError } = await supabase
+      .from('versions')
+      .insert({
+        id,
+        version,
+        endpoint_id: endpointId,
+        created_at: now,
+        updated_at: now,
+        author: author || null,
+        change_log: changeLog || null
+      });
+    
+    if (versionError) throw versionError;
+    
+    // 연관 데이터 저장
+    if (manualData) {
+      await saveManualData(id, manualData);
+    }
+    if (specData) {
+      await saveSpecData(id, specData);
+    }
+    if (builderData) {
+      await saveBuilderData(id, builderData);
+    }
+    if (runnerData) {
+      await saveRunnerData(id, runnerData);
+    }
+    
+    res.status(201).json({ id, message: 'Version created successfully' });
+  } catch (error) {
+    console.error('Error creating version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 버전 업데이트
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { version, changeLog, author, manualData, specData, builderData, runnerData } = req.body;
+    
+    const now = new Date().toISOString();
+    
+    // 버전 업데이트
+    const updateData = { updated_at: now };
+    if (version) updateData.version = version;
+    if (changeLog !== undefined) updateData.change_log = changeLog;
+    if (author !== undefined) updateData.author = author;
+    
+    const { error: versionError } = await supabase
+      .from('versions')
+      .update(updateData)
+      .eq('id', id);
+    
+    if (versionError) throw versionError;
+    
+    // 연관 데이터 업데이트
+    if (manualData) {
+      await saveManualData(id, manualData);
+    }
+    if (specData) {
+      await saveSpecData(id, specData);
+    }
+    if (builderData) {
+      await saveBuilderData(id, builderData);
+    }
+    if (runnerData) {
+      await saveRunnerData(id, runnerData);
+    }
+    
+    res.json({ message: 'Version updated successfully' });
+  } catch (error) {
+    console.error('Error updating version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 버전 삭제
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const { error } = await supabase
+      .from('versions')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    
+    res.json({ message: 'Version deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export default router;

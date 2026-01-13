@@ -50,7 +50,7 @@ class ApiClient {
   }
 
   async getEndpoint(id: string) {
-    return this.request<any>(`/endpoints/${id}`);
+    return this.request<any>(`/endpoints/${encodeURIComponent(id)}`);
   }
 
   async createEndpoint(data: any) {
@@ -61,14 +61,85 @@ class ApiClient {
   }
 
   async updateEndpoint(id: string, data: any) {
-    return this.request<{ message: string }>(`/endpoints/${id}`, {
+    return this.request<{ message: string }>(`/endpoints/${encodeURIComponent(id)}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
   async deleteEndpoint(id: string) {
-    return this.request<{ message: string }>(`/endpoints/${id}`, {
+    return this.request<{ message: string }>(`/endpoints/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async reorderEndpoints(endpoints: Array<{ id: string; order_index: number }>) {
+    return this.request<{ message: string; count: number }>('/endpoints/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ endpoints }),
+    });
+  }
+
+  async duplicateEndpoint(id: string) {
+    return this.request<{ endpoint: any; message: string }>(`/endpoints/${encodeURIComponent(id)}/duplicate`, {
+      method: 'POST',
+    });
+  }
+
+  async moveEndpoint(id: string, product: string, group_name: string, order_index?: number) {
+    return this.request<{ endpoint: any; message: string }>(`/endpoints/${encodeURIComponent(id)}/move`, {
+      method: 'PUT',
+      body: JSON.stringify({ product, group_name, order_index }),
+    });
+  }
+
+  // Products API
+  async getProducts() {
+    return this.request<any[]>('/products');
+  }
+
+  async createProduct(data: { id: string; name: string; description?: string }) {
+    return this.request<{ product: any; message: string }>('/products', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async reorderProducts(products: Array<{ id: string; order_index: number }>) {
+    return this.request<{ message: string; count: number }>('/products/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ products }),
+    });
+  }
+
+  async deleteProduct(id: string) {
+    return this.request<{ message: string }>(`/products/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Groups API
+  async getGroups(product_id?: string) {
+    const query = product_id ? `?product_id=${encodeURIComponent(product_id)}` : '';
+    return this.request<any[]>(`/groups${query}`);
+  }
+
+  async createGroup(data: { id: string; product_id: string; name: string; description?: string }) {
+    return this.request<{ group: any; message: string }>('/groups', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async reorderGroups(groups: Array<{ id: string; order_index: number }>) {
+    return this.request<{ message: string; count: number }>('/groups/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ groups }),
+    });
+  }
+
+  async deleteGroup(id: string) {
+    return this.request<{ message: string }>(`/groups/${encodeURIComponent(id)}`, {
       method: 'DELETE',
     });
   }

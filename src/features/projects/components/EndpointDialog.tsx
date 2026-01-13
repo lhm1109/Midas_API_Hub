@@ -80,7 +80,7 @@ export function EndpointDialog({
     e.preventDefault();
     
     if (!name.trim() || !path.trim()) {
-      alert('이름과 경로는 필수입니다.');
+      alert('Name and path are required.');
       return;
     }
 
@@ -104,21 +104,21 @@ export function EndpointDialog({
         if (result.error) {
           throw new Error(result.error);
         }
-        alert('✅ 엔드포인트가 수정되었습니다.');
+        alert('✅ Endpoint updated successfully.');
       } else {
         // 추가
         const result = await apiClient.createEndpoint(endpointData);
         if (result.error) {
           throw new Error(result.error);
         }
-        alert('✅ 엔드포인트가 추가되었습니다.');
+        alert('✅ Endpoint created successfully.');
       }
 
       onSuccess();
       onOpenChange(false);
     } catch (error) {
       console.error('Failed to save endpoint:', error);
-      alert(`❌ 저장 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(`❌ Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }

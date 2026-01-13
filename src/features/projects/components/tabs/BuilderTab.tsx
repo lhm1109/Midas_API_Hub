@@ -485,7 +485,7 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
   // 🎯 Test Case 저장 핸들러
   const handleSaveTestCase = async () => {
     if (!caseName.trim()) {
-      toast.error('Test Case 이름을 입력해주세요.');
+      toast.error('❌ Please enter a test case name');
       return;
     }
     
@@ -504,10 +504,10 @@ export function BuilderTab({ endpoint }: BuilderTabProps) {
     // 🔥 글로벌 저장 (DB에 영구 저장)
     try {
       await saveCurrentVersion();
-      toast.success('✅ Test Case가 저장되었습니다!');
+      toast.success(`✅ Test Case "${caseName}" saved successfully!`);
     } catch (error) {
       console.error('Failed to save version:', error);
-      toast.error('Test Case 저장에 실패했습니다');
+      toast.error('❌ Failed to save test case');
     }
     
     // Reset dialog

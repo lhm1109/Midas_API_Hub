@@ -7,6 +7,9 @@ import debugRouter from './routes/debug.js';
 import endpointsRouter from './routes/endpoints.js';
 import apiRouter from './routes/api.js';
 import attachmentsRouter from './routes/attachments.js';
+import locksRouter from './routes/locks.js';
+import productsRouter from './routes/products.js';
+import groupsRouter from './routes/groups.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -25,11 +28,14 @@ app.use((req, res, next) => {
 });
 
 // API 라우트
+app.use('/api/products', productsRouter);
+app.use('/api/groups', groupsRouter);
 app.use('/api/endpoints', endpointsRouter);
 app.use('/api/versions', versionsRouter);
 app.use('/api/data', dataRouter);
 app.use('/api/debug', debugRouter);
 app.use('/api/attachments', attachmentsRouter);
+app.use('/api/locks', locksRouter);
 
 // 실제 비즈니스 API (자동 문서화)
 app.use('/api/civil/db', apiRouter);
@@ -52,14 +58,16 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
 });
 
-// 데이터베이스 초기화 및 라우트 동기화
-initDb();
-syncRoutesToDatabase();
-printRouteMap();
-
-// 서버 시작
-app.listen(PORT, () => {
-  console.log(`
+// 데이터베이스 초기화 및 라우트 동기화 (비동기)
+async function startServer() {
+  try {
+    await initDb();
+    await syncRoutesToDatabase();
+    printRouteMap();
+    
+    // 서버 시작
+    app.listen(PORT, () => {
+      console.log(`
 ╔════════════════════════════════════════════════╗
 ║   🚀 API Verification Backend Server         ║
 ║                                                ║
@@ -67,10 +75,18 @@ app.listen(PORT, () => {
 ║   URL:  http://localhost:${PORT}                ║
 ║   Health: http://localhost:${PORT}/health      ║
 ║                                                ║
+║   📡 Connected to Supabase                    ║
 ║   📖 Routes auto-synced to database           ║
 ╚════════════════════════════════════════════════╝
-  `);
-});
+      `);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 export default app;
 

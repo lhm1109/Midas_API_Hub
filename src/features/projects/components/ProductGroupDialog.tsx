@@ -48,60 +48,51 @@ export function ProductGroupDialog({
     e.preventDefault();
     
     if (!name.trim()) {
-      alert('이름은 필수입니다.');
+      alert('Name is required.');
       return;
     }
 
     setLoading(true);
     try {
       if (type === 'product') {
-        // Product 추가: 더미 엔드포인트를 만들어서 Product 생성
-        const dummyEndpointId = `${name.toLowerCase().replace(/\s+/g, '-')}/_placeholder`;
-        const endpointData = {
-          id: dummyEndpointId,
-          name: '_placeholder',
-          method: 'GET',
-          path: `/${name.toLowerCase().replace(/\s+/g, '-')}/_placeholder`,
-          product: name.trim(),
-          group_name: '_placeholder',
-          description: 'This is a placeholder endpoint for product creation',
-          status: null,
+        // Product 추가: products 테이블에 직접 저장
+        const productId = name.toLowerCase().replace(/\s+/g, '-');
+        const productData = {
+          id: productId,
+          name: name.trim(),
+          description: '',
         };
 
-        const result = await apiClient.createEndpoint(endpointData);
-        if (result.error && !result.error.includes('UNIQUE constraint')) {
+        const result = await apiClient.createProduct(productData);
+        if (result.error) {
           throw new Error(result.error);
         }
-        alert('✅ 제품이 추가되었습니다.');
+        alert('✅ Product added successfully.');
       } else {
-        // Group 추가: 더미 엔드포인트를 만들어서 Group 생성
+        // Group 추가: groups 테이블에 직접 저장
         if (!productId) {
           throw new Error('Product ID is required');
         }
-        const dummyEndpointId = `${name.toLowerCase().replace(/\s+/g, '-')}/_placeholder`;
-        const endpointData = {
-          id: dummyEndpointId,
-          name: '_placeholder',
-          method: 'GET',
-          path: `/${name.toLowerCase().replace(/\s+/g, '-')}/_placeholder`,
-          product: productId,
-          group_name: name.trim(),
-          description: 'This is a placeholder endpoint for group creation',
-          status: null,
+        const groupId = `${productId}_${name.toLowerCase().replace(/\s+/g, '-')}`;
+        const groupData = {
+          id: groupId,
+          product_id: productId,
+          name: name.trim(),
+          description: '',
         };
 
-        const result = await apiClient.createEndpoint(endpointData);
-        if (result.error && !result.error.includes('UNIQUE constraint')) {
+        const result = await apiClient.createGroup(groupData);
+        if (result.error) {
           throw new Error(result.error);
         }
-        alert('✅ 그룹이 추가되었습니다.');
+        alert('✅ Group added successfully.');
       }
 
       onSuccess();
       onOpenChange(false);
     } catch (error) {
       console.error('Failed to save:', error);
-      alert(`❌ 저장 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(`❌ Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }

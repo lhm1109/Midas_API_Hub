@@ -118,6 +118,13 @@ export function RunnerTab({
 
       // 응답을 runnerData에 저장
       updateRunnerData({ responseBody });
+
+      // 🎯 성공 토스트
+      if (response.ok) {
+        toast.success(`✅ Request successful (${response.status}) - ${endTime - startTime}ms`);
+      } else {
+        toast.error(`⚠️ Request failed (${response.status}) - ${response.statusText}`);
+      }
     } catch (error) {
       const endTime = Date.now();
       setResponse({
@@ -133,6 +140,9 @@ export function RunnerTab({
           2
         ),
       });
+
+      // 🎯 실패 토스트
+      toast.error(`❌ Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -140,7 +150,7 @@ export function RunnerTab({
 
   const handleDeleteTestCase = async (caseId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm('이 Test Case를 삭제하시겠습니까?')) {
+    if (confirm('Are you sure you want to delete this test case?')) {
       deleteTestCase(caseId);
       if (selectedTestCaseId === caseId) {
         setSelectedTestCaseId(null);
@@ -149,10 +159,10 @@ export function RunnerTab({
       // 🔥 글로벌 저장 (DB에 영구 저장)
       try {
         await saveCurrentVersion();
-        toast.success('Test Case가 삭제되었습니다');
+        toast.success('✅ Test case deleted successfully');
       } catch (error) {
         console.error('Failed to save after delete:', error);
-        toast.error('삭제 후 저장에 실패했습니다');
+        toast.error('❌ Failed to save after deletion');
       }
     }
   };
@@ -165,7 +175,7 @@ export function RunnerTab({
     // Request Body 로드
     updateRunnerData({ requestBody: testCase.requestBody });
     setSelectedTestCaseId(testCaseId);
-    toast.success(`✅ Test Case "${testCase.name}"를 로드했습니다!`);
+    toast.success(`✅ Test Case "${testCase.name}" loaded successfully`);
   };
   
   // 🎯 Send to Manual 함수

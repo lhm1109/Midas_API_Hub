@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Database, RefreshCw, Trash2, AlertCircle } from 'lucide-react';
+import { Database, RefreshCw, Trash2, AlertCircle, Cloud, Download, Upload } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -23,10 +23,23 @@ interface DbData {
   testCases: any[];
 }
 
+interface SupabaseStats {
+  products: any[];
+  groups: any[];
+  endpoints: any[];
+  versions: any[];
+  locks: any[];
+  storageSize?: number;
+}
+
 export function DatabaseTab() {
   const [data, setData] = useState<DbData | null>(null);
+  const [supabaseStats, setSupabaseStats] = useState<SupabaseStats | null>(null);
   const [loading, setLoading] = useState(false);
+  const [supabaseLoading, setSupabaseLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [supabaseError, setSupabaseError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -42,6 +55,22 @@ export function DatabaseTab() {
       console.error('Database fetch error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSupabaseStats = async () => {
+    setSupabaseLoading(true);
+    setSupabaseError(null);
+    try {
+      const response = await fetch('http://localhost:9527/api/debug/supabase');
+      if (!response.ok) throw new Error('Failed to fetch Supabase data');
+      const result = await response.json();
+      setSupabaseStats(result);
+    } catch (err) {
+      setSupabaseError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Supabase fetch error:', err);
+    } finally {
+      setSupabaseLoading(false);
     }
   };
 
@@ -62,8 +91,83 @@ export function DatabaseTab() {
     }
   };
 
+  // Export 전체 DB
+  const handleExportDatabase = async () => {
+    try {
+      const response = await fetch('http://localhost:9527/api/debug/database/export');
+      if (!response.ok) throw new Error('Failed to export database');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `supabase-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      alert('✅ 데이터베이스 백업이 다운로드되었습니다.');
+    } catch (err) {
+      alert(`❌ Export 오류: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  };
+
+  // Import 전체 DB (덮어쓰기)
+  const handleImportDatabase = async (file: File) => {
+    if (!confirm(
+      '⚠️ 경고: 현재 Supabase 데이터베이스의 모든 내용이 삭제되고 백업 파일로 덮어씌워집니다.\n\n' +
+      '이 작업은 되돌릴 수 없습니다.\n\n' +
+      '계속하시겠습니까?'
+    )) {
+      return;
+    }
+
+    if (!confirm('⚠️ 최종 확인: 정말로 데이터베이스를 덮어쓰시겠습니까?')) {
+      return;
+    }
+
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+
+      const response = await fetch('http://localhost:9527/api/debug/database/import', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to import database');
+      }
+
+      alert('✅ 데이터베이스가 성공적으로 복원되었습니다.');
+      
+      // 데이터 새로고침
+      await fetchData();
+      await fetchSupabaseStats();
+    } catch (err) {
+      alert(`❌ Import 오류: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleImportDatabase(file);
+    }
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchSupabaseStats();
   }, []);
 
   if (loading && !data) {
@@ -93,6 +197,15 @@ export function DatabaseTab() {
 
   return (
     <div className="h-full flex flex-col bg-zinc-950">
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        onChange={handleFileSelect}
+        style={{ display: 'none' }}
+      />
+      
       {/* Header */}
       <div className="border-b border-zinc-800 bg-zinc-900 px-6 py-4 flex items-center justify-between flex-shrink-0">
         <div>
@@ -105,6 +218,23 @@ export function DatabaseTab() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            onClick={handleExportDatabase}
+            variant="outline"
+            size="sm"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export DB
+          </Button>
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            variant="outline"
+            size="sm"
+            className="border-amber-600 text-amber-400 hover:bg-amber-950/50"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Import DB
+          </Button>
           <Button
             onClick={fetchData}
             disabled={loading}
@@ -223,8 +353,9 @@ export function DatabaseTab() {
           </div>
 
           {/* Detailed Tables */}
-          <Tabs defaultValue="endpoints" className="w-full">
+          <Tabs defaultValue="supabase" className="w-full">
             <TabsList className="bg-zinc-800">
+              <TabsTrigger value="supabase">☁️ Supabase</TabsTrigger>
               <TabsTrigger value="endpoints">📍 Endpoints</TabsTrigger>
               <TabsTrigger value="versions">📦 Versions</TabsTrigger>
               <TabsTrigger value="manual">📖 Manual</TabsTrigger>
@@ -233,6 +364,324 @@ export function DatabaseTab() {
               <TabsTrigger value="runner">🚀 Runner</TabsTrigger>
               <TabsTrigger value="testcases">🧪 Tests</TabsTrigger>
             </TabsList>
+
+            {/* Supabase Tab */}
+            <TabsContent value="supabase" className="mt-4">
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                      <Cloud className="w-5 h-5 text-green-400" />
+                      Supabase PostgreSQL Status
+                    </h3>
+                    <p className="text-sm text-zinc-400 mt-1">
+                      실시간 데이터베이스 상태 및 통계
+                    </p>
+                  </div>
+                  <Button
+                    onClick={fetchSupabaseStats}
+                    disabled={supabaseLoading}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <RefreshCw className={`w-4 h-4 mr-2 ${supabaseLoading ? 'animate-spin' : ''}`} />
+                    새로고침
+                  </Button>
+                </div>
+
+                {supabaseLoading && !supabaseStats ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-green-400" />
+                      <p className="text-zinc-400">Loading Supabase data...</p>
+                    </div>
+                  </div>
+                ) : supabaseError && !supabaseStats ? (
+                  <Card className="bg-zinc-900 border-red-800">
+                    <CardContent className="pt-6">
+                      <div className="text-center">
+                        <AlertCircle className="w-8 h-8 mx-auto mb-2 text-red-400" />
+                        <p className="text-red-400 mb-2">Error: {supabaseError}</p>
+                        <Button onClick={fetchSupabaseStats} variant="outline" size="sm">
+                          Retry
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : supabaseStats ? (
+                  <>
+                    {/* Summary Cards */}
+                    <div className="grid grid-cols-5 gap-4">
+                      <Card className="bg-zinc-900 border-zinc-800">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium text-zinc-400">📦 Products</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-blue-400">
+                            {supabaseStats.products?.length || 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="bg-zinc-900 border-zinc-800">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium text-zinc-400">📁 Groups</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-purple-400">
+                            {supabaseStats.groups?.length || 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="bg-zinc-900 border-zinc-800">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium text-zinc-400">🔌 Endpoints</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-green-400">
+                            {supabaseStats.endpoints?.length || 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="bg-zinc-900 border-zinc-800">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium text-zinc-400">📦 Versions</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-amber-400">
+                            {supabaseStats.versions?.length || 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="bg-zinc-900 border-zinc-800">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium text-zinc-400">🔒 Locks</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-red-400">
+                            {supabaseStats.locks?.length || 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Products Table */}
+                    <Card className="bg-zinc-900 border-zinc-800">
+                      <CardHeader>
+                        <CardTitle className="text-white">📦 Products</CardTitle>
+                        <CardDescription className="text-zinc-400">
+                          제품 목록 및 순서
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {supabaseStats.products && supabaseStats.products.length > 0 ? (
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-zinc-800">
+                                <TableHead className="text-zinc-300">Order</TableHead>
+                                <TableHead className="text-zinc-300">ID</TableHead>
+                                <TableHead className="text-zinc-300">Name</TableHead>
+                                <TableHead className="text-zinc-300">Description</TableHead>
+                                <TableHead className="text-zinc-300">Created At</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {supabaseStats.products.map((product: any) => (
+                                <TableRow key={product.id} className="border-zinc-800 hover:bg-zinc-800/50">
+                                  <TableCell>
+                                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500">
+                                      #{product.order_index}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs text-zinc-300">{product.id}</TableCell>
+                                  <TableCell className="text-white font-medium">{product.name}</TableCell>
+                                  <TableCell className="text-zinc-400 text-sm">{product.description || '-'}</TableCell>
+                                  <TableCell className="text-xs text-zinc-500">
+                                    {new Date(product.created_at).toLocaleString('ko-KR')}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          <div className="text-center py-8 text-zinc-500">
+                            제품이 없습니다.
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Groups Table */}
+                    <Card className="bg-zinc-900 border-zinc-800">
+                      <CardHeader>
+                        <CardTitle className="text-white">📁 Groups</CardTitle>
+                        <CardDescription className="text-zinc-400">
+                          그룹 목록 및 순서
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {supabaseStats.groups && supabaseStats.groups.length > 0 ? (
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-zinc-800">
+                                <TableHead className="text-zinc-300">Order</TableHead>
+                                <TableHead className="text-zinc-300">Product</TableHead>
+                                <TableHead className="text-zinc-300">Name</TableHead>
+                                <TableHead className="text-zinc-300">Description</TableHead>
+                                <TableHead className="text-zinc-300">Created At</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {supabaseStats.groups.map((group: any) => (
+                                <TableRow key={group.id} className="border-zinc-800 hover:bg-zinc-800/50">
+                                  <TableCell>
+                                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500">
+                                      #{group.order_index}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500">
+                                      {group.product_id}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-white font-medium">{group.name}</TableCell>
+                                  <TableCell className="text-zinc-400 text-sm">{group.description || '-'}</TableCell>
+                                  <TableCell className="text-xs text-zinc-500">
+                                    {new Date(group.created_at).toLocaleString('ko-KR')}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          <div className="text-center py-8 text-zinc-500">
+                            그룹이 없습니다.
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Endpoints Table */}
+                    <Card className="bg-zinc-900 border-zinc-800">
+                      <CardHeader>
+                        <CardTitle className="text-white">🔌 Endpoints (Top 20)</CardTitle>
+                        <CardDescription className="text-zinc-400">
+                          엔드포인트 목록 및 순서 (최근 20개)
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {supabaseStats.endpoints && supabaseStats.endpoints.length > 0 ? (
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-zinc-800">
+                                <TableHead className="text-zinc-300">Order</TableHead>
+                                <TableHead className="text-zinc-300">Name</TableHead>
+                                <TableHead className="text-zinc-300">Method</TableHead>
+                                <TableHead className="text-zinc-300">Product</TableHead>
+                                <TableHead className="text-zinc-300">Group</TableHead>
+                                <TableHead className="text-zinc-300">Path</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {supabaseStats.endpoints.slice(0, 20).map((endpoint: any) => (
+                                <TableRow key={endpoint.id} className="border-zinc-800 hover:bg-zinc-800/50">
+                                  <TableCell>
+                                    <Badge className="bg-green-500/20 text-green-400 border-green-500">
+                                      #{endpoint.order_index}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-white font-medium">{endpoint.name}</TableCell>
+                                  <TableCell>
+                                    <Badge 
+                                      variant="outline" 
+                                      className={`
+                                        ${endpoint.method === 'GET' ? 'text-green-400 border-green-400' : ''}
+                                        ${endpoint.method === 'POST' ? 'text-blue-400 border-blue-400' : ''}
+                                        ${endpoint.method === 'PUT' ? 'text-yellow-400 border-yellow-400' : ''}
+                                        ${endpoint.method === 'DELETE' ? 'text-red-400 border-red-400' : ''}
+                                      `}
+                                    >
+                                      {endpoint.method}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500 font-mono text-xs">
+                                      {endpoint.product_id || endpoint.product}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500 font-mono text-xs">
+                                      {endpoint.group_name}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs text-zinc-400">{endpoint.path}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          <div className="text-center py-8 text-zinc-500">
+                            엔드포인트가 없습니다.
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Active Locks */}
+                    {supabaseStats.locks && supabaseStats.locks.length > 0 && (
+                      <Card className="bg-zinc-900 border-red-800">
+                        <CardHeader>
+                          <CardTitle className="text-white">🔒 Active Locks</CardTitle>
+                          <CardDescription className="text-zinc-400">
+                            현재 활성화된 편집 잠금
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-zinc-800">
+                                <TableHead className="text-zinc-300">Endpoint/Version</TableHead>
+                                <TableHead className="text-zinc-300">Locked By</TableHead>
+                                <TableHead className="text-zinc-300">Locked At</TableHead>
+                                <TableHead className="text-zinc-300">Expires At</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {supabaseStats.locks.map((lock: any, idx: number) => (
+                                <TableRow key={idx} className="border-zinc-800 hover:bg-zinc-800/50">
+                                  <TableCell className="font-mono text-xs text-amber-400">
+                                    {lock.endpoint_id || lock.version_id}
+                                  </TableCell>
+                                  <TableCell className="text-white">{lock.locked_by}</TableCell>
+                                  <TableCell className="text-xs text-zinc-500">
+                                    {new Date(lock.locked_at).toLocaleString('ko-KR')}
+                                  </TableCell>
+                                  <TableCell className="text-xs text-zinc-500">
+                                    {new Date(lock.expires_at).toLocaleString('ko-KR')}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </>
+                ) : (
+                  <Card className="bg-zinc-900 border-zinc-800">
+                    <CardContent className="pt-6">
+                      <div className="text-center py-8 text-zinc-500">
+                        데이터가 없습니다. 새로고침 버튼을 눌러주세요.
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </TabsContent>
 
             {/* Endpoints Table */}
             <TabsContent value="endpoints" className="mt-4">

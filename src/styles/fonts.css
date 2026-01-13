@@ -1,0 +1,26 @@
+/* 한글 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* 한글을 지원하는 폰트 스택 */
+  --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+               'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', 
+               Roboto, 'Helvetica Neue', Arial, sans-serif;
+  
+  --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 코드 블록용 폰트 */
+code,
+pre,
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+

@@ -19,6 +19,15 @@ export interface AppState {
   hasUnsavedChanges: boolean;
   isServerConnected: boolean;
   
+  // 🔒 **편집 잠금 상태**
+  endpointLock: {
+    locked: boolean;
+    lockedBy?: string;
+    lockedAt?: string;
+    expiresAt?: string;
+  } | null;
+  currentUserId: string; // 현재 사용자 ID (이메일 등)
+  
   // Tab actions
   setCurrentTab: (tab: 'version' | 'manual' | 'spec' | 'builder' | 'runner') => void;
   
@@ -50,6 +59,12 @@ export interface AppState {
   addTestCase: (name: string, description?: string) => void;
   updateTestCase: (id: string, updates: Partial<{ name: string; description?: string; requestBody: string }>) => void;
   deleteTestCase: (id: string) => void;
+  
+  // 🔒 **편집 잠금 관리**
+  checkEndpointLock: (endpointId: string) => Promise<void>;
+  acquireEndpointLock: (endpointId: string) => Promise<boolean>;
+  releaseEndpointLock: (endpointId: string) => Promise<void>;
+  setCurrentUserId: (userId: string) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -67,6 +82,10 @@ export const useAppStore = create<AppState>((set, get) => ({
   
   hasUnsavedChanges: false,
   isServerConnected: false,
+  
+  // 🔒 잠금 초기 상태
+  endpointLock: null,
+  currentUserId: localStorage.getItem('userId') || `user_${Date.now()}`,
   
   setCurrentTab: (tab) => set({ currentTab: tab }),
   
@@ -349,5 +368,65 @@ export const useAppStore = create<AppState>((set, get) => ({
       } : null,
       hasUnsavedChanges: true,
     }));
+  },
+  
+  // 🔒 **편집 잠금 상태 확인**
+  checkEndpointLock: async (endpointId) => {
+    try {
+      const response = await fetch(`http://localhost:9527/api/locks/endpoint/${encodeURIComponent(endpointId)}/lock`);
+      if (response.ok) {
+        const data = await response.json();
+        set({ endpointLock: data });
+      }
+    } catch (error) {
+      console.error('Failed to check lock:', error);
+    }
+  },
+  
+  // 🔒 **편집 잠금 획득**
+  acquireEndpointLock: async (endpointId) => {
+    const { currentUserId } = get();
+    try {
+      const response = await fetch(`http://localhost:9527/api/locks/endpoint/${encodeURIComponent(endpointId)}/lock`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUserId }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        set({ endpointLock: data.lock });
+        return true;
+      } else if (response.status === 423) {
+        const data = await response.json();
+        set({ endpointLock: { locked: true, ...data } });
+        return false;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to acquire lock:', error);
+      return false;
+    }
+  },
+  
+  // 🔒 **편집 잠금 해제**
+  releaseEndpointLock: async (endpointId) => {
+    const { currentUserId } = get();
+    try {
+      await fetch(`http://localhost:9527/api/locks/endpoint/${encodeURIComponent(endpointId)}/lock`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUserId }),
+      });
+      set({ endpointLock: null });
+    } catch (error) {
+      console.error('Failed to release lock:', error);
+    }
+  },
+  
+  // 🔒 **사용자 ID 설정**
+  setCurrentUserId: (userId) => {
+    localStorage.setItem('userId', userId);
+    set({ currentUserId: userId });
   },
 }));

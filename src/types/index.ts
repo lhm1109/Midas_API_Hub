@@ -6,6 +6,7 @@ export interface ApiEndpoint {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   path: string;
   status?: 'success' | 'error' | null;
+  order_index?: number;
 }
 
 export interface ApiGroup {

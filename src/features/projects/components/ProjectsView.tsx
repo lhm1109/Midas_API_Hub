@@ -1,10 +1,12 @@
 import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab } from './tabs';
+import { LockBanner } from './LockBanner';
 import type { ApiEndpoint } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 interface MainWorkspaceProps {
   endpoint: ApiEndpoint | null;
@@ -23,7 +25,30 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
     hasUnsavedChanges,
     currentTab,
     setCurrentTab,
+    checkEndpointLock,
+    endpointLock,
   } = useAppStore();
+
+  // 엔드포인트 변경 시 잠금 상태 확인
+  useEffect(() => {
+    if (endpoint?.id) {
+      checkEndpointLock(endpoint.id);
+    }
+  }, [endpoint?.id, checkEndpointLock]);
+
+  // 버전이 로드되지 않았을 때 자동으로 Version 탭으로 이동
+  useEffect(() => {
+    if (!currentVersionId && currentTab !== 'version') {
+      setCurrentTab('version');
+    }
+  }, [currentVersionId, currentTab, setCurrentTab]);
+
+  // 엔드포인트 변경 시 Version 탭으로 자동 이동
+  useEffect(() => {
+    if (endpoint?.id) {
+      setCurrentTab('version');
+    }
+  }, [endpoint?.id, setCurrentTab]);
 
   if (!endpoint) {
     return (
@@ -37,7 +62,10 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
   }
 
   const currentVersion = getCurrentVersion();
-  const isLocked = !currentVersionId; // 버전이 선택되지 않으면 탭 잠김
+  
+  // 다른 사용자가 잠금한 경우 읽기 전용 모드
+  const isReadOnly = endpointLock?.locked && endpointLock?.lockedBy !== useAppStore.getState().currentUserId;
+  const isLocked = !currentVersionId || isReadOnly; // 버전이 선택되지 않았거나 다른 사용자가 편집 중이면 탭 잠김
 
   // 🔥 Save Version 핸들러 (toast 추가)
   const handleSaveVersion = async () => {
@@ -52,6 +80,9 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
 
   return (
     <div className="flex-1 flex flex-col bg-zinc-950 overflow-hidden">
+      {/* 🔒 편집 잠금 배너 */}
+      {endpoint && <LockBanner endpointId={endpoint.id} />}
+      
       {/* 🎯 상단 버전 정보 + 저장 버튼 */}
       <div className="border-b border-zinc-800 bg-zinc-900 px-6 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
@@ -80,11 +111,12 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
         {currentVersion && (
           <Button
             onClick={handleSaveVersion}
-            disabled={!hasUnsavedChanges}
-            className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-4"
+            disabled={!hasUnsavedChanges || isReadOnly}
+            className="bg-blue-600 hover:bg-blue-700 text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            title={isReadOnly ? '다른 사용자가 편집 중입니다' : ''}
           >
             <Save className="w-4 h-4 mr-2" />
-            Save Version
+            {isReadOnly ? '읽기 전용' : 'Save Version'}
           </Button>
         )}
       </div>

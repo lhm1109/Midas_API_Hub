@@ -3,15 +3,13 @@ import type { ApiProduct } from '@/types';
 
 /**
  * DB로부터 엔드포인트 목록을 가져오는 훅
+ * - 초기 로드
+ * - 페이지 포커스 시 자동 갱신 (다른 탭에서 수정 후 돌아왔을 때 반영)
  */
 export function useEndpoints() {
   const [endpoints, setEndpoints] = useState<ApiProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchEndpoints();
-  }, []);
 
   const fetchEndpoints = async () => {
     try {
@@ -34,6 +32,27 @@ export function useEndpoints() {
       setLoading(false);
     }
   };
+
+  // 초기 로드
+  useEffect(() => {
+    fetchEndpoints();
+  }, []);
+
+  // 페이지 가시성 변경 시 자동 갱신 (다른 브라우저/탭에서 수정 후 돌아왔을 때)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('🔄 Page became visible, refetching endpoints...');
+        fetchEndpoints();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   return { endpoints, loading, error, refetch: fetchEndpoints };
 }

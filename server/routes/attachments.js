@@ -1,178 +1,212 @@
 import express from 'express';
 import multer from 'multer';
-import db from '../database.js';
-import { readFileSync, existsSync, mkdirSync, unlinkSync } from 'fs';
-import { join, dirname, extname } from 'path';
-import { fileURLToPath } from 'url';
+import supabase from '../database.js';
+import { extname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const router = express.Router();
 
-// uploads 디렉토리 경로
-const uploadsDir = join(__dirname, '..', 'uploads');
-
-// uploads 디렉토리가 없으면 생성
-if (!existsSync(uploadsDir)) {
-  mkdirSync(uploadsDir, { recursive: true });
-}
-
-// 🎯 Multer 설정 - 스트리밍 방식으로 파일 저장
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    // 고유한 파일명 생성
-    const uniqueId = `att_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const ext = extname(file.originalname);
-    const baseName = file.originalname.replace(ext, '');
-    cb(null, `${uniqueId}_${baseName}${ext}`);
-  }
-});
+// 🎯 Multer 설정 - 메모리에 임시 저장 후 Supabase Storage로 업로드
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 100 * 1024 * 1024 // 100MB 제한 (필요시 조정 가능)
+    fileSize: 100 * 1024 * 1024 // 100MB 제한
   }
 });
 
-// 🎯 파일 업로드 - Multipart/form-data 방식 (스트리밍)
-router.post('/upload', upload.single('file'), (req, res) => {
+// 🎯 파일 업로드 - Supabase Storage 사용
+router.post('/upload', upload.single('file'), async (req, res) => {
   try {
     const { versionId } = req.body;
     const file = req.file;
-    
-    console.log('📥 Upload request received:', {
-      versionId,
-      file: file ? {
-        originalname: file.originalname,
-        mimetype: file.mimetype,
-        size: file.size,
-        path: file.path,
-        extension: file.originalname.split('.').pop()
-      } : 'NO FILE'
-    });
     
     if (!versionId || !file) {
       console.error('❌ Missing fields:', { versionId: !!versionId, file: !!file });
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
-    // 파일 ID는 multer의 filename에서 추출
-    const attachmentId = file.filename.split('_').slice(0, 3).join('_');
+    // Multer는 Latin1로 인코딩하므로 UTF-8로 재변환
+    const originalFileName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    
+    console.log('📥 Upload request received:', {
+      versionId,
+      file: {
+        originalname: originalFileName,
+        mimetype: file.mimetype,
+        size: file.size
+      }
+    });
+    
+    // 고유한 파일 경로 생성
+    const attachmentId = `att_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const ext = extname(originalFileName);
+    const storagePath = `attachments/${versionId}/${attachmentId}${ext}`;
+    
+    // Supabase Storage에 파일 업로드
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('api-verification')
+      .upload(storagePath, file.buffer, {
+        contentType: file.mimetype || 'application/octet-stream',
+        upsert: false
+      });
+    
+    if (uploadError) {
+      console.error('❌ Supabase Storage upload error:', uploadError);
+      throw uploadError;
+    }
+    
+    console.log('✅ File uploaded to Supabase Storage:', storagePath);
     
     // 데이터베이스에 메타데이터 저장
     const now = new Date().toISOString();
-    db.prepare(`
-      INSERT INTO attachments (id, version_id, file_name, file_size, file_path, mime_type, uploaded_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      attachmentId,
-      versionId,
-      file.originalname,
-      file.size,
-      file.path,
-      file.mimetype || 'application/octet-stream',
-      now
-    );
+    const { error: dbError } = await supabase
+      .from('attachments')
+      .insert({
+        id: attachmentId,
+        version_id: versionId,
+        file_name: originalFileName,
+        file_size: file.size,
+        file_path: storagePath,
+        mime_type: file.mimetype || 'application/octet-stream',
+        uploaded_at: now
+      });
     
-    console.log('✅ File uploaded successfully:', attachmentId);
+    if (dbError) throw dbError;
+    
+    console.log('✅ Attachment metadata saved:', attachmentId);
     
     res.json({
       id: attachmentId,
       versionId,
-      fileName: file.originalname,
+      fileName: originalFileName,
       fileSize: file.size,
       mimeType: file.mimetype || 'application/octet-stream',
       uploadedAt: now
     });
   } catch (error) {
     console.error('❌ File upload error:', error);
-    res.status(500).json({ error: 'Failed to upload file' });
+    res.status(500).json({ error: 'Failed to upload file', details: error.message });
   }
 });
 
 // 🎯 버전의 첨부파일 목록 조회
-router.get('/version/:versionId', (req, res) => {
+router.get('/version/:versionId', async (req, res) => {
   try {
     const { versionId } = req.params;
     
-    const attachments = db.prepare(`
-      SELECT id, version_id as versionId, file_name as fileName, 
-             file_size as fileSize, mime_type as mimeType, uploaded_at as uploadedAt
-      FROM attachments
-      WHERE version_id = ?
-      ORDER BY uploaded_at DESC
-    `).all(versionId);
+    const { data: attachments, error } = await supabase
+      .from('attachments')
+      .select('id, version_id, file_name, file_size, mime_type, uploaded_at')
+      .eq('version_id', versionId)
+      .order('uploaded_at', { ascending: false });
     
-    res.json(attachments);
+    if (error) throw error;
+    
+    // 필드명 변환 (snake_case -> camelCase)
+    const formattedAttachments = (attachments || []).map(att => ({
+      id: att.id,
+      versionId: att.version_id,
+      fileName: att.file_name,
+      fileSize: att.file_size,
+      mimeType: att.mime_type,
+      uploadedAt: att.uploaded_at
+    }));
+    
+    res.json(formattedAttachments);
   } catch (error) {
     console.error('Error fetching attachments:', error);
-    res.status(500).json({ error: 'Failed to fetch attachments' });
+    res.status(500).json({ error: 'Failed to fetch attachments', details: error.message });
   }
 });
 
 // 🎯 파일 다운로드
-router.get('/download/:attachmentId', (req, res) => {
+router.get('/download/:attachmentId', async (req, res) => {
   try {
     const { attachmentId } = req.params;
     
-    const attachment = db.prepare(`
-      SELECT file_name, file_path, mime_type
-      FROM attachments
-      WHERE id = ?
-    `).get(attachmentId);
+    // DB에서 메타데이터 조회
+    const { data: attachment, error: dbError } = await supabase
+      .from('attachments')
+      .select('file_name, file_path, mime_type')
+      .eq('id', attachmentId)
+      .single();
     
-    if (!attachment) {
-      return res.status(404).json({ error: 'Attachment not found' });
+    if (dbError) {
+      if (dbError.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Attachment not found' });
+      }
+      throw dbError;
     }
     
-    if (!existsSync(attachment.file_path)) {
-      return res.status(404).json({ error: 'File not found on disk' });
+    // Supabase Storage에서 파일 다운로드
+    const { data: fileData, error: downloadError } = await supabase.storage
+      .from('api-verification')
+      .download(attachment.file_path);
+    
+    if (downloadError) {
+      console.error('❌ Supabase Storage download error:', downloadError);
+      throw downloadError;
     }
     
-    const fileData = readFileSync(attachment.file_path);
+    // ArrayBuffer를 Buffer로 변환
+    const buffer = Buffer.from(await fileData.arrayBuffer());
+    
+    // 한글 파일명을 올바르게 인코딩 (RFC 5987)
+    const encodedFilename = encodeURIComponent(attachment.file_name);
     
     res.setHeader('Content-Type', attachment.mime_type || 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="${attachment.file_name}"`);
-    res.send(fileData);
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFilename}`);
+    res.setHeader('Content-Length', buffer.length);
+    res.send(buffer);
   } catch (error) {
     console.error('File download error:', error);
-    res.status(500).json({ error: 'Failed to download file' });
+    res.status(500).json({ error: 'Failed to download file', details: error.message });
   }
 });
 
 // 🎯 파일 삭제
-router.delete('/:attachmentId', (req, res) => {
+router.delete('/:attachmentId', async (req, res) => {
   try {
     const { attachmentId } = req.params;
     
-    const attachment = db.prepare(`
-      SELECT file_path
-      FROM attachments
-      WHERE id = ?
-    `).get(attachmentId);
+    // DB에서 메타데이터 조회
+    const { data: attachment, error: dbError } = await supabase
+      .from('attachments')
+      .select('file_path')
+      .eq('id', attachmentId)
+      .single();
     
-    if (!attachment) {
-      return res.status(404).json({ error: 'Attachment not found' });
+    if (dbError) {
+      if (dbError.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Attachment not found' });
+      }
+      throw dbError;
     }
     
-    // 파일 삭제
-    if (existsSync(attachment.file_path)) {
-      unlinkSync(attachment.file_path);
+    // Supabase Storage에서 파일 삭제
+    const { error: storageError } = await supabase.storage
+      .from('api-verification')
+      .remove([attachment.file_path]);
+    
+    if (storageError) {
+      console.warn('⚠️ Storage deletion failed (file may not exist):', storageError);
+      // Storage 삭제 실패해도 계속 진행 (파일이 이미 없을 수 있음)
     }
     
     // DB에서 삭제
-    db.prepare('DELETE FROM attachments WHERE id = ?').run(attachmentId);
+    const { error: deleteError } = await supabase
+      .from('attachments')
+      .delete()
+      .eq('id', attachmentId);
+    
+    if (deleteError) throw deleteError;
     
     res.json({ success: true });
   } catch (error) {
     console.error('File delete error:', error);
-    res.status(500).json({ error: 'Failed to delete file' });
+    res.status(500).json({ error: 'Failed to delete file', details: error.message });
   }
 });
 
 export default router;
-

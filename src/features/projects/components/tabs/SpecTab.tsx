@@ -599,14 +599,14 @@ ${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
                     const parsedSchema = JSON.parse(editableSchema);
                     
                     if (!currentVersionId) {
-                      alert(`⚠️ No version selected!\n\n📝 To save:\n1. Go to Version tab\n2. Create or load a version\n3. Come back and save again`);
+                      toast.warning('⚠️ No version selected! Please go to Version tab and create or load a version first.');
                       return;
                     }
                     
                     // 🎯 현재 버전 가져오기
                     const currentVersion = getCurrentVersion();
                     if (!currentVersion) {
-                      alert('❌ Failed to get current version!');
+                      toast.error('❌ Failed to get current version!');
                       return;
                     }
                     
@@ -677,10 +677,10 @@ ${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
                     }
                     
                     setIsSchemaModified(false);
-                    alert(`✅ Schema saved!\n\n💾 Database: ${currentVersion.version}\n✨ Restart safe!`);
+                    toast.success(`✅ Schema saved successfully!\n💾 Database: ${currentVersion.version}`);
                   } catch (error) {
                     console.error('Save failed:', error);
-                    alert(`❌ Save failed!\n\n${error instanceof Error ? error.message : 'Unknown error'}`);
+                    toast.error(`❌ Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
                   }
                 }}
                 size="sm"

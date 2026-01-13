@@ -6,7 +6,7 @@
  * 2. 서버 시작 시 자동으로 DB에 등록
  */
 
-import db from './database.js';
+import supabase from './database.js';
 
 // 등록된 모든 라우트
 const routes = [];
@@ -66,7 +66,7 @@ export function registerRoutes(router, routeConfigs) {
 /**
  * 등록된 모든 라우트를 DB에 저장
  */
-export function syncRoutesToDatabase() {
+export async function syncRoutesToDatabase() {
   console.log('🔄 Syncing routes to database...');
   
   const now = new Date().toISOString();
@@ -74,86 +74,104 @@ export function syncRoutesToDatabase() {
   let updated = 0;
   let withDocs = 0;
 
-  routes.forEach(route => {
+  for (const route of routes) {
     try {
       // 1. Endpoint 저장/업데이트
-      const existing = db.prepare('SELECT id FROM endpoints WHERE id = ?').get(route.id);
+      const { data: existing, error: checkError } = await supabase
+        .from('endpoints')
+        .select('id')
+        .eq('id', route.id)
+        .single();
+      
+      if (checkError && checkError.code !== 'PGRST116') {
+        throw checkError;
+      }
       
       if (existing) {
-        db.prepare(`
-          UPDATE endpoints 
-          SET name=?, method=?, path=?, product=?, group_name=?, description=?, status=?, updated_at=?
-          WHERE id=?
-        `).run(
-          route.name,
-          route.method,
-          route.path,
-          route.product,
-          route.group_name,
-          route.description || null,
-          route.status,
-          now,
-          route.id
-        );
+        const { error: updateError } = await supabase
+          .from('endpoints')
+          .update({
+            name: route.name,
+            method: route.method,
+            path: route.path,
+            product: route.product,
+            group_name: route.group_name,
+            description: route.description || null,
+            status: route.status,
+            updated_at: now
+          })
+          .eq('id', route.id);
+        
+        if (updateError) throw updateError;
         updated++;
       } else {
-        db.prepare(`
-          INSERT INTO endpoints (id, name, method, path, product, group_name, description, status, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(
-          route.id,
-          route.name,
-          route.method,
-          route.path,
-          route.product,
-          route.group_name,
-          route.description || null,
-          route.status,
-          now,
-          now
-        );
+        const { error: insertError } = await supabase
+          .from('endpoints')
+          .insert({
+            id: route.id,
+            name: route.name,
+            method: route.method,
+            path: route.path,
+            product: route.product,
+            group_name: route.group_name,
+            description: route.description || null,
+            status: route.status,
+            created_at: now,
+            updated_at: now
+          });
+        
+        if (insertError) throw insertError;
         inserted++;
       }
 
       // 2. 문서가 있으면 기본 버전 생성
       if (route.docs && Object.keys(route.docs).length > 0) {
         const versionId = `v_auto_${route.id.replace(/\//g, '_')}`;
-        const existingVersion = db.prepare('SELECT id FROM versions WHERE id = ?').get(versionId);
+        const { data: existingVersion, error: versionCheckError } = await supabase
+          .from('versions')
+          .select('id')
+          .eq('id', versionId)
+          .single();
+        
+        if (versionCheckError && versionCheckError.code !== 'PGRST116') {
+          throw versionCheckError;
+        }
         
         if (!existingVersion) {
           // 버전 생성
-          db.prepare(`
-            INSERT INTO versions (id, version, endpoint_id, created_at, updated_at, author, change_log)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-          `).run(
-            versionId,
-            '1.0',
-            route.id,
-            now,
-            now,
-            'System',
-            'Auto-generated from route definition'
-          );
+          const { error: versionInsertError } = await supabase
+            .from('versions')
+            .insert({
+              id: versionId,
+              version: '1.0',
+              endpoint_id: route.id,
+              created_at: now,
+              updated_at: now,
+              author: 'System',
+              change_log: 'Auto-generated from route definition'
+            });
+          
+          if (versionInsertError) throw versionInsertError;
 
           // Manual 데이터 생성
           if (route.docs.schema || route.docs.htmlContent || route.docs.examples) {
-            db.prepare(`
-              INSERT INTO manual_data 
-              (version_id, title, category, input_uri, active_methods, json_schema, json_schema_original, json_schema_enhanced, examples, specifications, html_content)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `).run(
-              versionId,
-              route.docs.title || route.name,
-              route.group_name,
-              route.path,
-              route.method,
-              route.docs.schema ? JSON.stringify(route.docs.schema) : '{}',
-              route.docs.schemaOriginal ? JSON.stringify(route.docs.schemaOriginal) : null,
-              route.docs.schemaEnhanced ? JSON.stringify(route.docs.schemaEnhanced) : null,
-              route.docs.examples ? JSON.stringify(route.docs.examples) : '[]',
-              route.docs.specifications || route.description || null,
-              route.docs.htmlContent || null
-            );
+            const { error: manualInsertError } = await supabase
+              .from('manual_data')
+              .insert({
+                version_id: versionId,
+                title: route.docs.title || route.name,
+                category: route.group_name,
+                input_uri: route.path,
+                active_methods: route.method,
+                json_schema: route.docs.schema ? JSON.stringify(route.docs.schema) : '{}',
+                json_schema_original: route.docs.schemaOriginal ? JSON.stringify(route.docs.schemaOriginal) : null,
+                json_schema_enhanced: route.docs.schemaEnhanced ? JSON.stringify(route.docs.schemaEnhanced) : null,
+                examples: route.docs.examples ? JSON.stringify(route.docs.examples) : '[]',
+                specifications: route.docs.specifications || route.description || null,
+                html_content: route.docs.htmlContent || null
+              });
+            
+            if (manualInsertError) throw manualInsertError;
             withDocs++;
           }
         }
@@ -161,7 +179,7 @@ export function syncRoutesToDatabase() {
     } catch (error) {
       console.error(`❌ Failed to sync route ${route.id}:`, error.message);
     }
-  });
+  }
 
   console.log(`✅ Route sync complete:`);
   console.log(`   📌 ${inserted} endpoints inserted`);
