@@ -48,14 +48,28 @@ export function EndpointDialog({
 
   const isEditMode = !!endpoint;
 
-  // 엔드포인트 ID 생성 (product/group/name 기반)
+  // 엔드포인트 ID 생성 (path 기반으로 일관되게)
   const generateEndpointId = () => {
     if (isEditMode && endpoint) {
       return endpoint.id;
     }
-    // 새 엔드포인트: groupId/name 형태로 생성
-    const nameSlug = name.toLowerCase().replace(/\s+/g, '-');
-    return `${groupId}/${nameSlug}`;
+    
+    // 새 엔드포인트: path에서 그룹명 추출 후 소문자로 통일
+    // 예: "/db/node" → "db/node", "/gen/project" → "gen/project"
+    const cleanPath = path.trim().startsWith('/') ? path.trim().slice(1) : path.trim();
+    const pathSegments = cleanPath.split('/');
+    
+    if (pathSegments.length >= 2) {
+      // path가 /group/endpoint 형식인 경우
+      const groupFromPath = pathSegments[0].toLowerCase();
+      const endpointFromPath = pathSegments[1].toLowerCase();
+      return `${groupFromPath}/${endpointFromPath}`;
+    }
+    
+    // path가 명확하지 않으면 fallback: groupName/nameSlug
+    const groupName = groupId.includes('_') ? groupId.split('_')[1] : groupId;
+    const nameSlug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return `${groupName.toLowerCase()}/${nameSlug}`;
   };
 
   useEffect(() => {
@@ -91,13 +105,19 @@ export function EndpointDialog({
     setLoading(true);
     try {
       const endpointId = generateEndpointId();
+      // groupId 포맷: "productId_groupName" (예: "civil-nx_db")
+      // 만약 groupId가 이미 전체 ID 형식이면 그대로 사용, 아니면 생성
+      const fullGroupId = groupId.includes('_') ? groupId : `${productId}_${groupId}`;
+      
       const endpointData = {
         id: endpointId,
         name: name.trim(),
         method,
         path: path.trim().startsWith('/') ? path.trim() : `/${path.trim()}`,
         product: productId,
-        group_name: groupId,
+        product_id: productId,
+        group_name: groupId.includes('_') ? groupId.split('_')[1] : groupId,
+        group_id: fullGroupId,
         description: description.trim() || null,
         status: status || null,
         statusMessage: statusMessage.trim() || null,
@@ -221,7 +241,7 @@ export function EndpointDialog({
 
           <div className="text-xs text-zinc-500 space-y-1">
             <p>• 제품: {productId}</p>
-            <p>• 그룹: {groupId}</p>
+            <p>• 그룹: {groupId.includes('_') ? groupId.split('_')[1] : groupId}</p>
             {!isEditMode && (
               <p>• ID: {generateEndpointId()}</p>
             )}

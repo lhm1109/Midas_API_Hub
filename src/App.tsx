@@ -9,6 +9,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint } from '@/types';
 import { Toaster } from '@/components/ui/sonner';
+import { initSchemaLogicRules } from '@/lib/schema/schemaLogicEngine';
 
 export default function App() {
   const { setRunnerData } = useAppStore();
@@ -16,6 +17,52 @@ export default function App() {
   const [activeView, setActiveView] = useState<'projects' | 'history' | 'docs' | 'debug'>('projects');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
+  const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
+
+  // 🔥 스키마 로직 규칙 초기화 (앱 시작 시 한 번만)
+  useEffect(() => {
+    initSchemaLogicRules().catch(error => {
+      console.error('Failed to initialize schema logic rules:', error);
+    });
+  }, []);
+
+  // localStorage에서 패널 너비 로드
+  useEffect(() => {
+    const saved = localStorage.getItem('api-list-panel-width');
+    if (saved) {
+      setPanelWidth(parseInt(saved, 10));
+    }
+  }, []);
+
+  // 패널 너비 변경 시 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem('api-list-panel-width', panelWidth.toString());
+  }, [panelWidth]);
+
+  // 패널 리사이즈 핸들러
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startWidth = panelWidth;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const delta = moveEvent.clientX - startX;
+      const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
+      setPanelWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  };
 
   // 엔드포인트 로딩 완료 후 기본 선택
   useEffect(() => {
@@ -103,16 +150,34 @@ export default function App() {
       {activeView === 'projects' && (
         <>
           {endpointsLoading ? (
-            <div className="w-64 bg-zinc-900 border-r border-zinc-800 flex items-center justify-center">
+            <div 
+              style={{ width: `${panelWidth}px` }}
+              className="bg-zinc-900 border-r border-zinc-800 flex items-center justify-center"
+            >
               <p className="text-zinc-500">Loading...</p>
             </div>
           ) : (
-            <APIListPanel
-              products={apiData}
-              selectedEndpoint={selectedEndpoint?.id || null}
-              onEndpointSelect={handleEndpointSelect}
-              onEndpointsChange={refetchEndpoints}
-            />
+            <>
+              <div 
+                style={{ width: `${panelWidth}px` }}
+                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0"
+              >
+                <APIListPanel
+                  products={apiData}
+                  selectedEndpoint={selectedEndpoint?.id || null}
+                  onEndpointSelect={handleEndpointSelect}
+                  onEndpointsChange={refetchEndpoints}
+                />
+              </div>
+              {/* Resize Handle */}
+              <div
+                onMouseDown={handleMouseDown}
+                className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
+                style={{ touchAction: 'none' }}
+              >
+                <div className="absolute inset-y-0 -left-1 -right-1" />
+              </div>
+            </>
           )}
         </>
       )}

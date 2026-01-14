@@ -1,16 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Trash2, Save, FileText, Clock, AlertCircle, ChevronDown, ChevronRight, Plus, Edit, RefreshCw } from 'lucide-react';
+import { Trash2, Save, FileText, Clock, AlertCircle, Plus, Edit, RefreshCw } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
 import { CodeEditor } from '@/components/common';
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
@@ -31,6 +24,12 @@ import {
   canonicalToBuilderSchema,
   type UIBuilderField
 } from '@/lib/schema';
+import {
+  enhancedSchemaToBuilderFields,
+  type EnhancedSchema
+} from '@/lib/schema/enhancedBuilderAdapter';
+import { DynamicSchemaRenderer } from '@/lib/rendering/dynamicRenderer';
+import { loadCachedDefinition, loadBuilderRules, type DefinitionType } from '@/lib/rendering/definitionLoader';
 
 interface BuilderTabProps {
   endpoint: ApiEndpoint;
@@ -39,6 +38,7 @@ interface BuilderTabProps {
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
+    schemaDefinition?: DefinitionType;  // 🔥 NEW: YAML 정의 타입
   };
 }
 
@@ -78,15 +78,82 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const activeSchema = resolveActiveSchema(combinedSpecData);
   const hasEnhancedSchema = isEnhancedSchemaActive(combinedSpecData);
   
+  // 🔥 Builder Rules에서 wrapper rules 및 enhanced schema markers 로드
+  const [wrapperRules, setWrapperRules] = useState<Array<{ pattern: string; wrapper: string }>>([]);
+  const [enhancedSchemaMarkers, setEnhancedSchemaMarkers] = useState<string[]>([]);
+  
+  useEffect(() => {
+    const loadBuilderConfig = async () => {
+      try {
+        const builderDef = await loadBuilderRules('enhanced');
+        
+        if (builderDef.wrapperRules) {
+          console.log('✅ Loaded wrapper rules:', builderDef.wrapperRules);
+          setWrapperRules(builderDef.wrapperRules as Array<{ pattern: string; wrapper: string }>);
+        }
+        
+        if (builderDef.enhancedSchemaMarkers) {
+          console.log('✅ Loaded enhanced schema markers:', builderDef.enhancedSchemaMarkers);
+          setEnhancedSchemaMarkers(builderDef.enhancedSchemaMarkers);
+        }
+      } catch (error) {
+        console.error('❌ Failed to load builder config:', error);
+      }
+    };
+    loadBuilderConfig();
+  }, []);
+  
+  // 🔥 NEW Enhanced Schema 감지: builder.yaml의 enhancedSchemaMarkers 사용
+  const isNewEnhancedSchema = useMemo(() => {
+    if (enhancedSchemaMarkers.length === 0) {
+      // 마커가 로드되지 않았으면 기본값 사용 (폴백)
+      return false;
+    }
+    
+    const schemaStr = JSON.stringify(activeSchema);
+    return enhancedSchemaMarkers.some(marker => schemaStr.includes(marker));
+  }, [activeSchema, enhancedSchemaMarkers]);
+  
   // 🔥 NEW: Schema Compiler로 정규화된 AST 생성
   const canonicalFields = useMemo(() => {
+    if (isNewEnhancedSchema) {
+      return [];
+    }
     return compileSchema(activeSchema);
-  }, [activeSchema]);
+  }, [activeSchema, isNewEnhancedSchema]);
+  
+  // 🔥 Temporary state to track form values for enhanced schema
+  const [tempFormValuesForSchema, setTempFormValuesForSchema] = useState<Record<string, any>>({});
   
   // 🔥 NEW: UI Schema Adapter로 빌더 필드 생성
   const schemaFields: UIBuilderField[] = useMemo(() => {
+    if (isNewEnhancedSchema) {
+      // Enhanced Schema: 새 어댑터 사용 (현재 폼 값 전달하여 동적 업데이트)
+      return enhancedSchemaToBuilderFields(activeSchema as EnhancedSchema, tempFormValuesForSchema);
+    }
     return canonicalToBuilderSchema(canonicalFields);
-  }, [canonicalFields]);
+  }, [canonicalFields, isNewEnhancedSchema, activeSchema, tempFormValuesForSchema]);
+  
+  // 🔥 기본값 적용 헬퍼 함수 (공통)
+  const getDefaultValue = (field: UIBuilderField): any => {
+    // 1. 명시적 default 값이 있으면 사용
+    if (field.default !== undefined && field.default !== null) {
+      return field.default;
+    }
+    
+    // 2. 타입별 최소 초기값 (JSON Preview에 불필요한 값이 안 들어가도록)
+    // Required 필드는 사용자가 직접 입력해야 하므로 빈 값으로 초기화
+    if (field.type === 'array') return [];  // 배열은 빈 배열
+    if (field.type === 'boolean') return false;  // boolean은 false
+    if (field.type === 'enum' && field.enum && field.enum.length > 0) {
+      // enum은 첫 번째 값 (선택이 필요하므로)
+      return field.enum[0];
+    }
+    
+    // 3. number, integer, string은 빈 문자열 (사용자가 입력하도록)
+    // 이렇게 하면 JSON Preview에 불필요한 0이 표시되지 않음
+    return '';
+  };
   
   // 🎯 스키마 기반 동적 상태 (기존 하드코딩 대체)
   const [dynamicFormData, setDynamicFormData] = useState<any>(() => {
@@ -94,15 +161,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     schemaFields.forEach(field => {
       // 중첩 필드는 점(.) 표기법으로 저장
       if (field.type === 'array' && field.items) {
-        initialData[field.name] = [];
+        initialData[field.name] = getDefaultValue(field);
       } else if (field.type === 'object' && field.children) {
         // 🔥 Object with children: 각 자식 필드를 dot notation으로 초기화
         initialData[`${field.name}._enabled`] = false; // 체크박스 상태
         field.children.forEach(child => {
-          initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+          initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
         });
       } else {
-        initialData[field.name] = field.default !== undefined ? field.default : '';
+        initialData[field.name] = getDefaultValue(field);
       }
     });
     return initialData;
@@ -110,18 +177,18 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   
   // 🔥 Assign 인스턴스 관리 (여러 노드를 위한 상태)
   const [assignInstances, setAssignInstances] = useState<{ [key: string]: any }>(() => {
-    // 기본적으로 "1" 인스턴스 하나 생성
+    // 기본적으로 "1" 인스턴스 하나 생성 (공통 getDefaultValue 함수 사용)
     const initialData: any = {};
     schemaFields.forEach(field => {
       if (field.type === 'array' && field.items) {
-        initialData[field.name] = [];
+        initialData[field.name] = getDefaultValue(field);
       } else if (field.type === 'object' && field.children) {
         initialData[`${field.name}._enabled`] = false;
         field.children.forEach(child => {
-          initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+          initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
         });
       } else {
-        initialData[field.name] = field.default !== undefined ? field.default : '';
+        initialData[field.name] = getDefaultValue(field);
       }
     });
     
@@ -135,18 +202,18 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     const keys = Object.keys(assignInstances);
     const nextKey = String(Math.max(...keys.map(k => parseInt(k) || 0)) + 1);
     
-    // 새 인스턴스는 빈 데이터로 초기화
+    // 🔥 새 인스턴스는 기본값으로 초기화
     const newInstanceData: any = {};
     schemaFields.forEach(field => {
       if (field.type === 'array' && field.items) {
-        newInstanceData[field.name] = [];
+        newInstanceData[field.name] = getDefaultValue(field);
       } else if (field.type === 'object' && field.children) {
         newInstanceData[`${field.name}._enabled`] = false;
         field.children.forEach(child => {
-          newInstanceData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+          newInstanceData[`${field.name}.${child.name}`] = getDefaultValue(child);
         });
       } else {
-        newInstanceData[field.name] = field.default !== undefined ? field.default : '';
+        newInstanceData[field.name] = getDefaultValue(field);
       }
     });
     
@@ -195,6 +262,20 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     }));
   }, [dynamicFormData, currentInstanceKey]);
   
+  // 🔥 Enhanced Schema: dynamicFormData 변경 시 tempFormValuesForSchema 업데이트 (visibleWhen 재평가용)
+  useEffect(() => {
+    if (isNewEnhancedSchema) {
+      // Flatten dot notation to nested object for schema evaluation
+      const flatValues: Record<string, any> = {};
+      for (const [key, value] of Object.entries(dynamicFormData)) {
+        if (!key.includes('.')) {
+          flatValues[key] = value;
+        }
+      }
+      setTempFormValuesForSchema(flatValues);
+    }
+  }, [dynamicFormData, isNewEnhancedSchema]);
+  
   // 🎯 아코디언 상태 관리
   const [expandedObjects, setExpandedObjects] = useState<Set<string>>(new Set());
   
@@ -210,32 +291,158 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     });
   };
   
+  // 🔥 NEW: YAML 정의 로드
+  const [builderDefinition, setBuilderDefinition] = useState<any>(null);
+  
+  useEffect(() => {
+    const definitionType: DefinitionType = isNewEnhancedSchema ? 'enhanced' : 'original';
+    const overrideType = settings.schemaDefinition || definitionType;
+    
+    loadCachedDefinition(overrideType, 'builder')
+      .then(def => setBuilderDefinition(def))
+      .catch(err => console.error('Failed to load builder definition:', err));
+  }, [isNewEnhancedSchema, settings.schemaDefinition]);
+  
   // 🎯 스키마 변경 시 동적 폼 데이터 재초기화
+  // 🔥 schemaFields가 변경되면 (조건부 필드 포함) 동적으로 업데이트
   useEffect(() => {
     const initialData: any = {};
     schemaFields.forEach(field => {
       const existingValue = dynamicFormData[field.name];
       if (field.type === 'array' && field.items) {
-        initialData[field.name] = existingValue || [];
+        initialData[field.name] = existingValue !== undefined ? existingValue : getDefaultValue(field);
       } else if (field.type === 'object' && field.children) {
         // 🔥 Object with children: 각 자식 필드를 dot notation으로 유지
         const enabledKey = `${field.name}._enabled`;
         initialData[enabledKey] = dynamicFormData[enabledKey] !== undefined ? dynamicFormData[enabledKey] : false;
         
         field.children.forEach(child => {
-          const childKey = `${field.name}.${child.name}`;
+          // 🔥 child.name이 이미 전체 경로를 포함 (NODE_ELEMS.KEYS)
+          const childKey = child.name;
           const existingChildValue = dynamicFormData[childKey];
-          initialData[childKey] = existingChildValue !== undefined ? existingChildValue : (child.default !== undefined ? child.default : '');
+          initialData[childKey] = existingChildValue !== undefined ? existingChildValue : getDefaultValue(child);
         });
       } else {
-        initialData[field.name] = existingValue !== undefined ? existingValue : (field.default !== undefined ? field.default : '');
+        initialData[field.name] = existingValue !== undefined ? existingValue : getDefaultValue(field);
       }
     });
     setDynamicFormData(initialData);
-  }, [JSON.stringify(activeSchema)]);
+    
+    // 🔥 Assign 인스턴스도 동일하게 업데이트 (현재 선택된 인스턴스만)
+    if (settings.useAssignWrapper && currentInstanceKey) {
+      setAssignInstances(prev => {
+        const currentInstanceData = prev[currentInstanceKey] || {};
+        const updatedInstanceData: any = {};
+        
+        schemaFields.forEach(field => {
+          const existingValue = currentInstanceData[field.name];
+          if (field.type === 'array' && field.items) {
+            updatedInstanceData[field.name] = existingValue !== undefined ? existingValue : getDefaultValue(field);
+          } else if (field.type === 'object' && field.children) {
+            const enabledKey = `${field.name}._enabled`;
+            updatedInstanceData[enabledKey] = currentInstanceData[enabledKey] !== undefined ? currentInstanceData[enabledKey] : false;
+            
+            field.children.forEach(child => {
+              // 🔥 child.name이 이미 전체 경로를 포함 (NODE_ELEMS.KEYS)
+              const childKey = child.name;
+              const existingChildValue = currentInstanceData[childKey];
+              updatedInstanceData[childKey] = existingChildValue !== undefined ? existingChildValue : getDefaultValue(child);
+            });
+          } else {
+            updatedInstanceData[field.name] = existingValue !== undefined ? existingValue : getDefaultValue(field);
+          }
+        });
+        
+        return {
+          ...prev,
+          [currentInstanceKey]: updatedInstanceData
+        };
+      });
+    }
+  }, [schemaFields.length, JSON.stringify(schemaFields.map(f => f.name))]);
   
   const updateDynamicField = (key: string, value: any) => {
+    // 🔥 __selectedOption 변경 시, oneOf 필드 정리 및 초기화
+    if (key.endsWith('.__selectedOption')) {
+      const parentFieldName = key.replace('.__selectedOption', '');
+      const parentField = schemaFields.find(f => f.name === parentFieldName);
+      
+      console.log('🎯 oneOf selection changed:', { key, value, parentFieldName, parentField });
+      
+      if (parentField && parentField.oneOfOptions && parentField.children) {
+        const children = parentField.children; // 타입 가드
+        
+        console.log('🔍 oneOf children:', children.map((c: any) => ({
+          name: c.name,
+          optionIndex: c.optionIndex,
+          type: c.type,
+          defaultValue: getDefaultValue(c)
+        })));
+        
+        setDynamicFormData((prev: any) => {
+          const updated = { ...prev, [key]: value };
+          
+          // 1. 모든 oneOf 자식 필드를 삭제
+          children.forEach((child: any) => {
+            if (child.optionIndex !== undefined) {
+              console.log('🗑️ Deleting:', child.name);
+              delete updated[child.name];
+            }
+          });
+          
+          // 2. 선택된 옵션의 필드만 초기화
+          children.forEach((child: any) => {
+            if (child.optionIndex === value) {
+              const defaultVal = getDefaultValue(child);
+              console.log('✨ Initializing:', child.name, '=', defaultVal);
+              updated[child.name] = defaultVal;
+            }
+          });
+          
+          console.log('📦 Updated dynamicFormData:', updated);
+          return updated;
+        });
+        
+        if (settings.useAssignWrapper && currentInstanceKey) {
+          setAssignInstances(prev => {
+            const currentInstance = { ...prev[currentInstanceKey], [key]: value };
+            
+            // assignInstances에서도 동일하게 처리
+            children.forEach((child: any) => {
+              if (child.optionIndex !== undefined) {
+                delete currentInstance[child.name];
+              }
+            });
+            
+            children.forEach((child: any) => {
+              if (child.optionIndex === value) {
+                currentInstance[child.name] = getDefaultValue(child);
+              }
+            });
+            
+            return {
+              ...prev,
+              [currentInstanceKey]: currentInstance
+            };
+          });
+        }
+        return;
+      }
+    }
+    
+    // 일반 필드 업데이트
     setDynamicFormData((prev: any) => ({ ...prev, [key]: value }));
+    
+    // 🔥 Assign 래퍼가 활성화되어 있으면 현재 인스턴스도 업데이트
+    if (settings.useAssignWrapper && currentInstanceKey) {
+      setAssignInstances(prev => ({
+        ...prev,
+        [currentInstanceKey]: {
+          ...prev[currentInstanceKey],
+          [key]: value
+        }
+      }));
+    }
   };
   
   // 🎯 Test Case 저장 다이얼로그 상태
@@ -300,8 +507,52 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   
   // 🎨 JSON 필드 메타데이터 정의 (스키마 기반)
   const getFieldMetadata = (fieldPath: string): { type: 'required' | 'optional'; color: string; label: string } => {
-    // 스키마 필드에서 required 정보 찾기
-    const field = canonicalFields.find(f => f.path === fieldPath || f.name === fieldPath);
+    // 🔥 중첩 경로 정규화: "Assign.1.TYPE" → "TYPE", "Assign.1.__section_Common Keys and Solid__.TYPE" → "TYPE"
+    const normalizeFieldPath = (path: string): string => {
+      const parts = path.split('.');
+      // 🔥 래퍼 키, 숫자, __section__ 제거 (wrapper keys는 builder.yaml에서 동적으로 가져옴)
+      const wrapperKeys = [...new Set(wrapperRules.map(rule => rule.wrapper).filter(Boolean))];
+      const filtered = parts.filter(p => 
+        !wrapperKeys.includes(p) && 
+        !/^\d+$/.test(p) && 
+        !p.startsWith('__section_')
+      );
+      return filtered.join('.');
+    };
+    
+    const normalizedPath = normalizeFieldPath(fieldPath);
+    
+    // 🔥 Enhanced Schema 사용 시: schemaFields에서 required 정보 확인
+    if (isNewEnhancedSchema) {
+      const field = schemaFields.find(f => f.name === normalizedPath);
+      if (field && field.required !== undefined) {
+        return field.required
+          ? { type: 'required', color: 'text-red-400', label: 'Required' }
+          : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
+      }
+      
+      // 중첩 필드 체크 (예: UNIT.FORCE)
+      const parts = normalizedPath.split('.');
+      if (parts.length > 1) {
+        const parentName = parts[0];
+        const childName = parts[parts.length - 1];
+        const parentField = schemaFields.find(f => f.name === parentName);
+        if (parentField && parentField.children) {
+          const childField = parentField.children.find(c => c.name === childName);
+          if (childField && childField.required !== undefined) {
+            return childField.required
+              ? { type: 'required', color: 'text-red-400', label: 'Required' }
+              : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
+          }
+        }
+      }
+      
+      // Default for Enhanced Schema
+      return { type: 'optional', color: 'text-zinc-400', label: 'Optional' };
+    }
+    
+    // 🔥 Original Schema: canonicalFields에서 required 정보 확인
+    const field = canonicalFields.find(f => f.path === normalizedPath || f.name === normalizedPath);
     
     if (field) {
       return field.required
@@ -310,9 +561,9 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     }
     
     // 중첩 필드 체크 (예: UNIT.FORCE)
-    const parentField = canonicalFields.find(f => fieldPath.startsWith(f.name + '.'));
+    const parentField = canonicalFields.find(f => normalizedPath.startsWith(f.name + '.'));
     if (parentField && parentField.children) {
-      const childName = fieldPath.split('.').pop();
+      const childName = normalizedPath.split('.').pop();
       const childField = parentField.children.find(c => c.name === childName);
       if (childField) {
         return childField.required
@@ -327,7 +578,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
   // 🎨 커스텀 JSON 렌더러 컴포넌트
   const JSONRenderer = ({ data }: { data: any }) => {
-    const renderValue = (value: any, key?: string): JSX.Element => {
+    // 🔥 래퍼 키 목록 (builder.yaml의 wrapperRules에서 동적으로 추출)
+    const WRAPPER_KEYS = [...new Set(wrapperRules.map(rule => rule.wrapper))];
+    
+    const renderValue = (value: any, key?: string, depth: number = 0): JSX.Element => {
       if (value === null) {
         return <span className="text-purple-400">null</span>;
       }
@@ -354,7 +608,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
             <span className="text-zinc-500">[</span>
             {value.map((item, idx) => (
               <div key={idx} className="pl-4">
-                {renderValue(item)}
+                {renderValue(item, undefined, depth + 1)}
                 {idx < value.length - 1 && <span className="text-zinc-500">,</span>}
               </div>
             ))}
@@ -378,19 +632,24 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               const fieldPath = key ? `${key}.${k}` : k;
               const metadata = getFieldMetadata(fieldPath);
               
+              // 🔥 래퍼 키(Argument, Assign)는 depth 0에서만 체크하고 배지 표시 안함
+              const isWrapperKey = depth === 0 && WRAPPER_KEYS.includes(k);
+              
               return (
                 <div key={k} className="pl-4 group hover:bg-zinc-800/30 transition-colors rounded py-0.5">
-                  <span className={`${metadata.color} font-semibold`}>"{k}"</span>
+                  <span className={`${isWrapperKey ? 'text-purple-400' : metadata.color} font-semibold`}>"{k}"</span>
                   <span className="text-zinc-500">: </span>
-                  {/* 🏷️ Inline Badge */}
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded mr-2 ${
-                    metadata.type === 'required' 
-                      ? 'bg-red-900/50 text-red-300 border border-red-700/50' 
-                      : 'bg-blue-900/50 text-blue-300 border border-blue-700/50'
-                  }`}>
-                    {metadata.label}
-                  </span>
-                  {renderValue(v, fieldPath)}
+                  {/* 🏷️ Inline Badge - 래퍼 키는 배지 표시 안함 */}
+                  {!isWrapperKey && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded mr-2 ${
+                      metadata.type === 'required' 
+                        ? 'bg-red-900/50 text-red-300 border border-red-700/50' 
+                        : 'bg-blue-900/50 text-blue-300 border border-blue-700/50'
+                    }`}>
+                      {metadata.label}
+                    </span>
+                  )}
+                  {renderValue(v, fieldPath, depth + 1)}
                   {idx < entries.length - 1 && <span className="text-zinc-500">,</span>}
                 </div>
               );
@@ -405,7 +664,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       return <span>{String(value)}</span>;
     };
     
-    return <div className="font-mono text-xs leading-relaxed">{renderValue(data)}</div>;
+    return <div className="font-mono text-xs leading-relaxed">{renderValue(data, undefined, 0)}</div>;
   };
   
   // 🎯 Resize 이벤트 핸들러
@@ -449,19 +708,19 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       
       console.log('🔍 Starting conversion:', { rootKey, parsed, nestedData });
       
-      // 🔥 1단계: 스키마 기반으로 초기 formData 생성 (모든 필드 초기화)
+      // 🔥 1단계: 스키마 기반으로 초기 formData 생성 (모든 필드 기본값으로 초기화)
       const initialData: any = {};
       schemaFields.forEach(field => {
         if (field.type === 'array' && field.items) {
-          initialData[field.name] = [];
+          initialData[field.name] = getDefaultValue(field);
         } else if (field.type === 'object' && field.children) {
           // Object with children: 각 자식 필드를 dot notation으로 초기화
           initialData[`${field.name}._enabled`] = false;
           field.children.forEach(child => {
-            initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+            initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
           });
         } else {
-          initialData[field.name] = field.default !== undefined ? field.default : '';
+          initialData[field.name] = getDefaultValue(field);
         }
       });
       
@@ -529,24 +788,109 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   
   // 🧹 JSON Pruning: 현재 선택된 메소드에 맞는 데이터만 추출
   const buildCleanJSON = () => {
+    console.log('🔍 dynamicFormData (start of buildCleanJSON):', dynamicFormData);
+    
     // 🔥 동적 스키마 필드를 중첩 구조로 변환 (_enabled 체크박스 반영)
     const convertDotNotationToNested = (flatData: any) => {
       const nested: any = {};
       
+      // 🔥 oneOf 필드 수집: 부모 필드명 -> 선택된 옵션 인덱스
+      const oneOfSelections: Map<string, number> = new Map();
       Object.keys(flatData).forEach(key => {
+        const match = key.match(/^(.+)\.__selectedOption$/);
+        if (match) {
+          const parentField = match[1];
+          const selectedOption = flatData[key] || 0;
+          oneOfSelections.set(parentField, selectedOption);
+        }
+      });
+      
+      // 🔥 oneOf 필드의 옵션별 필드 매핑 (schemaFields에서 추출)
+      const oneOfFieldsByOption: Map<string, Map<number, Set<string>>> = new Map();
+      schemaFields.forEach(field => {
+        if (field.oneOfOptions && field.children) {
+          const fieldMap = new Map<number, Set<string>>();
+          field.children.forEach((child: any) => {
+            if (child.optionIndex !== undefined) {
+              if (!fieldMap.has(child.optionIndex)) {
+                fieldMap.set(child.optionIndex, new Set());
+              }
+              const childKeyName = child.name.split('.').pop() || child.name;
+              fieldMap.get(child.optionIndex)!.add(childKeyName);
+            }
+          });
+          oneOfFieldsByOption.set(field.name, fieldMap);
+          console.log(`🔍 oneOf field detected: ${field.name}`, {
+            options: field.oneOfOptions,
+            fieldMap: Array.from(fieldMap.entries()).map(([idx, fields]) => 
+              ({ optionIndex: idx, fields: Array.from(fields) }))
+          });
+        }
+      });
+      
+      console.log('🔍 oneOf selections:', Array.from(oneOfSelections.entries()));
+      console.log('🔍 oneOf field mappings:', Array.from(oneOfFieldsByOption.entries()));
+      
+      Object.keys(flatData).forEach(key => {
+        // 🔥 섹션 헤더 키 제외 (UI 전용)
+        if (key.startsWith('__section_') || key.includes('.__section_')) {
+          console.log('🔥 Filtering out section:', key);
+          return;
+        }
+        
+        // 🔥 oneOf 선택 상태 키 제외 (UI 전용)
+        if (key.endsWith('.__selectedOption') || key.includes('.__oneOf')) {
+          console.log('🔥 Filtering out selectedOption:', key);
+          return;
+        }
+        
         // _enabled 키는 제외
         if (key.endsWith('._enabled')) {
           return;
         }
         
+        // 🔥 빈 값 제외
+        const value = flatData[key];
+        if (value === '' || value === null || value === undefined) {
+          console.log(`❌ Skipped (empty value): ${key}=${value}`);
+          return;
+        }
+        
+        console.log('✅ Processing key:', key, 'value:', value);
+        
         if (key.includes('.')) {
-          // dot notation을 중첩 객체로 변환 (예: "UNIT.FORCE" -> nested.UNIT.FORCE)
+          // dot notation을 중첩 객체로 변환
           const parts = key.split('.');
           const parentKey = parts[0];
+          const childKey = parts[parts.length - 1];
           
           // 🔥 부모 객체가 체크되어 있지 않으면 스킵
           if (flatData[`${parentKey}._enabled`] === false) {
+            console.log(`❌ Skipped (parent disabled): ${key}, _enabled=${flatData[`${parentKey}._enabled`]}`);
             return;
+          }
+          
+          // 🔥 oneOf 필드인 경우, 선택되지 않은 옵션의 필드는 제외
+          if (oneOfSelections.has(parentKey) && oneOfFieldsByOption.has(parentKey)) {
+            const selectedOption = oneOfSelections.get(parentKey)!;
+            const fieldMap = oneOfFieldsByOption.get(parentKey)!;
+            const selectedFields = fieldMap.get(selectedOption);
+            
+            console.log(`🔍 oneOf check: ${parentKey}.${childKey}`, {
+              selectedOption,
+              selectedFields: selectedFields ? Array.from(selectedFields) : 'none',
+              childKey,
+              isIncluded: selectedFields ? selectedFields.has(childKey) : 'no mapping'
+            });
+            
+            // 🔥 selectedFields가 있으면 선택된 필드만 포함, 없으면 모두 포함 (oneOf가 아닌 경우)
+            if (selectedFields) {
+              if (!selectedFields.has(childKey)) {
+                console.log(`❌ Filtered out (unselected option): ${key}`);
+                return; // 선택되지 않은 옵션의 필드는 스킵
+              }
+            }
+            // selectedFields가 없으면 oneOf가 아니므로 그대로 포함
           }
           
           let current = nested;
@@ -558,10 +902,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
             current = current[parts[i]];
           }
           
-          current[parts[parts.length - 1]] = flatData[key];
+          current[parts[parts.length - 1]] = value;
         } else {
           // dot notation이 아닌 필드는 그대로 추가
-          nested[key] = flatData[key];
+          nested[key] = value;
         }
       });
       
@@ -575,24 +919,86 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       ...nestedDynamicData,
     };
     
-    return cleaned;
+    // 🔥 UI 전용 키 제거 (__selectedOption 등)
+    return cleanUIKeys(cleaned);
+  };
+  
+  // 🔥 JSON에서 UI 전용 키 제거 (후처리)
+  const cleanUIKeys = (obj: any): any => {
+    if (obj === null || obj === undefined) return obj;
+    
+    if (Array.isArray(obj)) {
+      return obj.map(item => cleanUIKeys(item));
+    }
+    
+    if (typeof obj === 'object') {
+      const cleaned: any = {};
+      
+      for (const [key, value] of Object.entries(obj)) {
+        // UI 전용 키 필터링
+        if (key.startsWith('__') || key.startsWith('_') && key !== '_id') {
+          continue; // __selectedOption, __section_0, _enabled 등 제외
+        }
+        
+        cleaned[key] = cleanUIKeys(value);
+      }
+      
+      return cleaned;
+    }
+    
+    return obj;
   };
 
-  // 🔥 Request Body를 Assign 래퍼로 변환하는 함수
+  // 🔥 URI 패턴에 따라 래퍼 키 결정
+  const getWrapperKey = (): string | null => {
+    const path = endpoint.path || '';
+    
+    console.log('🔍 getWrapperKey called:', { path, wrapperRules });
+    
+    // wrapperRules를 순회하며 매칭되는 패턴 찾기
+    for (const rule of wrapperRules) {
+      const regex = new RegExp(rule.pattern);
+      if (regex.test(path)) {
+        console.log('✅ Matched rule:', rule);
+        return rule.wrapper;
+      }
+    }
+    
+    console.log('❌ No matching wrapper rule for path:', path);
+    return null; // 래퍼 없음
+  };
+
+  // 🔥 Request Body를 래퍼로 변환하는 함수
   const wrapWithAssign = (body: string): string => {
-    if (!settings.useAssignWrapper) {
+    const wrapperKey = getWrapperKey();
+    
+    // 🔥 useAssignWrapper가 명시적으로 false가 아닌 이상 래퍼 적용 (undefined도 true로 간주)
+    const shouldUseWrapper = settings.useAssignWrapper !== false;
+    
+    console.log('🔍 wrapWithAssign called:', {
+      wrapperKey,
+      useAssignWrapper: settings.useAssignWrapper,
+      shouldUseWrapper,
+      endpointPath: endpoint.path,
+      bodyLength: body.length
+    });
+    
+    // 래퍼가 필요 없으면 원본 반환
+    if (!wrapperKey || !shouldUseWrapper) {
+      console.log('❌ No wrapper needed, wrapperKey:', wrapperKey, 'shouldUseWrapper:', shouldUseWrapper);
       return body;
     }
 
     try {
       const parsed = JSON.parse(body);
       
-      // 이미 Assign 래퍼가 있으면 그대로 반환
-      if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
+      // 이미 래퍼가 있으면 그대로 반환
+      if (parsed && typeof parsed === 'object' && (wrapperKey in parsed)) {
+        console.log('✅ Already wrapped with', wrapperKey);
         return body;
       }
       
-      // 🔥 모든 인스턴스를 Assign 래퍼로 감싸기
+      // 🔥 모든 인스턴스를 래퍼로 감싸기
       const allInstances: any = {};
       Object.keys(assignInstances).forEach(key => {
         const instanceData = assignInstances[key];
@@ -600,7 +1006,18 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           const nested: any = {};
           
           Object.keys(flatData).forEach(fieldKey => {
+            // 🔥 섹션 헤더 키 제외 (UI 전용)
+            if (fieldKey.startsWith('__section_')) {
+              return;
+            }
+            
             if (fieldKey.endsWith('._enabled')) {
+              return;
+            }
+            
+            // 🔥 빈 값 제외 (default가 없는 필드는 JSON에 포함하지 않음)
+            const value = flatData[fieldKey];
+            if (value === '' || value === null || value === undefined) {
               return;
             }
             
@@ -620,22 +1037,24 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 current = current[parts[i]];
               }
               
-              current[parts[parts.length - 1]] = flatData[fieldKey];
+              current[parts[parts.length - 1]] = value;
             } else {
-              nested[fieldKey] = flatData[fieldKey];
+              nested[fieldKey] = value;
             }
           });
           
           return nested;
         };
         
-        allInstances[key] = convertDotNotationToNested(instanceData);
+        // 🔥 UI 전용 키 제거 후 저장
+        allInstances[key] = cleanUIKeys(convertDotNotationToNested(instanceData));
       });
 
       const wrapped = {
-        Assign: allInstances
+        [wrapperKey]: allInstances
       };
 
+      console.log('✅ Wrapped with', wrapperKey, wrapped);
       return JSON.stringify(wrapped, null, 2);
     } catch (error) {
       // JSON 파싱 실패 시 원본 반환
@@ -646,20 +1065,23 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
   // formData 변경 시 JSON 업데이트 (Store에 직접 저장)
   useEffect(() => {
-    const rootKey = endpoint.name.toUpperCase();
+    console.log('🔄 useEffect triggered - updating JSON');
     const cleanData = buildCleanJSON();
-    const result = { [rootKey]: cleanData };
-    const rawRequestBody = JSON.stringify(result, null, 2);
+    const rawRequestBody = JSON.stringify(cleanData, null, 2);
     
-    // 🔥 Assign 래퍼 적용 (설정에 따라)
+    console.log('📦 Raw request body:', rawRequestBody);
+    
+    // 🔥 래퍼 적용 (URI 패턴에 따라)
     const requestBody = wrapWithAssign(rawRequestBody);
+    
+    console.log('🎁 Final request body:', requestBody);
     
     // Store의 Runner 데이터 업데이트
     updateRunnerData({ requestBody });
     
     // 🎯 편집 가능한 JSON도 업데이트
     setEditableJson(requestBody);
-  }, [assignInstances, endpoint.name, settings.useAssignWrapper]);
+  }, [JSON.stringify(assignInstances), endpoint.name, endpoint.method, endpoint.path, settings.useAssignWrapper, JSON.stringify(wrapperRules)]);
   
   // Update modified state whenever data changes
   useEffect(() => {
@@ -759,24 +1181,24 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const handleClearTestCase = () => {
     setSelectedTestCaseId(null);
     
-    // 폼 초기화
+    // 🔥 폼 기본값으로 초기화
     const initialData: any = {};
     schemaFields.forEach(field => {
       if (field.type === 'array' && field.items) {
-        initialData[field.name] = [];
+        initialData[field.name] = getDefaultValue(field);
       } else if (field.type === 'object' && field.children) {
         initialData[`${field.name}._enabled`] = false;
         field.children.forEach(child => {
-          initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+          initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
         });
       } else {
-        initialData[field.name] = field.default !== undefined ? field.default : '';
+        initialData[field.name] = getDefaultValue(field);
       }
     });
     setDynamicFormData(initialData);
     
-    // Assign 인스턴스 초기화
-    setAssignInstances({ '1': {} });
+    // 🔥 Assign 인스턴스 기본값으로 초기화
+    setAssignInstances({ '1': initialData });
     setCurrentInstanceKey('1');
     
     toast.info('📝 Ready to create new test case');
@@ -1023,8 +1445,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                           onDoubleClick={(e) => handleStartEditName(testCase.id, testCase.name, e)}
                           title="더블클릭하여 이름 변경"
                         >
-                          {testCase.name}
-                        </h4>
+                        {testCase.name}
+                      </h4>
                       )}
                       {testCase.description && !editingTestCaseId && (
                         <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
@@ -1050,13 +1472,13 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm flex items-center gap-2">
-              🏗️ Context-Aware Builder
-              {hasEnhancedSchema && (
-                <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
-                  Enhanced Schema Active
-                </span>
-              )}
-            </h3>
+            🏗️ Context-Aware Builder
+            {hasEnhancedSchema && (
+              <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
+                Enhanced Schema Active
+              </span>
+            )}
+          </h3>
             {selectedTestCaseId && (
               <Button
                 onClick={handleClearTestCase}
@@ -1077,7 +1499,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               <div className="flex-1">
                 <p className="text-xs font-semibold text-blue-300">
                   Editing: {testCases.find(tc => tc.id === selectedTestCaseId)?.name || 'Unknown'}
-                </p>
+          </p>
                 <p className="text-[10px] text-blue-400/70">
                   수정 후 "Update Test Case" 버튼을 눌러 저장하세요
                 </p>
@@ -1107,7 +1529,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   <h3 className="text-sm font-semibold flex items-center gap-2">
                     <span className="text-xl">🔢</span>
                     Assign Instances
-                  </h3>
+                </h3>
                   <Button
                     onClick={addAssignInstance}
                     size="sm"
@@ -1119,7 +1541,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 <div className="flex flex-wrap gap-2">
                   {Object.keys(assignInstances).sort((a, b) => parseInt(a) - parseInt(b)).map((key) => (
                     <div key={key} className="flex items-center gap-1">
-                      <button
+                            <button
                         onClick={() => setCurrentInstanceKey(key)}
                         className={`px-3 py-1 rounded text-sm transition-colors ${
                           currentInstanceKey === key
@@ -1128,7 +1550,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                         }`}
                       >
                         {key}
-                      </button>
+                            </button>
                       {Object.keys(assignInstances).length > 1 && (
                         <button
                           onClick={() => removeAssignInstance(key)}
@@ -1137,10 +1559,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                 <p className="text-xs text-zinc-500 mt-2">
                   Select an instance to edit. Each instance represents a separate item in the Assign wrapper.
                 </p>
@@ -1156,225 +1578,29 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   {settings.useAssignWrapper && (
                     <span className="px-2 py-0.5 bg-blue-600/20 text-blue-400 text-[10px] rounded border border-blue-600/50">
                       Instance: {currentInstanceKey}
-                    </span>
-                  )}
+                              </span>
+                            )}
                   {hasEnhancedSchema && (
                     <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
                       From Spec Tab
-                    </span>
+                            </span>
                   )}
-                </h3>
-
-                
-                <div className="space-y-4">
-                  {schemaFields.map((field) => (
-                    <div key={field.name} className="space-y-2">
-                      {/* 🔥 Object with Children: 아코디언 + 체크박스 */}
-                      {field.type === 'object' && field.children && field.children.length > 0 ? (
-                        <div className="border border-zinc-700 rounded-md bg-zinc-900/50">
-                          {/* 헤더: 체크박스 + 이름 + 아코디언 버튼 */}
-                          <div className="flex items-center gap-2 p-3 bg-zinc-800/50">
-                            <input
-                              type="checkbox"
-                              checked={dynamicFormData[`${field.name}._enabled`] || false}
-                              onChange={(e) => updateDynamicField(`${field.name}._enabled`, e.target.checked)}
-                              className="w-4 h-4"
+                </h3>                
+                {/* 🔥 YAML 정의 기반 동적 렌더러 */}
+                {builderDefinition ? (
+                  <DynamicSchemaRenderer
+                    definition={builderDefinition}
+                    schemaFields={schemaFields}
+                    dynamicFormData={dynamicFormData}
+                    updateDynamicField={updateDynamicField}
+                    expandedObjects={expandedObjects}
+                    toggleObject={toggleObject}
                             />
-                            <button
-                              onClick={() => toggleObject(field.name)}
-                              className="flex-1 flex items-center gap-2 text-left hover:text-white transition-colors"
-                            >
-                              {expandedObjects.has(field.name) ? (
-                                <ChevronDown className="w-4 h-4 text-zinc-400" />
-                              ) : (
-                                <ChevronRight className="w-4 h-4 text-zinc-400" />
-                              )}
-                              <Label className="text-sm flex items-center gap-2 cursor-pointer">
-                                {field.name}
-                                {field.required && <span className="text-red-400">*</span>}
-                                {field.description && (
-                                  <span className="text-xs text-zinc-500 font-normal">
-                                    ({field.description})
-                                  </span>
-                                )}
-                              </Label>
-                            </button>
-                            <span className="text-[10px] text-zinc-600 font-mono">
-                              {field.type}
-                            </span>
-                          </div>
-                          
-                          {/* 확장된 내용: 자식 필드들 */}
-                          {expandedObjects.has(field.name) && (
-                            <div className="p-4 space-y-3 bg-zinc-900/30">
-                              {field.children.map((child) => (
-                                <div key={child.name} className="space-y-2 pl-4 border-l-2 border-zinc-700">
-                                  <Label className="text-xs flex items-center gap-2">
-                                    {child.name}
-                                    {child.required && <span className="text-red-400">*</span>}
-                                    {child.description && (
-                                      <span className="text-xs text-zinc-500 font-normal">
-                                        ({child.description})
-                                      </span>
-                                    )}
-                                    <span className="text-[10px] text-zinc-600 font-mono ml-auto">
-                                      {child.type}
-                                    </span>
-                                  </Label>
-                                  
-                                  {/* Child input field */}
-                                  {child.enum ? (
-                                    <Select
-                                      value={String(dynamicFormData[`${field.name}.${child.name}`] || '')}
-                                      onValueChange={(value) => updateDynamicField(`${field.name}.${child.name}`, value)}
-                                      disabled={!dynamicFormData[`${field.name}._enabled`]}
-                                    >
-                                      <SelectTrigger className="bg-zinc-800 border-zinc-700 h-8 text-xs">
-                                        <SelectValue placeholder={`Select ${child.name}`} />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        {child.enum.map((option: any) => (
-                                          <SelectItem key={String(option)} value={String(option)}>
-                                            {String(option)}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                  ) : child.type === 'number' || child.type === 'integer' ? (
-                                    <Input
-                                      type="number"
-                                      value={dynamicFormData[`${field.name}.${child.name}`] || ''}
-                                      onChange={(e) => updateDynamicField(`${field.name}.${child.name}`, parseFloat(e.target.value) || 0)}
-                                      className="bg-zinc-800 border-zinc-700 h-8 text-xs"
-                                      placeholder={child.default?.toString() || '0'}
-                                      disabled={!dynamicFormData[`${field.name}._enabled`]}
-                                    />
-                                  ) : child.type === 'boolean' ? (
-                                    <div className="flex items-center gap-2">
-                                      <input
-                                        type="checkbox"
-                                        checked={dynamicFormData[`${field.name}.${child.name}`] || false}
-                                        onChange={(e) => updateDynamicField(`${field.name}.${child.name}`, e.target.checked)}
-                                        className="w-3 h-3"
-                                        disabled={!dynamicFormData[`${field.name}._enabled`]}
-                                      />
-                                      <span className="text-xs text-zinc-400">
-                                        {dynamicFormData[`${field.name}.${child.name}`] ? 'true' : 'false'}
-                                      </span>
-                                    </div>
-                                  ) : (
-                                    <Input
-                                      value={dynamicFormData[`${field.name}.${child.name}`] || ''}
-                                      onChange={(e) => updateDynamicField(`${field.name}.${child.name}`, e.target.value)}
-                                      className="bg-zinc-800 border-zinc-700 h-8 text-xs"
-                                      placeholder={child.default || `Enter ${child.name}`}
-                                      disabled={!dynamicFormData[`${field.name}._enabled`]}
-                                    />
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        /* 일반 필드 렌더링 */
-                        <>
-                          <Label className="text-sm flex items-center gap-2">
-                            {field.name}
-                            {field.required && <span className="text-red-400">*</span>}
-                            {field.description && (
-                              <span className="text-xs text-zinc-500 font-normal">
-                                ({field.description})
-                              </span>
-                            )}
-                            <span className="text-[10px] text-zinc-600 font-mono ml-auto">
-                              {field.type}
-                            </span>
-                          </Label>
-                          
-                          {field.enum ? (
-                            <Select
-                              value={String(dynamicFormData[field.name] || '')}
-                              onValueChange={(value) => updateDynamicField(field.name, value)}
-                            >
-                              <SelectTrigger className="bg-zinc-800 border-zinc-700">
-                                <SelectValue placeholder={`Select ${field.name}`} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {field.enum.map((option: any) => (
-                                  <SelectItem key={String(option)} value={String(option)}>
-                                    {String(option)}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          ) : field.type === 'array' ? (
-                            <Textarea
-                              placeholder={`Enter ${field.name} as JSON array, e.g., ["item1", "item2"]`}
-                              value={typeof dynamicFormData[field.name] === 'string' 
-                                ? dynamicFormData[field.name]
-                                : JSON.stringify(dynamicFormData[field.name] || [])}
-                              onChange={(e) => {
-                                try {
-                                  const parsed = JSON.parse(e.target.value);
-                                  updateDynamicField(field.name, parsed);
-                                } catch {
-                                  updateDynamicField(field.name, e.target.value);
-                                }
-                              }}
-                              className="bg-zinc-800 border-zinc-700 font-mono text-xs"
-                            />
-                          ) : field.type === 'object' ? (
-                            <Textarea
-                              placeholder={`Enter ${field.name} as JSON object, e.g., {"key": "value"}`}
-                              value={typeof dynamicFormData[field.name] === 'string' 
-                                ? dynamicFormData[field.name]
-                                : JSON.stringify(dynamicFormData[field.name] || {}, null, 2)}
-                              onChange={(e) => {
-                                try {
-                                  const parsed = JSON.parse(e.target.value);
-                                  updateDynamicField(field.name, parsed);
-                                } catch {
-                                  updateDynamicField(field.name, e.target.value);
-                                }
-                              }}
-                              className="bg-zinc-800 border-zinc-700 font-mono text-xs min-h-[100px]"
-                            />
-                          ) : field.type === 'number' || field.type === 'integer' ? (
-                            <Input
-                              type="number"
-                              value={dynamicFormData[field.name] || ''}
-                              onChange={(e) => updateDynamicField(field.name, parseFloat(e.target.value) || 0)}
-                              className="bg-zinc-800 border-zinc-700"
-                              placeholder={field.default?.toString() || '0'}
-                              min={field.minimum}
-                              max={field.maximum}
-                            />
-                          ) : field.type === 'boolean' ? (
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="checkbox"
-                                checked={dynamicFormData[field.name] || false}
-                                onChange={(e) => updateDynamicField(field.name, e.target.checked)}
-                                className="w-4 h-4"
-                              />
-                              <span className="text-sm text-zinc-400">
-                                {dynamicFormData[field.name] ? 'true' : 'false'}
-                              </span>
-                            </div>
-                          ) : (
-                            <Input
-                              value={dynamicFormData[field.name] || ''}
-                              onChange={(e) => updateDynamicField(field.name, e.target.value)}
-                              className="bg-zinc-800 border-zinc-700"
-                              placeholder={field.default || `Enter ${field.name}`}
-                            />
-                          )}
-                        </>
-                      )}
+                ) : (
+                  <div className="text-center py-8 text-zinc-500">
+                    Loading schema definition...
                     </div>
-                  ))}
-                </div>
+                )}
               </section>
             )}
           </div>
@@ -1465,53 +1691,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 <div className="p-4">
                   <div className="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800">
                     <JSONRenderer data={(() => {
-                      // 🔥 Assign 래퍼 적용 (설정에 따라)
-                      if (settings.useAssignWrapper) {
-                        const allInstances: any = {};
-                        Object.keys(assignInstances).forEach(key => {
-                          const instanceData = assignInstances[key];
-                          const convertDotNotationToNested = (flatData: any) => {
-                            const nested: any = {};
-                            
-                            Object.keys(flatData).forEach(fieldKey => {
-                              if (fieldKey.endsWith('._enabled')) {
-                                return;
-                              }
-                              
-                              if (fieldKey.includes('.')) {
-                                const parts = fieldKey.split('.');
-                                const parentKey = parts[0];
-                                
-                                if (flatData[`${parentKey}._enabled`] === false) {
-                                  return;
-                                }
-                                
-                                let current = nested;
-                                for (let i = 0; i < parts.length - 1; i++) {
-                                  if (!current[parts[i]]) {
-                                    current[parts[i]] = {};
-                                  }
-                                  current = current[parts[i]];
-                                }
-                                
-                                current[parts[parts.length - 1]] = flatData[fieldKey];
-                              } else {
-                                nested[fieldKey] = flatData[fieldKey];
-                              }
-                            });
-                            
-                            return nested;
-                          };
-                          
-                          allInstances[key] = convertDotNotationToNested(instanceData);
-                        });
-                        
-                        return { Assign: allInstances };
+                      // 🔥 editableJson 상태를 사용 (이미 래퍼가 적용된 상태)
+                      try {
+                        return JSON.parse(editableJson);
+                      } catch (error) {
+                        // 파싱 실패 시 폴백
+                        const cleanData = buildCleanJSON();
+                        const finalData = cleanUIKeys(cleanData);
+                        return finalData;
                       }
-                      
-                      const rootKey = endpoint.name.toUpperCase();
-                      const cleanData = buildCleanJSON();
-                      return { [rootKey]: cleanData };
                     })()} />
                   </div>
                 </div>
@@ -1539,18 +1727,18 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           <div className="flex items-center gap-2">
             <Button
               onClick={() => {
-                // Reset to initial state
+                // 🔥 Reset to default values
                 const initialData: any = {};
                 schemaFields.forEach(field => {
                   if (field.type === 'array' && field.items) {
-                    initialData[field.name] = [];
+                    initialData[field.name] = getDefaultValue(field);
                   } else if (field.type === 'object' && field.children) {
                     initialData[`${field.name}._enabled`] = false;
                     field.children.forEach(child => {
-                      initialData[`${field.name}.${child.name}`] = child.default !== undefined ? child.default : '';
+                      initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
                     });
                   } else {
-                    initialData[field.name] = field.default !== undefined ? field.default : '';
+                    initialData[field.name] = getDefaultValue(field);
                   }
                 });
                 setDynamicFormData(initialData);
@@ -1579,15 +1767,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               </Button>
             ) : (
               // 🔥 신규 모드: Save as New 버튼
-              <Button
-                onClick={() => setShowSaveDialog(true)}
-                size="sm"
-                disabled={!isModified}
-                className="h-8 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Save className="w-3 h-3 mr-2" />
+            <Button
+              onClick={() => setShowSaveDialog(true)}
+              size="sm"
+              disabled={!isModified}
+              className="h-8 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Save className="w-3 h-3 mr-2" />
                 Save as New Test Case
-              </Button>
+            </Button>
             )}
           </div>
         </div>

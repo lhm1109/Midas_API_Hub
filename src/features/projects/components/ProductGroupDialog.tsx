@@ -73,11 +73,13 @@ export function ProductGroupDialog({
         if (!productId) {
           throw new Error('Product ID is required');
         }
-        const groupId = `${productId}_${name.toLowerCase().replace(/\s+/g, '-')}`;
+        // 🔥 name을 그대로 사용해서 groupId 생성 (대소문자 유지)
+        const normalizedName = name.trim().replace(/\s+/g, '_');
+        const groupId = `${productId}_${normalizedName}`;
         const groupData = {
           id: groupId,
           product_id: productId,
-          name: name.trim(),
+          name: name.trim(),  // 원본 이름 그대로 저장
           description: '',
         };
 

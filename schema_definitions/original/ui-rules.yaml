@@ -1,0 +1,169 @@
+# Original JSON Schema UI Rendering Rules
+# 기존 JSON Schema (oneOf, allOf 등)의 UI 렌더링 규칙
+
+version: "1.0"
+type: "original"
+
+# ============================================================================
+# Field Type Mappings
+# JSON Schema 타입 → UI 컴포넌트 매핑
+# ============================================================================
+fieldTypeMapping:
+  string:
+    component: "Input"
+    props:
+      type: "text"
+      className: "bg-zinc-800 border-zinc-700"
+  
+  number:
+    component: "Input"
+    props:
+      type: "number"
+      className: "bg-zinc-800 border-zinc-700"
+  
+  integer:
+    component: "Input"
+    props:
+      type: "number"
+      className: "bg-zinc-800 border-zinc-700"
+  
+  boolean:
+    component: "Checkbox"
+    props:
+      className: "w-4 h-4"
+  
+  array:
+    component: "Textarea"
+    props:
+      className: "bg-zinc-800 border-zinc-700 font-mono text-xs"
+      placeholder: "Enter as JSON array, e.g., [1, 2, 3]"
+  
+  object:
+    component: "Textarea"
+    props:
+      className: "bg-zinc-800 border-zinc-700 font-mono text-xs min-h-[100px]"
+      placeholder: "Enter as JSON object, e.g., {\"key\": \"value\"}"
+  
+  enum:
+    component: "Select"
+    props:
+      className: "bg-zinc-800 border-zinc-700"
+
+# ============================================================================
+# Layout Rules
+# UI 레이아웃 규칙
+# ============================================================================
+layout:
+  # 섹션 헤더 (oneOf, allOf)
+  sectionHeader:
+    enabled: true
+    style:
+      backgroundColor: "bg-cyan-950/30"
+      borderColor: "border-zinc-800"
+      textColor: "text-cyan-400"
+      fontSize: "text-xs"
+      fontWeight: "font-semibold"
+      padding: "p-2"
+  
+  # 필드 그룹화
+  fieldGrouping:
+    enabled: false  # Original은 그룹화 없음
+  
+  # Object with children (중첩 필드)
+  nestedObject:
+    enabled: true
+    accordion: true  # 아코디언 방식
+    checkbox: true   # 활성화 체크박스
+    style:
+      border: "border-zinc-700"
+      background: "bg-zinc-900/50"
+      headerBackground: "bg-zinc-800/50"
+
+# ============================================================================
+# Rendering Rules
+# 필드 렌더링 규칙
+# ============================================================================
+rendering:
+  # Required 표시
+  requiredIndicator:
+    enabled: true
+    symbol: "*"
+    color: "text-red-400"
+  
+  # Description 표시
+  description:
+    enabled: true
+    position: "inline"  # inline | below
+    style:
+      color: "text-zinc-500"
+      fontSize: "text-xs"
+      fontWeight: "font-normal"
+  
+  # Type 표시
+  typeIndicator:
+    enabled: true
+    position: "right"  # left | right
+    style:
+      color: "text-zinc-600"
+      fontSize: "text-[10px]"
+      fontFamily: "font-mono"
+  
+  # Enum options
+  enumDisplay:
+    inline: false  # 옵션을 필드 아래 표시하지 않음
+    showLabels: false
+
+# ============================================================================
+# Validation Display
+# 검증 오류 표시 규칙
+# ============================================================================
+validation:
+  errorDisplay:
+    position: "below"  # below | inline | tooltip
+    style:
+      color: "text-red-400"
+      fontSize: "text-xs"
+      icon: "❌"
+  
+  warningDisplay:
+    position: "below"
+    style:
+      color: "text-yellow-400"
+      fontSize: "text-xs"
+      icon: "⚠️"
+
+# ============================================================================
+# Conditional Rendering
+# 조건부 렌더링 규칙
+# ============================================================================
+conditionalRendering:
+  # oneOf 지원
+  oneOf:
+    enabled: true
+    sectionReset: true  # 섹션마다 번호 리셋
+  
+  # allOf 지원
+  allOf:
+    enabled: true
+    merge: true  # 필드 병합
+
+# ============================================================================
+# Styling
+# 전역 스타일 규칙
+# ============================================================================
+styling:
+  colors:
+    primary: "blue-600"
+    secondary: "zinc-700"
+    success: "green-600"
+    error: "red-600"
+    warning: "yellow-600"
+  
+  spacing:
+    fieldGap: "4"  # space-y-4
+    sectionGap: "6"  # space-y-6
+  
+  borders:
+    fieldBorder: "border-zinc-700"
+    sectionBorder: "border-zinc-800"
+

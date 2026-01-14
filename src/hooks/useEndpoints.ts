@@ -14,17 +14,27 @@ export function useEndpoints() {
   const fetchEndpoints = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:9527/api/endpoints/tree');
+      console.log('🔄 Fetching endpoints from server...');
+      
+      // 🔥 캐시 무시하고 항상 최신 데이터 가져오기
+      const response = await fetch('http://localhost:9527/api/endpoints/tree', {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+        },
+      });
       
       if (!response.ok) {
         throw new Error('Failed to fetch endpoints');
       }
       
       const data = await response.json();
+      console.log('✅ Fetched endpoints:', data.length, 'products');
       setEndpoints(data);
       setError(null);
     } catch (err) {
-      console.error('Error fetching endpoints:', err);
+      console.error('❌ Error fetching endpoints:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');
       // 에러 시 빈 배열 설정
       setEndpoints([]);

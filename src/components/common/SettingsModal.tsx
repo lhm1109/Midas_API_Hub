@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,12 +21,14 @@ interface SettingsModalProps {
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
+    schemaDefinition?: 'original' | 'enhanced';
   };
   onSettingsChange: (settings: {
     baseUrl: string;
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
+    schemaDefinition?: 'original' | 'enhanced';
   }) => void;
 }
 
@@ -35,7 +38,14 @@ export function SettingsModal({
   settings,
   onSettingsChange,
 }: SettingsModalProps) {
+  const [localSettings, setLocalSettings] = useState(settings);
+  
+  useEffect(() => {
+    setLocalSettings(settings);
+  }, [settings]);
+  
   const handleSave = () => {
+    onSettingsChange(localSettings);
     onOpenChange(false);
     toast.success('✅ Settings saved successfully!');
   };
@@ -108,9 +118,9 @@ export function SettingsModal({
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="useAssignWrapper"
-                checked={settings.useAssignWrapper !== false}
+                checked={localSettings.useAssignWrapper !== false}
                 onCheckedChange={(checked) =>
-                  onSettingsChange({ ...settings, useAssignWrapper: checked === true })
+                  setLocalSettings({ ...localSettings, useAssignWrapper: checked === true })
                 }
                 className="border-zinc-700"
               />
@@ -121,6 +131,26 @@ export function SettingsModal({
             <p className="text-xs text-zinc-400 ml-7">
               Wrap request body with {"{"}"Assign": {"{"}"1": ...{"}"}{"}"} structure. 
               This is the default format for MIDAS API endpoints.
+            </p>
+          </div>
+
+          {/* 🔥 NEW: Schema Definition 선택 */}
+          <div className="space-y-2">
+            <Label htmlFor="schema-definition" className="text-zinc-200">
+              Schema Definition (UI Rendering)
+            </Label>
+            <select
+              id="schema-definition"
+              value={localSettings.schemaDefinition || 'auto'}
+              onChange={(e) => setLocalSettings({ ...localSettings, schemaDefinition: e.target.value === 'auto' ? undefined : e.target.value as 'original' | 'enhanced' })}
+              className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white text-sm"
+            >
+              <option value="auto">Auto (자동 감지)</option>
+              <option value="original">Original (기존 스키마)</option>
+              <option value="enhanced">Enhanced (인핸스드 스키마)</option>
+            </select>
+            <p className="text-xs text-zinc-400 mt-1">
+              UI 렌더링 규칙을 선택합니다. Auto는 스키마 타입을 자동으로 감지합니다.
             </p>
           </div>
         </div>

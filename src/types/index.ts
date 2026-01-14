@@ -107,5 +107,7 @@ export interface Settings {
   baseUrl: string;
   mapiKey: string;
   commonHeaders: string;
+  useAssignWrapper?: boolean;
+  schemaDefinition?: 'auto' | 'original' | 'enhanced';
 }
 

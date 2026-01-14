@@ -82,19 +82,17 @@ router.get('/tree', async (req, res) => {
       }
     });
     
-    // 4-3. Endpoints 추가
+    // 4-3. Endpoints 추가 (products 테이블에 있는 것만)
     (endpoints || []).forEach(endpoint => {
-      // Product가 없으면 생성 (레거시 데이터 대응)
+      // 🔥 Product가 products 테이블에 없으면 무시 (고아 엔드포인트)
       if (!tree[endpoint.product]) {
-        tree[endpoint.product] = {
-          id: endpoint.product,
-          name: endpoint.product,
-          groups: {}
-        };
+        console.log(`⚠️ Orphaned endpoint detected: ${endpoint.name} (product: ${endpoint.product})`);
+        return; // Skip this endpoint
       }
       
       // Group이 없으면 생성 (레거시 데이터 대응)
       if (!tree[endpoint.product].groups[endpoint.group_name]) {
+        console.log(`⚠️ Creating missing group: ${endpoint.group_name} for product: ${endpoint.product}`);
         tree[endpoint.product].groups[endpoint.group_name] = {
           id: `${endpoint.product}_${endpoint.group_name}`,
           name: endpoint.group_name,
@@ -406,6 +404,63 @@ router.put('/:id', async (req, res) => {
     }
   } catch (error) {
     console.error('Update endpoint error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * DELETE /api/endpoints/orphaned
+ * 고아 엔드포인트 삭제 (products 테이블에 없는 제품의 엔드포인트)
+ * ⚠️ 주의: /:id 라우트보다 먼저 정의되어야 함!
+ */
+router.delete('/orphaned', async (req, res) => {
+  try {
+    console.log('🧹 Cleaning up orphaned endpoints...');
+    
+    // 1. Products 테이블에서 모든 제품 ID 가져오기
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('id');
+    
+    if (productsError) throw productsError;
+    
+    const validProductIds = new Set(products.map(p => p.id));
+    console.log('✅ Valid product IDs:', Array.from(validProductIds));
+    
+    // 2. Endpoints 테이블에서 모든 엔드포인트 가져오기
+    const { data: endpoints, error: endpointsError } = await supabase
+      .from('endpoints')
+      .select('id, name, product');
+    
+    if (endpointsError) throw endpointsError;
+    
+    // 3. 고아 엔드포인트 찾기
+    const orphanedEndpoints = endpoints.filter(e => !validProductIds.has(e.product));
+    
+    if (orphanedEndpoints.length === 0) {
+      console.log('✅ No orphaned endpoints found');
+      return res.json({ message: 'No orphaned endpoints found', deleted: [] });
+    }
+    
+    console.log('🗑️ Found orphaned endpoints:', orphanedEndpoints.map(e => ({ id: e.id, name: e.name, product: e.product })));
+    
+    // 4. 고아 엔드포인트 삭제
+    const orphanedIds = orphanedEndpoints.map(e => e.id);
+    const { data: deleted, error: deleteError } = await supabase
+      .from('endpoints')
+      .delete()
+      .in('id', orphanedIds)
+      .select();
+    
+    if (deleteError) throw deleteError;
+    
+    console.log('✅ Deleted orphaned endpoints:', deleted);
+    res.json({ 
+      message: `Deleted ${deleted.length} orphaned endpoints`, 
+      deleted: deleted.map(e => ({ id: e.id, name: e.name, product: e.product }))
+    });
+  } catch (error) {
+    console.error('❌ Clean up orphaned endpoints error:', error);
     res.status(500).json({ error: error.message });
   }
 });

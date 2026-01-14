@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, User, FileCode, PlayCircle, Paperclip, Download, X } from 'lucide-react';
+import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, X } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
@@ -33,6 +33,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
   const [changeLog, setChangeLog] = useState('');
   const [attachments, setAttachments] = useState<Record<string, Attachment[]>>({});
   const [uploadingFiles, setUploadingFiles] = useState<Set<string>>(new Set());
+  const [isCreatingVersion, setIsCreatingVersion] = useState(false);
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   // 엔드포인트가 변경될 때마다 해당 엔드포인트의 버전 목록을 가져옴
@@ -196,6 +197,12 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       toast.error('❌ Please enter a version number');
       return;
     }
+    
+    if (isCreatingVersion) {
+      return; // 이미 생성 중이면 무시
+    }
+    
+    setIsCreatingVersion(true);
     try {
       await createVersion(endpoint.id, newVersionNumber.trim(), changeLog.trim() || undefined);
       toast.success(`✅ Version ${newVersionNumber.trim()} created successfully`);
@@ -204,6 +211,8 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       setShowCreateDialog(false);
     } catch (error) {
       toast.error(`❌ Failed to create version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsCreatingVersion(false);
     }
   };
 
@@ -477,11 +486,11 @@ export function VersionTab({ endpoint }: VersionTabProps) {
             </Button>
             <Button
               onClick={handleCreateVersion}
-              disabled={!newVersionNumber.trim()}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={!newVersionNumber.trim() || isCreatingVersion}
+              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create Version
+              {isCreatingVersion ? 'Creating...' : 'Create Version'}
             </Button>
           </div>
         </DialogContent>

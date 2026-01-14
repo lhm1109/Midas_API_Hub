@@ -1,0 +1,244 @@
+# Enhanced Schema Logic Rules
+# 스키마 처리 로직을 YAML로 정의하여 코드 변경 없이 규칙 수정 가능
+
+# ============================================================================
+# Section Determination Rules (섹션 결정 규칙)
+# ============================================================================
+sectionRules:
+  # 규칙 평가 순서대로 실행 (첫 매칭 규칙 적용)
+  
+  - name: "Explicit Group"
+    description: "x-ui.group이 명시되어 있으면 그대로 사용"
+    condition:
+      type: "has-explicit-group"
+    action:
+      type: "use-explicit-group"
+  
+  - name: "No VisibleWhen"
+    description: "visibleWhen이 없으면 공통 섹션"
+    condition:
+      type: "no-visible-when"
+    action:
+      type: "assign-section"
+      section: "Common Keys and Solid"
+  
+  - name: "Tension and Compression"
+    description: "TENSTR과 COMPTR 둘 다 포함"
+    condition:
+      type: "visible-types-include-all"
+      types: ["TENSTR", "COMPTR"]
+    action:
+      type: "assign-section"
+      section: "Tension/Compression"
+  
+  - name: "Tension Only - Cable"
+    description: "TENSTR만 있고 STYPE=3"
+    condition:
+      type: "visible-types-match"
+      includes: ["TENSTR"]
+      excludes: ["COMPTR"]
+      fields:
+        STYPE: 3
+    action:
+      type: "assign-section"
+      section: "Tension only - Cable"
+  
+  - name: "Tension Only"
+    description: "TENSTR만 있음"
+    condition:
+      type: "visible-types-match"
+      includes: ["TENSTR"]
+      excludes: ["COMPTR"]
+    action:
+      type: "assign-section"
+      section: "Tension only"
+  
+  - name: "Compression Only"
+    description: "COMPTR만 있음"
+    condition:
+      type: "visible-types-include-any"
+      types: ["COMPTR"]
+    action:
+      type: "assign-section"
+      section: "Compression only"
+  
+  - name: "Wall Only"
+    description: "WALL만 있음"
+    condition:
+      type: "visible-types-exact"
+      types: ["WALL"]
+    action:
+      type: "assign-section"
+      section: "Wall"
+  
+  - name: "Plate Only"
+    description: "PLATE만 있음"
+    condition:
+      type: "visible-types-exact"
+      types: ["PLATE"]
+    action:
+      type: "assign-section"
+      section: "Plate"
+  
+  - name: "Multiple Types"
+    description: "여러 타입이 있으면 조합된 이름"
+    condition:
+      type: "visible-types-multiple"
+    action:
+      type: "join-type-labels"
+      separator: ", "
+  
+  - name: "Fallback"
+    description: "기본값"
+    condition:
+      type: "always"
+    action:
+      type: "assign-section"
+      section: "Advanced"
+
+# ============================================================================
+# Section Ordering (섹션 정렬 순서)
+# ============================================================================
+sectionOrder:
+  - "Common Keys and Solid"
+  - "Beam, Truss, Plane Strain, Axisymmetric"
+  - "Tension only"
+  - "Tension only - Truss"
+  - "Tension only - Hook"
+  - "Tension only - Cable"
+  - "Compression only"
+  - "Compression only - Truss"
+  - "Compression only - Gap"
+  - "Tension/Compression"
+  - "Wall"
+  - "Plate"
+  - "Plane Stress"
+  - "Advanced"
+
+# ============================================================================
+# Type Labels (타입 레이블 매핑)
+# ============================================================================
+typeLabels:
+  TENSTR: "Tension only"
+  COMPTR: "Compression only"
+  BEAM: "Beam"
+  TRUSS: "Truss"
+  PLATE: "Plate"
+  WALL: "Wall"
+  PLSTRS: "Plane Stress"
+  PLSTRN: "Plane Strain"
+  AXISYM: "Axisymmetric"
+  SOLID: "Solid"
+
+# ============================================================================
+# Visibility Evaluation Rules (필드 표시 여부 평가 규칙)
+# ============================================================================
+visibilityRules:
+  # visibleWhen 조건을 평가하는 규칙
+  
+  - name: "No VisibleWhen"
+    description: "visibleWhen이 없으면 항상 표시"
+    condition:
+      type: "no-visible-when"
+    result: true
+  
+  - name: "TYPE Condition"
+    description: "TYPE 필드 조건 확인"
+    condition:
+      type: "has-field-condition"
+      field: "TYPE"
+    evaluation:
+      # currentType이 allowedTypes에 포함되어야 함
+      operator: "in"
+      field: "TYPE"
+  
+  - name: "Other Field Conditions"
+    description: "다른 필드 조건 확인"
+    condition:
+      type: "has-other-conditions"
+    evaluation:
+      # 모든 조건이 만족되어야 함
+      operator: "all-match"
+
+# ============================================================================
+# Required Status Calculation Rules (Required 상태 계산 규칙)
+# ============================================================================
+requiredCalculationRules:
+  priority:
+    - "base-required"      # 최상위 required 배열
+    - "conditional-required" # allOf 조건부 required
+    - "visibility-check"   # visibleWhen 조건
+
+  baseRequired:
+    description: "최상위 required 배열에 있으면 모든 TYPE에서 required"
+    status: "required"
+  
+  conditionalRequired:
+    description: "allOf 조건에 매칭되면 해당 TYPE에서 required"
+    status: "required"
+  
+  notVisible:
+    description: "visibleWhen 조건으로 보이지 않으면 n/a"
+    status: "n/a"
+  
+  default:
+    description: "기본값"
+    status: "optional"
+
+# ============================================================================
+# Validation Layer Rules (검증 레이어 결정 규칙)
+# ============================================================================
+validationLayerRules:
+  STD:
+    description: "Standard JSON Schema validation"
+    triggers:
+      - has-enum
+      - has-minItems
+      - has-maxItems
+      - has-type
+  
+  APP:
+    description: "Application-specific validation"
+    triggers:
+      - has-enumByType
+      - has-nodeCountByType
+      - has-valueConstraint
+      - has-custom-x-field
+
+# ============================================================================
+# Field Description Building Rules (필드 설명 생성 규칙)
+# ============================================================================
+descriptionBuildingRules:
+  order:
+    - label
+    - enum-values
+    - enum-by-type
+    - value-constraints
+    - node-count-by-type
+    - hint
+  
+  templates:
+    label: "<strong>{label}</strong>"
+    enum-values:
+      header: "<strong>Enum Values:</strong>"
+      item: "<li><code>{value}</code> - {label}</li>"
+      wrapper: "<ul>{items}</ul>"
+    
+    enum-by-type:
+      header: "<strong>Enum Values by Type:</strong>"
+      type-header: "<p><em>{type}:</em></p>"
+      item: "<li><code>{value}</code> - {label}</li>"
+      wrapper: "<ul>{items}</ul>"
+    
+    value-constraints:
+      header: "<strong>Value Constraints:</strong>"
+      item: "<li><em>{type}:</em> {constraint}</li>"
+      wrapper: "<ul>{items}</ul>"
+    
+    node-count-by-type:
+      header: "<strong>Node Count by Type:</strong>"
+      item: "<li><em>{type}:</em> {count} nodes</li>"
+      wrapper: "<ul>{items}</ul>"
+    
+    hint: '<p class="hint">{hint}</p>'
+

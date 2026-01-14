@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element - Enhanced Schema Specification</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            padding: 0 20px; 
+            line-height: 1.6; 
+        }
+        h1 { 
+            color: #2c3e50; 
+            border-bottom: 3px solid #3498db; 
+            padding-bottom: 10px; 
+        }
+        h2, h3 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .info { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin: 20px 0; 
+            border-left: 4px solid #3498db; 
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 100%; 
+            margin: 20px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+            vertical-align: top;
+        }
+        th { 
+            background-color: #3498db; 
+            color: white; 
+            font-weight: bold;
+            padding: 15px 5px;
+            text-align: center;
+        }
+        tr:nth-child(even) { 
+            background-color: #f2f2f2; 
+        }
+        .section-header {
+            background-color: #e6fcff;
+            padding: 10px 5px;
+            font-weight: bold;
+            color: #4c9aff;
+        }
+        .field-key {
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: bold;
+        }
+        .centered {
+            text-align: center;
+        }
+        .type-list {
+            margin: 3px 0;
+            padding-left: 15px;
+            font-size: 13px;
+        }
+        .type-list li {
+            margin: 2px 0;
+        }
+        .enum-values {
+            background-color: #f5f5f5;
+            padding: 8px;
+            border-radius: 3px;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .constraint-note {
+            background-color: #fff3e0;
+            padding: 6px 10px;
+            border-radius: 3px;
+            margin: 5px 0;
+            font-size: 12px;
+            border-left: 3px solid #ff9800;
+        }
+        .validation-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .std-validation {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .app-validation {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .legend {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .summary-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Element API - Enhanced Schema Specification</h1>
+    
+    <div class="info">
+        <p><strong>API Endpoint:</strong> <code>{base url} + db/ELEM</code></p>
+        <p><strong>Methods:</strong> POST, GET, PUT, DELETE</p>
+        <p><strong>Schema Type:</strong> Single Entity Schema (validates one Element object)</p>
+    </div>
+
+    <div class="summary-box">
+        <h3>Enhanced Schema Philosophy</h3>
+        <p><strong>Standard JSON Schema Validation</strong> + <strong>x-* Extensions for Complex Logic</strong></p>
+        <ul>
+            <li><span class="validation-badge std-validation">STD</span> Standard validators enforce: required fields, if/then logic, fixed enums, type checks</li>
+            <li><span class="validation-badge app-validation">APP</span> Application layer enforces: type-dependent enums, node counts, value sign constraints</li>
+        </ul>
+    </div>
+
+    <h2>Specifications</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 6%;">No.</th>
+                <th style="width: 35%;">Description</th>
+                <th style="width: 14%;">Key</th>
+                <th style="width: 10%;">Value Type</th>
+                <th style="width: 10%;">Default</th>
+                <th style="width: 25%;">Required</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Common Keys and Solid Section -->
+            <tr>
+                <td colspan="6" class="section-header">Common Keys and Solid</td>
+            </tr>
+            <tr>
+                <td class="centered">1</td>
+                <td>
+                    <strong>Element Type</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values:</strong>
+                        <ul class="type-list">
+                            <li>"BEAM" - General Beam/Tapered Beam</li>
+                            <li>"TRUSS" - Truss</li>
+                            <li>"TENSTR" - Tension only/Hook/Cable</li>
+                            <li>"COMPTR" - Compression only/Gap</li>
+                            <li>"PLATE" - Plate</li>
+                            <li>"WALL" - Wall</li>
+                            <li>"PLSTRS" - Plane Stress</li>
+                            <li>"PLSTRN" - Plane Strain</li>
+                            <li>"AXISYM" - Axisymmetric</li>
+                            <li>"SOLID" - Solid</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Validated by standard enum constraint
+                </td>
+                <td class="field-key">"TYPE"</td>
+                <td class="centered">String</td>
+                <td class="centered">"BEAM"</td>
+                <td class="centered">
+                    Optional<br>
+                    <small>(All types)</small>
+                </td>
+            </tr>
+            <tr>
+                <td class="centered">2</td>
+                <td>
+                    <strong>Material No.</strong>
+                    <p>Material number reference</p>
+                    <span class="validation-badge std-validation">STD</span> Always required
+                </td>
+                <td class="field-key">"MATL"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">
+                    Required<br>
+                    <small>(All types)</small>
+                </td>
+            </tr>
+            <tr>
+                <td class="centered">3</td>
+                <td>
+                    <strong>Section / Thickness No.</strong>
+                    <p>Section or thickness number reference</p>
+                    <span class="validation-badge std-validation">STD</span> Required for all types except SOLID
+                </td>
+                <td class="field-key">"SECT"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td>
+                    <strong>Required:</strong>
+                    <ul class="type-list">
+                        <li>BEAM, TRUSS, TENSTR, COMPTR</li>
+                        <li>PLATE, WALL, PLSTRS, PLSTRN, AXISYM</li>
+                    </ul>
+                    <strong>Not Applicable:</strong>
+                    <ul class="type-list">
+                        <li>SOLID</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="centered">4</td>
+                <td>
+                    <strong>Node No.</strong>
+                    <p>Array of node numbers defining element connectivity</p>
+                    <div class="constraint-note">
+                        <span class="validation-badge std-validation">STD</span> minItems: 2, maxItems: 8<br>
+                        <span class="validation-badge app-validation">APP</span> Exact count by type:
+                        <ul class="type-list">
+                            <li>BEAM, TRUSS, TENSTR, COMPTR: 2 nodes</li>
+                            <li>PLATE, PLSTRS, PLSTRN, AXISYM: 3 or 4 nodes</li>
+                            <li>WALL: 4 nodes</li>
+                            <li>SOLID: 4, 6, or 8 nodes</li>
+                        </ul>
+                    </div>
+                </td>
+                <td class="field-key">"NODE"</td>
+                <td class="centered">Array<br>[Integer]</td>
+                <td class="centered">-</td>
+                <td class="centered">
+                    Required<br>
+                    <small>(All types)</small>
+                </td>
+            </tr>
+
+            <!-- Geometry Section -->
+            <tr>
+                <td colspan="6" class="section-header">Beam, Truss, Plane Strain, Axisymmetric</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td>
+                    <strong>Beta Angle</strong>
+                    <p>Element rotation angle in degrees</p>
+                </td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td>
+                    <strong>Optional:</strong>
+                    <ul class="type-list">
+                        <li>BEAM, TRUSS, PLSTRN, AXISYM</li>
+                    </ul>
+                    <strong>Not Applicable:</strong>
+                    <ul class="type-list">
+                        <li>SOLID</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <!-- Tension only - Truss -->
+            <tr>
+                <td colspan="6" class="section-header">Tension only - Truss</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td>
+                    <strong>Beta Angle</strong>
+                </td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for TENSTR:</strong>
+                        <ul class="type-list">
+                            <li>1 - Truss</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=TENSTR<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">7</td>
+                <td>
+                    <strong>Allowable Compression</strong>
+                    <div class="constraint-note">
+                        <span class="validation-badge app-validation">APP</span> Negative Value Only
+                    </div>
+                </td>
+                <td class="field-key">"TENS"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">8</td>
+                <td>
+                    <strong>Tension Limit Value</strong>
+                    <div class="constraint-note">
+                        <span class="validation-badge app-validation">APP</span> Positive Value Only
+                    </div>
+                </td>
+                <td class="field-key">"T_LIMIT"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">9</td>
+                <td>
+                    <strong>Tension Limit</strong>
+                    <p>Enable/disable tension limit</p>
+                </td>
+                <td class="field-key">"T_bLMT"</td>
+                <td class="centered">Boolean</td>
+                <td class="centered">false</td>
+                <td class="centered">Optional</td>
+            </tr>
+
+            <!-- Tension only - Hook -->
+            <tr>
+                <td colspan="6" class="section-header">Tension only - Hook</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for TENSTR:</strong>
+                        <ul class="type-list">
+                            <li>2 - Hook</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=TENSTR<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">7</td>
+                <td>
+                    <strong>Hook Length</strong>
+                </td>
+                <td class="field-key">"NON_LEN"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+
+            <!-- Tension only - Cable -->
+            <tr>
+                <td colspan="6" class="section-header">Tension only - Cable</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for TENSTR:</strong>
+                        <ul class="type-list">
+                            <li>3 - Cable</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=TENSTR<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">7</td>
+                <td>
+                    <strong>Cable Type</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values:</strong>
+                        <ul class="type-list">
+                            <li>1 - Pretension</li>
+                            <li>2 - Horizontal</li>
+                            <li>3 - Lu</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Required when TYPE=TENSTR AND STYPE=3
+                </td>
+                <td class="field-key">"CABLE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">8</td>
+                <td><strong>Pretension / Horizontal</strong></td>
+                <td class="field-key">"TENS"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">9</td>
+                <td>
+                    <strong>Lu</strong>
+                    <div class="constraint-note">
+                        Range: 0.5~1.5<br>
+                        <span class="validation-badge std-validation">STD</span> Required when TYPE=TENSTR AND STYPE=3
+                    </div>
+                </td>
+                <td class="field-key">"NON_LEN"</td>
+                <td class="centered">Number</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+
+            <!-- Compression only - Truss -->
+            <tr>
+                <td colspan="6" class="section-header">Compression only - Truss</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for COMPTR:</strong>
+                        <ul class="type-list">
+                            <li>1 - Truss</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=COMPTR<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">7</td>
+                <td>
+                    <strong>Allowable Tension</strong>
+                    <div class="constraint-note">
+                        <span class="validation-badge app-validation">APP</span> Positive Value Only
+                    </div>
+                </td>
+                <td class="field-key">"TENS"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">8</td>
+                <td><strong>Compression Limit</strong></td>
+                <td class="field-key">"T_bLMT"</td>
+                <td class="centered">Boolean</td>
+                <td class="centered">false</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">9</td>
+                <td>
+                    <strong>Compression Limit value</strong>
+                    <div class="constraint-note">
+                        <span class="validation-badge app-validation">APP</span> Negative Value Only
+                    </div>
+                </td>
+                <td class="field-key">"T_LIMIT"</td>
+                <td class="centered">Number</td>
+                <td class="centered">-</td>
+                <td class="centered">Optional</td>
+            </tr>
+
+            <!-- Compression only - Gap -->
+            <tr>
+                <td colspan="6" class="section-header">Compression only - Gap</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for COMPTR:</strong>
+                        <ul class="type-list">
+                            <li>2 - Gap</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=COMPTR<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">7</td>
+                <td><strong>Gap</strong></td>
+                <td class="field-key">"NON_LEN"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+
+            <!-- Wall -->
+            <tr>
+                <td colspan="6" class="section-header">Wall</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for WALL:</strong>
+                        <ul class="type-list">
+                            <li>1 - Membrane</li>
+                            <li>2 - Plate</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=WALL<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">7</td>
+                <td>
+                    <strong>Wall ID</strong>
+                    <p>Wall identifier</p>
+                    <span class="validation-badge std-validation">STD</span> Required when TYPE=WALL
+                </td>
+                <td class="field-key">"WALL"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">8</td>
+                <td>
+                    <strong>Orientation (Wall Beta Angle Only)</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values:</strong>
+                        <ul class="type-list">
+                            <li>0 - Beta Angle</li>
+                            <li>1 - Ref Point</li>
+                            <li>2 - Ref Vector</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Required when TYPE=WALL
+                </td>
+                <td class="field-key">"W_CON"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+            <tr>
+                <td class="centered">9</td>
+                <td>
+                    <strong>Wall Type</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values:</strong>
+                        <ul class="type-list">
+                            <li>0 - Plate base</li>
+                            <li>1 - CRB - Pin</li>
+                            <li>2 - CRB - Fixed</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Fixed enum constraint
+                </td>
+                <td class="field-key">"W_TYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+
+            <!-- Plate -->
+            <tr>
+                <td colspan="6" class="section-header">Plate</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for PLATE:</strong>
+                        <ul class="type-list">
+                            <li>1 - Thick</li>
+                            <li>2 - Thin</li>
+                            <li>3 - Thick with Drilling DOF</li>
+                            <li>4 - Thin with Drilling DOF</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=PLATE<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+
+            <!-- Plane Stress -->
+            <tr>
+                <td colspan="6" class="section-header">Plane Stress</td>
+            </tr>
+            <tr>
+                <td class="centered">5</td>
+                <td><strong>Beta Angle</strong></td>
+                <td class="field-key">"ANGLE"</td>
+                <td class="centered">Number</td>
+                <td class="centered">0</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">6</td>
+                <td>
+                    <strong>Element Subtype</strong>
+                    <div class="enum-values">
+                        <strong>Enum Values for PLSTRS:</strong>
+                        <ul class="type-list">
+                            <li>1 - with Drilling DOF Inactive</li>
+                            <li>2 - with Drilling DOF Active</li>
+                        </ul>
+                    </div>
+                    <span class="validation-badge std-validation">STD</span> Field required when TYPE=PLSTRS<br>
+                    <span class="validation-badge app-validation">APP</span> Enum values validated by type
+                </td>
+                <td class="field-key">"STYPE"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Required</td>
+            </tr>
+
+            <!-- Advanced -->
+            <tr>
+                <td colspan="6" class="section-header">Advanced (All Types)</td>
+            </tr>
+            <tr>
+                <td class="centered">10</td>
+                <td>
+                    <strong>Local Axis</strong>
+                    <p>Local coordinate system reference</p>
+                </td>
+                <td class="field-key">"LCAXIS"</td>
+                <td class="centered">Integer</td>
+                <td class="centered">-</td>
+                <td class="centered">Optional</td>
+            </tr>
+            <tr>
+                <td class="centered">11</td>
+                <td>
+                    <strong>Cable Length Ratio</strong>
+                    <p>Only visible when TYPE=TENSTR and STYPE=3</p>
+                </td>
+                <td class="field-key">"C_RAT"</td>
+                <td class="centered">Number</td>
+                <td class="centered">-</td>
+                <td class="centered">Optional</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Validation Architecture</h2>
+
+    <div class="info">
+        <h3>✅ Standard JSON Schema Validation (~70%)</h3>
+        <p>Enforced by standard validators (Ajv, etc.):</p>
+        <ul>
+            <li><strong>Base Required:</strong> TYPE, MATL, NODE</li>
+            <li><strong>Conditional Required:</strong>
+                <ul>
+                    <li>SECT required for all types except SOLID</li>
+                    <li>STYPE required for TENSTR, COMPTR, PLATE, WALL, PLSTRS</li>
+                    <li>WALL, W_CON required when TYPE=WALL</li>
+                    <li>CABLE, NON_LEN required when TYPE=TENSTR AND STYPE=3</li>
+                </ul>
+            </li>
+            <li><strong>Fixed Enums:</strong> TYPE, CABLE, W_CON, W_TYPE</li>
+            <li><strong>Array Bounds:</strong> NODE minItems=2, maxItems=8</li>
+        </ul>
+    </div>
+
+    <div class="info" style="border-left-color: #ff9800; background: #fff8e1;">
+        <h3>⚠️ Application Layer Validation (~30%)</h3>
+        <p>Requires custom logic using x-* metadata:</p>
+        <ul>
+            <li><strong>Type-dependent STYPE enum:</strong> Different valid values per TYPE (x-enum-by-type)</li>
+            <li><strong>Exact NODE count:</strong> Specific counts per TYPE (x-node-count-by-type)</li>
+            <li><strong>Value sign constraints:</strong> TENS/T_LIMIT positive/negative checks (x-value-constraint)</li>
+            <li><strong>UI visibility:</strong> Conditional field display (x-ui.visibleWhen)</li>
+        </ul>
+    </div>
+
+    <h2>Transport Metadata</h2>
+    <div class="info">
+        <p><strong>Schema validates:</strong> Single Element object (e.g., <code>{ "TYPE": "BEAM", "MATL": 1, ... }</code>)</p>
+        <p><strong>API Request format:</strong></p>
+        <pre><code>{
+  "Assign": {
+    "1": { "TYPE": "BEAM", "MATL": 1, "SECT": 1, "NODE": [1, 2] },
+    "2": { "TYPE": "WALL", "MATL": 1, "SECT": 1, "NODE": [3,4,5,6], "STYPE": 1, "WALL": 1, "W_CON": 0 }
+  }
+}</code></pre>
+        <p><strong>x-transport metadata:</strong></p>
+        <ul>
+            <li>URI: <code>db/ELEM</code></li>
+            <li>Methods: POST, GET, PUT, DELETE</li>
+            <li>Body Root: <code>"Assign"</code></li>
+        </ul>
+    </div>
+
+</body>
+</html>

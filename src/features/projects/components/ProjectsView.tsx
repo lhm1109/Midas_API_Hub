@@ -93,7 +93,6 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
       console.log('✅ Save completed in', duration, 'ms');
       toast.success(`✅ Version saved successfully! (${duration}ms)`);
     } catch (error) {
-      const duration = Date.now() - startTime;
       console.error('❌ Save version failed:', error);
       toast.error(`❌ Failed to save version: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
@@ -150,8 +149,8 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               </>
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" />
-                {isReadOnly ? '읽기 전용' : 'Save Version'}
+            <Save className="w-4 h-4 mr-2" />
+            {isReadOnly ? '읽기 전용' : 'Save Version'}
               </>
             )}
           </Button>
@@ -231,7 +230,7 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               </div>
             </div>
           ) : (
-            <SpecTab key={`spec-${endpoint.id}-${currentVersionId || 'none'}`} endpoint={endpoint} />
+            <SpecTab key={`spec-${endpoint.id}-${currentVersionId || 'none'}`} endpoint={endpoint} settings={settings} />
           )}
         </TabsContent>
 

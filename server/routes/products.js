@@ -209,21 +209,40 @@ router.delete('/:id', async (req, res) => {
 
     console.log('🗑️ Delete product request:', { id });
 
-    const { error } = await supabase
+    // 먼저 제품이 존재하는지 확인
+    const { data: existing, error: checkError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (checkError) {
+      console.error('❌ Check error:', checkError);
+      if (checkError.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Product not found', id });
+      }
+      throw checkError;
+    }
+
+    console.log('📦 Found product:', existing);
+
+    // 삭제 시도
+    const { data: deleted, error } = await supabase
       .from('products')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
     if (error) {
       console.error('❌ Delete error:', error);
       throw error;
     }
 
-    console.log('✅ Product deleted:', id);
-    res.json({ message: 'Product deleted successfully' });
+    console.log('✅ Product deleted:', deleted);
+    res.json({ message: 'Product deleted successfully', deleted });
   } catch (error) {
     console.error('❌ Delete product error:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, details: error });
   }
 });
 

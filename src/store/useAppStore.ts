@@ -128,6 +128,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         jsonSchemaOriginal: undefined,
         jsonSchemaEnhanced: undefined,
         examples: [],
+        requestExamples: [],
+        responseExamples: [],
         specifications: '',
       },
       specData: state.specData || {

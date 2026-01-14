@@ -1,7 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useState, useEffect, useMemo } from 'react';
-import { ChevronRight, ChevronDown, Send, Save, AlertCircle } from 'lucide-react';
+import { ChevronDown, Send, Save, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
 import { useAppStore } from '@/store/useAppStore';
 import { apiClient } from '@/lib/api-client';
-import type { ManualData } from '@/types';
+import type { ManualData, Settings } from '@/types';
 import { toast } from 'sonner';
 import { 
   resolveActiveSchema, 
@@ -21,6 +21,14 @@ import {
   compileSchema,
   canonicalToTableSchema,
 } from '@/lib/schema';
+import { 
+  compileEnhancedSchema,
+  type EnhancedSchema 
+} from '@/lib/schema/enhancedSchemaCompiler';
+import { generateHTMLDocument } from '@/lib/schema/enhancedTableGenerator';
+import { DynamicTableRenderer } from '@/lib/rendering/dynamicTableRenderer';
+import { loadCachedDefinition, type TableDefinition, type DefinitionType } from '@/lib/rendering/definitionLoader';
+import { generateHTMLTable, type TableParameter } from '@/lib/rendering/tableToHTML';
 
 interface SpecTabProps {
   endpoint: {
@@ -29,9 +37,10 @@ interface SpecTabProps {
     method: string;
     path: string;
   };
+  settings?: Settings;
 }
 
-export function SpecTab({ endpoint }: SpecTabProps) {
+export function SpecTab({ endpoint, settings }: SpecTabProps) {
   const { 
     setManualData, 
     manualData, 
@@ -42,6 +51,10 @@ export function SpecTab({ endpoint }: SpecTabProps) {
     loadVersion,
     specData,
   } = useAppStore();
+  
+  // 🔥 YAML Definition 로드
+  const [tableDefinition, setTableDefinition] = useState<TableDefinition | null>(null);
+  const [isLoadingDefinition, setIsLoadingDefinition] = useState(true);
   
   // 🔥 Schema Registry로 활성 스키마 결정 (우선순위 정책 분리)
   const fallbackSpec = apiSpecs[endpoint.id] || {
@@ -67,15 +80,235 @@ export function SpecTab({ endpoint }: SpecTabProps) {
   const activeSchema = resolveActiveSchema(combinedSpecData);
   const hasEnhancedSchema = isEnhancedSchemaActive(combinedSpecData);
   
+  // 🔥 NEW Enhanced Schema 감지: x-ui, x-transport, x-enum-by-type 등의 필드가 있는지 확인
+  const isNewEnhancedSchema = useMemo(() => {
+    const schemaStr = JSON.stringify(activeSchema);
+    return schemaStr.includes('x-ui') || 
+           schemaStr.includes('x-transport') || 
+           schemaStr.includes('x-enum-by-type') ||
+           schemaStr.includes('x-node-count-by-type');
+  }, [activeSchema]);
+  
+  // 🔥 Schema Definition 결정 (Settings 우선, 없으면 자동 감지)
+  const effectiveDefinitionType: DefinitionType = useMemo(() => {
+    if (settings?.schemaDefinition === 'original') return 'original';
+    if (settings?.schemaDefinition === 'enhanced') return 'enhanced';
+    // Auto: 자동 감지
+    return isNewEnhancedSchema ? 'enhanced' : 'original';
+  }, [settings?.schemaDefinition, isNewEnhancedSchema]);
+  
+  // 🎯 Schema View Toggle: 'original' | 'enhanced' (⚠️ tableParameters보다 먼저 선언)
+  const [schemaView, setSchemaView] = useState<'original' | 'enhanced'>(() => {
+    return hasEnhancedSchema ? 'enhanced' : 'original';
+  });
+  
+  // 🔥 endpoint 변경 시 schemaView 재설정 (Enhanced 우선)
+  useEffect(() => {
+    // 1. Enhanced 스키마가 명시적으로 있으면 Enhanced 우선
+    if (hasEnhancedSchema) {
+      setSchemaView('enhanced');
+    }
+    // 2. Original 스키마에 x-ui 등이 있으면 (New Enhanced Schema) Enhanced로 전환
+    else if (isNewEnhancedSchema) {
+      console.log('🔄 Auto-switching to Enhanced view (x-ui detected in schema)');
+      setSchemaView('enhanced');
+    }
+    // 3. 순수 Original 스키마만 있으면 Original
+    else {
+      setSchemaView('original');
+    }
+  }, [endpoint.id, hasEnhancedSchema, isNewEnhancedSchema]);
+  
+  // 🔥 YAML Definition 로드 (effectiveDefinitionType 변경 시)
+  useEffect(() => {
+    setIsLoadingDefinition(true);
+    loadCachedDefinition(effectiveDefinitionType, 'table')
+      .then((def) => {
+        setTableDefinition(def as TableDefinition);
+        setIsLoadingDefinition(false);
+      })
+      .catch((error) => {
+        console.error('Failed to load table definition:', error);
+        setIsLoadingDefinition(false);
+      });
+  }, [effectiveDefinitionType]);
+  
   // 🔥 NEW: Schema Compiler로 정규화된 AST 생성
   const canonicalFields = useMemo(() => {
+    if (isNewEnhancedSchema) {
+      // New Enhanced Schema: 무시하고 빈 배열 반환 (새 컴파일러 사용)
+      return [];
+    }
     return compileSchema(activeSchema);
-  }, [activeSchema]);
+  }, [activeSchema, isNewEnhancedSchema]);
   
   // 🔥 NEW: UI Schema Adapter로 테이블 스키마 생성
   const tableParameters = useMemo(() => {
-    return canonicalToTableSchema(canonicalFields);
-  }, [canonicalFields]);
+    // 🔥 schemaView에 따라 사용할 스키마 결정
+    const schemaToUse = schemaView === 'enhanced' 
+      ? (combinedSpecData.jsonSchemaEnhanced || activeSchema)
+      : (combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema);
+    
+    // 🔥 Enhanced 스키마 구조 감지 (현재 뷰 기준)
+    const isEnhancedStructure = schemaView === 'enhanced' || isNewEnhancedSchema;
+    
+    if (isEnhancedStructure && schemaToUse && Object.keys(schemaToUse).length > 0) {
+      // New Enhanced Schema: 새 컴파일러로 섹션 생성
+      try {
+        const sections = compileEnhancedSchema(schemaToUse as EnhancedSchema);
+        
+        // Convert sections to table parameters format
+        const params: any[] = [];
+        let rowNumber = 1;
+        
+        for (const section of sections) {
+          // Add section header
+          params.push({
+            no: '',
+            section: section.name,
+            name: '',
+            type: '',
+            default: '',
+            required: '',
+            description: '',
+          });
+          
+          // Add fields
+          for (const field of section.fields) {
+            const param: any = {
+              no: rowNumber++,
+              name: field.key,
+              type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
+              default: field.default !== undefined ? String(field.default) : '-',
+              description: field.ui?.label || field.key,
+              required: 'Optional', // Default to optional
+            };
+            
+            // 🔥 중첩 필드 (children) 추가
+            if (field.children && field.children.length > 0) {
+              param.children = field.children.map((child, idx) => {
+                // 🔥 oneOf 섹션 헤더 처리
+                if (child.type === 'section-header') {
+                  return {
+                    no: '',
+                    name: '',
+                    type: 'section-header',
+                    section: child.section || child.ui?.label || '',
+                    default: '',
+                    description: '',
+                    required: '',
+                  };
+                }
+                
+                // 일반 중첩 필드
+                return {
+                  no: `${rowNumber - 1}.${idx + 1}`, // 예: 4.1, 4.2, 4.3
+                  name: child.key.split('.').pop() || child.key, // UNIT.FORCE → FORCE
+                  type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                  default: child.default !== undefined ? String(child.default) : '-',
+                  description: child.ui?.label || child.key.split('.').pop() || child.key,
+                  required: child.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                };
+              });
+            }
+            
+            // Build description with enum/constraints
+            const descParts: string[] = [];
+            if (field.ui?.label) {
+              descParts.push(`**${field.ui.label}**`);
+            }
+            
+            // Standard enum
+            if (field.enum && field.enum.length > 0) {
+              descParts.push('**Enum Values:**');
+              field.enum.forEach(val => {
+                const label = field.enumLabels?.[String(val)] || val;
+                descParts.push(`• ${val} - ${label}`);
+              });
+            }
+            
+            // Enum by type
+            if (field.enumByType) {
+              descParts.push('**Enum Values by Type:**');
+              for (const [type, values] of Object.entries(field.enumByType)) {
+                descParts.push(`*${type}:*`);
+                values.forEach(val => {
+                  const label = field.enumLabelsByType?.[type]?.[String(val)] || val;
+                  descParts.push(`• ${val} - ${label}`);
+                });
+              }
+            }
+            
+            // Value constraints
+            if (field.valueConstraint) {
+              descParts.push('**Value Constraints:**');
+              for (const [type, constraint] of Object.entries(field.valueConstraint)) {
+                descParts.push(`• ${type}: ${constraint}`);
+              }
+            }
+            
+            // Node count by type
+            if (field.nodeCountByType) {
+              descParts.push('**Node Count by Type:**');
+              for (const [type, count] of Object.entries(field.nodeCountByType)) {
+                const countStr = Array.isArray(count) ? count.join(' or ') : count;
+                descParts.push(`• ${type}: ${countStr} nodes`);
+              }
+            }
+            
+            // Hint
+            if (field.ui?.hint) {
+              descParts.push(`*${field.ui.hint}*`);
+            }
+            
+            param.description = descParts.join('\n');
+            
+            // Required status (check all types)
+            const requiredStatuses = Object.values(field.required);
+            const hasRequired = requiredStatuses.some(s => s === 'required');
+            const hasOptional = requiredStatuses.some(s => s === 'optional');
+            
+            if (hasRequired && hasOptional) {
+              // Mixed: show detail
+              const grouped: Record<string, string[]> = { required: [], optional: [] };
+              for (const [type, status] of Object.entries(field.required)) {
+                if (status === 'required') grouped.required.push(type);
+                if (status === 'optional') grouped.optional.push(type);
+              }
+              
+              const reqParts: string[] = [];
+              if (grouped.required.length > 0) {
+                reqParts.push(`**Required:** ${grouped.required.join(', ')}`);
+              }
+              if (grouped.optional.length > 0) {
+                reqParts.push(`**Optional:** ${grouped.optional.join(', ')}`);
+              }
+              param.required = reqParts.join('\n');
+            } else if (hasRequired) {
+              param.required = 'Required';
+            } else {
+              param.required = 'Optional';
+            }
+            
+            params.push(param);
+          }
+        }
+        
+        return params;
+      } catch (error) {
+        console.error('Failed to compile enhanced schema:', error);
+        return [];
+      }
+    }
+    
+    // Original Schema: 기존 canonical 방식
+    // schemaView가 'original'이면 Original 스키마로 컴파일
+    const fieldsToUse = schemaView === 'original'
+      ? compileSchema(schemaToUse)
+      : canonicalFields;
+    
+    return canonicalToTableSchema(fieldsToUse);
+  }, [canonicalFields, isNewEnhancedSchema, schemaView, combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchemaEnhanced, combinedSpecData.jsonSchema]);
   
   const spec = {
     title: fallbackSpec.title,
@@ -89,26 +322,12 @@ export function SpecTab({ endpoint }: SpecTabProps) {
   // Track which parameters are expanded
   const [expandedParams, setExpandedParams] = useState<Set<number>>(new Set());
   
-  // 🎯 Schema View Toggle: 'original' | 'enhanced'
-  const [schemaView, setSchemaView] = useState<'original' | 'enhanced'>(() => {
-    return hasEnhancedSchema ? 'enhanced' : 'original';
-  });
-  
   // 🎯 Editable Schema State
   const [editableSchema, setEditableSchema] = useState<string>('');
   const [isSchemaModified, setIsSchemaModified] = useState(false);
   
   // 🎯 저장된 스키마를 추적하는 state (리렌더링 트리거용)
-  const [savedSchema, setSavedSchema] = useState<any>(null);
-  
-  // 🔥 endpoint 변경 시 schemaView 재설정 (Enhanced 우선)
-  useEffect(() => {
-    if (hasEnhancedSchema) {
-      setSchemaView('enhanced');
-    } else {
-      setSchemaView('original');
-    }
-  }, [endpoint.id, hasEnhancedSchema]);
+  const [, setSavedSchema] = useState<any>(null);
   
   // Initialize editable schema
   useEffect(() => {
@@ -135,17 +354,6 @@ export function SpecTab({ endpoint }: SpecTabProps) {
     setIsSchemaModified(true);
   };
   
-  // Parse and validate JSON
-  const getSchemaForDisplay = () => {
-    try {
-      if (isSchemaModified) {
-        return JSON.parse(editableSchema);
-      }
-    } catch (e) {
-      // If invalid JSON, return the original
-    }
-    return schemaView === 'original' ? spec.jsonSchema : spec.jsonSchemaEnhanced;
-  };
   
   // 🎯 Display parameters - 이제 tableParameters 직접 사용
   const displayParameters = tableParameters;
@@ -164,47 +372,6 @@ export function SpecTab({ endpoint }: SpecTabProps) {
     
   // 🎯 Schema를 Manual로 전송
   const handleSendSchemaToManual = (schemaType: 'original' | 'enhanced') => {
-    const formatJsonSchemaToHTML = (schema: any): string => {
-      const jsonStr = JSON.stringify(schema, null, 2);
-      return jsonStr
-        .split('\n')
-        .map(line => {
-          const leadingSpaces = line.match(/^(\s*)/)?.[1] || '';
-          const indent = leadingSpaces.replace(/ /g, '&nbsp;&nbsp;');
-          const trimmedLine = line.trim();
-          
-          const keyMatch = trimmedLine.match(/^"([^"]+)":\s*(.+)$/);
-          if (keyMatch) {
-            const key = keyMatch[1];
-            let value = keyMatch[2];
-            const hasComma = value.endsWith(',');
-            if (hasComma) {
-              value = value.slice(0, -1);
-            }
-            
-            let styledValue = value;
-            if (value === 'true' || value === 'false') {
-              styledValue = `<span style="color: #055bcc; font-weight: bold;">${value}</span>`;
-            } else if (value.match(/^"[^"]*"$/)) {
-              styledValue = `<span style="color: #055bcc;">${value}</span>`;
-            } else if (value.match(/^-?\d+(\.\d+)?$/)) {
-              styledValue = `<span style="color: #0ab66c;">${value}</span>`;
-            } else if (value === '{' || value === '[') {
-              styledValue = value;
-      }
-      
-            const styledLine = `${indent}<span style="color: #c31b1b;">"${key}"</span>: ${styledValue}${hasComma ? ',' : ''}`;
-            return styledLine;
-          }
-          
-          if (trimmedLine.match(/^[{\[\}\]],?$/)) {
-            return indent + trimmedLine;
-          }
-          
-          return indent + trimmedLine;
-        })
-        .join('<br>');
-    };
 
     // 🔥 Enhanced 스키마인지 확인하는 함수
     const isEnhancedSchemaStructure = (schema: any): boolean => {
@@ -296,176 +463,42 @@ export function SpecTab({ endpoint }: SpecTabProps) {
 
   // 🎯 Table을 Manual로 전송
   const handleSendTableToManual = () => {
-    const formatJsonSchemaToHTML = (schema: any): string => {
-      const jsonStr = JSON.stringify(schema, null, 2);
-      return jsonStr
-        .split('\n')
-        .map(line => {
-          const leadingSpaces = line.match(/^(\s*)/)?.[1] || '';
-          const indent = leadingSpaces.replace(/ /g, '&nbsp;&nbsp;');
-          const trimmedLine = line.trim();
-          
-          const keyMatch = trimmedLine.match(/^"([^"]+)":\s*(.+)$/);
-          if (keyMatch) {
-            const key = keyMatch[1];
-            let value = keyMatch[2];
-            const hasComma = value.endsWith(',');
-            if (hasComma) {
-              value = value.slice(0, -1);
-            }
-            
-            let styledValue = value;
-            if (value === 'true' || value === 'false') {
-              styledValue = `<span style="color: #055bcc; font-weight: bold;">${value}</span>`;
-            } else if (value.match(/^"[^"]*"$/)) {
-              styledValue = `<span style="color: #055bcc;">${value}</span>`;
-            } else if (value.match(/^-?\d+(\.\d+)?$/)) {
-              styledValue = `<span style="color: #0ab66c;">${value}</span>`;
-            } else if (value === '{' || value === '[') {
-              styledValue = value;
-            }
-            
-            const styledLine = `${indent}<span style="color: #c31b1b;">"${key}"</span>: ${styledValue}${hasComma ? ',' : ''}`;
-            return styledLine;
-          }
-          
-          if (trimmedLine.match(/^[{\[\}\]],?$/)) {
-            return indent + trimmedLine;
-          }
-          
-          return indent + trimmedLine;
-        })
-        .join('<br>');
-    };
-
-    // Specifications 테이블을 HTML로 변환
-    const generateSpecificationsTable = (): string => {
-      const params = tableParameters;
+    // 🔥 NEW: Enhanced Schema인 경우 완전한 HTML 문서 생성
+    if (isNewEnhancedSchema) {
+      try {
+        const htmlDocument = generateHTMLDocument(activeSchema as EnhancedSchema);
         
-      if (!params || params.length === 0) {
-        return '<p>No parameters available</p>';
-      }
+        const newManualData: ManualData = {
+          title: spec.title || endpoint.name,
+          category: endpoint.method,
+          inputUri: endpoint.path,
+          activeMethods: endpoint.method,
+          jsonSchema: manualData?.jsonSchema || JSON.stringify(spec.jsonSchema, null, 2),
+          jsonSchemaOriginal: JSON.stringify(spec.jsonSchema, null, 2),
+          jsonSchemaEnhanced: spec.jsonSchemaEnhanced ? JSON.stringify(spec.jsonSchemaEnhanced, null, 2) : undefined,
+          examples: manualData?.examples || [],
+          requestExamples: manualData?.requestExamples || [],
+          responseExamples: manualData?.responseExamples || [],
+          specifications: htmlDocument, // 완전한 HTML 문서
+        };
 
-      // 🎯 Markdown을 HTML로 변환하는 헬퍼 함수
-      const markdownToHtml = (text: string): string => {
-        return text
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold** → <strong>bold</strong>
-          .replace(/\*(.+?)\*/g, '<em>$1</em>')              // *italic* → <em>italic</em>
-          .replace(/`(.+?)`/g, '<code>$1</code>')            // `code` → <code>code</code>
-          .replace(/\n/g, '<br>');                           // 줄바꿈 → <br>
-      };
-
-      let tableHTML = `
-<div class="table-wrap">
-<table style="border-collapse: collapse; width: 100%;" border="1">
-<colgroup> 
-  <col style="width: 6.00%;"> 
-  <col style="width: 6.00%;"> 
-  <col style="width: 44.00%;"> 
-  <col style="width: 14.00%;"> 
-  <col style="width: 10.00%;"> 
-  <col style="width: 10.00%;"> 
-  <col style="width: 10.00%;"> 
-</colgroup>
-<tbody>
-<tr>
-<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
-<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
-<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
-<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
-<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
-<th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
-</tr>`;
-
-      params.forEach((param: any) => {
-        if (param.section) {
-          tableHTML += `
-<tr>
-<td style="background-color: #e6fcff; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
-<p><span style="color: #4c9aff;">${param.section}</span></p>
-</td>
-</tr>`;
-          // 🔥 섹션 헤더만 있는 행이면 실제 필드 행 추가 안 함
-          if (!param.name || !param.type) {
+        setManualData(newManualData);
+        toast.success('✅ Enhanced Schema table sent to Manual tab!');
+        return;
+      } catch (error) {
+        console.error('Failed to generate enhanced HTML:', error);
+        toast.error('❌ Failed to generate enhanced schema table');
             return;
           }
         }
 
-        const rowspan = param.children ? param.children.length + 1 : 1;
-        tableHTML += `
-<tr>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" ${param.children ? `rowspan="${rowspan}"` : ''}>
-<p style="text-align: center;">${param.no}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
-<p>${markdownToHtml(param.description || param.name)}</p>
-${param.options ? param.options.map((opt: string) => `<p>${markdownToHtml(opt)}</p>`).join('') : ''}
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">"${param.name}"</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.type}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.default || '-'}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.required}</p>
-</td>
-</tr>`;
-
-        if (param.children) {
-          param.children.forEach((child: any) => {
-            // 🔥 자식 요소 중 섹션 헤더 처리
-            if (child.section) {
-              tableHTML += `
-<tr>
-<td style="background-color: #e3f2fd; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="7">
-<p><span style="color: #1976d2;">${child.section}</span></p>
-</td>
-</tr>`;
-              return; // 🔥 섹션 헤더만 렌더링하고 종료
-            }
-            
-            // 🔥 빈 행 스킵 (name이나 type이 없으면)
-            if (!child.name || !child.type || child.name === '""') {
+    // 🔥 YAML 기반: 테이블 정의를 사용하여 HTML 생성
+    if (!tableDefinition) {
+      toast.error('❌ Table definition not loaded!');
               return;
             }
             
-            tableHTML += `
-<tr>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.no}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p>${markdownToHtml(child.description || child.name)}</p>
-${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}</p>`).join('') : ''}
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">"${child.name}"</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.type}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.default || '-'}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.required}</p>
-</td>
-</tr>`;
-          });
-        }
-      });
-
-      tableHTML += `
-</tbody>
-</table>
-</div>`;
-      
-      return tableHTML;
-    };
+    const specificationsHTML = generateHTMLTable(tableParameters as TableParameter[], tableDefinition);
 
     // 🎯 JSON으로 저장 (HTML이 아닌 실제 JSON 문자열)
     const newManualData: ManualData = {
@@ -479,7 +512,7 @@ ${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
       examples: manualData?.examples || [],  // deprecated
       requestExamples: manualData?.requestExamples || [],
       responseExamples: manualData?.responseExamples || [],
-      specifications: generateSpecificationsTable(),
+      specifications: specificationsHTML,
     };
 
     setManualData(newManualData);
@@ -487,54 +520,65 @@ ${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
   };
 
   return (
-    <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-      {/* Left Pane - JSON Schema Editor */}
-      <ResizablePanel defaultSize={50} minSize={30}>
-        <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
-          {/* 🔥 경고: Fallback 스키마 사용 중 */}
-          {isUsingFallback && (
-            <div className="bg-yellow-900/30 border-b border-yellow-700/50 px-4 py-2 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs text-yellow-200">
-                Using default schema template. Load a version to see saved schema.
-              </span>
-            </div>
-          )}
+    <div className="h-full w-full flex flex-col">
+      {/* 🔥 중앙 토글 헤더 */}
+      <div className="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 px-4 py-3">
+        <div className="flex items-center justify-center gap-4">
+          <h3 className="text-sm text-zinc-400">Schema View:</h3>
           
-          <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm">JSON Schema</h3>
-              
-              {/* Schema Toggle */}
-              <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
-                <button
-                  onClick={() => setSchemaView('original')}
-                  className={`px-3 py-1 text-xs rounded transition-colors ${
-                    schemaView === 'original'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  Original
-                </button>
-                <button
-                  onClick={() => setSchemaView('enhanced')}
-                  className={`px-3 py-1 text-xs rounded transition-colors ${
-                    schemaView === 'enhanced'
-                      ? 'bg-green-600 text-white'
-                      : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
-                >
-                  Enhanced
-                </button>
+          {/* Schema Toggle - 중앙 배치 */}
+          <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
+            <button
+              onClick={() => setSchemaView('original')}
+              className={`px-4 py-1.5 text-xs rounded transition-colors font-medium ${
+                schemaView === 'original'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Original
+            </button>
+            <button
+              onClick={() => setSchemaView('enhanced')}
+              className={`px-4 py-1.5 text-xs rounded transition-colors font-medium ${
+                schemaView === 'enhanced'
+                  ? 'bg-green-600 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+              disabled={!hasEnhancedSchema && !isNewEnhancedSchema}
+            >
+              Enhanced
+            </button>
+          </div>
+          
+          <span className="text-xs text-zinc-500">
+            {schemaView === 'original' 
+              ? '(Original schema definition)' 
+              : '(Enhanced with x-ui, x-transport, conditions)'}
+          </span>
+        </div>
+      </div>
+      
+      {/* 🔥 경고: Fallback 스키마 사용 중 */}
+      {isUsingFallback && (
+        <div className="flex-shrink-0 bg-yellow-900/30 border-b border-yellow-700/50 px-4 py-2 flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 text-yellow-400" />
+          <span className="text-xs text-yellow-200">
+            Using default schema template. Load a version to see saved schema.
+          </span>
+        </div>
+      )}
+      
+      {/* Resizable Panel Group */}
+      <ResizablePanelGroup direction="horizontal" className="flex-1">
+        {/* Left Pane - JSON Schema Editor */}
+        <ResizablePanel defaultSize={50} minSize={30}>
+          <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
+            <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium">JSON Schema Editor</h3>
               </div>
             </div>
-            <p className="text-xs text-zinc-500">
-              {schemaView === 'original' 
-                ? 'Original schema definition (editable)' 
-                : 'Enhanced with conditions, required, and optional fields (editable)'}
-            </p>
-          </div>
 
           {/* Monaco Editor - Full Height */}
           <div className="flex-1 relative">
@@ -731,206 +775,28 @@ ${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
       {/* Right Pane - Visual Schema Grid (Table) */}
       <ResizablePanel defaultSize={50} minSize={30}>
         <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
-          <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm mb-1">Visual Schema Grid</h3>
-              <p className="text-xs text-zinc-500">API specification and parameters</p>
-            </div>
+          <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
+            <h3 className="text-sm font-medium">Visual Schema Table</h3>
           </div>
 
           <ScrollArea className="flex-1 h-0">
-            <div className="p-6 space-y-6">
-              <div>
-                <h2 className="text-2xl mb-2">{spec.title}</h2>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="px-3 py-1 bg-blue-600 text-white text-sm rounded">
-                    {endpoint.method}
-                  </span>
-                  <code className="text-sm text-zinc-400 font-mono">{spec.uri || endpoint.path}</code>
+            <div className="p-6">
+              {isLoadingDefinition ? (
+                <div className="border border-zinc-800 rounded-lg p-8 text-center text-zinc-500">
+                  Loading table definition...
                 </div>
-                {spec.methods && (
-                  <div className="text-xs text-zinc-500">
-                    Active Methods: {spec.methods.join(', ')}
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-4">
-                <section>
-                  <h3 className="text-lg mb-3">Description</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{spec.description}</p>
-                </section>
-
-                <section>
-                  <h3 className="text-lg mb-3">Parameters</h3>
-                  <div className="border border-zinc-800 rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
-                      <thead className="bg-zinc-900">
-                        <tr>
-                          <th className="text-left p-3 border-b border-zinc-800">No.</th>
-                          <th className="text-left p-3 border-b border-zinc-800">Description</th>
-                          <th className="text-left p-3 border-b border-zinc-800">Key</th>
-                          <th className="text-left p-3 border-b border-zinc-800">Type</th>
-                          <th className="text-left p-3 border-b border-zinc-800">Default</th>
-                          <th className="text-left p-3 border-b border-zinc-800">Required</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {displayParameters.map((param: any, idx: number) => {
-                          const rows = [];
-                          
-                          // Add section row if exists
-                          if (param.section) {
-                            rows.push(
-                              <tr key={`section-${param.no}-${idx}`} className="bg-cyan-950/30 border-b border-zinc-800">
-                                <td colSpan={6} className="p-2 text-cyan-400 font-semibold text-xs">
-                                  {param.section}
-                                </td>
-                              </tr>
-                            );
-                            // 🔥 섹션 헤더만 있는 행이면 실제 필드 행 추가 안 함
-                            if (!param.name || !param.type) {
-                              return rows;
-                            }
-                          }
-                          
-                          // Add main parameter row
-                          rows.push(
-                            <tr key={`param-${param.no}-${idx}`} className="border-b border-zinc-800">
-                              <td className="p-3 text-zinc-400">{param.no}</td>
-                              <td className="p-3 pl-9 relative">
-                                {param.children && (
-                                  <button
-                                    onClick={() => toggleParam(param.no)}
-                                    className="absolute left-3 top-3.5 w-4 h-4 flex items-center justify-center hover:text-blue-400 transition-colors"
-                                  >
-                                    {expandedParams.has(param.no) ? (
-                                      <ChevronDown className="w-4 h-4" />
-                                    ) : (
-                                      <ChevronRight className="w-4 h-4" />
-                                    )}
-                                  </button>
-                                )}
-                                <div>
-                                  {param.description && (
-                                    <div 
-                                      className="text-zinc-300 [&_span]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold"
-                                      dangerouslySetInnerHTML={{ 
-                                        __html: param.description
-                                          .replace(/\n/g, '<br>')
-                                          .replace(/• /g, '<span>• </span>')
-                                          .replace(/- /g, '<span>- </span>')
-                                          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                                      }}
-                                    />
-                                  )}
-                                  {param.options && param.options.length > 0 && (
-                                    <div className="mt-1 space-y-0.5">
-                                    {param.options.map((opt: string, optIdx: number) => (
-                                        <div 
-                                          key={`${param.name}-opt-${optIdx}`}
-                                          className="text-zinc-300 [&_span]:text-zinc-400"
-                                          dangerouslySetInnerHTML={{
-                                            __html: opt.replace(/• /g, '<span>• </span>')
-                                          }}
-                                        />
-                                    ))}
-                                  </div>
-                                )}
-                                </div>
-                              </td>
-                              <td className="p-3">
-                                <code className="font-mono text-blue-400">"{param.name}"</code>
-                              </td>
-                              <td className="p-3 text-zinc-400">{param.type}</td>
-                              <td className="p-3 text-zinc-500 font-mono text-xs">{param.default}</td>
-                              <td className="p-3">
-                                <span
-                                  className={`px-2 py-0.5 text-xs rounded ${
-                                    param.required === 'Required'
-                                      ? 'bg-red-600/20 text-red-400'
-                                      : 'bg-zinc-700/50 text-zinc-400'
-                                  }`}
-                                >
-                                  {param.required}
-                                </span>
-                              </td>
-                            </tr>
-                          );
-                          
-                          // Add child rows if expanded
-                          if (param.children && expandedParams.has(param.no)) {
-                            param.children.forEach((child: any, childIdx: number) => {
-                              // 🔥 자식 요소 중 섹션 헤더 처리
-                              if (child.section) {
-                                rows.push(
-                                  <tr key={`child-section-${param.no}-${childIdx}`} className="bg-blue-950/30 border-b border-zinc-800">
-                                    <td colSpan={6} className="p-2 text-blue-400 font-semibold text-xs pl-8">
-                                      {child.section}
-                                    </td>
-                                  </tr>
-                                );
-                                return;
-                              }
-                              
-                              rows.push(
-                                <tr key={`child-${param.no}-${childIdx}`} className="border-b border-zinc-800 bg-zinc-900/50">
-                                  <td className="p-3 text-zinc-500 text-center">{child.no}</td>
-                                  <td className="p-3 pl-8">
-                                    {child.description && (
-                                      <div 
-                                        className="text-zinc-300 [&_span]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold"
-                                        dangerouslySetInnerHTML={{ 
-                                          __html: child.description
-                                            .replace(/\n/g, '<br>')
-                                            .replace(/• /g, '<span>• </span>')
-                                            .replace(/- /g, '<span>- </span>')
-                                            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                                        }}
-                                      />
-                                    )}
-                                    {child.options && child.options.length > 0 && (
-                                      <div className="mt-1 space-y-0.5">
-                                        {child.options.map((opt: string, optIdx: number) => (
-                                          <div 
-                                            key={`${child.name}-opt-${optIdx}`}
-                                            className="text-zinc-300 [&_span]:text-zinc-400"
-                                            dangerouslySetInnerHTML={{
-                                              __html: opt.replace(/• /g, '<span>• </span>')
-                                            }}
-                                          />
-                                        ))}
-                                      </div>
-                                    )}
-                                  </td>
-                                  <td className="p-3">
-                                    <code className="font-mono text-amber-400">"{child.name}"</code>
-                                  </td>
-                                  <td className="p-3 text-zinc-400">{child.type}</td>
-                                  <td className="p-3 text-zinc-500 font-mono text-xs">{child.default}</td>
-                                  <td className="p-3">
-                                    <span
-                                      className={`px-2 py-0.5 text-xs rounded ${
-                                        child.required === 'Required'
-                                          ? 'bg-red-600/20 text-red-400'
-                                          : 'bg-zinc-700/50 text-zinc-400'
-                                      }`}
-                                    >
-                                      {child.required}
-                                    </span>
-                                  </td>
-                                </tr>
-                              );
-                            });
-                          }
-                          
-                          return rows;
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-              </div>
+              ) : tableDefinition ? (
+                <DynamicTableRenderer
+                  definition={tableDefinition}
+                  parameters={displayParameters}
+                  expandedParams={expandedParams}
+                  toggleParam={toggleParam}
+                />
+              ) : (
+                <div className="border border-zinc-800 rounded-lg p-8 text-center text-red-500">
+                  Failed to load table definition
+                </div>
+              )}
             </div>
           </ScrollArea>
           
@@ -948,5 +814,6 @@ ${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
+    </div>
   );
 }

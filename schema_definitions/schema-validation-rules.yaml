@@ -1,0 +1,426 @@
+# Schema Validation Rules
+# 스키마 작성 규칙을 YAML로 정의하여 자동 검증
+
+version: "1.0"
+description: "Enhanced JSON Schema 작성 규칙 및 검증 규칙"
+
+# ============================================================================
+# 필수 규칙 (MUST)
+# ============================================================================
+mustRules:
+  - id: "single-entity-schema"
+    name: "Single Entity Schema 원칙"
+    description: "스키마는 단일 엔티티만 정의해야 하며, 래퍼는 x-transport로 처리"
+    severity: "error"
+    category: "structure"
+    
+    checks:
+      - type: "no-wrapper-in-properties"
+        message: "최상위 properties에 래퍼 객체(Assign, Argument 등)가 있습니다."
+        explanation: |
+          스키마는 단일 엔티티를 정의합니다. 래퍼는 x-transport.body-root로 처리하세요.
+          
+          ❌ 잘못됨:
+          {
+            "properties": {
+              "Argument": { "properties": { ... } }
+            }
+          }
+          
+          ✅ 올바름:
+          {
+            "properties": { "TABLE_NAME": { ... } },
+            "x-transport": { "body-root": "Argument" }
+          }
+        
+        detect:
+          # properties 안에 단일 객체만 있고, 그것이 알려진 래퍼인 경우
+          conditions:
+            - path: "properties"
+              count: 1
+              childType: "object"
+              childName: ["Assign", "Argument", "Data", "Body"]
+        
+        fix:
+          action: "flatten-wrapper"
+          steps:
+            - "래퍼 객체의 properties를 최상위로 이동"
+            - "래퍼 객체의 required를 최상위로 이동"
+            - "x-transport.body-root에 래퍼 이름 추가"
+  
+  - id: "no-nested-required"
+    name: "Required 중첩 금지"
+    description: "required 배열은 최상위에만 있어야 함"
+    severity: "error"
+    category: "structure"
+    
+    checks:
+      - type: "required-at-root-only"
+        message: "required 배열이 중첩된 객체 안에 있습니다."
+        explanation: |
+          required 배열은 최상위에만 정의해야 합니다.
+          
+          ❌ 잘못됨:
+          {
+            "properties": {
+              "Argument": {
+                "required": ["TABLE_TYPE"]
+              }
+            }
+          }
+          
+          ✅ 올바름:
+          {
+            "required": ["TABLE_TYPE"],
+            "properties": { ... }
+          }
+        
+        detect:
+          conditions:
+            - path: "properties.*.required"
+              exists: true
+        
+        fix:
+          action: "move-required-to-root"
+          steps:
+            - "중첩된 required 배열을 최상위로 이동"
+  
+  - id: "no-dot-notation-in-allof"
+    name: "allOf에서 점 표기법 금지"
+    description: "allOf 조건에서 중첩 경로를 사용하지 않아야 함"
+    severity: "error"
+    category: "validation"
+    
+    checks:
+      - type: "no-nested-path-in-allof"
+        message: "allOf의 required에서 점 표기법(예: 'Argument.STAGE_STEP')을 사용하고 있습니다."
+        explanation: |
+          allOf는 최상위 필드만 참조해야 합니다.
+          
+          ❌ 잘못됨:
+          {
+            "allOf": [{
+              "then": { "required": ["Argument.STAGE_STEP"] }
+            }]
+          }
+          
+          ✅ 올바름:
+          {
+            "allOf": [{
+              "then": { "required": ["STAGE_STEP"] }
+            }]
+          }
+        
+        detect:
+          conditions:
+            - path: "allOf.*.then.required.*"
+              pattern: ".*\\..*"  # 점이 포함된 경우
+        
+        fix:
+          action: "remove-dot-notation"
+          steps:
+            - "점 표기법을 단순 필드명으로 변경"
+  
+  - id: "transport-wrapper-consistency"
+    name: "Transport 래퍼 일관성"
+    description: "x-transport.body-root가 실제 properties에 없어야 함"
+    severity: "error"
+    category: "structure"
+    
+    checks:
+      - type: "no-duplicate-wrapper"
+        message: "x-transport.body-root에 정의된 래퍼가 properties에도 있습니다."
+        explanation: |
+          래퍼는 x-transport.body-root에만 정의하고, properties에는 포함하지 마세요.
+          
+          ❌ 잘못됨:
+          {
+            "properties": { "Argument": { ... } },
+            "x-transport": { "body-root": "Argument" }
+          }
+          
+          ✅ 올바름:
+          {
+            "properties": { "TABLE_NAME": { ... } },
+            "x-transport": { "body-root": "Argument" }
+          }
+        
+        detect:
+          conditions:
+            - path: "x-transport.body-root"
+              valueInKeys: "properties"
+        
+        fix:
+          action: "remove-wrapper-from-properties"
+
+# ============================================================================
+# 권장 규칙 (SHOULD)
+# ============================================================================
+shouldRules:
+  - id: "use-x-ui-for-labels"
+    name: "x-ui로 레이블 정의"
+    description: "필드 레이블은 x-ui.label로 정의 권장"
+    severity: "warning"
+    category: "metadata"
+    
+    checks:
+      - type: "missing-x-ui-label"
+        message: "필드에 x-ui.label이 없습니다. 추가를 권장합니다."
+        explanation: |
+          UI에서 필드를 더 명확하게 표시하려면 x-ui.label을 추가하세요.
+          
+          ✅ 권장:
+          {
+            "TABLE_NAME": {
+              "type": "string",
+              "x-ui": {
+                "label": "Table Name",
+                "group": "General"
+              }
+            }
+          }
+        
+        detect:
+          conditions:
+            - path: "properties.*"
+              missing: "x-ui.label"
+              exclude:
+                - type: "object"  # 객체는 제외
+  
+  - id: "use-x-ui-group"
+    name: "x-ui.group으로 섹션 구분"
+    description: "관련 필드는 x-ui.group으로 그룹화 권장"
+    severity: "info"
+    category: "metadata"
+    
+    checks:
+      - type: "missing-x-ui-group"
+        message: "필드에 x-ui.group이 없습니다. 섹션 구분을 위해 추가를 권장합니다."
+        explanation: |
+          필드를 논리적으로 그룹화하면 UI가 더 직관적입니다.
+          
+          ✅ 권장:
+          {
+            "x-ui": {
+              "label": "Table Name",
+              "group": "General"
+            }
+          }
+  
+  - id: "use-standard-validation-first"
+    name: "표준 JSON Schema 우선 사용"
+    description: "검증 로직은 표준 JSON Schema로 최대한 표현"
+    severity: "warning"
+    category: "validation"
+    
+    checks:
+      - type: "x-extension-for-validation"
+        message: "x-* 확장을 검증 로직으로 사용하고 있습니다. 가능하면 표준 JSON Schema를 사용하세요."
+        explanation: |
+          x-* 확장은 표준 JSON Schema로 표현할 수 없는 경우에만 사용하세요.
+          
+          ❌ 피해야 함:
+          {
+            "SECT": {
+              "x-required-for-types": ["BEAM", "WALL"]
+            }
+          }
+          
+          ✅ 권장:
+          {
+            "allOf": [{
+              "if": {
+                "properties": { "TYPE": { "enum": ["BEAM", "WALL"] } }
+              },
+              "then": { "required": ["SECT"] }
+            }]
+          }
+
+# ============================================================================
+# 금지 규칙 (MUST NOT)
+# ============================================================================
+mustNotRules:
+  - id: "no-collection-in-schema"
+    name: "컬렉션 금지"
+    description: "스키마는 배열/컬렉션을 최상위로 가질 수 없음"
+    severity: "error"
+    category: "structure"
+    
+    checks:
+      - type: "root-is-not-array"
+        message: "최상위 type이 'array'입니다. 스키마는 단일 객체를 정의해야 합니다."
+        explanation: |
+          스키마는 하나의 엔티티를 정의합니다. 여러 인스턴스는 시스템이 관리합니다.
+          
+          ❌ 잘못됨:
+          {
+            "type": "array",
+            "items": { "type": "object", ... }
+          }
+          
+          ✅ 올바름:
+          {
+            "type": "object",
+            "properties": { ... }
+          }
+        
+        detect:
+          conditions:
+            - path: "type"
+              value: "array"
+  
+  - id: "no-validation-in-x-ui"
+    name: "x-ui에 검증 로직 금지"
+    description: "x-ui는 UI 메타데이터만 포함"
+    severity: "error"
+    category: "metadata"
+    
+    checks:
+      - type: "validation-keys-in-x-ui"
+        message: "x-ui에 검증 관련 키워드(required, minimum, maximum 등)가 있습니다."
+        explanation: |
+          x-ui는 UI 렌더링 메타데이터만 포함해야 합니다.
+          검증 로직은 표준 JSON Schema나 x-value-constraint를 사용하세요.
+          
+          ❌ 잘못됨:
+          {
+            "x-ui": {
+              "label": "Age",
+              "required": true,
+              "minimum": 0
+            }
+          }
+          
+          ✅ 올바름:
+          {
+            "type": "integer",
+            "minimum": 0,
+            "x-ui": {
+              "label": "Age"
+            }
+          }
+        
+        detect:
+          conditions:
+            - path: "properties.*.x-ui"
+              hasAnyKey: ["required", "minimum", "maximum", "minLength", "maxLength", "pattern", "enum"]
+
+# ============================================================================
+# 베스트 프랙티스
+# ============================================================================
+bestPractices:
+  - id: "use-description"
+    name: "description 추가"
+    severity: "info"
+    message: "필드에 description이 없습니다. 추가를 권장합니다."
+  
+  - id: "use-default-values"
+    name: "default 값 제공"
+    severity: "info"
+    message: "선택적 필드에 default 값을 추가하면 더 좋습니다."
+  
+  - id: "use-x-enum-labels"
+    name: "enum에 레이블 추가"
+    severity: "info"
+    message: "enum 필드에 x-enum-labels를 추가하면 UI가 더 명확합니다."
+
+# ============================================================================
+# 검증 실행 설정
+# ============================================================================
+validationConfig:
+  # 검증 수준
+  levels:
+    strict:
+      - mustRules
+      - mustNotRules
+      - shouldRules
+      - bestPractices
+    
+    standard:
+      - mustRules
+      - mustNotRules
+      - shouldRules
+    
+    minimal:
+      - mustRules
+      - mustNotRules
+  
+  # 자동 수정 가능 여부
+  autoFix:
+    enabled: true
+    level: "mustRules"  # mustRules만 자동 수정
+    confirmBeforeFix: true
+  
+  # 검증 시점
+  validateOn:
+    - upload
+    - save
+    - version-create
+  
+  # 에러 보고 형식
+  errorReport:
+    format: "detailed"  # detailed | summary
+    includeFixSuggestions: true
+    includeCodeExamples: true
+
+# ============================================================================
+# 알려진 래퍼 목록
+# ============================================================================
+knownWrappers:
+  - "Assign"
+  - "Argument"
+  - "Data"
+  - "Body"
+  - "Payload"
+  - "Request"
+  - "Response"
+
+# ============================================================================
+# 허용된 x-* 확장
+# ============================================================================
+allowedExtensions:
+  standard:
+    - "x-ui"
+    - "x-transport"
+    - "x-enum-labels"
+    - "x-enum-by-type"
+    - "x-enum-labels-by-type"
+    - "x-value-constraint"
+    - "x-node-count-by-type"
+    - "x-exclusive-keys"
+  
+  ui:
+    - "x-section-header"
+    - "x-section-by-type"
+    - "x-ui-hint"
+    - "x-ui-group"
+    - "x-ui-exclusive-group"
+  
+  validation:
+    - "x-validation-layer"
+    - "x-custom-validator"
+
+# ============================================================================
+# 검증 메시지 템플릿
+# ============================================================================
+messageTemplates:
+  error: "🚫 [{severity}] {ruleName}: {message}"
+  warning: "⚠️ [{severity}] {ruleName}: {message}"
+  info: "ℹ️ [{severity}] {ruleName}: {message}"
+  
+  detailedError: |
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚫 오류: {ruleName}
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    
+    위치: {path}
+    메시지: {message}
+    
+    설명:
+    {explanation}
+    
+    수정 방법:
+    {fixSteps}
+    
+    참고: schema_definitions/manual/SCHEMA_CONTRACT_KO.md
+

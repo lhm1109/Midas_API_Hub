@@ -19,7 +19,6 @@ export function ManualTab({ endpoint }: ManualTabProps) {
   
   // 🔍 Zoom 상태 관리
   const [zoom, setZoom] = useState(1);
-  const previewContainerRef = useRef<HTMLDivElement>(null);
   
   // 🎯 Editable HTML State
   const [editableHTML, setEditableHTML] = useState('');
@@ -55,7 +54,6 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       return '<p>No manual data available. Please send data from Spec, Builder, or Runner tabs.</p>';
     }
 
-    const now = new Date().toISOString();
     const { title, category, inputUri, activeMethods, jsonSchema, requestExamples, responseExamples, specifications } = manualData;
     
     // 🎯 Spec에서 보낸 스키마 사용 (JSON 문자열을 HTML로 포맷)
@@ -434,8 +432,8 @@ function toggleAccordion(button) {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
-      const htmlContent = event.target?.result as string;
+    reader.onload = (_event) => {
+      // const htmlContent = event.target?.result as string;
       // TODO: Parse HTML and extract manualData
       alert('Import functionality: Parse HTML to extract manual data');
     };

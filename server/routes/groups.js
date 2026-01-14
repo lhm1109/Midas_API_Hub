@@ -219,18 +219,66 @@ router.delete('/:id', async (req, res) => {
 
     console.log('🗑️ Delete group request:', { id });
 
+    // 1. 먼저 그룹 정보 조회
+    const { data: group, error: groupError } = await supabase
+      .from('groups')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (groupError) {
+      if (groupError.code === 'PGRST116') {
+        console.log('⚠️ Group not found:', id);
+        return res.status(404).json({ message: 'Group not found', id });
+      }
+      throw groupError;
+    }
+
+    console.log('📦 Found group:', group);
+
+    // 2. 해당 그룹의 엔드포인트들 조회
+    const { data: endpoints, error: endpointsError } = await supabase
+      .from('endpoints')
+      .select('id, name')
+      .eq('product', group.product_id)
+      .eq('group_name', group.name);
+
+    if (endpointsError) throw endpointsError;
+
+    console.log(`🔍 Found ${endpoints?.length || 0} endpoints in this group:`, endpoints?.map(e => e.name));
+
+    // 3. 그룹의 엔드포인트들 삭제
+    if (endpoints && endpoints.length > 0) {
+      const { error: deleteEndpointsError } = await supabase
+        .from('endpoints')
+        .delete()
+        .eq('product', group.product_id)
+        .eq('group_name', group.name);
+
+      if (deleteEndpointsError) {
+        console.error('❌ Delete endpoints error:', deleteEndpointsError);
+        throw deleteEndpointsError;
+      }
+
+      console.log(`✅ Deleted ${endpoints.length} endpoints`);
+    }
+
+    // 4. 그룹 삭제
     const { error } = await supabase
       .from('groups')
       .delete()
       .eq('id', id);
 
     if (error) {
-      console.error('❌ Delete error:', error);
+      console.error('❌ Delete group error:', error);
       throw error;
     }
 
     console.log('✅ Group deleted:', id);
-    res.json({ message: 'Group deleted successfully' });
+    res.json({ 
+      message: 'Group deleted successfully', 
+      deletedEndpoints: endpoints?.length || 0 
+    });
   } catch (error) {
     console.error('❌ Delete group error:', error);
     res.status(500).json({ error: error.message });

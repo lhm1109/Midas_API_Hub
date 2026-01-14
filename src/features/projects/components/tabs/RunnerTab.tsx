@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Play, ChevronDown, Trash2, FileText, Clock, Send } from 'lucide-react';
+import { useState } from 'react';
+import { Play, Trash2, FileText, Clock, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { formatJsonToHTML } from '@/lib/utils/htmlFormatter';
 import {
   Select,
   SelectContent,
@@ -264,60 +265,6 @@ export function RunnerTab({
       toast.error('No response available. Please run the request first.');
       return;
     }
-    
-    // JSON을 색상 있는 HTML로 변환
-    const formatJsonToHTML = (jsonStr: string, isRequest: boolean = false): string => {
-      try {
-        const jsonObj = JSON.parse(jsonStr);
-        const formatted = JSON.stringify(jsonObj, null, 2);
-        
-        return formatted
-          .split('\n')
-          .map(line => {
-            // 공백을 &nbsp;로 변환하여 들여쓰기 유지
-            const leadingSpaces = line.match(/^(\s*)/)?.[1] || '';
-            const indent = leadingSpaces.replace(/ /g, '&nbsp;&nbsp;');
-            const trimmedLine = line.trim();
-            
-            // 키-값 패턴 매칭
-            const keyMatch = trimmedLine.match(/^"([^"]+)":\s*(.+)$/);
-            if (keyMatch) {
-              const key = keyMatch[1];
-              let value = keyMatch[2];
-              const hasComma = value.endsWith(',');
-              if (hasComma) {
-                value = value.slice(0, -1);
-              }
-              
-              // 값의 타입에 따라 색상 적용
-              let styledValue = value;
-              if (value === 'true' || value === 'false') {
-                styledValue = `<span style="color: #055bcc; font-weight: bold;">${value}</span>`;
-              } else if (value.match(/^"[^"]*"$/)) {
-                styledValue = `<span style="color: #055bcc;">${value}</span>`;
-              } else if (value.match(/^-?\d+(\.\d+)?$/)) {
-                styledValue = `<span style="color: #0ab66c;">${value}</span>`;
-              } else if (value === '{' || value === '[') {
-                styledValue = value;
-              }
-              
-              const styledLine = `${indent}<span style="color: #c31b1b;">"${key}"</span>: ${styledValue}${hasComma ? ',' : ''}`;
-              return styledLine;
-            }
-            
-            // 중괄호, 대괄호만 있는 라인
-            if (trimmedLine.match(/^[{\[\}\]],?$/)) {
-              return indent + trimmedLine;
-            }
-            
-            return indent + trimmedLine;
-          })
-          .join('<br>');
-      } catch (e) {
-        // JSON 파싱 실패 시 원본 반환
-        return jsonStr.replace(/\n/g, '<br>').replace(/ /g, '&nbsp;');
-      }
-    };
     
     // Request와 Response를 HTML로 변환
     const requestHTML = formatJsonToHTML(requestBody);

@@ -689,7 +689,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     
     // 상태 정보가 없으면 초록색 (편집 가능)으로 표시
     if (!lockInfo) {
-      return (
+    return (
         <span className="w-2 h-2 rounded-full bg-green-500 cursor-help" title="✅ 편집 가능" />
       );
     }
@@ -738,17 +738,27 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
+    console.log('🗑️ Deleting endpoint:', endpoint.id, endpoint.name);
+
     try {
       const result = await apiClient.deleteEndpoint(endpoint.id);
+      
+      console.log('📦 Delete result:', result);
+      
       if (result.error) {
         throw new Error(result.error);
       }
+      
+      console.log('✅ Endpoint deleted successfully');
       alert('✅ Endpoint deleted successfully.');
+      
+      // 🔥 강제로 데이터 새로고침
       if (onEndpointsChange) {
-        onEndpointsChange();
+        console.log('🔄 Calling onEndpointsChange to refresh list...');
+        await onEndpointsChange();
       }
     } catch (error) {
-      console.error('Failed to delete endpoint:', error);
+      console.error('❌ Failed to delete endpoint:', error);
       alert(`❌ Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
@@ -1006,19 +1016,28 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
+    console.log('🗑️ Deleting product:', product.id, product.name);
+
     try {
       // products 테이블에서 삭제 (CASCADE로 자동으로 관련 데이터 삭제)
       const result = await apiClient.deleteProduct(product.id);
+      
+      console.log('📦 Delete result:', result);
+      
       if (result.error) {
         throw new Error(result.error);
       }
       
+      console.log('✅ Product deleted successfully');
       alert('✅ 제품이 성공적으로 삭제되었습니다.');
+      
+      // 🔥 강제로 데이터 새로고침
       if (onEndpointsChange) {
-        onEndpointsChange();
+        console.log('🔄 Calling onEndpointsChange to refresh list...');
+        await onEndpointsChange();
       }
     } catch (error) {
-      console.error('Failed to delete product:', error);
+      console.error('❌ Failed to delete product:', error);
       alert(`❌ Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
@@ -1037,38 +1056,63 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
+    console.log('🗑️ Deleting group:', groupId, groupName);
+
     try {
       // groups 테이블에서 삭제 (CASCADE로 자동으로 관련 데이터 삭제)
       const result = await apiClient.deleteGroup(groupId);
+      
+      console.log('📦 Delete result:', result);
+      
       if (result.error) {
         throw new Error(result.error);
       }
       
+      console.log('✅ Group deleted successfully');
       alert('✅ 그룹이 성공적으로 삭제되었습니다.');
+      
+      // 🔥 강제로 데이터 새로고침
       if (onEndpointsChange) {
-        onEndpointsChange();
+        console.log('🔄 Calling onEndpointsChange to refresh list...');
+        await onEndpointsChange();
       }
     } catch (error) {
-      console.error('Failed to delete group:', error);
+      console.error('❌ Failed to delete group:', error);
       alert(`❌ Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   return (
-    <div className="w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col">
+    <div className="h-full bg-zinc-900 flex flex-col">
       {/* Search */}
       <div className="p-3 border-b border-zinc-800">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <Input
-              type="text"
-              placeholder="Search API"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
-            />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            type="text"
+            placeholder="Search API"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
+          />
           </div>
+          {/* 🔄 전체 목록 새로고침 버튼 */}
+          <button
+            onClick={() => {
+              console.log('🔄 Manual refresh triggered');
+              if (onEndpointsChange) {
+                onEndpointsChange();
+              }
+            }}
+            className="h-8 w-8 flex items-center justify-center rounded border border-zinc-700 hover:bg-zinc-800 transition-colors"
+            title="목록 새로고침"
+          >
+            <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+          
           {/* 🔄 잠금 상태 새로고침 버튼 */}
           <button
             onClick={() => {
@@ -1084,7 +1128,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
               <div className="w-4 h-4 border-2 border-zinc-600 border-t-blue-500 rounded-full animate-spin" />
             ) : (
               <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             )}
           </button>
@@ -1126,21 +1170,20 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
                 {/* Groups */}
                 {expandedProducts.has(product.id) && (
                   <SortableContext
-                    items={product.groups.map((g) => `${product.id}___group___${g.name}`)}
+                    items={product.groups.map((g) => g.id)}
                     strategy={verticalListSortingStrategy}
                   >
                     <div className="ml-4 space-y-1">
                       {product.groups.map((group) => {
-                        const groupId = `${product.id}___group___${group.name}`;
                         return (
                           <SortableGroupItem
                             key={group.id}
-                            groupId={groupId}
+                            groupId={group.id}
                             productId={product.id}
                             groupName={group.name}
                             isExpanded={expandedGroups.has(group.id)}
                             onToggle={() => toggleGroup(group.id)}
-                            onAddEndpoint={() => handleAddEndpoint(product.id, group.name)}
+                            onAddEndpoint={() => handleAddEndpoint(product.id, group.id)}
                             onDelete={() => handleDeleteGroup(product.id, group.name, group.endpoints)}
                           >
 
@@ -1174,7 +1217,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
                                     endpoint={endpoint}
                                     isSelected={selectedEndpoint === endpoint.id}
                                     onSelect={onEndpointSelect}
-                                    onEdit={(e) => handleEditEndpoint(e, product.id, group.name)}
+                                    onEdit={(e) => handleEditEndpoint(e, product.id, group.id)}
                                     onDelete={handleDeleteEndpoint}
                                     onDuplicate={handleDuplicateEndpoint}
                                     getStatusIndicator={getStatusIndicator}

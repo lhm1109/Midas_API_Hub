@@ -37,6 +37,8 @@ export interface UIBuilderField {
   items?: any;
   placeholder?: string;
   children?: UIBuilderField[];  // 🔥 중첩 필드 지원
+  oneOfOptions?: string[];      // 🔥 oneOf 옵션 제목 (Method 1, Method 2, ...)
+  optionIndex?: number;         // 🔥 oneOf의 경우 어느 옵션에 속하는지 (0, 1, 2, ...)
 }
 
 /**

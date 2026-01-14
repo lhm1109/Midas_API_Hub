@@ -1,0 +1,352 @@
+# Enhanced Schema - HTML Document Template
+# Enhanced Schema → HTML 문서 생성 템플릿
+
+version: "1.0"
+
+# ============================================================================
+# Document Structure
+# HTML 문서 구조
+# ============================================================================
+document:
+  doctype: "<!DOCTYPE html>"
+  lang: "en"
+  charset: "UTF-8"
+  viewport: "width=device-width, initial-scale=1.0"
+  
+  title: "{schemaTitle} - Enhanced Schema"
+  
+  sections:
+    - id: "header"
+      template: "header"
+    - id: "info"
+      template: "infoSection"
+    - id: "validation"
+      template: "validationArchitecture"
+    - id: "specifications"
+      template: "specificationsTable"
+    - id: "transport"
+      template: "transportSection"
+
+# ============================================================================
+# Templates
+# 섹션별 HTML 템플릿
+# ============================================================================
+templates:
+  header:
+    html: |
+      <h1>{title} API - Enhanced Schema Specification</h1>
+  
+  infoSection:
+    html: |
+      <div class="info-section">
+        <h2>Basic Information</h2>
+        <table class="info-table">
+          <tr>
+            <th>Title</th>
+            <td>{title}</td>
+          </tr>
+          <tr>
+            <th>Transport URI</th>
+            <td><code>{transport.uri}</code></td>
+          </tr>
+          <tr>
+            <th>Methods</th>
+            <td>{transport.methods}</td>
+          </tr>
+          <tr>
+            <th>Body Root</th>
+            <td><code>{transport.bodyRoot}</code></td>
+          </tr>
+        </table>
+      </div>
+  
+  validationArchitecture:
+    html: |
+      <div class="validation-section">
+        <h2>Validation Architecture</h2>
+        <p>This API uses a two-layer validation approach:</p>
+        <ul>
+          <li>
+            <span class="validation-badge std-validation">STD</span>
+            <strong>Standard JSON Schema Validation:</strong> 
+            Type checking, enum values, array constraints
+          </li>
+          <li>
+            <span class="validation-badge app-validation">APP</span>
+            <strong>Application Layer Validation:</strong> 
+            Context-dependent enums, node counts, value constraints
+          </li>
+        </ul>
+      </div>
+  
+  specificationsTable:
+    html: |
+      <h2>Specifications</h2>
+      <table>
+        {tableHeader}
+        <tbody>
+          {tableRows}
+        </tbody>
+      </table>
+  
+  transportSection:
+    html: |
+      <div class="transport-section">
+        <h2>Transport Details</h2>
+        <h3>Request Body Structure</h3>
+        <pre><code>{
+  "{bodyRoot}": {
+    "1": {
+      // {title} fields here
+    }
+  }
+}</code></pre>
+      </div>
+
+# ============================================================================
+# Table Structure
+# 테이블 구조
+# ============================================================================
+table:
+  header:
+    columns:
+      - id: "no"
+        text: "No."
+        width: "6%"
+      - id: "description"
+        text: "Description"
+        width: "35%"
+        colspan: 2
+      - id: "key"
+        text: "Key"
+        width: "14%"
+      - id: "type"
+        text: "Value Type"
+        width: "10%"
+      - id: "default"
+        text: "Default"
+        width: "10%"
+      - id: "required"
+        text: "Required"
+        width: "25%"
+  
+  # 섹션 헤더 행
+  sectionHeader:
+    html: |
+      <tr>
+        <td colspan="6" class="section-header">{sectionName}</td>
+      </tr>
+  
+  # 필드 행
+  fieldRow:
+    html: |
+      <tr>
+        <td class="centered">{no}</td>
+        <td>{description}</td>
+        <td class="field-key">"{key}"</td>
+        <td class="centered">{type}</td>
+        <td class="centered">{default}</td>
+        <td>{required}</td>
+      </tr>
+
+# ============================================================================
+# Feature Boxes
+# Enhanced 특징 박스 (enum, constraints 등)
+# ============================================================================
+featureBoxes:
+  # Standard enum
+  enum:
+    html: |
+      <div class="enum-values">
+        <strong>Enum Values:</strong>
+        <ul class="type-list">
+          {enumItems}
+        </ul>
+      </div>
+    itemTemplate: "<li>{value} - {label}</li>"
+  
+  # Enum by type
+  enumByType:
+    html: |
+      <div class="enum-values">
+        <strong>Enum Values by Type:</strong>
+        {typeGroups}
+      </div>
+    typeGroupTemplate: |
+      <p><strong>{type}:</strong></p>
+      <ul class="type-list">
+        {items}
+      </ul>
+    itemTemplate: "<li>{value} - {label}</li>"
+  
+  # Value constraints
+  valueConstraint:
+    html: |
+      <div class="constraint-note">
+        {constraints}
+        <span class="validation-badge app-validation">APP</span> Validated by application layer
+      </div>
+    constraintTemplate: "<strong>{type}:</strong> {constraint}<br>"
+  
+  # Node count by type
+  nodeCountByType:
+    html: |
+      <div class="constraint-note">
+        <strong>Node count by type:</strong>
+        <ul class="type-list">
+          {items}
+        </ul>
+        <span class="validation-badge app-validation">APP</span> Validated by application layer
+      </div>
+    itemTemplate: "<li>{type}: {count} nodes</li>"
+
+# ============================================================================
+# CSS Styles
+# CSS 스타일시트
+# ============================================================================
+css:
+  reset: |
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  
+  body: |
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+  
+  headers: |
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #3498db;
+    }
+    h2 {
+      color: #34495e;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+  
+  table: |
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    thead {
+      background: #34495e;
+      color: white;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+  
+  sectionHeader: |
+    .section-header {
+      background: #3498db !important;
+      color: white !important;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 15px !important;
+    }
+  
+  fieldKey: |
+    .field-key {
+      font-family: 'Courier New', monospace;
+      background: #ecf0f1;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-weight: 600;
+      color: #e74c3c;
+    }
+  
+  featureBoxes: |
+    .enum-values {
+      margin-top: 10px;
+      padding: 10px;
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      border-radius: 3px;
+    }
+    .constraint-note {
+      margin-top: 10px;
+      padding: 10px;
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      border-radius: 3px;
+    }
+    .type-list {
+      margin: 5px 0 5px 20px;
+      list-style-type: circle;
+    }
+    .type-list li {
+      margin: 3px 0;
+    }
+  
+  validationBadges: |
+    .validation-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .std-validation {
+      background: #2196f3;
+      color: white;
+    }
+    .app-validation {
+      background: #ff9800;
+      color: white;
+    }
+  
+  sections: |
+    .info-section, .validation-section, .transport-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .info-table {
+      margin-top: 10px;
+    }
+    .info-table th {
+      background: #ecf0f1;
+      width: 200px;
+    }
+  
+  code: |
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: 'Courier New', monospace;
+    }
+

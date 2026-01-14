@@ -1,5 +1,5 @@
 // 🎯 로컬 스토리지 훅
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export function useLocalStorage<T>(
   key: string,
