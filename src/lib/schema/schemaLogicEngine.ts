@@ -15,6 +15,8 @@ import yaml from 'js-yaml';
 // ============================================================================
 
 export interface SchemaLogicRules {
+  platformSkeleton?: PlatformSkeleton;
+  schemaStructurePatterns?: SchemaStructurePattern[];
   sectionRules: SectionRule[];
   sectionOrder: string[];
   typeLabels: Record<string, string>;
@@ -22,6 +24,50 @@ export interface SchemaLogicRules {
   requiredCalculationRules: any;
   validationLayerRules: any;
   descriptionBuildingRules: any;
+}
+
+export interface PlatformSkeleton {
+  entityCollection: {
+    description: string;
+    type: string;
+    patternProperties: {
+      pattern: string;
+      description: string;
+      ref: string;
+    };
+    additionalProperties: boolean;
+    minProperties?: number;
+  };
+  defaultBodyRoot: string;
+  alternativeBodyRoots?: string[];
+  rootStructure: {
+    type: string;
+    additionalProperties: boolean;
+  };
+}
+
+export interface SchemaStructurePattern {
+  name: string;
+  description: string;
+  enabled: boolean;
+  detect: PatternDetectRule[];
+  transform: PatternTransform;
+}
+
+export interface PatternDetectRule {
+  path: string;
+  exists?: boolean;
+  isArray?: boolean;
+  value?: any;
+}
+
+export interface PatternTransform {
+  action: string;
+  wrapperKey?: string;
+  wrapperType?: string;
+  preserveMetadata?: string[];
+  strategy?: string;
+  optionSeparator?: string;
 }
 
 export interface SectionRule {
@@ -57,38 +103,60 @@ export interface VisibilityRule {
 // Cache & Initialization
 // ============================================================================
 
-let cachedRules: SchemaLogicRules | null = null;
-let isLoading = false;
-let loadPromise: Promise<SchemaLogicRules> | null = null;
+const cachedRulesMap = new Map<string, SchemaLogicRules>();
+const loadingMap = new Map<string, Promise<SchemaLogicRules>>();
 
 /**
- * YAML 규칙 로드 (캐시 지원, 동기 접근 가능)
+ * YAML 규칙 로드 (캐시 지원, 2-Level)
+ * @param psdSet - PSD 세트 (Level 1) - 제품의 psd_set에서 가져옴
+ * @param schemaType - 스키마 타입 (Level 2) - 'original' | 'enhanced'
  */
-export async function initSchemaLogicRules(): Promise<SchemaLogicRules> {
-  if (cachedRules) {
-    return cachedRules;
+export async function initSchemaLogicRules(
+  psdSet: string,
+  schemaType: string,
+  forceReload: boolean = false
+): Promise<SchemaLogicRules> {
+  const cacheKey = `${psdSet}/${schemaType}`;
+  
+  // 🔥 개발 중 캐시 우회: URL에 ?nocache 있으면 강제 리로드
+  const isDev = import.meta.env.DEV;
+  const urlParams = new URLSearchParams(window.location.search);
+  const noCache = urlParams.has('nocache') || forceReload;
+  
+  if (cachedRulesMap.has(cacheKey) && !noCache) {
+    return cachedRulesMap.get(cacheKey)!;
   }
   
-  if (isLoading && loadPromise) {
-    return loadPromise;
+  // 🔥 캐시 무효화
+  if (noCache && cachedRulesMap.has(cacheKey)) {
+    console.log(`🔄 Force reloading schema-logic.yaml for ${cacheKey}`);
+    cachedRulesMap.delete(cacheKey);
   }
   
-  isLoading = true;
-  loadPromise = (async () => {
+  if (loadingMap.has(cacheKey)) {
+    return loadingMap.get(cacheKey)!;
+  }
+  
+  const loadPromise = (async () => {
     try {
-      const response = await fetch('/schema_definitions/enhanced/schema-logic.yaml');
+      const path = `/schema_definitions/${psdSet}/${schemaType}/schema-logic.yaml`;
+      const response = await fetch(path);
       if (!response.ok) {
-        throw new Error(`Failed to load schema-logic.yaml: ${response.statusText}`);
+        throw new Error(`Failed to load ${path}: ${response.statusText}`);
       }
       
       const yamlText = await response.text();
-      cachedRules = yaml.load(yamlText) as SchemaLogicRules;
+      const rules = yaml.load(yamlText) as SchemaLogicRules;
       
-      return cachedRules;
+      cachedRulesMap.set(cacheKey, rules);
+      loadingMap.delete(cacheKey);
+      
+      console.log(`✅ Loaded schema-logic.yaml from ${cacheKey}`);
+      return rules;
     } catch (error) {
-      console.error('Failed to load schema logic rules:', error);
+      console.error(`❌ Failed to load schema logic rules from ${cacheKey}:`, error);
       // Fallback to empty rules
-      cachedRules = {
+      const fallbackRules: SchemaLogicRules = {
         sectionRules: [],
         sectionOrder: [],
         typeLabels: {},
@@ -97,32 +165,77 @@ export async function initSchemaLogicRules(): Promise<SchemaLogicRules> {
         validationLayerRules: {},
         descriptionBuildingRules: {}
       };
-      return cachedRules;
-    } finally {
-      isLoading = false;
+      cachedRulesMap.set(cacheKey, fallbackRules);
+      loadingMap.delete(cacheKey);
+      return fallbackRules;
     }
   })();
   
+  loadingMap.set(cacheKey, loadPromise);
   return loadPromise;
 }
 
 /**
  * 동기적으로 규칙 가져오기 (초기화 후 사용)
+ * 
+ * 우선순위:
+ * 1. schema['x-schema-rules'] (스키마 내부 정의) ← 최우선
+ * 2. YAML 파일 (플랫폼 공통 fallback)
+ * 
+ * @param psdSet - PSD 세트 (Level 1) - 제품의 psd_set에서 가져옴
+ * @param schemaType - 스키마 타입 (Level 2) - 'original' | 'enhanced'
+ * @param schema - 선택적: 스키마 자체 (x-schema-rules 추출용)
  */
-export function getSchemaLogicRules(): SchemaLogicRules {
-  if (!cachedRules) {
-    throw new Error('Schema logic rules not initialized. Call initSchemaLogicRules() first.');
+export function getSchemaLogicRules(
+  psdSet: string,
+  schemaType: string,
+  schema?: any
+): SchemaLogicRules {
+  const cacheKey = `${psdSet}/${schemaType}`;
+  const baseRules = cachedRulesMap.get(cacheKey);
+  if (!baseRules) {
+    throw new Error(`Schema logic rules not initialized for ${cacheKey}. Call initSchemaLogicRules() first.`);
   }
-  return cachedRules;
+  
+  // 🎯 스키마 자체에 x-schema-rules가 있으면 병합 (스키마 우선)
+  if (schema?.['x-schema-rules']) {
+    const schemaRules = schema['x-schema-rules'];
+    console.log('📋 Using schema-specific rules from x-schema-rules', schemaRules);
+    
+    // 🔥 방어: 각 필드가 올바른 타입인지 확인
+    const mergedRules: SchemaLogicRules = {
+      ...baseRules,
+      // platformSkeleton과 schemaStructurePatterns는 항상 YAML에서
+      platformSkeleton: baseRules.platformSkeleton,
+      schemaStructurePatterns: baseRules.schemaStructurePatterns,
+      // 나머지는 스키마 우선, 없으면 base 사용
+      sectionRules: Array.isArray(schemaRules.sectionRules) 
+        ? schemaRules.sectionRules 
+        : baseRules.sectionRules,
+      sectionOrder: Array.isArray(schemaRules.sectionOrder)
+        ? schemaRules.sectionOrder
+        : baseRules.sectionOrder,
+      typeLabels: schemaRules.typeLabels || baseRules.typeLabels,
+      visibilityRules: Array.isArray(schemaRules.visibilityRules)
+        ? schemaRules.visibilityRules
+        : baseRules.visibilityRules,
+      requiredCalculationRules: schemaRules.requiredCalculationRules || baseRules.requiredCalculationRules,
+      validationLayerRules: schemaRules.validationLayerRules || baseRules.validationLayerRules,
+      descriptionBuildingRules: schemaRules.descriptionBuildingRules || baseRules.descriptionBuildingRules
+    };
+    
+    return mergedRules;
+  }
+  
+  return baseRules;
 }
 
 /**
  * 캐시 초기화
  */
 export function clearSchemaLogicCache(): void {
-  cachedRules = null;
-  isLoading = false;
-  loadPromise = null;
+  cachedRulesMap.clear();
+  loadingMap.clear();
 }
 
 // ============================================================================
@@ -144,9 +257,18 @@ export interface FieldContext {
  */
 export function determineSectionName(
   field: FieldContext,
-  _allTypes: string[]
+  _allTypes: string[],
+  psdSet: string,
+  schemaType: string,
+  schema?: any
 ): string {
-  const rules = getSchemaLogicRules();
+  const rules = getSchemaLogicRules(psdSet, schemaType, schema);
+  
+  // 🔥 방어: sectionRules가 배열인지 확인
+  if (!Array.isArray(rules.sectionRules)) {
+    console.error('❌ sectionRules is not an array:', rules.sectionRules);
+    return 'General';
+  }
   
   // 규칙을 순서대로 평가
   for (const rule of rules.sectionRules) {
@@ -163,10 +285,20 @@ export function determineSectionName(
  * 섹션 규칙 조건 평가
  */
 function evaluateSectionCondition(condition: RuleCondition, field: FieldContext): boolean {
+  // 🔥 condition이 없거나 undefined면 false 반환
+  if (!condition || !condition.type) {
+    console.warn('⚠️ Invalid condition:', condition);
+    return false;
+  }
+  
   const { type } = condition;
   const visibleWhen = field.ui?.visibleWhen;
   
   switch (type) {
+    case 'always':
+      // 항상 매칭 (Original 스키마 기본값)
+      return true;
+    
     case 'has-explicit-group':
       return !!field.ui?.group;
     
@@ -274,16 +406,69 @@ function executeSectionAction(
 /**
  * 섹션 정렬 순서 가져오기 (YAML 규칙 기반, 동기)
  */
-export function getSectionOrder(): string[] {
-  const rules = getSchemaLogicRules();
+export function getSectionOrder(
+  psdSet: string,
+  schemaType: string,
+  schema?: any
+): string[] {
+  const rules = getSchemaLogicRules(psdSet, schemaType, schema);
   return rules.sectionOrder || [];
 }
 
 /**
- * Type Label 가져오기 (YAML 규칙 기반, 동기)
+ * Schema Structure Patterns 가져오기 (YAML 규칙 기반, 동기)
  */
-export function getTypeLabel(type: string): string {
-  const rules = getSchemaLogicRules();
+export function getSchemaStructurePatterns(
+  psdSet: string,
+  schemaType: string
+): SchemaStructurePattern[] {
+  const rules = getSchemaLogicRules(psdSet, schemaType);
+  return rules.schemaStructurePatterns || [];
+}
+
+/**
+ * Platform Skeleton 가져오기 (YAML 규칙 기반, 동기)
+ */
+export function getPlatformSkeleton(
+  psdSet: string,
+  schemaType: string
+): PlatformSkeleton {
+  const rules = getSchemaLogicRules(psdSet, schemaType);
+  
+  // 기본값 제공 (YAML에 없을 경우)
+  const defaultSkeleton: PlatformSkeleton = {
+    entityCollection: {
+      description: "Platform Standard Collection Map",
+      type: "object",
+      patternProperties: {
+        pattern: "^[0-9]+$",
+        description: "Entity ID (numeric)",
+        ref: "#/$defs/entity"
+      },
+      additionalProperties: false,
+      minProperties: 0
+    },
+    defaultBodyRoot: "Assign",
+    alternativeBodyRoots: ["Argument", "Assign"],
+    rootStructure: {
+      type: "object",
+      additionalProperties: false
+    }
+  };
+  
+  return rules.platformSkeleton || defaultSkeleton;
+}
+
+/**
+ * Type Label 가져오기 (YAML 규칙 기반, 동기)
+ * @deprecated Use getSchemaLogicRules(psdSet, schemaType).typeLabels instead
+ */
+export function getTypeLabel(
+  type: string,
+  psdSet: string,
+  schemaType: string
+): string {
+  const rules = getSchemaLogicRules(psdSet, schemaType);
   return rules.typeLabels[type] || type;
 }
 
@@ -352,9 +537,12 @@ export interface FieldForValidation {
  * Validation Layer 결정 (YAML 규칙 기반, 동기)
  */
 export function determineValidationLayers(
-  field: FieldForValidation
+  field: FieldForValidation,
+  psdSet: string,
+  schemaType: string,
+  schema?: any
 ): string[] {
-  const rules = getSchemaLogicRules();
+  const rules = getSchemaLogicRules(psdSet, schemaType, schema);
   const layers: string[] = [];
   
   // STD layer check

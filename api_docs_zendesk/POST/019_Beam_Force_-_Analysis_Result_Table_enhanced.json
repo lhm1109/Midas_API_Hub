@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "TABLE": {
+    "type": "object",
+    "required": ["TABLE_TYPE"],
+    "properties": {
+      "TABLE_NAME": {
+        "type": "string",
+        "description": "Response table title",
+        "default": ""
+      },
+      "TABLE_TYPE": {
+        "type": "string",
+        "description": "Result table type",
+        "enum": ["BEAMFORCE", "BEAMFORCEVBM"]
+      },
+      "EXPORT_PATH": {
+        "type": "string",
+        "description": "Result table save path"
+      },
+      "UNIT": {
+        "type": "object",
+        "description": "Response unit setting",
+        "properties": {
+          "FORCE": {
+            "type": "string",
+            "description": "Force"
+          },
+          "DIST": {
+            "type": "string",
+            "description": "Length"
+          },
+          "HEAT": {
+            "type": "string",
+            "description": "Heat"
+          },
+          "TEMP": {
+            "type": "string",
+            "description": "Temperature"
+          }
+        },
+        "additionalProperties": false
+      },
+      "STYLES": {
+        "type": "object",
+        "description": "Response number format",
+        "properties": {
+          "FORMAT": {
+            "type": "string",
+            "description": "Number format",
+            "enum": ["Default", "Fixed", "Scientific", "General"]
+          },
+          "PLACE": {
+            "type": "integer",
+            "description": "Digit place",
+            "minimum": 0,
+            "maximum": 15
+          }
+        },
+        "additionalProperties": false
+      },
+      "COMPONENTS": {
+        "type": "array",
+        "description": "Components of result table",
+        "items": {
+          "type": "string"
+        }
+      },
+      "NODE_ELEMS": {
+        "type": "object",
+        "description": "Node/element no. input",
+        "properties": {
+          "KEYS": {
+            "type": "array",
+            "description": "Specify each ID",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "TO": {
+            "type": "string",
+            "description": "Specify ID range"
+          },
+          "STRUCTURE_GROUP_NAME": {
+            "type": "string",
+            "description": "Specify structure group name"
+          }
+        },
+        "additionalProperties": false,
+        "x-exclusive-keys": ["KEYS", "TO", "STRUCTURE_GROUP_NAME"]
+      },
+      "LOAD_CASE_NAMES": {
+        "type": "array",
+        "description": "Load name and type",
+        "items": {
+          "type": "string"
+        }
+      },
+      "PARTS": {
+        "type": "array",
+        "description": "Element part number",
+        "items": {
+          "type": "string",
+          "enum": ["Part I", "Part 1/4", "Part 2/4", "Part 3/4", "Part J"]
+        }
+      },
+      "OPT_CS": {
+        "type": "boolean",
+        "description": "Activation - construction stage step",
+        "default": false
+      },
+      "STAGE_STEP": {
+        "type": "array",
+        "description": "Stage step name",
+        "items": {
+          "type": "string"
+        }
+      },
+      "ITEM_TO_DISPLAY": {
+        "type": "array",
+        "description": "Select component",
+        "items": {
+          "type": "string",
+          "enum": ["Axial", "Shear-y", "Shear-z", "Torsion", "Moment-y", "Moment-z"]
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}
+

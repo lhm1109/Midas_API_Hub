@@ -59,49 +59,67 @@ export interface HTMLTemplateDefinition {
 // ============================================================================
 
 /**
- * UI Rules YAML 로드
+ * UI Rules YAML 로드 (2-Level)
+ * @param psdSet - PSD 세트 (Level 1: default, civil_gen_definition, etc.)
+ * @param schemaType - 스키마 타입 (Level 2: enhanced, manual, original)
  */
-export async function loadUIRules(type: DefinitionType): Promise<UIRulesDefinition> {
+export async function loadUIRules(
+  psdSet: string = 'civil_gen_definition', 
+  schemaType: string = 'enhanced'
+): Promise<UIRulesDefinition> {
   try {
-    const response = await fetch(`/schema_definitions/${type}/ui-rules.yaml`);
+    const path = `/schema_definitions/${psdSet}/${schemaType}/ui-rules.yaml`;
+    const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as UIRulesDefinition;
     
-    console.log(`✅ Loaded ${type} ui-rules.yaml`, parsed);
+    console.log(`✅ Loaded ${psdSet}/${schemaType}/ui-rules.yaml`, parsed);
     return parsed;
   } catch (error) {
-    console.error(`❌ Failed to load ${type} ui-rules.yaml:`, error);
+    console.error(`❌ Failed to load ${psdSet}/${schemaType}/ui-rules.yaml:`, error);
     throw error;
   }
 }
 
 /**
- * Builder Rules YAML 로드
+ * Builder Rules YAML 로드 (2-Level)
+ * @param psdSet - PSD 세트 (Level 1)
+ * @param schemaType - 스키마 타입 (Level 2)
  */
-export async function loadBuilderRules(type: DefinitionType): Promise<BuilderDefinition> {
+export async function loadBuilderRules(
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
+): Promise<BuilderDefinition> {
   try {
-    const response = await fetch(`/schema_definitions/${type}/builder.yaml`);
+    const path = `/schema_definitions/${psdSet}/${schemaType}/builder.yaml`;
+    const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as BuilderDefinition;
     
     // extends 처리: ui-rules.yaml 병합
-    const uiRules = await loadUIRules(type);
+    const uiRules = await loadUIRules(psdSet, schemaType);
     const merged = { ...uiRules, ...parsed };
     
-    console.log(`✅ Loaded ${type} builder.yaml`, merged);
+    console.log(`✅ Loaded ${psdSet}/${schemaType}/builder.yaml`, merged);
     return merged;
   } catch (error) {
-    console.error(`❌ Failed to load ${type} builder.yaml:`, error);
+    console.error(`❌ Failed to load ${psdSet}/${schemaType}/builder.yaml:`, error);
     throw error;
   }
 }
 
 /**
- * Table Rules YAML 로드
+ * Table Rules YAML 로드 (2-Level)
+ * @param psdSet - PSD 세트 (Level 1)
+ * @param schemaType - 스키마 타입 (Level 2)
  */
-export async function loadTableRules(type: DefinitionType): Promise<TableDefinition> {
+export async function loadTableRules(
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
+): Promise<TableDefinition> {
   try {
-    const response = await fetch(`/schema_definitions/${type}/table.yaml`);
+    const path = `/schema_definitions/${psdSet}/${schemaType}/table.yaml`;
+    const response = await fetch(path);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -112,21 +130,21 @@ export async function loadTableRules(type: DefinitionType): Promise<TableDefinit
     
     // extends 처리: ui-rules.yaml 병합 (실패해도 계속 진행)
     try {
-      const uiRules = await loadUIRules(type);
+      const uiRules = await loadUIRules(psdSet, schemaType);
       const merged = { ...uiRules, ...parsed };
-      console.log(`✅ Loaded ${type} table.yaml`, merged);
+      console.log(`✅ Loaded ${psdSet}/${schemaType}/table.yaml`, merged);
       return merged;
     } catch (uiRulesError) {
       console.warn(`⚠️ Failed to load ui-rules.yaml, using table.yaml only:`, uiRulesError);
-      console.log(`✅ Loaded ${type} table.yaml (without ui-rules)`, parsed);
+      console.log(`✅ Loaded ${psdSet}/${schemaType}/table.yaml (without ui-rules)`, parsed);
       return parsed;
     }
   } catch (error) {
-    console.error(`❌ Failed to load ${type} table.yaml:`, error);
+    console.error(`❌ Failed to load ${psdSet}/${schemaType}/table.yaml:`, error);
     // 🔥 기본 구조 반환하여 앱이 크래시하지 않도록 함
     return {
       version: '1.0',
-      type: type,
+      type: setName,
       fieldTypeMapping: {},
       layout: {},
       rendering: {},
@@ -142,18 +160,22 @@ export async function loadTableRules(type: DefinitionType): Promise<TableDefinit
 }
 
 /**
- * HTML Template YAML 로드 (Enhanced만 지원)
+ * HTML Template YAML 로드 (Enhanced만 지원, 2-Level)
+ * @param psdSet - PSD 세트 (Level 1)
  */
-export async function loadHTMLTemplate(): Promise<HTMLTemplateDefinition> {
+export async function loadHTMLTemplate(
+  psdSet: string = 'default'
+): Promise<HTMLTemplateDefinition> {
   try {
-    const response = await fetch(`/schema_definitions/enhanced/html-template.yaml`);
+    const path = `/schema_definitions/${psdSet}/enhanced/html-template.yaml`;
+    const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as HTMLTemplateDefinition;
     
-    console.log(`✅ Loaded enhanced html-template.yaml`, parsed);
+    console.log(`✅ Loaded ${psdSet}/enhanced/html-template.yaml`, parsed);
     return parsed;
   } catch (error) {
-    console.error(`❌ Failed to load html-template.yaml:`, error);
+    console.error(`❌ Failed to load ${psdSet}/enhanced/html-template.yaml:`, error);
     throw error;
   }
 }
@@ -165,10 +187,17 @@ export async function loadHTMLTemplate(): Promise<HTMLTemplateDefinition> {
 const cache = new Map<string, any>();
 
 export async function loadCachedDefinition(
-  type: DefinitionType,
-  category: 'ui' | 'builder' | 'table' | 'html'
+  type: DefinitionType = 'enhanced',
+  category: 'ui' | 'builder' | 'table' | 'html',
+  schemaSet?: string,
+  psdSet?: string,
+  schemaType?: string
 ): Promise<any> {
-  const cacheKey = `${type}-${category}`;
+  // 2-level 구조 지원 (우선순위: psdSet/schemaType > schemaSet > type)
+  const finalPsdSet = psdSet || schemaSet || 'default';
+  const finalSchemaType = schemaType || type || 'enhanced';
+  
+  const cacheKey = `${finalPsdSet}-${finalSchemaType}-${category}`;
   
   if (cache.has(cacheKey)) {
     console.log(`📦 Using cached ${cacheKey}`);
@@ -179,17 +208,17 @@ export async function loadCachedDefinition(
   
   switch (category) {
     case 'ui':
-      definition = await loadUIRules(type);
+      definition = await loadUIRules(finalPsdSet, finalSchemaType);
       break;
     case 'builder':
-      definition = await loadBuilderRules(type);
+      definition = await loadBuilderRules(finalPsdSet, finalSchemaType);
       break;
     case 'table':
-      definition = await loadTableRules(type);
+      definition = await loadTableRules(finalPsdSet, finalSchemaType);
       break;
     case 'html':
-      if (type === 'enhanced') {
-        definition = await loadHTMLTemplate();
+      if (finalSchemaType === 'enhanced') {
+        definition = await loadHTMLTemplate(finalPsdSet);
       }
       break;
   }

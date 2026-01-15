@@ -1,10 +1,10 @@
-import { Gem, FolderOpen, History, Bug, Settings, BookOpen } from 'lucide-react';
+import { Gem, FolderOpen, History, Bug, Settings, BookOpen, PackageOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface GlobalSidebarProps {
-  activeView: 'projects' | 'history' | 'docs' | 'debug';
-  onViewChange: (view: 'projects' | 'history' | 'docs' | 'debug') => void;
+  activeView: 'projects' | 'history' | 'docs' | 'debug' | 'schema';
+  onViewChange: (view: 'projects' | 'history' | 'docs' | 'debug' | 'schema') => void;
   onSettingsClick: () => void;
 }
 
@@ -82,6 +82,28 @@ export function GlobalSidebar({ activeView, onViewChange, onSettingsClick }: Glo
             </TooltipTrigger>
             <TooltipContent side="right">
               <p>API Docs</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`w-10 h-10 ${
+                    activeView === 'schema'
+                      ? 'bg-zinc-800 text-white'
+                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                  }`}
+                  onClick={() => onViewChange('schema')}
+                >
+                  <PackageOpen className="w-5 h-5" />
+                </Button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Schema Definition (PSD)</p>
             </TooltipContent>
           </Tooltip>
 

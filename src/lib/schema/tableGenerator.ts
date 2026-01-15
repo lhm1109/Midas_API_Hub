@@ -1,11 +1,11 @@
 /**
- * Enhanced Schema to HTML Table Generator (YAML-based)
+ * Schema to HTML Table Generator (YAML-based)
  * 
- * Enhanced JSON Schema로부터 HTML 문서 테이블을 자동 생성합니다.
+ * JSON Schema로부터 HTML 문서 테이블을 자동 생성합니다.
  * YAML 정의 파일을 사용하여 HTML 템플릿, CSS, 구조를 동적으로 생성합니다.
  * 
  * @see api_docs_zendesk/schema_to_table_algorithm.md
- * @see schema_definitions/enhanced/html-template.yaml
+ * @see schema_definitions/{psdSet}/{schemaType}/html-template.yaml
  */
 
 import { 
@@ -13,7 +13,7 @@ import {
   type EnhancedSchema, 
   type EnhancedField, 
   type SectionGroup 
-} from './enhancedSchemaCompiler';
+} from './schemaCompiler';
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
 
 // ============================================================================
@@ -21,7 +21,7 @@ import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/
 // ============================================================================
 
 /**
- * Enhanced Schema로부터 완전한 HTML 문서 생성 (YAML 기반)
+ * Schema로부터 완전한 HTML 문서 생성 (YAML 기반)
  */
 export async function generateHTMLDocumentWithYAML(schema: EnhancedSchema): Promise<string> {
   const template = await loadCachedDefinition('enhanced', 'html') as HTMLTemplateDefinition;
@@ -451,7 +451,7 @@ function escapeHtml(text: string): string {
 // ============================================================================
 
 /**
- * Enhanced Schema로부터 완전한 HTML 문서 생성 (동기 버전, 하드코딩)
+ * Schema로부터 완전한 HTML 문서 생성 (동기 버전, 하드코딩)
  * @deprecated Use generateHTMLDocumentWithYAML instead
  */
 export function generateHTMLDocument(schema: EnhancedSchema): string {

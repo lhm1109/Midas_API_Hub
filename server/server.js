@@ -10,6 +10,7 @@ import attachmentsRouter from './routes/attachments.js';
 import locksRouter from './routes/locks.js';
 import productsRouter from './routes/products.js';
 import groupsRouter from './routes/groups.js';
+import schemaDefinitionsRouter from './routes/schema-definitions.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 app.use('/api/products', productsRouter);
 app.use('/api/groups', groupsRouter);
 app.use('/api/endpoints', endpointsRouter);
+app.use('/api/schema-definitions', schemaDefinitionsRouter);
 app.use('/api/versions', versionsRouter);
 app.use('/api/data', dataRouter);
 app.use('/api/debug', debugRouter);

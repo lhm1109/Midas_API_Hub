@@ -19,16 +19,17 @@ import {
   resolveActiveSchema, 
   isEnhancedSchemaActive, 
   compileSchema,
-  canonicalToTableSchema,
 } from '@/lib/schema';
 import { 
   compileEnhancedSchema,
   type EnhancedSchema 
-} from '@/lib/schema/enhancedSchemaCompiler';
-import { generateHTMLDocument } from '@/lib/schema/enhancedTableGenerator';
+} from '@/lib/schema/schemaCompiler';
+import { generateHTMLDocument } from '@/lib/schema/tableGenerator';
 import { DynamicTableRenderer } from '@/lib/rendering/dynamicTableRenderer';
 import { loadCachedDefinition, type TableDefinition, type DefinitionType } from '@/lib/rendering/definitionLoader';
 import { generateHTMLTable, type TableParameter } from '@/lib/rendering/tableToHTML';
+import { useEndpoints } from '@/hooks/useEndpoints';
+import { getPSDForProduct } from '@/config/psdMapping';
 
 interface SpecTabProps {
   endpoint: {
@@ -52,9 +53,21 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     specData,
   } = useAppStore();
   
+  // 🔥 제품 ID로 PSD 설정 가져오기 (로컬 매핑)
+  const { endpoints: products } = useEndpoints();
+  const currentProduct = products.find(p => p.id === (endpoint as any).product);
+  const productId = (endpoint as any).product || currentProduct?.id;
+  
+  // PSD 매핑 (로컬 관리)
+  const { psdSet, schemaType: defaultSchemaType } = useMemo(() => {
+    return getPSDForProduct(productId);
+  }, [productId]);
+  const schemaType = defaultSchemaType as 'original' | 'enhanced';
+  
   // 🔥 YAML Definition 로드
   const [tableDefinition, setTableDefinition] = useState<TableDefinition | null>(null);
   const [isLoadingDefinition, setIsLoadingDefinition] = useState(true);
+  const [initializedSchemaTypes, setInitializedSchemaTypes] = useState<Set<string>>(new Set());
   
   // 🔥 Schema Registry로 활성 스키마 결정 (우선순위 정책 분리)
   const fallbackSpec = apiSpecs[endpoint.id] || {
@@ -119,11 +132,34 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     }
   }, [endpoint.id, hasEnhancedSchema, isNewEnhancedSchema]);
   
-  // 🔥 YAML Definition 로드 (effectiveDefinitionType 변경 시)
+  // 🔥 YAML Definition 로드 (effectiveDefinitionType 또는 schemaView 변경 시)
   useEffect(() => {
     setIsLoadingDefinition(true);
-    loadCachedDefinition(effectiveDefinitionType, 'table')
+    
+    // 🔥 현재 뷰에 맞는 schemaType 결정
+    const currentSchemaType = schemaView === 'original' ? 'original' : schemaType;
+    const key = `${psdSet}/${currentSchemaType}`;
+    
+    // 🔥 Schema Logic Rules 초기화 (먼저!)
+    import('@/lib/schema/schemaLogicEngine').then(({ initSchemaLogicRules }) => {
+      return initSchemaLogicRules(psdSet, currentSchemaType);
+    }).then(() => {
+      console.log(`✅ Initialized schema logic rules for ${key}`);
+      
+      // 🔥 초기화 완료 추적
+      setInitializedSchemaTypes(prev => new Set(prev).add(key));
+      
+      // 🔥 제품의 PSD 설정 사용
+      return loadCachedDefinition(
+        effectiveDefinitionType, 
+        'table',
+        undefined, // schemaSet (deprecated)
+        psdSet, // psdSet (Level 1)
+        currentSchemaType // schemaType (Level 2) - 현재 뷰 기준
+      );
+    })
       .then((def) => {
+        console.log(`✅ Loaded table definition from ${key}`);
         setTableDefinition(def as TableDefinition);
         setIsLoadingDefinition(false);
       })
@@ -131,31 +167,64 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         console.error('Failed to load table definition:', error);
         setIsLoadingDefinition(false);
       });
-  }, [effectiveDefinitionType]);
+  }, [effectiveDefinitionType, psdSet, schemaType, schemaView]);
   
   // 🔥 NEW: Schema Compiler로 정규화된 AST 생성
   const canonicalFields = useMemo(() => {
+    // 🔥 현재 schemaView에 맞는 YAML 규칙이 초기화되었는지 확인
+    const currentSchemaType = schemaView === 'original' ? 'original' : schemaType;
+    const key = `${psdSet}/${currentSchemaType}`;
+    
+    if (!initializedSchemaTypes.has(key)) {
+      console.log(`⏳ Waiting for ${key} to be initialized...`);
+      return [];
+    }
+    
     if (isNewEnhancedSchema) {
       // New Enhanced Schema: 무시하고 빈 배열 반환 (새 컴파일러 사용)
       return [];
     }
-    return compileSchema(activeSchema);
-  }, [activeSchema, isNewEnhancedSchema]);
+    return compileSchema(activeSchema, psdSet, schemaType);
+  }, [activeSchema, isNewEnhancedSchema, initializedSchemaTypes, psdSet, schemaType, schemaView]);
   
   // 🔥 NEW: UI Schema Adapter로 테이블 스키마 생성
   const tableParameters = useMemo(() => {
+    // 🔥 현재 schemaView에 맞는 schemaType 결정
+    const currentSchemaType = schemaView === 'original' ? 'original' : schemaType;
+    const key = `${psdSet}/${currentSchemaType}`;
+    
+    // 🔥 YAML 규칙이 초기화되었는지 확인
+    console.log('🔍 Checking initialization for key:', key);
+    console.log('🔍 initializedSchemaTypes:', Array.from(initializedSchemaTypes));
+    if (!initializedSchemaTypes.has(key)) {
+      console.log(`⏳ Waiting for ${key} schema logic rules to be initialized...`);
+      return [];
+    }
+    console.log('✅ Schema logic rules initialized for:', key);
+    
     // 🔥 schemaView에 따라 사용할 스키마 결정
     const schemaToUse = schemaView === 'enhanced' 
       ? (combinedSpecData.jsonSchemaEnhanced || activeSchema)
       : (combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema);
     
+    console.log('🔍 SpecTab - schemaView:', schemaView);
+    console.log('🔍 SpecTab - schemaToUse:', schemaToUse);
+    console.log('🔍 SpecTab - isNewEnhancedSchema:', isNewEnhancedSchema);
+    
     // 🔥 Enhanced 스키마 구조 감지 (현재 뷰 기준)
-    const isEnhancedStructure = schemaView === 'enhanced' || isNewEnhancedSchema;
+    // Original 뷰일 때는 무조건 Original 컴파일러 사용!
+    const isEnhancedStructure = schemaView === 'enhanced';
+    
+    console.log('🔍 SpecTab - isEnhancedStructure:', isEnhancedStructure);
+    console.log('🔍 SpecTab - Object.keys(schemaToUse).length:', schemaToUse ? Object.keys(schemaToUse).length : 0);
+    console.log('🔍 SpecTab - psdSet:', psdSet, 'currentSchemaType:', currentSchemaType);
     
     if (isEnhancedStructure && schemaToUse && Object.keys(schemaToUse).length > 0) {
       // New Enhanced Schema: 새 컴파일러로 섹션 생성
       try {
-        const sections = compileEnhancedSchema(schemaToUse as EnhancedSchema);
+        console.log('🔄 Calling compileEnhancedSchema with:', { psdSet, schemaType: currentSchemaType });
+        const sections = compileEnhancedSchema(schemaToUse as EnhancedSchema, psdSet, currentSchemaType);
+        console.log('✅ compileEnhancedSchema returned sections:', sections.length);
         
         // Convert sections to table parameters format
         const params: any[] = [];
@@ -294,21 +363,61 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           }
         }
         
+        console.log('✅ Enhanced path - returning params:', params.length);
         return params;
       } catch (error) {
-        console.error('Failed to compile enhanced schema:', error);
+        console.error('❌ Failed to compile enhanced schema:', error);
+        console.error('Error stack:', error);
         return [];
       }
     }
     
-    // Original Schema: 기존 canonical 방식
+    console.log('⚠️ Enhanced condition not met, falling through to Original path');
+    
+    // Original Schema: compileSchema 결과를 직접 사용
     // schemaView가 'original'이면 Original 스키마로 컴파일
-    const fieldsToUse = schemaView === 'original'
-      ? compileSchema(schemaToUse)
+    // currentSchemaType은 위에서 이미 선언됨
+    const sections = schemaView === 'original'
+      ? compileSchema(schemaToUse, psdSet, currentSchemaType)
       : canonicalFields;
     
-    return canonicalToTableSchema(fieldsToUse);
-  }, [canonicalFields, isNewEnhancedSchema, schemaView, combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchemaEnhanced, combinedSpecData.jsonSchema]);
+    console.log('🔍 SpecTab - Original path - sections:', sections);
+    console.log('🔍 SpecTab - Original path - sections.length:', sections.length);
+    
+    // Convert sections to table parameters format (same as Enhanced)
+    const params: any[] = [];
+    let rowNumber = 1;
+    
+    for (const section of sections) {
+      // Add section header
+      params.push({
+        no: '',
+        section: section.name,
+        name: '',
+        type: '',
+        default: '',
+        required: '',
+        description: '',
+      });
+      
+      // Add fields
+      for (const field of section.fields) {
+        params.push({
+          no: rowNumber++,
+          name: field.key,
+          type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
+          default: field.default !== undefined ? String(field.default) : '-',
+          description: field.ui?.label || field.key,
+          required: field.required?.['*'] === 'required' ? 'Required' : 'Optional',
+        });
+      }
+    }
+    
+    console.log('🔍 SpecTab - tableSchema (params):', params);
+    console.log('🔍 SpecTab - tableSchema.length:', params.length);
+    
+    return params;
+  }, [initializedSchemaTypes, canonicalFields, isNewEnhancedSchema, schemaView, combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchemaEnhanced, combinedSpecData.jsonSchema, psdSet, schemaType]);
   
   const spec = {
     title: fallbackSpec.title,
@@ -321,6 +430,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
   // Track which parameters are expanded
   const [expandedParams, setExpandedParams] = useState<Set<number>>(new Set());
+  
+  // 🔥 초기 로드 시 모든 아코디언을 열린 상태로 설정
+  useEffect(() => {
+    if (tableParameters && tableParameters.length > 0) {
+      const allParamsWithChildren = new Set<number>();
+      tableParameters.forEach((param: any) => {
+        if (param.children && param.children.length > 0) {
+          allParamsWithChildren.add(param.no);
+        }
+      });
+      setExpandedParams(allParamsWithChildren);
+    }
+  }, [tableParameters]);
   
   // 🎯 Editable Schema State
   const [editableSchema, setEditableSchema] = useState<string>('');
@@ -523,14 +645,17 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     <div className="h-full w-full flex flex-col">
       {/* 🔥 중앙 토글 헤더 */}
       <div className="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 px-4 py-3">
-        <div className="flex items-center justify-center gap-4">
-          <h3 className="text-sm text-zinc-400">Schema View:</h3>
+        <div className="relative flex items-center justify-center">
+          {/* 왼쪽: Schema View 레이블 */}
+          <div className="absolute left-0 flex items-center gap-2">
+            <h3 className="text-sm text-zinc-400">Schema View:</h3>
+          </div>
           
-          {/* Schema Toggle - 중앙 배치 */}
-          <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1">
+          {/* 중앙: 토글 버튼 (절대 위치) */}
+          <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1 w-[240px]">
             <button
               onClick={() => setSchemaView('original')}
-              className={`px-4 py-1.5 text-xs rounded transition-colors font-medium ${
+              className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
                 schemaView === 'original'
                   ? 'bg-blue-600 text-white'
                   : 'text-zinc-400 hover:text-zinc-200'
@@ -540,7 +665,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             </button>
             <button
               onClick={() => setSchemaView('enhanced')}
-              className={`px-4 py-1.5 text-xs rounded transition-colors font-medium ${
+              className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
                 schemaView === 'enhanced'
                   ? 'bg-green-600 text-white'
                   : 'text-zinc-400 hover:text-zinc-200'
@@ -551,11 +676,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             </button>
           </div>
           
-          <span className="text-xs text-zinc-500">
-            {schemaView === 'original' 
-              ? '(Original schema definition)' 
-              : '(Enhanced with x-ui, x-transport, conditions)'}
-          </span>
+          {/* 오른쪽: 설명 텍스트 */}
+          <div className="absolute right-0">
+            <span className="text-xs text-zinc-500">
+              {schemaView === 'original' 
+                ? '(Original schema definition)' 
+                : '(Enhanced with x-ui, x-transport, conditions)'}
+            </span>
+          </div>
         </div>
       </div>
       

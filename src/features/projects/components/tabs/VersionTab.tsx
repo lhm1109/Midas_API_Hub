@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, X } from 'lucide-react';
+import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,6 +35,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
   const [uploadingFiles, setUploadingFiles] = useState<Set<string>>(new Set());
   const [isCreatingVersion, setIsCreatingVersion] = useState(false);
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const importFileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 엔드포인트가 변경될 때마다 해당 엔드포인트의 버전 목록을 가져옴
   useEffect(() => {
@@ -233,6 +234,82 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     }
   };
 
+  // 🔥 Export 버전을 JSON 파일로 내보내기
+  const handleExportVersion = async (versionId: string, versionName: string) => {
+    try {
+      toast.info('⏳ Exporting version...');
+      
+      const response = await fetch(`http://localhost:9527/api/versions/${versionId}/export`);
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+      
+      const exportData = await response.json();
+      
+      // JSON 파일로 다운로드
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${endpoint.name}_v${versionName}_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success(`✅ Version exported successfully`);
+    } catch (error) {
+      toast.error(`❌ Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Export error:', error);
+    }
+  };
+
+  // 🔥 Import JSON 파일에서 버전 가져오기
+  const handleImportVersion = () => {
+    importFileInputRef.current?.click();
+  };
+
+  const handleImportFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      toast.info('⏳ Importing version...');
+      
+      const text = await file.text();
+      const importData = JSON.parse(text);
+      
+      // 서버로 전송
+      const response = await fetch('http://localhost:9527/api/versions/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          endpointId: endpoint.id,
+          importData,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Import failed');
+      }
+      
+      const result = await response.json();
+      
+      // 버전 목록 새로고침
+      await fetchVersions(endpoint.id);
+      
+      toast.success(`✅ Version imported successfully: ${result.version.version}`);
+      
+      // 파일 입력 초기화
+      if (importFileInputRef.current) {
+        importFileInputRef.current.value = '';
+      }
+    } catch (error) {
+      toast.error(`❌ Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Import error:', error);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-zinc-950 overflow-hidden">
       {/* Header */}
@@ -247,6 +324,14 @@ export function VersionTab({ endpoint }: VersionTabProps) {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            onClick={handleImportVersion}
+            variant="outline"
+            className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Import Version
+          </Button>
           <Button
             onClick={() => setShowCompareDialog(true)}
             variant="outline"
@@ -411,6 +496,15 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                       </div>
 
                       <div className="flex flex-col gap-2 ml-4">
+                        <Button
+                          onClick={() => handleExportVersion(version.id, version.version)}
+                          size="sm"
+                          variant="outline"
+                          className="border-green-900 text-green-400 hover:bg-green-900/20"
+                        >
+                          <Download className="w-3 h-3 mr-1" />
+                          Export
+                        </Button>
                         {!isCurrentVersion && (
                           <Button
                             onClick={() => handleLoadVersion(version.id)}
@@ -501,6 +595,15 @@ export function VersionTab({ endpoint }: VersionTabProps) {
         open={showCompareDialog}
         onOpenChange={setShowCompareDialog}
         versions={endpointVersions}
+      />
+
+      {/* Hidden Import File Input */}
+      <input
+        ref={importFileInputRef}
+        type="file"
+        accept=".json"
+        onChange={handleImportFileSelected}
+        className="hidden"
       />
     </div>
   );

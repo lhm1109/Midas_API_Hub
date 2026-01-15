@@ -21,15 +21,17 @@ import {
   resolveActiveSchema, 
   isEnhancedSchemaActive,
   compileSchema,
-  canonicalToBuilderSchema,
   type UIBuilderField
 } from '@/lib/schema';
 import {
   enhancedSchemaToBuilderFields,
+  schemaToBuilderFields,
   type EnhancedSchema
-} from '@/lib/schema/enhancedBuilderAdapter';
+} from '@/lib/schema/builderAdapter';
 import { DynamicSchemaRenderer } from '@/lib/rendering/dynamicRenderer';
 import { loadCachedDefinition, loadBuilderRules, type DefinitionType } from '@/lib/rendering/definitionLoader';
+import { useEndpoints } from '@/hooks/useEndpoints';
+import { getPSDForProduct } from '@/config/psdMapping';
 
 interface BuilderTabProps {
   endpoint: ApiEndpoint;
@@ -51,6 +53,17 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     specData,
     saveCurrentVersion,
   } = useAppStore();
+  
+  // 🔥 제품 ID로 PSD 설정 가져오기 (로컬 매핑)
+  const { endpoints: products } = useEndpoints();
+  const currentProduct = products.find(p => p.id === (endpoint as any).product);
+  const productId = (endpoint as any).product || currentProduct?.id;
+  
+  // PSD 매핑 (로컬 관리)
+  const { psdSet, schemaType: defaultSchemaType } = useMemo(() => {
+    return getPSDForProduct(productId);
+  }, [productId]);
+  const schemaType = defaultSchemaType as 'original' | 'enhanced';
   
   const testCases = runnerData?.testCases || [];
   
@@ -85,10 +98,11 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   useEffect(() => {
     const loadBuilderConfig = async () => {
       try {
-        const builderDef = await loadBuilderRules('enhanced');
+        // 🔥 제품의 PSD 설정 사용
+        const builderDef = await loadBuilderRules(psdSet, schemaType);
         
         if (builderDef.wrapperRules) {
-          console.log('✅ Loaded wrapper rules:', builderDef.wrapperRules);
+          console.log('✅ Loaded wrapper rules from', `${psdSet}/${schemaType}:`, builderDef.wrapperRules);
           setWrapperRules(builderDef.wrapperRules as Array<{ pattern: string; wrapper: string }>);
         }
         
@@ -101,7 +115,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       }
     };
     loadBuilderConfig();
-  }, []);
+  }, [psdSet, schemaType]);
   
   // 🔥 NEW Enhanced Schema 감지: builder.yaml의 enhancedSchemaMarkers 사용
   const isNewEnhancedSchema = useMemo(() => {
@@ -119,8 +133,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     if (isNewEnhancedSchema) {
       return [];
     }
-    return compileSchema(activeSchema);
-  }, [activeSchema, isNewEnhancedSchema]);
+    return compileSchema(activeSchema, psdSet, schemaType);
+  }, [activeSchema, isNewEnhancedSchema, psdSet, schemaType]);
   
   // 🔥 Temporary state to track form values for enhanced schema
   const [tempFormValuesForSchema, setTempFormValuesForSchema] = useState<Record<string, any>>({});
@@ -129,10 +143,11 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const schemaFields: UIBuilderField[] = useMemo(() => {
     if (isNewEnhancedSchema) {
       // Enhanced Schema: 새 어댑터 사용 (현재 폼 값 전달하여 동적 업데이트)
-      return enhancedSchemaToBuilderFields(activeSchema as EnhancedSchema, tempFormValuesForSchema);
+      return enhancedSchemaToBuilderFields(activeSchema as EnhancedSchema, tempFormValuesForSchema, psdSet, schemaType);
     }
-    return canonicalToBuilderSchema(canonicalFields);
-  }, [canonicalFields, isNewEnhancedSchema, activeSchema, tempFormValuesForSchema]);
+    // Original Schema: compileSchema로 SectionGroup[] 생성 후 schemaToBuilderFields로 변환
+    return schemaToBuilderFields(activeSchema as EnhancedSchema, tempFormValuesForSchema, psdSet, schemaType);
+  }, [canonicalFields, isNewEnhancedSchema, activeSchema, tempFormValuesForSchema, psdSet, schemaType]);
   
   // 🔥 기본값 적용 헬퍼 함수 (공통)
   const getDefaultValue = (field: UIBuilderField): any => {
@@ -298,10 +313,17 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     const definitionType: DefinitionType = isNewEnhancedSchema ? 'enhanced' : 'original';
     const overrideType = settings.schemaDefinition || definitionType;
     
-    loadCachedDefinition(overrideType, 'builder')
+    // 🔥 제품의 PSD 설정 사용
+    loadCachedDefinition(
+      overrideType, 
+      'builder',
+      undefined, // schemaSet (deprecated)
+      psdSet, // psdSet (Level 1)
+      overrideType // schemaType (Level 2)
+    )
       .then(def => setBuilderDefinition(def))
       .catch(err => console.error('Failed to load builder definition:', err));
-  }, [isNewEnhancedSchema, settings.schemaDefinition]);
+  }, [isNewEnhancedSchema, settings.schemaDefinition, psdSet]);
   
   // 🎯 스키마 변경 시 동적 폼 데이터 재초기화
   // 🔥 schemaFields가 변경되면 (조건부 필드 포함) 동적으로 업데이트

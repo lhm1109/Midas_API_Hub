@@ -98,9 +98,16 @@ class ApiClient {
     return this.request<any[]>('/products');
   }
 
-  async createProduct(data: { id: string; name: string; description?: string }) {
+  async createProduct(data: { id: string; name: string; description?: string; psd_set?: string; schema_type?: string }) {
     return this.request<{ product: any; message: string }>('/products', {
       method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateProduct(id: string, data: { name?: string; description?: string; psd_set?: string; schema_type?: string }) {
+    return this.request<{ product: any; message: string }>(`/products/${encodeURIComponent(id)}`, {
+      method: 'PUT',
       body: JSON.stringify(data),
     });
   }

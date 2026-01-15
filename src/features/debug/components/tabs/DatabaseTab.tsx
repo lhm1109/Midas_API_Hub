@@ -165,6 +165,29 @@ export function DatabaseTab() {
     }
   };
 
+  const deleteEndpoint = async (endpointId: string, endpointName: string) => {
+    if (!confirm(`"${endpointName}" 엔드포인트를 삭제하시겠습니까?\n\n⚠️ 이 작업은 되돌릴 수 없습니다.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:9527/api/endpoints/${encodeURIComponent(endpointId)}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete endpoint');
+      }
+
+      alert('✅ 엔드포인트가 삭제되었습니다.');
+      
+      // 데이터 새로고침
+      await fetchSupabaseStats();
+    } catch (err) {
+      alert(`❌ 삭제 오류: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  };
+
   useEffect(() => {
     fetchData();
     fetchSupabaseStats();
@@ -584,6 +607,7 @@ export function DatabaseTab() {
                                 <TableHead className="text-zinc-300">Product</TableHead>
                                 <TableHead className="text-zinc-300">Group</TableHead>
                                 <TableHead className="text-zinc-300">Path</TableHead>
+                                <TableHead className="text-zinc-300 text-right">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -619,6 +643,16 @@ export function DatabaseTab() {
                                     </Badge>
                                   </TableCell>
                                   <TableCell className="font-mono text-xs text-zinc-400">{endpoint.path}</TableCell>
+                                  <TableCell className="text-right">
+                                    <Button
+                                      onClick={() => deleteEndpoint(endpoint.id, endpoint.name)}
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>

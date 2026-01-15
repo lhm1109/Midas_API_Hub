@@ -226,11 +226,56 @@ router.delete('/:id', async (req, res) => {
       .eq('id', id)
       .single();
 
-    if (groupError) {
-      if (groupError.code === 'PGRST116') {
-        console.log('⚠️ Group not found:', id);
-        return res.status(404).json({ message: 'Group not found', id });
+    // 🔥 groups 테이블에 없는 경우 (동적 그룹/레거시 그룹)
+    if (groupError && groupError.code === 'PGRST116') {
+      console.log('⚠️ Group not found in groups table, treating as legacy group:', id);
+      
+      // ID에서 product와 group_name 추출 (예: civil-nx_Gen → product: civil-nx, group_name: Gen)
+      const parts = id.split('_');
+      if (parts.length < 2) {
+        return res.status(400).json({ error: 'Invalid group ID format', id });
       }
+      
+      const product = parts[0];
+      const groupName = parts.slice(1).join('_');
+      
+      console.log('📦 Legacy group:', { product, groupName });
+      
+      // 해당 엔드포인트들 조회
+      const { data: endpoints, error: endpointsError } = await supabase
+        .from('endpoints')
+        .select('id, name')
+        .eq('product', product)
+        .eq('group_name', groupName);
+
+      if (endpointsError) throw endpointsError;
+
+      console.log(`🔍 Found ${endpoints?.length || 0} legacy endpoints:`, endpoints?.map(e => e.name));
+
+      // 엔드포인트들 삭제
+      if (endpoints && endpoints.length > 0) {
+        const { error: deleteError } = await supabase
+          .from('endpoints')
+          .delete()
+          .eq('product', product)
+          .eq('group_name', groupName);
+
+        if (deleteError) {
+          console.error('❌ Delete endpoints error:', deleteError);
+          throw deleteError;
+        }
+
+        console.log(`✅ Deleted ${endpoints.length} legacy endpoints`);
+      }
+
+      return res.json({ 
+        message: 'Legacy group deleted successfully (endpoints only)', 
+        deletedEndpoints: endpoints?.length || 0,
+        legacy: true
+      });
+    }
+
+    if (groupError) {
       throw groupError;
     }
 

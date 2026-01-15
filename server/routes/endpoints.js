@@ -62,11 +62,13 @@ router.get('/tree', async (req, res) => {
     // 4. 트리 구조로 변환
     const tree = {};
     
-    // 4-1. Products 먼저 생성
+    // 4-1. Products 먼저 생성 (psd_set, schema_type 포함)
     (products || []).forEach(product => {
       tree[product.id] = {
         id: product.id,
         name: product.name,
+        psd_set: product.psd_set || 'default',
+        schema_type: product.schema_type || 'enhanced',
         groups: {}
       };
     });

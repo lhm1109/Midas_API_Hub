@@ -62,8 +62,8 @@ export function DynamicTableRenderer({
             // 메인 파라미터 행
             rows.push(renderParameterRow(param, definition, expandedParams, toggleParam));
             
-            // 🔥 자식 행들 - 항상 표시 (object 타입의 경우)
-            if (param.children && param.children.length > 0) {
+            // 🔥 자식 행들 - expandedParams 확인 후 표시 (아코디언)
+            if (param.children && param.children.length > 0 && expandedParams.has(param.no)) {
               param.children.forEach((child: any, childIdx: number) => {
                 // 🔥 oneOf 섹션 헤더 (type === 'section-header')
                 if (child.type === 'section-header' || child.section) {

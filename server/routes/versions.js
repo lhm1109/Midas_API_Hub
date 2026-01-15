@@ -397,4 +397,245 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// 🔥 버전 Export - JSON 파일로 내보내기
+router.get('/:id/export', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // 버전 기본 정보
+    const { data: version, error: versionError } = await supabase
+      .from('versions')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (versionError) throw versionError;
+    if (!version) {
+      return res.status(404).json({ error: 'Version not found' });
+    }
+    
+    // Manual 데이터
+    const { data: manualData } = await supabase
+      .from('manual_data')
+      .select('*')
+      .eq('version_id', id)
+      .single();
+    
+    // Spec 데이터
+    const { data: specData } = await supabase
+      .from('spec_data')
+      .select('*')
+      .eq('version_id', id)
+      .single();
+    
+    // Builder 데이터
+    const { data: builderData } = await supabase
+      .from('builder_data')
+      .select('*')
+      .eq('version_id', id)
+      .single();
+    
+    // Runner 데이터 및 테스트 케이스
+    const { data: runnerData } = await supabase
+      .from('runner_data')
+      .select('*')
+      .eq('version_id', id)
+      .single();
+    
+    const { data: testCases } = await supabase
+      .from('test_cases')
+      .select('*')
+      .eq('version_id', id);
+    
+    // Export JSON 구조
+    const exportData = {
+      // 메타 정보
+      exportedAt: new Date().toISOString(),
+      exportVersion: '1.0',
+      
+      // 버전 기본 정보
+      version: {
+        version: version.version,
+        changeLog: version.change_log,
+        author: version.author,
+        createdAt: version.created_at,
+      },
+      
+      // 스키마 (Original + Enhanced)
+      schemas: {
+        original: safeParseJSON(specData?.json_schema_original, null),
+        enhanced: safeParseJSON(specData?.json_schema_enhanced, null),
+        // 레거시 스키마 (호환성)
+        jsonSchema: safeParseJSON(specData?.json_schema, {}),
+      },
+      
+      // 예제 데이터
+      examples: {
+        request: safeParseJSON(manualData?.request_examples, []),
+        response: safeParseJSON(manualData?.response_examples, []),
+        // 레거시 examples (호환성)
+        legacy: safeParseJSON(manualData?.examples, []),
+      },
+      
+      // 매뉴얼 내용
+      manual: {
+        title: manualData?.title || '',
+        category: manualData?.category || '',
+        specifications: manualData?.specifications || '',
+        htmlContent: manualData?.html_content || null,
+      },
+      
+      // Builder 데이터 (선택적)
+      builder: builderData ? {
+        formData: safeParseJSON(builderData.form_data, {}),
+      } : null,
+      
+      // Runner 데이터 (선택적)
+      runner: runnerData ? {
+        url: runnerData.url,
+        method: runnerData.method,
+        headers: safeParseJSON(runnerData.headers, {}),
+        body: safeParseJSON(runnerData.body, {}),
+        testCases: testCases?.map(tc => ({
+          name: tc.name,
+          description: tc.description,
+          input: safeParseJSON(tc.input, {}),
+          expectedOutput: safeParseJSON(tc.expected_output, {}),
+        })) || [],
+      } : null,
+    };
+    
+    res.json(exportData);
+  } catch (error) {
+    console.error('Error exporting version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 🔥 버전 Import - JSON 파일에서 가져오기
+router.post('/import', async (req, res) => {
+  try {
+    const { endpointId, importData } = req.body;
+    
+    if (!endpointId || !importData) {
+      return res.status(400).json({ error: 'endpointId and importData are required' });
+    }
+    
+    // 버전 생성
+    const versionData = {
+      endpoint_id: endpointId,
+      version: importData.version?.version || 'Imported',
+      change_log: importData.version?.changeLog || 'Imported from JSON',
+      author: importData.version?.author || 'System',
+      created_at: new Date().toISOString(),
+    };
+    
+    const { data: newVersion, error: versionError } = await supabase
+      .from('versions')
+      .insert([versionData])
+      .select()
+      .single();
+    
+    if (versionError) throw versionError;
+    
+    const versionId = newVersion.id;
+    
+    // Manual 데이터 저장
+    if (importData.manual || importData.examples) {
+      const manualInsert = {
+        version_id: versionId,
+        title: importData.manual?.title || '',
+        category: importData.manual?.category || '',
+        specifications: importData.manual?.specifications || '',
+        html_content: importData.manual?.htmlContent || null,
+        request_examples: JSON.stringify(importData.examples?.request || []),
+        response_examples: JSON.stringify(importData.examples?.response || []),
+        examples: JSON.stringify(importData.examples?.legacy || []),
+      };
+      
+      const { error: manualError } = await supabase
+        .from('manual_data')
+        .insert([manualInsert]);
+      
+      if (manualError) console.error('Manual data import error:', manualError);
+    }
+    
+    // Spec 데이터 저장
+    if (importData.schemas) {
+      const specInsert = {
+        version_id: versionId,
+        json_schema: JSON.stringify(importData.schemas.jsonSchema || {}),
+        json_schema_original: JSON.stringify(importData.schemas.original || null),
+        json_schema_enhanced: JSON.stringify(importData.schemas.enhanced || null),
+        specifications: importData.manual?.specifications || '',
+      };
+      
+      const { error: specError } = await supabase
+        .from('spec_data')
+        .insert([specInsert]);
+      
+      if (specError) console.error('Spec data import error:', specError);
+    }
+    
+    // Builder 데이터 저장 (선택적)
+    if (importData.builder) {
+      const builderInsert = {
+        version_id: versionId,
+        form_data: JSON.stringify(importData.builder.formData || {}),
+      };
+      
+      const { error: builderError } = await supabase
+        .from('builder_data')
+        .insert([builderInsert]);
+      
+      if (builderError) console.error('Builder data import error:', builderError);
+    }
+    
+    // Runner 데이터 저장 (선택적)
+    if (importData.runner) {
+      const runnerInsert = {
+        version_id: versionId,
+        url: importData.runner.url || '',
+        method: importData.runner.method || 'POST',
+        headers: JSON.stringify(importData.runner.headers || {}),
+        body: JSON.stringify(importData.runner.body || {}),
+      };
+      
+      const { data: newRunner, error: runnerError } = await supabase
+        .from('runner_data')
+        .insert([runnerInsert])
+        .select()
+        .single();
+      
+      if (runnerError) {
+        console.error('Runner data import error:', runnerError);
+      } else if (importData.runner.testCases && importData.runner.testCases.length > 0) {
+        // 테스트 케이스 저장
+        const testCaseInserts = importData.runner.testCases.map(tc => ({
+          version_id: versionId,
+          name: tc.name,
+          description: tc.description || '',
+          input: JSON.stringify(tc.input || {}),
+          expected_output: JSON.stringify(tc.expectedOutput || {}),
+        }));
+        
+        const { error: testCaseError } = await supabase
+          .from('test_cases')
+          .insert(testCaseInserts);
+        
+        if (testCaseError) console.error('Test case import error:', testCaseError);
+      }
+    }
+    
+    res.json({
+      message: 'Version imported successfully',
+      versionId: versionId,
+      version: newVersion,
+    });
+  } catch (error) {
+    console.error('Error importing version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

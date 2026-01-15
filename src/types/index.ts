@@ -19,6 +19,10 @@ export interface ApiGroup {
 export interface ApiProduct {
   id: string;
   name: string;
+  psd_set?: string; // PSD Set (Level 1: default, civil_gen_definition, etc.)
+  schema_type?: string; // Schema Type (Level 2: enhanced, manual, original)
+  // Deprecated: use psd_set + schema_type instead
+  schema_definition?: string;
   groups: ApiGroup[];
 }
 

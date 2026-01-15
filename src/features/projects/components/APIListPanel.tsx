@@ -1042,9 +1042,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
   };
 
-  const handleDeleteGroup = async (productId: string, groupName: string, endpoints: ApiEndpoint[]) => {
-    const groupId = `${productId}_${groupName}`;
-    
+  const handleDeleteGroup = async (groupId: string, groupName: string, endpoints: ApiEndpoint[]) => {
     const message = endpoints.length > 0
       ? `그룹 "${groupName}"과 관련된 모든 데이터를 삭제하시겠습니까?\n\n` +
         `- 엔드포인트: ${endpoints.length}개\n` +
@@ -1056,7 +1054,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
-    console.log('🗑️ Deleting group:', groupId, groupName);
+    console.log('🗑️ Deleting group:', { groupId, groupName });
 
     try {
       // groups 테이블에서 삭제 (CASCADE로 자동으로 관련 데이터 삭제)
@@ -1184,7 +1182,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
                             isExpanded={expandedGroups.has(group.id)}
                             onToggle={() => toggleGroup(group.id)}
                             onAddEndpoint={() => handleAddEndpoint(product.id, group.id)}
-                            onDelete={() => handleDeleteGroup(product.id, group.name, group.endpoints)}
+                            onDelete={() => handleDeleteGroup(group.id, group.name, group.endpoints)}
                           >
 
                       {/* Endpoints */}

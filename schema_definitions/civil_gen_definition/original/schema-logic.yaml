@@ -1,0 +1,148 @@
+# Original Schema Logic Rules
+# 기존 JSON Schema 처리 규칙 (x-* extensions 미사용)
+
+# ============================================================================
+# Platform Skeleton Definition (플랫폼 골격 정의)
+# ============================================================================
+platformSkeleton:
+  # Entity Collection 구조
+  entityCollection:
+    description: "Platform Standard Collection Map"
+    type: "object"
+    patternProperties:
+      pattern: "^[0-9]+$"  # ID 규칙: 숫자만 허용
+      description: "Entity ID (numeric)"
+      ref: "#/$defs/entity"
+    additionalProperties: false  # 보안: 정의되지 않은 키 차단
+    minProperties: 0
+  
+  # Body Root 기본값
+  defaultBodyRoot: "Assign"
+  
+  # Body Root 대체값 (명시적으로 지정 가능)
+  alternativeBodyRoots:
+    - "Argument"
+    - "Assign"
+  
+  # 조립된 스키마 최상위 구조
+  rootStructure:
+    type: "object"
+    additionalProperties: false
+
+# ============================================================================
+# Schema Structure Patterns (스키마 구조 패턴 지원)
+# ============================================================================
+schemaStructurePatterns:
+  - name: "Unwrap Root Wrapper Key"
+    description: "최상위 wrapper key 제거 (예: { 'TABLE': { $schema, type, properties } })"
+    enabled: true
+    priority: 1  # 가장 먼저 실행
+    detect:
+      - path: "$schema"
+        exists: false
+      - path: "type"
+        exists: false
+    transform:
+      action: "unwrap-root-key"
+      extractTitle: true  # wrapper key를 title로 사용
+      preserveMetadata: ["description", "x-ui", "x-transport"]
+  
+  - name: "Root oneOf"
+    description: "최상위 oneOf 패턴"
+    enabled: true
+    detect:
+      - path: "oneOf"
+        exists: true
+        isArray: true
+      - path: "properties"
+        exists: false
+    transform:
+      action: "wrap-in-virtual-object"
+      wrapperKey: "{title}"
+      wrapperType: "object"
+      preserveMetadata: ["description"]
+  
+  - name: "Root properties with oneOf"
+    description: "최상위 properties + oneOf 조합"
+    enabled: true
+    detect:
+      - path: "properties"
+        exists: true
+      - path: "oneOf"
+        exists: true
+        isArray: true
+    transform:
+      action: "merge-properties-with-oneof"
+      strategy: "wrap-and-filter"
+      wrapperKey: "{title}"
+      wrapperType: "object"
+
+# ============================================================================
+# Section Rules (섹션 분류 규칙)
+# ============================================================================
+sectionRules:
+  - name: "Default Section"
+    description: "기본 섹션 (모든 필드)"
+    condition:
+      type: "always"  # 항상 매칭
+    action:
+      type: "assign"
+      section: "General"
+
+# ============================================================================
+# Section Order (섹션 순서)
+# ============================================================================
+sectionOrder:
+  - "General"
+  - "Options"
+  - "Advanced"
+
+# ============================================================================
+# Type Labels (타입 표시 레이블)
+# ============================================================================
+typeLabels:
+  string: "String"
+  number: "Number"
+  integer: "Integer"
+  boolean: "Boolean"
+  array: "Array"
+  object: "Object"
+
+# ============================================================================
+# Visibility Rules (필드 표시 규칙)
+# ============================================================================
+visibilityRules: []
+
+# ============================================================================
+# Required Calculation Rules (필수 여부 계산)
+# ============================================================================
+requiredCalculationRules:
+  defaultStatus: "optional"
+  
+  conditionalRequired:
+    enabled: true
+    sources:
+      - "allOf[].if.properties"
+      - "allOf[].then.required"
+
+# ============================================================================
+# Validation Layer Rules (검증 레이어)
+# ============================================================================
+validationLayerRules:
+  defaultLayers: ["STD"]
+  
+  layerMapping: []
+
+# ============================================================================
+# Description Building Rules (설명 생성)
+# ============================================================================
+descriptionBuildingRules:
+  format: "simple"
+  
+  includeElements:
+    - "description"
+    - "enum"
+    - "default"
+  
+  excludeExtensions: true  # x-* 확장 무시
+

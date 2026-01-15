@@ -65,7 +65,7 @@ router.get('/:id', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const { id, name, description } = req.body;
+    const { id, name, description, psd_set, schema_type } = req.body;
     const now = new Date().toISOString();
 
     if (!id || !name) {
@@ -88,6 +88,8 @@ router.post('/', async (req, res) => {
         id,
         name,
         description: description || null,
+        psd_set: psd_set || 'default',
+        schema_type: schema_type || 'enhanced',
         order_index: nextOrderIndex,
         created_at: now,
         updated_at: now,
@@ -172,15 +174,20 @@ router.put('/reorder', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description } = req.body;
+    const { name, description, psd_set, schema_type } = req.body;
+
+    const updateData = {
+      updated_at: new Date().toISOString(),
+    };
+    
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description || null;
+    if (psd_set !== undefined) updateData.psd_set = psd_set;
+    if (schema_type !== undefined) updateData.schema_type = schema_type;
 
     const { data, error } = await supabase
       .from('products')
-      .update({
-        name,
-        description: description || null,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
@@ -219,14 +226,88 @@ router.delete('/:id', async (req, res) => {
     if (checkError) {
       console.error('❌ Check error:', checkError);
       if (checkError.code === 'PGRST116') {
-        return res.status(404).json({ error: 'Product not found', id });
+        // 🔥 products 테이블에 없는 레거시 제품인 경우
+        console.log('⚠️ Product not found in products table, treating as legacy product:', id);
+        
+        // 레거시 엔드포인트들 조회
+        const { data: legacyEndpoints, error: legacyError } = await supabase
+          .from('endpoints')
+          .select('id, name')
+          .eq('product', id);
+        
+        if (legacyError) throw legacyError;
+        
+        console.log(`🔍 Found ${legacyEndpoints?.length || 0} legacy endpoints for product ${id}`);
+        
+        // 레거시 엔드포인트들 삭제
+        if (legacyEndpoints && legacyEndpoints.length > 0) {
+          const { error: deleteError } = await supabase
+            .from('endpoints')
+            .delete()
+            .eq('product', id);
+          
+          if (deleteError) {
+            console.error('❌ Delete legacy endpoints error:', deleteError);
+            throw deleteError;
+          }
+          
+          console.log(`✅ Deleted ${legacyEndpoints.length} legacy endpoints`);
+        }
+        
+        return res.json({ 
+          message: 'Legacy product deleted successfully (endpoints only)', 
+          deletedEndpoints: legacyEndpoints?.length || 0,
+          legacy: true
+        });
       }
       throw checkError;
     }
 
     console.log('📦 Found product:', existing);
 
-    // 삭제 시도
+    // 🔥 1. 먼저 레거시 엔드포인트 삭제 (product 컬럼 사용)
+    const { data: legacyEndpoints } = await supabase
+      .from('endpoints')
+      .select('id, name')
+      .eq('product', id);
+    
+    if (legacyEndpoints && legacyEndpoints.length > 0) {
+      console.log(`🔍 Found ${legacyEndpoints.length} legacy endpoints (using product column)`);
+      
+      const { error: deleteLegacyError } = await supabase
+        .from('endpoints')
+        .delete()
+        .eq('product', id);
+      
+      if (deleteLegacyError) {
+        console.error('❌ Delete legacy endpoints error:', deleteLegacyError);
+      } else {
+        console.log(`✅ Deleted ${legacyEndpoints.length} legacy endpoints`);
+      }
+    }
+
+    // 🔥 2. 그룹 삭제 (CASCADE로 product_id 기반 엔드포인트도 삭제)
+    const { data: groups } = await supabase
+      .from('groups')
+      .select('id, name')
+      .eq('product_id', id);
+    
+    if (groups && groups.length > 0) {
+      console.log(`🔍 Found ${groups.length} groups to delete`);
+      
+      const { error: deleteGroupsError } = await supabase
+        .from('groups')
+        .delete()
+        .eq('product_id', id);
+      
+      if (deleteGroupsError) {
+        console.error('❌ Delete groups error:', deleteGroupsError);
+      } else {
+        console.log(`✅ Deleted ${groups.length} groups`);
+      }
+    }
+
+    // 🔥 3. 제품 삭제
     const { data: deleted, error } = await supabase
       .from('products')
       .delete()
@@ -239,7 +320,12 @@ router.delete('/:id', async (req, res) => {
     }
 
     console.log('✅ Product deleted:', deleted);
-    res.json({ message: 'Product deleted successfully', deleted });
+    res.json({ 
+      message: 'Product deleted successfully', 
+      deleted,
+      deletedLegacyEndpoints: legacyEndpoints?.length || 0,
+      deletedGroups: groups?.length || 0
+    });
   } catch (error) {
     console.error('❌ Delete product error:', error);
     res.status(500).json({ error: error.message, details: error });

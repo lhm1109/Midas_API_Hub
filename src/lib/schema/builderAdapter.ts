@@ -1,7 +1,7 @@
 /**
- * Enhanced Schema to Builder UI Adapter
+ * Schema to Builder UI Adapter
  * 
- * Enhanced JSON Schema를 BuilderTab의 동적 폼으로 변환합니다.
+ * JSON Schema를 BuilderTab의 동적 폼으로 변환합니다.
  * 
  * Features:
  * - visibleWhen 조건부 필드 표시
@@ -11,12 +11,32 @@
  */
 
 import { 
+  compileSchema,
   compileEnhancedSchema, 
   type EnhancedSchema, 
   type EnhancedField, 
   type SectionGroup 
-} from './enhancedSchemaCompiler';
-import type { UIBuilderField } from './uiSchemaAdapters';
+} from './schemaCompiler';
+
+// ============================================================================
+// UI Builder Field Type (from legacy uiSchemaAdapters)
+// ============================================================================
+
+export interface UIBuilderField {
+  name: string;
+  type: 'string' | 'number' | 'integer' | 'boolean' | 'enum' | 'array' | 'object';
+  description?: string;
+  required: boolean;
+  default?: any;
+  enum?: any[];
+  placeholder?: string;
+  items?: { type: string };
+  children?: UIBuilderField[];
+  oneOfOptions?: string[];
+  optionIndex?: number;
+  visible?: boolean;
+  valueConstraint?: string;
+}
 
 // Re-export for convenience
 export type { EnhancedSchema, EnhancedField, SectionGroup };
@@ -41,18 +61,32 @@ export interface BuilderFormState {
 // ============================================================================
 
 /**
- * Enhanced Schema를 Builder UI로 변환
+ * Schema를 Builder UI로 변환
  * 
- * @param schema Enhanced JSON Schema
+ * @param schema JSON Schema
  * @param currentValues 현재 폼 값 (visibleWhen 평가에 사용)
  * @returns Builder 섹션 리스트
  */
 export function adaptSchemaToBuilder(
   schema: EnhancedSchema,
-  currentValues: Record<string, any> = {}
+  currentValues: Record<string, any> = {},
+  psdSet: string,
+  schemaType: string
 ): BuilderSection[] {
-  const sections = compileEnhancedSchema(schema);
-  const currentType = currentValues['TYPE'] || schema.properties.TYPE?.default || '';
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
+  
+  // 🔥 schema.properties가 없을 수 있음 (단순 엔티티 정의)
+  // TYPE 필드를 sections에서 찾아서 기본값 추출
+  let typeDefaultValue = '';
+  for (const section of sections) {
+    const typeField = section.fields.find(f => f.key === 'TYPE');
+    if (typeField?.default) {
+      typeDefaultValue = typeField.default;
+      break;
+    }
+  }
+  
+  const currentType = currentValues['TYPE'] || typeDefaultValue || '';
   
   return sections.map(section => ({
     name: section.name,
@@ -63,18 +97,20 @@ export function adaptSchemaToBuilder(
 }
 
 /**
- * Enhanced Schema를 평탄화된 UIBuilderField 배열로 변환
+ * Schema를 평탄화된 UIBuilderField 배열로 변환
  * (BuilderTab과 호환되도록)
  * 
- * @param schema Enhanced JSON Schema
+ * @param schema JSON Schema
  * @param currentValues 현재 폼 값 (visibleWhen 평가에 사용)
  * @returns UIBuilderField 배열
  */
-export function enhancedSchemaToBuilderFields(
+export function schemaToBuilderFields(
   schema: EnhancedSchema,
-  currentValues: Record<string, any> = {}
+  currentValues: Record<string, any> = {},
+  psdSet: string,
+  schemaType: string
 ): UIBuilderField[] {
-  const sections = adaptSchemaToBuilder(schema, currentValues);
+  const sections = adaptSchemaToBuilder(schema, currentValues, psdSet, schemaType);
   const fields: UIBuilderField[] = [];
   
   // 섹션을 평탄화하되, 섹션 헤더는 유지
@@ -95,6 +131,9 @@ export function enhancedSchemaToBuilderFields(
   
   return fields;
 }
+
+// Legacy alias for backward compatibility
+export const enhancedSchemaToBuilderFields = schemaToBuilderFields;
 
 /**
  * Enhanced Field를 UIBuilderField로 변환

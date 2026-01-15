@@ -5,6 +5,7 @@ import { ProjectsView, APIListPanel } from '@/features/projects/components';
 import { HistoryView } from '@/features/history/components';
 import { DocsView } from '@/features/docs/components';
 import { DebugView } from '@/features/debug/components';
+import { SchemaView } from '@/features/schema/components';
 import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint } from '@/types';
@@ -14,15 +15,16 @@ import { initSchemaLogicRules } from '@/lib/schema/schemaLogicEngine';
 export default function App() {
   const { setRunnerData } = useAppStore();
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
-  const [activeView, setActiveView] = useState<'projects' | 'history' | 'docs' | 'debug'>('projects');
+  const [activeView, setActiveView] = useState<'projects' | 'history' | 'docs' | 'debug' | 'schema'>('projects');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
   const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
 
-  // 🔥 스키마 로직 규칙 초기화 (앱 시작 시 한 번만)
+  // 🔥 스키마 로직 규칙 초기화 (앱 시작 시 기본값으로)
   useEffect(() => {
-    initSchemaLogicRules().catch(error => {
-      console.error('Failed to initialize schema logic rules:', error);
+    // 기본 PSD로 초기화 (제품별로는 각 탭에서 개별 초기화)
+    initSchemaLogicRules('civil_gen_definition', 'enhanced').catch(error => {
+      console.error('Failed to initialize default schema logic rules:', error);
     });
   }, []);
 
@@ -192,6 +194,8 @@ export default function App() {
         <HistoryView />
       ) : activeView === 'docs' ? (
         <DocsView />
+      ) : activeView === 'schema' ? (
+        <SchemaView />
       ) : (
         <DebugView />
       )}

@@ -4,5 +4,5 @@
 
 export * from './schemaRegistry';
 export * from './schemaCompiler';
-export * from './uiSchemaAdapters';
+export * from './builderAdapter';
 
