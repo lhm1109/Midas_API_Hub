@@ -5,6 +5,111 @@ version: "1.0"
 extends: "./ui-rules.yaml"
 
 # ============================================================================
+# Schema Extensions (확장 필드 정의)
+# YAML에서 확장 필드를 정의하여 제너럴하게 처리
+# ============================================================================
+schemaExtensions:
+  # 스키마에서 추출할 확장 필드 (컴파일러용)
+  extractFromSchema:
+    # x-ui는 ui로 변환하여 저장
+    - key: "x-ui"
+      targetProperty: "ui"
+      transformKey: true  # x- prefix 제거
+      
+    # 나머지는 원본 키 그대로 또는 변환
+    - key: "x-enum-labels"
+      targetProperty: "enumLabels"
+      transformKey: true
+      
+    - key: "x-enum-by-type"
+      targetProperty: "enumByType"
+      transformKey: true
+      
+    - key: "x-enum-labels-by-type"
+      targetProperty: "enumLabelsByType"
+      transformKey: true
+      
+    - key: "x-node-count-by-type"
+      targetProperty: "nodeCountByType"
+      transformKey: true
+      
+    - key: "x-value-constraint"
+      targetProperty: "valueConstraint"
+      transformKey: true
+      
+    - key: "x-required-by-type"
+      targetProperty: "requiredByType"
+      transformKey: true
+      
+    # 원본 키 그대로 유지 (passthrough)
+    - key: "x-required-when"
+      targetProperty: "x-required-when"
+      passthrough: true
+      
+    - key: "x-transport"
+      targetProperty: "x-transport"
+      passthrough: true
+  
+  # 테이블에 표시할 조건부 필드
+  conditional:
+    - key: "x-ui.visibleWhen"
+      description: "필드가 표시될 조건"
+      format: "object"  # { fieldName: value }
+      displayInTable: true
+      displayIcon: "📌"
+      displayLabel: "Visible when"
+      displayColor: "#4c9aff"  # 파란색
+      
+    - key: "x-ui.hiddenWhen"
+      description: "필드가 숨겨질 조건"
+      format: "object"
+      displayInTable: true
+      displayIcon: "🚫"
+      displayLabel: "Hidden when"
+      displayColor: "#ff4c4c"  # 빨간색
+      
+    - key: "x-ui.disabledWhen"
+      description: "필드가 비활성화될 조건"
+      format: "object"
+      displayInTable: true
+      displayIcon: "⚠️"
+      displayLabel: "Disabled when"
+      displayColor: "#ffa500"  # 주황색
+      
+    - key: "x-required-when"
+      description: "조건부 필수 필드"
+      format: "object"
+      displayInTable: true
+      displayIcon: "⚠️"
+      displayLabel: "Required when"
+      displayColor: "#ff9d4c"  # 주황색
+      
+    - key: "x-value-constraint.dependsOn"
+      description: "값이 다른 필드에 의존"
+      format: "object"
+      displayInTable: true
+      displayIcon: "🔗"
+      displayLabel: "Depends on"
+      displayColor: "#9d4cff"  # 보라색
+  
+  # UI 관련 (참고용, 테이블에는 미표시)
+  ui:
+    - key: "x-ui.label"
+      description: "필드 레이블"
+      displayInTable: false
+      
+    - key: "x-ui.group"
+      description: "필드 그룹"
+      displayInTable: false
+      
+    - key: "x-ui.hint"
+      description: "필드 힌트"
+      displayInTable: true
+      displayIcon: "💡"
+      displayLabel: "Hint"
+      displayColor: "#999999"
+
+# ============================================================================
 # Table Structure
 # 테이블 구조
 # ============================================================================
@@ -58,6 +163,22 @@ sectionHeaders:
     fontWeight: "font-semibold"
     padding: "p-2"
     icon: "📋"
+  
+  colspan: 6
+
+# ============================================================================
+# Condition Rows (조건부 필드 표시 행)
+# 섹션 헤더와 동일한 스타일 적용
+# ============================================================================
+conditionRows:
+  enabled: true
+  
+  style:
+    background: "bg-cyan-950/30"
+    textColor: "text-cyan-400"
+    fontSize: "text-xs"
+    fontWeight: "font-semibold"
+    padding: "p-2"
   
   colspan: 6
   
@@ -211,4 +332,3 @@ styling:
     padding: "p-2"
     borderRadius: "rounded"
     fontSize: "text-xs"
-

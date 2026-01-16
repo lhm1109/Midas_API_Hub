@@ -21,14 +21,16 @@ interface SettingsModalProps {
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
-    schemaDefinition?: 'original' | 'enhanced';
+    schemaMode?: 'enhanced' | 'normal'; // 🔥 NEW: 개선 모드 vs 일반 모드
+    userName?: string; // 🔥 사용자 이름
   };
   onSettingsChange: (settings: {
     baseUrl: string;
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
-    schemaDefinition?: 'original' | 'enhanced';
+    schemaMode?: 'enhanced' | 'normal';
+    userName?: string;
   }) => void;
 }
 
@@ -61,6 +63,23 @@ export function SettingsModal({
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* 🔥 사용자 이름 */}
+          <div className="space-y-2">
+            <Label htmlFor="userName" className="text-zinc-200">사용자 이름</Label>
+            <Input
+              id="userName"
+              placeholder="Your Name"
+              value={localSettings.userName || ''}
+              onChange={(e) =>
+                setLocalSettings({ ...localSettings, userName: e.target.value })
+              }
+              className="bg-zinc-800 border-zinc-700 text-white"
+            />
+            <p className="text-xs text-zinc-400">
+              편집 잠금 시스템에서 표시될 사용자 이름입니다. 다른 사용자에게 표시됩니다.
+            </p>
+          </div>
+
           {/* Base URL */}
           <div className="space-y-2">
             <Label htmlFor="baseUrl" className="text-zinc-200">Base URL</Label>
@@ -134,24 +153,39 @@ export function SettingsModal({
             </p>
           </div>
 
-          {/* 🔥 NEW: Schema Definition 선택 */}
+          {/* 🔥 Schema Mode 선택 */}
           <div className="space-y-2">
-            <Label htmlFor="schema-definition" className="text-zinc-200">
-              Schema Definition (UI Rendering)
+            <Label htmlFor="schema-mode" className="text-zinc-200">
+              스키마 모드
             </Label>
             <select
-              id="schema-definition"
-              value={localSettings.schemaDefinition || 'auto'}
-              onChange={(e) => setLocalSettings({ ...localSettings, schemaDefinition: e.target.value === 'auto' ? undefined : e.target.value as 'original' | 'enhanced' })}
+              id="schema-mode"
+              value={localSettings.schemaMode || 'enhanced'}
+              onChange={(e) => setLocalSettings({ ...localSettings, schemaMode: e.target.value as 'enhanced' | 'normal' })}
               className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-md text-white text-sm"
             >
-              <option value="auto">Auto (자동 감지)</option>
-              <option value="original">Original (기존 스키마)</option>
-              <option value="enhanced">Enhanced (인핸스드 스키마)</option>
+              <option value="enhanced">개선 모드 (Original/Enhanced 2탭)</option>
+              <option value="normal">일반 모드 (단일 스키마)</option>
             </select>
-            <p className="text-xs text-zinc-400 mt-1">
-              UI 렌더링 규칙을 선택합니다. Auto는 스키마 타입을 자동으로 감지합니다.
-            </p>
+            <div className="mt-2 p-3 bg-zinc-800/50 rounded-md border border-zinc-700">
+              <p className="text-xs text-zinc-300 mb-2">
+                <strong className="text-blue-400">개선 모드:</strong>
+              </p>
+              <ul className="text-xs text-zinc-400 space-y-1 ml-4 list-disc">
+                <li>Original/Enhanced 2개 탭 표시</li>
+                <li>YAML 파일 2개 로드 (original.yaml, enhanced.yaml)</li>
+                <li>스키마 간 전환 및 비교 가능</li>
+              </ul>
+              
+              <p className="text-xs text-zinc-300 mb-2 mt-3">
+                <strong className="text-green-400">일반 모드:</strong>
+              </p>
+              <ul className="text-xs text-zinc-400 space-y-1 ml-4 list-disc">
+                <li>단일 스키마만 표시 (탭 구분 없음)</li>
+                <li>YAML 파일 1개만 로드 (definition.yaml)</li>
+                <li>심플한 UI로 빠른 작업</li>
+              </ul>
+            </div>
           </div>
         </div>
 

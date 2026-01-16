@@ -94,26 +94,16 @@ export interface ConditionalRule {
 export interface EnhancedField {
   key: string;
   type: string;
+  description?: string;
   default?: any;
   required: RequiredStatus;
-  enum?: (string | number)[];
-  enumLabels?: Record<string, string>;
-  enumByType?: Record<string, (string | number)[]>;
-  enumLabelsByType?: Record<string, Record<string, string>>;
-  nodeCountByType?: Record<string, number | number[]>;
-  valueConstraint?: Record<string, string>;
-  minItems?: number;
-  maxItems?: number;
-  items?: { type: string };
-  ui?: {
-    label?: string;
-    group?: string;
-    hint?: string;
-    visibleWhen?: any;
-  };
+  // 🔥 하드코딩 제거: 모든 확장 필드를 동적으로 저장
+  [key: string]: any;  // x-* 필드들을 동적으로 저장
+  
+  // 필수 필드들만 명시
   section: string;
   validationLayers: ValidationLayer[];
-  children?: EnhancedField[];  // 🔥 중첩 필드 지원
+  children?: EnhancedField[];
 }
 
 export type RequiredStatus = Record<string, 'required' | 'optional' | 'n/a'>;
@@ -197,6 +187,12 @@ function applySchemaStructurePatterns(
   psdSet: string,
   schemaType: string
 ): EnhancedSchema {
+  // 🔥 방어 코드: schema가 유효한지 확인
+  if (!schema || typeof schema !== 'object') {
+    console.warn('⚠️ applySchemaStructurePatterns: Invalid schema', schema);
+    return schema || {} as EnhancedSchema;
+  }
+  
   const patterns = getSchemaStructurePatterns(psdSet, schemaType);
   
   if (!patterns || patterns.length === 0) {
@@ -518,6 +514,12 @@ function injectEntityCollection(schema: any, _transform: any, psdSet: string, sc
 function unwrapRootKey(schema: any, transform: any): EnhancedSchema {
   const { extractTitle, preserveMetadata } = transform;
   
+  // 🔥 방어 코드: schema가 유효한지 확인
+  if (!schema || typeof schema !== 'object') {
+    console.warn('⚠️ unwrap-root-key: Invalid schema (null or not an object)', schema);
+    return schema || {};
+  }
+  
   // 최상위 키가 하나만 있는지 확인
   const keys = Object.keys(schema);
   if (keys.length !== 1) {
@@ -674,24 +676,36 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
   }
   
   for (const [key, prop] of Object.entries(schema.properties)) {
+    // 🔥 기본 필드 구조
     const field: EnhancedField = {
       key,
       type: prop.type,
+      description: prop.description,
       default: prop.default,
-      required: {}, // Will be calculated later
-      enum: prop.enum,
-      enumLabels: prop['x-enum-labels'],
-      enumByType: prop['x-enum-by-type'],
-      enumLabelsByType: prop['x-enum-labels-by-type'],
-      nodeCountByType: prop['x-node-count-by-type'],
-      valueConstraint: prop['x-value-constraint'],
-      minItems: prop.minItems,
-      maxItems: prop.maxItems,
-      items: prop.items,
-      ui: prop['x-ui'],
-      section: '', // Will be determined later
+      required: {},
+      section: '',
       validationLayers: [],
     };
+    
+    // 🔥 동적으로 모든 속성 복사 (x-*, enum, items 등)
+    for (const [propKey, propValue] of Object.entries(prop)) {
+      if (propKey === 'type' || propKey === 'description' || propKey === 'default') {
+        continue; // 이미 처리됨
+      }
+      
+      // x-ui는 ui로 변환
+      if (propKey === 'x-ui') {
+        field.ui = propValue as any;
+      }
+      // x-로 시작하는 필드는 그대로 유지
+      else if (propKey.startsWith('x-')) {
+        field[propKey] = propValue;
+      }
+      // 그 외 표준 JSON Schema 필드들 (enum, items, minItems, maxItems 등)
+      else {
+        field[propKey] = propValue;
+      }
+    }
     
     // 🔥 Object 타입 - 중첩 필드 추출
     if (prop.type === 'object' && prop.properties) {
@@ -701,15 +715,26 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       for (const [childKey, childProp] of Object.entries(prop.properties)) {
         const childField: EnhancedField = {
           key: `${key}.${childKey}`,
-          type: childProp.type,
-          default: childProp.default,
+          type: (childProp as any).type,
+          default: (childProp as any).default,
           required: objRequired.includes(childKey) ? { '*': 'required' } : { '*': 'optional' },
-          enum: childProp.enum,
-          enumLabels: childProp['x-enum-labels'],
-          ui: childProp['x-ui'],
           section: '',
           validationLayers: [],
         };
+        
+        // 🔥 자식 필드도 동적으로 모든 속성 복사
+        for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
+          if (cpKey === 'type' || cpKey === 'default') continue;
+          
+          if (cpKey === 'x-ui') {
+            childField.ui = cpValue;
+          } else if (cpKey.startsWith('x-')) {
+            childField[cpKey] = cpValue;
+          } else {
+            childField[cpKey] = cpValue;
+          }
+        }
+        
         field.children.push(childField);
       }
     }
@@ -741,15 +766,26 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
         for (const [childKey, childProp] of Object.entries(optionProps)) {
           const childField: EnhancedField = {
             key: `${key}.${childKey}`,
-            type: childProp.type,
-            default: childProp.default,
+            type: (childProp as any).type,
+            default: (childProp as any).default,
             required: optionRequired.includes(childKey) ? { '*': 'required' } : { '*': 'optional' },
-            enum: childProp.enum,
-            enumLabels: childProp['x-enum-labels'],
-            ui: childProp['x-ui'],
             section: optionTitle,
             validationLayers: [],
           };
+          
+          // 🔥 동적으로 모든 속성 복사
+          for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
+            if (cpKey === 'type' || cpKey === 'default') continue;
+            
+            if (cpKey === 'x-ui') {
+              childField.ui = cpValue;
+            } else if (cpKey.startsWith('x-')) {
+              childField[cpKey] = cpValue;
+            } else {
+              childField[cpKey] = cpValue;
+            }
+          }
+          
         field.children!.push(childField);
         }
       });

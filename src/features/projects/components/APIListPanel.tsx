@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, ChevronRight, ChevronDown, FileText, FolderClosed, FolderOpen, Plus, Pencil, Trash2, MoreVertical, GripVertical, Copy } from 'lucide-react';
+import { Search, ChevronRight, ChevronDown, FileText, FolderClosed, FolderOpen, Plus, Pencil, Trash2, MoreVertical, GripVertical, Copy, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -36,6 +36,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { EndpointDialog } from './EndpointDialog';
 import { ProductGroupDialog } from './ProductGroupDialog';
 import { apiClient } from '@/lib/api-client';
+import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint, ApiProduct } from '@/types';
 
 interface SortableEndpointItemProps {
@@ -387,14 +388,15 @@ interface APIListPanelProps {
   selectedEndpoint: string | null;
   onEndpointSelect: (endpoint: ApiEndpoint) => void;
   onEndpointsChange?: () => void;
+  onToggleCollapse?: () => void; // 🔥 접기/펴기 콜백
 }
 
-export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onEndpointsChange }: APIListPanelProps) {
+export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onEndpointsChange, onToggleCollapse }: APIListPanelProps) {
   const [searchTerm, setSearchTerm] = useState('');
   
   // 🔥 엔드포인트별 잠금 상태 관리
   const [endpointLocks, setEndpointLocks] = useState<Record<string, { locked: boolean; lockedBy?: string }>>({});
-  const currentUserId = localStorage.getItem('userId') || `user_${Date.now()}`;
+  const { currentUserId } = useAppStore();
   
   // localStorage에서 확장 상태 로드
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(() => {
@@ -491,10 +493,11 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       await Promise.all(allEndpoints.map(endpointId => checkLockStatus(endpointId)));
     };
 
+    // 초기 로드 시 한 번만 체크 (주기적 체크는 제거 - 버전 로드 시에만 체크)
     checkAllLocks();
   }, [products, checkLockStatus]);
 
-  // 🔥 선택된 엔드포인트는 5분마다 자동 확인
+  // 🔥 선택된 엔드포인트는 즉시 확인
   const selectedEndpointRef = useRef<string | null>(null);
   useEffect(() => {
     if (!selectedEndpoint) {
@@ -502,20 +505,11 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
-    // 선택된 엔드포인트가 변경되었을 때만 즉시 확인
+    // 선택된 엔드포인트가 변경되었을 때 즉시 확인
     if (selectedEndpointRef.current !== selectedEndpoint) {
       selectedEndpointRef.current = selectedEndpoint;
       checkLockStatus(selectedEndpoint);
     }
-    
-    // 5분마다 확인
-    const interval = setInterval(() => {
-      if (selectedEndpointRef.current) {
-        checkLockStatus(selectedEndpointRef.current);
-      }
-    }, 5 * 60 * 1000);
-
-    return () => clearInterval(interval);
   }, [selectedEndpoint, checkLockStatus]);
 
   // 확장 상태가 변경될 때마다 localStorage에 저장
@@ -1119,7 +1113,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
               checkLockStatus(selectedEndpoint).finally(() => setIsRefreshingLock(false));
             }}
             disabled={isRefreshingLock || !selectedEndpoint}
-            className="h-8 w-8 flex items-center justify-center rounded border border-zinc-700 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="h-8 w-8 flex items-center justify-center rounded border border-zinc-700 hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
             title="잠금 상태 새로고침 (5분마다 자동)"
           >
             {isRefreshingLock ? (
@@ -1130,6 +1124,17 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
               </svg>
             )}
           </button>
+          
+          {/* 🔥 접기 버튼 */}
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              className="h-8 w-8 flex items-center justify-center rounded border border-zinc-700 hover:bg-zinc-800 transition-colors flex-shrink-0"
+              title="패널 접기"
+            >
+              <ChevronLeft className="w-4 h-4 text-zinc-400" />
+            </button>
+          )}
         </div>
       </div>
 

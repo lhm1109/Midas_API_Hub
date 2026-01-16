@@ -1,0 +1,236 @@
+{
+  "MATL": {
+    "type": "object",
+    "required": ["TYPE", "NAME", "PARAM"],
+    "properties": {
+      "TYPE": {
+        "type": "string",
+        "description": "Material type",
+        "enum": ["CONC", "STEEL", "SRC", "ALUMINUM", "USER"]
+      },
+      "NAME": {
+        "type": "string",
+        "description": "Material name"
+      },
+      "HE_SPEC": {
+        "type": "number",
+        "description": "Specific heat",
+        "default": 0
+      },
+      "HE_COND": {
+        "type": "number",
+        "description": "Heat conduction",
+        "default": 0
+      },
+      "PLMT": {
+        "type": "integer",
+        "description": "Plastic material number",
+        "default": 0
+      },
+      "P_NAME": {
+        "type": "string",
+        "description": "Plastic material name",
+        "default": ""
+      },
+      "bMASS_DENS": {
+        "type": "boolean",
+        "description": "Use mass density",
+        "default": false
+      },
+      "DAMP_RAT": {
+        "type": "number",
+        "description": "Damping ratio",
+        "default": 0
+      },
+      "PARAM": {
+        "type": "array",
+        "description": "Material parameter",
+        "items": {
+          "type": "object",
+          "required": ["P_TYPE"],
+          "properties": {
+            "P_TYPE": {
+              "type": "integer",
+              "description": "Material type",
+              "enum": [1, 2, 3],
+              "x-enum-labels": {
+                "1": "Standard",
+                "2": "Isotropic",
+                "3": "Orthotropic"
+              }
+            },
+            "STANDARD": {
+              "type": "string",
+              "description": "Standard name"
+            },
+            "CODE": {
+              "type": "string",
+              "description": "Code name",
+              "default": ""
+            },
+            "DB": {
+              "type": "string",
+              "description": "DB name"
+            },
+            "bELAST": {
+              "type": "boolean",
+              "description": "Youngs modulus for user define option",
+              "default": false
+            },
+            "ELAST": {
+              "type": "number",
+              "description": "Modulus of elasticity"
+            },
+            "POISN": {
+              "type": "number",
+              "description": "Poisson's ratio"
+            },
+            "THERMAL": {
+              "type": "number",
+              "description": "Thermal coefficient"
+            },
+            "ELAST_M": {
+              "type": "array",
+              "description": "Moduli of elasticity corresponding direction (X, Y, Z)",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "POISN_M": {
+              "type": "array",
+              "description": "Poisson's ratio corresponding direction (X, Y, Z)",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "THERMAL_M": {
+              "type": "array",
+              "description": "Coefficients of linear thermal expansion in the corresponding direction (X, Y, Z)",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "SHEAR_M": {
+              "type": "array",
+              "description": "Shear moduli of elasticity in the corresponding directions X",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "DEN": {
+              "type": "number",
+              "description": "Weight of density"
+            },
+            "MASS": {
+              "type": "number",
+              "description": "Mass density"
+            }
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "P_TYPE": {
+                  "const": 1
+                },
+                "STANDARD": {
+                  "type": "string"
+                },
+                "DB": {
+                  "type": "string"
+                },
+                "bELAST": {
+                  "type": "boolean"
+                },
+                "ELAST": {
+                  "type": "number"
+                }
+              },
+              "required": ["P_TYPE", "STANDARD", "DB", "ELAST"],
+              "additionalProperties": false
+            },
+            {
+              "properties": {
+                "P_TYPE": {
+                  "const": 2
+                },
+                "ELAST": {
+                  "type": "number"
+                },
+                "POISN": {
+                  "type": "number"
+                },
+                "THERMAL": {
+                  "type": "number"
+                },
+                "DEN": {
+                  "type": "number"
+                },
+                "MASS": {
+                  "type": "number"
+                }
+              },
+              "required": ["P_TYPE", "ELAST", "POISN", "THERMAL", "DEN", "MASS"],
+              "additionalProperties": false
+            },
+            {
+              "properties": {
+                "P_TYPE": {
+                  "const": 3
+                },
+                "ELAST_M": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "POISN_M": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "THERMAL_M": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "SHEAR_M": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "DEN": {
+                  "type": "number"
+                },
+                "MASS": {
+                  "type": "number"
+                }
+              },
+              "required": ["P_TYPE", "ELAST_M", "POISN_M", "THERMAL_M", "SHEAR_M", "DEN", "MASS"],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

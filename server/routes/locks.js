@@ -109,7 +109,7 @@ router.post('/endpoint/:endpointId/lock', async (req, res) => {
 router.delete('/endpoint/:endpointId/lock', async (req, res) => {
   try {
     const { endpointId } = req.params;
-    const { userId } = req.body;
+    const { userId, force } = req.body; // 🔥 force: 관리자 강제 해제
     
     const { data: existingLock, error: checkError } = await supabase
       .from('endpoint_locks')
@@ -124,7 +124,8 @@ router.delete('/endpoint/:endpointId/lock', async (req, res) => {
       throw checkError;
     }
     
-    if (existingLock.locked_by !== userId) {
+    // 🔥 관리자 강제 해제가 아니고, 다른 사용자가 잠금한 경우
+    if (!force && existingLock.locked_by !== userId) {
       return res.status(403).json({ 
         error: 'Cannot unlock - locked by another user',
         lockedBy: existingLock.locked_by
@@ -268,7 +269,7 @@ router.post('/version/:versionId/lock', async (req, res) => {
 router.delete('/version/:versionId/lock', async (req, res) => {
   try {
     const { versionId } = req.params;
-    const { userId } = req.body;
+    const { userId, force } = req.body; // 🔥 force: 관리자 강제 해제
     
     const { data: existingLock, error: checkError } = await supabase
       .from('version_locks')
@@ -283,7 +284,8 @@ router.delete('/version/:versionId/lock', async (req, res) => {
       throw checkError;
     }
     
-    if (existingLock.locked_by !== userId) {
+    // 🔥 관리자 강제 해제가 아니고, 다른 사용자가 잠금한 경우
+    if (!force && existingLock.locked_by !== userId) {
       return res.status(403).json({ 
         error: 'Cannot unlock - locked by another user',
         lockedBy: existingLock.locked_by

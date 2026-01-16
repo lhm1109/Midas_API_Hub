@@ -311,19 +311,29 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   
   useEffect(() => {
     const definitionType: DefinitionType = isNewEnhancedSchema ? 'enhanced' : 'original';
-    const overrideType = settings.schemaDefinition || definitionType;
+    
+    // 🔥 일반 모드에서는 definition 하나만 로드
+    // 🔥 개선 모드에서는 original 또는 enhanced 로드
+    const schemaTypeToLoad = settings?.schemaMode === 'normal'
+      ? 'definition' // 일반 모드
+      : definitionType; // 개선 모드
+    
+    console.log(`🔄 BuilderTab: Loading YAML ${schemaTypeToLoad} (mode: ${settings?.schemaMode || 'enhanced'})`);
     
     // 🔥 제품의 PSD 설정 사용
     loadCachedDefinition(
-      overrideType, 
+      schemaTypeToLoad, 
       'builder',
       undefined, // schemaSet (deprecated)
       psdSet, // psdSet (Level 1)
-      overrideType // schemaType (Level 2)
+      schemaTypeToLoad // schemaType (Level 2)
     )
-      .then(def => setBuilderDefinition(def))
+      .then(def => {
+        console.log(`✅ BuilderTab: Loaded ${schemaTypeToLoad} builder definition`);
+        setBuilderDefinition(def);
+      })
       .catch(err => console.error('Failed to load builder definition:', err));
-  }, [isNewEnhancedSchema, settings.schemaDefinition, psdSet]);
+  }, [isNewEnhancedSchema, settings?.schemaMode, psdSet]);
   
   // 🎯 스키마 변경 시 동적 폼 데이터 재초기화
   // 🔥 schemaFields가 변경되면 (조건부 필드 포함) 동적으로 업데이트

@@ -1,0 +1,96 @@
+{
+  "STYP": {
+    "type": "object",
+    "properties": {
+      "STYP": {
+        "type": "integer",
+        "description": "Structure type",
+        "enum": [0, 1, 2, 3, 4],
+        "x-enum-labels": {
+          "0": "3-D",
+          "1": "X-Z Plane",
+          "2": "Y-Z Plane",
+          "3": "X-Y Plane",
+          "4": "Constraint RZ"
+        }
+      },
+      "MASS": {
+        "type": "integer",
+        "description": "Mass type",
+        "enum": [1, 2],
+        "x-enum-labels": {
+          "1": "Lumped Mass",
+          "2": "Consistent Mass"
+        }
+      },
+      "GRAV": {
+        "type": "number",
+        "description": "Gravity acceleration"
+      },
+      "TEMP": {
+        "type": "number",
+        "description": "Initial temperature",
+        "default": 0
+      },
+      "bALIGNBEAM": {
+        "type": "boolean",
+        "description": "Align top of beam section",
+        "default": false
+      },
+      "bALIGNSLAB": {
+        "type": "boolean",
+        "description": "Align the top of the slab (plate)",
+        "default": false
+      },
+      "bMASSOFFSET": {
+        "type": "boolean",
+        "description": "Consider off-diagonal masses",
+        "default": false
+      },
+      "bROTRIGID": {
+        "type": "boolean",
+        "description": "Considering rotational rigid body mode for modal participation factor",
+        "default": false
+      },
+      "bSELFWEIGHT": {
+        "type": "boolean",
+        "description": "Convert self-weight into masses",
+        "default": false
+      },
+      "SMASS": {
+        "type": "integer",
+        "description": "Structure mass type",
+        "enum": [1, 2, 3],
+        "default": 1,
+        "x-enum-labels": {
+          "1": "Convert to X, Y, Z",
+          "2": "Convert to X, Y",
+          "3": "Convert to Z"
+        },
+        "x-required-when": {
+          "bSELFWEIGHT": true
+        },
+        "x-ui": {
+          "visibleWhen": {
+            "bSELFWEIGHT": true
+          }
+        }
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "bSELFWEIGHT": {
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "required": ["SMASS"]
+        }
+      }
+    ],
+    "additionalProperties": false
+  }
+}

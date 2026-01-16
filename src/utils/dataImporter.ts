@@ -228,81 +228,63 @@ export async function importFromFile(file: File) {
 }
 
 /**
- * 샘플 데이터 생성 (테스트용)
+ * 샘플 데이터 생성 (테스트/개발용)
+ * 
+ * ⚠️ 이 함수는 개발 및 테스트 목적으로만 사용됩니다.
+ * 프로덕션에서는 Import 기능을 통해 실제 데이터를 추가하세요.
  */
 export function createSampleData(): ImportData {
+  console.warn('⚠️ createSampleData() is for testing only. Use Import feature for production data.');
+  
   return {
     endpoint: {
-      id: 'db/sample',
-      name: 'Sample API',
+      id: 'test/sample',
+      name: 'Sample Test API',
       method: 'POST',
-      path: '/db/sample',
-      product: 'civil-nx',
-      group_name: 'DB',
-      description: 'Sample endpoint for testing',
+      path: '/test/sample',
+      product: 'test-product',
+      group_name: 'Test',
+      description: '[TEST ONLY] Sample endpoint for development',
       status: 'active',
     },
     version: {
-      version: '1',
-      author: 'System',
-      changeLog: 'Initial version',
+      version: '0.0.1-dev',
+      author: 'Developer',
+      changeLog: 'Test data - DO NOT USE IN PRODUCTION',
     },
     schema: {
       jsonSchema: {
         type: 'object',
         properties: {
-          name: { type: 'string', description: 'Name of the item' },
-          value: { type: 'number', description: 'Numeric value' },
+          testField: { type: 'string', description: 'Test field' },
+          testValue: { type: 'number', description: 'Test value' },
         },
-        required: ['name'],
+        required: ['testField'],
       },
     },
     manual: {
-      title: 'Sample API Manual',
-      category: 'Database',
+      title: '[TEST] Sample API Manual',
+      category: 'Test',
       htmlContent: `
         <div class="manual">
-          <h1>Sample API</h1>
-          <p>This is a sample API for demonstration purposes.</p>
-          <h2>Usage</h2>
-          <pre><code>POST /db/sample
-{
-  "name": "example",
-  "value": 123
-}</code></pre>
+          <h1>⚠️ Test Data Only</h1>
+          <p>This is test data for development purposes.</p>
+          <p><strong>Do not use in production!</strong></p>
         </div>
       `,
-      specifications: 'This API creates a sample database entry.',
+      specifications: 'Test data for development and testing.',
     },
     examples: [
       {
-        name: 'Example 1: Basic Usage',
-        description: 'Simple example with minimal data',
+        name: 'Test Example',
+        description: 'Simple test example',
         request: {
-          name: 'test-item',
-          value: 42,
+          testField: 'test',
+          testValue: 123,
         },
         response: {
           success: true,
-          id: 'sample_001',
-          message: 'Created successfully',
-        },
-      },
-      {
-        name: 'Example 2: Complex Usage',
-        description: 'Example with additional fields',
-        request: {
-          name: 'complex-item',
-          value: 999,
-          metadata: {
-            type: 'test',
-            tags: ['important', 'demo'],
-          },
-        },
-        response: {
-          success: true,
-          id: 'sample_002',
-          message: 'Created successfully',
+          message: 'Test response',
         },
       },
     ],

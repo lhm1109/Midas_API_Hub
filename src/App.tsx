@@ -11,21 +11,42 @@ import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint } from '@/types';
 import { Toaster } from '@/components/ui/sonner';
 import { initSchemaLogicRules } from '@/lib/schema/schemaLogicEngine';
+import { refreshProductMappings } from '@/config/psdMapping';
+import { ChevronRight } from 'lucide-react';
 
 export default function App() {
-  const { setRunnerData } = useAppStore();
+  const { setRunnerData, acquireEndpointLock, releaseEndpointLock } = useAppStore();
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
   const [activeView, setActiveView] = useState<'projects' | 'history' | 'docs' | 'debug' | 'schema'>('projects');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
   const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false); // 🔥 패널 접기/펴기 상태
 
-  // 🔥 스키마 로직 규칙 초기화 (앱 시작 시 기본값으로)
+  // 🔥 앱 초기화: PSD 매핑 & 스키마 로직 규칙
   useEffect(() => {
-    // 기본 PSD로 초기화 (제품별로는 각 탭에서 개별 초기화)
-    initSchemaLogicRules('civil_gen_definition', 'enhanced').catch(error => {
-      console.error('Failed to initialize default schema logic rules:', error);
-    });
+    async function initializeApp() {
+      try {
+        // 1. Supabase에서 제품 PSD 매핑 가져오기
+        await refreshProductMappings();
+        
+        // 2. 기본 PSD로 스키마 로직 규칙 초기화
+        await initSchemaLogicRules('civil_gen_definition', 'enhanced');
+        
+        // 3. 🔥 사용자 이름이 설정되어 있으면 useAppStore에 반영
+        const savedUserName = localStorage.getItem('userName');
+        if (savedUserName) {
+          const { setCurrentUserId } = useAppStore.getState();
+          setCurrentUserId(savedUserName);
+        }
+        
+        console.log('✅ App initialized successfully');
+      } catch (error) {
+        console.error('❌ Failed to initialize app:', error);
+      }
+    }
+    
+    initializeApp();
   }, []);
 
   // localStorage에서 패널 너비 로드
@@ -101,6 +122,8 @@ export default function App() {
         2
       ),
       useAssignWrapper: true, // 기본값: Assign 래퍼 사용
+      schemaMode: 'enhanced', // 기본값: 개선 모드 (Original/Enhanced 2탭)
+      userName: localStorage.getItem('userName') || '', // 🔥 사용자 이름 로드
     };
   });
 
@@ -108,6 +131,11 @@ export default function App() {
   useEffect(() => {
     try {
       localStorage.setItem('api-settings', JSON.stringify(settings));
+      // 🔥 사용자 이름이 변경되면 useAppStore에도 반영
+      if (settings.userName) {
+        const { setCurrentUserId } = useAppStore.getState();
+        setCurrentUserId(settings.userName);
+      }
     } catch (error) {
       console.error('Failed to save settings to localStorage:', error);
     }
@@ -122,16 +150,73 @@ export default function App() {
     });
   }, [setRunnerData]);
 
+  // 🔥 편집 중일 때 주기적으로 잠금 갱신 (4분마다 - 5분 만료 전에 갱신)
+  useEffect(() => {
+    if (!selectedEndpoint?.id) return;
+
+    const refreshLock = async () => {
+      await acquireEndpointLock(selectedEndpoint.id);
+    };
+
+    // 즉시 한 번 실행
+    refreshLock();
+
+    // 4분마다 갱신
+    const interval = setInterval(refreshLock, 4 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [selectedEndpoint?.id, acquireEndpointLock]);
+
+  // 🔥 페이지 이탈 시 잠금 해제
+  useEffect(() => {
+    const handleBeforeUnload = async () => {
+      if (selectedEndpoint?.id) {
+        // 동기적으로 해제 (navigator.sendBeacon 사용)
+        await releaseEndpointLock(selectedEndpoint.id);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      // 컴포넌트 언마운트 시에도 해제
+      if (selectedEndpoint?.id) {
+        releaseEndpointLock(selectedEndpoint.id);
+      }
+    };
+  }, [selectedEndpoint?.id, releaseEndpointLock]);
+
   const handleEndpointSelect = async (endpoint: ApiEndpoint) => {
+    const { 
+      resetCurrentVersion, 
+      fetchVersions, 
+      releaseEndpointLock,
+      acquireEndpointLock,
+      endpoint: currentEndpoint 
+    } = useAppStore.getState();
+    
+    // 🔥 이전 엔드포인트의 잠금 해제
+    if (currentEndpoint?.id && currentEndpoint.id !== endpoint.id) {
+      await releaseEndpointLock(currentEndpoint.id);
+    }
+    
     setSelectedEndpoint(endpoint);
     
-    // 🔥 엔드포인트 변경 시 현재 버전과 모든 탭 데이터 리셋
-    const { resetCurrentVersion, fetchVersions } = useAppStore.getState();
+    // 🔥 Store에 엔드포인트 저장
+    useAppStore.setState({ endpoint });
     
+    // 🔥 엔드포인트 변경 시 현재 버전과 모든 탭 데이터 리셋
     // 🔥 1. 현재 버전 및 모든 데이터 리셋
     resetCurrentVersion();
     
-    // 🔥 2. 새 엔드포인트의 버전 목록 불러오기
+    // 🔥 2. 새 엔드포인트의 잠금 획득 시도
+    const lockAcquired = await acquireEndpointLock(endpoint.id);
+    if (!lockAcquired) {
+      console.warn('⚠️ Failed to acquire lock - endpoint may be locked by another user');
+    }
+    
+    // 🔥 3. 새 엔드포인트의 버전 목록 불러오기
     try {
       await fetchVersions(endpoint.id);
     } catch (error) {
@@ -153,32 +238,51 @@ export default function App() {
         <>
           {endpointsLoading ? (
             <div 
-              style={{ width: `${panelWidth}px` }}
-              className="bg-zinc-900 border-r border-zinc-800 flex items-center justify-center"
+              style={{ width: isPanelCollapsed ? '0px' : `${panelWidth}px` }}
+              className="bg-zinc-900 border-r border-zinc-800 flex items-center justify-center transition-all duration-300 overflow-hidden"
             >
-              <p className="text-zinc-500">Loading...</p>
+              {!isPanelCollapsed && <p className="text-zinc-500">Loading...</p>}
             </div>
           ) : (
             <>
+              {/* 패널 컨테이너 - 접혔을 때도 작은 영역 유지 */}
               <div 
-                style={{ width: `${panelWidth}px` }}
-                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0"
+                style={{ width: isPanelCollapsed ? '40px' : `${panelWidth}px` }}
+                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0 transition-all duration-300 overflow-hidden"
               >
-                <APIListPanel
-                  products={apiData}
-                  selectedEndpoint={selectedEndpoint?.id || null}
-                  onEndpointSelect={handleEndpointSelect}
-                  onEndpointsChange={refetchEndpoints}
-                />
+                {isPanelCollapsed ? (
+                  // 접힌 상태: 펼치기 버튼만 표시
+                  <div className="h-full flex items-start justify-center pt-3">
+                    <button
+                      onClick={() => setIsPanelCollapsed(false)}
+                      className="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-md flex items-center justify-center transition-colors shadow-lg"
+                      title="패널 펼치기"
+                    >
+                      <ChevronRight className="w-4 h-4 text-zinc-400" />
+                    </button>
+                  </div>
+                ) : (
+                  // 펼쳐진 상태: 패널 전체 표시
+                  <APIListPanel
+                    products={apiData}
+                    selectedEndpoint={selectedEndpoint?.id || null}
+                    onEndpointSelect={handleEndpointSelect}
+                    onEndpointsChange={refetchEndpoints}
+                    onToggleCollapse={() => setIsPanelCollapsed(true)}
+                  />
+                )}
               </div>
-              {/* Resize Handle */}
-              <div
-                onMouseDown={handleMouseDown}
-                className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
-                style={{ touchAction: 'none' }}
-              >
-                <div className="absolute inset-y-0 -left-1 -right-1" />
-              </div>
+              
+              {/* 리사이즈 핸들 (펼쳐진 상태에서만) */}
+              {!isPanelCollapsed && (
+                <div
+                  onMouseDown={handleMouseDown}
+                  className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
+                  style={{ touchAction: 'none' }}
+                >
+                  <div className="absolute inset-y-0 -left-1 -right-1" />
+                </div>
+              )}
             </>
           )}
         </>

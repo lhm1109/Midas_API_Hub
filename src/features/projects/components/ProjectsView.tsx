@@ -1,12 +1,11 @@
 import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab } from './tabs';
-import { LockBanner } from './LockBanner';
 import type { ApiEndpoint } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface MainWorkspaceProps {
   endpoint: ApiEndpoint | null;
@@ -32,6 +31,7 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
 
   // 🔥 저장 중 상태
   const [isSaving, setIsSaving] = useState(false);
+  const prevLockStateRef = useRef<{ locked: boolean; lockedBy?: string } | null>(null);
 
   // 엔드포인트 변경 시 잠금 상태 확인
   useEffect(() => {
@@ -39,6 +39,38 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
       checkEndpointLock(endpoint.id);
     }
   }, [endpoint?.id, checkEndpointLock]);
+
+  // 🔥 잠금 상태 변경 시 토스트 알림
+  useEffect(() => {
+    if (!endpointLock) {
+      prevLockStateRef.current = null;
+      return;
+    }
+
+    const currentUserId = useAppStore.getState().currentUserId;
+    const isLockedByOther = endpointLock.locked && endpointLock.lockedBy !== currentUserId;
+    const prevLockedByOther = prevLockStateRef.current?.locked && prevLockStateRef.current?.lockedBy !== currentUserId;
+
+    // 다른 사용자가 잠금한 경우에만 토스트 표시 (상태 변경 시에만)
+    if (isLockedByOther && !prevLockedByOther) {
+      toast.warning(
+        `🔒 편집 불가\n다른 사용자(${endpointLock.lockedBy})가 편집 중입니다.\n읽기 전용 모드로 표시됩니다.`,
+        {
+          duration: 5000,
+        }
+      );
+    } else if (!isLockedByOther && prevLockedByOther) {
+      // 잠금이 해제된 경우
+      toast.success('✅ 편집 가능\n이제 이 엔드포인트를 편집할 수 있습니다.', {
+        duration: 3000,
+      });
+    }
+
+    prevLockStateRef.current = {
+      locked: endpointLock.locked,
+      lockedBy: endpointLock.lockedBy,
+    };
+  }, [endpointLock]);
 
   // 버전이 로드되지 않았을 때 자동으로 Version 탭으로 이동
   useEffect(() => {
@@ -102,9 +134,6 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
 
   return (
     <div className="flex-1 flex flex-col bg-zinc-950 overflow-hidden">
-      {/* 🔒 편집 잠금 배너 */}
-      {endpoint && <LockBanner endpointId={endpoint.id} />}
-      
       {/* 🎯 상단 버전 정보 + 저장 버튼 */}
       <div className="border-b border-zinc-800 bg-zinc-900 px-6 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">

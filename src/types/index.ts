@@ -113,5 +113,7 @@ export interface Settings {
   commonHeaders: string;
   useAssignWrapper?: boolean;
   schemaDefinition?: 'auto' | 'original' | 'enhanced';
+  schemaMode?: 'enhanced' | 'normal'; // 🔥 NEW: 스키마 UI 모드
+  userName?: string; // 🔥 사용자 이름
 }
 

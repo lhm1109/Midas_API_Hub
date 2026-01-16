@@ -1,7 +1,14 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useState, useEffect, useMemo } from 'react';
-import { Save, AlertCircle, Sparkles } from 'lucide-react';
+import { ChevronDown, Send, Save, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
 import { useAppStore } from '@/store/useAppStore';
@@ -23,11 +30,6 @@ import { loadCachedDefinition, type TableDefinition, type DefinitionType } from 
 import { generateHTMLTable, type TableParameter } from '@/lib/rendering/tableToHTML';
 import { useEndpoints } from '@/hooks/useEndpoints';
 import { getPSDForProduct } from '@/config/psdMapping';
-import { 
-  collectFieldConditionInfo, 
-  groupFieldsByCondition 
-} from '@/lib/schema/conditionExtractor';
-import { buildFieldDescription } from '@/lib/schema/descriptionBuilder';
 
 interface SpecTabProps {
   endpoint: {
@@ -250,34 +252,80 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         let rowNumber = 1;
         
         for (const section of sections) {
-          // 🔥 조건 추출 및 그룹핑 (모듈화된 함수 사용)
-          const fieldInfoMap = collectFieldConditionInfo(
-            section.fields,
-            tableDefinition?.schemaExtensions?.conditional || []
-          );
-          
-          const { fieldGroups, noConditionFields } = groupFieldsByCondition(
-            section.fields,
-            fieldInfoMap
-          );
-          
-          // 🔥 섹션 헤더 추가 (조건이 있으면 조건 텍스트 포함)
-          let sectionHeaderText = section.name;
-          if (fieldGroups.size > 0) {
-            // 첫 번째 조건 정보를 섹션 헤더에 포함
-            const firstCondition = Array.from(fieldGroups.values())[0][0].conditionInfo;
-            sectionHeaderText = `${section.name} (When ${firstCondition.conditionText})`;
-          }
-          
+          // Add section header
           params.push({
             no: '',
-            section: sectionHeaderText,
+            section: section.name,
             name: '',
             type: '',
             default: '',
             required: '',
             description: '',
           });
+          
+          // 🔥 필드를 조건별로 그룹핑
+          const fieldGroups: Map<string, any[]> = new Map();
+          const noConditionFields: any[] = [];
+          
+          for (const field of section.fields) {
+            let conditionKey = '';
+            let conditionInfo: any = null;
+            
+            // YAML의 schemaExtensions.conditional 규칙에 따라 조건 추출
+            if (tableDefinition?.schemaExtensions?.conditional) {
+              const fieldAny = field as any;
+              
+              for (const ext of tableDefinition.schemaExtensions.conditional) {
+                if (!ext.displayInTable) continue;
+                
+                const keyPath = ext.key.split('.');
+                let value: any = fieldAny;
+                
+                for (let i = 0; i < keyPath.length; i++) {
+                  const part = keyPath[i];
+                  if (!value) break;
+                  
+                  if (part.startsWith('x-')) {
+                    if (part === 'x-ui') {
+                      value = value['ui'] || value['x-ui'];
+                    } else {
+                      value = value[part];
+                    }
+                  } else {
+                    value = value[part];
+                  }
+                }
+                
+                // 조건 값이 있으면 키 생성
+                if (value && typeof value === 'object' && Object.keys(value).length > 0) {
+                  const conditionStr = Object.entries(value)
+                    .map(([k, v]) => `${k}:${v}`)
+                    .join('|');
+                  
+                  conditionKey = conditionStr;
+                  conditionInfo = {
+                    label: ext.displayLabel || ext.key,
+                    conditionText: Object.entries(value)
+                      .map(([k, v]) => `"${k}" is ${v}`)
+                      .join(', '),
+                    color: ext.displayColor || '#4c9aff',
+                    icon: ext.displayIcon || '•'
+                  };
+                  break; // 첫 번째 조건만 사용
+                }
+              }
+            }
+            
+            // 조건이 있으면 그룹에 추가, 없으면 noCondition에 추가
+            if (conditionKey) {
+              if (!fieldGroups.has(conditionKey)) {
+                fieldGroups.set(conditionKey, []);
+              }
+              fieldGroups.get(conditionKey)!.push({ field, conditionInfo });
+            } else {
+              noConditionFields.push({ field, conditionInfo: null });
+            }
+          }
           
           // 🔥 조건 없는 필드들 먼저 렌더링
           for (const { field } of noConditionFields) {
@@ -311,8 +359,36 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               });
             }
             
-            // 🔥 Description 빌드 (모듈화된 함수 사용)
-            param.description = buildFieldDescription(field, tableDefinition);
+            // Build description with enum
+            const descParts: string[] = [];
+            if (field.ui?.label) {
+              descParts.push(`**${field.ui.label}**`);
+            } else if (field.description) {
+              descParts.push(`**${field.description}**`);
+            }
+            
+            // Enum 처리
+            const enumByType = field.enumByType || field['x-enum-by-type'];
+            if (field.enum && field.enum.length > 0) {
+              descParts.push('**Enum Values:**');
+              field.enum.forEach((val: any) => {
+                const label = field.enumLabels?.[String(val)] || field['x-enum-labels']?.[String(val)] || val;
+                descParts.push(`• ${val} - ${label}`);
+              });
+            } else if (enumByType) {
+              descParts.push('**Enum Values by Type:**');
+              for (const [type, values] of Object.entries(enumByType)) {
+                descParts.push(`*${type}:*`);
+                (values as any[]).forEach((val: any) => {
+                  const label = field.enumLabelsByType?.[type]?.[String(val)] || 
+                               field['x-enum-labels-by-type']?.[type]?.[String(val)] || 
+                               val;
+                  descParts.push(`• ${val} - ${label}`);
+                });
+              }
+            }
+            
+            param.description = descParts.join('\n');
             const requiredStatuses = Object.values(field.required);
             const hasRequired = requiredStatuses.some(s => s === 'required');
             const hasOptional = requiredStatuses.some(s => s === 'optional');
@@ -325,8 +401,17 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             params.push(param);
           }
           
-          // 🔥 조건별 그룹 렌더링 (필드들만, 조건 행은 섹션 헤더에 포함됨)
-          for (const [, fieldsWithCondition] of fieldGroups) {
+          // 🔥 조건별 그룹 렌더링 (조건 행 + 필드들)
+          for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
+            // 조건 행 삽입 (한 번만)
+            const firstCondInfo = fieldsWithCondition[0].conditionInfo;
+            params.push({
+              type: 'condition-row',
+              conditionText: `When ${firstCondInfo.conditionText}`,
+              conditionColor: firstCondInfo.color,
+              no: '', name: '', default: '', required: '', description: '',
+            });
+            
             // 해당 조건의 필드들 렌더링
             for (const { field } of fieldsWithCondition) {
               const param: any = {
@@ -359,8 +444,36 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 });
               }
               
-              // 🔥 Description 빌드 (모듈화된 함수 사용)
-              param.description = buildFieldDescription(field, tableDefinition);
+              // Build description with enum
+              const descParts: string[] = [];
+              if (field.ui?.label) {
+                descParts.push(`**${field.ui.label}**`);
+              } else if (field.description) {
+                descParts.push(`**${field.description}**`);
+              }
+              
+              // Enum 처리
+              const enumByType = field.enumByType || field['x-enum-by-type'];
+              if (field.enum && field.enum.length > 0) {
+                descParts.push('**Enum Values:**');
+                field.enum.forEach((val: any) => {
+                  const label = field.enumLabels?.[String(val)] || field['x-enum-labels']?.[String(val)] || val;
+                  descParts.push(`• ${val} - ${label}`);
+                });
+              } else if (enumByType) {
+                descParts.push('**Enum Values by Type:**');
+                for (const [type, values] of Object.entries(enumByType)) {
+                  descParts.push(`*${type}:*`);
+                  (values as any[]).forEach((val: any) => {
+                    const label = field.enumLabelsByType?.[type]?.[String(val)] || 
+                                 field['x-enum-labels-by-type']?.[type]?.[String(val)] || 
+                                 val;
+                    descParts.push(`• ${val} - ${label}`);
+                  });
+                }
+              }
+              
+              param.description = descParts.join('\n');
               const requiredStatuses = Object.values(field.required);
               const hasRequired = requiredStatuses.some(s => s === 'required');
               const hasOptional = requiredStatuses.some(s => s === 'optional');
@@ -485,99 +598,6 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   const handleSchemaChange = (value: string) => {
     setEditableSchema(value);
     setIsSchemaModified(true);
-  };
-  
-  // 🎯 Save Schema - 스키마 저장 및 테이블 반영
-  const handleSaveSchema = () => {
-    try {
-      const parsedSchema = JSON.parse(editableSchema);
-      
-      // 현재 스키마 뷰에 따라 적절한 스키마 업데이트
-      if (schemaView === 'original') {
-        spec.jsonSchema = parsedSchema;
-      } else {
-        spec.jsonSchemaEnhanced = parsedSchema;
-      }
-      
-      setSavedSchema(parsedSchema); // 리렌더링 트리거
-      setIsSchemaModified(false);
-      
-      // 성공 메시지
-      toast.success('✅ Schema saved!\n\nThe visual table has been updated with your changes.');
-    } catch (error) {
-      toast.error('❌ Invalid JSON!\n\nPlease fix the syntax errors before saving.');
-    }
-  };
-  
-  // 🎯 Reset Schema - 원래 스키마로 되돌리기
-  const handleResetSchema = () => {
-    if (schemaView === 'original') {
-      setEditableSchema(JSON.stringify(spec.jsonSchema, null, 2));
-    } else {
-      setEditableSchema(
-        spec.jsonSchemaEnhanced 
-          ? JSON.stringify(spec.jsonSchemaEnhanced, null, 2)
-          : '// Enhanced schema not available yet\n// Add enhanced schema to apiSpecs data'
-      );
-    }
-    setIsSchemaModified(false);
-  };
-  
-  // 🎯 Prettify Schema - 배열을 한 줄로 정렬
-  const handlePrettifySchema = () => {
-    try {
-      const parsed = JSON.parse(editableSchema);
-      
-      // Custom stringify with inline arrays
-      const stringifyWithInlineArrays = (obj: any, indent = 0): string => {
-        const spaces = '  '.repeat(indent);
-        const nextSpaces = '  '.repeat(indent + 1);
-        
-        if (Array.isArray(obj)) {
-          // Check if array contains only primitives (numbers, strings, booleans)
-          const isPrimitiveArray = obj.every(item => 
-            typeof item === 'number' || 
-            typeof item === 'string' || 
-            typeof item === 'boolean' ||
-            item === null
-          );
-          
-          if (isPrimitiveArray) {
-            // Format primitive arrays inline
-            const items = obj.map(item => 
-              typeof item === 'string' ? `"${item}"` : JSON.stringify(item)
-            ).join(', ');
-            return `[${items}]`;
-          } else {
-            // Complex arrays stay multi-line
-            const items = obj.map(item => 
-              nextSpaces + stringifyWithInlineArrays(item, indent + 1)
-            ).join(',\n');
-            return `[\n${items}\n${spaces}]`;
-          }
-        } else if (obj !== null && typeof obj === 'object') {
-          const keys = Object.keys(obj);
-          if (keys.length === 0) return '{}';
-          
-          const items = keys.map(key => {
-            const value = obj[key];
-            const valueStr = stringifyWithInlineArrays(value, indent + 1);
-            return `${nextSpaces}"${key}": ${valueStr}`;
-          }).join(',\n');
-          
-          return `{\n${items}\n${spaces}}`;
-        } else {
-          return JSON.stringify(obj);
-        }
-      };
-      
-      const prettified = stringifyWithInlineArrays(parsed, 0);
-      setEditableSchema(prettified);
-      setIsSchemaModified(true);
-      toast.success('✅ Schema prettified successfully');
-    } catch (error) {
-      toast.error('❌ Invalid JSON!\n\nCannot prettify invalid JSON.');
-    }
   };
   
   
@@ -745,218 +765,3 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     toast.success('✅ Table sent to Manual tab!');
   };
 
-  return (
-    <div className="h-full w-full flex flex-col">
-      {/* 🔥 중앙 토글 헤더 */}
-      <div className="flex-shrink-0 bg-zinc-900 border-b border-zinc-800 px-4 py-3">
-        <div className="relative flex items-center justify-center">
-          {/* 왼쪽: Schema View 레이블 */}
-          <div className="absolute left-0 flex items-center gap-2">
-            <h3 className="text-sm text-zinc-400">Schema View:</h3>
-          </div>
-          
-          {/* 중앙: 토글 버튼 (절대 위치) - 개선 모드에서만 표시 */}
-          {settings?.schemaMode !== 'normal' && (
-            <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1 w-[240px]">
-              <button
-                onClick={() => setSchemaView('original')}
-                className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
-                  schemaView === 'original'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                Original
-              </button>
-              <button
-                onClick={() => setSchemaView('enhanced')}
-                className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
-                  schemaView === 'enhanced'
-                    ? 'bg-green-600 text-white'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                Enhanced
-              </button>
-            </div>
-          )}
-          
-          {/* 일반 모드에서는 제목만 표시 */}
-          {settings?.schemaMode === 'normal' && (
-            <div className="text-sm font-medium text-zinc-300">
-              Schema Editor
-            </div>
-          )}
-          
-          {/* 오른쪽: 설명 텍스트 - 개선 모드에서만 */}
-          {settings?.schemaMode !== 'normal' && (
-            <div className="absolute right-0">
-              <span className="text-xs text-zinc-500">
-                {schemaView === 'original' 
-                  ? '(Original schema definition)' 
-                  : hasEnhancedSchema || isNewEnhancedSchema
-                    ? '(Enhanced with x-ui, x-transport, conditions)'
-                    : '(No enhanced schema - showing original)'}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* 🔥 경고: Fallback 스키마 사용 중 */}
-      {isUsingFallback && (
-        <div className="flex-shrink-0 bg-yellow-900/30 border-b border-yellow-700/50 px-4 py-2 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-yellow-400" />
-          <span className="text-xs text-yellow-200">
-            Using default schema template. Load a version to see saved schema.
-          </span>
-        </div>
-      )}
-      
-      {/* Resizable Panel Group */}
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* Left Pane - JSON Schema Editor */}
-        <ResizablePanel defaultSize={50} minSize={30}>
-          <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
-            <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">JSON Schema Editor</h3>
-                
-                {/* Prettify Button */}
-                <Button
-                  onClick={handlePrettifySchema}
-                  variant="outline"
-                  size="sm"
-                  className="h-7 px-2 text-xs"
-                >
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Prettify
-                </Button>
-              </div>
-            </div>
-
-          {/* Monaco Editor - Full Height */}
-          <div className="flex-1 relative">
-            <CodeEditor
-              value={editableSchema}
-              onChange={(value) => handleSchemaChange(value || '')}
-              language="json"
-              minimap={true}
-            />
-            
-            {/* Modified Indicator */}
-            {isSchemaModified && (
-              <div className="absolute top-4 right-4 px-2 py-1 bg-orange-600/20 border border-orange-600/50 rounded text-xs text-orange-400 z-10">
-                Modified
-              </div>
-            )}
-          </div>
-          
-          {/* Footer with Save Button */}
-          <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-between flex-shrink-0">
-            <div className="flex items-center gap-2 text-xs text-zinc-500">
-              {isSchemaModified ? (
-                <>
-                  <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-                  <span>Unsaved changes</span>
-                </>
-              ) : (
-                <>
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>All changes saved</span>
-                </>
-              )}
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={handleResetSchema}
-                variant="outline"
-                size="sm"
-                disabled={!isSchemaModified}
-                className="h-7 px-2 text-xs"
-              >
-                Reset
-              </Button>
-              
-              <Button
-                onClick={handleSaveSchema}
-                size="sm"
-                disabled={!isSchemaModified}
-                className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Save className="w-3 h-3 mr-1" />
-                Save
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleSendSchemaToManual('original')}
-                disabled={!spec.jsonSchema}
-                className="text-xs"
-              >
-                📤 Send Original to Manual
-              </Button>
-              
-              {(hasEnhancedSchema || isNewEnhancedSchema) && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleSendSchemaToManual('enhanced')}
-                  className="text-xs"
-                >
-                  📤 Send Enhanced to Manual
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-        </ResizablePanel>
-
-        {/* Resize Handle */}
-        <ResizableHandle className="w-1 bg-zinc-800 hover:bg-blue-500" />
-
-        {/* Right Pane - Visual Table Renderer */}
-        <ResizablePanel defaultSize={50} minSize={30}>
-          <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
-            <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">Visual Schema Table</h3>
-              </div>
-            </div>
-
-            {/* Table Content - Scrollable */}
-            <div className="flex-1 overflow-auto p-4">
-              {tableParameters.length > 0 && tableDefinition ? (
-                <DynamicTableRenderer
-                  definition={tableDefinition}
-                  parameters={tableParameters}
-                  expandedParams={expandedParams}
-                  toggleParam={toggleParam}
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-zinc-500">
-                  {isLoadingDefinition ? 'Loading table definition...' : 'No schema loaded'}
-                </div>
-              )}
-            </div>
-            
-            {/* Footer with Send to Manual Button */}
-            <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-end flex-shrink-0">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSendTableToManual}
-                disabled={tableParameters.length === 0}
-                className="text-xs"
-              >
-                📤 Send Table to Manual
-              </Button>
-            </div>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  );
-}

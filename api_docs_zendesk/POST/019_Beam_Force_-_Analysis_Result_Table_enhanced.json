@@ -1,6 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "TABLE": {
+  "BeamForce": {
     "type": "object",
     "required": ["TABLE_TYPE"],
     "properties": {
@@ -69,25 +68,41 @@
       "NODE_ELEMS": {
         "type": "object",
         "description": "Node/element no. input",
-        "properties": {
-          "KEYS": {
-            "type": "array",
-            "description": "Specify each ID",
-            "items": {
-              "type": "integer"
-            }
+        "oneOf": [
+          {
+            "properties": {
+              "KEYS": {
+                "type": "array",
+                "description": "Specify each ID",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "required": ["KEYS"],
+            "additionalProperties": false
           },
-          "TO": {
-            "type": "string",
-            "description": "Specify ID range"
+          {
+            "properties": {
+              "TO": {
+                "type": "string",
+                "description": "Specify ID range"
+              }
+            },
+            "required": ["TO"],
+            "additionalProperties": false
           },
-          "STRUCTURE_GROUP_NAME": {
-            "type": "string",
-            "description": "Specify structure group name"
+          {
+            "properties": {
+              "STRUCTURE_GROUP_NAME": {
+                "type": "string",
+                "description": "Specify structure group name"
+              }
+            },
+            "required": ["STRUCTURE_GROUP_NAME"],
+            "additionalProperties": false
           }
-        },
-        "additionalProperties": false,
-        "x-exclusive-keys": ["KEYS", "TO", "STRUCTURE_GROUP_NAME"]
+        ]
       },
       "LOAD_CASE_NAMES": {
         "type": "array",
@@ -101,7 +116,7 @@
         "description": "Element part number",
         "items": {
           "type": "string",
-          "enum": ["Part I", "Part 1/4", "Part 2/4", "Part 3/4", "Part J"]
+          "enum": ["PartI", "Part1/4", "Part2/4", "Part3/4", "PartJ"]
         }
       },
       "OPT_CS": {
@@ -128,4 +143,3 @@
     "additionalProperties": false
   }
 }
-

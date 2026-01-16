@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Database, Bug, Network, FileCode, Upload } from 'lucide-react';
-import { DatabaseTab, ImportTab } from './tabs';
+import { Database, Bug, Network, FileCode, Upload, Users } from 'lucide-react';
+import { DatabaseTab, ImportTab, SessionsTab } from './tabs';
 
 export function DebugView() {
   return (
@@ -38,6 +38,13 @@ export function DebugView() {
               📥 Import
             </TabsTrigger>
             <TabsTrigger
+              value="sessions"
+              className="px-4 py-2 rounded-md text-sm font-medium transition-colors data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 hover:text-zinc-200"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              👥 Sessions
+            </TabsTrigger>
+            <TabsTrigger
               value="network"
               disabled
               className="px-4 py-2 rounded-md text-sm font-medium transition-colors data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed"
@@ -64,6 +71,10 @@ export function DebugView() {
           
           <TabsContent value="import" className="h-full m-0">
             <ImportTab />
+          </TabsContent>
+          
+          <TabsContent value="sessions" className="h-full m-0">
+            <SessionsTab />
           </TabsContent>
           
           <TabsContent value="network" className="h-full m-0">

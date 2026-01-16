@@ -7,7 +7,7 @@ import { ChevronRight, ChevronDown } from 'lucide-react';
 import type { TableDefinition } from './definitionLoader';
 
 interface DynamicTableRendererProps {
-  definition: TableDefinition;
+  definition: TableDefinition | null;
   parameters: any[];
   expandedParams: Set<number>;
   toggleParam: (no: number) => void;
@@ -22,6 +22,17 @@ export function DynamicTableRenderer({
   expandedParams,
   toggleParam
 }: DynamicTableRendererProps) {
+  // 🔥 definition이 null인 경우 처리
+  if (!definition) {
+    return (
+      <div className="flex items-center justify-center h-full text-zinc-500">
+        <div className="text-center">
+          <p className="text-sm">Table definition is loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   const tableStyle = definition.styling?.table || {};
   const headerStyle = definition.styling?.header || {};
   const bodyStyle = definition.styling?.body || {};
@@ -48,6 +59,32 @@ export function DynamicTableRenderer({
         <tbody className={bodyStyle.fontSize || 'text-sm'}>
           {parameters.map((param: any) => {
             const rows = [];
+            
+            // 🔥 조건 행 처리 (YAML 스타일 적용)
+            if (param.type === 'condition-row') {
+              const conditionStyle = definition.conditionRows?.style || {};
+              const conditionColspan = definition.conditionRows?.colspan || 6;
+              
+              rows.push(
+                <tr 
+                  key={`condition-${param.conditionText}`} 
+                  className={`${conditionStyle.background || 'bg-cyan-950/30'} border-b border-zinc-800`}
+                >
+                  <td 
+                    colSpan={conditionColspan} 
+                    className={`
+                      ${conditionStyle.padding || 'p-2'} 
+                      ${conditionStyle.fontSize || 'text-xs'} 
+                      ${conditionStyle.fontWeight || 'font-semibold'}
+                      ${conditionStyle.textColor || 'text-cyan-400'}
+                    `}
+                  >
+                    {param.conditionText}
+                  </td>
+                </tr>
+              );
+              return rows;
+            }
             
             // 섹션 헤더
             if (param.section) {
@@ -227,7 +264,7 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
 function renderDescription(description: string) {
   return (
     <div
-      className="text-zinc-300 [&_span]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold"
+      className="text-zinc-300 [&_span:not([style])]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold"
       dangerouslySetInnerHTML={{
         __html: description
           .replace(/\n/g, '<br>')

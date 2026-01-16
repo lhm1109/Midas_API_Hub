@@ -39,6 +39,46 @@ export interface BuilderDefinition extends UIRulesDefinition {
 }
 
 export interface TableDefinition extends UIRulesDefinition {
+  // 🔥 NEW: Schema Extensions (확장 필드 정의)
+  schemaExtensions?: {
+    conditional?: Array<{
+      key: string;
+      description?: string;
+      format?: string;
+      displayInTable?: boolean;
+      displayIcon?: string;
+      displayLabel?: string;
+      displayColor?: string;
+    }>;
+    ui?: Array<{
+      key: string;
+      description?: string;
+      displayInTable?: boolean;
+      displayIcon?: string;
+      displayLabel?: string;
+      displayColor?: string;
+    }>;
+    extractFromSchema?: Array<{
+      key: string;
+      targetProperty: string;
+      passthrough?: boolean;
+      transformKey?: boolean;
+    }>;
+  };
+  
+  // 🔥 NEW: Condition Rows (조건부 필드 표시 행)
+  conditionRows?: {
+    enabled?: boolean;
+    style?: {
+      background?: string;
+      textColor?: string;
+      fontSize?: string;
+      fontWeight?: string;
+      padding?: string;
+    };
+    colspan?: number;
+  };
+  
   tableStructure: any;
   sectionHeaders: any;
   rowRendering: any;
@@ -133,10 +173,12 @@ export async function loadTableRules(
       const uiRules = await loadUIRules(psdSet, schemaType);
       const merged = { ...uiRules, ...parsed };
       console.log(`✅ Loaded ${psdSet}/${schemaType}/table.yaml`, merged);
+      console.log(`🔍 schemaExtensions in merged:`, merged.schemaExtensions);
       return merged;
     } catch (uiRulesError) {
       console.warn(`⚠️ Failed to load ui-rules.yaml, using table.yaml only:`, uiRulesError);
       console.log(`✅ Loaded ${psdSet}/${schemaType}/table.yaml (without ui-rules)`, parsed);
+      console.log(`🔍 schemaExtensions in parsed:`, parsed.schemaExtensions);
       return parsed;
     }
   } catch (error) {

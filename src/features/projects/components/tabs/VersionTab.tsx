@@ -29,6 +29,9 @@ export function VersionTab({ endpoint }: VersionTabProps) {
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCompareDialog, setShowCompareDialog] = useState(false);
+  const [showLockDialog, setShowLockDialog] = useState(false);
+  const [lockInfo, setLockInfo] = useState<{ locked: boolean; lockedBy?: string } | null>(null);
+  const [pendingVersionId, setPendingVersionId] = useState<string | null>(null);
   const [newVersionNumber, setNewVersionNumber] = useState('');
   const [changeLog, setChangeLog] = useState('');
   const [attachments, setAttachments] = useState<Record<string, Attachment[]>>({});
@@ -217,13 +220,67 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     }
   };
 
+  // 🔥 엔드포인트 잠금 상태 확인
+  const checkEndpointLock = async (endpointId: string): Promise<{ locked: boolean; lockedBy?: string }> => {
+    try {
+      const response = await fetch(`http://localhost:9527/api/locks/endpoint/${encodeURIComponent(endpointId)}/lock`);
+      if (response.ok) {
+        const data = await response.json();
+        const { currentUserId } = useAppStore.getState();
+        return {
+          locked: data.locked && data.lockedBy !== currentUserId,
+          lockedBy: data.lockedBy,
+        };
+      }
+      return { locked: false };
+    } catch (error) {
+      console.error('Failed to check lock status:', error);
+      return { locked: false };
+    }
+  };
+
   const handleLoadVersion = async (versionId: string) => {
+    if (!endpoint?.id) {
+      toast.error('❌ No endpoint selected');
+      return;
+    }
+
+    // 🔥 잠금 상태 확인
+    const lockStatus = await checkEndpointLock(endpoint.id);
+    
+    if (lockStatus.locked) {
+      // 잠금되어 있으면 팝업 표시
+      setLockInfo(lockStatus);
+      setPendingVersionId(versionId);
+      setShowLockDialog(true);
+      return;
+    }
+
+    // 잠금되지 않았으면 바로 로드
     try {
       await loadVersion(versionId);
       const version = versions.find(v => v.id === versionId);
       toast.success(`✅ Version ${version?.version || versionId} loaded successfully`);
     } catch (error) {
       toast.error(`❌ Failed to load version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  // 🔥 잠금 팝업에서 강제 로드
+  const handleForceLoad = async () => {
+    if (!pendingVersionId) return;
+    
+    setShowLockDialog(false);
+    try {
+      await loadVersion(pendingVersionId);
+      const version = versions.find(v => v.id === pendingVersionId);
+      toast.success(`✅ Version ${version?.version || pendingVersionId} loaded successfully`);
+      toast.warning('⚠️ This endpoint is being edited by another user. You are in read-only mode.');
+    } catch (error) {
+      toast.error(`❌ Failed to load version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setPendingVersionId(null);
+      setLockInfo(null);
     }
   };
 
@@ -586,6 +643,51 @@ export function VersionTab({ endpoint }: VersionTabProps) {
               <Plus className="w-4 h-4 mr-2" />
               {isCreatingVersion ? 'Creating...' : 'Create Version'}
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Lock Warning Dialog */}
+      <Dialog open={showLockDialog} onOpenChange={setShowLockDialog}>
+        <DialogContent className="bg-zinc-900 border-zinc-700">
+          <DialogHeader>
+            <DialogTitle className="text-zinc-100 flex items-center gap-2">
+              <span className="text-red-500">🔒</span>
+              Endpoint is Being Edited
+            </DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              This endpoint is currently being edited by another user.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="bg-red-900/20 border border-red-800/50 rounded-lg p-4">
+              <p className="text-sm text-zinc-300 mb-2">
+                <strong className="text-red-400">Editor:</strong> {lockInfo?.lockedBy || 'Unknown'}
+              </p>
+              <p className="text-xs text-zinc-400">
+                If you load this version, you will be in <strong className="text-yellow-400">read-only mode</strong>.
+                You won't be able to save changes while someone else is editing.
+              </p>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowLockDialog(false);
+                  setPendingVersionId(null);
+                  setLockInfo(null);
+                }}
+                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleForceLoad}
+                className="bg-yellow-600 hover:bg-yellow-700 text-white"
+              >
+                Load Anyway (Read-only)
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

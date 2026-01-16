@@ -1,5 +1,21 @@
-// API specifications data
+/**
+ * API Specifications (Fallback Data)
+ * 
+ * ⚠️ 이 파일은 레거시 데이터입니다.
+ * 새로운 API는 Supabase에서 관리되며, 이 데이터는 fallback으로만 사용됩니다.
+ * 
+ * 실제 API 데이터는 다음 위치에서 관리:
+ * - Supabase endpoints 테이블
+ * - Supabase versions 테이블
+ * - Supabase manual_data 테이블
+ */
+
+// API specifications data (Fallback only)
 export const apiSpecs: Record<string, any> = {
+  // ⚠️ 샘플 데이터는 제거되었습니다
+  // 필요한 경우 Import 기능을 사용하여 데이터를 추가하세요
+  
+  // 레거시 호환성을 위해 유지 (추후 제거 예정)
   nlct: {
     title: 'Nonlinear Analysis Control Data',
     category: 'DB',

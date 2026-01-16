@@ -27,6 +27,7 @@ export interface AppState {
     expiresAt?: string;
   } | null;
   currentUserId: string; // 현재 사용자 ID (이메일 등)
+  endpoint: ApiEndpoint | null; // 현재 선택된 엔드포인트
   
   // Tab actions
   setCurrentTab: (tab: 'version' | 'manual' | 'spec' | 'builder' | 'runner') => void;
@@ -85,7 +86,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   
   // 🔒 잠금 초기 상태
   endpointLock: null,
-  currentUserId: localStorage.getItem('userId') || `user_${Date.now()}`,
+  currentUserId: localStorage.getItem('userName') || localStorage.getItem('userId') || `user_${Date.now()}`,
+  endpoint: null,
   
   setCurrentTab: (tab) => set({ currentTab: tab }),
   
@@ -375,10 +377,13 @@ export const useAppStore = create<AppState>((set, get) => ({
   // 🔒 **편집 잠금 상태 확인**
   checkEndpointLock: async (endpointId) => {
     try {
+      const { currentUserId } = get();
       const response = await fetch(`http://localhost:9527/api/locks/endpoint/${encodeURIComponent(endpointId)}/lock`);
       if (response.ok) {
         const data = await response.json();
-        set({ endpointLock: data });
+        // 🔥 자기 자신의 잠금은 잠금으로 표시하지 않음
+        const isOwnLock = data.lockedBy === currentUserId;
+        set({ endpointLock: { ...data, locked: data.locked && !isOwnLock } });
       }
     } catch (error) {
       console.error('Failed to check lock:', error);
@@ -397,12 +402,15 @@ export const useAppStore = create<AppState>((set, get) => ({
       
       if (response.ok) {
         const data = await response.json();
-        set({ endpointLock: data.lock });
+        // 🔥 자기 자신의 잠금은 잠금으로 표시하지 않음
+        set({ endpointLock: { locked: false, lockedBy: currentUserId } });
         return true;
       } else if (response.status === 423) {
         const data = await response.json();
-        set({ endpointLock: { locked: true, ...data } });
-        return false;
+        // 🔥 자기 자신의 잠금인지 확인
+        const isOwnLock = data.lockedBy === currentUserId;
+        set({ endpointLock: { locked: !isOwnLock, ...data } });
+        return !isOwnLock; // 자기 자신이면 true 반환 (잠금 성공으로 간주)
       }
       return false;
     } catch (error) {
@@ -428,7 +436,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   
   // 🔒 **사용자 ID 설정**
   setCurrentUserId: (userId) => {
-    localStorage.setItem('userId', userId);
+    localStorage.setItem('userName', userId);
+    localStorage.setItem('userId', userId); // 하위 호환성
     set({ currentUserId: userId });
   },
 }));
