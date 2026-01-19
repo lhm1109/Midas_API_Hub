@@ -348,8 +348,9 @@ export function ManualTab({ endpoint }: ManualTabProps) {
 </div>
 </div>
 
+${(requestExamples && requestExamples.length > 0) ? `
 <h3 id=\"h_01J4K93QE3BGDFSY9AZXQ9ZJ8K\"><strong>Request Examples</strong></h3>
-${(requestExamples || []).map((ex, idx) => `
+${requestExamples.map((ex, idx) => `
 <div class=\"mgt32\">
 <p class=\"btn_dropdown mgt4 active\" onclick=\"toggleAccordion(this)\">${ex.title}</p>
 <div class=\"code-block-wrapper active\">
@@ -360,9 +361,11 @@ ${(requestExamples || []).map((ex, idx) => `
 </div>
 </div>
 `).join('')}
+` : ''}
 
+${(responseExamples && responseExamples.length > 0) ? `
 <h3 id=\"h_01J4K93QE3DTFGJEZ2NXN6ZH33\"><strong>Response Examples</strong></h3>
-${(responseExamples || []).map((ex, idx) => `
+${responseExamples.map((ex, idx) => `
 <div class=\"mgt32\">
 <p class=\"btn_dropdown mgt4 active\" onclick=\"toggleAccordion(this)\">${ex.title}</p>
 <div class=\"code-block-wrapper active\">
@@ -373,8 +376,8 @@ ${(responseExamples || []).map((ex, idx) => `
 </div>
 </div>
 `).join('')}
+` : ''}
 
-<h3 id=\"h_01J4JK6Y56RSE6RM7MN02S8ANN\"><strong>Specifications</strong></h3>
 ${specifications}
 
 </div>
