@@ -1,0 +1,591 @@
+<style>
+  .introduction-section {
+    margin-bottom: 40px;
+  }
+
+  .manual-search {
+    margin-bottom: 10px;
+  }
+
+  #search-bar {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  #search-bar:focus {
+    outline: none;
+    border-color: #888;
+    box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.1);
+  }
+
+  #search-message {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  #search-message.show {
+    display: block !important;
+  }
+
+  .category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .filter-btn {
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .filter-btn.active {
+    border-color: currentColor;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* All 버튼 */
+  .filter-btn.filter-all {
+    background: #f3f4f6;
+    color: #374151;
+  }
+
+  .filter-btn.filter-all.active {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+  }
+
+  /* GEOMETRY & MODELING - 노란색 */
+  .filter-btn.filter-geometry {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .filter-btn.filter-geometry.active {
+    border-color: #92400e;
+  }
+
+  /* POST-PROCESSING - 회색 */
+  .filter-btn.filter-postprocessing {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  .filter-btn.filter-postprocessing.active {
+    border-color: #6b7280;
+  }
+
+  /* DESIGN - 보라색 */
+  .filter-btn.filter-design {
+    background: #ede9fe;
+    color: #6b21a8;
+  }
+
+  .filter-btn.filter-design.active {
+    border-color: #6b21a8;
+  }
+
+  /* DATA INTEROPERABILITY - 녹색 */
+  .filter-btn.filter-data {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .filter-btn.filter-data.active {
+    border-color: #065f46;
+  }
+
+  /* VERIFICATION - 파란색 */
+  .filter-btn.filter-verification {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .filter-btn.filter-verification.active {
+    border-color: #1e40af;
+  }
+
+  /* TASK AUTO - 핑크 */
+  .filter-btn.filter-taskauto {
+    background: #fce7f3;
+    color: #9f1239;
+  }
+
+  .filter-btn.filter-taskauto.active {
+    border-color: #9f1239;
+  }
+
+  .category-section {
+    margin-bottom: 40px;
+  }
+
+  .category-header {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #d0d0d0;
+  }
+
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .category-section.hidden {
+    display: none;
+  }
+
+  .plugin-card {
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #e8e8e8;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .plugin-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #999, #bbb);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .plugin-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-color: #ccc;
+    background: white;
+  }
+
+  .plugin-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .plugin-card.hidden {
+    display: none;
+  }
+
+  .plugin-card a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+  }
+
+  .plugin-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 auto 0;
+    color: #333;
+    line-height: 1.5;
+    transition: color 0.3s ease;
+    flex: 1;
+  }
+
+  .plugin-card:hover .plugin-card-title {
+    color: #222;
+  }
+
+  .plugin-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .plugin-card-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .plugin-card-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* GEOMETRY & MODELING - 노란색 */
+  .tag-geometry {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  /* POST-PROCESSING - 회색 */
+  .tag-postprocessing {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  /* DESIGN - 보라색 */
+  .tag-design {
+    background: #ede9fe;
+    color: #6b21a8;
+  }
+
+  /* DATA INTEROPERABILITY - 녹색 */
+  .tag-data {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  /* VERIFICATION - 파란색 */
+  .tag-verification {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  /* TASK AUTO - 핑크 */
+  .tag-taskauto {
+    background: #fce7f3;
+    color: #9f1239;
+  }
+
+  .plugin-card:hover .plugin-card-tag {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .external-icon {
+    display: inline-block;
+    margin-left: 6px;
+    transition: transform 0.3s ease;
+  }
+
+  .plugin-card:hover .external-icon {
+    transform: translate(3px, -3px) !important;
+  }
+
+  @media (max-width: 768px) {
+    .cards-container {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 15px;
+    }
+
+    .plugin-card {
+      min-height: 140px;
+      padding: 20px;
+    }
+
+    .category-filters {
+      gap: 8px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      font-size: 11px;
+    }
+  }
+</style>
+
+<p>&nbsp;</p>
+
+<h2 id="01J410218QTJEGEM4RPHJ82Q42">Introduction</h2>
+<div class="introduction-section">
+  <p class="wysiwyg-indent1">
+    <a href="https://support.midasuser.com/hc/ko/articles/35693347852569" target="_blank" rel="noopener noreferrer">Introduction to MIDAS Plug-in↗</a>
+  </p>
+  <p class="wysiwyg-indent1">
+    <a href="https://support.midasuser.com/hc/ko/articles/35694950947353-How-to-use-MIDAS-Plug-ins" target="_blank" rel="noopener noreferrer">How to use MIDAS Plug-in↗</a>
+  </p>
+  <p class="wysiwyg-indent1">
+    <a href="https://support.midasuser.com/hc/ko/articles/44321576105497-Guiding-for-writing-Python-Code-Planning-Development-Collaboration" target="_blank" rel="noopener noreferrer">Guiding for writing Python Code(Planning/Development Collaboration)↗</a>
+  </p>
+  <p class="wysiwyg-indent1">
+    <a href="https://support.midasuser.com/hc/ko/articles/44321750649369-A-Guide-to-Creating-Plug-in-for-Developers" target="_blank" rel="noopener noreferrer">A Guide to Creating Plug-in for Developers↗</a>
+  </p>
+</div>
+
+<h2 id="01J4109GK8N1F8W8QWNWBWF5CP">Plug-in Item</h2>
+<div class="manual-search">
+  <input id="search-bar" placeholder="Search Plug-in Name" type="text">
+</div>
+<div style="color: #666; display: none;" id="search-message">Sorry, no results were found. Try to enter other words</div>
+
+<div class="category-filters" id="category-filters">
+  <!-- Category filter buttons will be dynamically generated -->
+</div>
+
+<div id="plugin-sections">
+  <!-- 카테고리별 섹션이 동적으로 생성됩니다 -->
+</div>
+
+<script>
+  // 플러그인 카테고리 타입 정의
+  const CATEGORY_TYPES = {
+    GEOMETRY: 'GEOMETRY & MODELING',
+    POSTPROCESSING: 'POST-PROCESSING',
+    DESIGN: 'DESIGN',
+    DATA: 'DATA INTEROPERABILITY',
+    VERIFICATION: 'VERIFICATION',
+    TASKAUTO: 'TASK AUTO'
+  };
+
+  // 플러그인 데이터 - 각 플러그인에 카테고리 타입 할당
+  const pluginData = [
+    { name: 'Alignment Local Axis for Element', url: 'https://support.midasuser.com/hc/ko/articles/35679369131289-Alignment-Local-Axis-for-Element', category: 'A', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Alignment Generator', url: 'https://support.midasuser.com/hc/ko/articles/40709970824729-Alignment-Generator', category: 'A', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Artificial Earthquake Generator', url: 'https://support.midasuser.com/hc/ko/articles/35656036758937-Artificial-Earthquake-Generator', category: 'A', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Artificial Earthquake Correlation', url: 'https://support.midasuser.com/hc/ko/articles/35650468767385-Artificial-Earthquake-Correlation-Checker', category: 'A', type: CATEGORY_TYPES.VERIFICATION },
+    { name: '[AS 1170.2:2021] Building Wind Loads Generator', url: 'https://support.midasuser.com/hc/ko/articles/46935970426905--AS-1170-2-2021-Building-Wind-Loads-Generator', category: 'A', type: CATEGORY_TYPES.VERIFICATION },
+    { name: '[AS 1170.4:2024] Static Seismic Loads Generator', url: 'https://support.midasuser.com/hc/ko/articles/46857988729753--AS-1170-4-2024-Static-Seismic-Loads-Generator', category: 'A', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Assign Floor Loads', url: 'https://support.midasuser.com/hc/ko/articles/52564358801049-Assign-Floor-Loads', category: 'A', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Auto Saver', url: 'https://support.midasuser.com/hc/ko/articles/35661003551385-Auto-Saver', category: 'A', type: CATEGORY_TYPES.TASKAUTO },
+    { name: 'Breakdown Load Combination', url: 'https://support.midasuser.com/hc/ko/articles/35845551989401-Breakdown-Load-Combination', category: 'B', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Concrete Material Set EN1992-1-1', url: 'https://support.midasuser.com/hc/ko/articles/45536334603161-Concrete-Material-Set-EN1992-1-1', category: 'C', type: CATEGORY_TYPES.DESIGN },
+    { name: 'Convert Load Combination into SDS Format', url: 'https://support.midasuser.com/hc/ko/articles/45496104876313-Convert-Load-Combinations-into-SDS-Format', category: 'C', type: CATEGORY_TYPES.DATA },
+    { name: 'Customized Load Combination', url: 'https://support.midasuser.com/hc/ko/articles/41509743351193-Customized-Load-Combination', category: 'C', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Easy Capture Genrator', url: 'https://support.midasuser.com/hc/ko/articles/35639906272025-Easy-Capture-Generator', category: 'E', type: CATEGORY_TYPES.TASKAUTO },
+    { name: 'Easy Load Combinations', url: 'https://support.midasuser.com/hc/ko/articles/45543036560921-Easy-Load-Combinations', category: 'E', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Easy Result Table', url: 'https://support.midasuser.com/hc/ko/articles/49504449511705-Easy-Result-Table', category: 'E', type: CATEGORY_TYPES.TASKAUTO },
+    { name: 'Element Information', url: 'https://support.midasuser.com/hc/ko/articles/35649982873625-Element-Information', category: 'E', type: CATEGORY_TYPES.TASKAUTO },
+    { name: '[Eurocode] Fatigue Analysis for Composite Girder Bridge', url: 'https://support.midasuser.com/hc/ko/articles/49393118303897-Road-bridge-Concrete-Fatigue-for-Composite-Section', category: 'E', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Flared Pier', url: 'https://support.midasuser.com/hc/ko/articles/45352026157593-Flared-Pier', category: 'F', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Floor Load Table Generator', url: 'https://support.midasuser.com/hc/ko/articles/49475987573657-Floor-Load-Table-Generator', category: 'F', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Floor Transition', url: 'https://support.midasuser.com/hc/ko/articles/35681919947673-Floor-Transition', category: 'F', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Group Pile', url: 'https://support.midasuser.com/hc/ko/articles/45354275911321-Group-Pile', category: 'G', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Inertial Forces Controller', url: 'https://support.midasuser.com/hc/ko/articles/40706127836953-Inertial-Forces-Controller', category: 'I', type: CATEGORY_TYPES.TASKAUTO },
+    { name: 'Iterative Response Spectrum', url: 'https://support.midasuser.com/hc/ko/articles/50959239482393-Iterative-Response-Spectrum', category: 'I', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Load Effect for LC', url: 'https://support.midasuser.com/hc/ko/articles/35649669387289-Load-Effect-for-Load-Combination', category: 'L', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Local Axis', url: 'https://support.midasuser.com/hc/ko/articles/45537498601881-Local-Axis', category: 'L', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Mirror Tapered Section', url: 'https://support.midasuser.com/hc/ko/articles/35651585867801-Mirror-Tapered-Section', category: 'M', type: CATEGORY_TYPES.GEOMETRY },
+    { name: '[MS 1553:2002] Building Wind Loads Generator', url: 'https://support.midasuser.com/hc/ko/articles/47130265330841--MS-1553-2002-Building-Wind-Loads-Generator', category: 'M', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Nastran Importer', url: 'https://support.midasuser.com/hc/ko/articles/45548001795865-Nastran-Importer', category: 'N', type: CATEGORY_TYPES.DATA },
+    { name: 'Node Controller', url: 'https://support.midasuser.com/hc/ko/articles/35654598923161-Node-Controller', category: 'N', type: CATEGORY_TYPES.TASKAUTO },
+    { name: '6x6 General Spring for Pile Foundation (KR)', url: 'https://support.midasuser.com/hc/ko/articles/35651992652441-Pile-Spring', category: 'P', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Rebar Spacing Converter', url: 'https://support.midasuser.com/hc/ko/articles/35649267067545-Rebar-Spacing-Converter', category: 'R', type: CATEGORY_TYPES.DESIGN },
+    { name: 'Response Spectrum Generator', url: 'https://support.midasuser.com/hc/ko/articles/45716286965273-Response-Spectrum-Generator', category: 'R', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Rigid link generator', url: 'https://support.midasuser.com/hc/ko/articles/35651417232025-Rigid-Link-Generator', category: 'R', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Seismic hazard map', url: 'https://support.midasuser.com/hc/ko/articles/35658068066841-Seismic-Hazard-Map', category: 'S', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Series Load', url: 'https://support.midasuser.com/hc/ko/articles/45545604010521-Series-Load', category: 'S', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'SPACE GASS Converter', url: 'https://support.midasuser.com/hc/ko/articles/35824220762521-SPACE-GASS-Converter', category: 'S', type: CATEGORY_TYPES.DATA },
+    { name: '[TAIWAN2014] Building Wind Loads Generator', url: 'https://support.midasuser.com/hc/ko/articles/52808991968665--TAIWAN2014-Building-Wind-Loads-Generator', category: 'T', type: CATEGORY_TYPES.VERIFICATION },
+    { name: 'Temperature Gradient Stress Generator', url: 'https://support.midasuser.com/hc/ko/articles/40708129121817-Temperature-Gradient-Stress-Generator', category: 'T', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Tendon Profile', url: 'https://support.midasuser.com/hc/ko/articles/45306728128921-Tendon-Profile', category: 'T', type: CATEGORY_TYPES.DESIGN },
+    { name: 'Temperature Load Calculator for bridges (HK)', url: 'https://support.midasuser.com/hc/ko/articles/40663607747737-Temperature-Load-Calculator-for-bridges-HK', category: 'T', type: CATEGORY_TYPES.POSTPROCESSING },
+    { name: 'Tunnel Lining Generator', url: 'https://support.midasuser.com/hc/ko/articles/35655721814937-Tunnel-Lining-Model', category: 'T', type: CATEGORY_TYPES.GEOMETRY },
+    { name: 'Wind Load Calculator for bridges (HK)', url: 'https://support.midasuser.com/hc/ko/articles/40645303004697-Wind-Load-Calculator-for-bridges-HK', category: 'W', type: CATEGORY_TYPES.VERIFICATION }
+  ];
+
+  // 카테고리 타입을 CSS 클래스명으로 변환
+  function getTypeClassName(type) {
+    const typeMap = {
+      [CATEGORY_TYPES.GEOMETRY]: 'geometry',
+      [CATEGORY_TYPES.POSTPROCESSING]: 'postprocessing',
+      [CATEGORY_TYPES.DESIGN]: 'design',
+      [CATEGORY_TYPES.DATA]: 'data',
+      [CATEGORY_TYPES.VERIFICATION]: 'verification',
+      [CATEGORY_TYPES.TASKAUTO]: 'taskauto'
+    };
+    return typeMap[type] || 'geometry';
+  }
+
+  // 현재 활성 필터
+  let currentFilter = 'all';
+
+  // 카테고리 필터 버튼 생성
+  function createCategoryFilters() {
+    const container = document.getElementById('category-filters');
+    container.innerHTML = '';
+
+    // All 버튼
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-btn filter-all active';
+    allBtn.textContent = 'All';
+    allBtn.onclick = () => filterByType('all');
+    container.appendChild(allBtn);
+
+    // 각 카테고리 타입 버튼
+    Object.values(CATEGORY_TYPES).forEach(type => {
+      const btn = document.createElement('button');
+      const className = getTypeClassName(type);
+      btn.className = `filter-btn filter-${className}`;
+      btn.textContent = type;
+      btn.onclick = () => filterByType(type);
+      container.appendChild(btn);
+    });
+  }
+
+  // 카테고리별로 데이터 그룹화 (알파벳 순)
+  const groupedData = {};
+  pluginData.forEach(item => {
+    if (!groupedData[item.category]) {
+      groupedData[item.category] = [];
+    }
+    groupedData[item.category].push(item);
+  });
+
+  // 카테고리별 섹션 생성
+  function createCategorySections() {
+    const container = document.getElementById('plugin-sections');
+    container.innerHTML = '';
+
+    const sortedCategories = Object.keys(groupedData).sort();
+
+    sortedCategories.forEach(category => {
+      const section = document.createElement('div');
+      section.className = 'category-section';
+      section.dataset.category = category;
+
+      const header = document.createElement('div');
+      header.className = 'category-header';
+      header.textContent = category;
+
+      const cardsContainer = document.createElement('div');
+      cardsContainer.className = 'cards-container';
+
+      groupedData[category].forEach(item => {
+        const card = createCard(item);
+        cardsContainer.appendChild(card);
+      });
+
+      section.appendChild(header);
+      section.appendChild(cardsContainer);
+      container.appendChild(section);
+    });
+  }
+
+  // 카드 생성
+  function createCard(item) {
+    const card = document.createElement('div');
+    card.className = 'plugin-card';
+    card.dataset.category = item.category;
+    card.dataset.type = item.type;
+    card.dataset.name = item.name.toLowerCase();
+
+    const typeClass = getTypeClassName(item.type);
+
+    card.innerHTML = `
+      <a href="${item.url}" target="_blank" rel="noopener noreferrer">
+        <h3 class="plugin-card-title">${item.name}<span class="external-icon">↗</span></h3>
+        <div class="plugin-card-footer">
+          <div class="plugin-card-tags">
+            <span class="plugin-card-tag tag-${typeClass}">${item.type}</span>
+          </div>
+        </div>
+      </a>
+    `;
+
+    return card;
+  }
+
+  // 타입별 필터링
+  function filterByType(type) {
+    currentFilter = type;
+
+    // 버튼 활성화 상태 업데이트
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    if (type === 'all') {
+      document.querySelector('.filter-all').classList.add('active');
+    } else {
+      const className = getTypeClassName(type);
+      document.querySelector(`.filter-${className}`).classList.add('active');
+    }
+
+    // 카드 필터링
+    filterCards();
+  }
+
+  // 카드 필터링 (타입 + 검색어)
+  function filterCards() {
+    const searchTerm = document.getElementById('search-bar').value.toLowerCase().trim();
+    const sections = document.querySelectorAll('.category-section');
+    let visibleCards = 0;
+
+    sections.forEach(section => {
+      const sectionCards = section.querySelectorAll('.plugin-card');
+      let sectionHasVisibleCards = false;
+
+      sectionCards.forEach(card => {
+        const cardType = card.dataset.type;
+        const cardName = card.dataset.name;
+        const cardText = card.textContent.toLowerCase();
+
+        const matchesType = currentFilter === 'all' || cardType === currentFilter;
+        const matchesSearch = !searchTerm || cardName.includes(searchTerm) || cardText.includes(searchTerm);
+
+        if (matchesType && matchesSearch) {
+          card.classList.remove('hidden');
+          sectionHasVisibleCards = true;
+          visibleCards++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (sectionHasVisibleCards) {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
+      }
+    });
+
+    // 검색 메시지 표시/숨김
+    const searchMessage = document.getElementById('search-message');
+    if (visibleCards === 0) {
+      searchMessage.classList.add('show');
+    } else {
+      searchMessage.classList.remove('show');
+    }
+  }
+
+  // 검색 기능
+  function handleSearch() {
+    filterCards();
+  }
+
+  // 초기화
+  document.addEventListener('DOMContentLoaded', () => {
+    createCategoryFilters();
+    createCategorySections();
+    
+    // 검색 이벤트 리스너
+    document.getElementById('search-bar').addEventListener('input', handleSearch);
+  });
+</script>

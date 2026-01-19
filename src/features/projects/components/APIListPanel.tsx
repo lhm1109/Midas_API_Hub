@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from 'react';
 import { Search, ChevronRight, ChevronDown, FileText, FolderClosed, FolderOpen, Plus, Pencil, Trash2, MoreVertical, GripVertical, Copy, ChevronLeft } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -49,7 +49,8 @@ interface SortableEndpointItemProps {
   getStatusIndicator: (endpointId: string) => JSX.Element | null;
 }
 
-function SortableEndpointItem({
+// ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
+const SortableEndpointItem = memo(function SortableEndpointItem({
   endpoint,
   isSelected,
   onSelect,
@@ -67,10 +68,12 @@ function SortableEndpointItem({
     isDragging,
   } = useSortable({ id: endpoint.id });
 
+  // 🔥 성능 최적화: GPU 가속 및 will-change 사용
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition, // 드래그 중 transition 비활성화
     opacity: isDragging ? 0.5 : 1,
+    willChange: isDragging ? 'transform' : 'auto', // GPU 가속
   };
 
   return (
@@ -147,7 +150,7 @@ function SortableEndpointItem({
       </DropdownMenu>
     </div>
   );
-}
+});
 
 // Sortable 제품 컴포넌트
 interface SortableProductItemProps {
@@ -159,7 +162,8 @@ interface SortableProductItemProps {
   children: React.ReactNode;
 }
 
-function SortableProductItem({
+// ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
+const SortableProductItem = memo(function SortableProductItem({
   product,
   isExpanded,
   onToggle,
@@ -176,10 +180,12 @@ function SortableProductItem({
     isDragging,
   } = useSortable({ id: product.id });
 
+  // 🔥 성능 최적화: GPU 가속 및 will-change 사용
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition, // 드래그 중 transition 비활성화
     opacity: isDragging ? 0.5 : 1,
+    willChange: isDragging ? 'transform' : 'auto', // GPU 가속
   };
 
   return (
@@ -252,7 +258,7 @@ function SortableProductItem({
       {children}
     </div>
   );
-}
+});
 
 // Sortable 그룹 컴포넌트
 interface SortableGroupItemProps {
@@ -266,7 +272,8 @@ interface SortableGroupItemProps {
   children: React.ReactNode;
 }
 
-function SortableGroupItem({
+// ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
+const SortableGroupItem = memo(function SortableGroupItem({
   groupId,
   productId: _productId,
   groupName,
@@ -285,10 +292,12 @@ function SortableGroupItem({
     isDragging,
   } = useSortable({ id: groupId });
 
+  // 🔥 성능 최적화: GPU 가속 및 will-change 사용
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition, // 드래그 중 transition 비활성화
     opacity: isDragging ? 0.5 : 1,
+    willChange: isDragging ? 'transform' : 'auto', // GPU 가속
   };
 
   return (
@@ -357,7 +366,7 @@ function SortableGroupItem({
       {children}
     </div>
   );
-}
+});
 
 // Droppable 그룹 컴포넌트
 interface DroppableGroupProps {
@@ -469,15 +478,26 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   }, [currentUserId]); // selectedEndpoint 제거 - 함수 파라미터로만 사용
 
   // 🔥 모든 엔드포인트의 초기 상태 확인 (한 번만, products가 실제로 변경될 때만)
+  // ⚡ 최적화: JSON.stringify 대신 ID 배열 비교
   const productsRef = useRef<string>('');
+  const productsIdsHash = useMemo(() => {
+    const ids: string[] = [];
+    products.forEach(p => {
+      ids.push(p.id);
+      p.groups.forEach(g => {
+        ids.push(g.id);
+        g.endpoints.forEach(e => ids.push(e.id));
+      });
+    });
+    return ids.join('|');
+  }, [products]);
+  
   useEffect(() => {
-    const productsKey = JSON.stringify(products.map(p => ({ id: p.id, groups: p.groups.map(g => ({ id: g.id, endpoints: g.endpoints.map(e => e.id) })) })));
-    
     // products가 실제로 변경되었을 때만 실행
-    if (productsRef.current === productsKey) {
+    if (productsRef.current === productsIdsHash) {
       return;
     }
-    productsRef.current = productsKey;
+    productsRef.current = productsIdsHash;
 
     const checkAllLocks = async () => {
       const allEndpoints: string[] = [];
@@ -521,10 +541,13 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     localStorage.setItem('expandedGroups', JSON.stringify(Array.from(expandedGroups)));
   }, [expandedGroups]);
 
+  // 🔥 성능 최적화: 드래그 센서 설정
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 5, // 8 -> 5로 줄여서 더 빠른 반응
+        delay: 0, // 지연 없음
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {

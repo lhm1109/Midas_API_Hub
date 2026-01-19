@@ -30,7 +30,8 @@ export default function App() {
         // 1. Supabase에서 제품 PSD 매핑 가져오기
         await refreshProductMappings();
         
-        // 2. 기본 PSD로 스키마 로직 규칙 초기화
+        // 2. 기본 PSD로 스키마 로직 규칙 초기화 (original + enhanced)
+        await initSchemaLogicRules('civil_gen_definition', 'original');
         await initSchemaLogicRules('civil_gen_definition', 'enhanced');
         
         // 3. 🔥 사용자 이름이 설정되어 있으면 useAppStore에 반영
@@ -62,19 +63,31 @@ export default function App() {
     localStorage.setItem('api-list-panel-width', panelWidth.toString());
   }, [panelWidth]);
 
-  // 패널 리사이즈 핸들러
+  // 패널 리사이즈 핸들러 (최적화: requestAnimationFrame 사용)
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     const startX = e.clientX;
     const startWidth = panelWidth;
+    let rafId: number | null = null;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      const delta = moveEvent.clientX - startX;
-      const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
-      setPanelWidth(newWidth);
+      // 이전 프레임 취소
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+
+      // 다음 프레임에 업데이트 예약
+      rafId = requestAnimationFrame(() => {
+        const delta = moveEvent.clientX - startX;
+        const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
+        setPanelWidth(newWidth);
+      });
     };
 
     const handleMouseUp = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
       document.body.style.cursor = '';
@@ -247,8 +260,11 @@ export default function App() {
             <>
               {/* 패널 컨테이너 - 접혔을 때도 작은 영역 유지 */}
               <div 
-                style={{ width: isPanelCollapsed ? '40px' : `${panelWidth}px` }}
-                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0 transition-all duration-300 overflow-hidden"
+                style={{ 
+                  width: isPanelCollapsed ? '40px' : `${panelWidth}px`,
+                  willChange: 'width', // GPU 가속
+                }}
+                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0 overflow-hidden"
               >
                 {isPanelCollapsed ? (
                   // 접힌 상태: 펼치기 버튼만 표시

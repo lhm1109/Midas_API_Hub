@@ -19,6 +19,7 @@ import {
   getSchemaStructurePatterns,
   getPlatformSkeleton,
 } from './schemaLogicEngine';
+import { schemaCompileCache, generateSchemaHash } from '../cache/schemaCache';
 
 // ============================================================================
 // Type Definitions
@@ -126,6 +127,8 @@ export interface SectionGroup {
  * Original / Enhanced 구분은 psdSet/schemaType으로 결정됩니다!
  * YAML 규칙이 초기화되어 있어야 합니다 (initSchemaLogicRules 호출 후 사용)
  * 
+ * ⚡ 캐싱 적용: 같은 스키마는 재컴파일하지 않음
+ * 
  * @param schema - JSON Schema (with or without x-* extensions)
  * @param psdSet - PSD 세트 (Level 1) - 제품의 psd_set에서 가져옴
  * @param schemaType - 스키마 타입 (Level 2) - 'original' | 'enhanced'
@@ -135,6 +138,14 @@ export function compileSchema(
   psdSet: string,
   schemaType: string
 ): SectionGroup[] {
+  // ⚡ 캐시 체크
+  const cacheKey = generateSchemaHash(schema, psdSet, schemaType);
+  const cached = schemaCompileCache.get(cacheKey);
+  
+  if (cached) {
+    console.log('✅ Using cached schema compilation');
+    return cached;
+  }
   // 🔥 YAML 기반 스키마 구조 패턴 감지 및 변환
   const transformedSchema = applySchemaStructurePatterns(schema, psdSet, schemaType);
   
@@ -163,7 +174,12 @@ export function compileSchema(
   const sections = groupFieldsBySectionsDynamic(fieldsWithStatus, types, psdSet, schemaType, transformedSchema);
   
   // Phase 4: Sort sections (YAML-based, 동기)
-  return sortSectionsDynamic(sections, psdSet, schemaType, transformedSchema);
+  const result = sortSectionsDynamic(sections, psdSet, schemaType, transformedSchema);
+  
+  // ⚡ 결과를 캐시에 저장
+  schemaCompileCache.set(cacheKey, result);
+  
+  return result;
 }
 
 // Legacy alias for backward compatibility (with required parameters)
