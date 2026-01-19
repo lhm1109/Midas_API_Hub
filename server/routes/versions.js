@@ -638,4 +638,88 @@ router.post('/import', async (req, res) => {
   }
 });
 
+// Update version metadata (e.g., changeLog)
+router.patch('/:versionId', async (req, res) => {
+  try {
+    const { versionId } = req.params;
+    const { 
+      version, 
+      changeLog, 
+      jsonSchema, 
+      jsonSchemaOriginal, 
+      jsonSchemaEnhanced,
+      requestExample,
+      responseExample,
+      runnerData 
+    } = req.body;
+    
+    // 🔥 Build update object with only provided fields
+    const updateData = {
+      updated_at: new Date().toISOString()
+    };
+    
+    if (version !== undefined) updateData.version = version;
+    if (changeLog !== undefined) updateData.change_log = changeLog;
+    
+    // Update version table
+    const { error: updateError } = await supabase
+      .from('versions')
+      .update(updateData)
+      .eq('id', versionId);
+    
+    if (updateError) {
+      throw updateError;
+    }
+    
+    // 🔥 Update spec_data if schema fields provided
+    if (jsonSchema !== undefined || jsonSchemaOriginal !== undefined || jsonSchemaEnhanced !== undefined) {
+      const specUpdateData = {};
+      if (jsonSchema !== undefined) specUpdateData.json_schema = typeof jsonSchema === 'string' ? jsonSchema : JSON.stringify(jsonSchema);
+      if (jsonSchemaOriginal !== undefined) specUpdateData.json_schema_original = typeof jsonSchemaOriginal === 'string' ? jsonSchemaOriginal : JSON.stringify(jsonSchemaOriginal);
+      if (jsonSchemaEnhanced !== undefined) specUpdateData.json_schema_enhanced = typeof jsonSchemaEnhanced === 'string' ? jsonSchemaEnhanced : JSON.stringify(jsonSchemaEnhanced);
+      
+      const { error: specError } = await supabase
+        .from('spec_data')
+        .upsert({
+          version_id: versionId,
+          ...specUpdateData
+        }, { onConflict: 'version_id' });
+      
+      if (specError) console.error('Error updating spec_data:', specError);
+    }
+    
+    // 🔥 Update runner_data if provided
+    if (runnerData !== undefined) {
+      const { error: runnerError } = await supabase
+        .from('runner_data')
+        .upsert({
+          version_id: versionId,
+          request_body: runnerData.requestBody || '{}',
+          response_body: runnerData.responseBody || ''
+        }, { onConflict: 'version_id' });
+      
+      if (runnerError) console.error('Error updating runner_data:', runnerError);
+    }
+    
+    // Get updated version
+    const { data: updatedVersion, error: fetchError } = await supabase
+      .from('versions')
+      .select('*')
+      .eq('id', versionId)
+      .single();
+    
+    if (fetchError) {
+      throw fetchError;
+    }
+    
+    res.json({
+      message: 'Version updated successfully',
+      version: updatedVersion
+    });
+  } catch (error) {
+    console.error('Error updating version:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

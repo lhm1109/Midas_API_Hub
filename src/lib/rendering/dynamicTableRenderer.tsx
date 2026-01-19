@@ -211,7 +211,9 @@ function renderParameterRow(
       <td className="p-3 text-zinc-400">{param.type}</td>
       
       {/* Default */}
-      <td className="p-3 text-zinc-500 font-mono text-xs">{param.default}</td>
+      <td className="p-3 text-zinc-500 font-mono text-xs">
+        {param.default !== undefined && param.default !== null ? String(param.default) : '-'}
+      </td>
       
       {/* Required */}
       <td className="p-3">
@@ -251,7 +253,9 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
         <code className={`font-mono ${nestedStyle.keyColor || 'text-amber-400'}`}>"{child.name}"</code>
       </td>
       <td className="p-3 text-zinc-400">{child.type}</td>
-      <td className="p-3 text-zinc-500 font-mono text-xs">{child.default}</td>
+      <td className="p-3 text-zinc-500 font-mono text-xs">
+        {child.default !== undefined && child.default !== null ? String(child.default) : '-'}
+      </td>
       <td className="p-3">
         {renderRequired(child.required, definition)}
       </td>
@@ -284,11 +288,17 @@ function renderRequired(required: string, definition: TableDefinition) {
   const requiredConfig = definition.rowRendering?.required || {};
   
   if (requiredConfig.simpleFormat) {
-    // Simple format: "Required" | "Optional"
+    // Simple format: "Required" | "Optional" | "Conditional"
     if (required === 'Required') {
       return (
         <span className={requiredConfig.badge?.required?.className || 'px-2 py-0.5 text-xs rounded bg-red-600/20 text-red-400'}>
           {requiredConfig.badge?.required?.text || 'Required'}
+        </span>
+      );
+    } else if (required === 'Conditional' || required === 'conditional') {
+      return (
+        <span className={requiredConfig.badge?.conditional?.className || 'px-2 py-0.5 text-xs rounded bg-yellow-600/20 text-yellow-400'}>
+          {requiredConfig.badge?.conditional?.text || 'Conditional'}
         </span>
       );
     } else {

@@ -43,6 +43,7 @@ export function EndpointDialog({
   const [path, setPath] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<string>('');
+  const [statusMessage, setStatusMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const isEditMode = !!endpoint;
@@ -80,6 +81,7 @@ export function EndpointDialog({
         setPath(endpoint.path);
         setDescription('');
         setStatus(endpoint.status || '');
+        setStatusMessage((endpoint as any).status_message || '');
       } else {
         // 추가 모드
         setName('');
@@ -87,6 +89,7 @@ export function EndpointDialog({
         setPath('');
         setDescription('');
         setStatus('');
+        setStatusMessage('');
       }
     }
   }, [open, endpoint]);
@@ -117,6 +120,7 @@ export function EndpointDialog({
         group_id: fullGroupId,
         description: description.trim() || null,
         status: status || null,
+        status_message: statusMessage.trim() || null,
       };
 
       if (isEditMode) {

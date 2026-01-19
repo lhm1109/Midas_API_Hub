@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
+import Editor from '@monaco-editor/react';
 
 interface ManualTabProps {
   endpoint: ApiEndpoint;
@@ -680,39 +681,40 @@ function toggleAccordion(button) {
               </p>
             </div>
             
-            <ScrollArea className="flex-1 h-0">
-              <div className="relative h-full">
-                {/* 🎯 Line numbers */}
-                <div className="absolute left-0 top-0 bottom-0 w-12 bg-zinc-900 border-r border-zinc-800 text-right text-xs text-zinc-600 select-none overflow-hidden">
-                  {(editableHTML || htmlContent).split('\n').map((_, idx) => (
-                    <div key={idx} className="px-2 leading-6">
-                      {idx + 1}
-                    </div>
-                  ))}
+            {/* 🎯 Monaco Editor - VSCode Style */}
+            <div className="flex-1 relative">
+              <Editor
+                height="100%"
+                defaultLanguage="html"
+                theme="vs-dark"
+                value={editableHTML || htmlContent}
+                onChange={(value) => handleHTMLChange(value || '')}
+                options={{
+                  minimap: { enabled: true },
+                  fontSize: 13,
+                  lineNumbers: 'on',
+                  scrollBeyondLastLine: false,
+                  wordWrap: 'on',
+                  automaticLayout: true,
+                  tabSize: 2,
+                  formatOnPaste: true,
+                  formatOnType: true,
+                  scrollbar: {
+                    vertical: 'auto',
+                    horizontal: 'auto',
+                    verticalScrollbarSize: 10,
+                    horizontalScrollbarSize: 10,
+                  },
+                }}
+              />
+              
+              {/* 🎯 Modified Indicator */}
+              {isHTMLModified && (
+                <div className="absolute top-2 right-2 px-2 py-1 bg-orange-600/20 border border-orange-600/50 rounded text-xs text-orange-400 z-10">
+                  Modified
                 </div>
-                
-                {/* 🎯 Editable Code Area */}
-                <textarea
-                  className="w-full h-full bg-zinc-950 text-zinc-100 font-mono text-sm leading-6 pl-14 pr-4 py-4 resize-none border-none outline-none focus:ring-2 focus:ring-blue-500/30 rounded-none"
-                  style={{
-                    minHeight: '800px',
-                    fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
-                    tabSize: 2,
-                  }}
-                  value={editableHTML || htmlContent}
-                  onChange={(e) => handleHTMLChange(e.target.value)}
-                  spellCheck={false}
-                  placeholder="HTML code will appear here..."
-                />
-                
-                {/* 🎯 Modified Indicator */}
-                {isHTMLModified && (
-                  <div className="absolute top-2 right-2 px-2 py-1 bg-orange-600/20 border border-orange-600/50 rounded text-xs text-orange-400">
-                    Modified
-                  </div>
-                )}
-              </div>
-            </ScrollArea>
+              )}
+            </div>
             
             {/* 🎯 Footer with Save Button - Compact */}
             <div className="border-t border-zinc-800 bg-zinc-900 px-3 py-2 flex items-center justify-between flex-shrink-0">

@@ -150,22 +150,18 @@ export function SchemaView() {
     }
   };
 
-  // 제품의 스키마 세트 변경
-  const handleUpdateProductSchema = async (productId: string, psdSet: string) => {
+  // 제품의 PSD 설정 변경 (로컬 저장만)
+  const handleUpdateProductPSD = (productId: string, psdSet: string, schemaType: 'original' | 'enhanced') => {
     try {
-      const result = await apiClient.updateProduct(productId, {
-        psd_set: psdSet,
-        schema_type: 'enhanced', // 기본값
-      });
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      alert('✅ 제품 PSD 세트가 변경되었습니다!');
+      // localStorage에만 저장 (애플리케이션별 설정)
+      setCustomPSDMapping(productId, psdSet, schemaType);
+      
+      // UI 업데이트를 위해 제품 목록 다시 가져오기
       fetchProducts();
+      
+      alert(`✅ ${psdSet}/${schemaType} 설정이 로컬에 저장되었습니다!`);
     } catch (error) {
-      alert(`❌ 변경 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(`❌ 설정 저장 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -384,29 +380,73 @@ export function SchemaView() {
                     <CardTitle className="text-base">{product.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-1">
-                      <Label className="text-xs text-zinc-400">
-                        스키마 세트 (완전한 YAML 묶음)
-                      </Label>
-                      <Select
-                        value={getPSDForProduct(product.id).psdSet}
-                        onValueChange={(value) => handleUpdateProductSchema(product.id, value)}
-                      >
-                        <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {schemaSets.map((set) => (
-                            <SelectItem key={set.id} value={set.id} className="text-xs">
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <Label className="text-xs text-zinc-400">
+                          PSD 세트 (Level 1)
+                        </Label>
+                        <Select
+                          value={getPSDForProduct(product.id).psdSet}
+                          onValueChange={(value) => handleUpdateProductPSD(
+                            product.id, 
+                            value, 
+                            getPSDForProduct(product.id).schemaType as 'original' | 'enhanced'
+                          )}
+                        >
+                          <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {schemaSets.map((set) => (
+                              <SelectItem key={set.id} value={set.id} className="text-xs">
+                                <div className="flex items-center gap-2">
+                                  <Package className="w-3 h-3 text-cyan-400" />
+                                  <span>{set.name}</span>
+                                  <span className="text-zinc-500">({set.fileCount || 0} 파일)</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <Label className="text-xs text-zinc-400">
+                          스키마 타입 (Level 2)
+                        </Label>
+                        <Select
+                          value={getPSDForProduct(product.id).schemaType}
+                          onValueChange={(value) => handleUpdateProductPSD(
+                            product.id, 
+                            getPSDForProduct(product.id).psdSet, 
+                            value as 'original' | 'enhanced'
+                          )}
+                        >
+                          <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="enhanced" className="text-xs">
                               <div className="flex items-center gap-2">
-                                <Package className="w-3 h-3 text-cyan-400" />
-                                <span>{set.name}</span>
-                                <span className="text-zinc-500">({set.fileCount || 0} 파일)</span>
+                                <FileText className="w-3 h-3 text-green-400" />
+                                <span>enhanced</span>
+                                <span className="text-zinc-500">(고급 기능)</span>
                               </div>
                             </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                            <SelectItem value="original" className="text-xs">
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-3 h-3 text-blue-400" />
+                                <span>original</span>
+                                <span className="text-zinc-500">(원본)</span>
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="text-[10px] text-zinc-500 pt-1">
+                        💾 로컬에만 저장 (애플리케이션별 설정)
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

@@ -23,9 +23,13 @@ import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/
 /**
  * Schema로부터 완전한 HTML 문서 생성 (YAML 기반)
  */
-export async function generateHTMLDocumentWithYAML(schema: EnhancedSchema): Promise<string> {
-  const template = await loadCachedDefinition('enhanced', 'html') as HTMLTemplateDefinition;
-  const sections = compileEnhancedSchema(schema);
+export async function generateHTMLDocumentWithYAML(
+  schema: EnhancedSchema,
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
+): Promise<string> {
+  const template = await loadCachedDefinition(schemaType as 'original' | 'enhanced', 'html') as HTMLTemplateDefinition;
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTML(sections, template);
   
   return `
@@ -177,8 +181,9 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
   if (field.enum && field.enum.length > 0) {
     parts.push('<strong>Enum Values:</strong>');
     parts.push('<ul>');
-    field.enum.forEach(val => {
-      const label = field.enumLabels?.[String(val)] || val;
+    field.enum.forEach((val: any) => {
+      const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
+      const label = enumLabels[String(val)] || val;
       parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
     });
     parts.push('</ul>');
@@ -190,8 +195,9 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
     for (const [type, values] of Object.entries(field.enumByType)) {
       parts.push(`<p><em>${escapeHtml(type)}:</em></p>`);
       parts.push('<ul>');
-      values.forEach(val => {
-        const label = field.enumLabelsByType?.[type]?.[String(val)] || val;
+      (values as any[]).forEach((val: any) => {
+        const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || {};
+        const label = enumLabelsByType?.[type]?.[String(val)] || val;
         parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
       });
       parts.push('</ul>');
@@ -334,6 +340,11 @@ function generateCSSFromYAML(template: HTMLTemplateDefinition): string {
         color: ${css.badgeOptionalColor || '#757575'};
       }
       
+      .badge-conditional {
+        background-color: ${css.badgeConditionalBg || '#fff9c4'};
+        color: ${css.badgeConditionalColor || '#f57f17'};
+      }
+      
       /* Code */
       code {
         background-color: ${css.codeBg || '#f5f5f5'};
@@ -454,8 +465,12 @@ function escapeHtml(text: string): string {
  * Schema로부터 완전한 HTML 문서 생성 (동기 버전, 하드코딩)
  * @deprecated Use generateHTMLDocumentWithYAML instead
  */
-export function generateHTMLDocument(schema: EnhancedSchema): string {
-  const sections = compileEnhancedSchema(schema);
+export function generateHTMLDocument(
+  schema: EnhancedSchema, 
+  psdSet: string = 'civil_gen_definition', 
+  schemaType: string = 'enhanced'
+): string {
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTMLLegacy(sections);
   
   return `
@@ -483,10 +498,44 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
   
   let rowNumber = 1;
   for (const section of sections) {
-    html += generateSectionHeaderLegacy(section.name);
+    
+    // 🔥 조건별로 필드 그룹화
+    const fieldsWithoutCondition: EnhancedField[] = [];
+    const fieldsByCondition: Map<string, EnhancedField[]> = new Map();
     
     for (const field of section.fields) {
-      html += generateFieldRowLegacy(field, rowNumber++);
+      const visibleWhen = (field as any).ui?.visibleWhen || (field as any)['x-ui']?.visibleWhen;
+      
+      if (visibleWhen && Object.keys(visibleWhen).length > 0) {
+        // 조건 키 생성 (예: "iMETHOD: 1" 또는 "iMETHOD: [2,4]")
+        const conditionKey = Object.entries(visibleWhen)
+          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
+          .join(', ');
+        
+        if (!fieldsByCondition.has(conditionKey)) {
+          fieldsByCondition.set(conditionKey, []);
+        }
+        fieldsByCondition.get(conditionKey)!.push(field);
+      } else {
+        fieldsWithoutCondition.push(field);
+      }
+    }
+    
+    // 🔥 조건 없는 필드 먼저 렌더링
+    if (fieldsWithoutCondition.length > 0) {
+      html += generateSectionHeaderLegacy(section.name);
+      for (const field of fieldsWithoutCondition) {
+        html += generateFieldRowLegacy(field, rowNumber++);
+      }
+    }
+    
+    // 🔥 조건별 필드 렌더링
+    for (const [conditionKey, fields] of fieldsByCondition.entries()) {
+      const conditionLabel = `${section.name} (When "${conditionKey.split(':')[0].trim()}" is ${conditionKey.split(':')[1].trim()})`;
+      html += generateSectionHeaderLegacy(conditionLabel);
+      for (const field of fields) {
+        html += generateFieldRowLegacy(field, rowNumber++);
+      }
     }
   }
   
@@ -530,7 +579,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
       <td style="text-align: center;"><code>"${escapeHtml(field.key)}"</code></td>
       <td style="text-align: center;">${typeDisplay}</td>
       <td style="text-align: center;">${defaultValue}</td>
-      <td>${requiredHTML}</td>
+      <td style="min-width: 120px;">${requiredHTML}</td>
     </tr>
   `;
 }
@@ -538,15 +587,18 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
 function generateFieldDescriptionLegacy(field: EnhancedField): string {
   const parts: string[] = [];
   
-  if (field.ui?.label) {
-    parts.push(`<strong>${escapeHtml(field.ui.label)}</strong>`);
+  // 🔥 우선순위: x-ui.label > description > key
+  const displayLabel = field.ui?.label || field.description || field.key;
+  if (displayLabel) {
+    parts.push(`<strong>${escapeHtml(displayLabel)}</strong>`);
   }
   
   if (field.enum && field.enum.length > 0) {
     parts.push('<strong>Enum Values:</strong>');
     parts.push('<ul>');
-    field.enum.forEach(val => {
-      const label = field.enumLabels?.[String(val)] || val;
+    field.enum.forEach((val: any) => {
+      const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
+      const label = enumLabels[String(val)] || val;
       parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
     });
     parts.push('</ul>');
@@ -557,8 +609,9 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
     for (const [type, values] of Object.entries(field.enumByType)) {
       parts.push(`<p><em>${escapeHtml(type)}:</em></p>`);
       parts.push('<ul>');
-      values.forEach(val => {
-        const label = field.enumLabelsByType?.[type]?.[String(val)] || val;
+      (values as any[]).forEach((val: any) => {
+        const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || {};
+        const label = enumLabelsByType?.[type]?.[String(val)] || val;
         parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
       });
       parts.push('</ul>');
@@ -592,10 +645,22 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
 }
 
 function generateRequiredCellLegacy(field: EnhancedField): string {
+  // 🔥 field.required가 undefined이거나 빈 객체인 경우 처리
+  if (!field.required || Object.keys(field.required).length === 0) {
+    return '<span class="badge badge-optional">Optional</span>';
+  }
+  
   const requiredStatuses = Object.values(field.required);
   const hasRequired = requiredStatuses.some(s => s === 'required');
   const hasOptional = requiredStatuses.some(s => s === 'optional');
+  const hasConditional = requiredStatuses.some(s => s === 'conditional');
   
+  // 🔥 1. Conditional 상태 처리
+  if (hasConditional) {
+    return '<span class="badge badge-conditional">Conditional</span>';
+  }
+  
+  // 🔥 2. Required/Optional 혼재 (타입별로 다름)
   if (hasRequired && hasOptional) {
     const grouped: Record<string, string[]> = { required: [], optional: [] };
     for (const [type, status] of Object.entries(field.required)) {
@@ -605,17 +670,21 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
     
     const parts: string[] = [];
     if (grouped.required.length > 0) {
-      parts.push(`<p><strong class="required">Required:</strong> ${grouped.required.join(', ')}</p>`);
+      parts.push(`<p style="margin: 2px 0;"><strong class="required">Required:</strong> ${grouped.required.join(', ')}</p>`);
     }
     if (grouped.optional.length > 0) {
-      parts.push(`<p><strong class="optional">Optional:</strong> ${grouped.optional.join(', ')}</p>`);
+      parts.push(`<p style="margin: 2px 0;"><strong class="optional">Optional:</strong> ${grouped.optional.join(', ')}</p>`);
     }
     return parts.join('\n');
-  } else if (hasRequired) {
+  } 
+  
+  // 🔥 3. Required
+  if (hasRequired) {
     return '<span class="badge badge-required">Required</span>';
-  } else {
-    return '<span class="badge badge-optional">Optional</span>';
-  }
+  } 
+  
+  // 🔥 4. Optional (기본값)
+  return '<span class="badge badge-optional">Optional</span>';
 }
 
 function generateCSSLegacy(): string {
@@ -648,6 +717,11 @@ function generateCSSLegacy(): string {
         background-color: #f5f5f5;
         font-weight: bold;
         color: #333;
+      }
+      
+      thead th:last-child,
+      tbody td:last-child {
+        min-width: 150px;
       }
       
       tbody tr:nth-child(even) {
@@ -683,6 +757,11 @@ function generateCSSLegacy(): string {
       .badge-optional {
         background-color: #f5f5f5;
         color: #757575;
+      }
+      
+      .badge-conditional {
+        background-color: #fff9c4;
+        color: #f57f17;
       }
       
       code {

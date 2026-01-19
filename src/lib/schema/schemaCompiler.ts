@@ -98,18 +98,50 @@ export interface EnhancedField {
   description?: string;
   default?: any;
   required: RequiredStatus;
-  // 🔥 하드코딩 제거: 모든 확장 필드를 동적으로 저장
-  [key: string]: any;  // x-* 필드들을 동적으로 저장
   
   // 필수 필드들만 명시
   section: string;
   validationLayers: ValidationLayer[];
   children?: EnhancedField[];
+  
+  // 🎯 NEW: 런타임 트리거 필드 (visibleWhen, x-required-when에서 자동 추출)
+  runtimeTriggers?: string[];
+  
+  // 🔥 하드코딩 제거: 모든 확장 필드를 동적으로 저장
+  [key: string]: any;  // x-* 필드들을 동적으로 저장
 }
 
-export type RequiredStatus = Record<string, 'required' | 'optional' | 'n/a'>;
+export type RequiredStatus = Record<string, 'required' | 'optional' | 'n/a' | 'conditional'>;
 
 export type ValidationLayer = 'STD' | 'APP';
+
+/**
+ * 🎯 VariantAxis: 스키마의 조건부 분기를 결정하는 축
+ * 
+ * 예시:
+ * - SKEW 엔티티: { field: 'iMETHOD', values: [1,2,3,4] }
+ * - ELEM 엔티티: { field: 'TYPE', values: ['BEAM','TRUSS',...] }
+ * - LOAD 엔티티: { field: 'LOAD_TYPE', values: [1,2,3] }
+ * 
+ * 자동 추론 규칙:
+ * 1. enum을 가진 필드
+ * 2. 다른 필드들의 visibleWhen/x-required-when에서 반복 사용됨
+ * 3. allOf.if 조건에 등장
+ */
+export interface VariantAxis {
+  field: string;
+  type: 'enum' | 'integer' | 'string' | 'number';
+  values: any[];
+  labels?: Record<string, string>; // x-enum-labels
+}
+
+/**
+ * 🎯 Compiled Schema Context: 스키마 컴파일 결과 + 메타데이터
+ */
+export interface CompiledSchemaContext {
+  sections: SectionGroup[];
+  variantAxes: VariantAxis[];
+}
 
 export interface SectionGroup {
   name: string;
@@ -143,9 +175,11 @@ export function compileSchema(
   const cached = schemaCompileCache.get(cacheKey);
   
   if (cached) {
-    console.log('✅ Using cached schema compilation');
+    console.log('✅ Using cached schema compilation (key:', cacheKey.substring(0, 80) + '...)');
     return cached;
   }
+  
+  console.log('🔄 Compiling schema (cache miss)');
   // 🔥 YAML 기반 스키마 구조 패턴 감지 및 변환
   const transformedSchema = applySchemaStructurePatterns(schema, psdSet, schemaType);
   
@@ -190,6 +224,142 @@ export const compileEnhancedSchema = (
 ): SectionGroup[] => {
   return compileSchema(schema, psdSet, schemaType);
 };
+
+/**
+ * 🎯 Schema를 컴파일하고 VariantAxes를 자동 추론하여 CompiledSchemaContext 반환
+ * 
+ * @param schema - JSON Schema
+ * @param psdSet - PSD 세트 (Level 1)
+ * @param schemaType - 스키마 타입 (Level 2)
+ * @returns CompiledSchemaContext (sections + variantAxes)
+ */
+export function compileSchemaWithContext(
+  schema: EnhancedSchema,
+  psdSet: string,
+  schemaType: string
+): CompiledSchemaContext {
+  const sections = compileSchema(schema, psdSet, schemaType);
+  const variantAxes = inferVariantAxes(schema, sections);
+  
+  return {
+    sections,
+    variantAxes,
+  };
+}
+
+/**
+ * 🎯 VariantAxis 자동 추론
+ * 
+ * 규칙:
+ * 1. enum을 가진 필드
+ * 2. 다른 필드들의 visibleWhen/x-required-when에서 반복 사용됨
+ * 3. allOf.if 조건에 등장
+ * 
+ * @param schema - JSON Schema
+ * @param sections - 컴파일된 섹션들
+ * @returns VariantAxis 배열
+ */
+function inferVariantAxes(
+  schema: EnhancedSchema,
+  sections: SectionGroup[]
+): VariantAxis[] {
+  const axes: VariantAxis[] = [];
+  const candidateFields = new Map<string, { type: string; values: any[]; labels?: Record<string, string>; refCount: number }>();
+  
+  // 🔥 Step 1: enum을 가진 필드를 후보로 수집
+  for (const section of sections) {
+    for (const field of section.fields) {
+      if (field.enum && Array.isArray(field.enum) && field.enum.length > 0) {
+        candidateFields.set(field.key, {
+          type: field.type,
+          values: field.enum,
+          labels: (field as any)['x-enum-labels'],
+          refCount: 0,
+        });
+      }
+    }
+  }
+  
+  // 🔥 Step 2: visibleWhen / x-required-when에서 사용 횟수 카운트
+  for (const section of sections) {
+    for (const field of section.fields) {
+      // visibleWhen 확인
+      const visibleWhen = field.ui?.visibleWhen;
+      if (visibleWhen && typeof visibleWhen === 'object') {
+        for (const key of Object.keys(visibleWhen)) {
+          if (candidateFields.has(key)) {
+            const candidate = candidateFields.get(key)!;
+            candidate.refCount++;
+          }
+        }
+      }
+      
+      // x-required-when 확인
+      const requiredWhen = (field as any)['x-required-when'];
+      if (requiredWhen && typeof requiredWhen === 'object') {
+        for (const key of Object.keys(requiredWhen)) {
+          if (candidateFields.has(key)) {
+            const candidate = candidateFields.get(key)!;
+            candidate.refCount++;
+          }
+        }
+      }
+      
+      // 중첩 필드도 확인
+      if (field.children && Array.isArray(field.children)) {
+        for (const child of field.children) {
+          const childVisibleWhen = (child as any).ui?.visibleWhen;
+          if (childVisibleWhen && typeof childVisibleWhen === 'object') {
+            for (const key of Object.keys(childVisibleWhen)) {
+              if (candidateFields.has(key)) {
+                const candidate = candidateFields.get(key)!;
+                candidate.refCount++;
+              }
+            }
+          }
+          
+          const childRequiredWhen = (child as any)['x-required-when'];
+          if (childRequiredWhen && typeof childRequiredWhen === 'object') {
+            for (const key of Object.keys(childRequiredWhen)) {
+              if (candidateFields.has(key)) {
+                const candidate = candidateFields.get(key)!;
+                candidate.refCount++;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // 🔥 Step 3: allOf.if 조건 확인
+  if (schema.allOf && Array.isArray(schema.allOf)) {
+    for (const rule of schema.allOf) {
+      if (rule.if?.properties) {
+        for (const key of Object.keys(rule.if.properties)) {
+          if (candidateFields.has(key)) {
+            const candidate = candidateFields.get(key)!;
+            candidate.refCount += 2; // allOf는 가중치 높게
+          }
+        }
+      }
+    }
+  }
+  
+  // 🔥 Step 4: refCount > 0인 필드를 VariantAxis로 추가
+  for (const [field, candidate] of candidateFields.entries()) {
+    if (candidate.refCount > 0) {
+      axes.push({
+        field,
+        type: candidate.type === 'integer' || candidate.type === 'number' ? candidate.type : 'enum',
+        values: candidate.values,
+        labels: candidate.labels,
+      });
+    }
+  }
+  
+  return axes;
+}
 
 // ============================================================================
 // Phase 0: Schema Structure Pattern Detection (YAML-based)
@@ -681,17 +851,56 @@ function extractTypes(schema: EnhancedSchema): string[] {
 }
 
 /**
+ * 🎯 Helper: 필드에서 런타임 트리거 필드 추출
+ * visibleWhen, x-required-when에서 사용되는 필드명들을 추출
+ */
+function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
+  const triggers = new Set<string>();
+  
+  // 1. x-ui.visibleWhen에서 추출
+  const xUi = (prop as any)['x-ui'];
+  if (xUi?.visibleWhen && typeof xUi.visibleWhen === 'object') {
+    for (const key of Object.keys(xUi.visibleWhen)) {
+      triggers.add(key);
+    }
+  }
+  
+  // 2. x-required-when에서 추출
+  const xRequiredWhen = (prop as any)['x-required-when'];
+  if (xRequiredWhen && typeof xRequiredWhen === 'object') {
+    for (const key of Object.keys(xRequiredWhen)) {
+      triggers.add(key);
+    }
+  }
+  
+  return Array.from(triggers);
+}
+
+/**
  * 모든 필드 추출 (중첩 객체 포함)
  */
 function extractFields(schema: EnhancedSchema): EnhancedField[] {
   const fields: EnhancedField[] = [];
   
-  // 🔥 schema.properties가 없으면 빈 배열 반환
-  if (!schema || !schema.properties) {
+  // 🔥 $defs/entity가 있으면 entity의 properties를 사용 (inject-entity-collection 변환 후)
+  const schemaAny = schema as any;
+  const entityDef = schemaAny.$defs?.entity;
+  const propsSource: Record<string, EnhancedProperty> = (entityDef?.properties || schema.properties) as any;
+  
+  console.log('🔍 extractFields - has $defs.entity:', !!entityDef);
+  console.log('🔍 extractFields - propsSource keys:', propsSource ? Object.keys(propsSource) : 'none');
+  
+  // 🔥 properties가 없으면 빈 배열 반환
+  if (!propsSource) {
     return [];
   }
   
-  for (const [key, prop] of Object.entries(schema.properties)) {
+  // 🎯 allOf → x-required-when 정규화 맵 생성
+  const conditionalRequiredMap = normalizeConditionalRequired(schema);
+  
+  for (const [key, prop] of Object.entries(propsSource)) {
+    console.log(`🔍 extractFields - ${key}:`, { type: prop.type, default: prop.default });
+    
     // 🔥 기본 필드 구조
     const field: EnhancedField = {
       key,
@@ -701,6 +910,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       required: {},
       section: '',
       validationLayers: [],
+      runtimeTriggers: extractRuntimeTriggers(prop), // 🎯 NEW: 트리거 필드 자동 추출
     };
     
     // 🔥 동적으로 모든 속성 복사 (x-*, enum, items 등)
@@ -721,6 +931,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       else {
         field[propKey] = propValue;
       }
+    }
+    
+    // 🎯 allOf에서 추출한 조건부 required 주입
+    if (conditionalRequiredMap[key]) {
+      field['x-required-when'] = {
+        ...(field['x-required-when'] ?? {}),
+        ...conditionalRequiredMap[key],
+      };
+      console.log(`✅ Injected x-required-when for ${key}:`, field['x-required-when']);
     }
     
     // 🔥 Object 타입 - 중첩 필드 추출
@@ -822,12 +1041,83 @@ function extractConditionalRequired(schema: EnhancedSchema): ConditionalRule[] {
   }
   
   // 🔥 allOf 항목 중 if-then 구조를 가진 것만 필터링
-  return schema.allOf.filter(rule => 
+  const rules = schema.allOf.filter(rule => 
     rule && 
     typeof rule === 'object' && 
     'if' in rule && 
     'then' in rule
   );
+  
+  console.log('🔍 extractConditionalRequired:', {
+    hasAllOf: !!schema.allOf,
+    allOfLength: schema.allOf?.length,
+    rulesExtracted: rules.length,
+    rules: rules.map(r => ({
+      ifCondition: r.if,
+      thenRequired: r.then?.required
+    }))
+  });
+  
+  return rules;
+}
+
+/**
+ * 🎯 allOf → x-required-when 정규화
+ * 
+ * JSON Schema의 allOf + if/then required를 x-required-when 형태로 변환
+ * 
+ * 예시:
+ * allOf: [{ 
+ *   if: { properties: { iMETHOD: { const: 4 } } },
+ *   then: { required: ["REFTYPE", "G_DIR"] }
+ * }]
+ * 
+ * →
+ * {
+ *   "REFTYPE": { "iMETHOD": 4 },
+ *   "G_DIR": { "iMETHOD": 4 }
+ * }
+ * 
+ * @param schema - JSON Schema
+ * @returns 필드명 → 조건 맵
+ */
+function normalizeConditionalRequired(
+  schema: EnhancedSchema
+): Record<string, Record<string, any>> {
+  const map: Record<string, Record<string, any>> = {};
+  
+  if (!schema.allOf || !Array.isArray(schema.allOf)) {
+    return map;
+  }
+  
+  for (const rule of schema.allOf) {
+    const condProps = rule.if?.properties;
+    const requiredFields = rule.then?.required;
+    
+    if (!condProps || !requiredFields || !Array.isArray(requiredFields)) {
+      continue;
+    }
+    
+    // 🔥 조건 축 필드 추출 (예: iMETHOD, TYPE, MODE 등)
+    // allOf의 if.properties에서 첫 번째 조건을 가져옴
+    const entries = Object.entries(condProps);
+    if (entries.length === 0) continue;
+    
+    const [axisField, axisCond] = entries[0];
+    const axisValue = (axisCond as any).const ?? (axisCond as any).enum;
+    
+    // 🔥 각 required 필드에 x-required-when 주입
+    for (const fieldName of requiredFields) {
+      if (!map[fieldName]) {
+        map[fieldName] = {};
+      }
+      map[fieldName][axisField] = axisValue;
+    }
+  }
+  
+  console.log('🎯 normalizeConditionalRequired:', map);
+  
+  return map;
 }
 
 // ============================================================================
@@ -845,9 +1135,28 @@ function calculateRequiredStatus(
 ): RequiredStatus {
   const status: RequiredStatus = {};
   
-  // 🔥 TYPE 필드가 없는 스키마 (e.g., BeamForceTable)
-  // → 타입별 조건 없이 단순히 required 배열만 확인
+  // 🔥 TYPE 필드가 없는 스키마 (e.g., SKEW with iMETHOD)
+  // → 트리거 필드 기반 조건부 required 확인
   if (types.length === 0) {
+    console.log(`🔍 calculateRequiredStatus for ${field.key}:`, {
+      types: types,
+      conditionalRulesCount: conditionalRules.length,
+      baseRequired: baseRequired,
+      fieldKey: field.key,
+      hasXRequiredWhen: !!(field as any)['x-required-when']
+    });
+    
+    // ✅ Step 1: x-required-when 확인 (allOf → x-required-when 정규화 완료)
+    // 이제 allOf의 조건도 x-required-when으로 변환되어 있음
+    const xRequiredWhen = (field as any)['x-required-when'];
+    if (xRequiredWhen && typeof xRequiredWhen === 'object') {
+      // x-required-when이 있으면 조건부 required
+      // 예: { "iMETHOD": 4 } → iMETHOD가 4일 때만 required
+      console.log(`✅ ${field.key} is conditionally required via x-required-when:`, xRequiredWhen);
+      return { '*': 'conditional' };
+    }
+    
+    // ✅ Step 2: 기본 required 체크
     if (baseRequired.includes(field.key)) {
       return { '*': 'required' };
     } else {
@@ -863,23 +1172,58 @@ function calculateRequiredStatus(
     return status;
   }
   
-  // 2. For each TYPE, check conditions
-  types.forEach(type => {
-    status[type] = 'optional'; // default
-    
-    // Check conditional required
-    for (const rule of conditionalRules) {
-      // 🔥 rule.then과 rule.then.required가 존재하는지 확인
-      if (matchesCondition(rule.if?.properties, type) && 
-          rule.then?.required && 
-          Array.isArray(rule.then.required) &&
-          rule.then.required.includes(field.key)) {
-        status[type] = 'required';
-        break;
+  // 2. x-required-when 체크 (개별 필드 레벨, TYPE이 있는 경우)
+  const xRequiredWhen = (field as any)['x-required-when'];
+  if (xRequiredWhen && typeof xRequiredWhen === 'object') {
+    // x-required-when의 조건을 확인
+    // 예: { "TYPE": "1" } → TYPE이 "1"일 때만 required
+    types.forEach(type => {
+      status[type] = 'optional'; // 기본값
+      
+      // TYPE 조건 확인
+      if (xRequiredWhen.TYPE) {
+        const requiredForTypes = Array.isArray(xRequiredWhen.TYPE) 
+          ? xRequiredWhen.TYPE 
+          : [xRequiredWhen.TYPE];
+        
+        if (requiredForTypes.includes(type)) {
+          status[type] = 'required';
+        }
       }
-    }
+    });
     
-    // Check visibleWhen (determines N/A)
+    // 적어도 하나의 TYPE에서 required이면 conditional로 표시
+    const hasRequired = Object.values(status).some(s => s === 'required');
+    const hasOptional = Object.values(status).some(s => s === 'optional');
+    if (hasRequired && hasOptional) {
+      // 일부 TYPE에서만 required → 모든 TYPE을 conditional로 변경
+      types.forEach(type => {
+        if (status[type] !== 'n/a') {
+          status[type] = 'conditional';
+        }
+      });
+    }
+  } else {
+    // 3. For each TYPE, check allOf conditions (x-required-when이 없는 경우)
+    types.forEach(type => {
+      status[type] = 'optional'; // default
+      
+      // Check conditional required from allOf
+      for (const rule of conditionalRules) {
+        // 🔥 rule.then과 rule.then.required가 존재하는지 확인
+        if (matchesCondition(rule.if?.properties, type) && 
+            rule.then?.required && 
+            Array.isArray(rule.then.required) &&
+            rule.then.required.includes(field.key)) {
+          status[type] = 'required';
+          break;
+        }
+      }
+    });
+  }
+  
+  // 4. Check visibleWhen (determines N/A)
+  types.forEach(type => {
     if (field.ui?.visibleWhen) {
       if (!isVisible(field.ui.visibleWhen, type)) {
         status[type] = 'n/a';
@@ -893,13 +1237,38 @@ function calculateRequiredStatus(
 /**
  * 조건이 특정 TYPE과 매칭되는지 확인
  */
+/**
+ * 🎯 동적 조건 매칭
+ * 
+ * TYPE뿐만 아니라 iMETHOD, MODE, LOAD_TYPE 등 모든 VariantAxis 지원
+ * 
+ * @param condition - 조건 객체 (예: { TYPE: { const: "1" } } 또는 { iMETHOD: { const: 4 } })
+ * @param axisValue - 비교할 값 (예: "1", 4)
+ * @returns 조건이 일치하면 true
+ */
 function matchesCondition(
-  condition: Record<string, { const?: string; enum?: string[] }> | undefined,
-  type: string
+  condition: Record<string, { const?: any; enum?: any[] }> | undefined,
+  axisValue: string | number
 ): boolean {
   if (!condition) return false;
-  if (condition.TYPE?.const === type) return true;
-  if (condition.TYPE?.enum?.includes(type)) return true;
+  
+  // 🔥 조건의 첫 번째 속성을 동적으로 가져옴 (TYPE, iMETHOD, MODE 등)
+  const entries = Object.entries(condition);
+  if (entries.length === 0) return false;
+  
+  const [_axisField, axisCond] = entries[0];
+  
+  // const 값과 비교
+  if (axisCond.const !== undefined) {
+    // 타입 정규화 (문자열 "4" vs 숫자 4)
+    return String(axisCond.const) === String(axisValue);
+  }
+  
+  // enum 배열과 비교
+  if (axisCond.enum && Array.isArray(axisCond.enum)) {
+    return axisCond.enum.some(v => String(v) === String(axisValue));
+  }
+  
   return false;
 }
 

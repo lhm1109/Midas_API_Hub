@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import apiClient from '@/lib/api-client';
-import type { Version, ManualData, SpecData, BuilderData, RunnerData } from '@/types';
+import type { Version, ManualData, SpecData, BuilderData, RunnerData, ApiEndpoint } from '@/types';
 
 export interface AppState {
   currentTab: 'version' | 'manual' | 'spec' | 'builder' | 'runner';
@@ -231,15 +231,20 @@ export const useAppStore = create<AppState>((set, get) => ({
         throw new Error('Server returned no data');
       }
       
-      // 성공하면 store 업데이트
+      // 성공하면 store 업데이트 (🔥 specData, manualData 등도 유지)
       set((state) => ({
         versions: state.versions.map((v) =>
           v.id === currentVersionId ? updatedVersion : v
         ),
         hasUnsavedChanges: false,
+        // 🔥 중요: 저장 후에도 현재 편집 중인 데이터 유지
+        specData: state.specData,
+        manualData: state.manualData,
+        builderData: state.builderData,
+        runnerData: state.runnerData,
       }));
       
-      console.log('✅ Version saved successfully');
+      console.log('✅ Version saved successfully, specData preserved:', get().specData);
     } catch (error) {
       console.error('❌ Save version failed:', error);
       throw error;
@@ -299,9 +304,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   
   updateSpecData: (updates) => {
     set((state) => ({
-      specData: state.specData ? { ...state.specData, ...updates } : null,
+      // 🔥 specData가 null이어도 새 객체 생성
+      specData: state.specData ? { ...state.specData, ...updates } : { ...updates } as SpecData,
       hasUnsavedChanges: true,
     }));
+    console.log('✅ updateSpecData called, new specData:', get().specData);
   },
   
   // 🎯 **Builder 데이터 설정 및 업데이트**

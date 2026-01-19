@@ -1,20 +1,23 @@
 {
   "NODE": {
-    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "X": {
-        "description": "GLOBALX-POSITION",
-        "type": "number"
+        "type": "number",
+        "description": "Coordinates - x",
+        "default": 0
       },
       "Y": {
-        "description": "GLOBALY-POSITION",
-        "type": "number"
+        "type": "number",
+        "description": "Coordinates - y",
+        "default": 0
       },
       "Z": {
-        "description": "GLOBALZ-POSITION",
-        "type": "number"
+        "type": "number",
+        "description": "Coordinates - z",
+        "default": 0
       }
-    }
+    },
+    "additionalProperties": false
   }
 }

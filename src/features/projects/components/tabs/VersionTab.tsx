@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X } from 'lucide-react';
+import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X, Copy, Edit2, Check } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
@@ -37,6 +37,10 @@ export function VersionTab({ endpoint }: VersionTabProps) {
   const [attachments, setAttachments] = useState<Record<string, Attachment[]>>({});
   const [uploadingFiles, setUploadingFiles] = useState<Set<string>>(new Set());
   const [isCreatingVersion, setIsCreatingVersion] = useState(false);
+  const [editingChangeLogId, setEditingChangeLogId] = useState<string | null>(null);
+  const [editingChangeLogValue, setEditingChangeLogValue] = useState('');
+  const [editingVersionTitleId, setEditingVersionTitleId] = useState<string | null>(null);
+  const [editingVersionTitleValue, setEditingVersionTitleValue] = useState('');
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const importFileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -291,6 +295,139 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     }
   };
 
+  // Change Log 편집 시작
+  const handleStartEditChangeLog = (versionId: string, currentChangeLog: string) => {
+    setEditingChangeLogId(versionId);
+    setEditingChangeLogValue(currentChangeLog || '');
+  };
+
+  // Change Log 편집 취소
+  const handleCancelEditChangeLog = () => {
+    setEditingChangeLogId(null);
+    setEditingChangeLogValue('');
+  };
+
+  // Change Log 저장
+  const handleSaveChangeLog = async (versionId: string) => {
+    try {
+      const response = await fetch(`http://localhost:9527/api/versions/${versionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          changeLog: editingChangeLogValue.trim() || null
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update change log');
+      }
+
+      await fetchVersions(endpoint!.id);
+      toast.success('✅ Change log updated successfully');
+      setEditingChangeLogId(null);
+      setEditingChangeLogValue('');
+    } catch (error) {
+      toast.error(`❌ Failed to update change log: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  // 🎯 버전 제목 편집
+  const handleEditVersionTitle = (versionId: string, currentTitle: string) => {
+    setEditingVersionTitleId(versionId);
+    setEditingVersionTitleValue(currentTitle);
+  };
+
+  const handleCancelEditVersionTitle = () => {
+    setEditingVersionTitleId(null);
+    setEditingVersionTitleValue('');
+  };
+
+  const handleSaveVersionTitle = async (versionId: string) => {
+    if (!editingVersionTitleValue.trim()) {
+      toast.error('❌ Version title cannot be empty');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`http://localhost:9527/api/versions/${versionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          version: editingVersionTitleValue.trim()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update version title');
+      }
+
+      await fetchVersions(endpoint!.id);
+      toast.success('✅ Version title updated successfully');
+      setEditingVersionTitleId(null);
+      setEditingVersionTitleValue('');
+    } catch (error) {
+      toast.error(`❌ Failed to update version title: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  // 🎯 버전 복사
+  const handleCopyVersion = async (versionId: string) => {
+    try {
+      const version = versions.find(v => v.id === versionId);
+      if (!version || !endpoint?.id) {
+        toast.error('❌ Version not found');
+        return;
+      }
+
+      toast.info('⏳ Copying version...');
+
+      // 원본 버전 데이터 가져오기
+      const response = await fetch(`http://localhost:9527/api/versions/${versionId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch version data');
+      }
+      const versionData = await response.json();
+      
+      // 복사된 버전의 새 제목 생성
+      const newVersionTitle = `${version.version} (copy)`;
+      
+      // 새 버전 생성
+      await createVersion(endpoint.id, newVersionTitle, version.changeLog);
+      
+      // 방금 생성된 버전 찾기 (가장 최근 버전)
+      await fetchVersions(endpoint.id);
+      const updatedVersions = useAppStore.getState().versions;
+      const newVersion = updatedVersions
+        .filter(v => v.endpointId === endpoint.id)
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+      
+      if (newVersion) {
+        // 새 버전에 데이터 복사
+        const updateResponse = await fetch(`http://localhost:9527/api/versions/${newVersion.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonSchema: versionData.jsonSchema,
+            jsonSchemaOriginal: versionData.jsonSchemaOriginal,
+            jsonSchemaEnhanced: versionData.jsonSchemaEnhanced,
+            requestExample: versionData.requestExample,
+            responseExample: versionData.responseExample,
+            runnerData: versionData.runnerData,
+          })
+        });
+
+        if (!updateResponse.ok) {
+          throw new Error('Failed to copy version data');
+        }
+      }
+      
+      toast.success(`✅ Version copied: ${newVersionTitle}`);
+    } catch (error) {
+      toast.error(`❌ Failed to copy version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Failed to copy version:', error);
+    }
+  };
+
   // 🔥 Export 버전을 JSON 파일로 내보내기
   const handleExportVersion = async (versionId: string, versionName: string) => {
     try {
@@ -439,20 +576,102 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                            <GitBranch className="w-4 h-4 text-blue-400" />
-                            {version.version}
-                          </h3>
-                          {isCurrentVersion && (
-                            <span className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded-full">
-                              CURRENT
-                            </span>
-                          )}
-                        </div>
+                        {/* Version Title - Editable */}
+                        {editingVersionTitleId === version.id ? (
+                          <div className="flex items-center gap-2 mb-2">
+                            <GitBranch className="w-4 h-4 text-blue-400 flex-shrink-0 mt-1" />
+                            <Input
+                              value={editingVersionTitleValue}
+                              onChange={(e) => setEditingVersionTitleValue(e.target.value)}
+                              className="bg-zinc-800 border-zinc-700 text-white text-lg font-semibold h-8 px-2"
+                              autoFocus
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSaveVersionTitle(version.id);
+                                if (e.key === 'Escape') handleCancelEditVersionTitle();
+                              }}
+                            />
+                            <Button
+                              size="sm"
+                              onClick={() => handleSaveVersionTitle(version.id)}
+                              className="h-7 px-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
+                            >
+                              <Check className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleCancelEditVersionTitle}
+                              className="h-7 px-2 bg-zinc-900 border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                              <GitBranch className="w-4 h-4 text-blue-400" />
+                              {version.version}
+                            </h3>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleEditVersionTitle(version.id, version.version)}
+                              className="h-6 w-6 p-0 text-zinc-400 hover:text-blue-400 hover:bg-zinc-800"
+                            >
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
+                            {isCurrentVersion && (
+                              <span className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded-full">
+                                CURRENT
+                              </span>
+                            )}
+                          </div>
+                        )}
 
-                        {version.changeLog && (
-                          <p className="text-sm text-zinc-400 mb-3">📝 {version.changeLog}</p>
+                        {/* Change Log - Editable */}
+                        {editingChangeLogId === version.id ? (
+                          <div className="mb-3 space-y-2">
+                            <Textarea
+                              value={editingChangeLogValue}
+                              onChange={(e) => setEditingChangeLogValue(e.target.value)}
+                              className="bg-zinc-800 border-zinc-700 text-zinc-100 text-sm min-h-[60px]"
+                              placeholder="Describe what changed in this version..."
+                              autoFocus
+                            />
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() => handleSaveChangeLog(version.id)}
+                                className="h-7 text-xs bg-blue-600 hover:bg-blue-700 text-white border-0"
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={handleCancelEditChangeLog}
+                                className="h-7 text-xs bg-zinc-900 border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className="mb-3 group cursor-pointer"
+                            onClick={() => handleStartEditChangeLog(version.id, version.changeLog || '')}
+                          >
+                            {version.changeLog ? (
+                              <p className="text-sm text-zinc-400 group-hover:text-zinc-300 transition-colors">
+                                📝 {version.changeLog}
+                                <span className="ml-2 text-xs text-zinc-600 group-hover:text-zinc-500">✏️ Click to edit</span>
+                              </p>
+                            ) : (
+                              <p className="text-sm text-zinc-600 group-hover:text-zinc-500 transition-colors">
+                                📝 <span className="italic">No change log - Click to add</span>
+                              </p>
+                            )}
+                          </div>
                         )}
 
                         <div className="flex items-center gap-4 text-xs text-zinc-500">
@@ -554,10 +773,19 @@ export function VersionTab({ endpoint }: VersionTabProps) {
 
                       <div className="flex flex-col gap-2 ml-4">
                         <Button
+                          onClick={() => handleCopyVersion(version.id)}
+                          size="sm"
+                          variant="outline"
+                          className="bg-zinc-900 border-cyan-600 text-cyan-300 hover:bg-cyan-950 hover:text-cyan-200 hover:border-cyan-500"
+                        >
+                          <Copy className="w-3 h-3 mr-1" />
+                          Copy
+                        </Button>
+                        <Button
                           onClick={() => handleExportVersion(version.id, version.version)}
                           size="sm"
                           variant="outline"
-                          className="border-green-900 text-green-400 hover:bg-green-900/20"
+                          className="bg-zinc-900 border-green-600 text-green-300 hover:bg-green-950 hover:text-green-200 hover:border-green-500"
                         >
                           <Download className="w-3 h-3 mr-1" />
                           Export
@@ -566,7 +794,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                           <Button
                             onClick={() => handleLoadVersion(version.id)}
                             size="sm"
-                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                            className="bg-blue-600 hover:bg-blue-700 text-white border-0"
                           >
                             <PlayCircle className="w-3 h-3 mr-1" />
                             Load
@@ -576,7 +804,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                           onClick={() => handleDeleteVersion(version.id)}
                           size="sm"
                           variant="outline"
-                          className="border-red-900 text-red-400 hover:bg-red-900/20"
+                          className="bg-zinc-900 border-red-600 text-red-300 hover:bg-red-950 hover:text-red-200 hover:border-red-500"
                         >
                           <Trash2 className="w-3 h-3 mr-1" />
                           Delete

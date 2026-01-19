@@ -28,6 +28,7 @@ import {
   groupFieldsByCondition 
 } from '@/lib/schema/conditionExtractor';
 import { buildFieldDescription } from '@/lib/schema/descriptionBuilder';
+import { schemaCompileCache } from '@/lib/cache/schemaCache';
 
 interface SpecTabProps {
   endpoint: {
@@ -49,6 +50,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     fetchVersions,
     loadVersion,
     specData,
+    saveCurrentVersion,
   } = useAppStore();
   
   // 🔥 제품 ID로 PSD 설정 가져오기 (로컬 매핑)
@@ -68,24 +70,44 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   const [initializedSchemaTypes, setInitializedSchemaTypes] = useState<Set<string>>(new Set());
   
   // 🔥 Schema Registry로 활성 스키마 결정 (우선순위 정책 분리)
-  const fallbackSpec = apiSpecs[endpoint.id] || {
-    title: endpoint.name,
-    description: 'API endpoint specification',
-    parameters: [],
-    jsonSchema: {},
-  };
+  // 🔥 fallbackSpec을 useMemo로 감싸서 매 렌더링마다 새 객체 생성 방지
+  const fallbackSpec = useMemo(() => {
+    return apiSpecs[endpoint.id] || {
+      title: endpoint.name,
+      description: 'API endpoint specification',
+      parameters: [],
+      jsonSchema: {},
+    };
+  }, [endpoint.id, endpoint.name]);
   
   // 🎯 specData 상태 확인
   const hasSpecData = !!(specData?.jsonSchema);
   const isUsingFallback = !hasSpecData;
   
-  // specData와 fallback을 결합
-  const combinedSpecData = {
-    jsonSchema: specData?.jsonSchema || specData?.jsonSchemaOriginal || fallbackSpec.jsonSchema,
-    jsonSchemaOriginal: specData?.jsonSchemaOriginal || specData?.jsonSchema || fallbackSpec.jsonSchema,
-    jsonSchemaEnhanced: specData?.jsonSchemaEnhanced || fallbackSpec.jsonSchemaEnhanced,
-    savedSchema: (specData as any)?.savedSchema,
-  };
+  // specData와 fallback을 결합 (specData 변경 시 재계산)
+  const combinedSpecData = useMemo(() => {
+    // 문자열인 경우 파싱, 이미 객체인 경우 그대로 사용
+    const parseIfString = (value: any) => {
+      if (!value) return value;
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      }
+      return value;
+    };
+    
+    const result = {
+      jsonSchema: parseIfString(specData?.jsonSchema) || parseIfString(specData?.jsonSchemaOriginal) || fallbackSpec.jsonSchema,
+      jsonSchemaOriginal: parseIfString(specData?.jsonSchemaOriginal) || parseIfString(specData?.jsonSchema) || fallbackSpec.jsonSchema,
+      jsonSchemaEnhanced: parseIfString(specData?.jsonSchemaEnhanced) || fallbackSpec.jsonSchemaEnhanced,
+      savedSchema: (specData as any)?.savedSchema,
+    };
+    
+    return result;
+  }, [specData, fallbackSpec]);
   
   // 🎯 활성 스키마 (우선순위: savedSchema > enhanced > original)
   const activeSchema = resolveActiveSchema(combinedSpecData);
@@ -219,6 +241,21 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     return compileSchema(activeSchema, psdSet, schemaType);
   }, [activeSchema, isNewEnhancedSchema, initializedSchemaTypes, psdSet, schemaType, schemaView]);
   
+  // 🎯 Helper: Convert required status to display string
+  const formatRequiredStatus = (requiredStatus: Record<string, string> | undefined): string => {
+    if (!requiredStatus || !requiredStatus['*']) {
+      return 'Optional';
+    }
+    
+    const status = requiredStatus['*'];
+    if (status === 'required') return 'Required';
+    if (status === 'conditional') return 'Conditional';
+    if (status === 'optional') return 'Optional';
+    if (status === 'n/a') return 'N/A';
+    
+    return 'Optional'; // Default fallback
+  };
+  
   // 🔥 NEW: UI Schema Adapter로 테이블 스키마 생성
   const tableParameters = useMemo(() => {
     // 🔥 현재 schemaView에 맞는 schemaType 결정
@@ -226,39 +263,30 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     const key = `${psdSet}/${currentSchemaType}`;
     
     // 🔥 YAML 규칙이 초기화되었는지 확인
-    console.log('🔍 Checking initialization for key:', key);
-    console.log('🔍 initializedSchemaTypes:', Array.from(initializedSchemaTypes));
     if (!initializedSchemaTypes.has(key)) {
-      console.log(`⏳ Waiting for ${key} schema logic rules to be initialized...`);
       return [];
     }
-    console.log('✅ Schema logic rules initialized for:', key);
     
     // 🔥 schemaView에 따라 사용할 스키마 결정
+    // Enhanced 탭: jsonSchemaEnhanced가 있으면 사용, 없으면 jsonSchemaOriginal을 Enhanced로 처리
+    // Original 탭: jsonSchemaOriginal 사용
     const schemaToUse = schemaView === 'enhanced' 
-      ? (combinedSpecData.jsonSchemaEnhanced || activeSchema)
+      ? (combinedSpecData.jsonSchemaEnhanced || combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema)
       : (combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema);
     
-    console.log('🔍 SpecTab - schemaView:', schemaView);
-    console.log('🔍 SpecTab - schemaToUse:', schemaToUse);
-    console.log('🔍 SpecTab - isNewEnhancedSchema:', isNewEnhancedSchema);
-    
     // 🔥 Enhanced 스키마 구조 감지 (현재 뷰 기준)
-    // Original 뷰일 때는 무조건 Original 컴파일러 사용!
+    // schemaView === 'enhanced'이면 무조건 Enhanced 컴파일러 사용 (사용자 선택 우선)
     const isEnhancedStructure = schemaView === 'enhanced';
     
-    console.log('🔍 SpecTab - isEnhancedStructure:', isEnhancedStructure);
-    console.log('🔍 SpecTab - Object.keys(schemaToUse).length:', schemaToUse ? Object.keys(schemaToUse).length : 0);
-    console.log('🔍 SpecTab - psdSet:', psdSet, 'currentSchemaType:', currentSchemaType);
+    // 🔥 스키마가 비어있거나 유효하지 않으면 빈 배열 반환
+    if (!schemaToUse || typeof schemaToUse !== 'object' || Object.keys(schemaToUse).length === 0) {
+      return [];
+    }
     
-    if (isEnhancedStructure && schemaToUse && Object.keys(schemaToUse).length > 0) {
+    if (isEnhancedStructure) {
       // New Enhanced Schema: 새 컴파일러로 섹션 생성
       try {
-        console.log('🔄 Calling compileEnhancedSchema with:', { psdSet, schemaType: currentSchemaType });
         const sections = compileEnhancedSchema(schemaToUse as EnhancedSchema, psdSet, currentSchemaType);
-        console.log('✅ compileEnhancedSchema returned sections:', sections.length);
-        console.log('🔍 tableDefinition from state:', tableDefinition);
-        console.log('🔍 tableDefinition.schemaExtensions:', tableDefinition?.schemaExtensions);
         
         // Convert sections to table parameters format
         const params: any[] = [];
@@ -278,15 +306,15 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           
           // 🔥 조건 없는 필드들이 있으면 일반 섹션 헤더 추가
           if (noConditionFields.length > 0) {
-            params.push({
-              no: '',
-              section: section.name,
-              name: '',
-              type: '',
-              default: '',
-              required: '',
-              description: '',
-            });
+          params.push({
+            no: '',
+            section: section.name,
+            name: '',
+            type: '',
+            default: '',
+            required: '',
+            description: '',
+          });
           }
           
           // 🔥 조건 없는 필드들 렌더링
@@ -297,7 +325,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
               default: field.default !== undefined ? String(field.default) : '-',
               description: field.ui?.label || field.description || field.key,
-              required: 'Optional',
+              required: formatRequiredStatus(field.required),
             };
             
             // 중첩 필드 처리
@@ -316,17 +344,22 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                   default: child.default !== undefined ? String(child.default) : '-',
                   description: child.ui?.label || child.description || child.key.split('.').pop() || child.key,
-                  required: child.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                  required: formatRequiredStatus(child.required),
                 };
               });
             }
             
             // 🔥 Description 빌드 (모듈화된 함수 사용)
             param.description = buildFieldDescription(field, tableDefinition);
+            
+            // 🔥 Required 상태 재계산 (TYPE별 다른 상태가 있는 경우)
             const requiredStatuses = Object.values(field.required);
             const hasRequired = requiredStatuses.some(s => s === 'required');
             const hasOptional = requiredStatuses.some(s => s === 'optional');
-            if (hasRequired && hasOptional) {
+            const hasConditional = requiredStatuses.some(s => s === 'conditional');
+            
+            // 조건부 required 또는 TYPE별로 다른 경우 Conditional로 표시
+            if (hasConditional || (hasRequired && hasOptional)) {
               param.required = 'Conditional';
             } else if (hasRequired) {
               param.required = 'Required';
@@ -357,7 +390,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
                 default: field.default !== undefined ? String(field.default) : '-',
                 description: field.ui?.label || field.description || field.key,
-                required: 'Optional',
+                required: formatRequiredStatus(field.required),
               };
               
               // 중첩 필드 처리
@@ -379,25 +412,29 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     required: child.required?.['*'] === 'required' ? 'Required' : 'Optional',
                   };
                 });
-              }
-              
+            }
+            
               // 🔥 Description 빌드 (모듈화된 함수 사용)
               param.description = buildFieldDescription(field, tableDefinition);
+              
+              // 🔥 Required 상태 재계산 (TYPE별 다른 상태가 있는 경우)
               const requiredStatuses = Object.values(field.required);
               const hasRequired = requiredStatuses.some(s => s === 'required');
               const hasOptional = requiredStatuses.some(s => s === 'optional');
-              if (hasRequired && hasOptional) {
+              const hasConditional = requiredStatuses.some(s => s === 'conditional');
+              
+              // 조건부 required 또는 TYPE별로 다른 경우 Conditional로 표시
+              if (hasConditional || (hasRequired && hasOptional)) {
                 param.required = 'Conditional';
               } else if (hasRequired) {
                 param.required = 'Required';
               }
-              
-              params.push(param);
+            
+            params.push(param);
             }
           }
         }
         
-        console.log('✅ Enhanced path - returning params:', params.length);
         return params;
       } catch (error) {
         console.error('❌ Failed to compile enhanced schema for table:', error);
@@ -405,17 +442,12 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       }
     }
     
-    console.log('⚠️ Enhanced condition not met, falling through to Original path');
-    
     // Original Schema: compileSchema 결과를 직접 사용
     // schemaView가 'original'이면 Original 스키마로 컴파일
     // currentSchemaType은 위에서 이미 선언됨
     const sections = schemaView === 'original'
       ? compileSchema(schemaToUse, psdSet, currentSchemaType)
       : canonicalFields;
-    
-    console.log('🔍 SpecTab - Original path - sections:', sections);
-    console.log('🔍 SpecTab - Original path - sections.length:', sections.length);
     
     // Convert sections to table parameters format (same as Enhanced)
     const params: any[] = [];
@@ -441,25 +473,22 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
           default: field.default !== undefined ? String(field.default) : '-',
           description: field.ui?.label || field.description || field.key,
-          required: field.required?.['*'] === 'required' ? 'Required' : 'Optional',
+          required: formatRequiredStatus(field.required),
         });
       }
     }
     
-    console.log('🔍 SpecTab - tableSchema (params):', params);
-    console.log('🔍 SpecTab - tableSchema.length:', params.length);
-    
     return params;
   }, [initializedSchemaTypes, canonicalFields, isNewEnhancedSchema, schemaView, combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchemaEnhanced, combinedSpecData.jsonSchema, psdSet, schemaType, tableDefinition]);
   
-  const spec = {
+  const spec = useMemo(() => ({
     title: fallbackSpec.title,
     description: fallbackSpec.description,
     jsonSchema: combinedSpecData.jsonSchemaOriginal || {},
     jsonSchemaEnhanced: combinedSpecData.jsonSchemaEnhanced,
     uri: fallbackSpec?.uri,
     methods: fallbackSpec?.methods,
-  };
+  }), [combinedSpecData, fallbackSpec]);
 
   // Track which parameters are expanded
   const [expandedParams, setExpandedParams] = useState<Set<number>>(new Set());
@@ -491,17 +520,32 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       return;
     }
     
-    if (schemaView === 'original') {
-      setEditableSchema(JSON.stringify(spec.jsonSchema, null, 2));
+    // 스키마가 문자열인 경우 파싱, 객체인 경우 그대로 사용
+    const getSchemaForView = () => {
+      if (schemaView === 'original') {
+        return spec.jsonSchema;
+      } else {
+        return spec.jsonSchemaEnhanced;
+      }
+    };
+    
+    const schemaForView = getSchemaForView();
+    
+    if (!schemaForView || (typeof schemaForView === 'object' && Object.keys(schemaForView).length === 0)) {
+      setEditableSchema('{}');
+    } else if (typeof schemaForView === 'string') {
+      // 이미 문자열인 경우 파싱 시도
+      try {
+        const parsed = JSON.parse(schemaForView);
+        setEditableSchema(JSON.stringify(parsed, null, 2));
+      } catch {
+        setEditableSchema(schemaForView);
+      }
     } else {
-      setEditableSchema(
-        spec.jsonSchemaEnhanced 
-          ? JSON.stringify(spec.jsonSchemaEnhanced, null, 2)
-          : '// Enhanced schema not available yet\n// Add enhanced schema to apiSpecs data'
-      );
+      setEditableSchema(JSON.stringify(schemaForView, null, 2));
     }
     setIsSchemaModified(false);
-  }, [schemaView, endpoint.id]); // endpoint.id로 변경
+  }, [schemaView, endpoint.id, spec.jsonSchema, spec.jsonSchemaEnhanced]); // spec 의존성 추가
   
   // Handle schema changes
   const handleSchemaChange = (value: string) => {
@@ -510,22 +554,55 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   };
   
   // 🎯 Save Schema - 스키마 저장 및 테이블 반영
-  const handleSaveSchema = () => {
+  const handleSaveSchema = async () => {
     try {
       const parsedSchema = JSON.parse(editableSchema);
       
+      console.log('💾 handleSaveSchema - parsedSchema:', parsedSchema);
+      console.log('💾 handleSaveSchema - schemaView:', schemaView);
+      
       // 현재 스키마 뷰에 따라 적절한 스키마 업데이트
+      // 항상 JSON 문자열로 저장 (서버와 호환성을 위해)
+      const updates: any = {};
       if (schemaView === 'original') {
-        spec.jsonSchema = parsedSchema;
+        updates.jsonSchemaOriginal = JSON.stringify(parsedSchema);
+        updates.jsonSchema = updates.jsonSchemaOriginal; // 호환성을 위해
       } else {
-        spec.jsonSchemaEnhanced = parsedSchema;
+        updates.jsonSchemaEnhanced = JSON.stringify(parsedSchema);
       }
       
+      console.log('💾 handleSaveSchema - updates:', updates);
+      
+      // 로컬 상태 업데이트
+      updateSpecData(updates);
       setSavedSchema(parsedSchema); // 리렌더링 트리거
       setIsSchemaModified(false);
       
-      // 성공 메시지
-      toast.success('✅ Schema saved!\n\nThe visual table has been updated with your changes.');
+      // 저장된 스키마로 editableSchema도 업데이트 (포맷팅 유지)
+      setEditableSchema(JSON.stringify(parsedSchema, null, 2));
+      
+      // 🔥 스키마 캐시 클리어 (변경사항을 즉시 반영하기 위해)
+      schemaCompileCache.clear();
+      console.log('🗑️ Schema compilation cache cleared');
+      
+      // 서버에 저장 (버전이 있는 경우)
+      if (currentVersionId) {
+        try {
+          console.log('💾 handleSaveSchema - Before saveCurrentVersion, specData:', specData);
+          await saveCurrentVersion();
+          console.log('💾 handleSaveSchema - After saveCurrentVersion, specData:', useAppStore.getState().specData);
+          toast.success('✅ Schema saved to server!\n\nThe visual table has been updated with your changes.');
+        } catch (error) {
+          console.error('Failed to save to server:', error);
+          toast.warning('⚠️ Schema saved locally, but failed to save to server.\n\nPlease create a version first.');
+        }
+      } else {
+        toast.success('✅ Schema saved locally!\n\nPlease create a version to save to server.');
+      }
+      
+      // 🔥 강제 리렌더링을 위해 specData 재설정
+      const currentSpecData = useAppStore.getState().specData;
+      console.log('💾 handleSaveSchema - Force re-render, currentSpecData:', currentSpecData);
     } catch (error) {
       toast.error('❌ Invalid JSON!\n\nPlease fix the syntax errors before saving.');
     }
@@ -657,15 +734,6 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         enhancedSchema = dbEnhanced;
             }
           }
-          
-    console.log('🔍 specData:', {
-      jsonSchema: specData?.jsonSchema,
-      jsonSchemaOriginal: specData?.jsonSchemaOriginal,
-      jsonSchemaEnhanced: specData?.jsonSchemaEnhanced
-    });
-    console.log('🔍 fallbackSpec.jsonSchema:', fallbackSpec.jsonSchema);
-    console.log('🔍 Final Original Schema:', originalSchema);
-    console.log('🔍 Final Enhanced Schema:', enhancedSchema);
     
     // 🎯 스키마 타입에 따라 레이블 설정
     let schemaLabel: string;
@@ -697,24 +765,16 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       specifications: '',  // 🔥 Specifications도 초기화
     };
 
-    console.log('📤 Sending to Manual:', { 
-      schemaType, 
-      schemaLabel, 
-      selectedLength: JSON.stringify(selectedSchema).length,
-      originalLength: JSON.stringify(originalSchema).length,
-      enhancedLength: enhancedSchema ? JSON.stringify(enhancedSchema).length : 0
-    });
-    
     setManualData(newManualData);
     toast.success(`✅ ${schemaLabel} Schema sent to Manual tab!`);
   };
 
   // 🎯 Table을 Manual로 전송
   const handleSendTableToManual = () => {
-    // 🔥 NEW: Enhanced Schema인 경우 완전한 HTML 문서 생성
-    if (isNewEnhancedSchema) {
+    // 🔥 NEW: Enhanced Schema 또는 Enhanced View인 경우 완전한 HTML 문서 생성
+    if (isNewEnhancedSchema || (schemaView === 'enhanced' && activeSchema)) {
       try {
-        const htmlDocument = generateHTMLDocument(activeSchema as EnhancedSchema);
+        const htmlDocument = generateHTMLDocument(activeSchema as EnhancedSchema, psdSet, schemaType);
         
         const newManualData: ManualData = {
           title: spec.title || endpoint.name,
@@ -731,11 +791,11 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         };
 
         setManualData(newManualData);
-        toast.success('✅ Enhanced Schema table sent to Manual tab!');
+        toast.success('✅ Schema table sent to Manual tab!');
         return;
       } catch (error) {
-        console.error('Failed to generate enhanced HTML:', error);
-        toast.error('❌ Failed to generate enhanced schema table');
+        console.error('❌ Failed to generate HTML:', error);
+        toast.error('❌ Failed to generate schema table');
             return;
           }
         }
@@ -779,28 +839,28 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           
           {/* 중앙: 토글 버튼 (절대 위치) - 개선 모드에서만 표시 */}
           {settings?.schemaMode !== 'normal' && (
-            <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1 w-[240px]">
-              <button
-                onClick={() => setSchemaView('original')}
-                className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
-                  schemaView === 'original'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                Original
-              </button>
-              <button
-                onClick={() => setSchemaView('enhanced')}
-                className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
-                  schemaView === 'enhanced'
-                    ? 'bg-green-600 text-white'
-                    : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                Enhanced
-              </button>
-            </div>
+          <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1 w-[240px]">
+            <button
+              onClick={() => setSchemaView('original')}
+              className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
+                schemaView === 'original'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Original
+            </button>
+            <button
+              onClick={() => setSchemaView('enhanced')}
+              className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${
+                schemaView === 'enhanced'
+                  ? 'bg-green-600 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Enhanced
+            </button>
+          </div>
           )}
           
           {/* 일반 모드에서는 제목만 표시 */}
@@ -812,15 +872,15 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           
           {/* 오른쪽: 설명 텍스트 - 개선 모드에서만 */}
           {settings?.schemaMode !== 'normal' && (
-            <div className="absolute right-0">
-              <span className="text-xs text-zinc-500">
-                {schemaView === 'original' 
-                  ? '(Original schema definition)' 
+          <div className="absolute right-0">
+            <span className="text-xs text-zinc-500">
+              {schemaView === 'original' 
+                ? '(Original schema definition)' 
                   : hasEnhancedSchema || isNewEnhancedSchema
                     ? '(Enhanced with x-ui, x-transport, conditions)'
                     : '(No enhanced schema - showing original)'}
-              </span>
-            </div>
+            </span>
+          </div>
           )}
         </div>
       </div>
@@ -914,7 +974,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleSendSchemaToManual('original')}
+                    onClick={() => handleSendSchemaToManual('original')}
                 disabled={!spec.jsonSchema}
                 className="text-xs"
               >
@@ -925,7 +985,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handleSendSchemaToManual('enhanced')}
+                    onClick={() => handleSendSchemaToManual('enhanced')}
                   className="text-xs"
                 >
                   📤 Send Enhanced to Manual
@@ -934,19 +994,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             </div>
           </div>
         </div>
-        </ResizablePanel>
+      </ResizablePanel>
 
         {/* Resize Handle */}
         <ResizableHandle className="w-1 bg-zinc-800 hover:bg-blue-500" />
 
         {/* Right Pane - Visual Table Renderer */}
-        <ResizablePanel defaultSize={50} minSize={30}>
-          <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
-            <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
+      <ResizablePanel defaultSize={50} minSize={30}>
+        <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
+          <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">Visual Schema Table</h3>
-              </div>
-            </div>
+            <h3 className="text-sm font-medium">Visual Schema Table</h3>
+          </div>
+                </div>
 
             {/* Table Content - Scrollable */}
             <div className="flex-1 overflow-auto p-4">
@@ -963,22 +1023,22 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 </div>
               )}
             </div>
-            
+          
             {/* Footer with Send to Manual Button */}
-            <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-end flex-shrink-0">
-              <Button
+          <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-end flex-shrink-0">
+            <Button
                 variant="outline"
-                size="sm"
+              size="sm"
                 onClick={handleSendTableToManual}
                 disabled={tableParameters.length === 0}
                 className="text-xs"
-              >
+            >
                 📤 Send Table to Manual
-              </Button>
-            </div>
+            </Button>
           </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        </div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
     </div>
   );
 }

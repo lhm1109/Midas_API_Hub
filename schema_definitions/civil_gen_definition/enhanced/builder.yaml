@@ -146,15 +146,16 @@ hintsDisplay:
 
 # ============================================================================
 # Dynamic Behavior
-# 동적 동작 (TYPE 기반)
+# 동적 동작 (자동 감지)
 # ============================================================================
 dynamicBehavior:
   # visibleWhen 지원
   conditionalVisibility:
     enabled: true
-    triggerFields:
-      - "TYPE"
-      - "STYPE"
+    # 🎯 triggerFields는 스키마의 x-ui.visibleWhen에서 자동으로 감지됩니다
+    # extractTriggerFields() 함수가 스키마를 파싱하여 사용된 모든 필드를 추출
+    # 예: TYPE, STYPE, iMETHOD, bUSE, etc.
+    autoDetect: true
     evaluateOn: "change"
     hideMode: "remove"  # remove | hide
   

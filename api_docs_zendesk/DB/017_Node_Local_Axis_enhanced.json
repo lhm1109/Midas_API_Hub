@@ -1,0 +1,357 @@
+{
+  "SKEW": {
+    "type": "object",
+    "properties": {
+      "iMETHOD": {
+        "type": "integer",
+        "description": "Input method",
+        "enum": [1, 2, 3, 4],
+        "default": 1,
+        "x-enum-labels": {
+          "1": "Angle",
+          "2": "3 points",
+          "3": "Vector",
+          "4": "Line Vector"
+        }
+      },
+      "ANGLE_X": {
+        "type": "number",
+        "description": "About x",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 1
+          }
+        }
+      },
+      "ANGLE_Y": {
+        "type": "number",
+        "description": "About y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 1
+          }
+        }
+      },
+      "ANGLE_Z": {
+        "type": "number",
+        "description": "About z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 1
+          }
+        }
+      },
+      "P0X": {
+        "type": "number",
+        "description": "P0 coordinate - X",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P0Y": {
+        "type": "number",
+        "description": "P0 coordinate - Y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P0Z": {
+        "type": "number",
+        "description": "P0 coordinate - Z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P1X": {
+        "type": "number",
+        "description": "P1 coordinate - X",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P1Y": {
+        "type": "number",
+        "description": "P1 coordinate - Y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P1Z": {
+        "type": "number",
+        "description": "P1 coordinate - Z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P2X": {
+        "type": "number",
+        "description": "P2 coordinate - X",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P2Y": {
+        "type": "number",
+        "description": "P2 coordinate - Y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "P2Z": {
+        "type": "number",
+        "description": "P2 coordinate - Z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": [2, 4]
+          }
+        }
+      },
+      "V1X": {
+        "type": "number",
+        "description": "Direction vector V1-x",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 3
+          }
+        }
+      },
+      "V1Y": {
+        "type": "number",
+        "description": "Direction vector V1-y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 3
+          }
+        }
+      },
+      "V1Z": {
+        "type": "number",
+        "description": "Direction vector V1-z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 3
+          }
+        }
+      },
+      "V2X": {
+        "type": "number",
+        "description": "Direction vector V2-x",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 3
+          }
+        }
+      },
+      "V2Y": {
+        "type": "number",
+        "description": "Direction vector V2-y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 3
+          }
+        }
+      },
+      "V2Z": {
+        "type": "number",
+        "description": "Direction vector V2-z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 3
+          }
+        }
+      },
+      "LV0X": {
+        "type": "number",
+        "description": "Direction vector V0-x",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV0Y": {
+        "type": "number",
+        "description": "Direction vector V0-y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV0Z": {
+        "type": "number",
+        "description": "Direction vector V0-z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV1X": {
+        "type": "number",
+        "description": "Direction vector V1-x",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV1Y": {
+        "type": "number",
+        "description": "Direction vector V1-y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV1Z": {
+        "type": "number",
+        "description": "Direction vector V1-z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV2X": {
+        "type": "number",
+        "description": "Direction vector V2-x",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV2Y": {
+        "type": "number",
+        "description": "Direction vector V2-y",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "LV2Z": {
+        "type": "number",
+        "description": "Direction vector V2-z",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "REFTYPE": {
+        "type": "integer",
+        "description": "Reference type",
+        "enum": [1, 2],
+        "x-enum-labels": {
+          "1": "Ref. Point",
+          "2": "Global Direction"
+        },
+        "x-required-when": {
+          "iMETHOD": 4
+        },
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "G_DIR": {
+        "type": "integer",
+        "description": "Global direction",
+        "enum": [0, 1, 2],
+        "x-enum-labels": {
+          "0": "Global X",
+          "1": "Global Y",
+          "2": "Global Z"
+        },
+        "x-required-when": {
+          "iMETHOD": 4
+        },
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      },
+      "L_DIR": {
+        "type": "integer",
+        "description": "Local direction",
+        "enum": [0, 1, 2],
+        "x-enum-labels": {
+          "0": "Local x",
+          "1": "Local y",
+          "2": "Local z"
+        },
+        "x-required-when": {
+          "iMETHOD": 4
+        },
+        "x-ui": {
+          "visibleWhen": {
+            "iMETHOD": 4
+          }
+        }
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "iMETHOD": {
+              "const": 4
+            }
+          }
+        },
+        "then": {
+          "required": ["REFTYPE", "G_DIR", "L_DIR"]
+        }
+      }
+    ],
+    "additionalProperties": false
+  }
+}

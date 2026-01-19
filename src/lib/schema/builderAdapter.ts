@@ -11,7 +11,6 @@
  */
 
 import { 
-  compileSchema,
   compileEnhancedSchema, 
   type EnhancedSchema, 
   type EnhancedField, 
@@ -54,6 +53,63 @@ export interface BuilderFormState {
   sections: BuilderSection[];
   values: Record<string, any>;
   errors: Record<string, string>;
+}
+
+// ============================================================================
+// Trigger Fields Extraction (Auto-detection)
+// ============================================================================
+
+/**
+ * 스키마에서 visibleWhen 조건에 사용된 모든 트리거 필드를 자동으로 추출
+ * 
+ * @param schema JSON Schema
+ * @param psdSet PSD 세트
+ * @param schemaType 스키마 타입
+ * @returns 트리거 필드 이름 배열 (중복 제거됨)
+ * 
+ * @example
+ * // SKEW 엔티티의 경우
+ * extractTriggerFields(schema) // => ['iMETHOD']
+ * 
+ * // ELEM 엔티티의 경우
+ * extractTriggerFields(schema) // => ['TYPE', 'STYPE']
+ */
+export function extractTriggerFields(
+  schema: EnhancedSchema,
+  psdSet: string,
+  schemaType: string
+): string[] {
+  const triggerFields = new Set<string>();
+  
+  // 스키마 컴파일하여 모든 필드 추출
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
+  
+  for (const section of sections) {
+    for (const field of section.fields) {
+      // x-ui.visibleWhen 조건 확인
+      const visibleWhen = field.ui?.visibleWhen;
+      if (visibleWhen && typeof visibleWhen === 'object') {
+        // visibleWhen의 모든 키를 트리거 필드로 추가
+        for (const key of Object.keys(visibleWhen)) {
+          triggerFields.add(key);
+        }
+      }
+      
+      // 중첩 필드도 재귀적으로 확인
+      if (field.children && Array.isArray(field.children)) {
+        for (const child of field.children) {
+          const childVisibleWhen = (child as any).ui?.visibleWhen;
+          if (childVisibleWhen && typeof childVisibleWhen === 'object') {
+            for (const key of Object.keys(childVisibleWhen)) {
+              triggerFields.add(key);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return Array.from(triggerFields);
 }
 
 // ============================================================================
@@ -110,6 +166,49 @@ export function schemaToBuilderFields(
   psdSet: string,
   schemaType: string
 ): UIBuilderField[] {
+  // 🔥 inject-entity-collection 변환 후 구조 감지
+  // properties가 $ref만 있고, $defs/entity가 있으면 entity 필드만 사용
+  const schemaAny = schema as any;
+  const hasEntityDef = schemaAny.$defs?.entity;
+  const propsKeys = Object.keys(schema.properties || {});
+  const hasOnlyRefProps = propsKeys.length === 1 && 
+    schemaAny.properties?.[propsKeys[0]]?.$ref;
+  
+  console.log('🔍 Builder schemaToBuilderFields:', {
+    hasEntityDef,
+    propsKeys,
+    hasOnlyRefProps,
+    firstProp: schemaAny.properties?.[propsKeys[0]]
+  });
+  
+  if (hasEntityDef && hasOnlyRefProps) {
+    console.log('🔍 Builder: Detected entity-collection structure, using $defs/entity directly');
+    console.log('🔍 Builder: Entity properties:', Object.keys(schemaAny.$defs.entity.properties || {}));
+    // $defs/entity를 직접 스키마로 사용
+    const entitySchema = {
+      ...schema,
+      properties: schemaAny.$defs.entity.properties,
+      required: schemaAny.$defs.entity.required || []
+    };
+    const sections = adaptSchemaToBuilder(entitySchema as EnhancedSchema, currentValues, psdSet, schemaType);
+    const fields: UIBuilderField[] = [];
+    
+    for (const section of sections) {
+      if (section.name) {
+        fields.push({
+          name: `__section_${section.name}__`,
+          type: 'object',
+          description: section.name,
+          required: false,
+        } as UIBuilderField & { sectionHeader?: string });
+      }
+      fields.push(...section.fields);
+    }
+    
+    return fields;
+  }
+  
+  // 일반 스키마 처리
   const sections = adaptSchemaToBuilder(schema, currentValues, psdSet, schemaType);
   const fields: UIBuilderField[] = [];
   
@@ -144,7 +243,22 @@ function adaptFieldToBuilder(
   currentValues: Record<string, any>
 ): UIBuilderField & { visible: boolean; valueConstraint?: string } {
   const visible = evaluateVisibility(field, currentType, currentValues);
-  const required = field.required[currentType] === 'required';
+  
+  // 🔥 Required 상태 결정: TYPE별 또는 전체 required
+  let required = false;
+  if (typeof field.required === 'boolean') {
+    // Simple boolean required
+    required = field.required;
+  } else if (typeof field.required === 'object' && field.required !== null) {
+    // TYPE-dependent required (Enhanced Schema)
+    if (currentType && field.required[currentType]) {
+      required = field.required[currentType] === 'required';
+    } else {
+      // currentType이 없거나, 해당 TYPE의 정보가 없으면 기본값 확인
+      const requiredValues = Object.values(field.required);
+      required = requiredValues.some(v => v === 'required');
+    }
+  }
   
   // Map Enhanced Field type to UIBuilderField type
   let uiType: UIBuilderField['type'] = 'string';
@@ -345,8 +459,12 @@ function buildValueConstraint(field: EnhancedField, currentType: string): string
 /**
  * 초기 폼 상태 생성
  */
-export function createInitialFormState(schema: EnhancedSchema): BuilderFormState {
-  const sections = compileEnhancedSchema(schema);
+export function createInitialFormState(
+  schema: EnhancedSchema,
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
+): BuilderFormState {
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const values: Record<string, any> = {};
   
   // Collect default values
@@ -359,7 +477,7 @@ export function createInitialFormState(schema: EnhancedSchema): BuilderFormState
   }
   
   // Build builder sections with initial visibility
-  const builderSections = adaptSchemaToBuilder(schema, values);
+  const builderSections = adaptSchemaToBuilder(schema, values, psdSet, schemaType);
   
   return {
     sections: builderSections,
@@ -375,10 +493,12 @@ export function handleValueChange(
   schema: EnhancedSchema,
   currentState: BuilderFormState,
   key: string,
-  value: any
+  value: any,
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
 ): BuilderFormState {
   const newValues = { ...currentState.values, [key]: value };
-  const newSections = adaptSchemaToBuilder(schema, newValues);
+  const newSections = adaptSchemaToBuilder(schema, newValues, psdSet, schemaType);
   
   return {
     sections: newSections,
@@ -396,10 +516,12 @@ export function handleValueChange(
  */
 export function validateFormState(
   schema: EnhancedSchema,
-  values: Record<string, any>
+  values: Record<string, any>,
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
 ): Record<string, string> {
   const errors: Record<string, string> = {};
-  const sections = compileEnhancedSchema(schema);
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const currentType = values['TYPE'] || '';
   
   for (const section of sections) {
@@ -524,9 +646,11 @@ function validateArray(
  */
 export function buildCleanJSON(
   schema: EnhancedSchema,
-  values: Record<string, any>
+  values: Record<string, any>,
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
 ): Record<string, any> {
-  const sections = compileEnhancedSchema(schema);
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const currentType = values['TYPE'] || '';
   const result: Record<string, any> = {};
   

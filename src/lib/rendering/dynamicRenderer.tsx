@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { UIBuilderField } from '@/lib/schema';
 import type { BuilderDefinition } from './definitionLoader';
+import type { FieldRuntimeStateMap } from '@/lib/schema/fieldRuntimeState';
 
 interface DynamicRendererProps {
   definition: BuilderDefinition;
@@ -19,6 +20,7 @@ interface DynamicRendererProps {
   updateDynamicField: (key: string, value: any) => void;
   expandedObjects: Set<string>;
   toggleObject: (fieldName: string) => void;
+  fieldRuntimeStates?: FieldRuntimeStateMap; // 🎯 NEW: Runtime States
 }
 
 /**
@@ -30,26 +32,38 @@ export function DynamicSchemaRenderer({
   dynamicFormData,
   updateDynamicField,
   expandedObjects,
-  toggleObject
+  toggleObject,
+  fieldRuntimeStates
 }: DynamicRendererProps) {
   // 컨테이너 스타일 적용
   const containerClassName = definition.formLayout?.fieldContainer?.className || 'space-y-4';
   
   return (
     <div className={containerClassName}>
-      {schemaFields.map((field) => {
-        // 섹션 헤더 감지
-        if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
-          return renderSectionHeader(field, definition);
-        }
-        
-        // 일반 필드 렌더링
-        return (
-          <div key={field.name} className="space-y-2">
-            {renderField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject)}
-          </div>
-        );
-      })}
+      {schemaFields
+        .filter((field) => {
+          // 🎯 Runtime State 기반 visible 판단 (Single Source of Truth)
+          if (fieldRuntimeStates && fieldRuntimeStates[field.name]) {
+            return fieldRuntimeStates[field.name].visible;
+          }
+          
+          // 🔥 Fallback: visible이 false인 필드는 렌더링하지 않음
+          // visible이 undefined이면 true로 간주 (섹션 헤더 등)
+          return field.visible !== false;
+        })
+        .map((field) => {
+          // 섹션 헤더 감지
+          if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
+            return renderSectionHeader(field, definition);
+          }
+          
+          // 일반 필드 렌더링
+          return (
+            <div key={field.name} className="space-y-2">
+              {renderField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates)}
+            </div>
+          );
+        })}
     </div>
   );
 }
@@ -84,7 +98,8 @@ function renderField(
   dynamicFormData: Record<string, any>,
   updateDynamicField: (key: string, value: any) => void,
   expandedObjects: Set<string>,
-  toggleObject: (fieldName: string) => void
+  toggleObject: (fieldName: string) => void,
+  fieldRuntimeStates?: Record<string, any>
 ): React.ReactNode {
   // Object with children
   if (field.type === 'object' && field.children && field.children.length > 0) {
@@ -92,7 +107,7 @@ function renderField(
   }
   
   // 일반 필드
-  return renderStandardField(field, definition, dynamicFormData, updateDynamicField);
+  return renderStandardField(field, definition, dynamicFormData, updateDynamicField, fieldRuntimeStates);
 }
 
 /**
@@ -208,15 +223,20 @@ function renderStandardField(
   field: UIBuilderField,
   definition: BuilderDefinition,
   dynamicFormData: Record<string, any>,
-  updateDynamicField: (key: string, value: any) => void
+  updateDynamicField: (key: string, value: any) => void,
+  fieldRuntimeStates?: Record<string, any>
 ): React.ReactNode {
   const labelStyle = definition.fieldRendering?.standard?.label || {};
+  
+  // 🎯 Runtime State에서 requiredNow 확인 (조건부 required 지원)
+  const runtimeState = fieldRuntimeStates?.[field.name];
+  const isRequired = runtimeState?.requiredNow ?? field.required;
   
   return (
     <>
       <Label className={labelStyle.className || 'text-sm flex items-center gap-2'}>
         {field.description || field.name}
-        {field.required && labelStyle.showRequired && <span className="text-red-400">*</span>}
+        {isRequired && labelStyle.showRequired && <span className="text-red-400">*</span>}
         {labelStyle.showType && (
           <span className="text-[10px] text-zinc-600 font-mono ml-auto">{field.type}</span>
         )}
@@ -318,8 +338,8 @@ function renderFieldInput(
         onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
         className={inputClassName}
         placeholder={field.default?.toString() || '0'}
-        min={field.minimum}
-        max={field.maximum}
+        min={(field as any).minimum}
+        max={(field as any).maximum}
         disabled={disabled}
       />
     );
