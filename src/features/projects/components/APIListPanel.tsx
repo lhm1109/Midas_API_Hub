@@ -491,7 +491,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     });
     return ids.join('|');
   }, [products]);
-  
+    
   useEffect(() => {
     // products가 실제로 변경되었을 때만 실행
     if (productsRef.current === productsIdsHash) {

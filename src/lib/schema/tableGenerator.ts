@@ -534,7 +534,7 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
       const conditionLabel = `${section.name} (When "${conditionKey.split(':')[0].trim()}" is ${conditionKey.split(':')[1].trim()})`;
       html += generateSectionHeaderLegacy(conditionLabel);
       for (const field of fields) {
-        html += generateFieldRowLegacy(field, rowNumber++);
+      html += generateFieldRowLegacy(field, rowNumber++);
       }
     }
   }
@@ -684,7 +684,7 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
   } 
   
   // 🔥 4. Optional (기본값)
-  return '<span class="badge badge-optional">Optional</span>';
+    return '<span class="badge badge-optional">Optional</span>';
 }
 
 function generateCSSLegacy(): string {

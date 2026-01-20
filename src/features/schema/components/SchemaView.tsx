@@ -155,7 +155,7 @@ export function SchemaView() {
     try {
       // localStorage에만 저장 (애플리케이션별 설정)
       setCustomPSDMapping(productId, psdSet, schemaType);
-      
+
       // UI 업데이트를 위해 제품 목록 다시 가져오기
       fetchProducts();
       
@@ -381,33 +381,33 @@ export function SchemaView() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <div className="space-y-1">
-                        <Label className="text-xs text-zinc-400">
+                    <div className="space-y-1">
+                      <Label className="text-xs text-zinc-400">
                           PSD 세트 (Level 1)
-                        </Label>
-                        <Select
-                          value={getPSDForProduct(product.id).psdSet}
+                      </Label>
+                      <Select
+                        value={getPSDForProduct(product.id).psdSet}
                           onValueChange={(value) => handleUpdateProductPSD(
                             product.id, 
                             value, 
                             getPSDForProduct(product.id).schemaType as 'original' | 'enhanced'
                           )}
-                        >
-                          <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {schemaSets.map((set) => (
-                              <SelectItem key={set.id} value={set.id} className="text-xs">
-                                <div className="flex items-center gap-2">
-                                  <Package className="w-3 h-3 text-cyan-400" />
-                                  <span>{set.name}</span>
-                                  <span className="text-zinc-500">({set.fileCount || 0} 파일)</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                      >
+                        <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {schemaSets.map((set) => (
+                            <SelectItem key={set.id} value={set.id} className="text-xs">
+                              <div className="flex items-center gap-2">
+                                <Package className="w-3 h-3 text-cyan-400" />
+                                <span>{set.name}</span>
+                                <span className="text-zinc-500">({set.fileCount || 0} 파일)</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       </div>
                       
                       <div className="space-y-1">

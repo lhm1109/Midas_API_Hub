@@ -52,18 +52,18 @@ export function DynamicSchemaRenderer({
           return field.visible !== false;
         })
         .map((field) => {
-          // 섹션 헤더 감지
-          if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
-            return renderSectionHeader(field, definition);
-          }
-          
-          // 일반 필드 렌더링
-          return (
-            <div key={field.name} className="space-y-2">
+        // 섹션 헤더 감지
+        if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
+          return renderSectionHeader(field, definition);
+        }
+        
+        // 일반 필드 렌더링
+        return (
+          <div key={field.name} className="space-y-2">
               {renderField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates)}
-            </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </div>
   );
 }

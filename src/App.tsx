@@ -78,9 +78,9 @@ export default function App() {
 
       // 다음 프레임에 업데이트 예약
       rafId = requestAnimationFrame(() => {
-        const delta = moveEvent.clientX - startX;
-        const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
-        setPanelWidth(newWidth);
+      const delta = moveEvent.clientX - startX;
+      const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
+      setPanelWidth(newWidth);
       });
     };
 
@@ -279,25 +279,25 @@ export default function App() {
                   </div>
                 ) : (
                   // 펼쳐진 상태: 패널 전체 표시
-                  <APIListPanel
-                    products={apiData}
-                    selectedEndpoint={selectedEndpoint?.id || null}
-                    onEndpointSelect={handleEndpointSelect}
-                    onEndpointsChange={refetchEndpoints}
+                <APIListPanel
+                  products={apiData}
+                  selectedEndpoint={selectedEndpoint?.id || null}
+                  onEndpointSelect={handleEndpointSelect}
+                  onEndpointsChange={refetchEndpoints}
                     onToggleCollapse={() => setIsPanelCollapsed(true)}
-                  />
+                />
                 )}
               </div>
               
               {/* 리사이즈 핸들 (펼쳐진 상태에서만) */}
               {!isPanelCollapsed && (
-                <div
-                  onMouseDown={handleMouseDown}
-                  className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
-                  style={{ touchAction: 'none' }}
-                >
-                  <div className="absolute inset-y-0 -left-1 -right-1" />
-                </div>
+              <div
+                onMouseDown={handleMouseDown}
+                className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
+                style={{ touchAction: 'none' }}
+              >
+                <div className="absolute inset-y-0 -left-1 -right-1" />
+              </div>
               )}
             </>
           )}

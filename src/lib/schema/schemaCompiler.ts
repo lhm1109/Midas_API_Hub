@@ -1205,23 +1205,23 @@ function calculateRequiredStatus(
     }
   } else {
     // 3. For each TYPE, check allOf conditions (x-required-when이 없는 경우)
-    types.forEach(type => {
-      status[type] = 'optional'; // default
-      
+  types.forEach(type => {
+    status[type] = 'optional'; // default
+    
       // Check conditional required from allOf
-      for (const rule of conditionalRules) {
-        // 🔥 rule.then과 rule.then.required가 존재하는지 확인
-        if (matchesCondition(rule.if?.properties, type) && 
-            rule.then?.required && 
-            Array.isArray(rule.then.required) &&
-            rule.then.required.includes(field.key)) {
-          status[type] = 'required';
-          break;
-        }
+    for (const rule of conditionalRules) {
+      // 🔥 rule.then과 rule.then.required가 존재하는지 확인
+      if (matchesCondition(rule.if?.properties, type) && 
+          rule.then?.required && 
+          Array.isArray(rule.then.required) &&
+          rule.then.required.includes(field.key)) {
+        status[type] = 'required';
+        break;
+      }
       }
     });
-  }
-  
+    }
+    
   // 4. Check visibleWhen (determines N/A)
   types.forEach(type => {
     if (field.ui?.visibleWhen) {

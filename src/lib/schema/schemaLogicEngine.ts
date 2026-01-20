@@ -360,9 +360,6 @@ function evaluateSectionCondition(condition: RuleCondition, field: FieldContext)
       return visibleTypes.length > 1;
     }
     
-    case 'always':
-      return true;
-    
     default:
       return false;
   }
