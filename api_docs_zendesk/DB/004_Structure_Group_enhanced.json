@@ -1,0 +1,32 @@
+{
+  "GRUP": {
+    "type": "object",
+    "properties": {
+      "NAME": {
+        "type": "string",
+        "description": "Structure group name"
+      },
+      "P_TYPE": {
+        "type": "integer",
+        "description": "Plane type",
+        "default": 0
+      },
+      "N_LIST": {
+        "type": "array",
+        "description": "Node list",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "E_LIST": {
+        "type": "array",
+        "description": "Element list",
+        "items": {
+          "type": "integer"
+        }
+      }
+    },
+    "required": ["NAME"],
+    "additionalProperties": false
+  }
+}

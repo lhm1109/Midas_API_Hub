@@ -285,7 +285,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   }, [schemaFields, activeSchema, psdSet, schemaType]);
 
   // 🔥 기본값 적용 헬퍼 함수 (공통)
-  const getDefaultValue = (field: UIBuilderField): any => {
+  // 🎯 Required 필드는 null, Optional 필드는 '' 반환
+  const getDefaultValue = (field: UIBuilderField, forceValue: boolean = false): any => {
     // 1. 명시적 default 값이 있으면 사용
     if (field.default !== undefined && field.default !== null) {
       return field.default;
@@ -297,12 +298,17 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       return field.enum[0];
     }
 
-    // 3. 타입별 최소 초기값 (JSON Preview에 불필요한 값이 안 들어가도록)
+    // 3. 타입별 초기값
     if (field.type === 'array') return [];  // 배열은 빈 배열
     if (field.type === 'boolean') return false;  // boolean은 false
 
-    // 4. number, integer, string은 빈 문자열 (사용자가 입력하도록)
-    // 이렇게 하면 JSON Preview에 불필요한 0이 표시되지 않음
+    // 4. 🔥 FIX: Required 필드는 null 반환 (forceValue=true일 때)
+    // forceValue=true: Required 필드로 간주, JSON에 key가 포함되어야 함
+    if (forceValue) {
+      return null;  // Required 필드는 null로 표시 (key는 존재)
+    }
+
+    // 5. Optional 필드는 빈 문자열 (나중에 필터링됨)
     return '';
   };
 
@@ -337,9 +343,14 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       const initialData: any = {};
 
       // 🔥 Rule 1: Trigger 필드(enum 필드) + Required 필드만 초기화
+      // ⚠️ 단, 조건부로 숨겨진 필드는 제외
       schemaFields.forEach(field => {
-        // ✅ Trigger 필드 (enum이 있는 필드는 VariantAxis일 가능성이 높음)
-        const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0;
+        // 🔥 FIX: x-required-when이 있는 enum 필드는 조건부 → Trigger가 아님
+        const xRequiredWhen = (field as any)['x-required-when'];
+        const hasConditionalVisibility = xRequiredWhen && typeof xRequiredWhen === 'object';
+
+        // ✅ Trigger 필드: enum이 있고 조건부 visibility가 없는 필드
+        const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0 && !hasConditionalVisibility;
 
         // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
         const isAlwaysRequired =
@@ -373,8 +384,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     // 🔥 Trigger + Required 필드만 초기화 (Optional 필드는 제외)
     const initialData: any = {};
     schemaFields.forEach(field => {
-      // ✅ Trigger 필드 (enum이 있는 필드는 VariantAxis일 가능성이 높음)
-      const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0;
+      // 🔥 FIX: x-required-when이 있는 enum 필드는 조건부 → Trigger가 아님
+      const xRequiredWhen = (field as any)['x-required-when'];
+      const hasConditionalVisibility = xRequiredWhen && typeof xRequiredWhen === 'object';
+
+      // ✅ Trigger 필드: enum이 있고 조건부 visibility가 없는 필드
+      const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0 && !hasConditionalVisibility;
 
       // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
       const isAlwaysRequired =
@@ -411,8 +426,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     // 🔥 Trigger + Required 필드만 초기화 (Optional 필드는 제외)
     const newInstanceData: any = {};
     schemaFields.forEach(field => {
-      // ✅ Trigger 필드 (enum이 있는 필드는 VariantAxis일 가능성이 높음)
-      const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0;
+      // 🔥 FIX: x-required-when이 있는 enum 필드는 조건부 → Trigger가 아님
+      const xRequiredWhen = (field as any)['x-required-when'];
+      const hasConditionalVisibility = xRequiredWhen && typeof xRequiredWhen === 'object';
+
+      // ✅ Trigger 필드: enum이 있고 조건부 visibility가 없는 필드
+      const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0 && !hasConditionalVisibility;
 
       // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
       const isAlwaysRequired =
@@ -623,22 +642,24 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       let addedCount = 0;
 
       requiredVisibleFields.forEach(([fieldName, _state]) => {
-        // 이미 값이 있으면 스킵
-        if (fieldName in updated && updated[fieldName] !== undefined) {
-          return;
+        // 🔥 FIX: 키가 이미 존재하면 스킵 (null이든 뭐든 상관없이)
+        // 이렇게 해야 무한 루프가 방지됨
+        if (fieldName in updated) {
+          return; // 키가 이미 있으면 스킵
         }
 
         // schemaFields에서 필드 정보 찾기
         const field = schemaFields.find(f => f.name === fieldName);
         if (field) {
-          updated[fieldName] = getDefaultValue(field);
+          // Required 필드는 null로 초기화 (enum이 있으면 첫 번째 값)
+          updated[fieldName] = getDefaultValue(field, true);
           addedCount++;
           console.log(`🔥 Auto-added Required field "${fieldName}":`, updated[fieldName]);
         }
       });
 
       if (addedCount > 0) {
-        console.log(`🎯 Total ${addedCount} Required fields auto-added to dynamicFormData`);
+        console.log(`🎯 Total ${addedCount} Required fields auto-added`);
         return updated;
       }
 
@@ -1350,10 +1371,30 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       const allInstances: any = {};
       Object.keys(assignInstances).forEach(key => {
         const instanceData = assignInstances[key];
-        const convertDotNotationToNested = (flatData: any) => {
+
+        // 🔥 FIX: buildCleanJSON과 동일한 로직 적용
+        // Required+Visible 필드는 null이어도 포함되어야 함
+        const convertDotNotationToNestedWithRequired = (flatData: any) => {
           const nested: any = {};
 
-          Object.keys(flatData).forEach(fieldKey => {
+          // 🎯 Step 1: Required + Visible 필드를 data 복사본에 추가
+          const enrichedData = { ...flatData };
+          schemaFields.forEach(field => {
+            const runtimeState = fieldRuntimeStates[field.name];
+            // 🔥 Rule: Required+Visible는 값이 없거나 빈 값이어도 key를 생성
+            if (runtimeState && runtimeState.requiredNow && runtimeState.visible) {
+              if (!(field.name in enrichedData) || enrichedData[field.name] === '') {
+                // enum 필드는 첫 번째 옵션, 그 외는 null
+                if (field.enum && field.enum.length > 0) {
+                  enrichedData[field.name] = field.enum[0];
+                } else {
+                  enrichedData[field.name] = null;
+                }
+              }
+            }
+          });
+
+          Object.keys(enrichedData).forEach(fieldKey => {
             // 🔥 섹션 헤더 키 제외 (UI 전용)
             if (fieldKey.startsWith('__section_')) {
               return;
@@ -1363,9 +1404,18 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               return;
             }
 
-            // 🔥 빈 값 제외 (default가 없는 필드는 JSON에 포함하지 않음)
-            const value = flatData[fieldKey];
-            if (value === '' || value === null || value === undefined) {
+            const value = enrichedData[fieldKey];
+
+            // 🔥 FIX: Required 필드는 null도 포함
+            const runtimeState = fieldRuntimeStates[fieldKey];
+            const isRequired = runtimeState?.requiredNow && runtimeState?.visible;
+
+            // 🔥 빈 값 제외 (단, Required 필드는 예외)
+            if (!isRequired && (value === '' || value === undefined)) {
+              return;
+            }
+            // null은 Required 필드만 허용
+            if (value === null && !isRequired) {
               return;
             }
 
@@ -1373,7 +1423,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               const parts = fieldKey.split('.');
               const parentKey = parts[0];
 
-              if (flatData[`${parentKey}._enabled`] === false) {
+              if (enrichedData[`${parentKey}._enabled`] === false) {
                 return;
               }
 
@@ -1395,7 +1445,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         };
 
         // 🔥 UI 전용 키 제거 후 저장
-        allInstances[key] = cleanUIKeys(convertDotNotationToNested(instanceData));
+        allInstances[key] = cleanUIKeys(convertDotNotationToNestedWithRequired(instanceData));
       });
 
       const wrapped = {

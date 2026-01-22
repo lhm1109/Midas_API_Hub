@@ -1,0 +1,54 @@
+{
+  "UNIT": {
+    "type": "object",
+    "properties": {
+      "FORCE": {
+        "type": "string",
+        "description": "Force (mass)",
+        "enum": ["N", "KN", "KGF", "TONF", "LBF", "KIPS"],
+        "x-enum-labels": {
+          "N": "N (kg)",
+          "KN": "kN (ton)",
+          "KGF": "kgf (kg)",
+          "TONF": "tonf (ton)",
+          "LBF": "lbf (lb)",
+          "KIPS": "kips (kips/g)"
+        }
+      },
+      "DIST": {
+        "type": "string",
+        "description": "Length",
+        "enum": ["M", "CM", "MM", "FT", "IN"],
+        "x-enum-labels": {
+          "M": "m",
+          "CM": "cm",
+          "MM": "mm",
+          "FT": "ft",
+          "IN": "in"
+        }
+      },
+      "HEAT": {
+        "type": "string",
+        "description": "Heat",
+        "enum": ["CAL", "KCAL", "J", "KJ", "BTU"],
+        "x-enum-labels": {
+          "CAL": "cal",
+          "KCAL": "kcal",
+          "J": "J",
+          "KJ": "kJ",
+          "BTU": "Btu"
+        }
+      },
+      "TEMPER": {
+        "type": "string",
+        "description": "Temperature unit",
+        "enum": ["C", "F"],
+        "x-enum-labels": {
+          "C": "Celsius",
+          "F": "Fahrenheit"
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "SBDO": {
+    "type": "object",
+    "properties": {
+      "SUB_DOMAIN_NAME": {
+        "type": "string",
+        "description": "Sub domain name"
+      },
+      "V1": {
+        "type": "number",
+        "description": "Rebar dir.1"
+      },
+      "V2": {
+        "type": "number",
+        "description": "Rebar dir.2"
+      },
+      "DOMAIN_NAME": {
+        "type": "string",
+        "description": "Domain name"
+      },
+      "MEMB_TYPE_CIVIL": {
+        "type": "integer",
+        "description": "Member type civil",
+        "enum": [0, 1, 2, 3],
+        "x-enum-labels": {
+          "0": "None",
+          "1": "Plate Beam (1D)",
+          "2": "Plate Column (1D)",
+          "3": "Shell"
+        }
+      },
+      "REBAR_AXIS_TYPE": {
+        "type": "integer",
+        "description": "Rebar direction",
+        "enum": [0, 1, 2],
+        "default": 0,
+        "x-enum-labels": {
+          "0": "Local",
+          "1": "UCS",
+          "2": "Reference Axis"
+        }
+      },
+      "STR_UCS": {
+        "type": "string",
+        "description": "UCS",
+        "default": "",
+        "x-ui": {
+          "visibleWhen": {
+            "REBAR_AXIS_TYPE": 1
+          }
+        }
+      },
+      "AXIS_VECTOR": {
+        "type": "array",
+        "description": "Axis vector",
+        "items": {
+          "type": "number"
+        },
+        "default": [0, 0, 0, 0, 0, 0],
+        "x-ui": {
+          "visibleWhen": {
+            "REBAR_AXIS_TYPE": 2
+          }
+        }
+      },
+      "MEMBER_TYPE": {
+        "type": "integer",
+        "description": "Member type",
+        "enum": [0, 1, 2],
+        "x-enum-labels": {
+          "0": "None",
+          "1": "Slab",
+          "2": "Mat"
+        }
+      },
+      "OPT_BASIC_REBAR": {
+        "type": "boolean",
+        "description": "Basic rebar option",
+        "default": false
+      },
+      "TOP_REBAR_NAME_X": {
+        "type": "string",
+        "description": "Top rebar name (X-dir)",
+        "default": "",
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "TOP_REBAR_SPACE_X": {
+        "type": "number",
+        "description": "Top rebar space (X-dir)",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "BOTTOM_REBAR_NAME_X": {
+        "type": "string",
+        "description": "Bottom rebar name (X-dir)",
+        "default": "",
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "BOTTOM_REBAR_SPACE_X": {
+        "type": "number",
+        "description": "Bottom rebar space (X-dir)",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "TOP_REBAR_NAME_Y": {
+        "type": "string",
+        "description": "Top rebar name (Y-dir)",
+        "default": "",
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "TOP_REBAR_SPACE_Y": {
+        "type": "number",
+        "description": "Top rebar space (Y-dir)",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "BOTTOM_REBAR_NAME_Y": {
+        "type": "string",
+        "description": "Bottom rebar name (Y-dir)",
+        "default": "",
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "BOTTOM_REBAR_SPACE_Y": {
+        "type": "number",
+        "description": "Bottom rebar space (Y-dir)",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_BASIC_REBAR": true
+          }
+        }
+      },
+      "OPT_REBAR_MATL": {
+        "type": "boolean",
+        "description": "Rebar material option",
+        "default": false
+      },
+      "REBAR_MATL_KEY": {
+        "type": "integer",
+        "description": "Rebar material key",
+        "default": 0,
+        "x-ui": {
+          "visibleWhen": {
+            "OPT_REBAR_MATL": true
+          }
+        }
+      },
+      "bUseMt": {
+        "type": "boolean",
+        "description": "Use Mt"
+      },
+      "THICKNESS": {
+        "type": "number",
+        "description": "Thickness"
+      }
+    },
+    "required": ["SUB_DOMAIN_NAME", "V1", "V2", "DOMAIN_NAME", "bUseMt", "THICKNESS"],
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "REBAR_AXIS_TYPE": {
+              "const": 1
+            }
+          }
+        },
+        "then": {
+          "required": ["STR_UCS"]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "REBAR_AXIS_TYPE": {
+              "const": 2
+            }
+          }
+        },
+        "then": {
+          "required": ["AXIS_VECTOR"]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "OPT_BASIC_REBAR": {
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "required": ["TOP_REBAR_NAME_X", "TOP_REBAR_SPACE_X", "BOTTOM_REBAR_NAME_X", "BOTTOM_REBAR_SPACE_X", "TOP_REBAR_NAME_Y", "TOP_REBAR_SPACE_Y", "BOTTOM_REBAR_NAME_Y", "BOTTOM_REBAR_SPACE_Y"]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "OPT_REBAR_MATL": {
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "required": ["REBAR_MATL_KEY"]
+        }
+      }
+    ],
+    "additionalProperties": false
+  }
+}

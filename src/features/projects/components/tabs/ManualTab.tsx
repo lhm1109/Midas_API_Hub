@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save } from 'lucide-react';
+import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
 import Editor from '@monaco-editor/react';
@@ -13,32 +13,32 @@ interface ManualTabProps {
 }
 
 export function ManualTab({ endpoint }: ManualTabProps) {
-  const { manualData } = useAppStore();
+  const { manualData, setManualData } = useAppStore();
   const [zendeskUrl, setZendeskUrl] = useState('');
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // 🔍 Zoom 상태 관리
   const [zoom, setZoom] = useState(1);
-  
+
   // 🎯 Editable HTML State
   const [editableHTML, setEditableHTML] = useState('');
   const [isHTMLModified, setIsHTMLModified] = useState(false);
-  
+
   // 🎯 Zoom 리셋
   const handleResetZoom = () => {
     setZoom(1);
   };
-  
+
   // 🎯 Zoom In/Out 버튼
   const handleZoomIn = () => {
     setZoom(prev => Math.min(prev + 0.1, 3));
   };
-  
+
   const handleZoomOut = () => {
     setZoom(prev => Math.max(prev - 0.1, 0.3));
   };
-  
+
   // 🎯 Ctrl + Wheel로 Zoom 제어
   const handleWheel = (e: React.WheelEvent) => {
     if (e.ctrlKey) {
@@ -56,60 +56,74 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     }
 
     const { title, category, inputUri, activeMethods, jsonSchema, requestExamples, responseExamples, specifications } = manualData;
-    
-    // 🎯 Spec에서 보낸 스키마 사용 (JSON 문자열을 HTML로 포맷)
-    const formatJsonToHTML = (jsonStr: string): string => {
-      try {
-        // JSON 문자열을 객체로 파싱
-        const jsonObj = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
-        const prettyJson = JSON.stringify(jsonObj, null, 2);
-        
-        // HTML 포맷팅
-        return prettyJson
-          .split('\n')
-          .map(line => {
-            const leadingSpaces = line.match(/^(\s*)/)?.[1] || '';
-            const indent = leadingSpaces.replace(/ /g, '&nbsp;&nbsp;');
-            const trimmedLine = line.trim();
-            
-            const keyMatch = trimmedLine.match(/^"([^"]+)":\s*(.+)$/);
-            if (keyMatch) {
-              const key = keyMatch[1];
-              let value = keyMatch[2];
-              const hasComma = value.endsWith(',');
-              if (hasComma) {
-                value = value.slice(0, -1);
-              }
-              
-              let styledValue = value;
-              if (value === 'true' || value === 'false') {
-                styledValue = `<span style="color: #055bcc; font-weight: bold;">${value}</span>`;
-              } else if (value.match(/^"[^"]*"$/)) {
-                styledValue = `<span style="color: #055bcc;">${value}</span>`;
-              } else if (value.match(/^-?\d+(\.\d+)?$/)) {
-                styledValue = `<span style="color: #0ab66c;">${value}</span>`;
-              } else if (value === '{' || value === '[') {
-                styledValue = value;
-              }
-              
-              const styledLine = `${indent}<span style="color: #c31b1b;">"${key}"</span>: ${styledValue}${hasComma ? ',' : ''}`;
-              return styledLine;
-            }
-            
-            if (trimmedLine.match(/^[{\[\}\]],?$/)) {
-              return indent + trimmedLine;
-            }
-            
-            return indent + trimmedLine;
-          })
-          .join('<br>');
-      } catch (error) {
-        // JSON 파싱 실패 시 원본 반환 (이미 HTML일 수도 있음)
-        console.warn('Failed to parse JSON schema, using raw value:', error);
-        return jsonStr;
-      }
+
+    // HTML 이스케이프 함수
+    const escapeHtml = (unsafe: string | number | boolean | null): string => {
+      if (unsafe === null || unsafe === undefined) return 'null';
+      if (typeof unsafe === 'boolean') return unsafe.toString();
+      if (typeof unsafe === 'number') return unsafe.toString();
+      return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     };
-    
+
+    // 🎯 Spec에서 보낸 스키마 사용 (JSON 문자열을 HTML로 포맷)
+    const formatJsonToHTML = (jsonStr: string | object | null | undefined, indentLevel = 0): string => {
+      let jsonObj: any;
+      try {
+        jsonObj = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
+      } catch (error) {
+        console.warn('Failed to parse JSON schema, using raw value:', error);
+        return escapeHtml(jsonStr as string);
+      }
+
+      if (jsonObj === null) {
+        return `<span style="color: #055bcc; font-weight: bold;">null</span>`;
+      }
+
+      if (typeof jsonObj !== 'object') {
+        // Primitive values
+        if (typeof jsonObj === 'string') {
+          return `<span style="color: #055bcc;">"${escapeHtml(jsonObj)}"</span>`;
+        }
+        if (typeof jsonObj === 'number') {
+          return `<span style="color: #0ab66c;">${escapeHtml(jsonObj)}</span>`;
+        }
+        if (typeof jsonObj === 'boolean') {
+          return `<span style="color: #055bcc; font-weight: bold;">${escapeHtml(jsonObj)}</span>`;
+        }
+        return escapeHtml(jsonObj);
+      }
+
+      const indent = '  '.repeat(indentLevel);
+      const nextIndent = '  '.repeat(indentLevel + 1);
+
+      if (Array.isArray(jsonObj)) {
+        if (jsonObj.length === 0) {
+          return '[]';
+        }
+        const items = jsonObj.map(item => {
+          return `${nextIndent}${formatJsonToHTML(item, indentLevel + 1)}`;
+        }).join(',\n');
+        return `[\n${items}\n${indent}]`;
+      }
+
+      // Object
+      const keys = Object.keys(jsonObj);
+      if (keys.length === 0) {
+        return '{}';
+      }
+      const properties = keys.map(key => {
+        const value = jsonObj[key];
+        const formattedValue = formatJsonToHTML(value, indentLevel + 1);
+        return `${nextIndent}<span style="color: #c31b1b;">"${escapeHtml(key)}"</span>: ${formattedValue}`;
+      }).join(',\n');
+      return `{\n${properties}\n${indent}}`;
+    };
+
     const currentSchema = formatJsonToHTML(jsonSchema || manualData.jsonSchemaOriginal || '{}');
 
     return `<!DOCTYPE html>
@@ -266,6 +280,8 @@ export function ManualTab({ endpoint }: ManualTabProps) {
             font-size: 13px;
             line-height: 1.6;
             color: #2f3941;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
         
         /* Colored table cells */
@@ -466,14 +482,14 @@ function toggleAccordion(button) {
     }
 
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
-    
+
     // TODO: Implement Zendesk API integration
     console.log('Sending to Zendesk:', zendeskUrl);
     console.log('HTML Content:', html);
-    
+
     alert(`✅ Manual would be sent to: ${zendeskUrl}\n(Zendesk API integration required)`);
   };
-  
+
   // 🎯 Switch to HTML Code mode
   const handleSwitchToCode = () => {
     if (viewMode === 'preview') {
@@ -482,22 +498,46 @@ function toggleAccordion(button) {
     }
     setViewMode('code');
   };
-  
+
   // 🎯 Handle HTML Change
   const handleHTMLChange = (newHTML: string) => {
     setEditableHTML(newHTML);
     setIsHTMLModified(true);
   };
-  
+
   // 🎯 Save HTML Changes
   const handleSaveHTML = () => {
     setIsHTMLModified(false);
     alert('✅ HTML changes saved!\n\nYou can now export or send to Zendesk with the updated HTML.');
   };
-  
+
   // 🎯 Reset HTML
   const handleResetHTML = () => {
     setEditableHTML(generateHTML());
+    setIsHTMLModified(false);
+  };
+
+  // 🎯 Clear Content (기본 템플릿 유지)
+  const handleClear = () => {
+    if (!window.confirm('내용을 클리어하시겠습니까?\n기본 템플릿 구조는 유지됩니다.')) return;
+
+    // 기본 템플릿 값으로 초기화
+    setManualData({
+      title: endpoint.name || 'Untitled',
+      category: '',
+      inputUri: '',
+      activeMethods: '',
+      jsonSchema: '{}',
+      jsonSchemaOriginal: undefined,
+      jsonSchemaEnhanced: undefined,
+      examples: [],
+      requestExamples: [],
+      responseExamples: [],
+      specifications: '',
+    });
+
+    // HTML 에디터도 리셋
+    setEditableHTML('');
     setIsHTMLModified(false);
   };
 
@@ -513,7 +553,7 @@ function toggleAccordion(button) {
             <h3 className="text-xs font-medium text-white whitespace-nowrap">📖 Manual</h3>
             <div className="h-4 w-px bg-zinc-700" />
           </div>
-          
+
           {/* View Mode Toggle */}
           <div className="flex items-center gap-1">
             <Button
@@ -550,10 +590,20 @@ function toggleAccordion(button) {
             onChange={handleFileChange}
             className="hidden"
           />
-          
+
           <Button size="sm" variant="outline" onClick={handleExport} className="h-7 px-2 text-xs">
             <FileDown className="w-3 h-3 mr-1" />
             Export
+          </Button>
+
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleClear}
+            className="h-7 px-2 text-xs text-red-400 border-red-600/50 hover:bg-red-900/20 hover:text-red-300"
+          >
+            <Trash2 className="w-3 h-3 mr-1" />
+            Clear
           </Button>
 
           <div className="h-4 w-px bg-zinc-700" />
@@ -593,11 +643,11 @@ function toggleAccordion(button) {
                   >
                     <ZoomOut className="w-3 h-3" />
                   </Button>
-                  
+
                   <span className="text-xs font-mono text-zinc-300 min-w-[50px] text-center">
                     {Math.round(zoom * 100)}%
                   </span>
-                  
+
                   <Button
                     size="sm"
                     variant="ghost"
@@ -607,9 +657,9 @@ function toggleAccordion(button) {
                   >
                     <ZoomIn className="w-3 h-3" />
                   </Button>
-                  
+
                   <div className="h-3 w-px bg-zinc-700 mx-1" />
-                  
+
                   <Button
                     size="sm"
                     variant="ghost"
@@ -619,56 +669,56 @@ function toggleAccordion(button) {
                   >
                     <RotateCcw className="w-3 h-3" />
                   </Button>
-                  
+
                   <div className="text-[10px] text-zinc-500 ml-1 hidden md:block">
                     💡 Ctrl+Wheel
                   </div>
                 </div>
               </div>
             )}
-            
-            <div 
+
+            <div
               className="h-full w-full overflow-hidden"
               onWheel={handleWheel}
             >
               <ScrollArea className="h-full w-full">
-                <div 
+                <div
                   className="p-6 pt-24"
                   style={{ cursor: 'default' }}
                 >
-              {!manualData ? (
-                <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
-                  <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
-                    <FileDown className="w-8 h-8 text-zinc-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-zinc-300 mb-2">No Manual Data</h3>
-                  <p className="text-sm text-zinc-500 max-w-md">
-                    Click "Send to Manual" from Spec, Builder, or Runner tabs to automatically generate documentation.
-                  </p>
+                  {!manualData ? (
+                    <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
+                      <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                        <FileDown className="w-8 h-8 text-zinc-600" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-zinc-300 mb-2">No Manual Data</h3>
+                      <p className="text-sm text-zinc-500 max-w-md">
+                        Click "Send to Manual" from Spec, Builder, or Runner tabs to automatically generate documentation.
+                      </p>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        transform: `scale(${zoom})`,
+                        transformOrigin: 'top left',
+                        transition: 'transform 0.1s ease-out',
+                        width: `${100 / zoom}%`,
+                        minHeight: `${100 / zoom}vh`
+                      }}
+                    >
+                      <iframe
+                        srcDoc={htmlContent}
+                        className="w-full bg-white rounded-lg border border-zinc-700 pointer-events-auto"
+                        title="Manual Preview"
+                        sandbox="allow-scripts allow-same-origin"
+                        style={{
+                          height: '100vh',
+                          minHeight: '100vh'
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div 
-                  style={{ 
-                    transform: `scale(${zoom})`, 
-                    transformOrigin: 'top left',
-                    transition: 'transform 0.1s ease-out',
-                    width: `${100 / zoom}%`,
-                    minHeight: `${100 / zoom}vh`
-                  }}
-                >
-                  <iframe
-                    srcDoc={htmlContent}
-                    className="w-full bg-white rounded-lg border border-zinc-700 pointer-events-auto"
-                    title="Manual Preview"
-                    sandbox="allow-scripts allow-same-origin"
-                    style={{ 
-                      height: '100vh',
-                      minHeight: '100vh'
-                    }}
-                  />
-                </div>
-              )}
-              </div>
               </ScrollArea>
             </div>
           </div>
@@ -680,7 +730,7 @@ function toggleAccordion(button) {
                 {isHTMLModified ? '✏️ Modified - Click Save to apply changes' : '✅ Ready to edit'}
               </p>
             </div>
-            
+
             {/* 🎯 Monaco Editor - VSCode Style */}
             <div className="flex-1 relative">
               <Editor
@@ -707,7 +757,7 @@ function toggleAccordion(button) {
                   },
                 }}
               />
-              
+
               {/* 🎯 Modified Indicator */}
               {isHTMLModified && (
                 <div className="absolute top-2 right-2 px-2 py-1 bg-orange-600/20 border border-orange-600/50 rounded text-xs text-orange-400 z-10">
@@ -715,7 +765,7 @@ function toggleAccordion(button) {
                 </div>
               )}
             </div>
-            
+
             {/* 🎯 Footer with Save Button - Compact */}
             <div className="border-t border-zinc-800 bg-zinc-900 px-3 py-2 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-2 text-xs text-zinc-500">
@@ -731,7 +781,7 @@ function toggleAccordion(button) {
                   </>
                 )}
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <Button
                   onClick={handleResetHTML}
@@ -742,7 +792,7 @@ function toggleAccordion(button) {
                 >
                   Reset
                 </Button>
-                
+
                 <Button
                   onClick={handleSaveHTML}
                   size="sm"

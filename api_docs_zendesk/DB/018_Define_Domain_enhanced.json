@@ -1,0 +1,36 @@
+{
+  "MADO": {
+    "type": "object",
+    "properties": {
+      "NAME": {
+        "type": "string",
+        "description": "Domain name"
+      },
+      "TYPE": {
+        "type": "integer",
+        "description": "Element type",
+        "enum": [3, 4, 6, 7],
+        "x-enum-labels": {
+          "3": "Plane Stress",
+          "4": "Plate",
+          "6": "Plane Strain",
+          "7": "Axisymmetric"
+        }
+      },
+      "MATL": {
+        "type": "integer",
+        "description": "Material ID"
+      },
+      "PROP": {
+        "type": "integer",
+        "description": "Element property"
+      },
+      "SUB_TYPE": {
+        "type": "integer",
+        "description": "Sub type"
+      }
+    },
+    "required": ["NAME", "TYPE", "MATL", "PROP", "SUB_TYPE"],
+    "additionalProperties": false
+  }
+}
