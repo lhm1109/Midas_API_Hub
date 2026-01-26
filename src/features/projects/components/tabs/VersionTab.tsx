@@ -607,11 +607,11 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                             </Button>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                              <GitBranch className="w-4 h-4 text-blue-400" />
-                              {version.version}
-                            </h3>
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                            <GitBranch className="w-4 h-4 text-blue-400" />
+                            {version.version}
+                          </h3>
                             <Button
                               size="sm"
                               variant="ghost"
@@ -620,12 +620,12 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                             >
                               <Edit2 className="w-3 h-3" />
                             </Button>
-                            {isCurrentVersion && (
-                              <span className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded-full">
-                                CURRENT
-                              </span>
-                            )}
-                          </div>
+                          {isCurrentVersion && (
+                            <span className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded-full">
+                              CURRENT
+                            </span>
+                          )}
+                        </div>
                         )}
 
                         {/* Change Log - Editable */}

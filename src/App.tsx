@@ -6,6 +6,8 @@ import { HistoryView } from '@/features/history/components';
 import { DocsView } from '@/features/docs/components';
 import { DebugView } from '@/features/debug/components';
 import { SchemaView } from '@/features/schema/components';
+import { SchemaBuilderPage } from '@/features/schema-builder';
+import { ManagerView } from '@/features/manager/components';
 import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint } from '@/types';
@@ -17,7 +19,7 @@ import { ChevronRight } from 'lucide-react';
 export default function App() {
   const { setRunnerData, acquireEndpointLock, releaseEndpointLock } = useAppStore();
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
-  const [activeView, setActiveView] = useState<'projects' | 'history' | 'docs' | 'debug' | 'schema'>('projects');
+  const [activeView, setActiveView] = useState<'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder'>('manager');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
   const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
@@ -29,24 +31,24 @@ export default function App() {
       try {
         // 1. Supabase에서 제품 PSD 매핑 가져오기
         await refreshProductMappings();
-        
+
         // 2. 기본 PSD로 스키마 로직 규칙 초기화 (original + enhanced)
         await initSchemaLogicRules('civil_gen_definition', 'original');
         await initSchemaLogicRules('civil_gen_definition', 'enhanced');
-        
+
         // 3. 🔥 사용자 이름이 설정되어 있으면 useAppStore에 반영
         const savedUserName = localStorage.getItem('userName');
         if (savedUserName) {
           const { setCurrentUserId } = useAppStore.getState();
           setCurrentUserId(savedUserName);
         }
-        
+
         console.log('✅ App initialized successfully');
       } catch (error) {
         console.error('❌ Failed to initialize app:', error);
       }
     }
-    
+
     initializeApp();
   }, []);
 
@@ -78,9 +80,9 @@ export default function App() {
 
       // 다음 프레임에 업데이트 예약
       rafId = requestAnimationFrame(() => {
-      const delta = moveEvent.clientX - startX;
-      const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
-      setPanelWidth(newWidth);
+        const delta = moveEvent.clientX - startX;
+        const newWidth = Math.max(200, Math.min(600, startWidth + delta)); // 최소 200px, 최대 600px
+        setPanelWidth(newWidth);
       });
     };
 
@@ -110,7 +112,7 @@ export default function App() {
       }
     }
   }, [endpointsLoading, apiData, selectedEndpoint]);
-  
+
   // 🎯 Settings 초기값 (localStorage에서 로드)
   const [settings, setSettings] = useState(() => {
     try {
@@ -121,7 +123,7 @@ export default function App() {
     } catch (error) {
       console.error('Failed to load settings from localStorage:', error);
     }
-    
+
     // 기본값
     return {
       baseUrl: 'https://api-beta.midasit.com/civil',
@@ -201,34 +203,34 @@ export default function App() {
   }, [selectedEndpoint?.id, releaseEndpointLock]);
 
   const handleEndpointSelect = async (endpoint: ApiEndpoint) => {
-    const { 
-      resetCurrentVersion, 
-      fetchVersions, 
+    const {
+      resetCurrentVersion,
+      fetchVersions,
       releaseEndpointLock,
       acquireEndpointLock,
-      endpoint: currentEndpoint 
+      endpoint: currentEndpoint
     } = useAppStore.getState();
-    
+
     // 🔥 이전 엔드포인트의 잠금 해제
     if (currentEndpoint?.id && currentEndpoint.id !== endpoint.id) {
       await releaseEndpointLock(currentEndpoint.id);
     }
-    
+
     setSelectedEndpoint(endpoint);
-    
+
     // 🔥 Store에 엔드포인트 저장
     useAppStore.setState({ endpoint });
-    
+
     // 🔥 엔드포인트 변경 시 현재 버전과 모든 탭 데이터 리셋
     // 🔥 1. 현재 버전 및 모든 데이터 리셋
     resetCurrentVersion();
-    
+
     // 🔥 2. 새 엔드포인트의 잠금 획득 시도
     const lockAcquired = await acquireEndpointLock(endpoint.id);
     if (!lockAcquired) {
       console.warn('⚠️ Failed to acquire lock - endpoint may be locked by another user');
     }
-    
+
     // 🔥 3. 새 엔드포인트의 버전 목록 불러오기
     try {
       await fetchVersions(endpoint.id);
@@ -250,7 +252,7 @@ export default function App() {
       {activeView === 'projects' && (
         <>
           {endpointsLoading ? (
-            <div 
+            <div
               style={{ width: isPanelCollapsed ? '0px' : `${panelWidth}px` }}
               className="bg-zinc-900 border-r border-zinc-800 flex items-center justify-center transition-all duration-300 overflow-hidden"
             >
@@ -259,8 +261,8 @@ export default function App() {
           ) : (
             <>
               {/* 패널 컨테이너 - 접혔을 때도 작은 영역 유지 */}
-              <div 
-                style={{ 
+              <div
+                style={{
                   width: isPanelCollapsed ? '40px' : `${panelWidth}px`,
                   willChange: 'width', // GPU 가속
                 }}
@@ -279,25 +281,25 @@ export default function App() {
                   </div>
                 ) : (
                   // 펼쳐진 상태: 패널 전체 표시
-                <APIListPanel
-                  products={apiData}
-                  selectedEndpoint={selectedEndpoint?.id || null}
-                  onEndpointSelect={handleEndpointSelect}
-                  onEndpointsChange={refetchEndpoints}
+                  <APIListPanel
+                    products={apiData}
+                    selectedEndpoint={selectedEndpoint?.id || null}
+                    onEndpointSelect={handleEndpointSelect}
+                    onEndpointsChange={refetchEndpoints}
                     onToggleCollapse={() => setIsPanelCollapsed(true)}
-                />
+                  />
                 )}
               </div>
-              
+
               {/* 리사이즈 핸들 (펼쳐진 상태에서만) */}
               {!isPanelCollapsed && (
-              <div
-                onMouseDown={handleMouseDown}
-                className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
-                style={{ touchAction: 'none' }}
-              >
-                <div className="absolute inset-y-0 -left-1 -right-1" />
-              </div>
+                <div
+                  onMouseDown={handleMouseDown}
+                  className="w-1 bg-zinc-800 hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 relative group"
+                  style={{ touchAction: 'none' }}
+                >
+                  <div className="absolute inset-y-0 -left-1 -right-1" />
+                </div>
               )}
             </>
           )}
@@ -305,7 +307,9 @@ export default function App() {
       )}
 
       {/* 3. Main Content Area */}
-      {activeView === 'projects' ? (
+      {activeView === 'manager' ? (
+        <ManagerView />
+      ) : activeView === 'projects' ? (
         <ProjectsView
           endpoint={selectedEndpoint}
           settings={settings}
@@ -316,6 +320,8 @@ export default function App() {
         <DocsView />
       ) : activeView === 'schema' ? (
         <SchemaView />
+      ) : activeView === 'builder' ? (
+        <SchemaBuilderPage />
       ) : (
         <DebugView />
       )}

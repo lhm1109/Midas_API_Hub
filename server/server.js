@@ -11,6 +11,7 @@ import locksRouter from './routes/locks.js';
 import productsRouter from './routes/products.js';
 import groupsRouter from './routes/groups.js';
 import schemaDefinitionsRouter from './routes/schema-definitions.js';
+import managerRouter from './routes/manager.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -38,6 +39,7 @@ app.use('/api/data', dataRouter);
 app.use('/api/debug', debugRouter);
 app.use('/api/attachments', attachmentsRouter);
 app.use('/api/locks', locksRouter);
+app.use('/api/manager', managerRouter);
 
 // 실제 비즈니스 API (자동 문서화)
 app.use('/api/civil/db', apiRouter);
