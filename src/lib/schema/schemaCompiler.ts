@@ -51,12 +51,12 @@ export interface EnhancedProperty {
   maxItems?: number;
   items?: { type: string; properties?: Record<string, any> };
   description?: string;
-  
+
   // Object type - nested properties
   properties?: Record<string, EnhancedProperty>;  // 🔥 중첩 객체 지원
   required?: string[];  // 🔥 중첩 객체의 required 필드
   oneOf?: any[];  // 🔥 oneOf 지원
-  
+
   // Enhanced extensions (YAML로 활성화 제어)
   'x-enum-labels'?: Record<string, string>;
   'x-enum-by-type'?: Record<string, (string | number)[]>;
@@ -98,15 +98,15 @@ export interface EnhancedField {
   description?: string;
   default?: any;
   required: RequiredStatus;
-  
+
   // 필수 필드들만 명시
   section: string;
   validationLayers: ValidationLayer[];
   children?: EnhancedField[];
-  
+
   // 🎯 NEW: 런타임 트리거 필드 (visibleWhen, x-required-when에서 자동 추출)
   runtimeTriggers?: string[];
-  
+
   // 🔥 하드코딩 제거: 모든 확장 필드를 동적으로 저장
   [key: string]: any;  // x-* 필드들을 동적으로 저장
 }
@@ -173,27 +173,27 @@ export function compileSchema(
   // ⚡ 캐시 체크
   const cacheKey = generateSchemaHash(schema, psdSet, schemaType);
   const cached = schemaCompileCache.get(cacheKey);
-  
+
   if (cached) {
     console.log('✅ Using cached schema compilation (key:', cacheKey.substring(0, 80) + '...)');
     return cached;
   }
-  
+
   console.log('🔄 Compiling schema (cache miss)');
   // 🔥 YAML 기반 스키마 구조 패턴 감지 및 변환
   const transformedSchema = applySchemaStructurePatterns(schema, psdSet, schemaType);
-  
+
   // 🔥 스키마 유효성 검사
   if (!transformedSchema || !transformedSchema.properties) {
     console.warn('⚠️ Invalid schema: missing properties', transformedSchema);
     return [];
   }
-  
+
   // Phase 1: Extract basic info
   const types = extractTypes(transformedSchema);
   const fields = extractFields(transformedSchema);
   const conditionalRules = extractConditionalRequired(transformedSchema);
-  
+
   // Phase 2: Calculate required status for each field
   const fieldsWithStatus = fields.map(field => {
     const layers = determineValidationLayersDynamic(field, psdSet, schemaType);
@@ -203,16 +203,16 @@ export function compileSchema(
       validationLayers: layers as ValidationLayer[],
     };
   });
-  
+
   // Phase 3: Group by sections (YAML-based, 동기)
   const sections = groupFieldsBySectionsDynamic(fieldsWithStatus, types, psdSet, schemaType, transformedSchema);
-  
+
   // Phase 4: Sort sections (YAML-based, 동기)
   const result = sortSectionsDynamic(sections, psdSet, schemaType, transformedSchema);
-  
+
   // ⚡ 결과를 캐시에 저장
   schemaCompileCache.set(cacheKey, result);
-  
+
   return result;
 }
 
@@ -240,7 +240,7 @@ export function compileSchemaWithContext(
 ): CompiledSchemaContext {
   const sections = compileSchema(schema, psdSet, schemaType);
   const variantAxes = inferVariantAxes(schema, sections);
-  
+
   return {
     sections,
     variantAxes,
@@ -265,7 +265,7 @@ function inferVariantAxes(
 ): VariantAxis[] {
   const axes: VariantAxis[] = [];
   const candidateFields = new Map<string, { type: string; values: any[]; labels?: Record<string, string>; refCount: number }>();
-  
+
   // 🔥 Step 1: enum을 가진 필드를 후보로 수집
   for (const section of sections) {
     for (const field of section.fields) {
@@ -279,7 +279,7 @@ function inferVariantAxes(
       }
     }
   }
-  
+
   // 🔥 Step 2: visibleWhen / x-required-when에서 사용 횟수 카운트
   for (const section of sections) {
     for (const field of section.fields) {
@@ -293,7 +293,7 @@ function inferVariantAxes(
           }
         }
       }
-      
+
       // x-required-when 확인
       const requiredWhen = (field as any)['x-required-when'];
       if (requiredWhen && typeof requiredWhen === 'object') {
@@ -304,7 +304,7 @@ function inferVariantAxes(
           }
         }
       }
-      
+
       // 중첩 필드도 확인
       if (field.children && Array.isArray(field.children)) {
         for (const child of field.children) {
@@ -317,7 +317,7 @@ function inferVariantAxes(
               }
             }
           }
-          
+
           const childRequiredWhen = (child as any)['x-required-when'];
           if (childRequiredWhen && typeof childRequiredWhen === 'object') {
             for (const key of Object.keys(childRequiredWhen)) {
@@ -331,7 +331,7 @@ function inferVariantAxes(
       }
     }
   }
-  
+
   // 🔥 Step 3: allOf.if 조건 확인
   if (schema.allOf && Array.isArray(schema.allOf)) {
     for (const rule of schema.allOf) {
@@ -345,7 +345,7 @@ function inferVariantAxes(
       }
     }
   }
-  
+
   // 🔥 Step 4: refCount > 0인 필드를 VariantAxis로 추가
   for (const [field, candidate] of candidateFields.entries()) {
     if (candidate.refCount > 0) {
@@ -357,7 +357,7 @@ function inferVariantAxes(
       });
     }
   }
-  
+
   return axes;
 }
 
@@ -378,26 +378,26 @@ function applySchemaStructurePatterns(
     console.warn('⚠️ applySchemaStructurePatterns: Invalid schema', schema);
     return schema || {} as EnhancedSchema;
   }
-  
+
   const patterns = getSchemaStructurePatterns(psdSet, schemaType);
-  
+
   if (!patterns || patterns.length === 0) {
     return schema; // No patterns defined, return as-is
   }
-  
+
   // 각 패턴을 순서대로 확인
   for (const pattern of patterns) {
     if (!pattern.enabled) continue;
-    
+
     // 패턴 감지
     if (matchesPattern(schema, pattern.detect)) {
       console.log(`🔄 Applying schema pattern: ${pattern.name}`);
-      
+
       // 패턴에 따라 변환 (psdSet, schemaType 전달)
       return transformSchema(schema, pattern.transform, psdSet, schemaType);
     }
   }
-  
+
   return schema; // No matching pattern
 }
 
@@ -406,30 +406,30 @@ function applySchemaStructurePatterns(
  */
 function matchesPattern(schema: any, detectRules: any[]): boolean {
   if (!detectRules || detectRules.length === 0) return false;
-  
+
   return detectRules.every(rule => {
     const { path, exists, isArray, value } = rule;
-    
+
     // path로 값 접근
     const pathValue = getValueByPath(schema, path);
-    
+
     // exists 체크
     if (exists !== undefined) {
       if (exists && pathValue === undefined) return false;
       if (!exists && pathValue !== undefined) return false;
     }
-    
+
     // isArray 체크
     if (isArray !== undefined) {
       if (isArray && !Array.isArray(pathValue)) return false;
       if (!isArray && Array.isArray(pathValue)) return false;
     }
-    
+
     // value 체크
     if (value !== undefined && pathValue !== value) {
       return false;
     }
-    
+
     return true;
   });
 }
@@ -439,12 +439,12 @@ function matchesPattern(schema: any, detectRules: any[]): boolean {
  */
 function getValueByPath(obj: any, path: string): any {
   if (!obj || !path) return undefined;
-  
+
   // "properties.*.oneOf" 같은 와일드카드 지원
   if (path.includes('*')) {
     const parts = path.split('.');
     let current = obj;
-    
+
     for (const part of parts) {
       if (part === '*') {
         // 와일드카드: 모든 키를 순회하며 하나라도 존재하면 true
@@ -456,14 +456,14 @@ function getValueByPath(obj: any, path: string): any {
         }
         return undefined;
       }
-      
+
       current = current[part];
       if (current === undefined) return undefined;
     }
-    
+
     return current;
   }
-  
+
   // 일반 path
   return path.split('.').reduce((acc, part) => acc?.[part], obj);
 }
@@ -473,35 +473,104 @@ function getValueByPath(obj: any, path: string): any {
  */
 function transformSchema(schema: EnhancedSchema, transform: any, psdSet: string, schemaType: string): EnhancedSchema {
   const { action } = transform;
-  
+
   switch (action) {
     case 'unwrap-root-key':
       return unwrapRootKey(schema, transform);
-    
+
     case 'inject-entity-collection-simple':
       return injectEntityCollectionSimple(schema, transform, psdSet, schemaType);
-    
+
     case 'inject-entity-collection':
       return injectEntityCollection(schema, transform, psdSet, schemaType);
-    
+
     case 'wrap-in-virtual-object':
       return wrapInVirtualObject(schema, transform);
-    
+
     case 'merge-properties-with-oneof':
       return mergePropertiesWithOneOf(schema, transform);
-    
+
     case 'merge-conditional-properties':
       // allOf + properties 병합 (향후 구현)
       return schema;
-    
+
     case 'process-as-exclusive-options':
       // 이미 extractFields에서 처리됨
       return schema;
-    
+
     default:
       console.warn(`⚠️ Unknown transform action: ${action}`);
       return schema;
   }
+}
+
+/**
+ * 최상위 wrapper key 제거 (예: { 'Argument': { type, properties } })
+ * 
+ * 입력:
+ * {
+ *   "$schema": "...",
+ *   "Argument": {
+ *     "type": "object",
+ *     "properties": { ... }
+ *   }
+ * }
+ * 
+ * 출력:
+ * {
+ *   "$schema": "...",
+ *   "type": "object",
+ *   "title": "Argument",
+ *   "properties": { ... }
+ * }
+ */
+function unwrapRootKey(schema: any, transform: any): EnhancedSchema {
+  const keys = Object.keys(schema);
+
+  // $schema 키 제외하고 실제 wrapper key 찾기
+  const wrapperKey = keys.find(k => k !== '$schema' && k !== 'description' && k !== 'x-ui' && k !== 'x-transport');
+
+  if (!wrapperKey) {
+    console.warn('⚠️ unwrapRootKey: No wrapper key found', keys);
+    return schema as EnhancedSchema;
+  }
+
+  const innerSchema = schema[wrapperKey];
+
+  // 내부 스키마가 유효한지 확인
+  if (!innerSchema || typeof innerSchema !== 'object') {
+    console.warn('⚠️ unwrapRootKey: Invalid inner schema for key:', wrapperKey);
+    return schema as EnhancedSchema;
+  }
+
+  console.log(`✅ unwrapRootKey: Unwrapping "${wrapperKey}"`, innerSchema);
+
+  // 메타데이터 보존 (transform.preserveMetadata에 정의된 키들)
+  const preserveKeys = transform.preserveMetadata || ['description', 'x-ui', 'x-transport'];
+  const preservedMetadata: Record<string, any> = {};
+  for (const key of preserveKeys) {
+    if (schema[key] !== undefined) {
+      preservedMetadata[key] = schema[key];
+    }
+  }
+
+  // 새로운 스키마 구성
+  const result: EnhancedSchema = {
+    ...innerSchema,
+    ...preservedMetadata,
+  };
+
+  // $schema 보존
+  if (schema.$schema) {
+    result.$schema = schema.$schema;
+  }
+
+  // wrapper key를 title로 사용 (extractTitle: true인 경우)
+  if (transform.extractTitle && !result.title) {
+    result.title = wrapperKey;
+  }
+
+  return result;
 }
 
 /**
@@ -536,26 +605,26 @@ function transformSchema(schema: EnhancedSchema, transform: any, psdSet: string,
 function injectEntityCollectionSimple(schema: any, _transform: any, psdSet: string, schemaType: string): EnhancedSchema {
   // 🎯 YAML에서 플랫폼 골격 정의 로드
   const skeleton = getPlatformSkeleton(psdSet, schemaType);
-  
+
   // 1. 최상위 키가 하나만 있는지 확인 (엔티티 이름)
   const keys = Object.keys(schema);
   if (keys.length !== 1) {
     console.warn('⚠️ inject-entity-collection-simple: Expected single entity key, found:', keys);
     return schema;
   }
-  
+
   const entityName = keys[0];
   const entityDef = schema[entityName];
-  
+
   // 2. entity 정의가 유효한지 확인
   if (!entityDef || entityDef.type !== 'object') {
     console.warn('⚠️ inject-entity-collection-simple: Invalid entity definition');
     return schema;
   }
-  
+
   // 3. body-root 결정 (YAML 기본값 사용)
   const bodyRoot = skeleton.defaultBodyRoot;
-  
+
   // 4. entity-collection 정의 생성 (YAML 정의 기반)
   const entityCollection: any = {
     description: skeleton.entityCollection.description,
@@ -567,12 +636,12 @@ function injectEntityCollectionSimple(schema: any, _transform: any, psdSet: stri
     },
     additionalProperties: skeleton.entityCollection.additionalProperties
   };
-  
+
   // minProperties가 있으면 추가
   if (skeleton.entityCollection.minProperties !== undefined) {
     entityCollection.minProperties = skeleton.entityCollection.minProperties;
   }
-  
+
   // 5. 최종 스키마 조립 (YAML 정의 기반)
   const assembledSchema: EnhancedSchema = {
     ...skeleton.rootStructure,
@@ -592,10 +661,10 @@ function injectEntityCollectionSimple(schema: any, _transform: any, psdSet: stri
       'body-root': bodyRoot
     }
   };
-  
+
   console.log(`✅ Injected entity collection (YAML-driven): "${entityName}" → "${bodyRoot}" → entity-collection → entity`);
   console.log(`📋 Platform skeleton from: ${psdSet}/${schemaType}/schema-logic.yaml`);
-  
+
   return assembledSchema;
 }
 
@@ -631,26 +700,26 @@ function injectEntityCollectionSimple(schema: any, _transform: any, psdSet: stri
 function injectEntityCollection(schema: any, _transform: any, psdSet: string, schemaType: string): EnhancedSchema {
   // 🎯 YAML에서 플랫폼 골격 정의 로드
   const skeleton = getPlatformSkeleton(psdSet, schemaType);
-  
+
   // 1. body-root 추출
   const bodyRoot = schema['x-transport']?.['body-root'];
   if (!bodyRoot) {
     console.warn('⚠️ inject-entity-collection: x-transport.body-root not found');
     return schema;
   }
-  
+
   // 2. body-root 유효성 검사 (YAML 정의 기반)
   const validBodyRoots = [skeleton.defaultBodyRoot, ...(skeleton.alternativeBodyRoots || [])];
   if (!validBodyRoots.includes(bodyRoot)) {
     console.warn(`⚠️ inject-entity-collection: Invalid body-root "${bodyRoot}". Valid options:`, validBodyRoots);
   }
-  
+
   // 3. entity 정의 확인
   if (!schema.$defs?.entity) {
     console.warn('⚠️ inject-entity-collection: $defs.entity not found');
     return schema;
   }
-  
+
   // 4. entity-collection 정의 생성 (YAML 정의 기반)
   const entityCollection: any = {
     description: skeleton.entityCollection.description,
@@ -662,12 +731,12 @@ function injectEntityCollection(schema: any, _transform: any, psdSet: string, sc
     },
     additionalProperties: skeleton.entityCollection.additionalProperties
   };
-  
+
   // minProperties가 있으면 추가
   if (skeleton.entityCollection.minProperties !== undefined) {
     entityCollection.minProperties = skeleton.entityCollection.minProperties;
   }
-  
+
   // 5. 최종 스키마 조립 (YAML 정의 기반)
   const assembledSchema: EnhancedSchema = {
     ...schema,
@@ -682,68 +751,15 @@ function injectEntityCollection(schema: any, _transform: any, psdSet: string, sc
       'entity-collection': entityCollection
     }
   };
-  
+
   // 6. title 설정 (없으면 body-root 사용)
   if (!assembledSchema.title) {
     assembledSchema.title = bodyRoot;
   }
-  
-  console.log(`✅ Injected entity collection: "${bodyRoot}" → entity-collection → entity`);
-  
-  return assembledSchema;
-}
 
-/**
- * 최상위 wrapper key 제거
- * 예: { "TABLE": { $schema, type, properties } } → { $schema, type, properties, title: "TABLE" }
- */
-function unwrapRootKey(schema: any, transform: any): EnhancedSchema {
-  const { extractTitle, preserveMetadata } = transform;
-  
-  // 🔥 방어 코드: schema가 유효한지 확인
-  if (!schema || typeof schema !== 'object') {
-    console.warn('⚠️ unwrap-root-key: Invalid schema (null or not an object)', schema);
-    return schema || {};
-  }
-  
-  // 최상위 키가 하나만 있는지 확인
-  const keys = Object.keys(schema);
-  if (keys.length !== 1) {
-    console.warn('⚠️ unwrap-root-key: Expected single root key, found:', keys);
-    return schema;
-  }
-  
-  const wrapperKey = keys[0];
-  const innerSchema = schema[wrapperKey];
-  
-  // innerSchema가 유효한 JSON Schema인지 확인
-  if (!innerSchema || typeof innerSchema !== 'object') {
-    console.warn('⚠️ unwrap-root-key: Invalid inner schema');
-    return schema;
-  }
-  
-  // Unwrap: innerSchema를 최상위로 이동
-  const unwrappedSchema: EnhancedSchema = {
-    ...innerSchema,
-  };
-  
-  // wrapper key를 title로 사용 (extractTitle이 true이고 title이 없으면)
-  if (extractTitle && !unwrappedSchema.title) {
-    unwrappedSchema.title = wrapperKey;
-  }
-  
-  // 메타데이터 보존
-  if (preserveMetadata) {
-    preserveMetadata.forEach((metaKey: string) => {
-      if (schema[metaKey] && !unwrappedSchema[metaKey]) {
-        unwrappedSchema[metaKey] = schema[metaKey];
-      }
-    });
-  }
-  
-  console.log(`✅ Unwrapped root key: "${wrapperKey}" → title: "${unwrappedSchema.title}"`);
-  
-  return unwrappedSchema;
+  console.log(`✅ Injected entity collection: "${bodyRoot}" → entity-collection → entity`);
+
+  return assembledSchema;
 }
 
 /**
@@ -751,10 +767,10 @@ function unwrapRootKey(schema: any, transform: any): EnhancedSchema {
  */
 function wrapInVirtualObject(schema: EnhancedSchema, transform: any): EnhancedSchema {
   const { wrapperKey, wrapperType, preserveMetadata } = transform;
-  
+
   // 래퍼 키 결정 (템플릿 지원)
   const key = wrapperKey.replace('{title}', schema.title || 'Options');
-  
+
   // 래퍼 스키마 생성
   const wrappedSchema: EnhancedSchema = {
     type: 'object',
@@ -767,7 +783,7 @@ function wrapInVirtualObject(schema: EnhancedSchema, transform: any): EnhancedSc
       }
     },
   };
-  
+
   // 메타데이터 보존
   if (preserveMetadata) {
     preserveMetadata.forEach((metaKey: string) => {
@@ -776,7 +792,7 @@ function wrapInVirtualObject(schema: EnhancedSchema, transform: any): EnhancedSc
       }
     });
   }
-  
+
   return wrappedSchema;
 }
 
@@ -787,7 +803,7 @@ function wrapInVirtualObject(schema: EnhancedSchema, transform: any): EnhancedSc
  */
 function mergePropertiesWithOneOf(schema: EnhancedSchema, transform: any): EnhancedSchema {
   const { wrapperKey, wrapperType } = transform;
-  
+
   // oneOf에서 사용되는 필드명 수집
   const oneOfFields = new Set<string>();
   if (schema.oneOf && Array.isArray(schema.oneOf)) {
@@ -800,7 +816,7 @@ function mergePropertiesWithOneOf(schema: EnhancedSchema, transform: any): Enhan
       }
     });
   }
-  
+
   // oneOf에 없는 properties 필드는 제거 (oneOf가 우선)
   const filteredProperties: Record<string, any> = {};
   if (schema.properties) {
@@ -810,10 +826,10 @@ function mergePropertiesWithOneOf(schema: EnhancedSchema, transform: any): Enhan
       }
     }
   }
-  
+
   // 래퍼 키 결정
   const key = wrapperKey.replace('{title}', schema.title || 'Options');
-  
+
   // oneOf를 가진 가상 객체로 래핑
   const wrappedSchema: EnhancedSchema = {
     type: 'object',
@@ -830,7 +846,7 @@ function mergePropertiesWithOneOf(schema: EnhancedSchema, transform: any): Enhan
     },
     'x-transport': schema['x-transport'],
   };
-  
+
   return wrappedSchema;
 }
 
@@ -842,7 +858,7 @@ function extractTypes(schema: EnhancedSchema): string[] {
   if (!schema || !schema.properties) {
     return [];
   }
-  
+
   const typeProperty = schema.properties.TYPE;
   if (!typeProperty || !typeProperty.enum) {
     return [];
@@ -856,7 +872,7 @@ function extractTypes(schema: EnhancedSchema): string[] {
  */
 function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
   const triggers = new Set<string>();
-  
+
   // 1. x-ui.visibleWhen에서 추출
   const xUi = (prop as any)['x-ui'];
   if (xUi?.visibleWhen && typeof xUi.visibleWhen === 'object') {
@@ -864,7 +880,7 @@ function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
       triggers.add(key);
     }
   }
-  
+
   // 2. x-required-when에서 추출
   const xRequiredWhen = (prop as any)['x-required-when'];
   if (xRequiredWhen && typeof xRequiredWhen === 'object') {
@@ -872,7 +888,7 @@ function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
       triggers.add(key);
     }
   }
-  
+
   return Array.from(triggers);
 }
 
@@ -881,26 +897,26 @@ function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
  */
 function extractFields(schema: EnhancedSchema): EnhancedField[] {
   const fields: EnhancedField[] = [];
-  
+
   // 🔥 $defs/entity가 있으면 entity의 properties를 사용 (inject-entity-collection 변환 후)
   const schemaAny = schema as any;
   const entityDef = schemaAny.$defs?.entity;
   const propsSource: Record<string, EnhancedProperty> = (entityDef?.properties || schema.properties) as any;
-  
+
   console.log('🔍 extractFields - has $defs.entity:', !!entityDef);
   console.log('🔍 extractFields - propsSource keys:', propsSource ? Object.keys(propsSource) : 'none');
-  
+
   // 🔥 properties가 없으면 빈 배열 반환
   if (!propsSource) {
     return [];
   }
-  
+
   // 🎯 allOf → x-required-when 정규화 맵 생성
   const conditionalRequiredMap = normalizeConditionalRequired(schema);
-  
+
   for (const [key, prop] of Object.entries(propsSource)) {
     console.log(`🔍 extractFields - ${key}:`, { type: prop.type, default: prop.default });
-    
+
     // 🔥 기본 필드 구조
     const field: EnhancedField = {
       key,
@@ -912,13 +928,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       validationLayers: [],
       runtimeTriggers: extractRuntimeTriggers(prop), // 🎯 NEW: 트리거 필드 자동 추출
     };
-    
+
     // 🔥 동적으로 모든 속성 복사 (x-*, enum, items 등)
     for (const [propKey, propValue] of Object.entries(prop)) {
       if (propKey === 'type' || propKey === 'description' || propKey === 'default') {
         continue; // 이미 처리됨
       }
-      
+
       // x-ui는 ui로 변환
       if (propKey === 'x-ui') {
         field.ui = propValue as any;
@@ -932,7 +948,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
         field[propKey] = propValue;
       }
     }
-    
+
     // 🎯 allOf에서 추출한 조건부 required 주입
     if (conditionalRequiredMap[key]) {
       field['x-required-when'] = {
@@ -941,12 +957,12 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       };
       console.log(`✅ Injected x-required-when for ${key}:`, field['x-required-when']);
     }
-    
+
     // 🔥 Object 타입 - 중첩 필드 추출
     if (prop.type === 'object' && prop.properties) {
       field.children = [];
       const objRequired = (prop.required as string[]) || [];
-      
+
       for (const [childKey, childProp] of Object.entries(prop.properties)) {
         const childField: EnhancedField = {
           key: `${key}.${childKey}`,
@@ -956,11 +972,11 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           section: '',
           validationLayers: [],
         };
-        
+
         // 🔥 자식 필드도 동적으로 모든 속성 복사
         for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
           if (cpKey === 'type' || cpKey === 'default') continue;
-          
+
           if (cpKey === 'x-ui') {
             childField.ui = cpValue;
           } else if (cpKey.startsWith('x-')) {
@@ -969,21 +985,21 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             childField[cpKey] = cpValue;
           }
         }
-        
+
         field.children.push(childField);
       }
     }
-    
+
     // 🔥 Object 타입 with oneOf - 상호 배타적 선택 (예: Method 1, 2, 3 중 선택)
-  if (prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)) {
-    field.children = [];
-    
+    if (prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)) {
+      field.children = [];
+
       // oneOf의 각 옵션을 섹션 헤더로 표시
-    prop.oneOf.forEach((option: any, optionIndex: number) => {
+      prop.oneOf.forEach((option: any, optionIndex: number) => {
         const optionTitle = option.title || `Option ${optionIndex + 1}`;
-      const optionProps = option.properties || {};
-      const optionRequired = option.required || [];
-        
+        const optionProps = option.properties || {};
+        const optionRequired = option.required || [];
+
         // 섹션 헤더 추가 (옵션 제목)
         if (Object.keys(optionProps).length > 0) {
           // 섹션 헤더는 특별한 필드로 표시
@@ -996,7 +1012,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             ui: { label: optionTitle, group: key },
           });
         }
-        
+
         // 옵션의 각 필드 추가
         for (const [childKey, childProp] of Object.entries(optionProps)) {
           const childField: EnhancedField = {
@@ -1007,11 +1023,11 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             section: optionTitle,
             validationLayers: [],
           };
-          
+
           // 🔥 동적으로 모든 속성 복사
           for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
             if (cpKey === 'type' || cpKey === 'default') continue;
-            
+
             if (cpKey === 'x-ui') {
               childField.ui = cpValue;
             } else if (cpKey.startsWith('x-')) {
@@ -1020,15 +1036,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               childField[cpKey] = cpValue;
             }
           }
-          
-        field.children!.push(childField);
+
+          field.children!.push(childField);
         }
       });
     }
-    
+
     fields.push(field);
   }
-  
+
   return fields;
 }
 
@@ -1039,15 +1055,15 @@ function extractConditionalRequired(schema: EnhancedSchema): ConditionalRule[] {
   if (!schema.allOf || !Array.isArray(schema.allOf)) {
     return [];
   }
-  
+
   // 🔥 allOf 항목 중 if-then 구조를 가진 것만 필터링
-  const rules = schema.allOf.filter(rule => 
-    rule && 
-    typeof rule === 'object' && 
-    'if' in rule && 
+  const rules = schema.allOf.filter(rule =>
+    rule &&
+    typeof rule === 'object' &&
+    'if' in rule &&
     'then' in rule
   );
-  
+
   console.log('🔍 extractConditionalRequired:', {
     hasAllOf: !!schema.allOf,
     allOfLength: schema.allOf?.length,
@@ -1057,7 +1073,7 @@ function extractConditionalRequired(schema: EnhancedSchema): ConditionalRule[] {
       thenRequired: r.then?.required
     }))
   });
-  
+
   return rules;
 }
 
@@ -1085,27 +1101,27 @@ function normalizeConditionalRequired(
   schema: EnhancedSchema
 ): Record<string, Record<string, any>> {
   const map: Record<string, Record<string, any>> = {};
-  
+
   if (!schema.allOf || !Array.isArray(schema.allOf)) {
     return map;
   }
-  
+
   for (const rule of schema.allOf) {
     const condProps = rule.if?.properties;
     const requiredFields = rule.then?.required;
-    
+
     if (!condProps || !requiredFields || !Array.isArray(requiredFields)) {
       continue;
     }
-    
+
     // 🔥 조건 축 필드 추출 (예: iMETHOD, TYPE, MODE 등)
     // allOf의 if.properties에서 첫 번째 조건을 가져옴
     const entries = Object.entries(condProps);
     if (entries.length === 0) continue;
-    
+
     const [axisField, axisCond] = entries[0];
     const axisValue = (axisCond as any).const ?? (axisCond as any).enum;
-    
+
     // 🔥 각 required 필드에 x-required-when 주입
     for (const fieldName of requiredFields) {
       if (!map[fieldName]) {
@@ -1114,9 +1130,9 @@ function normalizeConditionalRequired(
       map[fieldName][axisField] = axisValue;
     }
   }
-  
+
   console.log('🎯 normalizeConditionalRequired:', map);
-  
+
   return map;
 }
 
@@ -1134,7 +1150,7 @@ function calculateRequiredStatus(
   conditionalRules: ConditionalRule[]
 ): RequiredStatus {
   const status: RequiredStatus = {};
-  
+
   // 🔥 TYPE 필드가 없는 스키마 (e.g., SKEW with iMETHOD)
   // → 트리거 필드 기반 조건부 required 확인
   if (types.length === 0) {
@@ -1145,7 +1161,7 @@ function calculateRequiredStatus(
       fieldKey: field.key,
       hasXRequiredWhen: !!(field as any)['x-required-when']
     });
-    
+
     // ✅ Step 1: x-required-when 확인 (allOf → x-required-when 정규화 완료)
     // 이제 allOf의 조건도 x-required-when으로 변환되어 있음
     const xRequiredWhen = (field as any)['x-required-when'];
@@ -1155,7 +1171,7 @@ function calculateRequiredStatus(
       console.log(`✅ ${field.key} is conditionally required via x-required-when:`, xRequiredWhen);
       return { '*': 'conditional' };
     }
-    
+
     // ✅ Step 2: 기본 required 체크
     if (baseRequired.includes(field.key)) {
       return { '*': 'required' };
@@ -1163,7 +1179,7 @@ function calculateRequiredStatus(
       return { '*': 'optional' };
     }
   }
-  
+
   // 1. Base required check (TYPE 필드가 있는 경우)
   if (baseRequired.includes(field.key)) {
     types.forEach(type => {
@@ -1171,7 +1187,7 @@ function calculateRequiredStatus(
     });
     return status;
   }
-  
+
   // 2. x-required-when 체크 (개별 필드 레벨, TYPE이 있는 경우)
   const xRequiredWhen = (field as any)['x-required-when'];
   if (xRequiredWhen && typeof xRequiredWhen === 'object') {
@@ -1179,19 +1195,19 @@ function calculateRequiredStatus(
     // 예: { "TYPE": "1" } → TYPE이 "1"일 때만 required
     types.forEach(type => {
       status[type] = 'optional'; // 기본값
-      
+
       // TYPE 조건 확인
       if (xRequiredWhen.TYPE) {
-        const requiredForTypes = Array.isArray(xRequiredWhen.TYPE) 
-          ? xRequiredWhen.TYPE 
+        const requiredForTypes = Array.isArray(xRequiredWhen.TYPE)
+          ? xRequiredWhen.TYPE
           : [xRequiredWhen.TYPE];
-        
+
         if (requiredForTypes.includes(type)) {
           status[type] = 'required';
         }
       }
     });
-    
+
     // 적어도 하나의 TYPE에서 required이면 conditional로 표시
     const hasRequired = Object.values(status).some(s => s === 'required');
     const hasOptional = Object.values(status).some(s => s === 'optional');
@@ -1205,23 +1221,23 @@ function calculateRequiredStatus(
     }
   } else {
     // 3. For each TYPE, check allOf conditions (x-required-when이 없는 경우)
-  types.forEach(type => {
-    status[type] = 'optional'; // default
-    
+    types.forEach(type => {
+      status[type] = 'optional'; // default
+
       // Check conditional required from allOf
-    for (const rule of conditionalRules) {
-      // 🔥 rule.then과 rule.then.required가 존재하는지 확인
-      if (matchesCondition(rule.if?.properties, type) && 
-          rule.then?.required && 
+      for (const rule of conditionalRules) {
+        // 🔥 rule.then과 rule.then.required가 존재하는지 확인
+        if (matchesCondition(rule.if?.properties, type) &&
+          rule.then?.required &&
           Array.isArray(rule.then.required) &&
           rule.then.required.includes(field.key)) {
-        status[type] = 'required';
-        break;
-      }
+          status[type] = 'required';
+          break;
+        }
       }
     });
-    }
-    
+  }
+
   // 4. Check visibleWhen (determines N/A)
   types.forEach(type => {
     if (field.ui?.visibleWhen) {
@@ -1230,7 +1246,7 @@ function calculateRequiredStatus(
       }
     }
   });
-  
+
   return status;
 }
 
@@ -1251,24 +1267,24 @@ function matchesCondition(
   axisValue: string | number
 ): boolean {
   if (!condition) return false;
-  
+
   // 🔥 조건의 첫 번째 속성을 동적으로 가져옴 (TYPE, iMETHOD, MODE 등)
   const entries = Object.entries(condition);
   if (entries.length === 0) return false;
-  
+
   const [_axisField, axisCond] = entries[0];
-  
+
   // const 값과 비교
   if (axisCond.const !== undefined) {
     // 타입 정규화 (문자열 "4" vs 숫자 4)
     return String(axisCond.const) === String(axisValue);
   }
-  
+
   // enum 배열과 비교
   if (axisCond.enum && Array.isArray(axisCond.enum)) {
     return axisCond.enum.some(v => String(v) === String(axisValue));
   }
-  
+
   return false;
 }
 
@@ -1277,11 +1293,11 @@ function matchesCondition(
  */
 function isVisible(visibleWhen: any, type: string): boolean {
   if (!visibleWhen.TYPE) return true;
-  
+
   if (Array.isArray(visibleWhen.TYPE)) {
     return visibleWhen.TYPE.includes(type);
   }
-  
+
   return visibleWhen.TYPE === type;
 }
 
@@ -1300,17 +1316,17 @@ function groupFieldsBySectionsDynamic(
   schema?: any
 ): Map<string, EnhancedField[]> {
   const sections = new Map<string, EnhancedField[]>();
-  
+
   for (const field of fields) {
     const sectionName = determineSectionNameDynamic(field, types, psdSet, schemaType, schema);
     field.section = sectionName;
-    
+
     if (!sections.has(sectionName)) {
       sections.set(sectionName, []);
     }
     sections.get(sectionName)!.push(field);
   }
-  
+
   return sections;
 }
 
@@ -1329,7 +1345,7 @@ function sortSectionsDynamic(
 ): SectionGroup[] {
   const sectionOrder = getSectionOrder(psdSet, schemaType, schema);
   const result: SectionGroup[] = [];
-  
+
   for (const [name, fields] of sections) {
     const order = sectionOrder.indexOf(name);
     result.push({
@@ -1338,7 +1354,7 @@ function sortSectionsDynamic(
       order: order === -1 ? 999 : order,
     });
   }
-  
+
   return result.sort((a, b) => a.order - b.order);
 }
 

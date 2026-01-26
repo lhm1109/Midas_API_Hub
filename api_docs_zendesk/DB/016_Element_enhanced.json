@@ -9,6 +9,7 @@
         "enum": ["BEAM", "TRUSS", "TENSTR", "COMPTR", "PLATE", "WALL", "PLSTRS", "PLSTRN", "AXISYM", "SOLID"],
         "default": "BEAM",
         "x-ui": {
+          "label": "Element Type",
           "group": "Common Keys and Solid"
         }
       },
@@ -16,17 +17,28 @@
         "type": "integer",
         "description": "Material number",
         "x-ui": {
+          "label": "Material No.",
           "group": "Common Keys and Solid"
         }
       },
       "SECT": {
         "type": "integer",
         "description": "Section or thickness number",
+        "x-required-by-type": {
+          "BEAM": true,
+          "TRUSS": true,
+          "TENSTR": true,
+          "COMPTR": true,
+          "PLATE": true,
+          "WALL": true,
+          "PLSTRS": true,
+          "PLSTRN": true,
+          "AXISYM": true,
+          "SOLID": false
+        },
         "x-ui": {
-          "group": "Common Keys and Solid",
-          "visibleWhen": {
-            "TYPE": ["BEAM", "TRUSS", "TENSTR", "COMPTR", "PLATE", "WALL", "PLSTRS", "PLSTRN", "AXISYM"]
-          }
+          "label": "Section / Thickness No.",
+          "group": "Common Keys and Solid"
         }
       },
       "NODE": {
@@ -50,6 +62,7 @@
           "SOLID": [4, 6, 8]
         },
         "x-ui": {
+          "label": "Node No.",
           "group": "Common Keys and Solid"
         }
       },
@@ -58,9 +71,8 @@
         "description": "Beta angle",
         "default": 0,
         "x-ui": {
-          "visibleWhen": {
-            "TYPE": ["BEAM", "TRUSS", "TENSTR", "COMPTR", "PLATE", "WALL", "PLSTRS", "PLSTRN", "AXISYM"]
-          }
+          "label": "Beta Angle",
+          "group": "Tension / Compression"
         }
       },
       "STYPE": {
@@ -98,11 +110,16 @@
             "2": "with Drilling DOF Active"
           }
         },
+        "x-required-by-type": {
+          "TENSTR": true,
+          "COMPTR": true,
+          "PLATE": true,
+          "WALL": true,
+          "PLSTRS": true
+        },
         "x-ui": {
-          "group": "Common Keys and Solid",
-          "visibleWhen": {
-            "TYPE": ["TENSTR", "COMPTR", "PLATE", "WALL", "PLSTRS"]
-          }
+          "label": "Element Subtype",
+          "group": "Common Keys and Solid"
         }
       },
       "TENS": {
@@ -110,14 +127,12 @@
         "description": "Tension or compression value",
         "default": 0,
         "x-value-constraint": {
-          "TENSTR": "Negative Value Only (Allowable Compression)",
-          "COMPTR": "Positive Value Only (Allowable Tension)"
+          "TENSTR": "Negative only (Allowable compression)",
+          "COMPTR": "Positive only (Allowable tension)"
         },
         "x-ui": {
-          "group": "Tension / Compression",
-          "visibleWhen": {
-            "TYPE": ["TENSTR", "COMPTR"]
-          }
+          "label": "Tension / Compression",
+          "group": "Tension / Compression"
         }
       },
       "T_LIMIT": {
@@ -125,14 +140,12 @@
         "description": "Force limit value",
         "default": 0,
         "x-value-constraint": {
-          "TENSTR": "Positive Value Only (Tension Limit Value)",
-          "COMPTR": "Negative Value Only (Compression Limit Value)"
+          "TENSTR": "Positive only",
+          "COMPTR": "Negative only"
         },
         "x-ui": {
-          "group": "Tension / Compression",
-          "visibleWhen": {
-            "TYPE": ["TENSTR", "COMPTR"]
-          }
+          "label": "Force Limit Value",
+          "group": "Tension / Compression"
         }
       },
       "T_bLMT": {
@@ -140,21 +153,21 @@
         "description": "Use force limit flag",
         "default": false,
         "x-ui": {
-          "group": "Tension / Compression",
-          "visibleWhen": {
-            "TYPE": ["TENSTR", "COMPTR"]
-          }
+          "label": "Use Force Limit",
+          "group": "Tension / Compression"
         }
       },
       "NON_LEN": {
         "type": "number",
         "description": "Nonlinear length",
         "default": 0,
+        "x-required-by-type": {
+          "TENSTR": true,
+          "COMPTR": false
+        },
         "x-ui": {
-          "group": "Tension / Compression",
-          "visibleWhen": {
-            "TYPE": ["TENSTR", "COMPTR"]
-          }
+          "label": "Nonlinear Length",
+          "group": "Tension / Compression"
         }
       },
       "CABLE": {
@@ -171,35 +184,27 @@
           "STYPE": 3
         },
         "x-ui": {
-          "group": "Tension only - Cable",
-          "visibleWhen": {
-            "TYPE": "TENSTR",
-            "STYPE": 3
-          }
+          "label": "Cable Type",
+          "group": "Tension only - Cable"
         }
       },
       "C_RAT": {
         "type": "number",
         "description": "Cable length ratio",
         "x-ui": {
-          "group": "Tension only - Cable",
-          "visibleWhen": {
-            "TYPE": "TENSTR",
-            "STYPE": 3
-          }
+          "label": "Cable Length Ratio",
+          "group": "Tension only - Cable"
         }
       },
-      "WALL": {
+      "WALL_ID": {
         "type": "integer",
         "description": "Wall identifier",
         "x-required-when": {
           "TYPE": "WALL"
         },
         "x-ui": {
-          "group": "Wall",
-          "visibleWhen": {
-            "TYPE": "WALL"
-          }
+          "label": "Wall ID",
+          "group": "Wall"
         }
       },
       "W_CON": {
@@ -215,10 +220,8 @@
           "TYPE": "WALL"
         },
         "x-ui": {
-          "group": "Wall",
-          "visibleWhen": {
-            "TYPE": "WALL"
-          }
+          "label": "Orientation",
+          "group": "Wall"
         }
       },
       "W_TYPE": {
@@ -232,42 +235,12 @@
           "2": "CRB - Fixed"
         },
         "x-ui": {
-          "group": "Wall",
-          "visibleWhen": {
-            "TYPE": "WALL"
-          }
+          "label": "Wall Type",
+          "group": "Wall"
         }
-      },
-      "LCAXIS": {
-        "type": "integer",
-        "description": "Local axis"
       }
     },
     "allOf": [
-      {
-        "if": {
-          "properties": {
-            "TYPE": {
-              "enum": ["BEAM", "TRUSS", "TENSTR", "COMPTR", "PLATE", "WALL", "PLSTRS", "PLSTRN", "AXISYM"]
-            }
-          }
-        },
-        "then": {
-          "required": ["SECT"]
-        }
-      },
-      {
-        "if": {
-          "properties": {
-            "TYPE": {
-              "enum": ["TENSTR", "COMPTR", "PLATE", "WALL", "PLSTRS"]
-            }
-          }
-        },
-        "then": {
-          "required": ["STYPE"]
-        }
-      },
       {
         "if": {
           "properties": {
@@ -281,18 +254,6 @@
         },
         "then": {
           "required": ["CABLE", "NON_LEN"]
-        }
-      },
-      {
-        "if": {
-          "properties": {
-            "TYPE": {
-              "const": "WALL"
-            }
-          }
-        },
-        "then": {
-          "required": ["WALL", "W_CON"]
         }
       }
     ],

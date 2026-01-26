@@ -34,18 +34,20 @@ platformSkeleton:
 # ============================================================================
 schemaStructurePatterns:
   - name: "Unwrap Root Wrapper Key"
-    description: "최상위 wrapper key 제거 (예: { 'TABLE': { $schema, type, properties } })"
+    description: "최상위 wrapper key 제거 (예: { '$schema': '...', 'Argument': { type, properties } })"
     enabled: true
     priority: 1  # 가장 먼저 실행
     detect:
-      - path: "$schema"
-        exists: false
+      # 루트에 'type'이 없으면 wrapper key가 있는 것으로 간주
+      # ($schema, description, x-* 제외한 키가 wrapper)
       - path: "type"
+        exists: false
+      - path: "properties"
         exists: false
     transform:
       action: "unwrap-root-key"
       extractTitle: true  # wrapper key를 title로 사용
-      preserveMetadata: ["description", "x-ui", "x-transport"]
+      preserveMetadata: ["$schema", "description", "x-ui", "x-transport"]
   
   - name: "Root oneOf"
     description: "최상위 oneOf 패턴"

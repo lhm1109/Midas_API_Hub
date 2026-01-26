@@ -1,0 +1,31 @@
+{
+  "DCTL": {
+    "type": "object",
+    "properties": {
+      "FRAMEX": {
+        "type": "string",
+        "description": "X-direction of frame",
+        "enum": ["Unbraced Sway", "Braced Non-sway"],
+        "default": "Braced Non-sway"
+      },
+      "FRAMEY": {
+        "type": "string",
+        "description": "Y-direction of frame",
+        "enum": ["Unbraced Sway", "Braced Non-sway"],
+        "default": "Braced Non-sway"
+      },
+      "bAUTOKF": {
+        "type": "boolean",
+        "description": "Auto calculate effective length factor",
+        "default": false
+      },
+      "DT": {
+        "type": "string",
+        "description": "Design type",
+        "enum": ["3D", "XZ", "YZ", "XY"],
+        "default": "3D"
+      }
+    },
+    "additionalProperties": false
+  }
+}
