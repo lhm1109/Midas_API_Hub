@@ -1,12 +1,10 @@
+// 상태 타입 (단순화됨)
 export type StatusType =
-  | "green" // 초록불 - 완료
-  | "yellow" // 노랑불 - 진행 중
-  | "red" // 빨강불 - 문제
-  | "empty" // 비어있는원 - 시작 안함
-  | "working" // Working 스핀 - 작업 중
-  | "done" // Done 체크 - 완료
-  | "warning" // 주의판 - 경고
-  | "na"; // N/A - 해당없음
+  | "empty"   // 비어있는원 - 시작 안함
+  | "wip"     // 작업 중 (Work In Progress)
+  | "done"    // 완료
+  | "warning" // 경고/문제
+  | "na";     // N/A - 해당없음
 
 export interface ApiTask {
   id: string;
@@ -20,11 +18,12 @@ export interface ApiTask {
   seg2: string;
   endPoint: string;
   mode: string;
+  plan: StatusType;  // 새로 추가
   dev: StatusType;
   vv: StatusType;
   doc: StatusType;
   issue: StatusType;
-  status: "Working" | "Done" | string;
+  status: "In Progress" | "Done" | string;  // Working 제거
   charge: string;
   remark: string;
   // 커스텀 필드는 여기에 추가 가능
@@ -48,6 +47,7 @@ export const defaultColumns: Column[] = [
   { id: "seg2", label: "seg2", visible: true },
   { id: "endPoint", label: "End Point", visible: true },
   { id: "mode", label: "mode", visible: true },
+  { id: "plan", label: "Plan", visible: true },  // dev 앞에 추가
   { id: "dev", label: "Dev", visible: true },
   { id: "vv", label: "V&V", visible: true },
   { id: "doc", label: "doc.", visible: true },

@@ -28,10 +28,7 @@ interface EditTaskModalProps {
 
 const statusOptions: StatusType[] = [
   'empty',
-  'green',
-  'yellow',
-  'red',
-  'working',
+  'wip',
   'done',
   'warning',
   'na',
@@ -39,10 +36,7 @@ const statusOptions: StatusType[] = [
 
 const statusLabels: Record<StatusType, string> = {
   empty: '시작 안함',
-  green: '완료 (초록불)',
-  yellow: '진행 중 (노랑불)',
-  red: '문제 (빨강불)',
-  working: '작업 중',
+  wip: '작업 중',
   done: '완료',
   warning: '경고',
   na: '해당없음 (N/A)',
@@ -228,6 +222,25 @@ export function EditTaskModal({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="plan" className="text-zinc-300">Plan</Label>
+            <Select
+              value={formData.plan as string}
+              onValueChange={(value) => handleChange('plan', value as StatusType)}
+            >
+              <SelectTrigger className="bg-zinc-950 border-zinc-700 text-zinc-100">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-zinc-100 z-[110]">
+                {statusOptions.map((status) => (
+                  <SelectItem key={status} value={status} className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
+                    {statusLabels[status]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="dev" className="text-zinc-300">Dev</Label>
             <Select
               value={formData.dev as string}
@@ -313,9 +326,6 @@ export function EditTaskModal({
                 <SelectValue placeholder="상태 선택" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-700 text-zinc-100 z-[110]">
-                <SelectItem value="Working" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
-                  Working
-                </SelectItem>
                 <SelectItem value="In Progress" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
                   In Progress
                 </SelectItem>

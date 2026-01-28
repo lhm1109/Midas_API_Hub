@@ -41,7 +41,11 @@ interface ApiTableProps {
   onTaskEdit: (task: ApiTask) => void;
   onTaskDelete: (taskId: string) => void;
   onAddTask: () => void;
+  onTaskUpdate?: (task: ApiTask) => Promise<ApiTask>; // 인라인 편집용
 }
+
+// 상태 컬럼의 가능한 값들 (인라인 편집용 - 향후 사용)
+const STATUS_OPTIONS = ['empty', 'wip', 'done', 'warning', 'na'] as const;
 
 type SortDirection = 'asc' | 'desc' | null;
 
@@ -63,7 +67,7 @@ const COLUMN_GROUPS = {
   },
   pipeline: {
     label: 'Pipeline',
-    columns: ['dev', 'vv', 'doc', 'issue', 'status', 'charge', 'remark'],
+    columns: ['plan', 'dev', 'vv', 'doc', 'issue', 'status', 'charge', 'remark'],  // plan 추가
   },
 };
 
@@ -74,10 +78,16 @@ export function ApiTable({
   onTaskEdit,
   onTaskDelete,
   onAddTask,
+  onTaskUpdate,
 }: ApiTableProps) {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [filters, setFilters] = useState<FilterConfig[]>([]);
+
+  // 인라인 편집 상태
+  const [editingCell, setEditingCell] = useState<{ taskId: string; columnId: string } | null>(null);
+  const [editValue, setEditValue] = useState<string>('');
+  const editInputRef = useRef<HTMLInputElement>(null);
 
   // 컬럼 너비 상태 (드래그 리사이즈용)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
@@ -244,7 +254,8 @@ export function ApiTable({
   const renderCellContent = (task: ApiTask, columnId: string) => {
     const value = task[columnId];
 
-    if (columnId === 'dev' || columnId === 'vv' || columnId === 'doc' || columnId === 'issue') {
+    // plan, dev, vv, doc, issue는 상태 아이콘으로 표시
+    if (columnId === 'plan' || columnId === 'dev' || columnId === 'vv' || columnId === 'doc' || columnId === 'issue') {
       return (
         <div className="flex justify-center">
           <StatusIcon status={value as any} />
@@ -333,7 +344,7 @@ export function ApiTable({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4">
+      <div className="flex flex-col h-full gap-4">
         {/* 상단 액션 버튼 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -537,7 +548,7 @@ export function ApiTable({
 
         <div
           ref={tableContainerRef}
-          className="rounded-md border border-zinc-800 bg-zinc-950 overflow-auto max-h-[calc(100vh-280px)] relative"
+          className="flex-1 min-h-0 rounded-md border border-zinc-800 bg-zinc-950 overflow-auto relative"
         >
           {/* 헤더 - sticky로 고정 */}
           <div className="sticky top-0 z-20 bg-zinc-800">

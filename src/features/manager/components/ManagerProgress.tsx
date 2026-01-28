@@ -80,6 +80,7 @@ export function ManagerProgress({
         seg2: '',
         endPoint: '',
         mode: '',
+        plan: 'empty',  // plan 컬럼 추가
         dev: 'empty',
         vv: 'empty',
         doc: 'empty',
@@ -114,11 +115,11 @@ export function ManagerProgress({
   const handleExportCSV = () => {
     try {
       // CSV 헤더
-      const headers = ['Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Dev', 'V&V', 'doc', 'Issue', 'status', 'charge', 'remark'];
-      
+      const headers = ['Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Issue', 'status', 'charge', 'remark'];
+
       // CSV 데이터 생성
       const csvRows = [headers.join(',')];
-      
+
       tasks.forEach(task => {
         const row = [
           task.product,
@@ -131,6 +132,7 @@ export function ManagerProgress({
           task.seg2,
           task.endPoint,
           task.mode,
+          task.plan,  // plan 컬럼 추가
           task.dev,
           task.vv,
           task.doc,
@@ -154,7 +156,7 @@ export function ManagerProgress({
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
-      
+
       link.setAttribute('href', url);
       link.setAttribute('download', `manager_tasks_${new Date().toISOString().split('T')[0]}.csv`);
       link.style.visibility = 'hidden';
@@ -177,7 +179,7 @@ export function ManagerProgress({
       try {
         const text = e.target?.result as string;
         const lines = text.split('\n').filter(line => line.trim());
-        
+
         if (lines.length < 2) {
           alert('CSV 파일이 비어있거나 형식이 잘못되었습니다.');
           return;
@@ -185,11 +187,43 @@ export function ManagerProgress({
 
         // 헤더 제거
         const dataLines = lines.slice(1);
-        
+
+        // CSV 라인을 파싱하는 함수 (따옴표 내 쉼표 처리)
+        const parseCSVLine = (line: string): string[] => {
+          const result: string[] = [];
+          let current = '';
+          let inQuotes = false;
+
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+
+            if (char === '"') {
+              if (inQuotes && line[i + 1] === '"') {
+                // 이스케이프된 따옴표 ("") -> (")
+                current += '"';
+                i++;
+              } else {
+                // 따옴표 영역 토글
+                inQuotes = !inQuotes;
+              }
+            } else if (char === ',' && !inQuotes) {
+              // 따옴표 밖의 쉼표 = 구분자
+              result.push(current.trim());
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          // 마지막 필드 추가
+          result.push(current.trim());
+
+          return result;
+        };
+
         const newTasks: ApiTask[] = dataLines.map((line, index) => {
-          // CSV 파싱 (간단한 구현)
-          const values = line.split(',').map(v => v.trim().replace(/^"(.*)"$/, '$1').replace(/""/g, '"'));
-          
+          // CSV 파싱 (따옴표 내 쉼표 올바르게 처리)
+          const values = parseCSVLine(line);
+
           return {
             id: `imported-${Date.now()}-${index}`,
             product: values[0] || '',
@@ -202,13 +236,14 @@ export function ManagerProgress({
             seg2: values[7] || '',
             endPoint: values[8] || '',
             mode: values[9] || '',
-            dev: (values[10] as any) || 'empty',
-            vv: (values[11] as any) || 'empty',
-            doc: (values[12] as any) || 'empty',
-            issue: (values[13] as any) || 'empty',
-            status: values[14] || '',
-            charge: values[15] || '',
-            remark: values[16] || '',
+            plan: (values[10] as any) || 'empty',  // plan 컬럼 추가
+            dev: (values[11] as any) || 'empty',
+            vv: (values[12] as any) || 'empty',
+            doc: (values[13] as any) || 'empty',
+            issue: (values[14] as any) || 'empty',
+            status: values[15] || '',
+            charge: values[16] || '',
+            remark: values[17] || '',
           };
         });
 
@@ -220,18 +255,18 @@ export function ManagerProgress({
         console.error('Failed to import CSV:', error);
         alert('CSV 가져오기 실패: 파일 형식을 확인해주세요.');
       }
-      
+
       // 파일 입력 초기화
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     };
-    
+
     reader.readAsText(file, 'UTF-8');
   };
 
   return (
-    <div className="space-y-4 p-6">
+    <div className="flex flex-col h-full p-6 overflow-hidden">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold mb-2 text-white">
@@ -239,7 +274,7 @@ export function ManagerProgress({
           </h2>
           <p className="text-zinc-400">API 개발 진행 상황 추적 및 관리</p>
         </div>
-        
+
         {/* 액션 버튼들 */}
         <div className="flex items-center gap-2">
           <Button
@@ -252,7 +287,7 @@ export function ManagerProgress({
             <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
             새로고침
           </Button>
-          
+
           <Button
             onClick={handleExportCSV}
             variant="outline"
@@ -262,7 +297,7 @@ export function ManagerProgress({
             <Download className="w-4 h-4 mr-2" />
             CSV 내보내기
           </Button>
-          
+
           <input
             ref={fileInputRef}
             type="file"
@@ -282,14 +317,16 @@ export function ManagerProgress({
         </div>
       </div>
 
-      <ApiTable
-        tasks={tasks}
-        columns={columns}
-        onColumnVisibilityChange={handleColumnVisibilityChange}
-        onTaskEdit={handleTaskEdit}
-        onTaskDelete={handleTaskDelete}
-        onAddTask={handleAddTask}
-      />
+      <div className="flex-1 min-h-0 mt-4">
+        <ApiTable
+          tasks={tasks}
+          columns={columns}
+          onColumnVisibilityChange={handleColumnVisibilityChange}
+          onTaskEdit={handleTaskEdit}
+          onTaskDelete={handleTaskDelete}
+          onAddTask={handleAddTask}
+        />
+      </div>
 
       <EditTaskModal
         task={editingTask}

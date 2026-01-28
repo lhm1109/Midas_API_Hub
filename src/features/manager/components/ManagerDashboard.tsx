@@ -17,16 +17,16 @@ export function ManagerDashboard({ tasks }: ManagerDashboardProps) {
   // 통계 계산
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((task) => task.status === 'Done').length;
-  const workingTasks = tasks.filter((task) => task.status === 'Working').length;
+  const workingTasks = tasks.filter((task) => task.status === 'In Progress').length;
   const pendingTasks = totalTasks - completedTasks - workingTasks;
 
   const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
   // 개발 상태 통계
   const devStats = {
-    completed: tasks.filter((task) => task.dev === 'green').length,
-    inProgress: tasks.filter((task) => task.dev === 'yellow').length,
-    blocked: tasks.filter((task) => task.dev === 'red').length,
+    completed: tasks.filter((task) => task.dev === 'done').length,
+    inProgress: tasks.filter((task) => task.dev === 'wip').length,
+    blocked: tasks.filter((task) => task.dev === 'warning').length,
   };
 
   // 담당자별 통계
@@ -123,6 +123,74 @@ export function ManagerDashboard({ tasks }: ManagerDashboardProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* In Progress 상태 작업들의 진행률 */}
+      {(() => {
+        // status가 'In Progress'인 작업들만 필터링
+        const inProgressTasks = tasks.filter((task) =>
+          task.status === 'In Progress'
+        );
+        const inProgressTotal = inProgressTasks.length;
+
+        // In Progress 작업들 중 dev가 done(완료)인 것들
+        const inProgressCompleted = inProgressTasks.filter((task) => task.dev === 'done').length;
+        const inProgressWorking = inProgressTasks.filter((task) => task.dev === 'wip').length;
+        const inProgressPending = inProgressTotal - inProgressCompleted - inProgressWorking;
+
+        const inProgressRate = inProgressTotal > 0 ? (inProgressCompleted / inProgressTotal) * 100 : 0;
+
+        return (
+          <Card className="bg-gradient-to-br from-blue-900/30 to-zinc-900 border-blue-800/50">
+            <CardHeader>
+              <CardTitle className="text-blue-400 flex items-center gap-2">
+                <Loader2 className="w-5 h-5" />
+                In Progress 상태 진행률
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {inProgressTotal > 0 ? (
+                <>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-zinc-400">개발 완료율 (dev = green)</span>
+                      <span className="font-semibold text-blue-400">{inProgressRate.toFixed(1)}%</span>
+                    </div>
+                    <Progress value={inProgressRate} className="bg-zinc-800 [&>div]:bg-blue-500" />
+                  </div>
+                  <div className="grid grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <div className="text-zinc-400">전체</div>
+                      <div className="text-lg font-semibold text-blue-400">
+                        {inProgressTotal}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-zinc-400">개발완료</div>
+                      <div className="text-lg font-semibold text-green-500">
+                        {inProgressCompleted}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-zinc-400">개발중</div>
+                      <div className="text-lg font-semibold text-yellow-500">
+                        {inProgressWorking}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-zinc-400">대기</div>
+                      <div className="text-lg font-semibold text-zinc-400">
+                        {inProgressPending}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <p className="text-sm text-zinc-500">현재 In Progress 상태의 작업이 없습니다</p>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* 개발 상태 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

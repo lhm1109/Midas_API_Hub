@@ -1,4 +1,4 @@
-import { Circle, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { StatusType } from "../types/manager";
 
@@ -9,36 +9,6 @@ interface StatusIconProps {
 
 export function StatusIcon({ status, className }: StatusIconProps) {
   switch (status) {
-    case "green":
-      return (
-        <div
-          className={cn(
-            "w-4 h-4 rounded-full bg-green-500 border-2 border-black",
-            className
-          )}
-          title="완료"
-        />
-      );
-    case "yellow":
-      return (
-        <div
-          className={cn(
-            "w-4 h-4 rounded-full bg-yellow-500 border-2 border-black",
-            className
-          )}
-          title="진행 중"
-        />
-      );
-    case "red":
-      return (
-        <div
-          className={cn(
-            "w-4 h-4 rounded-full bg-red-500 border-2 border-black",
-            className
-          )}
-          title="문제"
-        />
-      );
     case "empty":
       return (
         <div
@@ -49,26 +19,29 @@ export function StatusIcon({ status, className }: StatusIconProps) {
           title="시작 안함"
         />
       );
-    case "working":
+    case "wip":
       return (
-        <Loader2
-          className={cn("w-4 h-4 text-blue-500 animate-spin", className)}
-          title="작업 중"
-        />
+        <div title="작업 중">
+          <Loader2
+            className={cn("w-4 h-4 text-yellow-500 animate-spin", className)}
+          />
+        </div>
       );
     case "done":
       return (
-        <CheckCircle2
-          className={cn("w-4 h-4 text-green-600", className)}
-          title="완료"
-        />
+        <div title="완료">
+          <CheckCircle2
+            className={cn("w-4 h-4 text-green-600", className)}
+          />
+        </div>
       );
     case "warning":
       return (
-        <AlertTriangle
-          className={cn("w-4 h-4 text-orange-500", className)}
-          title="경고"
-        />
+        <div title="경고">
+          <AlertTriangle
+            className={cn("w-4 h-4 text-orange-500", className)}
+          />
+        </div>
       );
     case "na":
       return (
@@ -89,25 +62,11 @@ export function StatusIcon({ status, className }: StatusIconProps) {
 
 // 상태 텍스트 뱃지
 interface StatusBadgeProps {
-  status: "Working" | "Done" | string;
+  status: "In Progress" | "Done" | string;
   className?: string;
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  if (status === "Working") {
-    return (
-      <div
-        className={cn(
-          "inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-600 text-white text-xs font-medium",
-          className
-        )}
-      >
-        <Loader2 className="w-3 h-3 animate-spin" />
-        Working
-      </div>
-    );
-  }
-  
   if (status === "In Progress") {
     return (
       <div
@@ -121,7 +80,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       </div>
     );
   }
-  
+
   if (status === "Done") {
     return (
       <div
