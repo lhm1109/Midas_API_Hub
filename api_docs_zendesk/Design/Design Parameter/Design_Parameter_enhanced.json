@@ -1,0 +1,56 @@
+{
+  "DesignParameter": {
+    "type": "object",
+    "properties": {
+      "NO": {
+        "type": "integer",
+        "description": "Load combination number"
+      },
+      "NAME": {
+        "type": "string",
+        "description": "Load combination name"
+      },
+      "ACTIVE": {
+        "type": "string",
+        "description": "Active status",
+        "enum": ["ACTIVE", "INACTIVE"]
+      },
+      "bCB": {
+        "type": "boolean",
+        "description": "Code-based combination"
+      },
+      "iTYPE": {
+        "type": "integer",
+        "description": "Load combination type"
+      },
+      "DESC": {
+        "type": "string",
+        "description": "Description"
+      },
+      "vCOMB": {
+        "type": "array",
+        "description": "Load case combination list",
+        "items": {
+          "type": "object",
+          "properties": {
+            "ANAL": {
+              "type": "string",
+              "description": "Analysis type"
+            },
+            "LCNAME": {
+              "type": "string",
+              "description": "Load case name"
+            },
+            "FACTOR": {
+              "type": "number",
+              "description": "Load factor"
+            }
+          },
+          "required": ["ANAL", "LCNAME", "FACTOR"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

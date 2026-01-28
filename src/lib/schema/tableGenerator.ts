@@ -8,11 +8,11 @@
  * @see schema_definitions/{psdSet}/{schemaType}/html-template.yaml
  */
 
-import { 
-  compileEnhancedSchema, 
-  type EnhancedSchema, 
-  type EnhancedField, 
-  type SectionGroup 
+import {
+  compileEnhancedSchema,
+  type EnhancedSchema,
+  type EnhancedField,
+  type SectionGroup
 } from './schemaCompiler';
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
 
@@ -31,7 +31,7 @@ export async function generateHTMLDocumentWithYAML(
   const template = await loadCachedDefinition(schemaType as 'original' | 'enhanced', 'html') as HTMLTemplateDefinition;
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTML(sections, template);
-  
+
   return `
 <!DOCTYPE html>
 <html lang="${template.document?.language || 'en'}">
@@ -64,16 +64,16 @@ export async function generateHTMLDocumentWithYAML(
 function generateTableHTML(sections: SectionGroup[], template: HTMLTemplateDefinition): string {
   let html = generateTableHeader(template);
   html += '<tbody>';
-  
+
   let rowNumber = 1;
   for (const section of sections) {
     html += generateSectionHeader(section.name, template);
-    
+
     for (const field of section.fields) {
       html += generateFieldRow(field, rowNumber++, template);
     }
   }
-  
+
   html += '</tbody>';
   return html;
 }
@@ -90,11 +90,11 @@ function generateTableHeader(template: HTMLTemplateDefinition): string {
     { id: 'default', label: 'Default', width: '10%' },
     { id: 'required', label: 'Required', width: '25%' }
   ];
-  
-  const headerRows = columns.map((col: any) => 
+
+  const headerRows = columns.map((col: any) =>
     `<th style="width: ${col.width};">${col.label}</th>`
   ).join('\n        ');
-  
+
   return `
     <thead>
       <tr>
@@ -105,12 +105,30 @@ function generateTableHeader(template: HTMLTemplateDefinition): string {
 }
 
 /**
+ * Default 값 포맷팅 (문자열은 따옴표로 감싸서 API에서 사용할 형태로 표시)
+ */
+function formatDefaultValue(value: any, type: string): string {
+  if (value === undefined || value === null) return '-';
+
+  // 문자열 타입이면 따옴표로 감싸기
+  if (type === 'string') {
+    return `<code>"${escapeHtml(String(value))}"</code>`;
+  }
+  // boolean과 number는 코드 스타일로 표시
+  if (type === 'boolean' || type === 'number' || type === 'integer') {
+    return `<code>${escapeHtml(String(value))}</code>`;
+  }
+  // 그 외
+  return escapeHtml(String(value));
+}
+
+/**
  * 섹션 헤더 행 생성 (YAML 기반)
  */
 function generateSectionHeader(sectionName: string, template: HTMLTemplateDefinition): string {
   const colspan = template.table?.columns?.length || 6;
   const className = template.table?.sectionHeaderClass || 'section-header';
-  
+
   return `
     <tr>
       <td colspan="${colspan}" class="${className}">${escapeHtml(sectionName)}</td>
@@ -124,9 +142,9 @@ function generateSectionHeader(sectionName: string, template: HTMLTemplateDefini
 function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTMLTemplateDefinition): string {
   const descriptionHTML = generateFieldDescription(field, template);
   const requiredHTML = generateRequiredCell(field, template);
-  const defaultValue = field.default !== undefined ? escapeHtml(String(field.default)) : '-';
+  const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type;
-  
+
   let html = `
     <tr>
       <td style="text-align: center;">${rowNumber}</td>
@@ -137,19 +155,19 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
       <td>${requiredHTML}</td>
     </tr>
   `;
-  
+
   // 🔥 중첩 필드 처리 (children이 있으면 하위 행 추가)
   if (field.children && field.children.length > 0) {
     let childNo = 1;
     for (const child of field.children) {
       const childDescriptionHTML = generateFieldDescription(child, template);
       const childRequiredHTML = generateRequiredCell(child, template);
-      const childDefaultValue = child.default !== undefined ? escapeHtml(String(child.default)) : '-';
+      const childDefaultValue = formatDefaultValue(child.default, child.type);
       const childTypeDisplay = child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type;
-      
+
       // 중첩 필드의 key에서 부모 prefix 제거 (UNIT.FORCE → FORCE)
       const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
-      
+
       html += `
         <tr style="background-color: rgba(255, 255, 255, 0.02);">
           <td style="text-align: center; padding-left: 2em;">(${childNo++})</td>
@@ -162,7 +180,7 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
       `;
     }
   }
-  
+
   return html;
 }
 
@@ -171,12 +189,12 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
  */
 function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateDefinition): string {
   const parts: string[] = [];
-  
+
   // Label
   if (field.ui?.label) {
     parts.push(`<strong>${escapeHtml(field.ui.label)}</strong>`);
   }
-  
+
   // Standard enum
   if (field.enum && field.enum.length > 0) {
     parts.push('<strong>Enum Values:</strong>');
@@ -184,11 +202,12 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
     field.enum.forEach((val: any) => {
       const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
       const label = enumLabels[String(val)] || val;
-      parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
+      // Format: Label : "value" (shows what to actually use in API)
+      parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
     });
     parts.push('</ul>');
   }
-  
+
   // Enum by type
   if (field.enumByType) {
     parts.push('<strong>Enum Values by Type:</strong>');
@@ -198,12 +217,13 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
       (values as any[]).forEach((val: any) => {
         const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || {};
         const label = enumLabelsByType?.[type]?.[String(val)] || val;
-        parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
+        // Format: Label : "value" (shows what to actually use in API)
+        parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
       });
       parts.push('</ul>');
     }
   }
-  
+
   // Value constraints
   if (field.valueConstraint) {
     parts.push('<strong>Value Constraints:</strong>');
@@ -213,7 +233,7 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
     }
     parts.push('</ul>');
   }
-  
+
   // Node count by type
   if (field.nodeCountByType) {
     parts.push('<strong>Node Count by Type:</strong>');
@@ -224,12 +244,12 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
     }
     parts.push('</ul>');
   }
-  
+
   // Hint
   if (field.ui?.hint) {
     parts.push(`<p class="hint">${escapeHtml(field.ui.hint)}</p>`);
   }
-  
+
   return parts.join('\n');
 }
 
@@ -240,7 +260,7 @@ function generateRequiredCell(field: EnhancedField, _template: HTMLTemplateDefin
   const requiredStatuses = Object.values(field.required);
   const hasRequired = requiredStatuses.some(s => s === 'required');
   const hasOptional = requiredStatuses.some(s => s === 'optional');
-  
+
   if (hasRequired && hasOptional) {
     // Mixed: show detail
     const grouped: Record<string, string[]> = { required: [], optional: [] };
@@ -248,7 +268,7 @@ function generateRequiredCell(field: EnhancedField, _template: HTMLTemplateDefin
       if (status === 'required') grouped.required.push(type);
       if (status === 'optional') grouped.optional.push(type);
     }
-    
+
     const parts: string[] = [];
     if (grouped.required.length > 0) {
       parts.push(`<p><strong class="required">Required:</strong> ${grouped.required.join(', ')}</p>`);
@@ -269,7 +289,7 @@ function generateRequiredCell(field: EnhancedField, _template: HTMLTemplateDefin
  */
 function generateCSSFromYAML(template: HTMLTemplateDefinition): string {
   const css = template.css || {};
-  
+
   return `
     <style>
       /* Base styles */
@@ -384,9 +404,9 @@ function generateCSSFromYAML(template: HTMLTemplateDefinition): string {
 function generateInfoSection(schema: EnhancedSchema, template: HTMLTemplateDefinition): string {
   const transport = (schema as any)['x-transport'];
   if (!transport) return '';
-  
+
   const featureBox = template.featureBoxes?.info || {};
-  
+
   return `
     <div class="feature-box">
       <h3>${featureBox.title || '📋 API Information'}</h3>
@@ -402,18 +422,18 @@ function generateInfoSection(schema: EnhancedSchema, template: HTMLTemplateDefin
  */
 function generateValidationArchitectureSection(template: HTMLTemplateDefinition): string {
   const featureBox = template.featureBoxes?.validation || {};
-  
+
   return `
     <div class="feature-box">
       <h3>${featureBox.title || '🏗️ Validation Architecture'}</h3>
       <p>${featureBox.description || 'This schema uses a multi-layered validation approach:'}</p>
       <ul>
         ${(featureBox.items || [
-          'Type-specific required fields (e.g., BEAM requires SECT, SOLID does not)',
-          'Dynamic enum values based on TYPE selection',
-          'Conditional field visibility using visibleWhen rules',
-          'Value constraints that vary by element type'
-        ]).map((item: string) => `<li>${escapeHtml(item)}</li>`).join('\n        ')}
+      'Type-specific required fields (e.g., BEAM requires SECT, SOLID does not)',
+      'Dynamic enum values based on TYPE selection',
+      'Conditional field visibility using visibleWhen rules',
+      'Value constraints that vary by element type'
+    ]).map((item: string) => `<li>${escapeHtml(item)}</li>`).join('\n        ')}
       </ul>
     </div>
   `;
@@ -425,9 +445,9 @@ function generateValidationArchitectureSection(template: HTMLTemplateDefinition)
 function generateTransportSection(schema: EnhancedSchema, template: HTMLTemplateDefinition): string {
   const transport = (schema as any)['x-transport'];
   if (!transport || !transport['body-root']) return '';
-  
+
   const featureBox = template.featureBoxes?.transport || {};
-  
+
   return `
     <div class="feature-box">
       <h3>${featureBox.title || '🚀 Transport Layer'}</h3>
@@ -466,13 +486,13 @@ function escapeHtml(text: string): string {
  * @deprecated Use generateHTMLDocumentWithYAML instead
  */
 export function generateHTMLDocument(
-  schema: EnhancedSchema, 
-  psdSet: string = 'civil_gen_definition', 
+  schema: EnhancedSchema,
+  psdSet: string = 'civil_gen_definition',
   schemaType: string = 'enhanced'
 ): string {
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTMLLegacy(sections);
-  
+
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -495,23 +515,23 @@ export function generateHTMLDocument(
 function generateTableHTMLLegacy(sections: SectionGroup[]): string {
   let html = generateTableHeaderLegacy();
   html += '<tbody>';
-  
+
   let rowNumber = 1;
   for (const section of sections) {
-    
+
     // 🔥 조건별로 필드 그룹화
     const fieldsWithoutCondition: EnhancedField[] = [];
     const fieldsByCondition: Map<string, EnhancedField[]> = new Map();
-    
+
     for (const field of section.fields) {
       const visibleWhen = (field as any).ui?.visibleWhen || (field as any)['x-ui']?.visibleWhen;
-      
+
       if (visibleWhen && Object.keys(visibleWhen).length > 0) {
         // 조건 키 생성 (예: "iMETHOD: 1" 또는 "iMETHOD: [2,4]")
         const conditionKey = Object.entries(visibleWhen)
           .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
           .join(', ');
-        
+
         if (!fieldsByCondition.has(conditionKey)) {
           fieldsByCondition.set(conditionKey, []);
         }
@@ -520,7 +540,7 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
         fieldsWithoutCondition.push(field);
       }
     }
-    
+
     // 🔥 조건 없는 필드 먼저 렌더링
     if (fieldsWithoutCondition.length > 0) {
       html += generateSectionHeaderLegacy(section.name);
@@ -528,17 +548,17 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
         html += generateFieldRowLegacy(field, rowNumber++);
       }
     }
-    
+
     // 🔥 조건별 필드 렌더링
     for (const [conditionKey, fields] of fieldsByCondition.entries()) {
       const conditionLabel = `${section.name} (When "${conditionKey.split(':')[0].trim()}" is ${conditionKey.split(':')[1].trim()})`;
       html += generateSectionHeaderLegacy(conditionLabel);
       for (const field of fields) {
-      html += generateFieldRowLegacy(field, rowNumber++);
+        html += generateFieldRowLegacy(field, rowNumber++);
       }
     }
   }
-  
+
   html += '</tbody>';
   return html;
 }
@@ -569,9 +589,9 @@ function generateSectionHeaderLegacy(sectionName: string): string {
 function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string {
   const descriptionHTML = generateFieldDescriptionLegacy(field);
   const requiredHTML = generateRequiredCellLegacy(field);
-  const defaultValue = field.default !== undefined ? escapeHtml(String(field.default)) : '-';
+  const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type;
-  
+
   return `
     <tr>
       <td style="text-align: center;">${rowNumber}</td>
@@ -586,24 +606,25 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
 
 function generateFieldDescriptionLegacy(field: EnhancedField): string {
   const parts: string[] = [];
-  
+
   // 🔥 우선순위: x-ui.label > description > key
   const displayLabel = field.ui?.label || field.description || field.key;
   if (displayLabel) {
     parts.push(`<strong>${escapeHtml(displayLabel)}</strong>`);
   }
-  
+
   if (field.enum && field.enum.length > 0) {
     parts.push('<strong>Enum Values:</strong>');
     parts.push('<ul>');
     field.enum.forEach((val: any) => {
       const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
       const label = enumLabels[String(val)] || val;
-      parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
+      // Format: Label : "value" (shows what to actually use in API)
+      parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
     });
     parts.push('</ul>');
   }
-  
+
   if (field.enumByType) {
     parts.push('<strong>Enum Values by Type:</strong>');
     for (const [type, values] of Object.entries(field.enumByType)) {
@@ -612,12 +633,13 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
       (values as any[]).forEach((val: any) => {
         const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || {};
         const label = enumLabelsByType?.[type]?.[String(val)] || val;
-        parts.push(`<li><code>${escapeHtml(String(val))}</code> - ${escapeHtml(String(label))}</li>`);
+        // Format: Label : "value" (shows what to actually use in API)
+        parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
       });
       parts.push('</ul>');
     }
   }
-  
+
   if (field.valueConstraint) {
     parts.push('<strong>Value Constraints:</strong>');
     parts.push('<ul>');
@@ -626,7 +648,7 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
     }
     parts.push('</ul>');
   }
-  
+
   if (field.nodeCountByType) {
     parts.push('<strong>Node Count by Type:</strong>');
     parts.push('<ul>');
@@ -636,11 +658,11 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
     }
     parts.push('</ul>');
   }
-  
+
   if (field.ui?.hint) {
     parts.push(`<p class="hint">${escapeHtml(field.ui.hint)}</p>`);
   }
-  
+
   return parts.join('\n');
 }
 
@@ -649,17 +671,17 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
   if (!field.required || Object.keys(field.required).length === 0) {
     return '<span class="badge badge-optional">Optional</span>';
   }
-  
+
   const requiredStatuses = Object.values(field.required);
   const hasRequired = requiredStatuses.some(s => s === 'required');
   const hasOptional = requiredStatuses.some(s => s === 'optional');
   const hasConditional = requiredStatuses.some(s => s === 'conditional');
-  
+
   // 🔥 1. Conditional 상태 처리
   if (hasConditional) {
     return '<span class="badge badge-conditional">Conditional</span>';
   }
-  
+
   // 🔥 2. Required/Optional 혼재 (타입별로 다름)
   if (hasRequired && hasOptional) {
     const grouped: Record<string, string[]> = { required: [], optional: [] };
@@ -667,7 +689,7 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
       if (status === 'required') grouped.required.push(type);
       if (status === 'optional') grouped.optional.push(type);
     }
-    
+
     const parts: string[] = [];
     if (grouped.required.length > 0) {
       parts.push(`<p style="margin: 2px 0;"><strong class="required">Required:</strong> ${grouped.required.join(', ')}</p>`);
@@ -676,15 +698,15 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
       parts.push(`<p style="margin: 2px 0;"><strong class="optional">Optional:</strong> ${grouped.optional.join(', ')}</p>`);
     }
     return parts.join('\n');
-  } 
-  
+  }
+
   // 🔥 3. Required
   if (hasRequired) {
     return '<span class="badge badge-required">Required</span>';
-  } 
-  
+  }
+
   // 🔥 4. Optional (기본값)
-    return '<span class="badge badge-optional">Optional</span>';
+  return '<span class="badge badge-optional">Optional</span>';
 }
 
 function generateCSSLegacy(): string {
@@ -797,7 +819,7 @@ function generateCSSLegacy(): string {
 function generateInfoSectionLegacy(schema: EnhancedSchema): string {
   const transport = (schema as any)['x-transport'];
   if (!transport) return '';
-  
+
   return `
     <div class="feature-box">
       <h3>📋 API Information</h3>
@@ -826,7 +848,7 @@ function generateValidationArchitectureSectionLegacy(): string {
 function generateTransportSectionLegacy(schema: EnhancedSchema): string {
   const transport = (schema as any)['x-transport'];
   if (!transport || !transport['body-root']) return '';
-  
+
   return `
     <div class="feature-box">
       <h3>🚀 Transport Layer</h3>
