@@ -12,7 +12,7 @@ extends: "./shared.yaml"
 # LAYOUT - 레이아웃 공통 규칙
 # ============================================================================
 layout:
-  # 섹션 헤더 (x-ui.group)
+  # 섹션 헤더 (x-ui.sectionId 기반 - x-ui.group deprecated)
   sectionHeader:
     enabled: true
     icon: "📋"
@@ -28,7 +28,7 @@ layout:
   # 필드 그룹화
   fieldGrouping:
     enabled: true
-    groupBy: "x-ui.group"
+    groupBy: "x-ui.sectionId"  # 🔥 x-ui.group deprecated
 
   # 중첩 객체
   nestedObject:
@@ -48,7 +48,7 @@ enhancedFeatures:
     features:
       label: true
       hint: true
-      group: true
+      sectionId: true  # 🔥 group deprecated → sectionId
       visibleWhen: true
 
   xenumByType:
@@ -315,7 +315,7 @@ fallbackUI:
     label:
       source: "key"
       transform: "humanize"  # "iTENDON_TYPE" → "I Tendon Type"
-    group: "General"
+    sectionId: "SECTION_GENERAL"  # 🔥 sectionRegistry.id 참조
     component: "Input"
     warn: true
 

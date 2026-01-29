@@ -3,7 +3,7 @@
  * YAML 규칙 기반으로 스키마 검증 및 자동 변환
  */
 
-import { loadValidationRules, loadGenerationRules } from '../utils/rules-loader.js';
+import { loadValidationRules, loadGenerationRules, loadSharedRules } from '../utils/rules-loader.js';
 
 export interface ValidationResult {
     valid: boolean;
@@ -105,21 +105,38 @@ export function validateAndTransform(
                 }
             }
 
-            // 3. x-ui.group 필수 체크
+            // 3. x-ui.sectionId 필수 체크 (🔥 v1.5 SSOT: group → sectionId)
             if (validationRules?.requiredProperties?.xuiGroup?.enabled) {
                 const xui = field['x-ui'] as Record<string, unknown> | undefined;
-                if (!xui?.['group']) {
-                    const defaultGroup = 'General';
+                // sectionId가 없고 group도 없으면 기본 sectionId 설정
+                if (!xui?.['sectionId'] && !xui?.['group']) {
+                    // 🔥 v1.5: sectionRegistry에서 isDefault=true인 섹션 찾기
+                    const sharedRules = loadSharedRules();
+                    const defaultSection = sharedRules?.sectionRegistry?.find((s: { isDefault?: boolean }) => s.isDefault);
+                    const defaultSectionId = defaultSection?.id || 'SECTION_GENERAL';
 
                     if (!xui) {
-                        field['x-ui'] = { group: defaultGroup };
+                        field['x-ui'] = { sectionId: defaultSectionId };
                     } else {
-                        xui['group'] = defaultGroup;
+                        xui['sectionId'] = defaultSectionId;
                     }
 
                     warnings.push({
                         field: fieldName,
-                        message: `x-ui.group 기본값 설정: "${defaultGroup}"`,
+                        message: `x-ui.sectionId 기본값 설정: "${defaultSectionId}" (sectionRegistry SSOT)`,
+                    });
+                }
+                // 🔥 v1.5: group → sectionId 마이그레이션
+                if (xui?.['group'] && !xui?.['sectionId']) {
+                    const groupValue = xui['group'] as string;
+                    // group 문자열을 sectionId 패턴으로 변환
+                    const sectionId = `SECTION_${groupValue.toUpperCase().replace(/\s+/g, '_')}`;
+                    xui['sectionId'] = sectionId;
+                    delete xui['group'];
+
+                    warnings.push({
+                        field: fieldName,
+                        message: `x-ui.group → x-ui.sectionId 마이그레이션: "${groupValue}" → "${sectionId}"`,
                     });
                 }
             }
@@ -139,10 +156,28 @@ export function validateAndTransform(
                     }
                 }
             }
+
+            // 🔥 5. sectionId 무결성 검증 (v1.5 SSOT)
+            const sharedRules = loadSharedRules();
+            if (sharedRules?.integrityRules?.requireXuiSectionIdInRegistry) {
+                const xui = field['x-ui'] as Record<string, unknown> | undefined;
+                const sectionId = xui?.['sectionId'] as string | undefined;
+                if (sectionId) {
+                    const validSectionIds = sharedRules.sectionRegistry?.map(s => s.id) || [];
+                    if (!validSectionIds.includes(sectionId)) {
+                        errors.push({
+                            field: fieldName,
+                            message: `x-ui.sectionId "${sectionId}"가 sectionRegistry에 없음. 유효값: ${validSectionIds.join(', ')}`,
+                            fixable: true,
+                            fixApplied: false,
+                        });
+                    }
+                }
+            }
         }
     }
 
-    // 5. $schema 추가
+    // 6. $schema 추가
     if (validationRules?.structureValidation?.requireSchema?.enabled) {
         if (!transformed['$schema']) {
             transformed['$schema'] = validationRules.structureValidation.requireSchema.value;
@@ -156,3 +191,4 @@ export function validateAndTransform(
         transformed,
     };
 }
+

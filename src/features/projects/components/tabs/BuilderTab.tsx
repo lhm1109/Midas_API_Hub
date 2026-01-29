@@ -116,7 +116,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   }
 
   // 🔥 Builder Rules에서 wrapper rules 및 enhanced schema markers 로드
-  const [wrapperRules, setWrapperRules] = useState<Array<{ pattern: string; wrapper: string }>>([]);
+  const [wrapperRules, setWrapperRules] = useState<Array<{ pattern: string; wrapper: string; priority?: number }>>([]);
+  const [wrapperPriorityDefault, setWrapperPriorityDefault] = useState<number>(0);  // 🔥 shared.yaml에서 로드
   const [enhancedSchemaMarkers, setEnhancedSchemaMarkers] = useState<string[]>([]);
 
   useEffect(() => {
@@ -127,12 +128,18 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
         if (builderDef.wrapperRules) {
           console.log('✅ Loaded wrapper rules from', `${psdSet}/${schemaType}:`, builderDef.wrapperRules);
-          setWrapperRules(builderDef.wrapperRules as Array<{ pattern: string; wrapper: string }>);
+          setWrapperRules(builderDef.wrapperRules as Array<{ pattern: string; wrapper: string; priority?: number }>);
         }
 
         if (builderDef.enhancedSchemaMarkers) {
           console.log('✅ Loaded enhanced schema markers:', builderDef.enhancedSchemaMarkers);
           setEnhancedSchemaMarkers(builderDef.enhancedSchemaMarkers);
+        }
+
+        // 🔥 NEW: wrapperPriorityDefault 로드 (shared.yaml에서)
+        if (builderDef.wrapperPriorityDefault !== undefined) {
+          console.log('✅ Loaded wrapperPriorityDefault:', builderDef.wrapperPriorityDefault);
+          setWrapperPriorityDefault(builderDef.wrapperPriorityDefault);
         }
       } catch (error) {
         console.error('❌ Failed to load builder config:', error);
@@ -1204,13 +1211,30 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   };
 
   // 🔥 URI 패턴에 따라 래퍼 키 결정
+  // ⚠️ 매칭 알고리즘 (shared.yaml과 일치):
+  //   1. priority DESC 정렬 (undefined는 defaultHandlers.wrapperPriorityDefault 적용)
+  //   2. 동률이면 리스트 순서 유지 (stable sort)
+  //   3. 첫 매칭 rule 반환 (short-circuit)
   const getWrapperKey = (): string | null => {
     const path = endpoint.path || '';
 
     console.log('🔍 getWrapperKey called:', { path, wrapperRules });
 
-    // wrapperRules를 순회하며 매칭되는 패턴 찾기
-    for (const rule of wrapperRules) {
+    // 🔥 priority 기반 정렬 (stable sort - 동률은 원래 순서 유지)
+    // priority 없으면 wrapperPriorityDefault 적용 (shared.yaml SSOT)
+    const sortedRules = [...wrapperRules]
+      .map((rule, index) => ({ ...rule, _originalIndex: index }))
+      .sort((a, b) => {
+        const priorityA = a.priority ?? wrapperPriorityDefault;
+        const priorityB = b.priority ?? wrapperPriorityDefault;
+        if (priorityB !== priorityA) {
+          return priorityB - priorityA;  // DESC
+        }
+        return (a as any)._originalIndex - (b as any)._originalIndex;  // stable
+      });
+
+    // 첫 매칭 반환 (short-circuit)
+    for (const rule of sortedRules) {
       const regex = new RegExp(rule.pattern);
       if (regex.test(path)) {
         console.log('✅ Matched rule:', rule);

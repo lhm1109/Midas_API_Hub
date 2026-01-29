@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "bCombinedShearAndTorsionCheck": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Combined Shear and Torsion Check",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bCrackCheck": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Crack Check",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bFlexuralStrengthCheck": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Flexural Strength Check",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bPrincipalStressByConstructionStage": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Principal Stress by Construction Stage",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bPrincipalStressByMaxShear": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Principal Stress by Service Load Combinations (Max Shear)",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bPrincipalStressByMaxTorsion": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Principal Stress by Service Load Combination (Max Torsion)",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bShearStrengthCheck": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Shear Strength Check",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bStressByConstructionStage": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Stress by Construction Stage",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bStressByServiceLoadComb": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Stress by Service Load Combinations",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "bStressInPrestressingTendons": {
+      "default": true,
+      "type": "boolean",
+      "x-ui": {
+        "label": "Stress in Prestressing Tendons",
+        "sectionId": "SECTION_OUTPUT"
+      }
+    },
+    "dExposureFactorValue": {
+      "default": 1,
+      "type": "number",
+      "x-ui": {
+        "label": "User Exposure Factor Value",
+        "sectionId": "SECTION_INPUT",
+        "visibleWhen": {
+          "equals": 2,
+          "field": "iExposureFactor"
+        }
+      }
+    },
+    "iConstructionType": {
+      "oneOf": [
+        {
+          "const": 0,
+          "title": "Segmental"
+        },
+        {
+          "const": 1,
+          "title": "Non-Segmental"
+        }
+      ],
+      "type": "integer",
+      "x-ui": {
+        "label": "Construction Type",
+        "sectionId": "SECTION_INPUT"
+      }
+    },
+    "iCorrosiveCondition": {
+      "oneOf": [
+        {
+          "const": 0,
+          "title": "Severe"
+        },
+        {
+          "const": 1,
+          "title": "Moderate/Mild"
+        }
+      ],
+      "type": "integer",
+      "x-ui": {
+        "label": "Corrosive Condition",
+        "sectionId": "SECTION_INPUT"
+      }
+    },
+    "iExposureFactor": {
+      "oneOf": [
+        {
+          "const": 0,
+          "title": "Class I (1.0)"
+        },
+        {
+          "const": 1,
+          "title": "Class II (0.75)"
+        },
+        {
+          "const": 2,
+          "title": "User"
+        }
+      ],
+      "type": "integer",
+      "x-ui": {
+        "label": "Exposure Factor for Crack Width",
+        "sectionId": "SECTION_INPUT"
+      }
+    },
+    "iFlexuralStrength": {
+      "oneOf": [
+        {
+          "const": 0,
+          "title": "Code"
+        },
+        {
+          "const": 1,
+          "title": "Strain Compatibility"
+        }
+      ],
+      "type": "integer",
+      "x-ui": {
+        "label": "Flexural Strength",
+        "sectionId": "SECTION_INPUT"
+      }
+    },
+    "iTendonType": {
+      "oneOf": [
+        {
+          "const": 0,
+          "title": "Low Relaxation Tendons"
+        },
+        {
+          "const": 1,
+          "title": "Stress Relieved Tendons"
+        },
+        {
+          "const": 2,
+          "title": "Prestressing Bars"
+        }
+      ],
+      "type": "integer",
+      "x-ui": {
+        "label": "Tendon Type",
+        "sectionId": "SECTION_INPUT"
+      }
+    },
+    "sDesignCode": {
+      "type": "string",
+      "x-enum-by-type": {
+        "default": [
+          "AASHTO-LRFD20",
+          "AASHTO-LRFD17",
+          "AASHTO-LRFD16",
+          "AASHTO-LRFD14",
+          "AASHTO-LRFD12",
+          "AASHTO-LRFD07"
+        ]
+      },
+      "x-ui": {
+        "label": "Design Code",
+        "sectionId": "SECTION_GENERAL"
+      }
+    }
+  },
+  "required": [
+    "sDesignCode",
+    "iTendonType"
+  ],
+  "title": "PSC Design Code",
+  "type": "object"
+}

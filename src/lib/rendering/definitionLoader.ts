@@ -35,7 +35,9 @@ export interface BuilderDefinition extends UIRulesDefinition {
     pattern: string;
     wrapper: string;
     description?: string;
+    priority?: number;  // 🔥 NEW
   }>;
+  wrapperPriorityDefault?: number;  // 🔥 NEW: shared.yaml에서 로드
 }
 
 export interface TableDefinition extends UIRulesDefinition {
@@ -99,19 +101,86 @@ export interface HTMLTemplateDefinition {
 // ============================================================================
 
 export interface SharedRulesDefinition {
-  version: string;
-  specVersion: string;
+  // 🔥 v1.5: SSOT 100점 구조
+  versioning: {
+    rulesSpecVersion: string;
+    inputSpec: {
+      schemaDraft: string;
+      min: string;
+      max: string;
+    };
+  };
   unknownPolicy: any;
-  defaultHandlers: any;
-  versioning: any;
-  precedence: string[];
-  markerRegistry: Array<{ id: string; key: string; description?: string; required?: boolean }>;
-  wrapperRegistry: Array<{ id: string; pattern: string; wrapper: string | null; description?: string; priority?: number }>;
+  defaultHandlers: {
+    typeInferenceFallback: { type: string; warn: boolean };
+    missingXui: { label: string; warn: boolean };
+    wrapperPriorityDefault: number;
+  };
+  // 🔥 v1.4: object 구조로 변경
+  precedence: {
+    order: string[];
+    merge: {
+      sameKey: 'override' | 'merge';
+      list: 'replace' | 'concat';
+      missingKey: 'inherit' | 'ignore';
+    };
+  };
+  // 🔥 v1.5: integrityRules 추가
+  integrityRules: {
+    requireMarkerIdInRegistry: boolean;
+    requireSectionIdInRegistry: boolean;
+    requireConditionTypeInRegistry: boolean;
+    requireXuiSectionIdInRegistry: boolean;
+  };
+  markerRegistry: Array<{
+    id: string;
+    key: string;
+    description?: string;
+    required?: boolean;
+  }>;
+  // 🔥 v1.4: conditionRegistry 전역 이동
+  conditionRegistry: Array<{
+    type: string;
+    requiredParams: string[];
+    description?: string;
+  }>;
+  // 🔥 v1.4: sectionRegistry 추가
+  sectionRegistry: Array<{
+    id: string;
+    name: string;
+    description?: string;
+    isDefault?: boolean;
+  }>;
+  // 🔥 v1.4: wrapperRegistryPolicy 추가
+  wrapperRegistryPolicy: {
+    sort: 'priorityDescStable' | 'priorityAscStable';
+    match: 'first' | 'all';
+  };
+  wrapperRegistry: Array<{
+    id: string;
+    pattern: string;
+    wrapper: string | null;
+    description?: string;
+    priority?: number;
+  }>;
   typeInferenceRegistry: Array<{ id: string; prefix: string; type: string; example?: string }>;
   componentRegistry: Record<string, { component: string; props?: any }>;
-  naming: any;
-  diagnostics: any;
-  outputMeta: any;
+  // 🔥 v1.4: prefixSource 추가
+  naming: {
+    yamlKeyPolicy: { min: number; max: number; style: string };
+    fieldNamePolicy: { prefixSource?: string; allowUppercase: boolean; maxLength: number };
+    conflict: { strategy: string; format: string };
+  };
+  diagnostics: {
+    errors: Array<{ code: string; level: string; message: string; fix?: string }>;
+    warnings: Array<{ code: string; level: string; message: string; fix?: string }>;
+  };
+  // 🔥 v1.2: defaults + required/onMissing
+  outputMeta: {
+    defaults: { required: boolean; onMissing: 'warn' | 'error' | 'null' };
+    fields: Array<{ alias: string; source: string; required?: boolean; onMissing?: string }>;
+  };
+  schemaLogic: any;
 }
 
 export interface MCPRulesDefinition {
@@ -218,7 +287,10 @@ export async function loadBuilderRules(
         pattern: w.pattern,
         wrapper: w.wrapper,
         description: w.description,
+        priority: w.priority,  // 🔥 NEW: priority 포함
       })) || [],
+      // 🔥 NEW: shared.yaml의 defaultHandlers.wrapperPriorityDefault
+      wrapperPriorityDefault: uiRules.defaultHandlers?.wrapperPriorityDefault ?? 0,
     };
 
     console.log(`✅ Loaded builder rules from ${psdSet}/${schemaType}/ui.yaml`, merged);

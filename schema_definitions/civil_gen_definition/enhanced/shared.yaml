@@ -3,67 +3,106 @@
 # ============================================================================
 # 이 파일은 MCP와 UI가 공통으로 참조하는 규칙입니다.
 # 중복을 방지하고 일관성을 유지하기 위해 이 파일만 수정하세요.
+#
+# ⚠️ SSOT 원칙 (v1.1 - 결정론 강화):
+#   - 버전: versioning 섹션만 책임
+#   - 섹션/그룹: schemaLogic.sectionRules만 책임
+#   - 래퍼: wrapperRegistry만 책임 (priority 없으면 defaultHandlers.wrapperPriorityDefault 적용)
+#   - 컴포넌트: componentRegistry만 책임
+#   - 마커: markerRegistry.id가 SSOT
+#     → 트리거 문자열은 런타임에서 "has-marker:<MARKER_ID>" 자동 생성
+#     → triggerId 필드 없음 (중복 제거)
+#   - 조건: 구조화된 condition 객체 사용 (문자열 하드코딩 금지)
+#     → 예: { type: "has-marker", markerId: "MARKER_ENUM_BY_TYPE" }
+#
+# ⚠️ 검증 경계:
+#   - shared.yaml 검증 → shared.meta.schema.json (CI)
+#   - 입력 스키마 검증 → unknownPolicy (런타임)
+#
+# ⚠️ 메타스키마: shared.meta.schema.json
 # ============================================================================
 
-version: "1.0.0"
-specVersion: "1.0"  # YAML 스펙 버전 (버전 게이트용)
+# ============================================================================
+# VERSIONING - 버전 관리 (유일한 버전 SSOT)
+# ============================================================================
+versioning:
+  rulesSpecVersion: "1.5.0"  # 🔥 SSOT 100점: integrityRules + x-ui.sectionId
+  inputSpec:
+    schemaDraft: "draft-07"
+    min: "1.0"
+    max: "1.x"
 
 # ============================================================================
-# FLEXIBILITY LAYER - 유연성 레이어
+# UNKNOWN POLICY - 입력 스키마 unknown 키 처리 (런타임용)
 # ============================================================================
-
-# A. Unknown-tolerant 정책 (미지 키 허용 + 엄격 검증)
+# ⚠️ 이 정책은 Enhanced JSON Schema 파싱 시 적용됨
+#    shared.yaml 자체의 unknown 키는 meta-schema가 검증
 unknownPolicy:
   transform:
-    action: "passthrough"  # passthrough | warn | error
-    collectUnknown: true   # meta에 unknownKeys[] 기록
+    action: "passthrough"
+    collectUnknown: true
   validate:
-    unknownKey: "warn"     # allow | warn | error
+    unknownKey: "warn"
     unknownMarker: "warn"
     unsupportedStructure: "error"
 
-# B. Default Handlers (폴백 처리)
+# ============================================================================
+# DEFAULT HANDLERS
+# ============================================================================
 defaultHandlers:
-  # 타입 추론 실패 시
   typeInferenceFallback:
     type: "string"
-    component: "Input"
     warn: true
   
-  # x-ui 없는 필드
   missingXui:
-    label: "{key}"  # 키 이름 사용
-    group: "General"
-    component: "Input"
+    label: "{key}"
     warn: true
   
-  # 알 수 없는 wrapper 패턴
-  unknownWrapperPattern:
-    wrapper: null
-    warn: true
+  # 🔥 wrapperRegistry priority 없을 때 적용되는 기본값
+  # 런타임에서 반드시 이 값을 사용해야 결정론 보장
+  wrapperPriorityDefault: 0
 
-# C. Version Gate (버전 호환성)
-versioning:
-  rulesVersion: "1.0.0"
-  compatibility:
-    schemaDraft: "draft-07"
-    minSpecVersion: "1.0"
-    maxSpecVersion: "1.x"  # 1.x는 모두 호환
-
-# D. 규칙 우선순위 (Precedence)
+# ============================================================================
+# PRECEDENCE - 규칙 우선순위 정의 (결정론 보장)
+# ============================================================================
+# ⚠️ 적용 범위: 모든 룰 세트 (wrapperRegistry, markerRegistry, sectionRules 등)
+# ⚠️ Merge 전략:
+#   - 동일 키 → 상위 우선순위가 override (deep merge 아님)
+#   - 리스트 → 상위 우선순위가 전체 대체 (concat 아님)
+#   - 없는 키 → 하위 우선순위에서 상속
 precedence:
-  - explicit       # 명시적 필드 규칙
-  - product        # 제품별 오버라이드
-  - module         # 모듈별 오버라이드
-  - shared         # 공통 기본값
-  - inference      # 타입 추론
+  order:
+    - explicit    # 스키마 내부 x-schema-rules (최우선)
+    - product     # 제품별 ui.yaml, mcp.yaml
+    - module      # 모듈별 override (향후)
+    - shared      # 공통 shared.yaml
+    - inference   # 타입 추론 기본값
+  merge:
+    sameKey: "override"      # 동일 키 → 상위가 덮어씀
+    list: "replace"          # 리스트 → 전체 대체
+    missingKey: "inherit"    # 없는 키 → 하위에서 상속
 
 # ============================================================================
-# REGISTRIES - 플러그인 스타일 레지스트리
+# INTEGRITY RULES - 레퍼런스 무결성 (SSOT)
 # ============================================================================
-# 새 마커/래퍼/타입 추가 시 코드 수정 없이 여기만 수정
+# ⚠️ 이 규칙으로 참조 존재 여부를 런타임/CI에서 검증
+integrityRules:
+  # markerId는 반드시 markerRegistry.id에 존재해야 함
+  requireMarkerIdInRegistry: true
+  # sectionId는 반드시 sectionRegistry.id에 존재해야 함
+  requireSectionIdInRegistry: true
+  # condition.type은 반드시 conditionRegistry.type에 존재해야 함
+  requireConditionTypeInRegistry: true
+  # x-ui.sectionId는 반드시 sectionRegistry.id에 존재해야 함
+  requireXuiSectionIdInRegistry: true
 
-# 1. Enhanced Schema 감지 마커 레지스트리
+# ============================================================================
+# REGISTRIES
+# ============================================================================
+
+# 1. Enhanced Schema 감지 마커 레지스트리 (SSOT)
+# ⚠️ id가 SSOT - triggerId 필드 없음 (자동 생성 규칙으로 대체)
+#    트리거 문자열 = "has-marker:<id>" (런타임에서 자동 생성)
 markerRegistry:
   - id: MARKER_UI
     key: "x-ui"
@@ -100,28 +139,97 @@ markerRegistry:
     description: "TYPE별 enum 라벨"
     required: false
 
-# 2. Wrapper Rules 레지스트리 (JSON 래퍼 결정)
+# ============================================================================
+# CONDITION REGISTRY - condition type taxonomy (전역 SSOT)
+# ============================================================================
+# ⚠️ 모든 condition.type은 여기 등록된 것만 유효 (schemaLogic/mcp/ui 공통)
+# ⚠️ 런타임은 이 레지스트리를 기준으로 검증
+conditionRegistry:
+  - type: "has-marker"
+    requiredParams: ["markerId"]
+    description: "markerRegistry.id 참조, 해당 마커 존재 시 true"
+
+  - type: "has-enum"
+    requiredParams: []
+    description: "명시적 enum 배열 존재 시 true"
+
+  - type: "has-oneOf-with-const"
+    requiredParams: []
+    description: "oneOf 내부에 const 속성 존재 시 true"
+
+  - type: "has-minItems"
+    requiredParams: []
+    description: "minItems 속성 존재 시 true"
+
+  - type: "has-maxItems"
+    requiredParams: []
+    description: "maxItems 속성 존재 시 true"
+
+  - type: "has-type"
+    requiredParams: []
+    description: "type 속성 존재 시 true"
+
+  - type: "has-explicit-sectionId"
+    requiredParams: []
+    description: "x-ui.sectionId가 명시적으로 존재 시 true (x-ui.group은 deprecated)"
+
+  - type: "always"
+    requiredParams: []
+    description: "항상 true (기본 fallback)"
+
+  - type: "no-visible-when"
+    requiredParams: []
+    description: "visibleWhen이 없으면 true"
+
+  - type: "has-field-condition"
+    requiredParams: ["field"]
+    description: "특정 필드 조건 존재 시 true"
+
+  - type: "has-other-conditions"
+    requiredParams: []
+    description: "기타 조건 존재 시 true"
+
+# ============================================================================
+# SECTION REGISTRY - 섹션 중앙 관리 (SSOT)
+# ============================================================================
+# ⚠️ sectionRules와 sectionOrder는 여기 등록된 id만 참조
+sectionRegistry:
+  - id: SECTION_GENERAL
+    name: "General"
+    description: "기본 섹션"
+    isDefault: true
+
+# 2. Wrapper Rules 레지스트리 (SSOT)
+# ⚠️ 매칭 알고리즘 (결정론 보장):
+#   1. priority DESC 정렬 (없으면 defaultHandlers.wrapperPriorityDefault 적용)
+#   2. 동률이면 리스트 순서 유지 (stable sort 필수)
+#   3. 첫 매칭 rule 반환 (short-circuit)
+
+# 🔥 v1.4: 정책을 YAML로 선언 (SSOT)
+wrapperRegistryPolicy:
+  sort: "priorityDescStable"   # priority DESC + stable sort
+  match: "first"               # 첫 매칭 반환
+
 wrapperRegistry:
   - id: WRAP_DB
     pattern: "^/db/"
     wrapper: "Assign"
-    description: "Database endpoints use Assign wrapper"
+    priority: 10
 
   - id: WRAP_POST
     pattern: "^/post/"
     wrapper: "Argument"
-    description: "Post endpoints use Argument wrapper"
+    priority: 10
 
   - id: WRAP_DOC
     pattern: "^/doc/"
     wrapper: "Argument"
-    description: "Documentation endpoints use Argument wrapper"
+    priority: 10
 
   - id: WRAP_DEFAULT
     pattern: ".*"
     wrapper: null
-    priority: -1  # 최저 우선순위
-    description: "Default: no wrapper"
+    priority: -1
 
 # 3. 타입 접두사 추론 레지스트리
 typeInferenceRegistry:
@@ -145,7 +253,7 @@ typeInferenceRegistry:
     type: "string"
     example: "sCODE_NAME"
 
-# 4. 필드 타입 → UI 컴포넌트 레지스트리
+# 4. 필드 타입 → UI 컴포넌트 레지스트리 (SSOT)
 componentRegistry:
   string:
     component: "Input"
@@ -176,16 +284,58 @@ componentRegistry:
     props: {}
 
 # ============================================================================
-# NAMING POLICY - 네이밍 정책
+# NAMING POLICY
 # ============================================================================
 naming:
-  keyPolicy:
+  yamlKeyPolicy:
     min: 3
-    max: 12
-    style: "snake_case"  # snake_case | camelCase | shortcode
+    max: 20
+    style: "camelCase"
+  
+  fieldNamePolicy:
+    # 🔥 v1.4: 파생 규칙을 YAML로 선언 (SSOT)
+    prefixSource: "typeInferenceRegistry"  # allowedPrefixes = typeInferenceRegistry.map(prefix)
+    allowUppercase: true
+    maxLength: 30
+  
   conflict:
     strategy: "suffix"
     format: "{key}_{n}"
+
+# ============================================================================
+# OUTPUT META - 출력 메타데이터 템플릿
+# ============================================================================
+# ⚠️ source 경로 규칙:
+#   - versioning.* : shared.yaml에서 직접 읽음
+#   - _computed.*  : 런타임에서 계산 (sourceHash, outputHash 등)
+# ⚠️ 에러 정책:
+#   - required: true → 해석 실패 시 에러 (프로세스 중단)
+#   - required: false + onMissing: warn → 경고 + null
+#   - required: false + onMissing: null → 조용히 null
+outputMeta:
+  # 기본 에러 정책 (개별 필드에서 override 가능)
+  defaults:
+    required: false
+    onMissing: "warn"  # "warn" | "error" | "null"
+  fields:
+    - alias: "rulesSpecVersion"
+      source: "versioning.rulesSpecVersion"
+      required: true  # 필수 - 없으면 에러
+    - alias: "sourceHash"
+      source: "_computed.sourceHash"
+    - alias: "outputHash"
+      source: "_computed.outputHash"
+    - alias: "generatedAt"
+      source: "_computed.generatedAt"
+      required: true  # 필수
+    - alias: "appliedRuleIds"
+      source: "_computed.appliedRuleIds"
+    - alias: "warnings"
+      source: "_computed.warnings"
+      onMissing: "null"  # 경고 없이 null
+    - alias: "unknownKeys"
+      source: "_computed.unknownKeys"
+      onMissing: "null"  # 경고 없이 null
 
 # ============================================================================
 # DIAGNOSTICS - 진단 코드 체계
@@ -205,6 +355,18 @@ diagnostics:
       level: "error"
       message: "지원하지 않는 스키마 구조: {structure}"
 
+    - code: "INVALID_FIELD_NAME_POLICY"
+      level: "error"
+      message: "필드명 정책 위반: {field}"
+
+    - code: "INVALID_YAML_KEY_POLICY"
+      level: "error"
+      message: "YAML 키 정책 위반: {key}"
+
+    - code: "OUTPUT_META_SOURCE_NOT_FOUND"
+      level: "error"
+      message: "outputMeta source 경로 해석 실패: {source}"
+
   warnings:
     - code: "MISSING_XUI_LABEL"
       level: "warn"
@@ -214,8 +376,6 @@ diagnostics:
     - code: "MISSING_XUI_GROUP"
       level: "warn"
       message: "x-ui.group 누락: {field}"
-      fix: "set-default"
-      defaultValue: "General"
 
     - code: "UNKNOWN_KEY"
       level: "warn"
@@ -226,165 +386,175 @@ diagnostics:
       message: "알 수 없는 마커: {marker}"
 
 # ============================================================================
-# OUTPUT META TEMPLATE - 출력 메타데이터 템플릿
+# SCHEMA LOGIC - 스키마 처리 로직 (네임스페이스)
 # ============================================================================
-outputMeta:
-  includeFields:
-    - "rulesVersion"
-    - "specVersion"
-    - "sourceHash"
-    - "outputHash"
-    - "generatedAt"
-    - "appliedRuleIds"
-    - "warnings"
-    - "unknownKeys"
+schemaLogic:
+  schemaStructurePatterns:
+    - name: "Unwrap Root Wrapper Key"
+      description: "루트 래퍼 키를 제거하고 내부 스키마를 끌어올림"
+      enabled: true
+      priority: 1
+      detect:
+        - path: "$schema"
+          exists: false
+        - path: "type"
+          exists: false
+      transform:
+        action: "unwrap-root-key"
+        extractTitle: true
+        preserveMetadata: ["description", "x-ui", "x-transport"]
 
-# ============================================================================
-# SCHEMA LOGIC - 스키마 처리 로직 (구 schema-logic.yaml 통합)
-# ============================================================================
+  platformSkeleton:
+    entityCollection:
+      description: "Platform Standard Collection Map"
+      type: "object"
+      patternProperties:
+        pattern: "^[0-9]+$"
+        description: "Entity ID (numeric)"
+        ref: "#/$defs/entity"
+      additionalProperties: false
+      minProperties: 0
+    defaultBodyRoot: "Assign"
+    alternativeBodyRoots:
+      - "Argument"
+      - "Assign"
+    rootStructure:
+      type: "object"
+      additionalProperties: false
 
-# 스키마 구조 패턴
-schemaStructurePatterns:
-  - name: "Unwrap Root Wrapper Key"
-    description: "루트 래퍼 키를 제거하고 내부 스키마를 끌어올림"
-    enabled: true
-    priority: 1
-    detect:
-      - path: "$schema"
-        exists: false
-      - path: "type"
-        exists: false
-    transform:
-      action: "unwrap-root-key"
-      extractTitle: true
-      preserveMetadata: ["description", "x-ui", "x-transport"]
+  sectionRules:
+    - name: "Explicit SectionId"
+      description: "x-ui.sectionId가 명시되어 있으면 그대로 사용 (sectionRegistry.id 참조 필수)"
+      condition:
+        type: "has-explicit-sectionId"
+      action:
+        type: "use-explicit-sectionId"
+        # ⚠️ integrityRules.requireXuiSectionIdInRegistry=true로 검증
+        # ⚠️ x-ui.group은 deprecated - x-ui.sectionId로 대체
+    - name: "Fallback"
+      description: "기본 섹션 (sectionRegistry SSOT)"
+      condition:
+        type: "always"
+      action:
+        type: "assign-section"
+        sectionId: "SECTION_GENERAL"  # 🔥 sectionRegistry.id 참조
 
-# 플랫폼 골격 정의
-platformSkeleton:
-  entityCollection:
-    description: "Platform Standard Collection Map"
-    type: "object"
-    patternProperties:
-      pattern: "^[0-9]+$"
-      description: "Entity ID (numeric)"
-      ref: "#/$defs/entity"
-    additionalProperties: false
-    minProperties: 0
-  defaultBodyRoot: "Assign"
-  alternativeBodyRoots:
-    - "Argument"
-    - "Assign"
-  rootStructure:
-    type: "object"
-    additionalProperties: false
+  sectionOrder:
+    - "SECTION_GENERAL"  # 🔥 sectionRegistry.id 참조
 
-# 섹션 결정 규칙
-sectionRules:
-  - name: "Explicit Group"
-    description: "x-ui.group이 명시되어 있으면 그대로 사용"
-    condition:
-      type: "has-explicit-group"
-    action:
-      type: "use-explicit-group"
-  - name: "Fallback"
-    description: "기본 섹션"
-    condition:
-      type: "always"
-    action:
-      type: "assign-section"
-      section: "General"
+  typeLabels: {}
 
-# 섹션 정렬 순서
-sectionOrder:
-  - "General"
+  # Enum 판정 규칙
+  # ⚠️ 구조화된 condition 사용 (문자열 하드코딩 금지)
+  #    markerRegistry.id를 직접 참조
+  enumDetectionRules:
+    - id: ENUM_EXPLICIT
+      condition:
+        type: "has-enum"
+      description: "명시적 enum 배열이 있으면 enum"
 
-# 타입 레이블 매핑
-typeLabels: {}
+    - id: ENUM_ONEOF_CONST
+      condition:
+        type: "has-oneOf-with-const"
+      description: "oneOf 내부에 const가 있으면 enum"
 
-# 필드 표시 여부 평가 규칙
-visibilityRules:
-  - name: "No VisibleWhen"
-    description: "visibleWhen이 없으면 항상 표시"
-    condition:
-      type: "no-visible-when"
-    result: true
-  - name: "TYPE Condition"
-    description: "TYPE 필드 조건 확인"
-    condition:
-      type: "has-field-condition"
-      field: "TYPE"
-    evaluation:
-      operator: "in"
-      field: "TYPE"
-  - name: "Other Field Conditions"
-    description: "다른 필드 조건 확인"
-    condition:
-      type: "has-other-conditions"
-    evaluation:
-      operator: "all-match"
+    - id: ENUM_X_ENUM_BY_TYPE
+      condition:
+        type: "has-marker"
+        markerId: "MARKER_ENUM_BY_TYPE"  # 🔥 markerRegistry.id 참조
+      description: "x-enum-by-type 마커가 있으면 동적 enum"
 
-# Required 상태 계산 규칙
-requiredCalculationRules:
-  priority:
-    - "base-required"
-    - "conditional-required"
-    - "visibility-check"
-  baseRequired:
-    description: "최상위 required 배열에 있으면 모든 TYPE에서 required"
-    status: "required"
-  conditionalRequired:
-    description: "allOf 조건에 매칭되면 해당 TYPE에서 required"
-    status: "required"
-  notVisible:
-    description: "visibleWhen 조건으로 보이지 않으면 n/a"
-    status: "n/a"
-  default:
-    description: "기본값"
-    status: "optional"
+  visibilityRules:
+    - name: "No VisibleWhen"
+      description: "visibleWhen이 없으면 항상 표시"
+      condition:
+        type: "no-visible-when"
+      result: true
+    - name: "TYPE Condition"
+      description: "TYPE 필드 조건 확인"
+      condition:
+        type: "has-field-condition"
+        field: "TYPE"
+      evaluation:
+        operator: "in"
+        field: "TYPE"
+    - name: "Other Field Conditions"
+      description: "다른 필드 조건 확인"
+      condition:
+        type: "has-other-conditions"
+      evaluation:
+        operator: "all-match"
 
-# 검증 레이어 결정 규칙
-validationLayerRules:
-  STD:
-    description: "Standard JSON Schema validation"
-    triggers:
-      - has-enum
-      - has-minItems
-      - has-maxItems
-      - has-type
-  APP:
-    description: "Application-specific validation"
-    triggers:
-      - has-enumByType
-      - has-nodeCountByType
-      - has-valueConstraint
-      - has-custom-x-field
+  requiredCalculationRules:
+    priority:
+      - "base-required"
+      - "conditional-required"
+      - "visibility-check"
+    baseRequired:
+      description: "최상위 required 배열에 있으면 모든 TYPE에서 required"
+      status: "required"
+    conditionalRequired:
+      description: "allOf 조건에 매칭되면 해당 TYPE에서 required"
+      status: "required"
+    notVisible:
+      description: "visibleWhen 조건으로 보이지 않으면 n/a"
+      status: "n/a"
+    default:
+      description: "기본값"
+      status: "optional"
 
-# 필드 설명 생성 규칙
-descriptionBuildingRules:
-  order:
-    - label
-    - enum-values
-    - enum-by-type
-    - value-constraints
-    - node-count-by-type
-    - hint
-  templates:
-    label: "<strong>{label}</strong>"
-    enum-values:
-      header: "<strong>Enum Values:</strong>"
-      item: "<li><code>{value}</code> - {label}</li>"
-      wrapper: "<ul>{items}</ul>"
-    enum-by-type:
-      header: "<strong>Enum Values by Type:</strong>"
-      type-header: "<p><em>{type}:</em></p>"
-      item: "<li><code>{value}</code> - {label}</li>"
-      wrapper: "<ul>{items}</ul>"
-    value-constraints:
-      header: "<strong>Value Constraints:</strong>"
-      item: "<li><em>{type}:</em> {constraint}</li>"
-      wrapper: "<ul>{items}</ul>"
-    node-count-by-type:
-      header: "<strong>Node Count by Type:</strong>"
-      item: "<li><em>{type}:</em> {count} nodes</li>"
-      wrapper: "<ul>{items}</ul>"
-    hint: '<p class="hint">{hint}</p>'
+  # 검증 레이어 결정 규칙
+  # ⚠️ 구조화된 condition 사용
+  validationLayerRules:
+    STD:
+      description: "Standard JSON Schema validation"
+      triggers:
+        - condition:
+            type: "has-enum"
+        - condition:
+            type: "has-minItems"
+        - condition:
+            type: "has-maxItems"
+        - condition:
+            type: "has-type"
+    APP:
+      description: "Application-specific validation"
+      triggers:
+        - condition:
+            type: "has-marker"
+            markerId: "MARKER_ENUM_BY_TYPE"
+        - condition:
+            type: "has-marker"
+            markerId: "MARKER_NODE_COUNT"
+        - condition:
+            type: "has-marker"
+            markerId: "MARKER_VALUE_CONSTRAINT"
+
+  descriptionBuildingRules:
+    order:
+      - label
+      - enum-values
+      - enum-by-type
+      - value-constraints
+      - node-count-by-type
+      - hint
+    templates:
+      label: "<strong>{label}</strong>"
+      enum-values:
+        header: "<strong>Enum Values:</strong>"
+        item: "<li><code>{value}</code> - {label}</li>"
+        wrapper: "<ul>{items}</ul>"
+      enum-by-type:
+        header: "<strong>Enum Values by Type:</strong>"
+        type-header: "<p><em>{type}:</em></p>"
+        item: "<li><code>{value}</code> - {label}</li>"
+        wrapper: "<ul>{items}</ul>"
+      value-constraints:
+        header: "<strong>Value Constraints:</strong>"
+        item: "<li><em>{type}:</em> {constraint}</li>"
+        wrapper: "<ul>{items}</ul>"
+      node-count-by-type:
+        header: "<strong>Node Count by Type:</strong>"
+        item: "<li><em>{type}:</em> {count} nodes</li>"
+        wrapper: "<ul>{items}</ul>"
+      hint: '<p class="hint">{hint}</p>'

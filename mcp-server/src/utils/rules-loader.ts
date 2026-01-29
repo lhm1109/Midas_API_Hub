@@ -112,3 +112,43 @@ export function loadValidationRules(): ValidationRules | null {
 export function getRulesDir(): string {
     return RULES_DIR;
 }
+
+/**
+ * 🔥 v1.5: shared.yaml에서 SSOT 규칙 로드
+ */
+export interface SharedRules {
+    versioning: { rulesSpecVersion: string };
+    sectionRegistry: Array<{
+        id: string;
+        name: string;
+        description?: string;
+        isDefault?: boolean;
+    }>;
+    conditionRegistry: Array<{
+        type: string;
+        requiredParams: string[];
+        description?: string;
+    }>;
+    integrityRules: {
+        requireMarkerIdInRegistry: boolean;
+        requireSectionIdInRegistry: boolean;
+        requireConditionTypeInRegistry: boolean;
+        requireXuiSectionIdInRegistry: boolean;
+    };
+    wrapperRegistryPolicy: {
+        sort: string;
+        match: string;
+    };
+}
+
+export function loadSharedRules(): SharedRules | null {
+    const filePath = path.join(RULES_DIR, 'shared.yaml');
+    try {
+        const content = fs.readFileSync(filePath, 'utf-8');
+        return yaml.load(content) as SharedRules;
+    } catch (error) {
+        console.error(`Failed to load shared rules: ${filePath}`, error);
+        return null;
+    }
+}
+

@@ -1,68 +1,137 @@
 # ============================================================================
-# SHARED RULES - Original Schema용 공통 규칙 (SSOT)
+# SHARED RULES - Original Schema용 공통 규칙 (SSOT v1.5)
 # ============================================================================
-# x-* extensions 미사용 버전
-
-version: "1.0.0"
-specVersion: "1.0"
-type: "original"
+# x-* extensions 미사용 버전 (Plain JSON Schema only)
+#
+# ⚠️ SSOT 원칙:
+#   - 버전: versioning 섹션만 책임
+#   - 섹션/그룹: sectionRegistry + schemaLogic.sectionRules
+#   - 래퍼: wrapperRegistry + wrapperRegistryPolicy
+#   - 조건: conditionRegistry (전역 SSOT)
+#   - 무결성: integrityRules (레퍼런스 검증)
+# ============================================================================
 
 # ============================================================================
-# FLEXIBILITY LAYER - 유연성 레이어
+# VERSIONING
 # ============================================================================
+versioning:
+  rulesSpecVersion: "1.5.0"  # 🔥 SSOT 100점 버전
+  inputSpec:
+    schemaDraft: "draft-07"
+    min: "1.0"
+    max: "1.x"
 
+# ============================================================================
+# UNKNOWN POLICY
+# ============================================================================
 unknownPolicy:
   transform:
     action: "passthrough"
     collectUnknown: true
   validate:
     unknownKey: "warn"
+    unknownMarker: "allow"    # original에는 x-* 마커 없음
+    unsupportedStructure: "warn"
 
+# ============================================================================
+# DEFAULT HANDLERS
+# ============================================================================
 defaultHandlers:
   typeInferenceFallback:
     type: "string"
-    component: "Input"
     warn: true
   
   missingXui:
     label: "{key}"
-    group: "General"
-    component: "Input"
+    warn: true
+  
+  wrapperPriorityDefault: 0
 
-versioning:
-  rulesVersion: "1.0.0"
-  compatibility:
-    schemaDraft: "draft-07"
-
+# ============================================================================
+# PRECEDENCE
+# ============================================================================
 precedence:
-  - explicit
-  - product
-  - shared
-  - inference
+  order:
+    - explicit
+    - product
+    - shared
+    - inference
+  merge:
+    sameKey: "override"
+    list: "replace"
+    missingKey: "inherit"
 
 # ============================================================================
-# REGISTRIES - 레지스트리
+# INTEGRITY RULES - 레퍼런스 무결성 (SSOT)
+# ============================================================================
+integrityRules:
+  requireMarkerIdInRegistry: false     # original에는 marker 없음
+  requireSectionIdInRegistry: true
+  requireConditionTypeInRegistry: true
+  requireXuiSectionIdInRegistry: false # original에는 x-ui 없음
+
+# ============================================================================
+# REGISTRIES
 # ============================================================================
 
-# Wrapper Rules 레지스트리
+# Marker Registry - original에는 x-* 마커 없음 (빈 배열)
+markerRegistry: []
+
+# Condition Registry (전역 SSOT) - original용 최소 세트
+conditionRegistry:
+  - type: "has-enum"
+    requiredParams: []
+    description: "명시적 enum 배열 존재 시 true"
+
+  - type: "has-oneOf-with-const"
+    requiredParams: []
+    description: "oneOf 내부에 const 속성 존재 시 true"
+
+  - type: "always"
+    requiredParams: []
+    description: "항상 true (기본 fallback)"
+
+# Section Registry (SSOT)
+sectionRegistry:
+  - id: SECTION_GENERAL
+    name: "General"
+    description: "기본 섹션"
+    isDefault: true
+
+  - id: SECTION_OPTIONS
+    name: "Options"
+    description: "옵션 섹션"
+
+  - id: SECTION_ADVANCED
+    name: "Advanced"
+    description: "고급 설정"
+
+# Wrapper Registry Policy
+wrapperRegistryPolicy:
+  sort: "priorityDescStable"
+  match: "first"
+
+# Wrapper Registry (SSOT)
 wrapperRegistry:
   - id: WRAP_DB
     pattern: "^/db/"
     wrapper: "Assign"
-    description: "Database endpoints use Assign wrapper"
+    priority: 10
 
   - id: WRAP_POST
     pattern: "^/post/"
     wrapper: "Argument"
-    description: "Post endpoints use Argument wrapper"
+    priority: 10
 
   - id: WRAP_DEFAULT
     pattern: ".*"
     wrapper: null
     priority: -1
-    description: "Default: no wrapper"
 
-# 필드 타입 → UI 컴포넌트 레지스트리
+# Type Inference Registry (SSOT) - original에는 prefix 추론 없음 (빈 배열)
+typeInferenceRegistry: []
+
+# Component Registry
 componentRegistry:
   string:
     component: "Input"
@@ -82,7 +151,7 @@ componentRegistry:
 
   array:
     component: "Textarea"
-    props: { placeholder: "Enter as JSON array, e.g., [1, 2, 3]" }
+    props: { placeholder: "Enter as JSON array" }
 
   object:
     component: "Textarea"
@@ -93,96 +162,163 @@ componentRegistry:
     props: {}
 
 # ============================================================================
-# SCHEMA LOGIC - 스키마 처리 로직 (구 schema-logic.yaml 통합)
+# NAMING
 # ============================================================================
-
-platformSkeleton:
-  entityCollection:
-    description: "Platform Standard Collection Map"
-    type: "object"
-    patternProperties:
-      pattern: "^[0-9]+$"
-      description: "Entity ID (numeric)"
-      ref: "#/$defs/entity"
-    additionalProperties: false
-    minProperties: 0
-  defaultBodyRoot: "Assign"
-  alternativeBodyRoots:
-    - "Argument"
-    - "Assign"
-  rootStructure:
-    type: "object"
-    additionalProperties: false
-
-schemaStructurePatterns:
-  - name: "Unwrap Root Wrapper Key"
-    description: "최상위 wrapper key 제거"
-    enabled: true
-    priority: 1
-    detect:
-      - path: "type"
-        exists: false
-      - path: "properties"
-        exists: false
-    transform:
-      action: "unwrap-root-key"
-      extractTitle: true
-      preserveMetadata: ["$schema", "description", "x-ui", "x-transport"]
+naming:
+  yamlKeyPolicy:
+    min: 3
+    max: 20
+    style: "camelCase"
   
-  - name: "Root oneOf"
-    description: "최상위 oneOf 패턴"
-    enabled: true
-    detect:
-      - path: "oneOf"
-        exists: true
-        isArray: true
-      - path: "properties"
-        exists: false
-    transform:
-      action: "wrap-in-virtual-object"
-      wrapperKey: "{title}"
-      wrapperType: "object"
+  fieldNamePolicy:
+    # prefixSource 없음 = original에는 타입 추론 없음
+    allowUppercase: true
+    maxLength: 30
+  
+  conflict:
+    strategy: "suffix"
+    format: "_{n}"
 
-sectionRules:
-  - name: "Default Section"
-    description: "기본 섹션"
-    condition:
-      type: "always"
-    action:
-      type: "assign"
-      section: "General"
+# ============================================================================
+# OUTPUT META
+# ============================================================================
+outputMeta:
+  defaults:
+    required: false
+    onMissing: "null"
+  fields:
+    - alias: "rulesSpecVersion"
+      source: "versioning.rulesSpecVersion"
+    - alias: "sourceHash"
+      source: "_computed.sourceHash"
+    - alias: "generatedAt"
+      source: "_computed.generatedAt"
 
-sectionOrder:
-  - "General"
-  - "Options"
-  - "Advanced"
+# ============================================================================
+# DIAGNOSTICS
+# ============================================================================
+diagnostics:
+  errors:
+    - code: "INVALID_FIELD_NAME_POLICY"
+      level: "error"
+      message: "필드명 정책 위반: {field}"
 
-typeLabels:
-  string: "String"
-  number: "Number"
-  integer: "Integer"
-  boolean: "Boolean"
-  array: "Array"
-  object: "Object"
+    - code: "INVALID_YAML_KEY_POLICY"
+      level: "error"
+      message: "YAML 키 정책 위반: {key}"
 
-visibilityRules: []
+  warnings:
+    - code: "UNKNOWN_KEY"
+      level: "warn"
+      message: "알 수 없는 키: {key}"
 
-requiredCalculationRules:
-  defaultStatus: "optional"
-  conditionalRequired:
-    enabled: true
-    sources:
-      - "allOf[].if.properties"
-      - "allOf[].then.required"
+# ============================================================================
+# SCHEMA LOGIC
+# ============================================================================
+schemaLogic:
+  platformSkeleton:
+    entityCollection:
+      description: "Platform Standard Collection Map"
+      type: "object"
+      patternProperties:
+        pattern: "^[0-9]+$"
+        description: "Entity ID (numeric)"
+        ref: "#/$defs/entity"
+      additionalProperties: false
+      minProperties: 0
+    defaultBodyRoot: "Assign"
+    alternativeBodyRoots:
+      - "Argument"
+      - "Assign"
+    rootStructure:
+      type: "object"
+      additionalProperties: false
 
-validationLayerRules:
-  defaultLayers: ["STD"]
-  layerMapping: []
+  schemaStructurePatterns:
+    - name: "Unwrap Root Wrapper Key"
+      description: "최상위 wrapper key 제거"
+      enabled: true
+      priority: 1
+      detect:
+        - path: "type"
+          exists: false
+        - path: "properties"
+          exists: false
+      transform:
+        action: "unwrap-root-key"
+        extractTitle: true
+        preserveMetadata: ["$schema", "description"]
+    
+    - name: "Root oneOf"
+      description: "최상위 oneOf 패턴"
+      enabled: true
+      detect:
+        - path: "oneOf"
+          exists: true
+          isArray: true
+        - path: "properties"
+          exists: false
+      transform:
+        action: "wrap-in-virtual-object"
+        wrapperKey: "{title}"
+        wrapperType: "object"
 
-descriptionBuildingRules:
-  format: "simple"
-  includeElements:
-    - "description"
-    - "enum"
-    - "default"
-  excludeExtensions: true
+  # 🔥 v1.5: sectionId 참조
+  sectionRules:
+    - name: "Default Section"
+      description: "기본 섹션 (sectionRegistry SSOT)"
+      condition:
+        type: "always"
+      action:
+        type: "assign-section"
+        sectionId: "SECTION_GENERAL"
+
+  # 🔥 v1.5: sectionRegistry.id 참조
+  sectionOrder:
+    - "SECTION_GENERAL"
+    - "SECTION_OPTIONS"
+    - "SECTION_ADVANCED"
+
+  typeLabels:
+    string: "String"
+    number: "Number"
+    integer: "Integer"
+    boolean: "Boolean"
+    array: "Array"
+    object: "Object"
+
+  # 🔥 구조화된 condition 사용
+  enumDetectionRules:
+    - id: ENUM_EXPLICIT
+      condition:
+        type: "has-enum"
+      description: "명시적 enum 배열이 있으면 enum"
+    - id: ENUM_ONEOF_CONST
+      condition:
+        type: "has-oneOf-with-const"
+      description: "oneOf 내부에 const가 있으면 enum"
+
+  visibilityRules: []
+
+  requiredCalculationRules:
+    defaultStatus: "optional"
+    conditionalRequired:
+      enabled: true
+      sources:
+        - "allOf[].if.properties"
+        - "allOf[].then.required"
+
+  validationLayerRules:
+    STD:
+      description: "Standard JSON Schema Validation"
+      triggers:
+        - condition:
+            type: "always"
+
+  descriptionBuildingRules:
+    format: "simple"
+    includeElements:
+      - "description"
+      - "enum"
+      - "default"
+    excludeExtensions: true

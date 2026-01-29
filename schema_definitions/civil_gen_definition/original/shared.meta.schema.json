@@ -1,0 +1,690 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "shared.meta.schema.json",
+    "title": "Shared Rules YAML Schema v1.5",
+    "description": "shared.yaml 파일 검증용 메타스키마 - SSOT 100점 (레퍼런스 무결성 버전)",
+    "type": "object",
+    "required": [
+        "versioning",
+        "unknownPolicy",
+        "defaultHandlers",
+        "markerRegistry",
+        "conditionRegistry",
+        "sectionRegistry",
+        "integrityRules",
+        "wrapperRegistryPolicy",
+        "wrapperRegistry",
+        "componentRegistry",
+        "schemaLogic"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "versioning": {
+            "type": "object",
+            "required": [
+                "rulesSpecVersion",
+                "inputSpec"
+            ],
+            "properties": {
+                "rulesSpecVersion": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                },
+                "inputSpec": {
+                    "type": "object",
+                    "required": [
+                        "schemaDraft",
+                        "min",
+                        "max"
+                    ],
+                    "properties": {
+                        "schemaDraft": {
+                            "type": "string"
+                        },
+                        "min": {
+                            "type": "string"
+                        },
+                        "max": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "unknownPolicy": {
+            "type": "object",
+            "description": "입력 스키마 unknown 키 처리 정책",
+            "required": [
+                "transform",
+                "validate"
+            ],
+            "properties": {
+                "transform": {
+                    "type": "object",
+                    "properties": {
+                        "action": {
+                            "enum": [
+                                "passthrough",
+                                "warn",
+                                "error"
+                            ]
+                        },
+                        "collectUnknown": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "validate": {
+                    "type": "object",
+                    "properties": {
+                        "unknownKey": {
+                            "enum": [
+                                "allow",
+                                "warn",
+                                "error"
+                            ]
+                        },
+                        "unknownMarker": {
+                            "enum": [
+                                "allow",
+                                "warn",
+                                "error"
+                            ]
+                        },
+                        "unsupportedStructure": {
+                            "enum": [
+                                "warn",
+                                "error"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "defaultHandlers": {
+            "type": "object",
+            "required": [
+                "wrapperPriorityDefault"
+            ],
+            "properties": {
+                "typeInferenceFallback": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        },
+                        "warn": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "missingXui": {
+                    "type": "object",
+                    "properties": {
+                        "label": {
+                            "type": "string"
+                        },
+                        "warn": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "wrapperPriorityDefault": {
+                    "type": "integer"
+                }
+            }
+        },
+        "precedence": {
+            "type": "object",
+            "description": "규칙 우선순위 정의 (결정론 보장)",
+            "required": [
+                "order",
+                "merge"
+            ],
+            "properties": {
+                "order": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                "merge": {
+                    "type": "object",
+                    "required": [
+                        "sameKey",
+                        "list",
+                        "missingKey"
+                    ],
+                    "properties": {
+                        "sameKey": {
+                            "enum": [
+                                "override",
+                                "merge"
+                            ]
+                        },
+                        "list": {
+                            "enum": [
+                                "replace",
+                                "concat"
+                            ]
+                        },
+                        "missingKey": {
+                            "enum": [
+                                "inherit",
+                                "ignore"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "integrityRules": {
+            "type": "object",
+            "description": "레퍼런스 무결성 규칙 (SSOT)",
+            "required": [
+                "requireMarkerIdInRegistry",
+                "requireSectionIdInRegistry",
+                "requireConditionTypeInRegistry",
+                "requireXuiSectionIdInRegistry"
+            ],
+            "properties": {
+                "requireMarkerIdInRegistry": {
+                    "type": "boolean"
+                },
+                "requireSectionIdInRegistry": {
+                    "type": "boolean"
+                },
+                "requireConditionTypeInRegistry": {
+                    "type": "boolean"
+                },
+                "requireXuiSectionIdInRegistry": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "markerRegistry": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "key"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "pattern": "^MARKER_[A-Z_]+$"
+                    },
+                    "key": {
+                        "type": "string",
+                        "pattern": "^x-[a-z-]+$"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "required": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "conditionRegistry": {
+            "type": "array",
+            "description": "condition type taxonomy (전역 SSOT)",
+            "items": {
+                "type": "object",
+                "required": [
+                    "type",
+                    "requiredParams"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "requiredParams": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "sectionRegistry": {
+            "type": "array",
+            "description": "섹션 중앙 관리 (SSOT)",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "pattern": "^SECTION_[A-Z_]+$"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "isDefault": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "wrapperRegistryPolicy": {
+            "type": "object",
+            "description": "wrapper 매칭 정책 (SSOT)",
+            "required": [
+                "sort",
+                "match"
+            ],
+            "properties": {
+                "sort": {
+                    "enum": [
+                        "priorityDescStable",
+                        "priorityAscStable"
+                    ]
+                },
+                "match": {
+                    "enum": [
+                        "first",
+                        "all"
+                    ]
+                }
+            }
+        },
+        "wrapperRegistry": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "pattern"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "pattern": "^WRAP_[A-Z_]+$"
+                    },
+                    "pattern": {
+                        "type": "string"
+                    },
+                    "wrapper": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "priority": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "typeInferenceRegistry": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "prefix",
+                    "type"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "prefix": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "type": {
+                        "enum": [
+                            "string",
+                            "number",
+                            "integer",
+                            "boolean",
+                            "array",
+                            "object"
+                        ]
+                    },
+                    "example": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "componentRegistry": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "required": [
+                    "component"
+                ],
+                "properties": {
+                    "component": {
+                        "type": "string"
+                    },
+                    "props": {
+                        "type": "object"
+                    }
+                }
+            }
+        },
+        "naming": {
+            "type": "object",
+            "properties": {
+                "yamlKeyPolicy": {
+                    "type": "object",
+                    "properties": {
+                        "min": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "max": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "style": {
+                            "enum": [
+                                "camelCase",
+                                "snake_case",
+                                "kebab-case"
+                            ]
+                        }
+                    }
+                },
+                "fieldNamePolicy": {
+                    "type": "object",
+                    "description": "prefixSource로 파생 규칙 선언 (SSOT)",
+                    "properties": {
+                        "prefixSource": {
+                            "type": "string",
+                            "description": "prefix SSOT 원천 참조"
+                        },
+                        "allowUppercase": {
+                            "type": "boolean"
+                        },
+                        "maxLength": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "conflict": {
+                    "type": "object",
+                    "properties": {
+                        "strategy": {
+                            "enum": [
+                                "suffix",
+                                "error"
+                            ]
+                        },
+                        "format": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "outputMeta": {
+            "type": "object",
+            "required": [
+                "defaults",
+                "fields"
+            ],
+            "properties": {
+                "defaults": {
+                    "type": "object",
+                    "required": [
+                        "required",
+                        "onMissing"
+                    ],
+                    "properties": {
+                        "required": {
+                            "type": "boolean"
+                        },
+                        "onMissing": {
+                            "enum": [
+                                "warn",
+                                "error",
+                                "null"
+                            ]
+                        }
+                    }
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "alias",
+                            "source"
+                        ],
+                        "properties": {
+                            "alias": {
+                                "type": "string"
+                            },
+                            "source": {
+                                "type": "string",
+                                "pattern": "^(versioning\\.|_computed\\.)[a-zA-Z]+$"
+                            },
+                            "required": {
+                                "type": "boolean"
+                            },
+                            "onMissing": {
+                                "enum": [
+                                    "warn",
+                                    "error",
+                                    "null"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "diagnostics": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/diagnosticItem"
+                    }
+                },
+                "warnings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/diagnosticItem"
+                    }
+                }
+            }
+        },
+        "schemaLogic": {
+            "type": "object",
+            "required": [
+                "sectionRules",
+                "sectionOrder",
+                "enumDetectionRules",
+                "validationLayerRules"
+            ],
+            "properties": {
+                "schemaStructurePatterns": {
+                    "type": "array"
+                },
+                "platformSkeleton": {
+                    "type": "object"
+                },
+                "sectionRules": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "condition",
+                            "action"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "condition": {
+                                "$ref": "#/$defs/structuredCondition"
+                            },
+                            "action": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "sectionOrder": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                },
+                "typeLabels": {
+                    "type": "object"
+                },
+                "enumDetectionRules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id",
+                            "condition"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "condition": {
+                                "$ref": "#/$defs/structuredCondition"
+                            },
+                            "description": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "visibilityRules": {
+                    "type": "array"
+                },
+                "requiredCalculationRules": {
+                    "type": "object"
+                },
+                "validationLayerRules": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "description": {
+                                "type": "string"
+                            },
+                            "triggers": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "condition"
+                                    ],
+                                    "properties": {
+                                        "condition": {
+                                            "$ref": "#/$defs/structuredCondition"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "descriptionBuildingRules": {
+                    "type": "object"
+                }
+            }
+        }
+    },
+    "$defs": {
+        "diagnosticItem": {
+            "type": "object",
+            "required": [
+                "code",
+                "level",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "pattern": "^[A-Z_]+$"
+                },
+                "level": {
+                    "enum": [
+                        "error",
+                        "warn",
+                        "info"
+                    ]
+                },
+                "message": {
+                    "type": "string"
+                },
+                "fix": {
+                    "type": "string"
+                }
+            }
+        },
+        "structuredCondition": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "description": "conditionRegistry에 등록된 type만 유효",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "markerId": {
+                    "type": "string",
+                    "pattern": "^MARKER_[A-Z_]+$"
+                },
+                "field": {
+                    "type": "string"
+                },
+                "sectionId": {
+                    "type": "string",
+                    "pattern": "^SECTION_[A-Z_]+$"
+                }
+            },
+            "if": {
+                "properties": {
+                    "type": {
+                        "const": "has-marker"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "markerId"
+                ]
+            }
+        }
+    }
+}
