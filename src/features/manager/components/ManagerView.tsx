@@ -4,8 +4,14 @@ import { BarChart3, Table2, Loader2 } from 'lucide-react';
 import { ManagerDashboard } from './ManagerDashboard';
 import { ManagerProgress } from './ManagerProgress';
 import { useManagerData } from '../hooks/useManagerData';
+import type { ApiProduct } from '@/types';
 
-export function ManagerView() {
+interface ManagerViewProps {
+  endpoints?: ApiProduct[];
+  onNavigateToEndpoint?: (endpointId: string) => void;
+}
+
+export function ManagerView({ endpoints = [], onNavigateToEndpoint }: ManagerViewProps) {
   const {
     tasks,
     columns,
@@ -40,7 +46,7 @@ export function ManagerView() {
           <div className="text-red-400 text-5xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-white mb-2">데이터를 불러오지 못했습니다</h2>
           <p className="text-zinc-400 mb-4">{error}</p>
-          
+
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 text-left">
             <h3 className="text-lg font-semibold text-cyan-400 mb-3">🔧 해결 방법</h3>
             <ol className="space-y-2 text-zinc-300 text-sm">
@@ -73,11 +79,6 @@ export function ManagerView() {
 
   return (
     <div className="flex-1 flex flex-col bg-zinc-950 overflow-hidden">
-      {/* Header */}
-      <div className="border-b border-zinc-800 bg-zinc-900 px-6 py-4 flex-shrink-0">
-        <h1 className="text-2xl font-bold text-white mb-1">API 업무 진행 관리</h1>
-        <p className="text-zinc-400 text-sm">담당자 간 협업 및 진행 상황 추적</p>
-      </div>
 
       <Tabs
         value={activeTab}
@@ -119,6 +120,8 @@ export function ManagerView() {
               onColumnVisibilityChange={updateColumnVisibility}
               onRefresh={refetch}
               onBulkReplace={bulkReplaceTasks}
+              endpoints={endpoints}
+              onNavigateToEndpoint={onNavigateToEndpoint}
             />
           </div>
         </TabsContent>

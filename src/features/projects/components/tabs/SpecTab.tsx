@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
 import { useAppStore } from '@/store/useAppStore';
-import { apiClient } from '@/lib/api-client';
+// import { apiClient } from '@/lib/api-client'; // Unused
 import type { ManualData, Settings } from '@/types';
 import { toast } from 'sonner';
 import {
@@ -29,6 +29,7 @@ import {
 } from '@/lib/schema/conditionExtractor';
 import { buildFieldDescription } from '@/lib/schema/descriptionBuilder';
 import { schemaCompileCache } from '@/lib/cache/schemaCache';
+import { SchemaDesigner } from '@/features/schema-designer/components/SchemaDesigner';
 
 interface SpecTabProps {
   endpoint: {
@@ -45,10 +46,10 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     setManualData,
     manualData,
     currentVersionId,
-    getCurrentVersion,
+    // getCurrentVersion,
     updateSpecData,
-    fetchVersions,
-    loadVersion,
+    // fetchVersions,
+    // loadVersion,
     specData,
     saveCurrentVersion,
   } = useAppStore();
@@ -155,7 +156,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   });
 
   // 🎨 Designer Mode Toggle: 'code' | 'visual'
-  const [designerMode, setDesignerMode] = useState<'code' | 'visual'>('code');
+  const [designerMode, _setDesignerMode] = useState<'code' | 'visual'>('code');
 
   // 🔥 endpoint 변경 시 schemaView 재설정 (Enhanced 우선)
   useEffect(() => {
@@ -684,7 +685,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
 
   // 🎯 Display parameters - 이제 tableParameters 직접 사용
-  const displayParameters = tableParameters;
+  // const displayParameters = tableParameters; // Unused - using tableParameters directly
 
   const toggleParam = (paramNo: number) => {
     setExpandedParams((prev) => {
@@ -780,7 +781,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     if (isNewEnhancedSchema || (schemaView === 'enhanced' && activeSchema)) {
       try {
         const htmlDocument = generateHTMLDocument(activeSchema as EnhancedSchema, psdSet, schemaType);
-        
+
         // 🔥 Extract body content only (remove <!DOCTYPE>, <html>, <head>, <body> tags)
         const bodyMatch = htmlDocument.match(/<body[^>]*>([\s\S]*)<\/body>/i);
         if (bodyMatch && bodyMatch[1]) {

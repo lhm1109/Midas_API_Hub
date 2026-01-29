@@ -21,8 +21,11 @@ interface SettingsModalProps {
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
-    schemaMode?: 'enhanced' | 'normal'; // 🔥 NEW: 개선 모드 vs 일반 모드
-    userName?: string; // 🔥 사용자 이름
+    schemaMode?: 'enhanced' | 'normal';
+    userName?: string;
+    supabaseUrl?: string;
+    supabaseServiceKey?: string;
+    supabaseDbPassword?: string;
   };
   onSettingsChange: (settings: {
     baseUrl: string;
@@ -31,6 +34,9 @@ interface SettingsModalProps {
     useAssignWrapper?: boolean;
     schemaMode?: 'enhanced' | 'normal';
     userName?: string;
+    supabaseUrl?: string;
+    supabaseServiceKey?: string;
+    supabaseDbPassword?: string;
   }) => void;
 }
 
@@ -41,12 +47,14 @@ export function SettingsModal({
   onSettingsChange,
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState(settings);
-  
+
   useEffect(() => {
     setLocalSettings(settings);
   }, [settings]);
-  
+
   const handleSave = () => {
+    console.log('🔥 SettingsModal saving:', localSettings);
+    console.log('🔥 supabaseDbPassword:', localSettings.supabaseDbPassword);
     onSettingsChange(localSettings);
     onOpenChange(false);
     toast.success('✅ Settings saved successfully!');
@@ -54,7 +62,7 @@ export function SettingsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-zinc-900 border-zinc-800 text-zinc-100">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-zinc-900 border-zinc-800 text-zinc-100">
         <DialogHeader>
           <DialogTitle className="text-white">Global Environment Settings</DialogTitle>
           <DialogDescription className="text-zinc-400">
@@ -148,7 +156,7 @@ export function SettingsModal({
               </Label>
             </div>
             <p className="text-xs text-zinc-400 ml-7">
-              Wrap request body with {"{"}"Assign": {"{"}"1": ...{"}"}{"}"} structure. 
+              Wrap request body with {"{"}"Assign": {"{"}"1": ...{"}"}{"}"} structure.
               This is the default format for MIDAS API endpoints.
             </p>
           </div>
@@ -176,7 +184,7 @@ export function SettingsModal({
                 <li>YAML 파일 2개 로드 (original.yaml, enhanced.yaml)</li>
                 <li>스키마 간 전환 및 비교 가능</li>
               </ul>
-              
+
               <p className="text-xs text-zinc-300 mb-2 mt-3">
                 <strong className="text-green-400">일반 모드:</strong>
               </p>
@@ -185,6 +193,62 @@ export function SettingsModal({
                 <li>YAML 파일 1개만 로드 (definition.yaml)</li>
                 <li>심플한 UI로 빠른 작업</li>
               </ul>
+            </div>
+          </div>
+
+          {/* 🔥 Supabase 설정 */}
+          <div className="space-y-4 pt-4 border-t border-zinc-700">
+            <h3 className="text-sm font-semibold text-green-400">Supabase Database</h3>
+
+            <div className="space-y-2">
+              <Label htmlFor="supabaseUrl" className="text-zinc-200">Supabase URL</Label>
+              <Input
+                id="supabaseUrl"
+                placeholder="https://xxx.supabase.co"
+                value={localSettings.supabaseUrl || ''}
+                onChange={(e) =>
+                  setLocalSettings({ ...localSettings, supabaseUrl: e.target.value })
+                }
+                className="bg-zinc-800 border-zinc-700 text-white"
+              />
+              <p className="text-xs text-zinc-400">
+                Supabase 프로젝트 URL (프로젝트 설정에서 확인)
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="supabaseServiceKey" className="text-zinc-200">Service Role Key</Label>
+              <Input
+                id="supabaseServiceKey"
+                type="password"
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                value={localSettings.supabaseServiceKey || ''}
+                onChange={(e) =>
+                  setLocalSettings({ ...localSettings, supabaseServiceKey: e.target.value })
+                }
+                className="bg-zinc-800 border-zinc-700 text-white"
+              />
+              <p className="text-xs text-zinc-400">
+                Service Role Key (API 인증용) - API Settings에서 확인
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="supabaseDbPassword" className="text-zinc-200">Database Password ⚠️</Label>
+              <Input
+                id="supabaseDbPassword"
+                type="password"
+                placeholder="프로젝트 생성 시 설정한 DB 비밀번호"
+                value={localSettings.supabaseDbPassword || ''}
+                onChange={(e) => {
+                  console.log('🔥 Input onChange:', e.target.value);
+                  setLocalSettings({ ...localSettings, supabaseDbPassword: e.target.value });
+                }}
+                className="bg-zinc-800 border-zinc-700 text-white"
+              />
+              <p className="text-xs text-zinc-400">
+                ⚠️ 마이그레이션 실행에 필요! Project Settings → Database → Connection string에서 확인
+              </p>
             </div>
           </div>
         </div>

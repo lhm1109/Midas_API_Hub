@@ -18,12 +18,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ApiTask, StatusType } from '../types/manager';
+import type { ApiProduct, ApiEndpoint } from '@/types';
+import { Link2 } from 'lucide-react';
 
 interface EditTaskModalProps {
   task: ApiTask | null;
   open: boolean;
   onClose: () => void;
   onSave: (task: ApiTask) => void;
+  endpoints?: ApiProduct[]; // 프로젝트 엔드포인트 목록
 }
 
 const statusOptions: StatusType[] = [
@@ -47,6 +50,7 @@ export function EditTaskModal({
   open,
   onClose,
   onSave,
+  endpoints = [],
 }: EditTaskModalProps) {
   const [formData, setFormData] = useState<ApiTask | null>(null);
 
@@ -208,6 +212,63 @@ export function EditTaskModal({
                 </a>
               )}
             </div>
+          </div>
+
+          {/* 프로젝트 엔드포인트 연결 */}
+          <div className="space-y-2 col-span-2">
+            <Label className="text-zinc-300 flex items-center gap-2">
+              <Link2 className="w-4 h-4" />
+              프로젝트 연결
+            </Label>
+            <Select
+              value={formData.linkedEndpointId || ''}
+              onValueChange={(value) => handleChange('linkedEndpointId', value === '__none__' ? '' : value)}
+            >
+              <SelectTrigger className="bg-zinc-950 border-zinc-700 text-zinc-100">
+                <SelectValue placeholder="프로젝트 엔드포인트 선택 (선택사항)" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-zinc-100 z-[110] max-h-[300px]">
+                <SelectItem value="__none__" className="text-zinc-400 focus:bg-zinc-800 focus:text-zinc-100">
+                  연결 없음
+                </SelectItem>
+                {endpoints.map((product) => {
+                  // 재귀적으로 그룹과 서브그룹의 엔드포인트를 수집
+                  const renderGroupEndpoints = (group: typeof product.groups[0], groupPath: string): React.ReactNode[] => {
+                    const items: React.ReactNode[] = [];
+
+                    // 현재 그룹의 엔드포인트
+                    group.endpoints.forEach((ep: ApiEndpoint) => {
+                      items.push(
+                        <SelectItem
+                          key={ep.id}
+                          value={ep.id}
+                          className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100"
+                        >
+                          <span className="text-zinc-400">{product.name}</span>
+                          <span className="text-zinc-500 mx-1">/</span>
+                          <span className="text-zinc-300">{groupPath}</span>
+                          <span className="text-zinc-500 mx-1">/</span>
+                          <span className="text-cyan-400">{ep.name}</span>
+                        </SelectItem>
+                      );
+                    });
+
+                    // 서브그룹의 엔드포인트 재귀 탐색
+                    group.subgroups?.forEach((subgroup) => {
+                      const subPath = `${groupPath} > ${subgroup.name}`;
+                      items.push(...renderGroupEndpoints(subgroup as typeof group, subPath));
+                    });
+
+                    return items;
+                  };
+
+                  return product.groups.map((group) => renderGroupEndpoints(group, group.name));
+                })}
+              </SelectContent>
+            </Select>
+            {formData.linkedEndpointId && (
+              <p className="text-xs text-cyan-400">✓ 프로젝트 탭의 엔드포인트와 연결됨</p>
+            )}
           </div>
 
           <div className="space-y-2">

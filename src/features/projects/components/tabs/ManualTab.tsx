@@ -49,13 +49,13 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     }
   };
 
-  // 🎨 HTML 생성 함수
+  // 🎨 HTML 생성 함수 (Zendesk 호환)
   const generateHTML = (): string => {
     if (!manualData) {
       return '<p>No manual data available. Please send data from Spec, Builder, or Runner tabs.</p>';
     }
 
-    const { title, category, inputUri, activeMethods, jsonSchema, requestExamples, responseExamples, specifications } = manualData;
+    const { inputUri, activeMethods, jsonSchema, requestExamples, specifications } = manualData;
 
     // HTML 이스케이프 함수
     const escapeHtml = (unsafe: string | number | boolean | null): string => {
@@ -70,8 +70,8 @@ export function ManualTab({ endpoint }: ManualTabProps) {
         .replace(/'/g, '&#039;');
     };
 
-    // 🎯 Spec에서 보낸 스키마 사용 (JSON 문자열을 HTML로 포맷)
-    const formatJsonToHTML = (jsonStr: string | object | null | undefined, indentLevel = 0): string => {
+    // 🎯 Zendesk 호환 JSON 포맷터 (&nbsp;로 들여쓰기, <br>로 줄바꿈)
+    const formatJsonToZendeskHTML = (jsonStr: string | object | null | undefined, indentLevel = 0): string => {
       let jsonObj: any;
       try {
         jsonObj = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
@@ -80,366 +80,236 @@ export function ManualTab({ endpoint }: ManualTabProps) {
         return escapeHtml(jsonStr as string);
       }
 
-      if (jsonObj === null) {
-        return `<span style="color: #055bcc; font-weight: bold;">null</span>`;
-      }
+      // &nbsp; x 4 per indent level
+      const getIndent = (level: number): string => '&nbsp;'.repeat(level * 4);
 
-      if (typeof jsonObj !== 'object') {
-        // Primitive values
-        if (typeof jsonObj === 'string') {
-          return `<span style="color: #055bcc;">"${escapeHtml(jsonObj)}"</span>`;
+      const formatValue = (value: any, level: number): string => {
+        if (value === null) {
+          return `<span style="color: #055bcc; font-weight: bold;">null</span>`;
         }
-        if (typeof jsonObj === 'number') {
-          return `<span style="color: #0ab66c;">${escapeHtml(jsonObj)}</span>`;
+        if (typeof value === 'string') {
+          return `<span style="color: #055bcc;">"${escapeHtml(value)}"</span>`;
         }
-        if (typeof jsonObj === 'boolean') {
-          return `<span style="color: #055bcc; font-weight: bold;">${escapeHtml(jsonObj)}</span>`;
+        if (typeof value === 'number') {
+          return `<span style="color: #0ab66c;">${escapeHtml(value)}</span>`;
         }
-        return escapeHtml(jsonObj);
-      }
+        if (typeof value === 'boolean') {
+          return `<span style="color: #055bcc; font-weight: bold;">${escapeHtml(value)}</span>`;
+        }
+        if (Array.isArray(value)) {
+          if (value.length === 0) return '[]';
+          const items = value.map(item =>
+            `${getIndent(level + 1)}${formatValue(item, level + 1)}`
+          ).join(',<br>\n');
+          return `[<br>\n${items}<br>\n${getIndent(level)}]`;
+        }
+        if (typeof value === 'object') {
+          const keys = Object.keys(value);
+          if (keys.length === 0) return '{}';
+          const props = keys.map(key =>
+            `${getIndent(level + 1)}<span style="color: #c31b1b;">"${escapeHtml(key)}"</span>: ${formatValue(value[key], level + 1)}`
+          ).join(',<br>\n');
+          return `{<br>\n${props}<br>\n${getIndent(level)}}`;
+        }
+        return escapeHtml(String(value));
+      };
 
-      const indent = '  '.repeat(indentLevel);
-      const nextIndent = '  '.repeat(indentLevel + 1);
-
-      if (Array.isArray(jsonObj)) {
-        if (jsonObj.length === 0) {
-          return '[]';
-        }
-        const items = jsonObj.map(item => {
-          return `${nextIndent}${formatJsonToHTML(item, indentLevel + 1)}`;
-        }).join(',\n');
-        return `[\n${items}\n${indent}]`;
-      }
-
-      // Object
-      const keys = Object.keys(jsonObj);
-      if (keys.length === 0) {
-        return '{}';
-      }
-      const properties = keys.map(key => {
-        const value = jsonObj[key];
-        const formattedValue = formatJsonToHTML(value, indentLevel + 1);
-        return `${nextIndent}<span style="color: #c31b1b;">"${escapeHtml(key)}"</span>: ${formattedValue}`;
-      }).join(',\n');
-      return `{\n${properties}\n${indent}}`;
+      return formatValue(jsonObj, indentLevel);
     };
 
-    const currentSchema = formatJsonToHTML(jsonSchema || manualData.jsonSchemaOriginal || '{}');
+    const currentSchema = formatJsonToZendeskHTML(jsonSchema || manualData.jsonSchemaOriginal || '{}');
 
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <title>${title} - ${category}</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #2f3941;
-            background-color: #fff;
-            padding: 40px 20px;
-        }
-        .container { max-width: 800px; margin: 0 auto; }
-        
-        h1, h2, h3, h4, h5, h6 { 
-            font-weight: 600;
-            margin-top: 24px;
-            margin-bottom: 16px;
-            line-height: 1.25;
-        }
-        h1 { font-size: 32px; margin-top: 0; }
-        h2 { font-size: 24px; }
-        h3 { font-size: 20px; }
-        
-        p { margin-bottom: 16px; }
-        
-        /* Table Styles - Zendesk Style */
-        .table-wrap {
-            margin: 20px 0;
-            overflow-x: auto;
-        }
-        
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 16px 0;
-            border: 1px solid #d8dcde;
-            font-size: 14px;
-        }
-        
-        th {
-            background-color: #f8f9f9;
-            color: #2f3941;
-            font-weight: 600;
-            text-align: left;
-            padding: 12px 15px;
-            border: 1px solid #d8dcde;
-        }
-        
-        td {
-            padding: 12px 15px;
-            border: 1px solid #d8dcde;
-            vertical-align: top;
-        }
-        
-        tr:hover {
-            background-color: #f8f9f9;
-        }
-        
-        /* Code Block Styles */
-        .mgt32 {
-            margin: 20px 0;
-        }
-        
-        .btn_dropdown {
-            background-color: #f8f9f9;
-            padding: 12px 16px;
-            border: 1px solid #d8dcde;
-            font-weight: 600;
-            color: #2f3941;
-            cursor: pointer;
-            border-radius: 4px;
-            margin: 0;
-            position: relative;
-            user-select: none;
-        }
-        
-        .btn_dropdown:hover {
-            background-color: #e8e9ea;
-        }
-        
-        .btn_dropdown::after {
-            content: '▼';
-            position: absolute;
-            right: 16px;
-            font-size: 10px;
-            transition: transform 0.3s;
-        }
-        
-        .btn_dropdown.active::after {
-            transform: rotate(180deg);
-        }
-        
-        .btn_dropdown.active {
-            border-radius: 4px 4px 0 0;
-            border-bottom: none;
-        }
-        
-        .code-block-wrapper {
-            border: 1px solid #d8dcde;
-            border-top: none;
-            border-radius: 0 0 4px 4px;
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-        }
-        
-        .code-block-wrapper.active {
-            max-height: 10000px;
-            opacity: 1;
-        }
-        
-        .code-block-header {
-            background-color: #f8f9f9;
-            padding: 8px 16px;
-            text-align: right;
-            border-bottom: 1px solid #d8dcde;
-        }
-        
-        .copy-btn {
-            background-color: #1f73b7;
-            border: none;
-            color: white;
-            padding: 6px 16px;
-            text-align: center;
-            display: inline-block;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-        
-        .copy-btn:hover {
-            background-color: #165a8e;
-        }
-        
-        .copy-btn:active {
-            background-color: #0d4a73;
-        }
-        
-        .code-content {
-            background-color: #f8f9f9;
-            padding: 16px;
-            overflow-x: auto;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #2f3941;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-        
-        /* Colored table cells */
-        td[style*="background-color: #e6fcff"] {
-            background-color: #e3f2fd !important;
-        }
-        
-        /* Center aligned text */
-        p[style*="text-align: center"] {
-            text-align: center;
-        }
-        
-        /* Link styles */
-        a {
-            color: #1f73b7;
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Strong/Bold */
-        strong {
-            font-weight: 600;
-        }
-        
-        /* Lists */
-        ul, ol {
-            margin: 16px 0;
-            padding-left: 32px;
-        }
-        
-        li {
-            margin-bottom: 8px;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h1>${title}</h1>
-    
-    <div class="content">
+    // 🎯 Request Examples 생성 (Zendesk 형식)
+    let requestExamplesHTML = '';
+    if (requestExamples && requestExamples.length > 0) {
+      requestExamplesHTML = `
+    <h3 id="h_01J4JJ26CHV3XS8BRMW0ND0E1W">
+      <strong>Request Examples</strong>
+    </h3>
+${requestExamples.map((ex, idx) => {
+        let exampleJson = ex.code;
+        const isAlreadyHTML = typeof ex.code === 'string' && (
+          ex.code.includes('<span') ||
+          ex.code.includes('<br>') ||
+          ex.code.includes('&nbsp;')
+        );
 
-<h3 id=\"h_01J4JK6Y55WBG41A5PTKHSBPQX\"><strong>Input URI</strong></h3>
-<div class=\"table-wrap\">
-<table>
-<colgroup> <col style=\"width: 100.00%;\"> </colgroup>
-<tbody>
-<tr>
-<th style="text-align: center;">
-<strong>${inputUri}</strong>
-</th>
-</tr>
-</tbody>
-</table>
-</div>
-
-<h3 id=\"h_01J4JK6Y55M865QPHE3BYY76TV\"><strong>Active Methods</strong></h3>
-<div class=\"table-wrap\">
-<table>
-<colgroup> <col style=\"width: 100.00%;\"> </colgroup>
-<tbody>
-<tr>
-<th style="text-align: center;">
-<strong>${activeMethods}</strong>
-</th>
-</tr>
-</tbody>
-</table>
-</div>
-
-<h3 id=\"h_01J4JK6Y55M7H2APG5Z99R0EHF\"><strong>JSON Schema</strong></h3>
-<div class=\"mgt32\">
-<p class=\"btn_dropdown mgt4 active\" onclick=\"toggleAccordion(this)\">Details</p>
-<div class=\"code-block-wrapper active\">
-<div class=\"code-block-header\">
-<button class=\"copy-btn\" onclick=\"copyText('copyTarget1')\">Copy</button>
-</div>
-<div class=\"code-content\" id=\"copyTarget1\">${currentSchema}</div>
-</div>
-</div>
-
-${(requestExamples && requestExamples.length > 0) ? `
-<h3 id=\"h_01J4K93QE3BGDFSY9AZXQ9ZJ8K\"><strong>Request Examples</strong></h3>
-${requestExamples.map((ex, idx) => `
-<div class=\"mgt32\">
-<p class=\"btn_dropdown mgt4 active\" onclick=\"toggleAccordion(this)\">${ex.title}</p>
-<div class=\"code-block-wrapper active\">
-<div class=\"code-block-header\">
-<button class=\"copy-btn\" onclick=\"copyText('copyTargetReq${idx}')\">Copy</button>
-</div>
-<div class=\"code-content\" id=\"copyTargetReq${idx}\">${ex.code}</div>
-</div>
-</div>
-`).join('')}
-` : ''}
-
-${(responseExamples && responseExamples.length > 0) ? `
-<h3 id=\"h_01J4K93QE3DTFGJEZ2NXN6ZH33\"><strong>Response Examples</strong></h3>
-${responseExamples.map((ex, idx) => `
-<div class=\"mgt32\">
-<p class=\"btn_dropdown mgt4 active\" onclick=\"toggleAccordion(this)\">${ex.title}</p>
-<div class=\"code-block-wrapper active\">
-<div class=\"code-block-header\">
-<button class=\"copy-btn\" onclick=\"copyText('copyTargetRes${idx}')\">Copy</button>
-</div>
-<div class=\"code-content\" id=\"copyTargetRes${idx}\">${ex.code}</div>
-</div>
-</div>
-`).join('')}
-` : ''}
-
-${specifications}
-
-</div>
-</div>
-
-<script>
-// 🎯 Copy Text Function
-function copyText(elementId) {
-    var element = document.getElementById(elementId);
-    var text = element.innerText || element.textContent;
-    text = text.replace(/&nbsp;/g, " ");
-    text = text.replace(/ /g, " ");
-    
-    var textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    
-    try {
-        document.execCommand('copy');
-        var btn = event.target;
-        var originalText = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(function() {
-            btn.textContent = originalText;
-        }, 1500);
-    } catch (err) {
-        console.error('Copy failed:', err);
+        if (isAlreadyHTML) {
+          exampleJson = ex.code;
+        } else {
+          try {
+            const parsed = typeof ex.code === 'string' ? JSON.parse(ex.code) : ex.code;
+            exampleJson = formatJsonToZendeskHTML(parsed);
+          } catch {
+            exampleJson = escapeHtml(ex.code);
+          }
+        }
+        return `    <div class="mgt32" style="margin: 10px;">
+      <p class="btn_dropdown mgt4" style="font-size: 15px;">${escapeHtml(ex.title)}</p>
+      <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+        <div style="background-color: #f5f7fa;" align="right">
+          <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyReq${idx + 1}')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
+        </div>
+        <div id="copyReq${idx + 1}" style="font-size: 15px; letter-spacing: 0.01em;">
+          ${exampleJson}
+        </div>
+      </div>
+    </div>`;
+      }).join('\n')}`;
     }
-    
-    document.body.removeChild(textarea);
-}
 
-// 🎯 Accordion Toggle Function
-function toggleAccordion(button) {
-    var wrapper = button.nextElementSibling;
-    button.classList.toggle('active');
-    wrapper.classList.toggle('active');
-}
-</script>
+    // 🎯 Response Examples 생성 (Zendesk 형식)
+    let responseExamplesHTML = '';
+    const { responseExamples } = manualData;
+    if (responseExamples && responseExamples.length > 0) {
+      responseExamplesHTML = `
+    <br><br>
+    <h3 id="h_01J4JJ26GDKM4PZBGT5CCVJEPF">
+      <strong>Response Examples</strong>
+    </h3>
+${responseExamples.map((ex, idx) => {
+        let exampleJson = ex.code;
+        const isAlreadyHTML = typeof ex.code === 'string' && (
+          ex.code.includes('<span') ||
+          ex.code.includes('<br>') ||
+          ex.code.includes('&nbsp;')
+        );
 
-</body>
-</html>`;
+        if (isAlreadyHTML) {
+          exampleJson = ex.code;
+        } else {
+          try {
+            const parsed = typeof ex.code === 'string' ? JSON.parse(ex.code) : ex.code;
+            exampleJson = formatJsonToZendeskHTML(parsed);
+          } catch {
+            exampleJson = escapeHtml(ex.code);
+          }
+        }
+        return `    <div class="mgt32" style="margin: 10px;">
+      <p class="btn_dropdown mgt4" style="font-size: 15px;">${escapeHtml(ex.title)}</p>
+      <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+        <div style="background-color: #f5f7fa;" align="right">
+          <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyRes${idx + 1}')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
+        </div>
+        <div id="copyRes${idx + 1}" style="font-size: 15px; letter-spacing: 0.01em;">
+          ${exampleJson}
+        </div>
+      </div>
+    </div>`;
+      }).join('\n')}`;
+    }
+
+    // 🎯 Examples HTML 결합
+    const examplesHTML = requestExamplesHTML + responseExamplesHTML;
+
+    // 🎯 Zendesk 호환 HTML 반환 (zd-html-block 래퍼)
+    return `<zd-html-block>
+  <script>
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        text = text.replace(/&nbsp;/g, " ");
+        text = text.replace(/ /g, " ");
+        navigator.clipboard.writeText(text);
+    }
+  </script>
+  <div>
+    <h3 id="h_01J4JJ26CH2ZW675YHESZJ9ZBV">
+      <strong>Input URI</strong>
+    </h3>
+    <div class="table-wrap">
+      <table style="width: 100%; margin-left: 0px; margin-right: auto;">
+        <colgroup>
+          <col style="width: 100.00%;">
+        </colgroup>
+        <tbody>
+          <tr>
+            <th style="padding: 10px 5px 10px 5px;">
+              <p style="text-align: center;">
+                <strong>${escapeHtml(inputUri || '{base url} + endpoint')}</strong>
+              </p>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <br>
+    <h3 id="h_01J4JJ26CHE5BP89TJEWH778AT">
+      <strong>Active Methods</strong>
+    </h3>
+    <div class="table-wrap">
+      <table style="width: 100%; margin-left: 0px; margin-right: auto;">
+        <colgroup>
+          <col style="width: 100.00%;">
+        </colgroup>
+        <tbody>
+          <tr>
+            <th style="padding: 10px 5px 10px 5px;">
+              <p style="text-align: center;">
+                <strong>${escapeHtml(activeMethods || 'POST, GET, PUT, DELETE')}</strong>
+              </p>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <br>
+    <h3 id="h_01J4JJ26CH0H9ZM7RSET9FZMGN">
+      <strong>JSON Schema</strong>
+    </h3>
+    <div class="mgt32" style="margin: 10px;">
+      <p class="btn_dropdown mgt4" style="font-size: 15px;">Details</p>
+      <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
+        <div style="background-color: #f5f7fa;" align="right">
+          <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
+        </div>
+        <div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">
+          ${currentSchema}
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+${examplesHTML}
+    <br><br>
+${(() => {
+        // specifications가 이미 완전한 Zendesk HTML인지 확인 (table-wrap, <strong>Specifications 포함)
+        const isAlreadyFormattedHTML = specifications &&
+          (specifications.includes('<table') || specifications.includes('class="table-wrap"'));
+        const hasSpecTitle = specifications &&
+          (specifications.includes('>Specifications<') || specifications.includes('<strong>Specifications'));
+
+        if (!specifications) {
+          return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
+      <strong>Specifications</strong>
+    </h3>
+    <p>No specifications available.</p>`;
+        }
+
+        if (isAlreadyFormattedHTML && hasSpecTitle) {
+          // 이미 제목과 테이블이 포함된 완전한 HTML
+          return specifications;
+        }
+
+        if (isAlreadyFormattedHTML) {
+          // 테이블은 있지만 제목이 없는 경우
+          return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
+      <strong>Specifications</strong>
+    </h3>
+${specifications}`;
+        }
+
+        // 일반 텍스트인 경우
+        return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
+      <strong>Specifications</strong>
+    </h3>
+    <p>${escapeHtml(specifications)}</p>`;
+      })()}
+    <br>
+    <br>
+  </div>
+</zd-html-block>`;
   };
 
   // 📥 Import HTML
@@ -492,9 +362,10 @@ function toggleAccordion(button) {
 
   // 🎯 Switch to HTML Code mode
   const handleSwitchToCode = () => {
-    if (viewMode === 'preview') {
+    // 기존 editableHTML이 없을 때만 generateHTML()로 초기화
+    // 이미 코드가 있으면 유지 (코드가 기준)
+    if (!editableHTML) {
       setEditableHTML(generateHTML());
-      setIsHTMLModified(false);
     }
     setViewMode('code');
   };
@@ -507,13 +378,14 @@ function toggleAccordion(button) {
 
   // 🎯 Save HTML Changes
   const handleSaveHTML = () => {
+    // editableHTML을 저장된 HTML로 마크 (isHTMLModified를 false로 하지만 editableHTML은 유지)
     setIsHTMLModified(false);
-    alert('✅ HTML changes saved!\n\nYou can now export or send to Zendesk with the updated HTML.');
+    // 알림 없이 조용히 저장 (사용자 경험 개선)
   };
 
   // 🎯 Reset HTML
   const handleResetHTML = () => {
-    setEditableHTML(generateHTML());
+    setEditableHTML(''); // 빈 문자열로 리셋하여 generateHTML() 사용하도록
     setIsHTMLModified(false);
   };
 
@@ -541,7 +413,8 @@ function toggleAccordion(button) {
     setIsHTMLModified(false);
   };
 
-  const htmlContent = isHTMLModified && editableHTML ? editableHTML : generateHTML();
+  // 🎯 htmlContent: editableHTML이 있으면 그것을 사용, 없으면 generateHTML()
+  const htmlContent = editableHTML || generateHTML();
 
   return (
     <div className="flex h-full w-full flex-col bg-zinc-950 relative">

@@ -47,32 +47,36 @@ export function StatusIcon({ status, className }: StatusIconProps) {
       );
     case "empty":
       return (
-        <Circle
-          className={cn("w-6 h-6 text-gray-300", className)}
-          strokeWidth={2}
-          title="시작 안함"
-        />
+        <span title="시작 안함">
+          <Circle
+            className={cn("w-6 h-6 text-gray-300", className)}
+            strokeWidth={2}
+          />
+        </span>
       );
     case "working":
       return (
-        <Loader2
-          className={cn("w-6 h-6 text-blue-500 animate-spin", className)}
-          title="작업 중"
-        />
+        <span title="작업 중">
+          <Loader2
+            className={cn("w-6 h-6 text-blue-500 animate-spin", className)}
+          />
+        </span>
       );
     case "done":
       return (
-        <CheckCircle2
-          className={cn("w-6 h-6 text-green-600", className)}
-          title="완료"
-        />
+        <span title="완료">
+          <CheckCircle2
+            className={cn("w-6 h-6 text-green-600", className)}
+          />
+        </span>
       );
     case "warning":
       return (
-        <AlertTriangle
-          className={cn("w-6 h-6 text-orange-500", className)}
-          title="경고"
-        />
+        <span title="경고">
+          <AlertTriangle
+            className={cn("w-6 h-6 text-orange-500", className)}
+          />
+        </span>
       );
     default:
       return null;
@@ -99,7 +103,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       </div>
     );
   }
-  
+
   if (status === "Done") {
     return (
       <div

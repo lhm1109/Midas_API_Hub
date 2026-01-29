@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, FileJson, PlayCircle, Check, X, AlertCircle } from 'lucide-react';
-import { importFromJSON, importFromFile, createSampleData, type ImportData } from '@/utils/dataImporter';
+import { importFromJSON, importFromFile, createSampleData } from '@/utils/dataImporter';
 
 export function ImportTab() {
   const [jsonInput, setJsonInput] = useState('');
@@ -22,11 +22,13 @@ export function ImportTab() {
     try {
       const result = await importFromJSON(jsonInput);
       setResult(result);
-      
-      if (result.success) {
+
+      if ('success' in result && result.success) {
         alert('✅ 데이터가 성공적으로 저장되었습니다!');
-      } else {
+      } else if ('error' in result) {
         alert(`❌ 오류: ${result.error}`);
+      } else if ('succeeded' in result) {
+        alert(`✅ ${result.succeeded}개 성공, ${result.failed}개 실패`);
       }
     } catch (error) {
       setResult({
@@ -46,13 +48,15 @@ export function ImportTab() {
     setResult(null);
 
     try {
-      const result = await importFromFile(file);
+      const result = await importFromFile(file) as any;
       setResult(result);
-      
-      if (result.success) {
+
+      if ('success' in result && result.success) {
         alert('✅ 파일이 성공적으로 임포트되었습니다!');
-      } else {
+      } else if ('error' in result) {
         alert(`❌ 오류: ${result.error}`);
+      } else if ('succeeded' in result) {
+        alert(`✅ ${result.succeeded}개 성공, ${result.failed}개 실패`);
       }
     } catch (error) {
       setResult({
@@ -120,7 +124,7 @@ export function ImportTab() {
 }`}
               className="min-h-[300px] font-mono text-sm bg-zinc-950 border-zinc-700 text-zinc-300"
             />
-            
+
             <div className="flex gap-2">
               <Button
                 onClick={handleJSONImport}
@@ -130,7 +134,7 @@ export function ImportTab() {
                 <PlayCircle className="w-4 h-4 mr-2" />
                 {loading ? '저장 중...' : '임포트 실행'}
               </Button>
-              
+
               <Button
                 onClick={loadSampleData}
                 variant="outline"
@@ -173,15 +177,13 @@ export function ImportTab() {
 
         {/* Result */}
         {result && (
-          <Card className={`${
-            result.success 
-              ? 'bg-green-950/30 border-green-800/50' 
-              : 'bg-red-950/30 border-red-800/50'
-          }`}>
+          <Card className={`${result.success
+            ? 'bg-green-950/30 border-green-800/50'
+            : 'bg-red-950/30 border-red-800/50'
+            }`}>
             <CardHeader>
-              <CardTitle className={`flex items-center gap-2 ${
-                result.success ? 'text-green-400' : 'text-red-400'
-              }`}>
+              <CardTitle className={`flex items-center gap-2 ${result.success ? 'text-green-400' : 'text-red-400'
+                }`}>
                 {result.success ? (
                   <>
                     <Check className="w-5 h-5" />
@@ -249,7 +251,7 @@ export function ImportTab() {
                 <li><code className="text-blue-400">version.version</code> - 버전 번호</li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold text-zinc-200 mb-2">선택 필드:</h4>
               <ul className="list-disc list-inside space-y-1 ml-2">

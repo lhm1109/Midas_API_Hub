@@ -1,7 +1,8 @@
 {
-  "name": "api-verification-platform",
+  "name": "bat-rack",
   "version": "1.0.0",
-  "description": "MIDAS API Verification Platform with Electron",
+  "description": "Bat Rack - API Development & Server Management Platform",
+  "author": "MIDAS IT",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -50,6 +51,8 @@
     "@tanstack/react-virtual": "^3.13.18",
     "@types/better-sqlite3": "^7.6.13",
     "@types/diff": "^8.0.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
     "better-sqlite3": "^12.5.0",
     "body-parser": "^1.20.2",
     "class-variance-authority": "0.7.1",
@@ -68,7 +71,8 @@
     "motion": "12.23.24",
     "multer": "^2.0.2",
     "next-themes": "0.4.6",
-    "pg": "^8.16.3",
+    "node-pty": "^1.1.0",
+    "pg": "^8.17.2",
     "react": "^18.2.0",
     "react-day-picker": "8.10.1",
     "react-dnd": "16.0.1",
@@ -109,14 +113,39 @@
     "wait-on": "^7.2.0"
   },
   "build": {
-    "appId": "com.midas.api-verification",
-    "productName": "MIDAS API Verification",
+    "appId": "com.midas.bat-rack",
+    "productName": "Bat Rack",
+    "npmRebuild": false,
+    "asar": false,
     "files": [
       "dist/**/*",
-      "electron/**/*"
+      "electron/**/*",
+      "server/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "server",
+        "to": "server",
+        "filter": [
+          "**/*"
+        ]
+      }
     ],
     "directories": {
       "output": "release"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.exe"
     }
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Trash2, User, Lock, Clock } from 'lucide-react';
+import { RefreshCw, Trash2, User, Clock } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -36,7 +36,7 @@ export function SessionsTab() {
     try {
       const response = await fetch('http://localhost:9527/api/locks/all');
       if (!response.ok) throw new Error('Failed to fetch active sessions');
-      
+
       const data = await response.json();
       const allLocks: LockInfo[] = [
         ...(data.endpointLocks || []).map((lock: any) => ({ ...lock, type: 'endpoint' })),
@@ -143,7 +143,7 @@ export function SessionsTab() {
     const diff = now.getTime() - date.getTime();
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
-    
+
     if (minutes > 0) {
       return `${minutes}분 ${seconds}초 전`;
     }
@@ -154,9 +154,9 @@ export function SessionsTab() {
     const expires = new Date(expiresAt);
     const now = new Date();
     const diff = expires.getTime() - now.getTime();
-    
+
     if (diff <= 0) return '만료됨';
-    
+
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
     return `${minutes}분 ${seconds}초`;

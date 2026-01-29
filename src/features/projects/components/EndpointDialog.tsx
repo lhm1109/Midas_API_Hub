@@ -53,19 +53,19 @@ export function EndpointDialog({
     if (isEditMode && endpoint) {
       return endpoint.id;
     }
-    
+
     // 새 엔드포인트: path에서 그룹명 추출 후 소문자로 통일
     // 예: "/db/node" → "db/node", "/gen/project" → "gen/project"
     const cleanPath = path.trim().startsWith('/') ? path.trim().slice(1) : path.trim();
     const pathSegments = cleanPath.split('/');
-    
+
     if (pathSegments.length >= 2) {
       // path가 /group/endpoint 형식인 경우
       const groupFromPath = pathSegments[0].toLowerCase();
       const endpointFromPath = pathSegments[1].toLowerCase();
       return `${groupFromPath}/${endpointFromPath}`;
     }
-    
+
     // path가 명확하지 않으면 fallback: groupName/nameSlug
     const groupName = groupId.includes('_') ? groupId.split('_')[1] : groupId;
     const nameSlug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -96,7 +96,7 @@ export function EndpointDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim() || !path.trim()) {
       alert('Name and path are required.');
       return;
@@ -105,10 +105,9 @@ export function EndpointDialog({
     setLoading(true);
     try {
       const endpointId = generateEndpointId();
-      // groupId 포맷: "productId_groupName" (예: "civil-nx_db")
-      // 만약 groupId가 이미 전체 ID 형식이면 그대로 사용, 아니면 생성
-      const fullGroupId = groupId.includes('_') ? groupId : `${productId}_${groupId}`;
-      
+
+      // ✅ groupId는 이제 항상 실제 groups.id (UUID 또는 legacy ID)
+      // 더 이상 "productId_groupName" 형식으로 변환하지 않음
       const endpointData = {
         id: endpointId,
         name: name.trim(),
@@ -116,8 +115,7 @@ export function EndpointDialog({
         path: path.trim().startsWith('/') ? path.trim() : `/${path.trim()}`,
         product: productId,
         product_id: productId,
-        group_name: groupId.includes('_') ? groupId.split('_')[1] : groupId,
-        group_id: fullGroupId,
+        group_id: groupId,  // ✅ 직접 사용 (UUID 또는 실제 ID)
         description: description.trim() || null,
         status: status || null,
         status_message: statusMessage.trim() || null,

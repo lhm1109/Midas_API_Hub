@@ -643,7 +643,7 @@ function injectEntityCollectionSimple(schema: any, _transform: any, psdSet: stri
   }
 
   // 5. 최종 스키마 조립 (YAML 정의 기반)
-  const assembledSchema: EnhancedSchema = {
+  const assembledSchema = {
     ...skeleton.rootStructure,
     title: entityName,
     properties: {
@@ -660,7 +660,7 @@ function injectEntityCollectionSimple(schema: any, _transform: any, psdSet: stri
       methods: [],
       'body-root': bodyRoot
     }
-  };
+  } as unknown as EnhancedSchema;
 
   console.log(`✅ Injected entity collection (YAML-driven): "${entityName}" → "${bodyRoot}" → entity-collection → entity`);
   console.log(`📋 Platform skeleton from: ${psdSet}/${schemaType}/schema-logic.yaml`);
@@ -778,8 +778,8 @@ function wrapInVirtualObject(schema: EnhancedSchema, transform: any): EnhancedSc
     required: [],
     properties: {
       [key]: {
-        type: wrapperType,
         ...schema,
+        type: wrapperType, // schema의 type을 wrapperType으로 덮어씀
       }
     },
   };
@@ -1318,7 +1318,7 @@ function groupFieldsBySectionsDynamic(
   const sections = new Map<string, EnhancedField[]>();
 
   for (const field of fields) {
-    const sectionName = determineSectionNameDynamic(field, types, psdSet, schemaType, schema);
+    const sectionName = determineSectionNameDynamic(field as any, types, psdSet, schemaType, schema);
     field.section = sectionName;
 
     if (!sections.has(sectionName)) {

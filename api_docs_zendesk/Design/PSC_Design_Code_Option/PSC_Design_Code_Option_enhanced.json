@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PSC Design Code Option",
+  "description": "PSC Design Code Option Configuration",
+  "type": "object",
+  "properties": {
+    "DESIGN_CODE": {
+      "type": "string",
+      "description": "Design Code",
+      "enum": [
+        "AASHTO-LRFD20",
+        "AASHTO-LRFD17",
+        "AASHTO-LRFD16",
+        "AASHTO-LRFD14",
+        "AASHTO-LRFD12",
+        "AASHTO-LRFD07"
+      ],
+      "default": "AASHTO-LRFD20",
+      "x-ui": {
+        "label": "Design Code",
+        "group": "General",
+        "widget": "dropdown",
+        "hint": "Select the design code for PSC design"
+      },
+      "x-enum-labels": {
+        "AASHTO-LRFD20": "AASHTO-LRFD20",
+        "AASHTO-LRFD17": "AASHTO-LRFD17",
+        "AASHTO-LRFD16": "AASHTO-LRFD16",
+        "AASHTO-LRFD14": "AASHTO-LRFD14",
+        "AASHTO-LRFD12": "AASHTO-LRFD12",
+        "AASHTO-LRFD07": "AASHTO-LRFD07"
+      }
+    },
+    "TENDON_TYPE": {
+      "type": "string",
+      "description": "Tendon Type",
+      "enum": [
+        "LOW_RELAXATION",
+        "STRESS_RELIEVED",
+        "PRESTRESSING_BARS"
+      ],
+      "default": "LOW_RELAXATION",
+      "x-ui": {
+        "label": "Tendon Type",
+        "group": "Input Parameters",
+        "widget": "radio",
+        "hint": "Select the type of prestressing tendons"
+      },
+      "x-enum-labels": {
+        "LOW_RELAXATION": "Low Relaxation Tendons",
+        "STRESS_RELIEVED": "Stress Relieved Tendons",
+        "PRESTRESSING_BARS": "Prestressing Bars"
+      }
+    },
+    "EXPOSURE_FACTOR_TYPE": {
+      "type": "string",
+      "description": "Exposure Factor for Crack Width",
+      "enum": [
+        "CLASS_I",
+        "CLASS_II",
+        "USER"
+      ],
+      "default": "CLASS_I",
+      "x-ui": {
+        "label": "Exposure Factor for Crack Width",
+        "group": "Input Parameters",
+        "widget": "radio",
+        "hint": "Select exposure class or specify user value"
+      },
+      "x-enum-labels": {
+        "CLASS_I": "Class I (1.0)",
+        "CLASS_II": "Class II (0.75)",
+        "USER": "User"
+      }
+    },
+    "EXPOSURE_FACTOR_VALUE": {
+      "type": "number",
+      "description": "User-defined Exposure Factor Value",
+      "default": 1.0,
+      "minimum": 0,
+      "maximum": 1.0,
+      "x-ui": {
+        "label": "Exposure Factor Value",
+        "group": "Input Parameters",
+        "widget": "number",
+        "hint": "Enter exposure factor value (0.0 to 1.0)",
+        "visibleWhen": {
+          "EXPOSURE_FACTOR_TYPE": ["USER"]
+        }
+      },
+      "x-required-when": {
+        "EXPOSURE_FACTOR_TYPE": ["USER"]
+      }
+    },
+    "CORROSIVE_CONDITION": {
+      "type": "string",
+      "description": "Corrosive Condition",
+      "enum": [
+        "SEVERE",
+        "MODERATE_MILD"
+      ],
+      "default": "SEVERE",
+      "x-ui": {
+        "label": "Corrosive Condition",
+        "group": "Input Parameters",
+        "widget": "radio",
+        "hint": "Select the corrosive environment condition"
+      },
+      "x-enum-labels": {
+        "SEVERE": "Severe",
+        "MODERATE_MILD": "Moderate/Mild"
+      }
+    },
+    "FLEXURAL_STRENGTH": {
+      "type": "string",
+      "description": "Flexural Strength Calculation Method",
+      "enum": [
+        "CODE",
+        "STRAIN_COMPATIBILITY"
+      ],
+      "default": "CODE",
+      "x-ui": {
+        "label": "Flexural Strength",
+        "group": "Input Parameters",
+        "widget": "radio",
+        "hint": "Select flexural strength calculation method"
+      },
+      "x-enum-labels": {
+        "CODE": "Code",
+        "STRAIN_COMPATIBILITY": "Strain Compatibility"
+      }
+    },
+    "CONSTRUCTION_TYPE": {
+      "type": "string",
+      "description": "Construction Type",
+      "enum": [
+        "SEGMENTAL",
+        "NON_SEGMENTAL"
+      ],
+      "default": "NON_SEGMENTAL",
+      "x-ui": {
+        "label": "Construction Type",
+        "group": "Input Parameters",
+        "widget": "radio",
+        "hint": "Select construction type"
+      },
+      "x-enum-labels": {
+        "SEGMENTAL": "Segmental",
+        "NON_SEGMENTAL": "Non-Segmental"
+      }
+    },
+    "OUTPUT_CONSTRUCTION_SERVICE": {
+      "type": "object",
+      "description": "Output Parameters at Construction Stage/Service Loads",
+      "properties": {
+        "STRESS_BY_CONSTRUCTION_STAGE": {
+          "type": "boolean",
+          "description": "Stress by Construction Stage",
+          "default": true,
+          "x-ui": {
+            "label": "Stress by Construction Stage",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        },
+        "STRESS_BY_SERVICE_LOAD_COMB": {
+          "type": "boolean",
+          "description": "Stress by Service Load Combinations",
+          "default": true,
+          "x-ui": {
+            "label": "Stress by Service Load Combinations",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        },
+        "STRESS_IN_PRESTRESSING_TENDONS": {
+          "type": "boolean",
+          "description": "Stress in Prestressing Tendons",
+          "default": true,
+          "x-ui": {
+            "label": "Stress in Prestressing Tendons",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        },
+        "PRINCIPAL_STRESS_BY_CONSTRUCTION_STAGE": {
+          "type": "boolean",
+          "description": "Principal Stress by Construction Stage",
+          "default": true,
+          "x-ui": {
+            "label": "Principal Stress by Construction Stage",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        },
+        "PRINCIPAL_STRESS_BY_SERVICE_MAX_SHEAR": {
+          "type": "boolean",
+          "description": "Principal Stress by Service Load Combinations (Max Shear)",
+          "default": true,
+          "x-ui": {
+            "label": "Principal Stress by Service Load Combinations (Max Shear)",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        },
+        "PRINCIPAL_STRESS_BY_SERVICE_MAX_TORSION": {
+          "type": "boolean",
+          "description": "Principal Stress by Service Load Combination (Max Torsion)",
+          "default": true,
+          "x-ui": {
+            "label": "Principal Stress by Service Load Combination (Max Torsion)",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        },
+        "CRACK_CHECK": {
+          "type": "boolean",
+          "description": "Crack Check",
+          "default": true,
+          "x-ui": {
+            "label": "Crack Check",
+            "group": "Output Parameters - Construction/Service",
+            "widget": "checkbox"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "x-ui": {
+        "label": "At Construction Stage/Service Loads",
+        "group": "Output Parameters",
+        "widget": "group"
+      }
+    },
+    "OUTPUT_FACTORED_LOADS": {
+      "type": "object",
+      "description": "Output Parameters at Factored Loads",
+      "properties": {
+        "FLEXURAL_STRENGTH_CHECK": {
+          "type": "boolean",
+          "description": "Flexural Strength Check",
+          "default": true,
+          "x-ui": {
+            "label": "Flexural Strength Check",
+            "group": "Output Parameters - Factored Loads",
+            "widget": "checkbox"
+          }
+        },
+        "SHEAR_STRENGTH_CHECK": {
+          "type": "boolean",
+          "description": "Shear Strength Check",
+          "default": true,
+          "x-ui": {
+            "label": "Shear Strength Check",
+            "group": "Output Parameters - Factored Loads",
+            "widget": "checkbox"
+          }
+        },
+        "COMBINED_SHEAR_TORSION_CHECK": {
+          "type": "boolean",
+          "description": "Combined Shear and Torsion Check",
+          "default": true,
+          "x-ui": {
+            "label": "Combined Shear and Torsion Check",
+            "group": "Output Parameters - Factored Loads",
+            "widget": "checkbox"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "x-ui": {
+        "label": "At Factored Loads",
+        "group": "Output Parameters",
+        "widget": "group"
+      }
+    }
+  },
+  "required": [
+    "DESIGN_CODE",
+    "TENDON_TYPE",
+    "EXPOSURE_FACTOR_TYPE",
+    "CORROSIVE_CONDITION",
+    "FLEXURAL_STRENGTH",
+    "CONSTRUCTION_TYPE"
+  ],
+  "additionalProperties": false
+}

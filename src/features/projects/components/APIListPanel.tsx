@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback, useRef, useMemo, memo } from 'react';
-import { Search, ChevronRight, ChevronDown, FileText, FolderClosed, FolderOpen, Plus, Pencil, Trash2, MoreVertical, GripVertical, Copy, ChevronLeft } from 'lucide-react';
+import { Search, ChevronRight, ChevronDown, FileText, FolderClosed, FolderOpen, Plus, Pencil, Trash2, MoreVertical, GripVertical, Copy, ChevronLeft, Link2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Tooltip,
@@ -23,7 +32,7 @@ import {
   DragEndEvent,
   DragOverEvent,
   useDroppable,
-  pointerWithin,
+  closestCorners,  // ✅ closestCenter 대신 closestCorners 사용
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -37,11 +46,14 @@ import { EndpointDialog } from './EndpointDialog';
 import { ProductGroupDialog } from './ProductGroupDialog';
 import { apiClient } from '@/lib/api-client';
 import { useAppStore } from '@/store/useAppStore';
-import type { ApiEndpoint, ApiProduct } from '@/types';
+import type { ApiEndpoint, ApiProduct, ApiGroup } from '@/types';
+import { DndId, parseDndId } from '../utils/dndIdUtils';
 
 interface SortableEndpointItemProps {
+  sortableId: string;  // ✅ DnD용 ID (e.g. "e:xyz789")
   endpoint: ApiEndpoint;
   isSelected: boolean;
+  isLinked?: boolean;  // Manager 탭과 연결 여부
   onSelect: (endpoint: ApiEndpoint) => void;
   onEdit: (endpoint: ApiEndpoint) => void;
   onDelete: (endpoint: ApiEndpoint) => void;
@@ -51,8 +63,10 @@ interface SortableEndpointItemProps {
 
 // ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
 const SortableEndpointItem = memo(function SortableEndpointItem({
+  sortableId,  // ✅ 추가
   endpoint,
   isSelected,
+  isLinked,
   onSelect,
   onEdit,
   onDelete,
@@ -66,7 +80,7 @@ const SortableEndpointItem = memo(function SortableEndpointItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: endpoint.id });
+  } = useSortable({ id: sortableId });  // ✅ sortableId 사용
 
   // 🔥 성능 최적화: GPU 가속 및 will-change 사용
   const style = {
@@ -80,11 +94,10 @@ const SortableEndpointItem = memo(function SortableEndpointItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group flex items-center gap-1 rounded text-sm ${
-        isSelected
-          ? 'bg-blue-600 text-white'
-          : 'text-zinc-300 hover:bg-zinc-800'
-      }`}
+      className={`group flex items-center gap-1 rounded text-sm ${isSelected
+        ? 'bg-blue-600 text-white'
+        : 'text-zinc-300 hover:bg-zinc-800'
+        }`}
     >
       {/* Drag Handle */}
       <button
@@ -102,6 +115,9 @@ const SortableEndpointItem = memo(function SortableEndpointItem({
       >
         <FileText className="w-3 h-3" />
         <span className="flex-1 text-left">{endpoint.name}</span>
+        {isLinked && (
+          <Link2 className="w-3 h-3 text-cyan-400" />
+        )}
         {getStatusIndicator(endpoint.id)}
       </button>
 
@@ -109,9 +125,8 @@ const SortableEndpointItem = memo(function SortableEndpointItem({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button
-            className={`p-0.5 rounded hover:bg-zinc-700/50 opacity-0 group-hover:opacity-100 transition-opacity ${
-              isSelected ? 'opacity-100' : ''
-            }`}
+            className={`p-0.5 rounded hover:bg-zinc-700/50 opacity-0 group-hover:opacity-100 transition-opacity ${isSelected ? 'opacity-100' : ''
+              }`}
             onClick={(e) => e.stopPropagation()}
           >
             <MoreVertical className="w-3 h-3" />
@@ -262,25 +277,33 @@ const SortableProductItem = memo(function SortableProductItem({
 
 // Sortable 그룹 컴포넌트
 interface SortableGroupItemProps {
-  groupId: string;
+  sortableId: string;  // ✅ DnD용 ID (e.g. "g:abc123")
+  groupId: string;     // ✅ 실제 group.id (API 호출용)
   productId: string;
   groupName: string;
+  depth: number;
   isExpanded: boolean;
   onToggle: () => void;
   onAddEndpoint: () => void;
+  onAddSubgroup: () => void;
   onDelete: () => void;
+  onRename: () => void;  // 이름 변경
   children: React.ReactNode;
 }
 
 // ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
 const SortableGroupItem = memo(function SortableGroupItem({
-  groupId,
+  sortableId,
+  groupId: _groupId,  // 추후 API 호출용
   productId: _productId,
   groupName,
+  depth,
   isExpanded,
   onToggle,
   onAddEndpoint,
+  onAddSubgroup,
   onDelete,
+  onRename,
   children,
 }: SortableGroupItemProps) {
   const {
@@ -290,7 +313,7 @@ const SortableGroupItem = memo(function SortableGroupItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: groupId });
+  } = useSortable({ id: sortableId });  // ✅ sortableId 사용
 
   // 🔥 성능 최적화: GPU 가속 및 will-change 사용
   const style = {
@@ -299,6 +322,10 @@ const SortableGroupItem = memo(function SortableGroupItem({
     opacity: isDragging ? 0.5 : 1,
     willChange: isDragging ? 'transform' : 'auto', // GPU 가속
   };
+
+  // depth에 따른 색상 배열
+  const depthColors = ['text-yellow-400', 'text-orange-400', 'text-pink-400', 'text-purple-400', 'text-cyan-400'];
+  const folderColor = depthColors[(depth - 1) % depthColors.length];
 
   return (
     <div ref={setNodeRef} style={style} className="mb-1">
@@ -322,21 +349,47 @@ const SortableGroupItem = memo(function SortableGroupItem({
           ) : (
             <ChevronRight className="w-3 h-3" />
           )}
-          <FolderClosed className="w-3 h-3 text-yellow-400" />
+          <FolderClosed className={`w-3 h-3 ${folderColor}`} />
           <span className="flex-1 text-left">{groupName}</span>
+          {depth > 1 && (
+            <span className="text-xs text-zinc-500">L{depth}</span>
+          )}
         </button>
 
-        {/* Add Endpoint Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddEndpoint();
-          }}
-          className="p-1 rounded hover:bg-zinc-700/50 opacity-0 group-hover:opacity-100 transition-opacity"
-          title="엔드포인트 추가"
-        >
-          <Plus className="w-3 h-3" />
-        </button>
+        {/* Add Dropdown Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="p-1 rounded hover:bg-zinc-700/50 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={(e) => e.stopPropagation()}
+              title="추가"
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-44">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddEndpoint();
+              }}
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              엔드포인트 추가
+            </DropdownMenuItem>
+            {depth < 5 && (
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddSubgroup();
+                }}
+              >
+                <FolderClosed className="w-4 h-4 mr-2" />
+                하위 그룹 추가
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Group Actions Menu */}
         <DropdownMenu>
@@ -349,6 +402,16 @@ const SortableGroupItem = memo(function SortableGroupItem({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onRename();
+              }}
+              className="text-zinc-200 hover:bg-zinc-700 focus:bg-zinc-700 focus:text-zinc-100"
+            >
+              <Pencil className="w-4 h-4 mr-2" />
+              이름 변경
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
@@ -383,12 +446,135 @@ function DroppableGroup({ id, children, isOver }: DroppableGroupProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`ml-4 space-y-1 min-h-[40px] rounded transition-colors ${
-        isOver ? 'bg-blue-900/20 ring-2 ring-blue-500' : ''
-      }`}
+      className={`space-y-1 min-h-[32px] rounded transition-colors ${isOver ? 'bg-blue-900/20 ring-2 ring-blue-500' : ''
+        }`}
     >
       {children}
     </div>
+  );
+}
+
+// ==========================================
+// renderGroupTree - 재귀적 그룹 렌더링 순수 함수
+// ==========================================
+interface RenderGroupDeps {
+  expandedGroups: Set<string>;
+  toggleGroup: (id: string) => void;
+  handleAddEndpoint: (productId: string, groupId: string) => void;
+  handleAddSubgroup: (productId: string, groupId: string) => void;
+  handleDeleteGroup: (groupId: string, name: string, endpoints: ApiEndpoint[]) => void;
+  handleRenameGroup: (groupId: string, currentName: string) => void;  // 추가
+  selectedEndpoint: string | null;
+  onEndpointSelect: (endpoint: ApiEndpoint) => void;
+  handleEditEndpoint: (e: ApiEndpoint, productId: string, groupId: string) => void;
+  handleDeleteEndpoint: (e: ApiEndpoint) => void;
+  handleDuplicateEndpoint: (e: ApiEndpoint) => void;
+  getStatusIndicator: (id: string) => JSX.Element | null;
+  searchTerm: string;
+  activeDroppableId: string | null;
+  linkedEndpointIds?: Set<string>;  // Manager 탭과 연결된 엔드포인트 ID
+}
+
+function renderGroupTree(
+  group: ApiGroup,
+  productId: string,
+  deps: RenderGroupDeps
+): JSX.Element {
+  const isExpanded = deps.expandedGroups.has(group.id);
+
+  // ✅ 검색 중이면 자동 확장 (검색 결과 보여주기)
+  const hasMatchingEndpoints = (group.endpoints ?? []).some(ep =>
+    ep.name.toLowerCase().includes(deps.searchTerm.toLowerCase())
+  );
+  const shouldExpand = isExpanded || !!(deps.searchTerm && hasMatchingEndpoints);
+
+  // ✅ 필터 결과 단일화 - 한 번만 계산
+  const filteredSubgroups = group.subgroups ?? [];
+  const filteredEndpoints = (group.endpoints ?? []).filter(ep =>
+    ep.name.toLowerCase().includes(deps.searchTerm.toLowerCase())
+  );
+
+  // ✅ items는 필터된 결과로부터 생성
+  const subgroupItems = filteredSubgroups.map(sg => DndId.groupItem(sg.id));
+  const endpointItems = filteredEndpoints.map(ep => DndId.endpointItem(ep.id));
+
+  return (
+    <SortableGroupItem
+      key={group.id}
+      sortableId={DndId.groupItem(group.id)}
+      groupId={group.id}
+      productId={productId}
+      groupName={group.name}
+      depth={group.depth}
+      isExpanded={shouldExpand}
+      onToggle={() => deps.toggleGroup(group.id)}
+      onAddEndpoint={() => deps.handleAddEndpoint(productId, group.id)}
+      onAddSubgroup={() => deps.handleAddSubgroup(productId, group.id)}
+      onDelete={() => deps.handleDeleteGroup(group.id, group.name, group.endpoints)}
+      onRename={() => deps.handleRenameGroup(group.id, group.name)}
+    >
+      {shouldExpand && (
+        <>
+          {/* ✅ 하위 그룹 - 항상 DroppableGroup 렌더 (빈 경우도) */}
+          <DroppableGroup
+            id={DndId.groupContainer(productId, group.id)}
+            isOver={deps.activeDroppableId === DndId.groupContainer(productId, group.id)}
+          >
+            <SortableContext
+              items={subgroupItems}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="ml-4 space-y-1">
+                {subgroupItems.length === 0 ? (
+                  // ✅ 빈 그룹 placeholder (드롭 가능하게)
+                  <div className="py-2 px-3 text-xs text-zinc-600 text-center border border-dashed border-zinc-700 rounded opacity-50 hover:opacity-100 transition-opacity">
+                    하위 그룹을 여기에 드롭
+                  </div>
+                ) : (
+                  filteredSubgroups.map(sg =>
+                    renderGroupTree(sg, productId, deps)
+                  )
+                )}
+              </div>
+            </SortableContext>
+          </DroppableGroup>
+
+          {/* ✅ 엔드포인트 */}
+          <DroppableGroup
+            id={DndId.endpointContainer(productId, group.id)}
+            isOver={deps.activeDroppableId === DndId.endpointContainer(productId, group.id)}
+          >
+            <SortableContext
+              items={endpointItems}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="ml-6">
+                {filteredEndpoints.length === 0 ? (
+                  <div className="px-2 py-3 text-xs text-zinc-500 text-center">
+                    {deps.searchTerm ? '검색 결과 없음' : '엔드포인트 없음'}
+                  </div>
+                ) : (
+                  filteredEndpoints.map(ep => (
+                    <SortableEndpointItem
+                      key={ep.id}
+                      sortableId={DndId.endpointItem(ep.id)}
+                      endpoint={ep}
+                      isSelected={deps.selectedEndpoint === ep.id}
+                      isLinked={deps.linkedEndpointIds?.has(ep.id)}
+                      onSelect={deps.onEndpointSelect}
+                      onEdit={(e) => deps.handleEditEndpoint(e, productId, group.id)}
+                      onDelete={deps.handleDeleteEndpoint}
+                      onDuplicate={deps.handleDuplicateEndpoint}
+                      getStatusIndicator={deps.getStatusIndicator}
+                    />
+                  ))
+                )}
+              </div>
+            </SortableContext>
+          </DroppableGroup>
+        </>
+      )}
+    </SortableGroupItem>
   );
 }
 
@@ -398,15 +584,16 @@ interface APIListPanelProps {
   onEndpointSelect: (endpoint: ApiEndpoint) => void;
   onEndpointsChange?: () => void;
   onToggleCollapse?: () => void; // 🔥 접기/펴기 콜백
+  linkedEndpointIds?: Set<string>;  // Manager 탭과 연결된 엔드포인트 ID 목록
 }
 
-export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onEndpointsChange, onToggleCollapse }: APIListPanelProps) {
+export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onEndpointsChange, onToggleCollapse, linkedEndpointIds }: APIListPanelProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // 🔥 엔드포인트별 잠금 상태 관리
   const [endpointLocks, setEndpointLocks] = useState<Record<string, { locked: boolean; lockedBy?: string }>>({});
   const { currentUserId } = useAppStore();
-  
+
   // localStorage에서 확장 상태 로드
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(() => {
     try {
@@ -416,7 +603,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return new Set(['civil-nx']);
     }
   });
-  
+
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem('expandedGroups');
@@ -425,7 +612,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return new Set(['db']);
     }
   });
-  
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEndpoint, setEditingEndpoint] = useState<ApiEndpoint | null>(null);
   const [dialogProductId, setDialogProductId] = useState<string>('');
@@ -433,12 +620,18 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const [productGroupDialogOpen, setProductGroupDialogOpen] = useState(false);
   const [productGroupDialogType, setProductGroupDialogType] = useState<'product' | 'group'>('product');
   const [productGroupDialogProductId, setProductGroupDialogProductId] = useState<string>('');
+  const [productGroupDialogParentGroupId, setProductGroupDialogParentGroupId] = useState<string | null>(null);
   const [activeDroppableId, setActiveDroppableId] = useState<string | null>(null);
   const [isRefreshingLock, setIsRefreshingLock] = useState(false);
 
+  // Rename Dialog 상태
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [renameGroupId, setRenameGroupId] = useState<string | null>(null);
+  const [renameGroupName, setRenameGroupName] = useState('');
+
   // 🔥 현재 선택된 엔드포인트의 잠금 상태 확인 함수 (안정화)
   const checkLockStatusRef = useRef<Record<string, number>>({});
-  
+
   const checkLockStatus = useCallback(async (endpointId: string) => {
     if (!endpointId) {
       return;
@@ -491,7 +684,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     });
     return ids.join('|');
   }, [products]);
-    
+
   useEffect(() => {
     // products가 실제로 변경되었을 때만 실행
     if (productsRef.current === productsIdsHash) {
@@ -501,12 +694,22 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
     const checkAllLocks = async () => {
       const allEndpoints: string[] = [];
-      products.forEach(product => {
-        product.groups.forEach(group => {
+
+      // 재귀적으로 모든 그룹의 엔드포인트 수집
+      const collectEndpoints = (groups: typeof products[0]['groups']) => {
+        groups.forEach(group => {
           group.endpoints.forEach(endpoint => {
             allEndpoints.push(endpoint.id);
           });
+          // 하위 그룹도 재귀적으로 순회
+          if (group.subgroups && group.subgroups.length > 0) {
+            collectEndpoints(group.subgroups);
+          }
         });
+      };
+
+      products.forEach(product => {
+        collectEndpoints(product.groups);
       });
 
       // 병렬로 모든 엔드포인트 상태 확인
@@ -603,6 +806,35 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
   };
 
+  // ✅ 재귀적으로 그룹에서 엔드포인트 찾기 (하위 그룹 포함)
+  const findEndpointInGroups = (groups: ApiGroup[], endpointId: string): { endpoint: ApiEndpoint; group: ApiGroup; productId: string } | null => {
+    for (const group of groups) {
+      // 현재 그룹의 엔드포인트에서 찾기
+      const endpoint = group.endpoints.find((e) => e.id === endpointId);
+      if (endpoint) {
+        return { endpoint, group, productId: '' }; // productId는 상위에서 설정
+      }
+      // 하위 그룹에서 재귀적으로 찾기
+      if (group.subgroups && group.subgroups.length > 0) {
+        const result = findEndpointInGroups(group.subgroups, endpointId);
+        if (result) return result;
+      }
+    }
+    return null;
+  };
+
+  // ✅ 재귀적으로 그룹 ID로 그룹 찾기
+  const findGroupById = (groups: ApiGroup[], groupId: string): ApiGroup | null => {
+    for (const group of groups) {
+      if (group.id === groupId) return group;
+      if (group.subgroups && group.subgroups.length > 0) {
+        const result = findGroupById(group.subgroups, groupId);
+        if (result) return result;
+      }
+    }
+    return null;
+  };
+
   const handleGroupDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -610,52 +842,68 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
-    const activeId = active.id as string;
-    const overId = over.id as string;
+    const activeId = String(active.id);
+    const overId = String(over.id);
 
-    // 그룹 ID 형식: {productId}___group___{groupName}
-    const parseGroupId = (groupId: string) => {
-      const parts = groupId.split('___group___');
-      if (parts.length !== 2) return null;
-      return { productId: parts[0], groupName: parts[1] };
-    };
+    // ✅ 새로운 ID 체계: g:{groupId}
+    const activeParsed = parseDndId(activeId);
+    const overParsed = parseDndId(overId);
 
-    const activeGroup = parseGroupId(activeId);
-    const overGroup = parseGroupId(overId);
-
-    if (!activeGroup || !overGroup) {
-      console.error('Invalid group ID format:', { activeId, overId });
+    if (activeParsed.type !== 'group' || overParsed.type !== 'group') {
+      console.error('Invalid group drag IDs:', { activeId, overId });
       return;
     }
 
-    // 같은 제품 내에서만 그룹 순서 변경 가능
-    if (activeGroup.productId !== overGroup.productId) {
-      console.log('⚠️ Groups must be in the same product');
+    // 그룹 찾기
+    let activeGroup: ApiGroup | null = null;
+    let overGroup: ApiGroup | null = null;
+    let activeProduct: ApiProduct | null = null;
+    let overProduct: ApiProduct | null = null;
+
+    for (const product of products) {
+      const foundActive = findGroupById(product.groups, activeParsed.itemId);
+      const foundOver = findGroupById(product.groups, overParsed.itemId);
+      if (foundActive) {
+        activeGroup = foundActive;
+        activeProduct = product;
+      }
+      if (foundOver) {
+        overGroup = foundOver;
+        overProduct = product;
+      }
+    }
+
+    if (!activeGroup || !overGroup || !activeProduct || !overProduct) {
+      console.error('Groups not found:', { activeId, overId });
       return;
     }
 
-    // 제품 찾기
-    const product = products.find((p) => p.id === activeGroup.productId);
-    if (!product) {
-      console.error('Product not found:', activeGroup.productId);
+    // 같은 제품 내에서만 그룹 순서 변경 가능 (일단)
+    if (activeProduct.id !== overProduct.id) {
+      console.log('⚠️ Cross-product group move not supported yet');
       return;
     }
 
-    const oldIndex = product.groups.findIndex((g) => g.name === activeGroup.groupName);
-    const newIndex = product.groups.findIndex((g) => g.name === overGroup.groupName);
+    // 같은 부모 내의 그룹들만 재정렬
+    // TODO: cross-parent group move 지원
+    const parentGroups = activeProduct.groups; // root level만 일단 지원
+
+    const oldIndex = parentGroups.findIndex((g) => g.id === activeParsed.itemId);
+    const newIndex = parentGroups.findIndex((g) => g.id === overParsed.itemId);
 
     if (oldIndex === -1 || newIndex === -1) {
+      console.log('⚠️ Groups not at root level, nested group reorder not yet supported');
       return;
     }
 
     console.log('🔄 Reorder groups:', {
-      product: product.id,
+      product: activeProduct.id,
       from: oldIndex,
       to: newIndex,
     });
 
     // 순서 변경
-    const reorderedGroups = arrayMove(product.groups, oldIndex, newIndex);
+    const reorderedGroups = arrayMove(parentGroups, oldIndex, newIndex);
 
     // order_index 업데이트
     const updates = reorderedGroups.map((group, index) => ({
@@ -703,20 +951,20 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
   const getStatusIndicator = (endpointId: string) => {
     const lockInfo = endpointLocks[endpointId];
-    
+
     // 상태 정보가 없으면 초록색 (편집 가능)으로 표시
     if (!lockInfo) {
-    return (
+      return (
         <span className="w-2 h-2 rounded-full bg-green-500 cursor-help" title="✅ 편집 가능" />
       );
     }
-    
+
     const isLocked = lockInfo.locked;
     const statusColor = isLocked ? 'bg-red-500' : 'bg-green-500';
-    const tooltipText = isLocked 
+    const tooltipText = isLocked
       ? `🔒 편집 중\n다른 사용자(${lockInfo.lockedBy || 'Unknown'})가 편집하고 있습니다.\n읽기 전용 모드입니다.`
       : '✅ 편집 가능\n이 엔드포인트를 편집할 수 있습니다.';
-    
+
     return (
       <TooltipProvider>
         <Tooltip delayDuration={200}>
@@ -759,16 +1007,16 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
     try {
       const result = await apiClient.deleteEndpoint(endpoint.id);
-      
+
       console.log('📦 Delete result:', result);
-      
+
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       console.log('✅ Endpoint deleted successfully');
       alert('✅ Endpoint deleted successfully.');
-      
+
       // 🔥 강제로 데이터 새로고침
       if (onEndpointsChange) {
         console.log('🔄 Calling onEndpointsChange to refresh list...');
@@ -796,6 +1044,41 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
   };
 
+  // 그룹 이름 변경 다이얼로그 열기
+  const handleRenameGroup = (groupId: string, currentName: string) => {
+    setRenameGroupId(groupId);
+    setRenameGroupName(currentName);
+    setRenameDialogOpen(true);
+  };
+
+  // 그룹 이름 변경 확정
+  const confirmRenameGroup = async () => {
+    if (!renameGroupId || !renameGroupName.trim()) {
+      return;
+    }
+
+    try {
+      const result = await apiClient.renameGroup(renameGroupId, renameGroupName.trim());
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      console.log('✅ Group renamed successfully:', renameGroupId, renameGroupName);
+
+      // UI 업데이트
+      if (onEndpointsChange) {
+        await onEndpointsChange();
+      }
+    } catch (error) {
+      console.error('❌ Failed to rename group:', error);
+      alert(`❌ Rename failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setRenameDialogOpen(false);
+      setRenameGroupId(null);
+      setRenameGroupName('');
+    }
+  };
+
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -803,148 +1086,110 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
-    const activeId = active.id as string;
+    const activeId = String(active.id);
+    const overId = String(over.id);
 
-    // 제품 드래그인지 확인
+    // ✅ 새로운 ID 체계 파싱
+    const activeParsed = parseDndId(activeId);
+    const overParsed = parseDndId(overId);
+
+    console.log('🔄 Drag end:', { activeId, overId, activeParsed, overParsed });
+
+    // 제품 드래그인지 확인 (제품은 아직 prefix 없음)
     const isProductDrag = products.some((p) => p.id === activeId);
     if (isProductDrag) {
       await handleProductDragEnd(event);
       return;
     }
 
-    // 그룹 드래그인지 확인 (형식: {productId}___group___{groupName})
-    if (activeId.includes('___group___')) {
+    // ✅ 그룹 드래그 (g: prefix)
+    if (activeParsed.type === 'group') {
       await handleGroupDragEnd(event);
       return;
     }
 
-    // 엔드포인트 드래그
-    const draggedEndpointId = activeId;
-    
-    // 드래그된 엔드포인트 찾기
-    let draggedEndpoint: ApiEndpoint | null = null;
-    let sourceProduct: string = '';
-    let sourceGroup: string = '';
-    
-    for (const product of products) {
-      for (const group of product.groups) {
-        const endpoint = group.endpoints.find((e) => e.id === draggedEndpointId);
-        if (endpoint) {
-          draggedEndpoint = endpoint;
-          sourceProduct = product.id;
-          sourceGroup = group.name;
-          break;
-        }
-      }
-      if (draggedEndpoint) break;
+    // ✅ 엔드포인트 드래그 (e: prefix)
+    if (activeParsed.type !== 'endpoint') {
+      console.log('⚠️ Unknown drag type:', activeParsed.type);
+      return;
     }
 
-    if (!draggedEndpoint) {
+    const draggedEndpointId = activeParsed.itemId;
+
+    // 드래그된 엔드포인트 찾기 (재귀적)
+    let draggedEndpoint: ApiEndpoint | null = null;
+    let sourceProductId: string = '';
+    let sourceGroup: ApiGroup | null = null;
+
+    for (const product of products) {
+      const result = findEndpointInGroups(product.groups, draggedEndpointId);
+      if (result) {
+        draggedEndpoint = result.endpoint;
+        sourceGroup = result.group;
+        sourceProductId = product.id;
+        break;
+      }
+    }
+
+    if (!draggedEndpoint || !sourceGroup) {
       console.error('Dragged endpoint not found:', draggedEndpointId);
       return;
     }
 
-    console.log('🔄 Drag end:', {
-      from: `${sourceProduct}/${sourceGroup}/${draggedEndpoint.name}`,
-      to: over.id,
+    console.log('🔄 Drag from:', {
+      product: sourceProductId,
+      group: sourceGroup.name,
+      endpoint: draggedEndpoint.name,
     });
 
-    // over가 그룹인지 엔드포인트인지 확인
-    const overIdStr = String(over.id);
-    
-    // 그룹으로 드롭된 경우 (droppable-{product.id}___{group.name} 형식)
-    if (overIdStr.startsWith('droppable-')) {
-      const dropId = overIdStr.replace('droppable-', '');
-      const parts = dropId.split('___');
-      
-      if (parts.length !== 2) {
-        console.error('❌ Invalid droppable ID format:', overIdStr);
-        alert(`Invalid drop target: ${overIdStr}`);
+    // ✅ over가 엔드포인트 컨테이너인 경우 (ep:productId:groupId) - 그룹으로 이동
+    if (overParsed.type === 'endpointContainer') {
+      const targetGroupId = overParsed.containerParentId;
+
+      if (!targetGroupId) {
+        console.error('Invalid endpoint container:', overId);
         return;
       }
-      
-      const targetProduct = parts[0];
-      const targetGroup = parts[1];
-      
-      console.log('📍 Drop to group:', { targetProduct, targetGroup });
-      
+
       // 같은 그룹이면 무시
-      if (targetProduct === sourceProduct && targetGroup === sourceGroup) {
+      if (targetGroupId === sourceGroup.id) {
+        console.log('⚠️ Same group, no move needed');
         return;
       }
-      
-      // 다른 그룹으로 이동
-      try {
-        const result = await apiClient.moveEndpoint(
-          draggedEndpointId,
-          targetProduct,
-          targetGroup,
-          0 // 맨 위로 이동
-        );
-        
-        if (result.error) {
-          throw new Error(result.error);
-        }
-        
-        alert(`✅ Endpoint moved to ${targetGroup} in ${targetProduct}`);
-        if (onEndpointsChange) {
-          onEndpointsChange();
-        }
-      } catch (error) {
-        console.error('Failed to move endpoint:', error);
-        alert(`❌ Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-      return;
-    }
-    
-    // 엔드포인트로 드롭된 경우 (같은 그룹 내 순서 변경 또는 다른 그룹으로 이동)
-    const targetEndpointId = String(over.id);
-    
-    console.log('📍 Drop to endpoint:', targetEndpointId);
-    
-    // 대상 엔드포인트 찾기
-    let targetProduct: string = '';
-    let targetGroup: string = '';
-    let targetGroupEndpoints: ApiEndpoint[] = [];
-    
-    for (const product of products) {
-      for (const group of product.groups) {
-        if (group.endpoints.some((e) => e.id === targetEndpointId)) {
-          targetProduct = product.id;
-          targetGroup = group.name;
-          targetGroupEndpoints = group.endpoints;
+
+      // 대상 그룹 찾기
+      let targetGroup: ApiGroup | null = null;
+      let targetProductId: string = '';
+
+      for (const product of products) {
+        const found = findGroupById(product.groups, targetGroupId);
+        if (found) {
+          targetGroup = found;
+          targetProductId = product.id;
           break;
         }
       }
-      if (targetProduct) break;
-    }
-    
-    if (!targetProduct) {
-      console.error('❌ Target endpoint not found:', targetEndpointId);
-      return;
-    }
-    
-    console.log('📍 Target location:', { targetProduct, targetGroup });
-    
-    // 다른 그룹으로 이동하는 경우
-    if (targetProduct !== sourceProduct || targetGroup !== sourceGroup) {
-      const targetIndex = targetGroupEndpoints.findIndex((e) => e.id === targetEndpointId);
-      
-      console.log('🔀 Moving to different group at index:', targetIndex);
-      
+
+      if (!targetGroup) {
+        console.error('Target group not found:', targetGroupId);
+        return;
+      }
+
+      console.log('📍 Move to group:', { targetProductId, targetGroup: targetGroup.name });
+
       try {
-        const result = await apiClient.moveEndpoint(
+        // 새로운 move API 호출 (group_id 사용)
+        const result = await apiClient.moveEndpointToGroup(
           draggedEndpointId,
-          targetProduct,
-          targetGroup,
-          targetIndex
+          targetGroupId,
+          0
         );
-        
+
         if (result.error) {
           throw new Error(result.error);
         }
-        
-        alert(`✅ Endpoint moved to ${targetGroup} in ${targetProduct}`);
+
+        console.log('✅ Endpoint moved successfully');
         if (onEndpointsChange) {
           onEndpointsChange();
         }
@@ -954,50 +1199,98 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       }
       return;
     }
-    
-    // 같은 그룹 내 순서 변경
-    console.log('🔄 Reordering within same group');
-    
-    if (draggedEndpointId === targetEndpointId) {
-      console.log('⚠️ Same endpoint, no action');
+
+    // ✅ over가 엔드포인트인 경우 (e:endpointId) - 재정렬 또는 이동
+    if (overParsed.type === 'endpoint') {
+      const targetEndpointId = overParsed.itemId;
+
+      if (draggedEndpointId === targetEndpointId) {
+        console.log('⚠️ Same endpoint, no action');
+        return;
+      }
+
+      // 대상 엔드포인트 찾기 (재귀적)
+      let targetGroup: ApiGroup | null = null;
+
+      for (const product of products) {
+        const result = findEndpointInGroups(product.groups, targetEndpointId);
+        if (result) {
+          targetGroup = result.group;
+          // _targetProductId = product.id; // Not currently used
+          break;
+        }
+      }
+
+      if (!targetGroup) {
+        console.error('Target endpoint not found:', targetEndpointId);
+        return;
+      }
+
+      // 같은 그룹 내 재정렬
+      if (sourceGroup.id === targetGroup.id) {
+        console.log('� Reordering within same group');
+
+        const targetGroupEndpoints = targetGroup.endpoints;
+        const oldIndex = targetGroupEndpoints.findIndex((e) => e.id === draggedEndpointId);
+        const newIndex = targetGroupEndpoints.findIndex((e) => e.id === targetEndpointId);
+
+        if (oldIndex === -1 || newIndex === -1) {
+          console.error('❌ Index not found:', { oldIndex, newIndex });
+          return;
+        }
+
+        console.log('📊 Reorder:', { from: oldIndex, to: newIndex });
+
+        const reorderedEndpoints = arrayMove(targetGroupEndpoints, oldIndex, newIndex);
+        const updates = reorderedEndpoints.map((endpoint, index) => ({
+          id: endpoint.id,
+          order_index: index,
+        }));
+
+        try {
+          const result = await apiClient.reorderEndpoints(updates);
+          if (result.error) {
+            throw new Error(result.error);
+          }
+
+          console.log('✅ Reorder successful');
+          if (onEndpointsChange) {
+            onEndpointsChange();
+          }
+        } catch (error) {
+          console.error('Failed to reorder endpoints:', error);
+          alert(`❌ Reorder failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        return;
+      }
+
+      // 다른 그룹으로 이동
+      console.log('� Moving to different group');
+      const targetIndex = targetGroup.endpoints.findIndex((e) => e.id === targetEndpointId);
+
+      try {
+        const result = await apiClient.moveEndpointToGroup(
+          draggedEndpointId,
+          targetGroup.id,
+          targetIndex
+        );
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        console.log('✅ Endpoint moved successfully');
+        if (onEndpointsChange) {
+          onEndpointsChange();
+        }
+      } catch (error) {
+        console.error('Failed to move endpoint:', error);
+        alert(`❌ Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
       return;
     }
-    
-    const oldIndex = targetGroupEndpoints.findIndex((e) => e.id === draggedEndpointId);
-    const newIndex = targetGroupEndpoints.findIndex((e) => e.id === targetEndpointId);
-    
-    if (oldIndex === -1 || newIndex === -1) {
-      console.error('❌ Index not found:', { oldIndex, newIndex });
-      return;
-    }
-    
-    console.log('📊 Reorder:', { from: oldIndex, to: newIndex });
-    
-    // 순서 변경
-    const reorderedEndpoints = arrayMove(targetGroupEndpoints, oldIndex, newIndex);
-    
-    // order_index 업데이트
-    const updates = reorderedEndpoints.map((endpoint, index) => ({
-      id: endpoint.id,
-      order_index: index,
-    }));
-    
-    try {
-      const result = await apiClient.reorderEndpoints(updates);
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      
-      console.log('✅ Reorder successful');
-      
-      // UI 업데이트
-      if (onEndpointsChange) {
-        onEndpointsChange();
-      }
-    } catch (error) {
-      console.error('Failed to reorder endpoints:', error);
-      alert(`❌ Reorder failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+
+    console.log('⚠️ Unhandled drop target type:', overParsed.type);
   };
 
   const handleDialogSuccess = () => {
@@ -1015,18 +1308,26 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const handleAddGroup = (productId: string) => {
     setProductGroupDialogType('group');
     setProductGroupDialogProductId(productId);
+    setProductGroupDialogParentGroupId(null);
+    setProductGroupDialogOpen(true);
+  };
+
+  const handleAddSubgroup = (productId: string, parentGroupId: string) => {
+    setProductGroupDialogType('group');
+    setProductGroupDialogProductId(productId);
+    setProductGroupDialogParentGroupId(parentGroupId);
     setProductGroupDialogOpen(true);
   };
 
   const handleDeleteProduct = async (product: ApiProduct) => {
     const endpointCount = product.groups.reduce((sum, group) => sum + group.endpoints.length, 0);
-    
+
     const message = endpointCount > 0
       ? `제품 "${product.name}"과 관련된 모든 데이터를 삭제하시겠습니까?\n\n` +
-        `- 그룹: ${product.groups.length}개\n` +
-        `- 엔드포인트: ${endpointCount}개\n` +
-        `- 모든 버전 및 작업 데이터\n\n` +
-        `⚠️ 이 작업은 되돌릴 수 없습니다.`
+      `- 그룹: ${product.groups.length}개\n` +
+      `- 엔드포인트: ${endpointCount}개\n` +
+      `- 모든 버전 및 작업 데이터\n\n` +
+      `⚠️ 이 작업은 되돌릴 수 없습니다.`
       : `빈 제품 "${product.name}"을 삭제하시겠습니까?`;
 
     if (!confirm(message)) {
@@ -1038,16 +1339,16 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     try {
       // products 테이블에서 삭제 (CASCADE로 자동으로 관련 데이터 삭제)
       const result = await apiClient.deleteProduct(product.id);
-      
+
       console.log('📦 Delete result:', result);
-      
+
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       console.log('✅ Product deleted successfully');
       alert('✅ 제품이 성공적으로 삭제되었습니다.');
-      
+
       // 🔥 강제로 데이터 새로고침
       if (onEndpointsChange) {
         console.log('🔄 Calling onEndpointsChange to refresh list...');
@@ -1062,9 +1363,9 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const handleDeleteGroup = async (groupId: string, groupName: string, endpoints: ApiEndpoint[]) => {
     const message = endpoints.length > 0
       ? `그룹 "${groupName}"과 관련된 모든 데이터를 삭제하시겠습니까?\n\n` +
-        `- 엔드포인트: ${endpoints.length}개\n` +
-        `- 모든 버전 및 작업 데이터\n\n` +
-        `⚠️ 이 작업은 되돌릴 수 없습니다.`
+      `- 엔드포인트: ${endpoints.length}개\n` +
+      `- 모든 버전 및 작업 데이터\n\n` +
+      `⚠️ 이 작업은 되돌릴 수 없습니다.`
       : `빈 그룹 "${groupName}"을 삭제하시겠습니까?`;
 
     if (!confirm(message)) {
@@ -1076,16 +1377,16 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     try {
       // groups 테이블에서 삭제 (CASCADE로 자동으로 관련 데이터 삭제)
       const result = await apiClient.deleteGroup(groupId);
-      
+
       console.log('📦 Delete result:', result);
-      
+
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       console.log('✅ Group deleted successfully');
       alert('✅ 그룹이 성공적으로 삭제되었습니다.');
-      
+
       // 🔥 강제로 데이터 새로고침
       if (onEndpointsChange) {
         console.log('🔄 Calling onEndpointsChange to refresh list...');
@@ -1103,14 +1404,14 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       <div className="p-3 border-b border-zinc-800">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            type="text"
-            placeholder="Search API"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
-          />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              type="text"
+              placeholder="Search API"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
+            />
           </div>
           {/* 🔄 전체 목록 새로고침 버튼 */}
           <button
@@ -1127,7 +1428,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </button>
-          
+
           {/* 🔄 잠금 상태 새로고침 버튼 */}
           <button
             onClick={() => {
@@ -1147,7 +1448,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
               </svg>
             )}
           </button>
-          
+
           {/* 🔥 접기 버튼 */}
           {onToggleCollapse && (
             <button
@@ -1165,104 +1466,72 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       <ScrollArea className="flex-1">
         <DndContext
           sensors={sensors}
-          collisionDetection={pointerWithin}
+          collisionDetection={closestCorners}
           onDragEnd={handleDragEnd}
           onDragOver={handleDragOver}
         >
-        <div className="p-2">
-          {/* Add Product Button */}
-          <button
-            onClick={handleAddProduct}
-            className="w-full mb-2 flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors border border-dashed border-zinc-700 hover:border-zinc-600"
-          >
-            <Plus className="w-4 h-4" />
-            <span>제품 추가</span>
-          </button>
+          <div className="p-2">
+            {/* Add Product Button */}
+            <button
+              onClick={handleAddProduct}
+              className="w-full mb-2 flex items-center gap-2 px-2 py-1.5 rounded text-sm text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors border border-dashed border-zinc-700 hover:border-zinc-600"
+            >
+              <Plus className="w-4 h-4" />
+              <span>제품 추가</span>
+            </button>
 
-          {/* Products List with Drag & Drop */}
-          <SortableContext
-            items={products.map((p) => p.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {products.map((product) => (
-              <SortableProductItem
-                key={product.id}
-                product={product}
-                isExpanded={expandedProducts.has(product.id)}
-                onToggle={() => toggleProduct(product.id)}
-                onAddGroup={() => handleAddGroup(product.id)}
-                onDelete={() => handleDeleteProduct(product)}
-              >
-                {/* Groups */}
-                {expandedProducts.has(product.id) && (
-                  <SortableContext
-                    items={product.groups.map((g) => g.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <div className="ml-4 space-y-1">
-                      {product.groups.map((group) => {
-                        return (
-                          <SortableGroupItem
-                            key={group.id}
-                            groupId={group.id}
-                            productId={product.id}
-                            groupName={group.name}
-                            isExpanded={expandedGroups.has(group.id)}
-                            onToggle={() => toggleGroup(group.id)}
-                            onAddEndpoint={() => handleAddEndpoint(product.id, group.id)}
-                            onDelete={() => handleDeleteGroup(group.id, group.name, group.endpoints)}
-                          >
-
-                      {/* Endpoints */}
-                      {expandedGroups.has(group.id) && (
-                        <DroppableGroup
-                          id={`droppable-${product.id}___${group.name}`}
-                          isOver={activeDroppableId === `droppable-${product.id}___${group.name}`}
-                        >
-                          {/* Endpoints List with Drag & Drop */}
-                          <SortableContext
-                            items={group.endpoints
-                              .filter((endpoint) =>
-                                endpoint.name.toLowerCase().includes(searchTerm.toLowerCase())
-                              )
-                              .map((e) => e.id)}
-                            strategy={verticalListSortingStrategy}
-                          >
-                            {group.endpoints.length === 0 ? (
-                              <div className="px-2 py-3 text-xs text-zinc-500 text-center">
-                                엔드포인트 없음
-                              </div>
-                            ) : (
-                              group.endpoints
-                                .filter((endpoint) =>
-                                  endpoint.name.toLowerCase().includes(searchTerm.toLowerCase())
-                                )
-                                .map((endpoint) => (
-                                  <SortableEndpointItem
-                                    key={endpoint.id}
-                                    endpoint={endpoint}
-                                    isSelected={selectedEndpoint === endpoint.id}
-                                    onSelect={onEndpointSelect}
-                                    onEdit={(e) => handleEditEndpoint(e, product.id, group.id)}
-                                    onDelete={handleDeleteEndpoint}
-                                    onDuplicate={handleDuplicateEndpoint}
-                                    getStatusIndicator={getStatusIndicator}
-                                  />
-                                ))
-                            )}
-                          </SortableContext>
-                        </DroppableGroup>
-                      )}
-                          </SortableGroupItem>
-                        );
-                      })}
-                    </div>
-                  </SortableContext>
-                )}
-              </SortableProductItem>
-            ))}
-          </SortableContext>
-        </div>
+            {/* Products List with Drag & Drop */}
+            <SortableContext
+              items={products.map((p) => p.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {products.map((product) => (
+                <SortableProductItem
+                  key={product.id}
+                  product={product}
+                  isExpanded={expandedProducts.has(product.id)}
+                  onToggle={() => toggleProduct(product.id)}
+                  onAddGroup={() => handleAddGroup(product.id)}
+                  onDelete={() => handleDeleteProduct(product)}
+                >
+                  {/* ✅ 루트 그룹 DroppableGroup + renderGroupTree 사용 */}
+                  {expandedProducts.has(product.id) && (
+                    <DroppableGroup
+                      id={DndId.rootGroupContainer(product.id)}
+                      isOver={activeDroppableId === DndId.rootGroupContainer(product.id)}
+                    >
+                      <SortableContext
+                        items={product.groups.map(g => DndId.groupItem(g.id))}
+                        strategy={verticalListSortingStrategy}
+                      >
+                        <div className="ml-4 space-y-1">
+                          {product.groups.map((group) =>
+                            renderGroupTree(group, product.id, {
+                              expandedGroups,
+                              toggleGroup,
+                              handleAddEndpoint,
+                              handleAddSubgroup,
+                              handleDeleteGroup,
+                              handleRenameGroup,
+                              selectedEndpoint,
+                              onEndpointSelect,
+                              handleEditEndpoint,
+                              handleDeleteEndpoint,
+                              handleDuplicateEndpoint,
+                              getStatusIndicator,
+                              searchTerm,
+                              activeDroppableId,
+                              linkedEndpointIds,
+                            })
+                          )}
+                        </div>
+                      </SortableContext>
+                    </DroppableGroup>
+                  )}
+                </SortableProductItem>
+              ))}
+            </SortableContext>
+          </div>
         </DndContext>
       </ScrollArea>
 
@@ -1282,8 +1551,51 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
         onOpenChange={setProductGroupDialogOpen}
         type={productGroupDialogType}
         productId={productGroupDialogProductId}
+        parentGroupId={productGroupDialogParentGroupId}
         onSuccess={handleDialogSuccess}
       />
+
+      {/* Rename Group Dialog */}
+      <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+        <DialogContent className="sm:max-w-[400px] bg-zinc-900 border-zinc-700">
+          <DialogHeader>
+            <DialogTitle className="text-zinc-100">그룹 이름 변경</DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              새로운 그룹 이름을 입력하세요.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              value={renameGroupName}
+              onChange={(e) => setRenameGroupName(e.target.value)}
+              placeholder="그룹 이름"
+              className="bg-zinc-800 border-zinc-600 text-zinc-100"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  confirmRenameGroup();
+                }
+              }}
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setRenameDialogOpen(false)}
+              className="bg-zinc-800 border-zinc-600 text-zinc-300 hover:bg-zinc-700"
+            >
+              취소
+            </Button>
+            <Button
+              onClick={confirmRenameGroup}
+              disabled={!renameGroupName.trim()}
+              className="bg-blue-600 hover:bg-blue-500 text-white"
+            >
+              변경
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -15,7 +15,7 @@ import type { TableDefinition } from '../rendering/definitionLoader';
  */
 export function buildFieldDescription(
   field: EnhancedField,
-  tableDefinition: TableDefinition | null
+  _tableDefinition: TableDefinition | null
 ): string {
   const descParts: string[] = [];
   const fieldAny = field as any;
@@ -31,9 +31,9 @@ export function buildFieldDescription(
   if (field.enum && field.enum.length > 0) {
     descParts.push('**Enum Values:**');
     field.enum.forEach((val: any) => {
-      const label = fieldAny.enumLabels?.[String(val)] || 
-                   fieldAny['x-enum-labels']?.[String(val)] || 
-                   val;
+      const label = fieldAny.enumLabels?.[String(val)] ||
+        fieldAny['x-enum-labels']?.[String(val)] ||
+        val;
       descParts.push(`• ${val} - ${label}`);
     });
   }
@@ -46,8 +46,8 @@ export function buildFieldDescription(
       descParts.push(`*${type}:*`);
       (values as any[]).forEach((val: any) => {
         const label = fieldAny.enumLabelsByType?.[type]?.[String(val)] ||
-                     fieldAny['x-enum-labels-by-type']?.[type]?.[String(val)] ||
-                     val;
+          fieldAny['x-enum-labels-by-type']?.[type]?.[String(val)] ||
+          val;
         descParts.push(`• ${val} - ${label}`);
       });
     }

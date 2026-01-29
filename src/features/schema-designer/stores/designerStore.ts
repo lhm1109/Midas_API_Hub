@@ -543,7 +543,7 @@ export const useDesignerStore = create<DesignerStore>()(
             // Set Fields (for loading from schema)
             setFields: (fields: DesignedField[], rows?: DesignerRow[]) => {
                 // If rows not provided, create one row per field
-                const actualRows = rows || fields.map((field, index) => ({
+                const actualRows = rows || fields.map((field, _index) => ({
                     id: field.layout?.rowId || generateRowId(),
                     fieldIds: [field.id],
                 }));

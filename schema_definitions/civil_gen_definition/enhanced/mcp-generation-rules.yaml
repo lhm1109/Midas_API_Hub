@@ -1,0 +1,87 @@
+# MCP Schema Generation Rules
+# AI가 스키마 생성 시 참조하는 규칙 정의
+
+version: "1.0"
+
+# ============================================================================
+# Enum 생성 규칙
+# ============================================================================
+enumRules:
+  # 정수/숫자 enum은 반드시 oneOf 형식 사용
+  integerEnumFormat:
+    type: "oneOf"
+    structure:
+      - const: "<value>"
+        title: "<label>"
+    example:
+      before:  # ❌ 잘못된 형식
+        enum: [0, 1, 2]
+      after:   # ✅ 올바른 형식
+        oneOf:
+          - { const: 0, title: "Low Relaxation Tendons" }
+          - { const: 1, title: "Stress Relieved Tendons" }
+          - { const: 2, title: "Prestressing Bars" }
+  
+  # 문자열 enum은 값이 라벨이면 단순 enum 허용
+  stringEnumFormat:
+    type: "enum"
+    condition: "값 자체가 사용자에게 의미있는 경우"
+    example:
+      allowed:
+        enum: ["AASHTO-LRFD20", "EUROCODE", "JTG"]
+
+# ============================================================================
+# 필드 네이밍 규칙
+# ============================================================================
+fieldNaming:
+  # 접두사로 타입 추론
+  prefixInference:
+    enabled: true
+    rules:
+      - prefix: "i"
+        type: "integer"
+        example: "iTENDON_TYPE"
+      - prefix: "b"
+        type: "boolean"
+        example: "bCRACK_CHECK"
+      - prefix: "d"
+        type: "number"
+        example: "dEXPOSURE_VALUE"
+      - prefix: "s"
+        type: "string"
+        example: "sCODE_NAME"
+
+# ============================================================================
+# x-ui 마커 규칙
+# ============================================================================
+xuiRules:
+  # 필수 속성
+  required:
+    - label      # 필드 라벨 (한글)
+    - group      # 섹션 그룹
+  
+  # 선택 속성
+  optional:
+    - component   # 컴포넌트 타입 (select, radio, checkbox)
+    - visibleWhen # 조건부 표시
+    - hint        # 힌트 텍스트
+  
+  # 컴포넌트 자동 결정
+  componentInference:
+    - condition: "oneOf 있고 옵션 <= 4개"
+      component: "radio"
+    - condition: "oneOf 있고 옵션 > 4개"
+      component: "select"
+    - condition: "type: boolean"
+      component: "checkbox"
+
+# ============================================================================
+# 조건부 표시 규칙
+# ============================================================================
+visibilityRules:
+  format:
+    key: "visibleWhen"
+    valueType: "object"
+    example:
+      visibleWhen:
+        iEXPOSURE: 2   # iEXPOSURE가 2일 때만 표시

@@ -416,7 +416,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const _data = await response.json();
         // 🔥 자기 자신의 잠금은 잠금으로 표시하지 않음
         set({ endpointLock: { locked: false, lockedBy: currentUserId } });
         return true;

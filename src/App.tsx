@@ -8,6 +8,9 @@ import { DebugView } from '@/features/debug/components';
 import { SchemaView } from '@/features/schema/components';
 import { SchemaBuilderPage } from '@/features/schema-builder';
 import { ManagerView } from '@/features/manager/components';
+import { useManagerData } from '@/features/manager/hooks/useManagerData';
+import { TerminalTab } from '@/components/terminal';
+import { DatabaseTab } from '@/features/database/DatabaseTab';
 import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint } from '@/types';
@@ -19,7 +22,8 @@ import { ChevronRight } from 'lucide-react';
 export default function App() {
   const { setRunnerData, acquireEndpointLock, releaseEndpointLock } = useAppStore();
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
-  const [activeView, setActiveView] = useState<'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder'>('manager');
+  const { tasks: managerTasks } = useManagerData();  // Manager 작업 데이터
+  const [activeView, setActiveView] = useState<'terminal' | 'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'>('manager');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
   const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
@@ -50,6 +54,38 @@ export default function App() {
     }
 
     initializeApp();
+  }, []);
+
+  // 🔓 앱 종료 시 락 해제 (세션 정리)
+  useEffect(() => {
+    const handleBeforeUnload = async () => {
+      const userId = useAppStore.getState().currentUserId;
+      if (!userId) return;
+
+      // Electron 환경에서는 IPC로 락 해제
+      const electronAPI = (window as any).electronAPI;
+      if (electronAPI?.locks?.releaseAll) {
+        try {
+          await electronAPI.locks.releaseAll(userId);
+          console.log('🔓 All locks released on app close');
+        } catch (e) {
+          console.warn('🔓 Failed to release locks on close:', e);
+        }
+      } else {
+        // 웹 환경에서는 beacon API 사용 (비권장이지만 fallback)
+        try {
+          navigator.sendBeacon(
+            `http://localhost:9527/api/locks/user/${encodeURIComponent(userId)}/all`,
+            JSON.stringify({})
+          );
+        } catch (e) {
+          // ignore
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
   // localStorage에서 패널 너비 로드
@@ -139,6 +175,9 @@ export default function App() {
       useAssignWrapper: true, // 기본값: Assign 래퍼 사용
       schemaMode: 'enhanced', // 기본값: 개선 모드 (Original/Enhanced 2탭)
       userName: localStorage.getItem('userName') || '', // 🔥 사용자 이름 로드
+      supabaseUrl: '',
+      supabaseServiceKey: '',
+      supabaseDbPassword: '',
     };
   });
 
@@ -165,22 +204,8 @@ export default function App() {
     });
   }, [setRunnerData]);
 
-  // 🔥 편집 중일 때 주기적으로 잠금 갱신 (4분마다 - 5분 만료 전에 갱신)
-  useEffect(() => {
-    if (!selectedEndpoint?.id) return;
-
-    const refreshLock = async () => {
-      await acquireEndpointLock(selectedEndpoint.id);
-    };
-
-    // 즉시 한 번 실행
-    refreshLock();
-
-    // 4분마다 갱신
-    const interval = setInterval(refreshLock, 4 * 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [selectedEndpoint?.id, acquireEndpointLock]);
+  // 🔥 [변경됨] 엔드포인트 선택 시 자동 락 제거 - 버전 로드 시에만 락을 획득
+  // 하트비트 로직도 버전 로드 시에만 작동하도록 변경됨 (VersionTab.tsx에서 처리)
 
   // 🔥 페이지 이탈 시 잠금 해제
   useEffect(() => {
@@ -287,6 +312,11 @@ export default function App() {
                     onEndpointSelect={handleEndpointSelect}
                     onEndpointsChange={refetchEndpoints}
                     onToggleCollapse={() => setIsPanelCollapsed(true)}
+                    linkedEndpointIds={new Set(
+                      managerTasks
+                        .filter(t => t.linkedEndpointId)
+                        .map(t => t.linkedEndpointId!)
+                    )}
                   />
                 )}
               </div>
@@ -307,8 +337,40 @@ export default function App() {
       )}
 
       {/* 3. Main Content Area */}
-      {activeView === 'manager' ? (
-        <ManagerView />
+      {activeView === 'terminal' ? (
+        <TerminalTab />
+      ) : activeView === 'manager' ? (
+        <ManagerView
+          endpoints={apiData}
+          onNavigateToEndpoint={(endpointId) => {
+            // 모든 프로덕트에서 해당 엔드포인트 찾기
+            for (const product of apiData) {
+              for (const group of product.groups) {
+                const found = group.endpoints.find(ep => ep.id === endpointId);
+                if (found) {
+                  setSelectedEndpoint(found);
+                  setActiveView('projects');
+                  return;
+                }
+                // 하위 그룹도 탐색
+                const findInSubgroups = (subgroups: typeof group.subgroups): boolean => {
+                  for (const subgroup of subgroups) {
+                    const foundInSub = subgroup.endpoints.find(ep => ep.id === endpointId);
+                    if (foundInSub) {
+                      setSelectedEndpoint(foundInSub);
+                      setActiveView('projects');
+                      return true;
+                    }
+                    if (findInSubgroups(subgroup.subgroups)) return true;
+                  }
+                  return false;
+                };
+                if (findInSubgroups(group.subgroups)) return;
+              }
+            }
+            console.warn('Endpoint not found:', endpointId);
+          }}
+        />
       ) : activeView === 'projects' ? (
         <ProjectsView
           endpoint={selectedEndpoint}
@@ -322,6 +384,8 @@ export default function App() {
         <SchemaView />
       ) : activeView === 'builder' ? (
         <SchemaBuilderPage />
+      ) : activeView === 'database' ? (
+        <DatabaseTab settings={settings} />
       ) : (
         <DebugView />
       )}

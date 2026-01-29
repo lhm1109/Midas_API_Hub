@@ -1,7 +1,7 @@
 // 🎯 무한 확장성을 위한 설정 기반 아키텍처 예시
 // 이 파일은 참고용 예시입니다. 실제로 구현하려면 추가 작업이 필요합니다.
 
-import { lazy, ComponentType } from 'react';
+import { ComponentType } from 'react';
 import { LucideIcon } from 'lucide-react';
 
 /**
@@ -11,22 +11,22 @@ import { LucideIcon } from 'lucide-react';
 export interface FeatureConfig {
   /** 고유 식별자 */
   id: string;
-  
+
   /** 표시될 이름 */
   name: string;
-  
+
   /** 아이콘 컴포넌트 */
   icon: LucideIcon;
-  
+
   /** 지연 로딩될 컴포넌트 */
   component: React.LazyExoticComponent<ComponentType<any>>;
-  
+
   /** 표시 순서 */
   order: number;
-  
+
   /** 활성화 여부 */
   enabled: boolean;
-  
+
   /** 권한 (선택사항) */
   permission?: string;
 }
@@ -38,22 +38,22 @@ export interface FeatureConfig {
 export interface TabConfig {
   /** 고유 식별자 */
   id: string;
-  
+
   /** 표시될 이름 */
   name: string;
-  
+
   /** 아이콘 컴포넌트 */
   icon: LucideIcon;
-  
+
   /** 지연 로딩될 컴포넌트 */
   component: React.LazyExoticComponent<ComponentType<any>>;
-  
+
   /** 표시 순서 */
   order: number;
-  
+
   /** 버전 선택이 필요한지 여부 */
   requiresVersion?: boolean;
-  
+
   /** 활성화 여부 */
   enabled?: boolean;
 }
@@ -167,7 +167,7 @@ export const PROJECT_TABS: TabConfig[] = [
  * - ProjectsView를 설정 기반으로 변경
  */
 
-export {};
+export { };
 
 
 

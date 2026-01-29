@@ -36,6 +36,11 @@ import {
   type FieldRuntimeStateMap
 } from '@/lib/schema/fieldRuntimeState';
 import { compileSchemaWithContext } from '@/lib/schema/schemaCompiler';
+// 🔥 PR#1: 순수 함수 추출 - builder.logic.ts에서 import
+import {
+  getDefaultValue,
+  buildInitialDynamicFormData,
+} from './builder.logic';
 
 interface BuilderTabProps {
   endpoint: ApiEndpoint;
@@ -284,33 +289,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     }
   }, [schemaFields, activeSchema, psdSet, schemaType]);
 
-  // 🔥 기본값 적용 헬퍼 함수 (공통)
-  // 🎯 Required 필드는 null, Optional 필드는 '' 반환
-  const getDefaultValue = (field: UIBuilderField, forceValue: boolean = false): any => {
-    // 1. 명시적 default 값이 있으면 사용
-    if (field.default !== undefined && field.default !== null) {
-      return field.default;
-    }
-
-    // 2. enum 값이 있으면 첫 번째 값 사용 (type과 무관하게)
-    // 🔥 FIX: integer/number 타입도 enum을 가질 수 있음 (드롭다운으로 표시)
-    if (field.enum && field.enum.length > 0) {
-      return field.enum[0];
-    }
-
-    // 3. 타입별 초기값
-    if (field.type === 'array') return [];  // 배열은 빈 배열
-    if (field.type === 'boolean') return false;  // boolean은 false
-
-    // 4. 🔥 FIX: Required 필드는 null 반환 (forceValue=true일 때)
-    // forceValue=true: Required 필드로 간주, JSON에 key가 포함되어야 함
-    if (forceValue) {
-      return null;  // Required 필드는 null로 표시 (key는 존재)
-    }
-
-    // 5. Optional 필드는 빈 문자열 (나중에 필터링됨)
-    return '';
-  };
+  // 🔥 PR#1: getDefaultValue는 builder.logic.ts에서 import됨
 
   const fieldRuntimeStates: FieldRuntimeStateMap = useMemo(() => {
     if (compiledSchemaSections.length === 0) {
@@ -338,122 +317,28 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   }, [compiledSchemaSections, tempFormValuesForSchema, dynamicFormData, variantAxes]);
 
   // 🎯 schemaFields가 준비되면 dynamicFormData 초기화 (Trigger + Required 필드만)
+  // 🔥 PR#1: buildInitialDynamicFormData로 대체
   useEffect(() => {
     if (schemaFields.length > 0 && Object.keys(dynamicFormData).length === 0) {
-      const initialData: any = {};
-
-      // 🔥 Rule 1: Trigger 필드(enum 필드) + Required 필드만 초기화
-      // ⚠️ 단, 조건부로 숨겨진 필드는 제외
-      schemaFields.forEach(field => {
-        // 🔥 FIX: x-required-when이 있는 enum 필드는 조건부 → Trigger가 아님
-        const xRequiredWhen = (field as any)['x-required-when'];
-        const hasConditionalVisibility = xRequiredWhen && typeof xRequiredWhen === 'object';
-
-        // ✅ Trigger 필드: enum이 있고 조건부 visibility가 없는 필드
-        const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0 && !hasConditionalVisibility;
-
-        // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
-        const isAlwaysRequired =
-          field.required === true ||
-          (typeof field.required === 'object' &&
-            field.required['*'] === 'required');
-
-        // 🎯 Trigger 또는 Always Required만 초기화
-        if (isTriggerField || isAlwaysRequired) {
-          if (field.type === 'array' && field.items) {
-            initialData[field.name] = getDefaultValue(field);
-          } else if (field.type === 'object' && field.children) {
-            initialData[`${field.name}._enabled`] = false;
-            field.children.forEach(child => {
-              initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
-            });
-          } else {
-            initialData[field.name] = getDefaultValue(field);
-          }
-        }
-        // 🔥 Optional/Conditional 필드는 key 자체를 만들지 않음
-      });
-
+      const initialData = buildInitialDynamicFormData(schemaFields, {});
       setDynamicFormData(initialData);
       console.log('🎯 Initialized dynamicFormData (Trigger + Required only):', initialData);
     }
   }, [schemaFields]);
 
   // 🔥 Assign 인스턴스 관리 (여러 노드를 위한 상태)
+  // 🔥 PR#1: buildInitialDynamicFormData로 대체
   const [assignInstances, setAssignInstances] = useState<{ [key: string]: any }>(() => {
-    // 🔥 Trigger + Required 필드만 초기화 (Optional 필드는 제외)
-    const initialData: any = {};
-    schemaFields.forEach(field => {
-      // 🔥 FIX: x-required-when이 있는 enum 필드는 조건부 → Trigger가 아님
-      const xRequiredWhen = (field as any)['x-required-when'];
-      const hasConditionalVisibility = xRequiredWhen && typeof xRequiredWhen === 'object';
-
-      // ✅ Trigger 필드: enum이 있고 조건부 visibility가 없는 필드
-      const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0 && !hasConditionalVisibility;
-
-      // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
-      const isAlwaysRequired =
-        field.required === true ||
-        (typeof field.required === 'object' &&
-          (field.required as any)['*'] === 'required');
-
-      // 🎯 Trigger 또는 Always Required만 초기화
-      if (isTriggerField || isAlwaysRequired) {
-        if (field.type === 'array' && field.items) {
-          initialData[field.name] = getDefaultValue(field);
-        } else if (field.type === 'object' && field.children) {
-          initialData[`${field.name}._enabled`] = false;
-          field.children.forEach(child => {
-            initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
-          });
-        } else {
-          initialData[field.name] = getDefaultValue(field);
-        }
-      }
-      // 🔥 Optional 필드는 key 자체를 만들지 않음
-    });
-
-    return {
-      "1": initialData
-    };
+    const initialData = buildInitialDynamicFormData(schemaFields, {});
+    return { "1": initialData };
   });
 
   // Assign 인스턴스 추가
+  // 🔥 PR#1: buildInitialDynamicFormData로 대체
   const addAssignInstance = () => {
     const keys = Object.keys(assignInstances);
     const nextKey = String(Math.max(...keys.map(k => parseInt(k) || 0)) + 1);
-
-    // 🔥 Trigger + Required 필드만 초기화 (Optional 필드는 제외)
-    const newInstanceData: any = {};
-    schemaFields.forEach(field => {
-      // 🔥 FIX: x-required-when이 있는 enum 필드는 조건부 → Trigger가 아님
-      const xRequiredWhen = (field as any)['x-required-when'];
-      const hasConditionalVisibility = xRequiredWhen && typeof xRequiredWhen === 'object';
-
-      // ✅ Trigger 필드: enum이 있고 조건부 visibility가 없는 필드
-      const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0 && !hasConditionalVisibility;
-
-      // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
-      const isAlwaysRequired =
-        field.required === true ||
-        (typeof field.required === 'object' &&
-          (field.required as any)['*'] === 'required');
-
-      // 🎯 Trigger 또는 Always Required만 초기화
-      if (isTriggerField || isAlwaysRequired) {
-        if (field.type === 'array' && field.items) {
-          newInstanceData[field.name] = getDefaultValue(field);
-        } else if (field.type === 'object' && field.children) {
-          newInstanceData[`${field.name}._enabled`] = false;
-          field.children.forEach(child => {
-            newInstanceData[`${field.name}.${child.name}`] = getDefaultValue(child);
-          });
-        } else {
-          newInstanceData[field.name] = getDefaultValue(field);
-        }
-      }
-      // 🔥 Optional 필드는 key 자체를 만들지 않음
-    });
+    const newInstanceData = buildInitialDynamicFormData(schemaFields, {});
 
     setAssignInstances(prev => ({
       ...prev,

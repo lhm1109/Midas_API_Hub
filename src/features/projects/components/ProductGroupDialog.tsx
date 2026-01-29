@@ -19,6 +19,7 @@ interface ProductGroupDialogProps {
   productId?: string;
   productName?: string;
   groupName?: string;
+  parentGroupId?: string | null;
   onSuccess: () => void;
 }
 
@@ -29,6 +30,7 @@ export function ProductGroupDialog({
   productId,
   productName,
   groupName,
+  parentGroupId,
   onSuccess,
 }: ProductGroupDialogProps) {
   const [name, setName] = useState('');
@@ -46,7 +48,7 @@ export function ProductGroupDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       alert('Name is required.');
       return;
@@ -75,19 +77,22 @@ export function ProductGroupDialog({
         }
         // 🔥 name을 그대로 사용해서 groupId 생성 (대소문자 유지)
         const normalizedName = name.trim().replace(/\s+/g, '_');
-        const groupId = `${productId}_${normalizedName}`;
+        const groupId = parentGroupId
+          ? `${parentGroupId}_${normalizedName}`
+          : `${productId}_${normalizedName}`;
         const groupData = {
           id: groupId,
           product_id: productId,
           name: name.trim(),  // 원본 이름 그대로 저장
           description: '',
+          parent_group_id: parentGroupId || null,
         };
 
         const result = await apiClient.createGroup(groupData);
         if (result.error) {
           throw new Error(result.error);
         }
-        alert('✅ Group added successfully.');
+        alert(parentGroupId ? '✅ Subgroup added successfully.' : '✅ Group added successfully.');
       }
 
       onSuccess();

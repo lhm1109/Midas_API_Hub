@@ -33,7 +33,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { apiClient } from '@/lib/api-client';
+import { apiClient as _apiClient } from '@/lib/api-client';
 import type { ApiProduct } from '@/types';
 import { getPSDForProduct, setCustomPSDMapping } from '@/config/psdMapping';
 import yaml from 'js-yaml';
@@ -56,7 +56,7 @@ export function SchemaView() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newSetName, setNewSetName] = useState('');
   const [baseSetName, setBaseSetName] = useState('enhanced');
-  
+
   // YAML 편집 관련
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentSet, setCurrentSet] = useState<SchemaDefinitionSet | null>(null);
@@ -158,7 +158,7 @@ export function SchemaView() {
 
       // UI 업데이트를 위해 제품 목록 다시 가져오기
       fetchProducts();
-      
+
       alert(`✅ ${psdSet}/${schemaType} 설정이 로컬에 저장되었습니다!`);
     } catch (error) {
       alert(`❌ 설정 저장 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -176,7 +176,7 @@ export function SchemaView() {
       // fileName이 "enhanced/builder.yaml" 형태이므로 split
       const [schemaType, ...fileNameParts] = fileName.split('/');
       const actualFileName = fileNameParts.join('/');
-      
+
       const response = await fetch(
         `http://localhost:9527/api/schema-definitions/${set.id}/${schemaType}/${actualFileName}`
       );
@@ -205,7 +205,7 @@ export function SchemaView() {
       // currentFileName이 "enhanced/builder.yaml" 형태이므로 split
       const [schemaType, ...fileNameParts] = currentFileName.split('/');
       const actualFileName = fileNameParts.join('/');
-      
+
       const response = await fetch(
         `http://localhost:9527/api/schema-definitions/${currentSet.id}/${schemaType}/${actualFileName}`,
         {
@@ -241,9 +241,9 @@ export function SchemaView() {
       const parsed = yaml.load(fileContent);
       return { success: true, data: parsed };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Parsing error' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Parsing error'
       };
     }
   };
@@ -310,7 +310,7 @@ export function SchemaView() {
             <p className="text-xs text-zinc-400 mb-4">
               각 세트는 완전한 YAML 파일 묶음입니다. 파일을 클릭하여 내용을 확인하세요.
             </p>
-            
+
             {loading ? (
               <div className="text-zinc-400 text-center py-8">로딩 중...</div>
             ) : (
@@ -372,7 +372,7 @@ export function SchemaView() {
             <p className="text-xs text-zinc-400 mb-4">
               각 제품에 완전한 스키마 세트를 할당합니다. 선택한 세트의 모든 YAML 파일이 적용됩니다.
             </p>
-            
+
             <div className="space-y-3">
               {products.map((product) => (
                 <Card key={product.id} className="bg-zinc-900 border-zinc-800">
@@ -381,35 +381,35 @@ export function SchemaView() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                    <div className="space-y-1">
-                      <Label className="text-xs text-zinc-400">
+                      <div className="space-y-1">
+                        <Label className="text-xs text-zinc-400">
                           PSD 세트 (Level 1)
-                      </Label>
-                      <Select
-                        value={getPSDForProduct(product.id).psdSet}
+                        </Label>
+                        <Select
+                          value={getPSDForProduct(product.id).psdSet}
                           onValueChange={(value) => handleUpdateProductPSD(
-                            product.id, 
-                            value, 
+                            product.id,
+                            value,
                             getPSDForProduct(product.id).schemaType as 'original' | 'enhanced'
                           )}
-                      >
-                        <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {schemaSets.map((set) => (
-                            <SelectItem key={set.id} value={set.id} className="text-xs">
-                              <div className="flex items-center gap-2">
-                                <Package className="w-3 h-3 text-cyan-400" />
-                                <span>{set.name}</span>
-                                <span className="text-zinc-500">({set.fileCount || 0} 파일)</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        >
+                          <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {schemaSets.map((set) => (
+                              <SelectItem key={set.id} value={set.id} className="text-xs">
+                                <div className="flex items-center gap-2">
+                                  <Package className="w-3 h-3 text-cyan-400" />
+                                  <span>{set.name}</span>
+                                  <span className="text-zinc-500">({set.fileCount || 0} 파일)</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                      
+
                       <div className="space-y-1">
                         <Label className="text-xs text-zinc-400">
                           스키마 타입 (Level 2)
@@ -417,8 +417,8 @@ export function SchemaView() {
                         <Select
                           value={getPSDForProduct(product.id).schemaType}
                           onValueChange={(value) => handleUpdateProductPSD(
-                            product.id, 
-                            getPSDForProduct(product.id).psdSet, 
+                            product.id,
+                            getPSDForProduct(product.id).psdSet,
                             value as 'original' | 'enhanced'
                           )}
                         >
@@ -443,7 +443,7 @@ export function SchemaView() {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div className="text-[10px] text-zinc-500 pt-1">
                         💾 로컬에만 저장 (애플리케이션별 설정)
                       </div>
@@ -548,7 +548,7 @@ export function SchemaView() {
                     <TabsTrigger value="edit">편집</TabsTrigger>
                     <TabsTrigger value="preview">미리보기 (JSON)</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="edit" className="flex-1 mt-2 min-h-0">
                     <ScrollArea className="h-full border rounded-md">
                       <Textarea
@@ -560,7 +560,7 @@ export function SchemaView() {
                       />
                     </ScrollArea>
                   </TabsContent>
-                  
+
                   <TabsContent value="preview" className="flex-1 mt-2 min-h-0">
                     <ScrollArea className="h-full border rounded-md bg-zinc-950 p-4">
                       <pre className="text-xs text-zinc-300 font-mono">
@@ -576,7 +576,7 @@ export function SchemaView() {
                     </ScrollArea>
                   </TabsContent>
                 </Tabs>
-                
+
                 {hasChanges && (
                   <div className="text-xs text-amber-400 flex items-center gap-1">
                     ⚠️ 저장되지 않은 변경사항이 있습니다
@@ -587,8 +587,8 @@ export function SchemaView() {
           </div>
 
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => {
                 if (hasChanges && !confirm('저장하지 않은 변경사항이 있습니다. 정말 닫으시겠습니까?')) {
                   return;
@@ -600,14 +600,14 @@ export function SchemaView() {
             </Button>
             {!['enhanced', 'original', 'manual'].includes(currentSet?.id || '') && (
               <>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setFileContent(originalContent)}
                   disabled={!hasChanges}
                 >
                   되돌리기
                 </Button>
-                <Button 
+                <Button
                   onClick={handleSaveFile}
                   disabled={!hasChanges || savingFile}
                 >

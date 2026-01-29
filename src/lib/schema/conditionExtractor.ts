@@ -29,7 +29,7 @@ export interface FieldConditionInfo {
  */
 export function extractFieldConditions(
   field: EnhancedField,
-  conditionalRules: TableDefinition['schemaExtensions']['conditional'] = []
+  conditionalRules: NonNullable<TableDefinition['schemaExtensions']>['conditional'] = []
 ): FieldCondition | null {
   if (!conditionalRules || conditionalRules.length === 0) {
     return null;
@@ -41,7 +41,7 @@ export function extractFieldConditions(
     if (!rule.displayInTable) continue;
 
     const value = getNestedValue(fieldAny, rule.key);
-    
+
     // 조건 값이 있으면 조건 정보 생성
     if (value && typeof value === 'object' && Object.keys(value).length > 0) {
       return {
@@ -106,7 +106,7 @@ function formatConditionText(condition: Record<string, any>): string {
  */
 export function collectFieldConditionInfo(
   fields: EnhancedField[],
-  conditionalRules: TableDefinition['schemaExtensions']['conditional'] = []
+  conditionalRules: NonNullable<TableDefinition['schemaExtensions']>['conditional'] = []
 ): Map<EnhancedField, FieldConditionInfo> {
   const fieldInfoMap = new Map<EnhancedField, FieldConditionInfo>();
   const groupToConditionMap = new Map<string, { conditionKey: string; conditionInfo: FieldCondition }>();
@@ -140,7 +140,7 @@ export function collectFieldConditionInfo(
   // 2단계: 그룹 조건을 조건이 없는 필드에도 적용
   for (const field of fields) {
     const info = fieldInfoMap.get(field)!;
-    
+
     // 조건이 없지만 같은 그룹에 조건이 있는 필드가 있으면 그 조건 사용
     if (!info.conditionKey && info.group) {
       const groupCondition = groupToConditionMap.get(info.group);
@@ -172,7 +172,7 @@ export function groupFieldsByCondition(
 
   for (const field of fields) {
     const info = fieldInfoMap.get(field)!;
-    
+
     if (info.conditionKey && info.conditionInfo) {
       if (!fieldGroups.has(info.conditionKey)) {
         fieldGroups.set(info.conditionKey, []);

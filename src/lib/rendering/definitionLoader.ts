@@ -65,7 +65,7 @@ export interface TableDefinition extends UIRulesDefinition {
       transformKey?: boolean;
     }>;
   };
-  
+
   // 🔥 NEW: Condition Rows (조건부 필드 표시 행)
   conditionRows?: {
     enabled?: boolean;
@@ -78,7 +78,7 @@ export interface TableDefinition extends UIRulesDefinition {
     };
     colspan?: number;
   };
-  
+
   tableStructure: any;
   sectionHeaders: any;
   rowRendering: any;
@@ -104,7 +104,7 @@ export interface HTMLTemplateDefinition {
  * @param schemaType - 스키마 타입 (Level 2: enhanced, manual, original)
  */
 export async function loadUIRules(
-  psdSet: string = 'civil_gen_definition', 
+  psdSet: string = 'civil_gen_definition',
   schemaType: string = 'enhanced'
 ): Promise<UIRulesDefinition> {
   try {
@@ -112,7 +112,7 @@ export async function loadUIRules(
     const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as UIRulesDefinition;
-    
+
     console.log(`✅ Loaded ${psdSet}/${schemaType}/ui-rules.yaml`, parsed);
     return parsed;
   } catch (error) {
@@ -135,11 +135,11 @@ export async function loadBuilderRules(
     const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as BuilderDefinition;
-    
+
     // extends 처리: ui-rules.yaml 병합
     const uiRules = await loadUIRules(psdSet, schemaType);
     const merged = { ...uiRules, ...parsed };
-    
+
     console.log(`✅ Loaded ${psdSet}/${schemaType}/builder.yaml`, merged);
     return merged;
   } catch (error) {
@@ -160,14 +160,14 @@ export async function loadTableRules(
   try {
     const path = `/schema_definitions/${psdSet}/${schemaType}/table.yaml`;
     const response = await fetch(path);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as TableDefinition;
-    
+
     // extends 처리: ui-rules.yaml 병합 (실패해도 계속 진행)
     try {
       const uiRules = await loadUIRules(psdSet, schemaType);
@@ -186,7 +186,7 @@ export async function loadTableRules(
     // 🔥 기본 구조 반환하여 앱이 크래시하지 않도록 함
     return {
       version: '1.0',
-      type: setName,
+      type: psdSet,
       fieldTypeMapping: {},
       layout: {},
       rendering: {},
@@ -213,7 +213,7 @@ export async function loadHTMLTemplate(
     const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as HTMLTemplateDefinition;
-    
+
     console.log(`✅ Loaded ${psdSet}/enhanced/html-template.yaml`, parsed);
     return parsed;
   } catch (error) {
@@ -238,16 +238,16 @@ export async function loadCachedDefinition(
   // 2-level 구조 지원 (우선순위: psdSet/schemaType > schemaSet > type)
   const finalPsdSet = psdSet || schemaSet || 'default';
   const finalSchemaType = schemaType || type || 'enhanced';
-  
+
   const cacheKey = `${finalPsdSet}-${finalSchemaType}-${category}`;
-  
+
   if (cache.has(cacheKey)) {
     console.log(`📦 Using cached ${cacheKey}`);
     return cache.get(cacheKey);
   }
-  
+
   let definition: any;
-  
+
   switch (category) {
     case 'ui':
       definition = await loadUIRules(finalPsdSet, finalSchemaType);
@@ -264,7 +264,7 @@ export async function loadCachedDefinition(
       }
       break;
   }
-  
+
   cache.set(cacheKey, definition);
   return definition;
 }

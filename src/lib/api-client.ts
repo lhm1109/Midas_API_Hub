@@ -93,6 +93,14 @@ class ApiClient {
     });
   }
 
+  // ✅ 새로운 API: group_id 기반으로 엔드포인트 이동
+  async moveEndpointToGroup(id: string, group_id: string, order_index?: number) {
+    return this.request<{ endpoint: any; message: string }>(`/endpoints/${encodeURIComponent(id)}/move-to-group`, {
+      method: 'PUT',
+      body: JSON.stringify({ group_id, order_index }),
+    });
+  }
+
   // Products API
   async getProducts() {
     return this.request<any[]>('/products');
@@ -148,6 +156,13 @@ class ApiClient {
   async deleteGroup(id: string) {
     return this.request<{ message: string }>(`/groups/${encodeURIComponent(id)}`, {
       method: 'DELETE',
+    });
+  }
+
+  async renameGroup(id: string, newName: string) {
+    return this.request<{ group: any; message: string }>(`/groups/${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ name: newName }),
     });
   }
 

@@ -26,8 +26,9 @@ export interface ApiTask {
   status: "In Progress" | "Done" | string;  // Working 제거
   charge: string;
   remark: string;
+  linkedEndpointId?: string; // 프로젝트 탭 엔드포인트 연결
   // 커스텀 필드는 여기에 추가 가능
-  [key: string]: string | StatusType;
+  [key: string]: string | StatusType | undefined;
 }
 
 export interface Column {

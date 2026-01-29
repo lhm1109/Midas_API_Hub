@@ -209,7 +209,7 @@ function renderObjectField(
       {/* 자식 필드들 */}
       {expandedObjects.has(field.name) && (
         <div className={objectStyle.content || 'p-4 space-y-3 bg-zinc-900/30'}>
-          {field.children!.map((child: any, idx) => {
+          {field.children!.map((child: any, _idx) => {
             // 🔥 oneOf인 경우: 선택된 옵션의 필드만 표시
             if (isOneOf && child.optionIndex !== undefined) {
               const selectedOption = dynamicFormData[`${field.name}.__selectedOption`] || 0;
@@ -288,7 +288,7 @@ function renderStandardField(
  */
 function renderFieldInput(
   field: UIBuilderField,
-  fieldKey: string,
+  _fieldKey: string,
   value: any,
   onChange: (value: any) => void,
   definition: BuilderDefinition,

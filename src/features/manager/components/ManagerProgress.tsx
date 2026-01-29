@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { ApiTable } from './ApiTable';
 import { EditTaskModal } from './EditTaskModal';
 import { ApiTask, Column } from '../types/manager';
+import type { ApiProduct } from '@/types';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Download, Upload } from 'lucide-react';
 
@@ -14,6 +15,8 @@ interface ManagerProgressProps {
   onColumnVisibilityChange: (columnId: string, visible: boolean) => Promise<void>;
   onRefresh: () => Promise<void>;
   onBulkReplace: (tasks: ApiTask[]) => Promise<void>;
+  endpoints?: ApiProduct[];
+  onNavigateToEndpoint?: (endpointId: string) => void;
 }
 
 export function ManagerProgress({
@@ -25,6 +28,8 @@ export function ManagerProgress({
   onColumnVisibilityChange,
   onRefresh,
   onBulkReplace,
+  endpoints = [],
+  onNavigateToEndpoint,
 }: ManagerProgressProps) {
   const [editingTask, setEditingTask] = useState<ApiTask | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -325,6 +330,7 @@ export function ManagerProgress({
           onTaskEdit={handleTaskEdit}
           onTaskDelete={handleTaskDelete}
           onAddTask={handleAddTask}
+          onNavigateToEndpoint={onNavigateToEndpoint}
         />
       </div>
 
@@ -333,6 +339,7 @@ export function ManagerProgress({
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onSave={handleTaskSave}
+        endpoints={endpoints}
       />
     </div>
   );

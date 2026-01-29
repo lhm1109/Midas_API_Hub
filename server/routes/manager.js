@@ -25,7 +25,14 @@ router.get('/tasks', async (req, res) => {
 
     if (error) throw error;
 
-    res.json(tasks || []);
+    // snake_case -> camelCase 변환
+    const convertedTasks = (tasks || []).map(task => ({
+      ...task,
+      linkedEndpointId: task.linked_endpoint_id || undefined,
+      linked_endpoint_id: undefined,
+    }));
+
+    res.json(convertedTasks);
   } catch (error) {
     console.error('Get manager tasks error:', error);
     res.status(500).json({ error: error.message });
@@ -76,6 +83,9 @@ router.post('/tasks', async (req, res) => {
       .from('manager_tasks')
       .insert({
         ...taskData,
+        // camelCase -> snake_case 변환
+        linked_endpoint_id: taskData.linkedEndpointId || null,
+        linkedEndpointId: undefined, // 원본 필드 제거
         created_at: now,
         updated_at: now,
       })
@@ -102,12 +112,14 @@ router.put('/tasks/:id', async (req, res) => {
     const now = new Date().toISOString();
 
     // id 필드는 업데이트하지 않음
-    const { id: _, created_at, ...updateData } = taskData;
+    const { id: _, created_at, linkedEndpointId, ...updateData } = taskData;
 
     const { data, error } = await supabase
       .from('manager_tasks')
       .update({
         ...updateData,
+        // camelCase -> snake_case 변환
+        linked_endpoint_id: linkedEndpointId || null,
         updated_at: now,
       })
       .eq('id', id)
@@ -121,7 +133,14 @@ router.put('/tasks/:id', async (req, res) => {
       throw error;
     }
 
-    res.json(data);
+    // snake_case -> camelCase 변환하여 응답
+    const convertedData = {
+      ...data,
+      linkedEndpointId: data.linked_endpoint_id || undefined,
+      linked_endpoint_id: undefined,
+    };
+
+    res.json(convertedData);
   } catch (error) {
     console.error('Update manager task error:', error);
     res.status(500).json({ error: error.message });
@@ -177,7 +196,7 @@ router.get('/columns', async (req, res) => {
 router.put('/columns', async (req, res) => {
   try {
     const columns = req.body;
-    
+
     if (!Array.isArray(columns)) {
       return res.status(400).json({ error: 'columns must be an array' });
     }
@@ -253,7 +272,7 @@ router.put('/columns/:id/visibility', async (req, res) => {
 router.post('/tasks/bulk-replace', async (req, res) => {
   try {
     const tasks = req.body;
-    
+
     if (!Array.isArray(tasks)) {
       return res.status(400).json({ error: 'tasks must be an array' });
     }

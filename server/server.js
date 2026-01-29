@@ -12,6 +12,7 @@ import productsRouter from './routes/products.js';
 import groupsRouter from './routes/groups.js';
 import schemaDefinitionsRouter from './routes/schema-definitions.js';
 import managerRouter from './routes/manager.js';
+import databaseRouter from './routes/database.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -40,6 +41,7 @@ app.use('/api/debug', debugRouter);
 app.use('/api/attachments', attachmentsRouter);
 app.use('/api/locks', locksRouter);
 app.use('/api/manager', managerRouter);
+app.use('/api/database', databaseRouter);
 
 // 실제 비즈니스 API (자동 문서화)
 app.use('/api/civil/db', apiRouter);
@@ -68,7 +70,7 @@ async function startServer() {
     await initDb();
     await syncRoutesToDatabase();
     printRouteMap();
-    
+
     // 서버 시작
     app.listen(PORT, () => {
       console.log(`

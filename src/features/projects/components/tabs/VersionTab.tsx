@@ -8,7 +8,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { CompareVersionsDialog } from './CompareVersionsDialog';
-import type { ApiEndpoint, Version, Attachment } from '@/types';
+import type { ApiEndpoint, Version as _Version, Attachment } from '@/types';
 import { toast } from 'sonner';
 
 interface VersionTabProps {
@@ -23,8 +23,10 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     loadVersion,
     deleteVersion,
     getVersionsByEndpoint,
-    getCurrentVersion,
+    getCurrentVersion: _getCurrentVersion,
     fetchVersions,
+    acquireEndpointLock,
+    releaseEndpointLock,
   } = useAppStore();
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -205,11 +207,11 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       toast.error('❌ Please enter a version number');
       return;
     }
-    
+
     if (isCreatingVersion) {
       return; // 이미 생성 중이면 무시
     }
-    
+
     setIsCreatingVersion(true);
     try {
       await createVersion(endpoint.id, newVersionNumber.trim(), changeLog.trim() || undefined);
@@ -251,7 +253,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
 
     // 🔥 잠금 상태 확인
     const lockStatus = await checkEndpointLock(endpoint.id);
-    
+
     if (lockStatus.locked) {
       // 잠금되어 있으면 팝업 표시
       setLockInfo(lockStatus);
@@ -273,7 +275,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
   // 🔥 잠금 팝업에서 강제 로드
   const handleForceLoad = async () => {
     if (!pendingVersionId) return;
-    
+
     setShowLockDialog(false);
     try {
       await loadVersion(pendingVersionId);
@@ -347,7 +349,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       toast.error('❌ Version title cannot be empty');
       return;
     }
-    
+
     try {
       const response = await fetch(`http://localhost:9527/api/versions/${versionId}`, {
         method: 'PATCH',
@@ -387,20 +389,20 @@ export function VersionTab({ endpoint }: VersionTabProps) {
         throw new Error('Failed to fetch version data');
       }
       const versionData = await response.json();
-      
+
       // 복사된 버전의 새 제목 생성
       const newVersionTitle = `${version.version} (copy)`;
-      
+
       // 새 버전 생성
       await createVersion(endpoint.id, newVersionTitle, version.changeLog);
-      
+
       // 방금 생성된 버전 찾기 (가장 최근 버전)
       await fetchVersions(endpoint.id);
       const updatedVersions = useAppStore.getState().versions;
       const newVersion = updatedVersions
         .filter(v => v.endpointId === endpoint.id)
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
-      
+
       if (newVersion) {
         // 새 버전에 데이터 복사
         const updateResponse = await fetch(`http://localhost:9527/api/versions/${newVersion.id}`, {
@@ -420,7 +422,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
           throw new Error('Failed to copy version data');
         }
       }
-      
+
       toast.success(`✅ Version copied: ${newVersionTitle}`);
     } catch (error) {
       toast.error(`❌ Failed to copy version: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -432,14 +434,14 @@ export function VersionTab({ endpoint }: VersionTabProps) {
   const handleExportVersion = async (versionId: string, versionName: string) => {
     try {
       toast.info('⏳ Exporting version...');
-      
+
       const response = await fetch(`http://localhost:9527/api/versions/${versionId}/export`);
       if (!response.ok) {
         throw new Error('Export failed');
       }
-      
+
       const exportData = await response.json();
-      
+
       // JSON 파일로 다운로드
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -450,7 +452,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       toast.success(`✅ Version exported successfully`);
     } catch (error) {
       toast.error(`❌ Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -469,10 +471,10 @@ export function VersionTab({ endpoint }: VersionTabProps) {
 
     try {
       toast.info('⏳ Importing version...');
-      
+
       const text = await file.text();
       const importData = JSON.parse(text);
-      
+
       // 서버로 전송
       const response = await fetch('http://localhost:9527/api/versions/import', {
         method: 'POST',
@@ -482,18 +484,18 @@ export function VersionTab({ endpoint }: VersionTabProps) {
           importData,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Import failed');
       }
-      
+
       const result = await response.json();
-      
+
       // 버전 목록 새로고침
       await fetchVersions(endpoint.id);
-      
+
       toast.success(`✅ Version imported successfully: ${result.version.version}`);
-      
+
       // 파일 입력 초기화
       if (importFileInputRef.current) {
         importFileInputRef.current.value = '';
@@ -564,15 +566,14 @@ export function VersionTab({ endpoint }: VersionTabProps) {
             <div className="space-y-3">
               {endpointVersions.map((version) => {
                 const isCurrentVersion = version.id === currentVersionId;
-                
+
                 return (
                   <div
                     key={version.id}
-                    className={`p-4 rounded-lg border transition-all ${
-                      isCurrentVersion
-                        ? 'bg-blue-900/20 border-blue-600'
-                        : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'
-                    }`}
+                    className={`p-4 rounded-lg border transition-all ${isCurrentVersion
+                      ? 'bg-blue-900/20 border-blue-600'
+                      : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700'
+                      }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -607,11 +608,11 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                             </Button>
                           </div>
                         ) : (
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                            <GitBranch className="w-4 h-4 text-blue-400" />
-                            {version.version}
-                          </h3>
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                              <GitBranch className="w-4 h-4 text-blue-400" />
+                              {version.version}
+                            </h3>
                             <Button
                               size="sm"
                               variant="ghost"
@@ -620,12 +621,12 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                             >
                               <Edit2 className="w-3 h-3" />
                             </Button>
-                          {isCurrentVersion && (
-                            <span className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded-full">
-                              CURRENT
-                            </span>
-                          )}
-                        </div>
+                            {isCurrentVersion && (
+                              <span className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded-full">
+                                CURRENT
+                              </span>
+                            )}
+                          </div>
                         )}
 
                         {/* Change Log - Editable */}
@@ -719,7 +720,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                                     <FileText className="w-3 h-3 text-blue-400 flex-shrink-0" />
                                     <span className="truncate text-zinc-300">{attachment.fileName}</span>
                                     <span className="text-zinc-500 text-[10px]">
-                                      ({attachment.fileSize >= 1024 * 1024 
+                                      ({attachment.fileSize >= 1024 * 1024
                                         ? `${(attachment.fileSize / (1024 * 1024)).toFixed(2)} MB`
                                         : `${(attachment.fileSize / 1024).toFixed(1)} KB`
                                       })

@@ -13,6 +13,10 @@ export interface ApiEndpoint {
 export interface ApiGroup {
   id: string;
   name: string;
+  parent_group_id?: string | null;
+  depth: number;           // ✅ 필수로 변경
+  order_index?: number;
+  subgroups: ApiGroup[];   // ✅ 필수로 변경 (재귀 타입)
   endpoints: ApiEndpoint[];
 }
 
@@ -115,5 +119,8 @@ export interface Settings {
   schemaDefinition?: 'auto' | 'original' | 'enhanced';
   schemaMode?: 'enhanced' | 'normal'; // 🔥 NEW: 스키마 UI 모드
   userName?: string; // 🔥 사용자 이름
+  supabaseUrl?: string; // Supabase Project URL
+  supabaseServiceKey?: string; // Supabase Service Role Key
+  supabaseDbPassword?: string; // Supabase Database Password
 }
 

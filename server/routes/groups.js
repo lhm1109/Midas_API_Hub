@@ -69,26 +69,54 @@ router.get('/:id', async (req, res) => {
 
 /**
  * POST /api/groups
- * 새 그룹 생성
+ * 새 그룹 생성 (계층 구조 지원 - 최대 5단계)
  */
 router.post('/', async (req, res) => {
   try {
-    const { id, product_id, name, description } = req.body;
+    const { id, product_id, name, description, parent_group_id } = req.body;
     const now = new Date().toISOString();
 
     if (!id || !product_id || !name) {
       return res.status(400).json({ error: 'id, product_id, and name are required' });
     }
 
-    // 해당 제품의 현재 최대 order_index 조회
-    const { data: maxOrderData } = await supabase
+    // 부모 그룹의 depth 조회 (있는 경우)
+    let depth = 1;
+    if (parent_group_id) {
+      const { data: parentGroup, error: parentError } = await supabase
+        .from('groups')
+        .select('depth')
+        .eq('id', parent_group_id)
+        .single();
+
+      if (parentError) {
+        console.error('❌ Parent group lookup error:', parentError);
+        return res.status(400).json({ error: 'Parent group not found' });
+      }
+
+      depth = (parentGroup.depth || 1) + 1;
+
+      // 최대 5단계 제한
+      if (depth > 5) {
+        return res.status(400).json({ error: 'Maximum group depth (5) exceeded' });
+      }
+    }
+
+    // 해당 제품/부모 그룹의 현재 최대 order_index 조회
+    let query = supabase
       .from('groups')
       .select('order_index')
       .eq('product_id', product_id)
       .order('order_index', { ascending: false })
-      .limit(1)
-      .single();
+      .limit(1);
 
+    if (parent_group_id) {
+      query = query.eq('parent_group_id', parent_group_id);
+    } else {
+      query = query.is('parent_group_id', null);
+    }
+
+    const { data: maxOrderData } = await query.single();
     const nextOrderIndex = (maxOrderData?.order_index ?? -1) + 1;
 
     const { data, error } = await supabase
@@ -98,6 +126,8 @@ router.post('/', async (req, res) => {
         product_id,
         name,
         description: description || null,
+        parent_group_id: parent_group_id || null,
+        depth,
         order_index: nextOrderIndex,
         created_at: now,
         updated_at: now,
@@ -107,7 +137,7 @@ router.post('/', async (req, res) => {
 
     if (error) throw error;
 
-    console.log('✅ Group created:', id);
+    console.log('✅ Group created:', id, 'depth:', depth);
     res.status(201).json({ group: data, message: 'Group created successfully' });
   } catch (error) {
     console.error('❌ Create group error:', error);
@@ -229,18 +259,18 @@ router.delete('/:id', async (req, res) => {
     // 🔥 groups 테이블에 없는 경우 (동적 그룹/레거시 그룹)
     if (groupError && groupError.code === 'PGRST116') {
       console.log('⚠️ Group not found in groups table, treating as legacy group:', id);
-      
+
       // ID에서 product와 group_name 추출 (예: civil-nx_Gen → product: civil-nx, group_name: Gen)
       const parts = id.split('_');
       if (parts.length < 2) {
         return res.status(400).json({ error: 'Invalid group ID format', id });
       }
-      
+
       const product = parts[0];
       const groupName = parts.slice(1).join('_');
-      
+
       console.log('📦 Legacy group:', { product, groupName });
-      
+
       // 해당 엔드포인트들 조회
       const { data: endpoints, error: endpointsError } = await supabase
         .from('endpoints')
@@ -268,8 +298,8 @@ router.delete('/:id', async (req, res) => {
         console.log(`✅ Deleted ${endpoints.length} legacy endpoints`);
       }
 
-      return res.json({ 
-        message: 'Legacy group deleted successfully (endpoints only)', 
+      return res.json({
+        message: 'Legacy group deleted successfully (endpoints only)',
         deletedEndpoints: endpoints?.length || 0,
         legacy: true
       });
@@ -320,9 +350,9 @@ router.delete('/:id', async (req, res) => {
     }
 
     console.log('✅ Group deleted:', id);
-    res.json({ 
-      message: 'Group deleted successfully', 
-      deletedEndpoints: endpoints?.length || 0 
+    res.json({
+      message: 'Group deleted successfully',
+      deletedEndpoints: endpoints?.length || 0
     });
   } catch (error) {
     console.error('❌ Delete group error:', error);

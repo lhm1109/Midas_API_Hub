@@ -493,28 +493,32 @@ export function generateHTMLDocument(
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTMLLegacy(sections);
 
+  // Zendesk 호환 테이블 (inline 스타일)
   return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${schema.title} - Enhanced Schema</title>
-    ${generateCSSLegacy()}
-</head>
-<body>
-    <h2>Specifications</h2>
-    <table>
+    <h3 id="h_specifications">
+      <strong>Specifications</strong>
+    </h3>
+    <div class="table-wrap">
+      <table style="border-collapse: collapse; width: 100%;" border="1">
+        <colgroup>
+          <col style="width: 6.00%;">
+          <col style="width: 6.00%;">
+          <col style="width: 44.00%;">
+          <col style="width: 14.00%;">
+          <col style="width: 10.00%;">
+          <col style="width: 10.00%;">
+          <col style="width: 10.00%;">
+        </colgroup>
         ${tableHTML}
-    </table>
-</body>
-</html>
+      </table>
+    </div>
   `.trim();
 }
 
 function generateTableHTMLLegacy(sections: SectionGroup[]): string {
-  let html = generateTableHeaderLegacy();
-  html += '<tbody>';
+  // Zendesk 스타일: <tbody> 안에 헤더 행 포함
+  let html = '<tbody>\n';
+  html += generateTableHeaderLegacy();
 
   let rowNumber = 1;
   for (const section of sections) {
@@ -563,25 +567,33 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
   return html;
 }
 
+// Zendesk 호환 테이블 스타일 (기존 Zendesk 문서와 동일한 형태)
+// 헤더: 배경색은 CSS에서 처리 (th { background-color: #3498db; color: white; })
+const ZENDESK_HEADER_STYLE = 'padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;';
+// 일반 셀: 배경색은 CSS에서 처리 (tr:nth-child(even) { background-color: #f2f2f2; })
+const ZENDESK_CELL_STYLE = 'padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;';
+
 function generateTableHeaderLegacy(): string {
   return `
-    <thead>
-      <tr>
-        <th style="width: 6%;">No.</th>
-        <th style="width: 35%;">Description</th>
-        <th style="width: 14%;">Key</th>
-        <th style="width: 10%;">Value Type</th>
-        <th style="width: 10%;">Default</th>
-        <th style="width: 25%;">Required</th>
-      </tr>
-    </thead>
+    <tr>
+      <th style="${ZENDESK_HEADER_STYLE}">No.</th>
+      <th style="${ZENDESK_HEADER_STYLE}" colspan="2">Description</th>
+      <th style="${ZENDESK_HEADER_STYLE}">Key</th>
+      <th style="${ZENDESK_HEADER_STYLE}">Value Type</th>
+      <th style="${ZENDESK_HEADER_STYLE}">Default</th>
+      <th style="${ZENDESK_HEADER_STYLE}">Required</th>
+    </tr>
   `;
 }
 
 function generateSectionHeaderLegacy(sectionName: string): string {
+  // Zendesk 스타일: inline 배경색 + 파란 텍스트
+  // 전체 7개 열 병합 (No. ~ Required 까지 전체)
   return `
     <tr>
-      <td colspan="6" class="section-header">${escapeHtml(sectionName)}</td>
+      <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="7">
+        <p><span style="color: #4c9aff;">${escapeHtml(sectionName)}</span></p>
+      </td>
     </tr>
   `;
 }
@@ -590,16 +602,29 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
   const descriptionHTML = generateFieldDescriptionLegacy(field);
   const requiredHTML = generateRequiredCellLegacy(field);
   const defaultValue = formatDefaultValue(field.default, field.type);
-  const typeDisplay = field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type;
+  const typeDisplay = field.type === 'array' ? `Array [${field.items?.type || 'any'}]` : field.type;
 
+  // Zendesk 스타일: inline 패딩 + <p> 태그 + text-align: center
   return `
     <tr>
-      <td style="text-align: center;">${rowNumber}</td>
-      <td>${descriptionHTML}</td>
-      <td style="text-align: center;"><code>"${escapeHtml(field.key)}"</code></td>
-      <td style="text-align: center;">${typeDisplay}</td>
-      <td style="text-align: center;">${defaultValue}</td>
-      <td style="min-width: 120px;">${requiredHTML}</td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${rowNumber}</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}" colspan="2">
+        ${descriptionHTML}
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">"${escapeHtml(field.key)}"</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${typeDisplay}</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${defaultValue}</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${requiredHTML}</p>
+      </td>
     </tr>
   `;
 }
@@ -610,57 +635,46 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
   // 🔥 우선순위: x-ui.label > description > key
   const displayLabel = field.ui?.label || field.description || field.key;
   if (displayLabel) {
-    parts.push(`<strong>${escapeHtml(displayLabel)}</strong>`);
+    parts.push(`<p>${escapeHtml(displayLabel)}</p>`);
   }
 
+  // Zendesk 스타일: enum 값은 <p> • value 형식
   if (field.enum && field.enum.length > 0) {
-    parts.push('<strong>Enum Values:</strong>');
-    parts.push('<ul>');
     field.enum.forEach((val: any) => {
       const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
       const label = enumLabels[String(val)] || val;
-      // Format: Label : "value" (shows what to actually use in API)
-      parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
+      parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
     });
-    parts.push('</ul>');
   }
 
   if (field.enumByType) {
-    parts.push('<strong>Enum Values by Type:</strong>');
     for (const [type, values] of Object.entries(field.enumByType)) {
       parts.push(`<p><em>${escapeHtml(type)}:</em></p>`);
-      parts.push('<ul>');
       (values as any[]).forEach((val: any) => {
         const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || {};
         const label = enumLabelsByType?.[type]?.[String(val)] || val;
-        // Format: Label : "value" (shows what to actually use in API)
-        parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
+        parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
       });
-      parts.push('</ul>');
     }
   }
 
   if (field.valueConstraint) {
-    parts.push('<strong>Value Constraints:</strong>');
-    parts.push('<ul>');
+    parts.push(`<p><strong>Value Constraints:</strong></p>`);
     for (const [type, constraint] of Object.entries(field.valueConstraint)) {
-      parts.push(`<li><em>${escapeHtml(type)}:</em> ${escapeHtml(String(constraint))}</li>`);
+      parts.push(`<p> • ${escapeHtml(type)}: ${escapeHtml(String(constraint))}</p>`);
     }
-    parts.push('</ul>');
   }
 
   if (field.nodeCountByType) {
-    parts.push('<strong>Node Count by Type:</strong>');
-    parts.push('<ul>');
+    parts.push(`<p><strong>Node Count by Type:</strong></p>`);
     for (const [type, count] of Object.entries(field.nodeCountByType)) {
       const countStr = Array.isArray(count) ? count.join(' or ') : count;
-      parts.push(`<li><em>${escapeHtml(type)}:</em> ${countStr} nodes</li>`);
+      parts.push(`<p> • ${escapeHtml(type)}: ${countStr} nodes</p>`);
     }
-    parts.push('</ul>');
   }
 
   if (field.ui?.hint) {
-    parts.push(`<p class="hint">${escapeHtml(field.ui.hint)}</p>`);
+    parts.push(`<p style="color: #757575; font-style: italic;">${escapeHtml(field.ui.hint)}</p>`);
   }
 
   return parts.join('\n');
@@ -669,7 +683,7 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
 function generateRequiredCellLegacy(field: EnhancedField): string {
   // 🔥 field.required가 undefined이거나 빈 객체인 경우 처리
   if (!field.required || Object.keys(field.required).length === 0) {
-    return '<span class="badge badge-optional">Optional</span>';
+    return 'Optional';
   }
 
   const requiredStatuses = Object.values(field.required);
@@ -679,10 +693,10 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
 
   // 🔥 1. Conditional 상태 처리
   if (hasConditional) {
-    return '<span class="badge badge-conditional">Conditional</span>';
+    return 'Conditional';
   }
 
-  // 🔥 2. Required/Optional 혼재 (타입별로 다름)
+  // 🔥 2. Required/Optional 혼재 (타입별로 다름) - Zendesk 스타일로 간소화
   if (hasRequired && hasOptional) {
     const grouped: Record<string, string[]> = { required: [], optional: [] };
     for (const [type, status] of Object.entries(field.required)) {
@@ -692,24 +706,24 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
 
     const parts: string[] = [];
     if (grouped.required.length > 0) {
-      parts.push(`<p style="margin: 2px 0;"><strong class="required">Required:</strong> ${grouped.required.join(', ')}</p>`);
+      parts.push(`Required: ${grouped.required.join(', ')}`);
     }
     if (grouped.optional.length > 0) {
-      parts.push(`<p style="margin: 2px 0;"><strong class="optional">Optional:</strong> ${grouped.optional.join(', ')}</p>`);
+      parts.push(`Optional: ${grouped.optional.join(', ')}`);
     }
-    return parts.join('\n');
+    return parts.join('<br>');
   }
 
   // 🔥 3. Required
   if (hasRequired) {
-    return '<span class="badge badge-required">Required</span>';
+    return 'Required';
   }
 
   // 🔥 4. Optional (기본값)
-  return '<span class="badge badge-optional">Optional</span>';
+  return 'Optional';
 }
 
-function generateCSSLegacy(): string {
+function _generateCSSLegacy(): string {
   return `
     <style>
       body {
@@ -816,7 +830,7 @@ function generateCSSLegacy(): string {
   `;
 }
 
-function generateInfoSectionLegacy(schema: EnhancedSchema): string {
+function _generateInfoSectionLegacy(schema: EnhancedSchema): string {
   const transport = (schema as any)['x-transport'];
   if (!transport) return '';
 
@@ -830,7 +844,7 @@ function generateInfoSectionLegacy(schema: EnhancedSchema): string {
   `;
 }
 
-function generateValidationArchitectureSectionLegacy(): string {
+function _generateValidationArchitectureSectionLegacy(): string {
   return `
     <div class="feature-box">
       <h3>🏗️ Validation Architecture</h3>
@@ -845,7 +859,7 @@ function generateValidationArchitectureSectionLegacy(): string {
   `;
 }
 
-function generateTransportSectionLegacy(schema: EnhancedSchema): string {
+function _generateTransportSectionLegacy(schema: EnhancedSchema): string {
   const transport = (schema as any)['x-transport'];
   if (!transport || !transport['body-root']) return '';
 
@@ -863,3 +877,195 @@ function generateTransportSectionLegacy(schema: EnhancedSchema): string {
     </div>
   `;
 }
+
+// ============================================================================
+// Zendesk Compatible Table Generator (Inline Styles)
+// ============================================================================
+
+export interface ZendeskTableRow {
+  no: string | number;
+  description: string;
+  key: string;
+  valueType: string;
+  defaultValue: string;
+  required: string;
+  isHeader?: boolean;       // 섹션 헤더 여부
+  isSubRow?: boolean;       // 하위 행 여부 (들여쓰기)
+  rowspan?: number;         // rowspan 값
+  colspan?: number;         // colspan 값
+  bgColor?: string;         // 배경색
+}
+
+/**
+ * Zendesk 호환 Specifications 테이블 HTML 생성
+ * 기존 Zendesk 문서 스타일 (007_Import_to_Json.html) 참고
+ */
+export function generateZendeskTable(rows: ZendeskTableRow[]): string {
+  // 테이블 헤더
+  const headerHTML = `
+    <tr>
+      <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">No.</th>
+      <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">Description</th>
+      <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Key</th>
+      <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Value Type</th>
+      <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Default</th>
+      <th style="padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">Required</th>
+    </tr>`;
+
+  // 테이블 행 생성
+  const rowsHTML = rows.map((row) => {
+    const cellStyle = 'padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;';
+    const bgStyle = row.bgColor ? ` background-color: ${row.bgColor};` : '';
+    const rowspanAttr = row.rowspan ? ` rowspan="${row.rowspan}"` : '';
+
+    if (row.isSubRow) {
+      // 하위 행 (들여쓰기)
+      return `
+    <tr>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(String(row.no))}</p>
+      </td>
+      <td style="${cellStyle}" colspan="2">
+        <p>${row.description}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.key)}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.valueType)}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.defaultValue)}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.required)}</p>
+      </td>
+    </tr>`;
+    }
+
+    if (row.bgColor) {
+      // 섹션 구분 행 (배경색 있음)
+      return `
+    <tr>
+      <td style="${cellStyle}${bgStyle}" colspan="7">
+        <p><span style="color: #4c9aff;">${row.description}</span></p>
+      </td>
+    </tr>`;
+    }
+
+    // 일반 행
+    return `
+    <tr>
+      <td style="${cellStyle}"${rowspanAttr}>
+        <p style="text-align: center;">${escapeHtml(String(row.no))}</p>
+      </td>
+      <td style="${cellStyle}" colspan="2">
+        <p>${row.description}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.key)}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.valueType)}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.defaultValue)}</p>
+      </td>
+      <td style="${cellStyle}">
+        <p style="text-align: center;">${escapeHtml(row.required)}</p>
+      </td>
+    </tr>`;
+  }).join('\n');
+
+  return `
+    <h3 id="h_specifications">
+      <strong>Specifications</strong>
+    </h3>
+    <div class="table-wrap">
+      <table style="border-collapse: collapse; width: 100%; margin-left: 0px; margin-right: auto;" border="1">
+        <colgroup>
+          <col style="width: 6.00%;">
+          <col style="width: 6.00%;">
+          <col style="width: 44.00%;">
+          <col style="width: 14.00%;">
+          <col style="width: 10.00%;">
+          <col style="width: 10.00%;">
+          <col style="width: 10.00%;">
+        </colgroup>
+        <tbody>
+          ${headerHTML}
+          ${rowsHTML}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+/**
+ * EnhancedSchema에서 Zendesk 테이블 행 데이터 추출
+ */
+export function schemaToZendeskTableRows(
+  schema: EnhancedSchema,
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
+): ZendeskTableRow[] {
+  const sections = compileEnhancedSchema(schema, psdSet, schemaType);
+  const rows: ZendeskTableRow[] = [];
+  let rowNumber = 1;
+
+  for (const section of sections) {
+    for (const field of section.fields) {
+      // Description 생성 (enum 값 포함)
+      let description = field.ui?.label || field.description || field.key;
+
+      if (field.enum && field.enum.length > 0) {
+        const enumList = field.enum.map((val: any) => {
+          const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
+          const label = enumLabels[String(val)] || val;
+          return `&nbsp;•&nbsp;${label}: "${val}"`;
+        }).join('<br>');
+        description += `<br>${enumList}`;
+      }
+
+      rows.push({
+        no: rowNumber++,
+        description,
+        key: `"${field.key}"`,
+        valueType: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
+        defaultValue: field.default !== undefined ? String(field.default) : '-',
+        required: Object.values(field.required || {}).some(s => s === 'required') ? 'Required' : 'Optional'
+      });
+
+      // 중첩 필드 처리
+      if (field.children && field.children.length > 0) {
+        let childNo = 1;
+        for (const child of field.children) {
+          let childDescription = child.ui?.label || child.description || child.key;
+
+          if (child.enum && child.enum.length > 0) {
+            const enumList = child.enum.map((val: any) => {
+              const enumLabels = (child as any).enumLabels || (child as any)['x-enum-labels'] || {};
+              const label = enumLabels[String(val)] || val;
+              return `&nbsp;•&nbsp;${label}: "${val}"`;
+            }).join('<br>');
+            childDescription += `<br>${enumList}`;
+          }
+
+          const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
+
+          rows.push({
+            no: `(${childNo++})`,
+            description: childDescription,
+            key: `"${childKeyDisplay}"`,
+            valueType: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+            defaultValue: child.default !== undefined ? String(child.default) : '-',
+            required: Object.values(child.required || {}).some(s => s === 'required') ? 'Required' : 'Optional',
+            isSubRow: true
+          });
+        }
+      }
+    }
+  }
+
+  return rows;
+}
+

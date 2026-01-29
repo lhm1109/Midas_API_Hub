@@ -28,6 +28,7 @@ import {
   Filter,
   X,
   Search,
+  Link2,
 } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
 import { ApiTask, Column } from '../types/manager';
@@ -42,10 +43,11 @@ interface ApiTableProps {
   onTaskDelete: (taskId: string) => void;
   onAddTask: () => void;
   onTaskUpdate?: (task: ApiTask) => Promise<ApiTask>; // 인라인 편집용
+  onNavigateToEndpoint?: (endpointId: string) => void; // 프로젝트 엔드포인트로 이동
 }
 
 // 상태 컬럼의 가능한 값들 (인라인 편집용 - 향후 사용)
-const STATUS_OPTIONS = ['empty', 'wip', 'done', 'warning', 'na'] as const;
+// const _STATUS_OPTIONS = ['empty', 'wip', 'done', 'warning', 'na'] as const;
 
 type SortDirection = 'asc' | 'desc' | null;
 
@@ -78,16 +80,24 @@ export function ApiTable({
   onTaskEdit,
   onTaskDelete,
   onAddTask,
-  onTaskUpdate,
+  onTaskUpdate: _onTaskUpdate,
+  onNavigateToEndpoint,
 }: ApiTableProps) {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-  const [filters, setFilters] = useState<FilterConfig[]>([]);
+  const [filters, setFilters] = useState<FilterConfig[]>(() => {
+    try {
+      const saved = localStorage.getItem('manager-table-filters');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // 인라인 편집 상태
-  const [editingCell, setEditingCell] = useState<{ taskId: string; columnId: string } | null>(null);
-  const [editValue, setEditValue] = useState<string>('');
-  const editInputRef = useRef<HTMLInputElement>(null);
+  const [_editingCell, _setEditingCell] = useState<{ taskId: string; columnId: string } | null>(null);
+  const [_editValue, _setEditValue] = useState<string>('');
+  // const _editInputRef = useRef<HTMLInputElement>(null);
 
   // 컬럼 너비 상태 (드래그 리사이즈용)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
@@ -148,8 +158,8 @@ export function ApiTable({
     if (!sortColumn || !sortDirection) return tasks;
 
     return [...tasks].sort((a, b) => {
-      const aValue = a[sortColumn];
-      const bValue = b[sortColumn];
+      const aValue = a[sortColumn] ?? '';
+      const bValue = b[sortColumn] ?? '';
 
       if (aValue === bValue) return 0;
 
@@ -164,16 +174,16 @@ export function ApiTable({
       const existingFilterIndex = prevFilters.findIndex(
         (filter) => filter.columnId === columnId
       );
+      let newFilters;
       if (existingFilterIndex > -1) {
-        const newFilters = [...prevFilters];
+        newFilters = [...prevFilters];
         newFilters[existingFilterIndex] = {
           columnId,
           columnLabel: columns.find((col) => col.id === columnId)?.label || '',
           selectedValues,
         };
-        return newFilters;
       } else {
-        return [
+        newFilters = [
           ...prevFilters,
           {
             columnId,
@@ -182,17 +192,22 @@ export function ApiTable({
           },
         ];
       }
+      localStorage.setItem('manager-table-filters', JSON.stringify(newFilters));
+      return newFilters;
     });
   };
 
   const clearFilter = (columnId: string) => {
-    setFilters((prevFilters) =>
-      prevFilters.filter((filter) => filter.columnId !== columnId)
-    );
+    setFilters((prevFilters) => {
+      const newFilters = prevFilters.filter((filter) => filter.columnId !== columnId);
+      localStorage.setItem('manager-table-filters', JSON.stringify(newFilters));
+      return newFilters;
+    });
   };
 
   const clearAllFilters = () => {
     setFilters([]);
+    localStorage.removeItem('manager-table-filters');
   };
 
   // 모든 컬럼의 unique values를 한 번에 계산하여 캐싱
@@ -217,7 +232,7 @@ export function ApiTable({
     return sortedTasks.filter((task) => {
       return filters.every((filter) => {
         if (filter.selectedValues.length > 0) {
-          return filter.selectedValues.includes(task[filter.columnId]);
+          return filter.selectedValues.includes(task[filter.columnId] ?? '');
         }
         return true;
       });
@@ -277,6 +292,36 @@ export function ApiTable({
           <CategoryBadge category={value as string} />
         </div>
       ) : null;
+    }
+
+    // endPoint 컬럼: linkedEndpointId가 있으면 링크 아이콘 표시 + 툴팁
+    if (columnId === 'endPoint') {
+      return (
+        <Tooltip delayDuration={300}>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-1 justify-center cursor-default">
+              <span className="truncate">{value || ''}</span>
+              {task.linkedEndpointId && onNavigateToEndpoint && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onNavigateToEndpoint(task.linkedEndpointId!);
+                  }}
+                  className="flex-shrink-0 p-0.5 rounded hover:bg-cyan-600/20 transition-colors"
+                  title="프로젝트 탭에서 열기"
+                >
+                  <Link2 className="w-3.5 h-3.5 text-cyan-400" />
+                </button>
+              )}
+            </div>
+          </TooltipTrigger>
+          {value && (
+            <TooltipContent side="top" className="bg-zinc-800 text-zinc-100 border-zinc-700">
+              <p className="max-w-xs break-words">{value}</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
+      );
     }
 
     // Product Ribbon 컬럼들은 툴팁과 말줄임표 적용
