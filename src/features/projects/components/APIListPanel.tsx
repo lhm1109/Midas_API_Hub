@@ -592,7 +592,18 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
   // 🔥 엔드포인트별 잠금 상태 관리
   const [endpointLocks, setEndpointLocks] = useState<Record<string, { locked: boolean; lockedBy?: string }>>({});
-  const { currentUserId } = useAppStore();
+  const { currentUserId, releaseEndpointLock } = useAppStore();
+
+  // 🔓 엔드포인트 변경 시 이전 락 해제
+  const prevSelectedEndpointRef = useRef<string | null>(null);
+  useEffect(() => {
+    const prevEndpoint = prevSelectedEndpointRef.current;
+    if (prevEndpoint && prevEndpoint !== selectedEndpoint) {
+      // 이전 엔드포인트의 락 해제
+      releaseEndpointLock(prevEndpoint).catch(console.error);
+    }
+    prevSelectedEndpointRef.current = selectedEndpoint;
+  }, [selectedEndpoint, releaseEndpointLock]);
 
   // localStorage에서 확장 상태 로드
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(() => {
@@ -718,6 +729,15 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
     // 초기 로드 시 한 번만 체크 (주기적 체크는 제거 - 버전 로드 시에만 체크)
     checkAllLocks();
+
+    // 🔄 lock-status-changed 이벤트 구독 (VersionTab에서 Load 시 발생)
+    const handleLockStatusChanged = () => {
+      checkAllLocks();
+    };
+    window.addEventListener('lock-status-changed', handleLockStatusChanged);
+    return () => {
+      window.removeEventListener('lock-status-changed', handleLockStatusChanged);
+    };
   }, [products, checkLockStatus]);
 
   // 🔥 선택된 엔드포인트는 즉시 확인

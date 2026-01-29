@@ -1,0 +1,332 @@
+# ============================================================================
+# UI RULES - Original Schema UI 통합 규칙
+# ============================================================================
+# Builder + Table 통합 (구 ui-rules.yaml, builder.yaml, table.yaml)
+
+version: "1.0.0"
+extends: "./shared.yaml"
+type: "original"
+
+# ============================================================================
+# FIELD TYPE MAPPING
+# ============================================================================
+fieldTypeMapping:
+  string:
+    component: "Input"
+    props:
+      type: "text"
+      className: "bg-zinc-800 border-zinc-700"
+  
+  number:
+    component: "Input"
+    props:
+      type: "number"
+      className: "bg-zinc-800 border-zinc-700"
+  
+  integer:
+    component: "Input"
+    props:
+      type: "number"
+      className: "bg-zinc-800 border-zinc-700"
+  
+  boolean:
+    component: "Checkbox"
+    props:
+      className: "w-4 h-4"
+  
+  array:
+    component: "Textarea"
+    props:
+      className: "bg-zinc-800 border-zinc-700 font-mono text-xs"
+      placeholder: "Enter as JSON array, e.g., [1, 2, 3]"
+  
+  object:
+    component: "Textarea"
+    props:
+      className: "bg-zinc-800 border-zinc-700 font-mono text-xs min-h-[100px]"
+      placeholder: 'Enter as JSON object, e.g., {"key": "value"}'
+  
+  enum:
+    component: "Select"
+    props:
+      className: "bg-zinc-800 border-zinc-700"
+
+# ============================================================================
+# LAYOUT RULES
+# ============================================================================
+layout:
+  sectionHeader:
+    enabled: true
+    style:
+      backgroundColor: "bg-cyan-950/30"
+      borderColor: "border-zinc-800"
+      textColor: "text-cyan-400"
+      fontSize: "text-xs"
+      fontWeight: "font-semibold"
+      padding: "p-2"
+  
+  fieldGrouping:
+    enabled: false
+  
+  nestedObject:
+    enabled: true
+    accordion: true
+    checkbox: true
+    style:
+      border: "border-zinc-700"
+      background: "bg-zinc-900/50"
+      headerBackground: "bg-zinc-800/50"
+
+# ============================================================================
+# RENDERING RULES
+# ============================================================================
+rendering:
+  requiredIndicator:
+    enabled: true
+    symbol: "*"
+    color: "text-red-400"
+  
+  description:
+    enabled: true
+    position: "inline"
+    style:
+      color: "text-zinc-500"
+      fontSize: "text-xs"
+  
+  typeIndicator:
+    enabled: true
+    position: "right"
+    style:
+      color: "text-zinc-600"
+      fontSize: "text-[10px]"
+      fontFamily: "font-mono"
+  
+  enumDisplay:
+    inline: false
+    showLabels: false
+
+# ============================================================================
+# VALIDATION
+# ============================================================================
+validation:
+  errorDisplay:
+    position: "below"
+    style:
+      color: "text-red-400"
+      fontSize: "text-xs"
+      icon: "❌"
+  
+  warningDisplay:
+    position: "below"
+    style:
+      color: "text-yellow-400"
+      icon: "⚠️"
+
+# ============================================================================
+# CONDITIONAL RENDERING
+# ============================================================================
+conditionalRendering:
+  oneOf:
+    enabled: true
+    sectionReset: true
+  
+  allOf:
+    enabled: true
+    merge: true
+
+# ============================================================================
+# STYLING
+# ============================================================================
+styling:
+  colors:
+    primary: "blue-600"
+    secondary: "zinc-700"
+    success: "green-600"
+    error: "red-600"
+    warning: "yellow-600"
+  
+  spacing:
+    fieldGap: "4"
+    sectionGap: "6"
+  
+  borders:
+    fieldBorder: "border-zinc-700"
+    sectionBorder: "border-zinc-800"
+
+# ============================================================================
+# BUILDER TAB SPECIFIC (구 builder.yaml)
+# ============================================================================
+builder:
+  formLayout:
+    container:
+      className: "bg-gradient-to-br from-purple-950/50 to-zinc-900 border-2 border-purple-800/50 rounded-lg p-6"
+    title:
+      text: "Schema-Based Fields"
+      icon: "📝"
+      className: "text-lg font-semibold mb-4"
+    fieldContainer:
+      className: "space-y-4"
+
+  fieldRendering:
+    standard:
+      label:
+        className: "text-sm flex items-center gap-2"
+        showRequired: true
+        showDescription: true
+        showType: true
+      input:
+        className: "bg-zinc-800 border-zinc-700"
+        showPlaceholder: true
+    enum:
+      component: "Select"
+      showEmptyOption: false
+      optionFormat: "value"
+    array:
+      component: "Textarea"
+      parseJson: true
+      formatOnBlur: true
+    object:
+      accordion: true
+      checkbox: true
+      expandByDefault: false
+      style:
+        border: "border-zinc-700 rounded-md bg-zinc-900/50"
+        header: "flex items-center gap-2 p-3 bg-zinc-800/50"
+        content: "p-4 space-y-3 bg-zinc-900/30"
+        childBorder: "pl-4 border-l-2 border-zinc-700"
+
+  inputBehavior:
+    autoSave:
+      enabled: false
+      debounce: 1000
+    validation:
+      trigger: "onChange"
+      showErrors: "immediate"
+    defaultValues:
+      applyOnMount: true
+      clearOnReset: true
+    typeCoercion:
+      number: true
+      boolean: true
+      array: true
+
+  instanceManagement:
+    enabled: true
+    wrapper: "Assign"
+    defaultInstance: "1"
+    ui:
+      container:
+        className: "bg-gradient-to-br from-blue-950/50 to-zinc-900 border-2 border-blue-800/50 rounded-lg p-4"
+      title:
+        text: "Assign Instances"
+        icon: "🔢"
+        className: "text-sm font-semibold"
+      buttons:
+        add:
+          text: "+ Add Instance"
+          className: "h-7 text-xs bg-blue-600 hover:bg-blue-500"
+        remove:
+          icon: "🗑️"
+          className: "p-1 rounded text-red-400 hover:bg-red-900/20"
+
+  jsonPreview:
+    enabled: true
+    modes:
+      - annotated
+      - monaco
+    defaultMode: "annotated"
+
+# ============================================================================
+# TABLE TAB SPECIFIC (구 table.yaml)
+# ============================================================================
+table:
+  structure:
+    columns:
+      - id: "no"
+        header: "No."
+        width: "6%"
+        align: "center"
+      - id: "description"
+        header: "Description"
+        width: "35%"
+        align: "left"
+      - id: "key"
+        header: "Key"
+        width: "14%"
+        align: "left"
+      - id: "type"
+        header: "Value Type"
+        width: "10%"
+        align: "center"
+      - id: "default"
+        header: "Default"
+        width: "10%"
+        align: "center"
+      - id: "required"
+        header: "Required"
+        width: "25%"
+        align: "left"
+    numbering:
+      start: 1
+      resetOnSection: true
+
+  sectionHeaders:
+    enabled: true
+    style:
+      background: "bg-cyan-950/30"
+      textColor: "text-cyan-400"
+      fontSize: "text-xs"
+      fontWeight: "font-semibold"
+      padding: "p-2"
+    colspan: 6
+
+  rowRendering:
+    standard:
+      hover: true
+      hoverStyle: "hover:bg-zinc-800/30"
+    description:
+      showFieldName: true
+      format: "name"
+      markdown: true
+      enumDisplay:
+        enabled: false
+    key:
+      format: '"{key}"'
+      style:
+        color: "text-blue-400"
+        fontFamily: "font-mono"
+    type:
+      format: "capitalize"
+      arrayFormat: "Array[{itemType}]"
+    default:
+      emptyValue: "-"
+      format: "raw"
+    required:
+      simpleFormat: true
+      badge:
+        required:
+          text: "Required"
+          className: "px-2 py-0.5 text-xs rounded bg-red-600/20 text-red-400"
+        optional:
+          text: "Optional"
+          className: "px-2 py-0.5 text-xs rounded bg-zinc-700/50 text-zinc-400"
+
+  nestedFields:
+    enabled: true
+    expandable: true
+    expandIcon: "▼"
+    collapseIcon: "▶"
+    style:
+      indentation: "pl-8"
+      background: "bg-zinc-900/50"
+      keyColor: "text-amber-400"
+
+# ============================================================================
+# VALIDATION MESSAGES
+# ============================================================================
+validationMessages:
+  required: "{field} is required"
+  invalidType: "{field} must be a {type}"
+  invalidEnum: "{field} must be one of: {values}"
+  minItems: "{field} must have at least {min} items"
+  maxItems: "{field} must have at most {max} items"

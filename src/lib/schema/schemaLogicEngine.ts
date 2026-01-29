@@ -128,7 +128,7 @@ export async function initSchemaLogicRules(
 
   // 🔥 캐시 무효화
   if (noCache && cachedRulesMap.has(cacheKey)) {
-    console.log(`🔄 Force reloading schema-logic.yaml for ${cacheKey}`);
+    console.log(`🔄 Force reloading shared.yaml (schema logic) for ${cacheKey}`);
     cachedRulesMap.delete(cacheKey);
   }
 
@@ -138,7 +138,8 @@ export async function initSchemaLogicRules(
 
   const loadPromise = (async () => {
     try {
-      const path = `/schema_definitions/${psdSet}/${schemaType}/schema-logic.yaml`;
+      // 🔥 NEW: shared.yaml에서 schema logic 규칙 로드 (구 schema-logic.yaml 통합)
+      const path = `/schema_definitions/${psdSet}/${schemaType}/shared.yaml`;
       const response = await fetch(path);
       if (!response.ok) {
         throw new Error(`Failed to load ${path}: ${response.statusText}`);
@@ -150,7 +151,7 @@ export async function initSchemaLogicRules(
       cachedRulesMap.set(cacheKey, rules);
       loadingMap.delete(cacheKey);
 
-      console.log(`✅ Loaded schema-logic.yaml from ${cacheKey}`);
+      console.log(`✅ Loaded schema logic from ${cacheKey}/shared.yaml`);
       return rules;
     } catch (error) {
       console.error(`❌ Failed to load schema logic rules from ${cacheKey}:`, error);

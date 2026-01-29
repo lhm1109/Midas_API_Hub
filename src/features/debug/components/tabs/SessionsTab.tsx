@@ -97,6 +97,8 @@ export function SessionsTab() {
       if (response.ok) {
         toast.success(`✅ "${lock.locked_by}" 사용자의 잠금이 해제되었습니다.`);
         fetchSessions();
+        // 🔄 리스트 패널 락 상태 갱신 이벤트
+        window.dispatchEvent(new CustomEvent('lock-status-changed'));
       } else {
         throw new Error('Failed to unlock');
       }
@@ -131,6 +133,8 @@ export function SessionsTab() {
       await Promise.all(unlockPromises);
       toast.success(`✅ "${user}" 사용자의 모든 잠금이 해제되었습니다.`);
       fetchSessions();
+      // 🔄 리스트 패널 락 상태 갱신 이벤트
+      window.dispatchEvent(new CustomEvent('lock-status-changed'));
     } catch (error) {
       console.error('Failed to force unlock all:', error);
       toast.error('❌ 잠금 해제에 실패했습니다.');

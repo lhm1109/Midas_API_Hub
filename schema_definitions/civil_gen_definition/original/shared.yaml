@@ -1,0 +1,188 @@
+# ============================================================================
+# SHARED RULES - Original Schema용 공통 규칙 (SSOT)
+# ============================================================================
+# x-* extensions 미사용 버전
+
+version: "1.0.0"
+specVersion: "1.0"
+type: "original"
+
+# ============================================================================
+# FLEXIBILITY LAYER - 유연성 레이어
+# ============================================================================
+
+unknownPolicy:
+  transform:
+    action: "passthrough"
+    collectUnknown: true
+  validate:
+    unknownKey: "warn"
+
+defaultHandlers:
+  typeInferenceFallback:
+    type: "string"
+    component: "Input"
+    warn: true
+  
+  missingXui:
+    label: "{key}"
+    group: "General"
+    component: "Input"
+
+versioning:
+  rulesVersion: "1.0.0"
+  compatibility:
+    schemaDraft: "draft-07"
+
+precedence:
+  - explicit
+  - product
+  - shared
+  - inference
+
+# ============================================================================
+# REGISTRIES - 레지스트리
+# ============================================================================
+
+# Wrapper Rules 레지스트리
+wrapperRegistry:
+  - id: WRAP_DB
+    pattern: "^/db/"
+    wrapper: "Assign"
+    description: "Database endpoints use Assign wrapper"
+
+  - id: WRAP_POST
+    pattern: "^/post/"
+    wrapper: "Argument"
+    description: "Post endpoints use Argument wrapper"
+
+  - id: WRAP_DEFAULT
+    pattern: ".*"
+    wrapper: null
+    priority: -1
+    description: "Default: no wrapper"
+
+# 필드 타입 → UI 컴포넌트 레지스트리
+componentRegistry:
+  string:
+    component: "Input"
+    props: { type: "text" }
+
+  number:
+    component: "Input"
+    props: { type: "number" }
+
+  integer:
+    component: "Input"
+    props: { type: "number" }
+
+  boolean:
+    component: "Checkbox"
+    props: {}
+
+  array:
+    component: "Textarea"
+    props: { placeholder: "Enter as JSON array, e.g., [1, 2, 3]" }
+
+  object:
+    component: "Textarea"
+    props: { placeholder: "Enter as JSON object" }
+
+  enum:
+    component: "Select"
+    props: {}
+
+# ============================================================================
+# SCHEMA LOGIC - 스키마 처리 로직 (구 schema-logic.yaml 통합)
+# ============================================================================
+
+platformSkeleton:
+  entityCollection:
+    description: "Platform Standard Collection Map"
+    type: "object"
+    patternProperties:
+      pattern: "^[0-9]+$"
+      description: "Entity ID (numeric)"
+      ref: "#/$defs/entity"
+    additionalProperties: false
+    minProperties: 0
+  defaultBodyRoot: "Assign"
+  alternativeBodyRoots:
+    - "Argument"
+    - "Assign"
+  rootStructure:
+    type: "object"
+    additionalProperties: false
+
+schemaStructurePatterns:
+  - name: "Unwrap Root Wrapper Key"
+    description: "최상위 wrapper key 제거"
+    enabled: true
+    priority: 1
+    detect:
+      - path: "type"
+        exists: false
+      - path: "properties"
+        exists: false
+    transform:
+      action: "unwrap-root-key"
+      extractTitle: true
+      preserveMetadata: ["$schema", "description", "x-ui", "x-transport"]
+  
+  - name: "Root oneOf"
+    description: "최상위 oneOf 패턴"
+    enabled: true
+    detect:
+      - path: "oneOf"
+        exists: true
+        isArray: true
+      - path: "properties"
+        exists: false
+    transform:
+      action: "wrap-in-virtual-object"
+      wrapperKey: "{title}"
+      wrapperType: "object"
+
+sectionRules:
+  - name: "Default Section"
+    description: "기본 섹션"
+    condition:
+      type: "always"
+    action:
+      type: "assign"
+      section: "General"
+
+sectionOrder:
+  - "General"
+  - "Options"
+  - "Advanced"
+
+typeLabels:
+  string: "String"
+  number: "Number"
+  integer: "Integer"
+  boolean: "Boolean"
+  array: "Array"
+  object: "Object"
+
+visibilityRules: []
+
+requiredCalculationRules:
+  defaultStatus: "optional"
+  conditionalRequired:
+    enabled: true
+    sources:
+      - "allOf[].if.properties"
+      - "allOf[].then.required"
+
+validationLayerRules:
+  defaultLayers: ["STD"]
+  layerMapping: []
+
+descriptionBuildingRules:
+  format: "simple"
+  includeElements:
+    - "description"
+    - "enum"
+    - "default"
+  excludeExtensions: true

@@ -1,0 +1,152 @@
+# ============================================================================
+# MCP RULES - MCP 서버 전용 규칙
+# ============================================================================
+# MCP 서버가 지켜야 할 보안, IO, 결정론, 검증 규칙
+# 스키마 의미는 shared.yaml에서 참조
+# ============================================================================
+
+version: "1.0.0"
+extends: "./shared.yaml"
+
+# ============================================================================
+# SECURITY - 보안 정책
+# ============================================================================
+security:
+  # 읽기 허용 경로
+  readAllowlist:
+    - "schema_definitions/**/*.{yaml,yml}"
+    - "schema_definitions/**/*.json"
+  
+  # 쓰기 허용 경로
+  writeAllowlist:
+    - "generated_schemas/**/*.json"
+  
+  # 차단 정책
+  deny:
+    pathTraversal: true      # ../ 차단
+    symlinks: true           # 심볼릭 링크 차단
+    absolutePaths: true      # 절대 경로 차단 (allowlist 외)
+
+# ============================================================================
+# DETERMINISM - 결정론적 출력 보장
+# ============================================================================
+determinism:
+  # JSON 출력 규칙
+  json:
+    sortObjectKeys: true     # 키 알파벳 정렬
+    indent: 2
+    lineEnding: "LF"         # CRLF | LF
+  
+  # 배열 처리
+  array:
+    preserveOrder: true      # 원본 순서 유지
+  
+  # 타입 강제 변환 금지
+  forbidTypeCoercion: true   # "1" → 1 변환 금지
+  
+  # YAML Alias 처리
+  yamlAliasPolicy: "expand"  # expand | preserve | reject
+
+# ============================================================================
+# VALIDATION PIPELINE - 검증 파이프라인
+# ============================================================================
+validation:
+  # Enum 규칙
+  enum:
+    integerMustUseOneOf: true
+    autoConvert:
+      enabled: true
+      from: "enum"
+      to: "oneOf"
+      fallbackLabel: "Option {value}"
+  
+  # 구조 검증
+  structure:
+    requireSchema: 
+      enabled: true
+      value: "http://json-schema.org/draft-07/schema#"
+    recommendTitle:
+      enabled: true
+      level: "warning"
+    requiredFieldsExist:
+      enabled: true
+      message: "required에 있는 필드가 properties에 없습니다"
+  
+  # 타입 검증
+  type:
+    prefixMatch:
+      enabled: true
+      # 규칙은 shared.yaml의 typeInferenceRegistry 참조
+
+# ============================================================================
+# TRANSFORM RULES - 변환 규칙
+# ============================================================================
+transform:
+  # 루트 래퍼 키 제거
+  unwrapRootKey:
+    enabled: true
+    extractTitle: true
+    preserveMetadata:
+      - "description"
+      - "x-ui"
+      - "x-transport"
+  
+  # Unknown key 처리
+  unknownKeys:
+    action: "passthrough"    # passthrough | remove | error
+    collect: true            # meta에 기록
+    
+  # x-* 마커 처리
+  markers:
+    # shared.yaml의 markerRegistry 참조
+    unknownMarker: "passthrough"  # passthrough | warn | error
+
+# ============================================================================
+# OUTPUT - 출력 규칙
+# ============================================================================
+output:
+  # 파일명 규칙
+  filename:
+    case: "UPPER_SNAKE"      # 대문자 스네이크 케이스
+    extension: ".json"
+  
+  # 메타데이터 포함
+  meta:
+    enabled: true
+    fields:
+      - "rulesVersion"
+      - "specVersion"
+      - "sourceHash"
+      - "outputHash"
+      - "generatedAt"
+      - "appliedRuleIds"
+      - "warnings"
+      - "unknownKeys"
+  
+  # 별도 meta.json 파일 생성
+  separateMetaFile: false    # true면 SCHEMA_NAME.meta.json 생성
+
+# ============================================================================
+# TOOL CONTRACT - MCP 도구 계약
+# ============================================================================
+toolContract:
+  # save_schema 도구
+  saveSchema:
+    requiredParams:
+      - schemaName
+      - schema
+    optionalParams:
+      - description
+      - outputDir
+      - questions
+      - skipValidation
+    
+    # 질문 필드 정책
+    questions:
+      maxItems: 10
+      requiredFields:
+        - field
+        - question
+      optionalFields:
+        - context
+        - suggestion

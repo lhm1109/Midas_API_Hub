@@ -95,11 +95,77 @@ export interface HTMLTemplateDefinition {
 }
 
 // ============================================================================
+// NEW: 통합 규칙 정의 (3파일 체계)
+// ============================================================================
+
+export interface SharedRulesDefinition {
+  version: string;
+  specVersion: string;
+  unknownPolicy: any;
+  defaultHandlers: any;
+  versioning: any;
+  precedence: string[];
+  markerRegistry: Array<{ id: string; key: string; description?: string; required?: boolean }>;
+  wrapperRegistry: Array<{ id: string; pattern: string; wrapper: string | null; description?: string; priority?: number }>;
+  typeInferenceRegistry: Array<{ id: string; prefix: string; type: string; example?: string }>;
+  componentRegistry: Record<string, { component: string; props?: any }>;
+  naming: any;
+  diagnostics: any;
+  outputMeta: any;
+}
+
+export interface MCPRulesDefinition {
+  version: string;
+  extends: string;
+  security: any;
+  determinism: any;
+  validation: any;
+  transform: any;
+  output: any;
+  toolContract: any;
+}
+
+export interface UIRulesDefinitionV2 extends SharedRulesDefinition {
+  layout: any;
+  enhancedFeatures: any;
+  rendering: any;
+  validation: any;
+  builder: any;
+  table: any;
+  styling: any;
+  validationMessages: any;
+  fallbackUI: any;
+}
+
+// ============================================================================
 // YAML 파일 로더
 // ============================================================================
 
 /**
- * UI Rules YAML 로드 (2-Level)
+ * Shared Rules YAML 로드 (SSOT - 공통 규칙)
+ * @param psdSet - PSD 세트 (Level 1: default, civil_gen_definition, etc.)
+ * @param schemaType - 스키마 타입 (Level 2: enhanced, manual, original)
+ */
+export async function loadSharedRules(
+  psdSet: string = 'civil_gen_definition',
+  schemaType: string = 'enhanced'
+): Promise<SharedRulesDefinition> {
+  try {
+    const path = `/schema_definitions/${psdSet}/${schemaType}/shared.yaml`;
+    const response = await fetch(path);
+    const yamlText = await response.text();
+    const parsed = yaml.load(yamlText) as SharedRulesDefinition;
+
+    console.log(`✅ Loaded ${psdSet}/${schemaType}/shared.yaml`, parsed);
+    return parsed;
+  } catch (error) {
+    console.error(`❌ Failed to load ${psdSet}/${schemaType}/shared.yaml:`, error);
+    throw error;
+  }
+}
+
+/**
+ * UI Rules YAML 로드 (통합된 ui.yaml - shared.yaml 상속)
  * @param psdSet - PSD 세트 (Level 1: default, civil_gen_definition, etc.)
  * @param schemaType - 스키마 타입 (Level 2: enhanced, manual, original)
  */
@@ -108,21 +174,24 @@ export async function loadUIRules(
   schemaType: string = 'enhanced'
 ): Promise<UIRulesDefinition> {
   try {
-    const path = `/schema_definitions/${psdSet}/${schemaType}/ui-rules.yaml`;
+    // 🔥 NEW: shared.yaml + ui.yaml 병합
+    const sharedRules = await loadSharedRules(psdSet, schemaType);
+    const path = `/schema_definitions/${psdSet}/${schemaType}/ui.yaml`;
     const response = await fetch(path);
     const yamlText = await response.text();
     const parsed = yaml.load(yamlText) as UIRulesDefinition;
 
-    console.log(`✅ Loaded ${psdSet}/${schemaType}/ui-rules.yaml`, parsed);
-    return parsed;
+    const merged = { ...sharedRules, ...parsed };
+    console.log(`✅ Loaded ${psdSet}/${schemaType}/ui.yaml (merged with shared)`, merged);
+    return merged;
   } catch (error) {
-    console.error(`❌ Failed to load ${psdSet}/${schemaType}/ui-rules.yaml:`, error);
+    console.error(`❌ Failed to load ${psdSet}/${schemaType}/ui.yaml:`, error);
     throw error;
   }
 }
 
 /**
- * Builder Rules YAML 로드 (2-Level)
+ * Builder Rules YAML 로드 (ui.yaml의 builder 섹션 사용)
  * @param psdSet - PSD 세트 (Level 1)
  * @param schemaType - 스키마 타입 (Level 2)
  */
@@ -131,25 +200,37 @@ export async function loadBuilderRules(
   schemaType: string = 'enhanced'
 ): Promise<BuilderDefinition> {
   try {
-    const path = `/schema_definitions/${psdSet}/${schemaType}/builder.yaml`;
-    const response = await fetch(path);
-    const yamlText = await response.text();
-    const parsed = yaml.load(yamlText) as BuilderDefinition;
+    // 🔥 NEW: ui.yaml에서 builder 섹션 추출 (shared.yaml 상속됨)
+    const uiRules = await loadUIRules(psdSet, schemaType) as any;
 
-    // extends 처리: ui-rules.yaml 병합
-    const uiRules = await loadUIRules(psdSet, schemaType);
-    const merged = { ...uiRules, ...parsed };
+    // ui.yaml의 builder 섹션 + 공통 규칙 병합
+    const builderConfig = uiRules.builder || {};
+    const merged = {
+      ...uiRules,
+      formLayout: builderConfig.formLayout,
+      fieldRendering: builderConfig.fieldRendering,
+      dynamicBehavior: builderConfig.dynamicBehavior,
+      instanceManagement: builderConfig.instanceManagement,
+      jsonPreview: builderConfig.jsonPreview,
+      // shared.yaml에서 가져온 규칙들
+      enhancedSchemaMarkers: uiRules.markerRegistry?.map((m: any) => m.key) || [],
+      wrapperRules: uiRules.wrapperRegistry?.map((w: any) => ({
+        pattern: w.pattern,
+        wrapper: w.wrapper,
+        description: w.description,
+      })) || [],
+    };
 
-    console.log(`✅ Loaded ${psdSet}/${schemaType}/builder.yaml`, merged);
-    return merged;
+    console.log(`✅ Loaded builder rules from ${psdSet}/${schemaType}/ui.yaml`, merged);
+    return merged as BuilderDefinition;
   } catch (error) {
-    console.error(`❌ Failed to load ${psdSet}/${schemaType}/builder.yaml:`, error);
+    console.error(`❌ Failed to load builder rules:`, error);
     throw error;
   }
 }
 
 /**
- * Table Rules YAML 로드 (2-Level)
+ * Table Rules YAML 로드 (ui.yaml의 table 섹션 사용)
  * @param psdSet - PSD 세트 (Level 1)
  * @param schemaType - 스키마 타입 (Level 2)
  */
@@ -158,31 +239,26 @@ export async function loadTableRules(
   schemaType: string = 'enhanced'
 ): Promise<TableDefinition> {
   try {
-    const path = `/schema_definitions/${psdSet}/${schemaType}/table.yaml`;
-    const response = await fetch(path);
+    // 🔥 NEW: ui.yaml에서 table 섹션 추출 (shared.yaml 상속됨)
+    const uiRules = await loadUIRules(psdSet, schemaType) as any;
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
+    // ui.yaml의 table 섹션 + 공통 규칙 병합
+    const tableConfig = uiRules.table || {};
+    const merged = {
+      ...uiRules,
+      schemaExtensions: tableConfig.schemaExtensions,
+      tableStructure: tableConfig.structure,
+      sectionHeaders: uiRules.layout?.sectionHeader,
+      rowRendering: tableConfig.rowRendering,
+      nestedFields: tableConfig.nestedFields,
+      conditionRows: tableConfig.conditionRows,
+    };
 
-    const yamlText = await response.text();
-    const parsed = yaml.load(yamlText) as TableDefinition;
-
-    // extends 처리: ui-rules.yaml 병합 (실패해도 계속 진행)
-    try {
-      const uiRules = await loadUIRules(psdSet, schemaType);
-      const merged = { ...uiRules, ...parsed };
-      console.log(`✅ Loaded ${psdSet}/${schemaType}/table.yaml`, merged);
-      console.log(`🔍 schemaExtensions in merged:`, merged.schemaExtensions);
-      return merged;
-    } catch (uiRulesError) {
-      console.warn(`⚠️ Failed to load ui-rules.yaml, using table.yaml only:`, uiRulesError);
-      console.log(`✅ Loaded ${psdSet}/${schemaType}/table.yaml (without ui-rules)`, parsed);
-      console.log(`🔍 schemaExtensions in parsed:`, parsed.schemaExtensions);
-      return parsed;
-    }
+    console.log(`✅ Loaded table rules from ${psdSet}/${schemaType}/ui.yaml`, merged);
+    console.log(`🔍 schemaExtensions in merged:`, merged.schemaExtensions);
+    return merged as TableDefinition;
   } catch (error) {
-    console.error(`❌ Failed to load ${psdSet}/${schemaType}/table.yaml:`, error);
+    console.error(`❌ Failed to load table rules:`, error);
     // 🔥 기본 구조 반환하여 앱이 크래시하지 않도록 함
     return {
       version: '1.0',

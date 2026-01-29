@@ -1,0 +1,327 @@
+# ============================================================================
+# UI RULES - UI 렌더링 통합 규칙
+# ============================================================================
+# Builder/Table/HTML 렌더링을 위한 통합 규칙
+# 공통 규칙은 shared.yaml에서 상속
+# ============================================================================
+
+version: "1.0.0"
+extends: "./shared.yaml"
+
+# ============================================================================
+# LAYOUT - 레이아웃 공통 규칙
+# ============================================================================
+layout:
+  # 섹션 헤더 (x-ui.group)
+  sectionHeader:
+    enabled: true
+    icon: "📋"
+    style:
+      borderTop: "border-t-2 border-cyan-800/50"
+      textColor: "text-cyan-400"
+      fontSize: "text-sm"
+      fontWeight: "font-semibold"
+      padding: "pt-4 pb-2"
+      firstSection:
+        borderTop: false
+
+  # 필드 그룹화
+  fieldGrouping:
+    enabled: true
+    groupBy: "x-ui.group"
+
+  # 중첩 객체
+  nestedObject:
+    accordion: true
+    checkbox: true
+    style:
+      border: "border-zinc-700"
+      background: "bg-zinc-900/50"
+      headerBackground: "bg-zinc-800/50"
+
+# ============================================================================
+# ENHANCED FEATURES - x-* 마커 지원
+# ============================================================================
+enhancedFeatures:
+  xui:
+    enabled: true
+    features:
+      label: true
+      hint: true
+      group: true
+      visibleWhen: true
+
+  xenumByType:
+    enabled: true
+    dynamicUpdate: true
+
+  xvalueConstraint:
+    enabled: true
+    display: "hint"
+    icon: "💡"
+    style:
+      color: "text-amber-400"
+      fontSize: "text-[10px]"
+
+  xnodeCountByType:
+    enabled: true
+    display: "hint"
+    validationTrigger: "onChange"
+
+# ============================================================================
+# RENDERING - 렌더링 공통 규칙
+# ============================================================================
+rendering:
+  requiredIndicator:
+    enabled: true
+    symbol: "*"
+    color: "text-red-400"
+
+  description:
+    enabled: true
+    source: "x-ui.label"
+    fallback: "key"
+    position: "inline"
+    style:
+      color: "text-zinc-200"
+      fontSize: "text-sm"
+
+  typeIndicator:
+    enabled: true
+    position: "right"
+    style:
+      color: "text-zinc-600"
+      fontSize: "text-[10px]"
+      fontFamily: "font-mono"
+
+  hintDisplay:
+    enabled: true
+    position: "below"
+    sources:
+      - "x-ui.hint"
+      - "x-value-constraint"
+      - "x-node-count-by-type"
+    style:
+      color: "text-amber-400"
+      fontSize: "text-[10px]"
+      fontStyle: "italic"
+      icon: "💡"
+
+# ============================================================================
+# VALIDATION DISPLAY - 검증 표시
+# ============================================================================
+validation:
+  standard:
+    enabled: true
+    badge: "STD"
+    badgeColor: "bg-blue-900/50 text-blue-300 border-blue-700/50"
+
+  appLayer:
+    enabled: true
+    badge: "APP"
+    badgeColor: "bg-orange-900/50 text-orange-300 border-orange-700/50"
+
+  errorDisplay:
+    position: "below"
+    style:
+      color: "text-red-400"
+      fontSize: "text-xs"
+      icon: "❌"
+
+  warningDisplay:
+    position: "below"
+    style:
+      color: "text-yellow-400"
+      fontSize: "text-xs"
+      icon: "⚠️"
+
+# ============================================================================
+# BUILDER SPECIFIC - Builder 탭 전용
+# ============================================================================
+builder:
+  formLayout:
+    container:
+      className: "bg-gradient-to-br from-purple-950/50 to-zinc-900 border-2 border-purple-800/50 rounded-lg p-6"
+    title:
+      text: "Schema-Based Fields"
+      icon: "📝"
+    fieldContainer:
+      className: "space-y-4"
+
+  fieldRendering:
+    standard:
+      label:
+        source: "description"
+        fallback: "name"
+        showRequired: true
+        showType: true
+      input:
+        className: "bg-zinc-800 border-zinc-700"
+
+    enum:
+      component: "Select"
+      dynamic: true
+      triggerField: "TYPE"
+
+    array:
+      component: "Textarea"
+      parseJson: true
+      showHint: true
+
+    object:
+      accordion: true
+      checkbox: true
+      expandByDefault: false
+
+  dynamicBehavior:
+    conditionalVisibility:
+      enabled: true
+      autoDetect: true
+      evaluateOn: "change"
+      hideMode: "remove"
+
+    dynamicEnum:
+      enabled: true
+      triggerField: "TYPE"
+      preserveValue: false
+
+    dynamicRequired:
+      enabled: true
+      triggerField: "TYPE"
+
+  instanceManagement:
+    enabled: true
+    wrapper: "Assign"
+    defaultInstance: "1"
+
+  jsonPreview:
+    enabled: true
+    modes:
+      - "annotated"
+      - "monaco"
+    defaultMode: "annotated"
+
+# ============================================================================
+# TABLE SPECIFIC - Table (Spec) 탭 전용
+# ============================================================================
+table:
+  # 스키마 확장 필드 추출 규칙
+  schemaExtensions:
+    extractFromSchema:
+      - { key: "x-ui", targetProperty: "ui", transformKey: true }
+      - { key: "x-enum-labels", targetProperty: "enumLabels", transformKey: true }
+      - { key: "x-enum-by-type", targetProperty: "enumByType", transformKey: true }
+      - { key: "x-enum-labels-by-type", targetProperty: "enumLabelsByType", transformKey: true }
+      - { key: "x-node-count-by-type", targetProperty: "nodeCountByType", transformKey: true }
+      - { key: "x-value-constraint", targetProperty: "valueConstraint", transformKey: true }
+      - { key: "x-required-by-type", targetProperty: "requiredByType", transformKey: true }
+      - { key: "x-transport", targetProperty: "x-transport", passthrough: true }
+
+  # 테이블 구조
+  structure:
+    columns:
+      - { id: "no", header: "No.", width: "6%", align: "center" }
+      - { id: "description", header: "Description", width: "35%", align: "left" }
+      - { id: "key", header: "Key", width: "14%", align: "left" }
+      - { id: "type", header: "Value Type", width: "10%", align: "center" }
+      - { id: "default", header: "Default", width: "10%", align: "center" }
+      - { id: "required", header: "Required", width: "25%", align: "left" }
+
+    numbering:
+      start: 1
+      resetOnSection: false
+
+  # 행 렌더링
+  rowRendering:
+    description:
+      source: "x-ui.label"
+      fallback: "key"
+      markdown: true
+      features:
+        enum:
+          enabled: true
+          title: "**Enum Values:**"
+          format: "• {value} - {label}"
+        enumByType:
+          enabled: true
+          title: "**Enum Values by Type:**"
+        valueConstraint:
+          enabled: true
+          title: "**Value Constraints:**"
+          badge: "APP"
+        nodeCountByType:
+          enabled: true
+          title: "**Node Count by Type:**"
+          badge: "APP"
+
+    key:
+      format: "\"{key}\""
+      style:
+        color: "text-blue-400"
+        fontFamily: "font-mono"
+
+    required:
+      dynamicByType: true
+
+  # 중첩 필드
+  nestedFields:
+    enabled: true
+    expandable: true
+    expandIcon: "▼"
+    collapseIcon: "▶"
+    style:
+      indentation: "pl-8"
+      background: "bg-zinc-900/50"
+      keyColor: "text-amber-400"
+
+# ============================================================================
+# STYLING - 전역 스타일
+# ============================================================================
+styling:
+  colors:
+    primary: "blue-600"
+    secondary: "cyan-600"
+    success: "green-600"
+    error: "red-600"
+    warning: "amber-600"
+    section: "cyan-400"
+
+  spacing:
+    fieldGap: "4"
+    sectionGap: "6"
+
+  borders:
+    fieldBorder: "border-zinc-700"
+    sectionBorder: "border-cyan-800/50"
+
+# ============================================================================
+# VALIDATION MESSAGES - 검증 메시지 템플릿
+# ============================================================================
+validationMessages:
+  required: "{field} is required for {TYPE}"
+  invalidType: "{field} must be a {type}"
+  invalidEnum: "{field} must be one of: {values} (for {TYPE})"
+  minItems: "{field} must have at least {min} items"
+  maxItems: "{field} must have at most {max} items"
+  nodeCount: "{field} must have {count} nodes for {TYPE}"
+  valueConstraint: "{field}: {constraint}"
+
+# ============================================================================
+# FALLBACK UI - 폴백 렌더링 (missing x-ui 처리)
+# ============================================================================
+fallbackUI:
+  # x-ui 없는 필드 처리
+  missingXui:
+    label:
+      source: "key"
+      transform: "humanize"  # "iTENDON_TYPE" → "I Tendon Type"
+    group: "General"
+    component: "Input"
+    warn: true
+
+  # 알 수 없는 타입 처리
+  unknownType:
+    component: "Textarea"
+    props:
+      placeholder: "Enter value as JSON"
+    warn: true

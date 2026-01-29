@@ -262,13 +262,25 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       return;
     }
 
-    // 잠금되지 않았으면 바로 로드
+    // 🔒 버전 로드 전 락 획득
+    const lockAcquired = await acquireEndpointLock(endpoint.id);
+    if (!lockAcquired) {
+      toast.error('❌ Failed to acquire lock');
+      return;
+    }
+
+    // 잠금 획득 후 로드 (락은 로드 완료 후에도 유지됨 - 새로고침 또는 다른 엔드포인트 선택 시 해제)
     try {
       await loadVersion(versionId);
       const version = versions.find(v => v.id === versionId);
       toast.success(`✅ Version ${version?.version || versionId} loaded successfully`);
+      toast.info('🔒 Lock acquired - will be released on refresh or endpoint change');
+      // 🔄 리스트 패널 락 상태 갱신 이벤트
+      window.dispatchEvent(new CustomEvent('lock-status-changed'));
     } catch (error) {
       toast.error(`❌ Failed to load version: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // 로드 실패 시에만 락 해제
+      await releaseEndpointLock(endpoint.id);
     }
   };
 
