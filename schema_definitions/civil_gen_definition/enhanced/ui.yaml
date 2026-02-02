@@ -49,7 +49,7 @@ enhancedFeatures:
       label: true
       hint: true
       sectionId: true  # 🔥 group deprecated → sectionId
-      visibleWhen: true
+      visibleWhen: false  # 🔥 deprecated → x-required-when/x-optional-when 사용
 
   xenumByType:
     enabled: true
@@ -67,6 +67,37 @@ enhancedFeatures:
     enabled: true
     display: "hint"
     validationTrigger: "onChange"
+
+  # 🔥 조건부 마커 표시 스타일 (테이블 헤더용)
+  conditionalMarkers:
+    # 조건부 필수: 조건 충족 시 표시 + required
+    x-required-when:
+      enabled: true
+      label: "Required When"
+      icon: "●"
+      color: "#ff7e7e"       # 빨간색 계열 (필수)
+      textColor: "text-red-300"
+      headerBackground: "bg-red-950/30"
+      headerBorder: "border-red-800/50"
+    
+    # 조건부 선택: 조건 충족 시 표시 + optional
+    x-optional-when:
+      enabled: true
+      label: "Optional When"
+      icon: "○"
+      color: "#7eb8ff"       # 파란색 계열 (선택)
+      textColor: "text-blue-300"
+      headerBackground: "bg-blue-950/30"
+      headerBorder: "border-blue-800/50"
+    
+    # 레거시 호환 (deprecated)
+    x-ui.visibleWhen:
+      enabled: false
+      label: "Visible When"
+      icon: "◐"
+      color: "#4c9aff"
+      deprecated: true
+      replacedBy: "x-required-when or x-optional-when"
 
 # ============================================================================
 # RENDERING - 렌더링 공통 규칙

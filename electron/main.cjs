@@ -78,7 +78,75 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(() => {
+// 🔥 서버에서 사용하는 포트 목록 (충돌 방지를 위해 앱 시작 시 정리)
+const SERVER_PORTS = [3001, 5178, 6274, 5173, 9527];
+
+// 🔥 포트를 사용하는 프로세스를 종료하는 함수 (Windows 전용)
+async function killProcessOnPort(port) {
+  const { exec } = require('child_process');
+
+  return new Promise((resolve) => {
+    // Windows: netstat로 PID 찾고 taskkill로 종료
+    exec(`netstat -ano | findstr :${port}`, (error, stdout) => {
+      if (error || !stdout.trim()) {
+        resolve(false);
+        return;
+      }
+
+      // LISTENING 상태인 PID 추출
+      const lines = stdout.trim().split('\n');
+      const pids = new Set();
+
+      for (const line of lines) {
+        if (line.includes('LISTENING')) {
+          const parts = line.trim().split(/\s+/);
+          const pid = parts[parts.length - 1];
+          if (pid && pid !== '0') {
+            pids.add(pid);
+          }
+        }
+      }
+
+      if (pids.size === 0) {
+        resolve(false);
+        return;
+      }
+
+      // 각 PID 종료
+      let killed = false;
+      for (const pid of pids) {
+        exec(`taskkill /PID ${pid} /F`, (killError) => {
+          if (!killError) {
+            console.log(`  🔫 Killed process ${pid} on port ${port}`);
+            killed = true;
+          }
+        });
+      }
+
+      // 약간의 딜레이 후 resolve
+      setTimeout(() => resolve(killed), 500);
+    });
+  });
+}
+
+// 🔥 모든 서버 포트 정리
+async function clearServerPorts() {
+  console.log('🧹 Clearing server ports before startup...');
+
+  for (const port of SERVER_PORTS) {
+    const killed = await killProcessOnPort(port);
+    if (killed) {
+      console.log(`  ✅ Port ${port} cleared`);
+    }
+  }
+
+  console.log('🧹 Port cleanup complete');
+}
+
+app.whenReady().then(async () => {
+  // 🔥 앱 시작 전 포트 정리
+  await clearServerPorts();
+
   // Initialize database
   // db.initDatabase(); // DB 기능은 나중에 활성화
 
@@ -90,6 +158,7 @@ app.whenReady().then(() => {
     }
   });
 });
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

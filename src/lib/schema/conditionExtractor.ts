@@ -25,33 +25,93 @@ export interface FieldConditionInfo {
 }
 
 /**
+ * 조건 마커 스타일 기본값 (YAML에서 오버라이드 가능)
+ * @see schema_definitions/{psdSet}/{schemaType}/ui.yaml - enhancedFeatures.conditionalMarkers
+ */
+const DEFAULT_CONDITIONAL_MARKERS: Record<string, { label: string; icon: string; color: string }> = {
+  'x-required-when': {
+    label: 'Required When',
+    icon: '●',
+    color: '#ff7e7e',  // 빨간색 계열 (필수)
+  },
+  'x-optional-when': {
+    label: 'Optional When',
+    icon: '○',
+    color: '#7eb8ff',  // 파란색 계열 (선택)
+  },
+};
+
+/**
  * 필드에서 조건 정보 추출
+ * 
+ * @param field - Enhanced Schema 필드
+ * @param conditionalRules - YAML에서 정의된 조건 규칙
+ * @param markerStyles - YAML에서 정의된 마커 스타일 (ui.yaml - enhancedFeatures.conditionalMarkers)
  */
 export function extractFieldConditions(
   field: EnhancedField,
-  conditionalRules: NonNullable<TableDefinition['schemaExtensions']>['conditional'] = []
+  conditionalRules: NonNullable<TableDefinition['schemaExtensions']>['conditional'] = [],
+  markerStyles?: Record<string, { label?: string; icon?: string; color?: string }>
 ): FieldCondition | null {
-  if (!conditionalRules || conditionalRules.length === 0) {
-    return null;
-  }
-
   const fieldAny = field as any;
 
-  for (const rule of conditionalRules) {
-    if (!rule.displayInTable) continue;
+  // 🔥 마커 스타일 병합 (YAML 우선, 기본값 폴백)
+  const getMarkerStyle = (markerKey: string) => {
+    const yamlStyle = markerStyles?.[markerKey];
+    const defaultStyle = DEFAULT_CONDITIONAL_MARKERS[markerKey];
+    return {
+      label: yamlStyle?.label || defaultStyle?.label || markerKey,
+      icon: yamlStyle?.icon || defaultStyle?.icon || '•',
+      color: yamlStyle?.color || defaultStyle?.color || '#4c9aff',
+    };
+  };
 
-    const value = getNestedValue(fieldAny, rule.key);
+  // 🔥 1. x-required-when 처리 (조건부 필수 = 표시 + required)
+  const requiredWhen = fieldAny['x-required-when'];
+  if (requiredWhen && typeof requiredWhen === 'object' && Object.keys(requiredWhen).length > 0) {
+    const style = getMarkerStyle('x-required-when');
+    return {
+      type: 'x-required-when',
+      label: style.label,
+      conditionText: formatConditionText(requiredWhen),
+      color: style.color,
+      icon: style.icon,
+      value: requiredWhen,
+    };
+  }
 
-    // 조건 값이 있으면 조건 정보 생성
-    if (value && typeof value === 'object' && Object.keys(value).length > 0) {
-      return {
-        type: rule.key,
-        label: rule.displayLabel || rule.key,
-        conditionText: formatConditionText(value),
-        color: rule.displayColor || '#4c9aff',
-        icon: rule.displayIcon || '•',
-        value: value,
-      };
+  // 🔥 2. x-optional-when 처리 (조건부 선택 = 표시 + optional)
+  const optionalWhen = fieldAny['x-optional-when'];
+  if (optionalWhen && typeof optionalWhen === 'object' && Object.keys(optionalWhen).length > 0) {
+    const style = getMarkerStyle('x-optional-when');
+    return {
+      type: 'x-optional-when',
+      label: style.label,
+      conditionText: formatConditionText(optionalWhen),
+      color: style.color,
+      icon: style.icon,
+      value: optionalWhen,
+    };
+  }
+
+  // 🔥 3. YAML 규칙 기반 조건 처리 (기존 로직)
+  if (conditionalRules && conditionalRules.length > 0) {
+    for (const rule of conditionalRules) {
+      if (!rule.displayInTable) continue;
+
+      const value = getNestedValue(fieldAny, rule.key);
+
+      // 조건 값이 있으면 조건 정보 생성
+      if (value && typeof value === 'object' && Object.keys(value).length > 0) {
+        return {
+          type: rule.key,
+          label: rule.displayLabel || rule.key,
+          conditionText: formatConditionText(value),
+          color: rule.displayColor || '#4c9aff',
+          icon: rule.displayIcon || '•',
+          value: value,
+        };
+      }
     }
   }
 

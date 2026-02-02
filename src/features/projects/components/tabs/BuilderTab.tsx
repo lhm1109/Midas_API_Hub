@@ -679,12 +679,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const [editingTestCaseId, setEditingTestCaseId] = useState<string | null>(null);
   const [editingTestCaseName, setEditingTestCaseName] = useState<string>('');
 
-  // 🎯 Resizable Panel 상태 - 초기값을 화면의 50%로 설정
+  // 🎯 Resizable Panel 상태 - 초기값을 화면의 35%로 설정 (빌더 컬럼 확장)
   const [rightPanelWidth, setRightPanelWidth] = useState(() => {
     if (typeof window !== 'undefined') {
-      return Math.min(window.innerWidth / 2, 800);
+      return Math.min(window.innerWidth * 0.35, 500);  // 🔥 50% → 35%, max 800 → 500
     }
-    return 600; // fallback for SSR
+    return 400; // fallback for SSR (600 → 400)
   });
 
   // 🎯 Modified state tracking

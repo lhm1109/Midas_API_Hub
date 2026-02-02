@@ -106,7 +106,7 @@ integrityRules:
 markerRegistry:
   - id: MARKER_UI
     key: "x-ui"
-    description: "UI 메타데이터 (label, group, hint, visibleWhen)"
+    description: "UI 메타데이터 (label, group, hint, sectionId)"
     required: false
 
   - id: MARKER_TRANSPORT
@@ -133,6 +133,38 @@ markerRegistry:
     key: "x-required-by-type"
     description: "TYPE별 required 상태"
     required: false
+
+  - id: MARKER_REQUIRED_WHEN
+    key: "x-required-when"
+    description: "조건부 필수 - 조건 충족 시 필드가 표시되고 required"
+    required: false
+    schema:
+      type: object
+      properties:
+        field:
+          type: string
+          description: "조건을 검사할 필드 이름"
+        equals:
+          description: "해당 값과 같을 때 표시 + required"
+        notEquals:
+          description: "해당 값과 다를 때 표시 + required"
+      required: ["field"]
+
+  - id: MARKER_OPTIONAL_WHEN
+    key: "x-optional-when"
+    description: "조건부 선택 - 조건 충족 시 필드가 표시되지만 optional"
+    required: false
+    schema:
+      type: object
+      properties:
+        field:
+          type: string
+          description: "조건을 검사할 필드 이름"
+        equals:
+          description: "해당 값과 같을 때 표시 (optional)"
+        notEquals:
+          description: "해당 값과 다를 때 표시 (optional)"
+      required: ["field"]
 
   - id: MARKER_ENUM_LABELS_BY_TYPE
     key: "x-enum-labels-by-type"

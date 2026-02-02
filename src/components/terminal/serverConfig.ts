@@ -35,7 +35,7 @@ export const PREDEFINED_SERVERS: ServerConfig[] = [
     {
         id: 'mcp',
         name: 'MCP Inspector',
-        command: 'npx @modelcontextprotocol/inspector node dist/index.js',
+        command: 'npx @modelcontextprotocol/inspector --no-open node dist/index.js',  // 🔥 --no-open 플래그로 자동 브라우저 열림 방지
         cwd: 'c:/MIDAS/code/apiverification/mcp-server',
         icon: '🔌',
         description: 'MCP Schema Server inspector',

@@ -38,7 +38,7 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
   const tableStyle = definition.styling?.table || {};
   const headerStyle = definition.styling?.header || {};
   const bodyStyle = definition.styling?.body || {};
-  
+
   return (
     <div className={`border rounded-lg overflow-hidden ${tableStyle.borderColor || 'border-zinc-800'}`}>
       <table className={`w-full text-sm ${tableStyle.borderCollapse ? 'border-collapse' : ''}`}>
@@ -56,24 +56,24 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
             ))}
           </tr>
         </thead>
-        
+
         {/* 테이블 바디 */}
         <tbody className={bodyStyle.fontSize || 'text-sm'}>
           {parameters.map((param: any) => {
             const rows = [];
-            
+
             // 🔥 조건 행 처리 (YAML 스타일 적용)
             if (param.type === 'condition-row') {
               const conditionStyle = definition.conditionRows?.style || {};
               const conditionColspan = definition.conditionRows?.colspan || 6;
-              
+
               rows.push(
-                <tr 
-                  key={`condition-${param.conditionText}`} 
+                <tr
+                  key={`condition-${param.conditionText}`}
                   className={`${conditionStyle.background || 'bg-cyan-950/30'} border-b border-zinc-800`}
                 >
-                  <td 
-                    colSpan={conditionColspan} 
+                  <td
+                    colSpan={conditionColspan}
                     className={`
                       ${conditionStyle.padding || 'p-2'} 
                       ${conditionStyle.fontSize || 'text-xs'} 
@@ -87,20 +87,20 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
               );
               return rows;
             }
-            
+
             // 섹션 헤더
             if (param.section) {
               rows.push(renderSectionHeader(param, definition));
-              
+
               // 섹션만 있는 행이면 필드 행 추가 안함
               if (!param.name || !param.type) {
                 return rows;
               }
             }
-            
+
             // 메인 파라미터 행
             rows.push(renderParameterRow(param, definition, expandedParams, toggleParam));
-            
+
             // 🔥 자식 행들 - expandedParams 확인 후 표시 (아코디언)
             if (param.children && param.children.length > 0 && expandedParams.has(param.no)) {
               param.children.forEach((child: any, childIdx: number) => {
@@ -109,12 +109,12 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
                   rows.push(renderNestedSectionHeader(child, definition, param.no, childIdx));
                   return;
                 }
-                
+
                 // 자식 행
                 rows.push(renderChildRow(child, definition, param.no, childIdx));
               });
             }
-            
+
             return rows;
           })}
         </tbody>
@@ -127,7 +127,7 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
  */
 function renderSectionHeader(param: any, definition: TableDefinition) {
   const sectionStyle = definition.sectionHeaders?.style || {};
-  
+
   return (
     <tr key={`section-${param.no}`} className={sectionStyle.background || 'bg-cyan-950/30 border-b border-zinc-800'}>
       <td colSpan={definition.sectionHeaders?.colspan || 6} className={`p-2 ${sectionStyle.textColor || 'text-cyan-400'} ${sectionStyle.fontWeight || 'font-semibold'} ${sectionStyle.fontSize || 'text-xs'}`}>
@@ -142,10 +142,10 @@ function renderSectionHeader(param: any, definition: TableDefinition) {
  */
 function renderNestedSectionHeader(child: any, definition: TableDefinition, parentNo: number, childIdx: number) {
   const nestedStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
-  
+
   // 고유한 key 생성: 부모 no + 자식 인덱스 + 섹션명
   const uniqueKey = `child-section-${parentNo}-${childIdx}-${child.section || child.name || ''}`;
-  
+
   return (
     <tr key={uniqueKey} className={nestedStyle.background || 'bg-blue-950/30 border-b border-zinc-800'}>
       <td colSpan={6} className={`p-2 ${nestedStyle.textColor || 'text-blue-400'} font-semibold text-xs pl-8`}>
@@ -166,12 +166,12 @@ function renderParameterRow(
 ) {
   const rowStyle = definition.rowRendering?.standard || {};
   const hoverClass = rowStyle.hover ? (rowStyle.hoverStyle || 'hover:bg-zinc-800/30') : '';
-  
+
   return (
     <tr key={`param-${param.no}`} className={`border-b border-zinc-800 ${hoverClass}`}>
       {/* No. */}
       <td className="p-3 text-zinc-400">{param.no}</td>
-      
+
       {/* Description */}
       <td className="p-3 pl-9 relative">
         {param.children && (
@@ -201,20 +201,20 @@ function renderParameterRow(
           )}
         </div>
       </td>
-      
+
       {/* Key */}
       <td className="p-3">
         <code className="font-mono text-blue-400">"{param.name}"</code>
       </td>
-      
+
       {/* Type */}
       <td className="p-3 text-zinc-400">{param.type}</td>
-      
+
       {/* Default */}
       <td className="p-3 text-zinc-500 font-mono text-xs">
         {param.default !== undefined && param.default !== null ? String(param.default) : '-'}
       </td>
-      
+
       {/* Required */}
       <td className="p-3">
         {renderRequired(param.required, definition)}
@@ -228,10 +228,10 @@ function renderParameterRow(
  */
 function renderChildRow(child: any, definition: TableDefinition, parentNo: number, childIdx: number) {
   const nestedStyle = definition.nestedFields?.style || {};
-  
+
   // 고유한 key 생성: 부모 no + 자식 인덱스 + 자식 이름
   const uniqueKey = `child-${parentNo}-${childIdx}-${child.name || child.no || ''}`;
-  
+
   return (
     <tr key={uniqueKey} className="border-b border-zinc-800 bg-zinc-900/50">
       <td className="p-3 text-zinc-500 text-center">{child.no}</td>
@@ -269,13 +269,14 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
 function renderDescription(description: string) {
   return (
     <div
-      className="text-zinc-300 [&_span:not([style])]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold"
+      className="text-zinc-300 [&_span:not([style])]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold [&_em]:text-cyan-400 [&_em]:not-italic [&_em]:font-medium"
       dangerouslySetInnerHTML={{
         __html: description
           .replace(/\n/g, '<br>')
           .replace(/• /g, '<span>• </span>')
           .replace(/- /g, '<span>- </span>')
-          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')  // **bold**
+          .replace(/\*([^*]+)\*/g, '<em>$1</em>')  // 🔥 *italic* (타입 이름 등)
       }}
     />
   );
@@ -286,7 +287,7 @@ function renderDescription(description: string) {
  */
 function renderRequired(required: string, definition: TableDefinition) {
   const requiredConfig = definition.rowRendering?.required || {};
-  
+
   if (requiredConfig.simpleFormat) {
     // Simple format: "Required" | "Optional" | "Conditional"
     if (required === 'Required') {
@@ -309,7 +310,7 @@ function renderRequired(required: string, definition: TableDefinition) {
       );
     }
   }
-  
+
   // Complex format (TYPE별 다른 경우)
   return <div dangerouslySetInnerHTML={{ __html: required }} />;
 }

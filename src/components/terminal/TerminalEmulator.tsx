@@ -45,6 +45,9 @@ export const TerminalEmulator: React.FC<TerminalEmulatorProps> = ({
             fontFamily: 'Consolas, "Courier New", monospace',
             cursorBlink: true,
             scrollback: 5000,
+            // 🔥 복사/붙여넣기 관련 설정
+            rightClickSelectsWord: true,       // 우클릭으로 단어 선택
+            allowProposedApi: true,            // 추가 API 허용
         });
 
         const fitAddon = new FitAddon();
@@ -56,6 +59,53 @@ export const TerminalEmulator: React.FC<TerminalEmulatorProps> = ({
 
         terminalRef.current = terminal;
         fitAddonRef.current = fitAddon;
+
+        // 🔥 Ctrl+Shift+C/V 및 Ctrl+C/V 복사/붙여넣기 지원
+        terminal.attachCustomKeyEventHandler((event) => {
+            // Ctrl+Shift+C: 복사
+            if (event.ctrlKey && event.shiftKey && event.key === 'C') {
+                const selection = terminal.getSelection();
+                if (selection) {
+                    navigator.clipboard.writeText(selection);
+                }
+                return false;  // 이벤트를 터미널로 전달하지 않음
+            }
+
+            // Ctrl+Shift+V: 붙여넣기
+            if (event.ctrlKey && event.shiftKey && event.key === 'V') {
+                navigator.clipboard.readText().then((text) => {
+                    const api = terminalAPI();
+                    if (api && text) {
+                        api.write(terminalId, text);
+                    }
+                });
+                return false;
+            }
+
+            // Ctrl+C: 선택된 텍스트가 있으면 복사, 없으면 SIGINT로 전달
+            if (event.ctrlKey && !event.shiftKey && event.key === 'c') {
+                const selection = terminal.getSelection();
+                if (selection) {
+                    navigator.clipboard.writeText(selection);
+                    return false;
+                }
+                // 선택이 없으면 터미널로 전달 (SIGINT)
+                return true;
+            }
+
+            // Ctrl+V: 붙여넣기
+            if (event.ctrlKey && !event.shiftKey && event.key === 'v') {
+                navigator.clipboard.readText().then((text) => {
+                    const api = terminalAPI();
+                    if (api && text) {
+                        api.write(terminalId, text);
+                    }
+                });
+                return false;
+            }
+
+            return true;  // 다른 키는 터미널로 전달
+        });
 
         const api = terminalAPI();
         if (api) {

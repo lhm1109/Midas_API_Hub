@@ -1,99 +1,111 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "properties": {
-    "bCombinedShearAndTorsionCheck": {
-      "default": true,
+    "bCOMB_SHEAR_TORS": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
+        "group": "At Factored Loads",
         "label": "Combined Shear and Torsion Check",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bCrackCheck": {
-      "default": true,
+    "bCRACK_CHK": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
+        "group": "At Construction Stage/Service Loads",
         "label": "Crack Check",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bFlexuralStrengthCheck": {
-      "default": true,
+    "bFLEX_STR_CHK": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
+        "group": "At Factored Loads",
         "label": "Flexural Strength Check",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bPrincipalStressByConstructionStage": {
-      "default": true,
+    "bPRINC_CONSTR": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
+        "group": "At Construction Stage/Service Loads",
         "label": "Principal Stress by Construction Stage",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bPrincipalStressByMaxShear": {
-      "default": true,
+    "bPRINC_MAX_SHEAR": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
-        "label": "Principal Stress by Service Load Combinations (Max Shear)",
+        "group": "At Construction Stage/Service Loads",
+        "label": "Principal Stress by Service Load (Max Shear)",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bPrincipalStressByMaxTorsion": {
-      "default": true,
+    "bPRINC_MAX_TORS": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
-        "label": "Principal Stress by Service Load Combination (Max Torsion)",
+        "group": "At Construction Stage/Service Loads",
+        "label": "Principal Stress by Service Load (Max Torsion)",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bShearStrengthCheck": {
-      "default": true,
+    "bSHEAR_STR_CHK": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
+        "group": "At Factored Loads",
         "label": "Shear Strength Check",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bStressByConstructionStage": {
-      "default": true,
+    "bSTRS_CONSTR": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
+        "group": "At Construction Stage/Service Loads",
         "label": "Stress by Construction Stage",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "bStressByServiceLoadComb": {
-      "default": true,
+    "bSTRS_PREST": {
+      "default": false,
       "type": "boolean",
       "x-ui": {
-        "label": "Stress by Service Load Combinations",
-        "sectionId": "SECTION_OUTPUT"
-      }
-    },
-    "bStressInPrestressingTendons": {
-      "default": true,
-      "type": "boolean",
-      "x-ui": {
+        "group": "At Construction Stage/Service Loads",
         "label": "Stress in Prestressing Tendons",
         "sectionId": "SECTION_OUTPUT"
       }
     },
-    "dExposureFactorValue": {
-      "default": 1,
-      "type": "number",
+    "bSTRS_SVC_COMB": {
+      "default": false,
+      "type": "boolean",
       "x-ui": {
-        "label": "User Exposure Factor Value",
-        "sectionId": "SECTION_INPUT",
-        "visibleWhen": {
-          "equals": 2,
-          "field": "iExposureFactor"
-        }
+        "group": "At Construction Stage/Service Loads",
+        "label": "Stress by Service Load Combinations",
+        "sectionId": "SECTION_OUTPUT"
       }
     },
-    "iConstructionType": {
+    "dEXP_VAL": {
+      "default": 1,
+      "description": "User가 직접 입력하는 Exposure Factor 값",
+      "type": "number",
+      "x-required-when": {
+        "equals": 2,
+        "field": "iEXP_FACT"
+      },
+      "x-ui": {
+        "label": "User Exposure Factor Value",
+        "sectionId": "SECTION_INPUT"
+      }
+    },
+    "iCONSTR_TYPE": {
+      "default": 1,
       "oneOf": [
         {
           "const": 0,
@@ -110,7 +122,8 @@
         "sectionId": "SECTION_INPUT"
       }
     },
-    "iCorrosiveCondition": {
+    "iCORR_COND": {
+      "default": 0,
       "oneOf": [
         {
           "const": 0,
@@ -127,7 +140,8 @@
         "sectionId": "SECTION_INPUT"
       }
     },
-    "iExposureFactor": {
+    "iEXP_FACT": {
+      "default": 0,
       "oneOf": [
         {
           "const": 0,
@@ -148,7 +162,8 @@
         "sectionId": "SECTION_INPUT"
       }
     },
-    "iFlexuralStrength": {
+    "iFLEX_STR": {
+      "default": 0,
       "oneOf": [
         {
           "const": 0,
@@ -165,7 +180,8 @@
         "sectionId": "SECTION_INPUT"
       }
     },
-    "iTendonType": {
+    "iTEND_TYPE": {
+      "default": 0,
       "oneOf": [
         {
           "const": 0,
@@ -186,18 +202,17 @@
         "sectionId": "SECTION_INPUT"
       }
     },
-    "sDesignCode": {
+    "sDES_CODE": {
+      "default": "AASHTO-LRFD20",
+      "enum": [
+        "AASHTO-LRFD20",
+        "AASHTO-LRFD17",
+        "AASHTO-LRFD16",
+        "AASHTO-LRFD14",
+        "AASHTO-LRFD12",
+        "AASHTO-LRFD07"
+      ],
       "type": "string",
-      "x-enum-by-type": {
-        "default": [
-          "AASHTO-LRFD20",
-          "AASHTO-LRFD17",
-          "AASHTO-LRFD16",
-          "AASHTO-LRFD14",
-          "AASHTO-LRFD12",
-          "AASHTO-LRFD07"
-        ]
-      },
       "x-ui": {
         "label": "Design Code",
         "sectionId": "SECTION_GENERAL"
@@ -205,8 +220,8 @@
     }
   },
   "required": [
-    "sDesignCode",
-    "iTendonType"
+    "sDES_CODE",
+    "iTEND_TYPE"
   ],
   "title": "PSC Design Code",
   "type": "object"

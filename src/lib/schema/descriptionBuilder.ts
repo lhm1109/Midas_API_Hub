@@ -34,7 +34,20 @@ export function buildFieldDescription(
       const label = fieldAny.enumLabels?.[String(val)] ||
         fieldAny['x-enum-labels']?.[String(val)] ||
         val;
-      descParts.push(`• ${val} - ${label}`);
+      // 🔥 개선: "설명 : 값" 형식, 문자열은 따옴표로 감싸기
+      const formattedVal = typeof val === 'string' ? `"${val}"` : val;
+      descParts.push(`• ${label} : ${formattedVal}`);
+    });
+  }
+
+  // 🔥 2-1. oneOf 형식 (JSON Schema 표준 - const + title)
+  if (fieldAny.oneOf && Array.isArray(fieldAny.oneOf)) {
+    descParts.push('**Enum Values:**');
+    fieldAny.oneOf.forEach((option: any) => {
+      const val = option.const;
+      const label = option.title || val;
+      const formattedVal = typeof val === 'string' ? `"${val}"` : val;
+      descParts.push(`• ${label} : ${formattedVal}`);
     });
   }
 
@@ -48,7 +61,9 @@ export function buildFieldDescription(
         const label = fieldAny.enumLabelsByType?.[type]?.[String(val)] ||
           fieldAny['x-enum-labels-by-type']?.[type]?.[String(val)] ||
           val;
-        descParts.push(`• ${val} - ${label}`);
+        // 🔥 개선: "설명 : 값" 형식, 문자열은 따옴표로 감싸기
+        const formattedVal = typeof val === 'string' ? `"${val}"` : val;
+        descParts.push(`• ${label} : ${formattedVal}`);
       });
     }
   }

@@ -102,6 +102,136 @@ transform:
     unknownMarker: "passthrough"  # passthrough | warn | error
 
 # ============================================================================
+# FIELD NAMING RULES - 필드 네이밍 규칙 (AI 스키마 생성용)
+# ============================================================================
+# 📌 AI가 스키마 생성 시 이 규칙을 참조하여 축약형 키 이름을 사용해야 함
+fieldNaming:
+  # 🔥 스타일 가이드
+  style:
+    case: "UPPER_SNAKE"       # UPPER_SNAKE | camelCase | PascalCase
+    maxLength: 12             # 최대 12자 권장
+    abbreviateCommonWords: true
+  
+  # 🔥 접두사 규칙 (타입 추론)
+  prefixes:
+    i: "integer"              # iTENDON_TYPE, iCONSTR_TYPE
+    s: "string"               # sDESIGN_CODE, sTYPE
+    d: "number"               # dEXPOSURE_FACTOR, dANGLE
+    b: "boolean"              # bUSE_LIMIT, bFLEX_CHECK
+    n: "number"               # nVALUE (legacy)
+    arr: "array"              # arrNODE, arrVALUES
+  
+  # 🔥 축약어 사전 (AI 생성 시 활용)
+  abbreviations:
+    # 공통 약어
+    Construction: "CONSTR"
+    Combination: "COMB"
+    Combinations: "COMBS"
+    Principal: "PRINC"
+    Flexural: "FLEX"
+    Strength: "STR"
+    Service: "SVC"
+    Factored: "FACT"
+    Maximum: "MAX"
+    Minimum: "MIN"
+    Shear: "SHEAR"
+    Torsion: "TORS"
+    Combined: "COMB"
+    Check: "CHK"
+    Stress: "STRS"
+    Prestressing: "PREST"
+    Tendons: "TEND"
+    Stage: "STG"
+    Loads: "LD"
+    Load: "LD"
+    Value: "VAL"
+    Factor: "FACT"
+    Exposure: "EXP"
+    Type: "TYPE"
+    Class: "CLS"
+    Code: "CODE"
+    Design: "DES"
+    Condition: "COND"
+    Corrosive: "CORR"
+    Relaxation: "RLX"
+    Relieved: "RLV"
+    Segmental: "SEG"
+    Number: ""                # 생략 (NODE = Node No.)
+    
+  # 🔥 예시 매핑 (긴 이름 → 축약 이름)
+  examples:
+    # Output Parameters - Factored Loads
+    - long: "bCombinedShearAndTorsionCheck"
+      short: "bCOMB_SHEAR_TORS"
+      label: "Combined Shear and Torsion Check"
+      
+    - long: "bFlexuralStrengthCheck"
+      short: "bFLEX_STR_CHK"
+      label: "Flexural Strength Check"
+      
+    - long: "bShearStrengthCheck"
+      short: "bSHEAR_STR_CHK"
+      label: "Shear Strength Check"
+    
+    # Output Parameters - Service Loads
+    - long: "bStressByConstructionStage"
+      short: "bSTRS_CONSTR"
+      label: "Stress by Construction Stage"
+      
+    - long: "bStressByServiceLoadCombinations"
+      short: "bSTRS_SVC_COMB"
+      label: "Stress by Service Load Combinations"
+      
+    - long: "bStressInPrestressingTendons"
+      short: "bSTRS_PREST"
+      label: "Stress in Prestressing Tendons"
+      
+    - long: "bPrincipalStressByConstructionStage"
+      short: "bPRINC_CONSTR"
+      label: "Principal Stress by Construction Stage"
+      
+    - long: "bPrincipalStressByMaxShear"
+      short: "bPRINC_MAX_SHEAR"
+      label: "Principal Stress by Service Load (Max Shear)"
+      
+    - long: "bPrincipalStressByMaxTorsion"
+      short: "bPRINC_MAX_TORS"
+      label: "Principal Stress by Service Load (Max Torsion)"
+    
+    - long: "bCrackCheck"
+      short: "bCRACK_CHK"
+      label: "Crack Check"
+    
+    # Input Parameters
+    - long: "iTendonType"
+      short: "iTEND_TYPE"
+      label: "Tendon Type"
+      
+    - long: "iCorrosiveCondition"
+      short: "iCORR_COND"
+      label: "Corrosive Condition"
+      
+    - long: "iFlexuralStrength"
+      short: "iFLEX_STR"
+      label: "Flexural Strength"
+      
+    - long: "iExposureFactor"
+      short: "iEXP_FACT"
+      label: "Exposure Factor for Crack Width"
+      
+    - long: "dExposureFactorValue"
+      short: "dEXP_VAL"
+      label: "User Exposure Factor Value"
+      
+    - long: "iConstructionType"
+      short: "iCONSTR_TYPE"
+      label: "Construction Type"
+      
+    - long: "sDesignCode"
+      short: "sDES_CODE"
+      label: "Design Code"
+
+# ============================================================================
 # OUTPUT - 출력 규칙
 # ============================================================================
 output:
@@ -150,3 +280,99 @@ toolContract:
       optionalFields:
         - context
         - suggestion
+
+# ============================================================================
+# AUTO-QUESTION PATTERNS - 자동 질문 패턴 (AI 참조용)
+# ============================================================================
+# 📌 AI가 스키마 생성 시 아래 패턴을 감지하면 사용자에게 질문해야 함
+autoQuestionPatterns:
+  # 🔥 조건부 입력 필드 패턴
+  conditionalInput:
+    description: |
+      라디오/드롭다운 옵션 중 "User", "Custom", "직접 입력" 등의 옵션이 있으면
+      해당 옵션 선택 시 텍스트/숫자 입력 필드가 활성화되는지 질문해야 함
+    triggers:
+      - "User"
+      - "Custom"
+      - "Manual"
+      - "직접 입력"
+      - "사용자 정의"
+    question: |
+      "{option}" 옵션을 선택하면 별도의 입력 필드가 활성화되나요?
+      (예: 숫자 입력, 텍스트 입력)
+    schemaPattern: |
+      visibleWhen:
+        field: "{parentField}"
+        equals: {optionValue}
+  
+  # 🔥 TYPE별 조건부 필드 패턴
+  typeConditionalFields:
+    description: |
+      TYPE 선택에 따라 보이는/숨겨지는 필드가 있는지 확인
+    question: |
+      "{field}" 필드는 특정 TYPE에서만 사용 가능한가요?
+      어떤 TYPE에서 사용 가능한지 알려주세요.
+    schemaPattern: |
+      x-required-by-type:
+        TYPE1: true
+        TYPE2: false
+  
+  # 🔥 그룹/섹션 토글 패턴
+  groupToggle:
+    description: |
+      특정 옵션 선택 시 전체 그룹/섹션이 활성화되는 경우
+    triggers:
+      - "Enable"
+      - "Use"
+      - "활성화"
+      - "사용"
+    question: |
+      "{option}" 옵션을 선택하면 추가 설정 영역이 활성화되나요?
+      어떤 필드들이 활성화되는지 알려주세요.
+  
+  # 🔥 기본값 연동 패턴
+  linkedDefaults:
+    description: |
+      한 필드의 선택이 다른 필드의 기본값에 영향을 주는 경우
+    question: |
+      "{field1}" 선택에 따라 "{field2}"의 기본값이 변경되나요?
+      
+  # 🔥 Select All / Unselect All 패턴
+  bulkSelection:
+    description: |
+      "Select All", "Unselect All" 버튼이 있는 체크박스 그룹
+    triggers:
+      - "Select All"
+      - "Unselect All"
+      - "모두 선택"
+      - "모두 해제"
+    question: |
+      이 체크박스 그룹에 "모두 선택/해제" 기능이 필요한가요?
+    note: |
+      이 기능은 스키마가 아닌 UI 렌더러에서 처리됨
+
+# ============================================================================
+# EXAMPLE QUESTIONS - 질문 예시 (AI 참조용)
+# ============================================================================
+exampleQuestions:
+  - field: "iEXP_FACT"
+    question: |
+      "Exposure Factor for Crack Width"에서 "User" 옵션을 선택하면 
+      별도의 숫자 입력 필드가 활성화되나요? 있다면 기본값은 무엇인가요?
+    context: "이미지에서 'User' 옵션 옆에 입력 필드가 보입니다"
+    suggestion:
+      addField: "dEXP_VAL"
+      type: "number"
+      default: 1
+      visibleWhen:
+        field: "iEXP_FACT"
+        equals: 2  # User 옵션의 값
+        
+  - field: "STYPE"
+    question: |
+      "Element Subtype"은 모든 TYPE에서 사용 가능한가요?
+      아니면 특정 TYPE에서만 보이나요?
+    context: "x-enum-by-type을 보면 일부 TYPE에만 값이 정의되어 있음"
+    suggestion:
+      usePattern: "x-required-by-type"
+
