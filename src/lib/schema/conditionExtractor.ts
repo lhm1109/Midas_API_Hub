@@ -26,7 +26,8 @@ export interface FieldConditionInfo {
 
 /**
  * 조건 마커 스타일 기본값 (YAML에서 오버라이드 가능)
- * @see schema_definitions/{psdSet}/{schemaType}/ui.yaml - enhancedFeatures.conditionalMarkers
+ * @see schema_definitions/{psdSet}/{schemaType}/ui.yaml - legacyMarkers (deprecated)
+ * @see 새 스키마: allOf if/then + x-uiRules.visibleWhen 사용 권장
  */
 const DEFAULT_CONDITIONAL_MARKERS: Record<string, { label: string; icon: string; color: string }> = {
   'x-required-when': {
@@ -46,7 +47,7 @@ const DEFAULT_CONDITIONAL_MARKERS: Record<string, { label: string; icon: string;
  * 
  * @param field - Enhanced Schema 필드
  * @param conditionalRules - YAML에서 정의된 조건 규칙
- * @param markerStyles - YAML에서 정의된 마커 스타일 (ui.yaml - enhancedFeatures.conditionalMarkers)
+ * @param markerStyles - YAML에서 정의된 마커 스타일 (ui.yaml - legacyMarkers)
  */
 export function extractFieldConditions(
   field: EnhancedField,

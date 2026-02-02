@@ -1,6 +1,7 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useState, useEffect, useMemo } from 'react';
-import { Save, AlertCircle, Sparkles } from 'lucide-react';
+import { Save, AlertCircle, Sparkles, ArrowRight } from 'lucide-react';
+import { convertWithDetails } from '@/lib/schema/schemaConverter';
 import { Button } from '@/components/ui/button';
 import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
@@ -517,11 +518,23 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   // 🎯 저장된 스키마를 추적하는 state (리렌더링 트리거용)
   const [, setSavedSchema] = useState<any>(null);
 
+  // 🔥 FIX: 이전 schemaView를 추적하여 탭 전환 감지
+  const [prevSchemaView, setPrevSchemaView] = useState<'original' | 'enhanced'>(schemaView);
+
   // Initialize editable schema
   useEffect(() => {
-    // 🔥 이미 수정 중인 경우 초기화하지 않음 (탭 전환 대응)
-    if (isSchemaModified && editableSchema) {
-      return;
+    // 🔥 FIX: schemaView가 변경되면 무조건 리셋 (탭 전환)
+    const isTabSwitch = prevSchemaView !== schemaView;
+
+    if (isTabSwitch) {
+      setPrevSchemaView(schemaView);
+      // 탭 전환 시 수정 상태도 리셋
+      setIsSchemaModified(false);
+    } else {
+      // 🔥 같은 탭에서 수정 중인 경우에만 초기화 방지
+      if (isSchemaModified && editableSchema) {
+        return;
+      }
     }
 
     // 스키마가 문자열인 경우 파싱, 객체인 경우 그대로 사용
@@ -549,7 +562,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       setEditableSchema(JSON.stringify(schemaForView, null, 2));
     }
     setIsSchemaModified(false);
-  }, [schemaView, endpoint.id, spec.jsonSchema, spec.jsonSchemaEnhanced]); // spec 의존성 추가
+  }, [schemaView, endpoint.id, spec.jsonSchema, spec.jsonSchemaEnhanced, prevSchemaView]); // spec 의존성 추가
 
   // Handle schema changes
   const handleSchemaChange = (value: string) => {
@@ -682,6 +695,49 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       toast.error('❌ Invalid JSON!\n\nCannot prettify invalid JSON.');
     }
   };
+
+  // 🎯 Enhanced → Original 변환 (Original 탭에 저장)
+  const handleConvertToOriginal = () => {
+    try {
+      const parsedSchema = JSON.parse(editableSchema);
+
+      // Enhanced → Original 변환 (x-* 마커 제거)
+      const result = convertWithDetails(parsedSchema);
+
+      if (result.removedMarkersCount === 0) {
+        toast.info('ℹ️ No x-* markers found. Schema is already in Original format.');
+        return;
+      }
+
+      // 🔥 변환된 스키마를 Original 탭에 저장 (Enhanced 탭은 유지)
+      const originalSchemaStr = JSON.stringify(result.schema, null, 2);
+      updateSpecData({
+        jsonSchemaOriginal: originalSchemaStr,
+        jsonSchema: originalSchemaStr,  // 호환성을 위해
+      });
+
+      // 🔥 FIX: 직접 editableSchema 설정 + isSchemaModified 리셋
+      // useEffect가 isSchemaModified=true일 때 스킵하므로 직접 설정 필요
+      setEditableSchema(originalSchemaStr);
+      setIsSchemaModified(false);
+
+      toast.success(
+        `✅ Converted to Original tab!\n\nRemoved ${result.removedMarkersCount} x-* markers:\n${result.removedMarkerKeys.slice(0, 5).join(', ')}${result.removedMarkerKeys.length > 5 ? '...' : ''}`
+      );
+
+      console.log('🔄 Converted Enhanced → Original (saved to Original tab):', {
+        removedCount: result.removedMarkersCount,
+        removedKeys: result.removedMarkerKeys,
+      });
+
+      // 🔥 Original 탭으로 전환
+      setSchemaView('original');
+    } catch (error) {
+      toast.error('❌ Invalid JSON!\n\nPlease fix the syntax errors before converting.');
+    }
+  };
+
+
 
 
   // 🎯 Display parameters - 이제 tableParameters 직접 사용
@@ -977,6 +1033,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     Save
                   </Button>
 
+                  {/* Enhanced → Original 변환 버튼 */}
+                  {schemaView === 'enhanced' && (
+                    <Button
+                      onClick={handleConvertToOriginal}
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-2 text-xs border-orange-600/50 text-orange-400 hover:bg-orange-600/20"
+                    >
+                      <ArrowRight className="w-3 h-3 mr-1" />
+                      Convert to Original
+                    </Button>
+                  )}
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -1015,14 +1084,83 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               </div>
 
               {/* Table Content - Scrollable */}
-              <div className="flex-1 overflow-auto p-4">
+              <div className="flex-1 overflow-auto p-4 space-y-6">
                 {tableParameters.length > 0 && tableDefinition ? (
-                  <DynamicTableRenderer
-                    definition={tableDefinition}
-                    parameters={tableParameters}
-                    expandedParams={expandedParams}
-                    toggleParam={toggleParam}
-                  />
+                  <>
+                    {/* 🔥 Table 1: Keyed Object Entry (Map Key Description) */}
+                    {(() => {
+                      // 원본 스키마에서 wrapper 정보 확인 (schemaView에 따라)
+                      const rawSchema = schemaView === 'enhanced'
+                        ? combinedSpecData.jsonSchemaEnhanced
+                        : combinedSpecData.jsonSchemaOriginal;
+                      const wrapperKey = rawSchema?.properties?.Assign ? 'Assign'
+                        : rawSchema?.properties?.Argument ? 'Argument' : null;
+                      const wrapperInfo = wrapperKey ? rawSchema?.properties?.[wrapperKey] : null;
+
+                      if (!wrapperKey || !wrapperInfo?.additionalProperties) return null;
+
+                      return (
+                        <div>
+                          <h4 className="text-sm font-semibold text-cyan-400 mb-2">Keyed Object Entry</h4>
+                          <p className="text-xs text-zinc-400 mb-3">
+                          </p>
+                          <div className="border rounded-lg overflow-hidden border-zinc-800">
+                            <table className="w-full text-sm">
+                              {/* 동일한 컬럼 너비 사용 (ui.yaml과 일치) */}
+                              <thead className="bg-zinc-900">
+                                <tr>
+                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '6%' }}>No.</th>
+                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '35%' }}>Description</th>
+                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '14%' }}>Key</th>
+                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '10%' }}>Value Type</th>
+                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '10%' }}>Default</th>
+                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '25%' }}>Required</th>
+                                </tr>
+                              </thead>
+                              <tbody className="text-sm">
+                                {/* Section Header */}
+                                <tr className="bg-cyan-950/30 border-b border-zinc-800">
+                                  <td colSpan={6} className="p-2 text-cyan-400 font-semibold text-xs">
+                                    Root Object
+                                  </td>
+                                </tr>
+                                {/* Data Row */}
+                                <tr className="border-b border-zinc-800 hover:bg-zinc-800/30">
+                                  <td className="p-3 text-zinc-400">1</td>
+                                  <td className="p-3">
+                                    <div className="text-zinc-300">
+                                      {wrapperInfo.description || 'Map of keyed objects where each key is a string identifier.'}
+                                    </div>
+                                  </td>
+                                  <td className="p-3">
+                                    <code className="font-mono text-blue-400">"{wrapperKey}"</code>
+                                  </td>
+                                  <td className="p-3 text-zinc-400">object</td>
+                                  <td className="p-3 text-zinc-500 font-mono text-xs">-</td>
+                                  <td className="p-3">
+                                    <span className="px-2 py-0.5 text-xs rounded bg-red-600/20 text-red-400">Required</span>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* 🔥 Table 2: Item (Value Object Schema) */}
+                    <div>
+                      <h4 className="text-sm font-semibold text-cyan-400 mb-2">Item (Value Object Schema)</h4>
+                      <p className="text-xs text-zinc-400 mb-3">
+                      </p>
+                      <DynamicTableRenderer
+                        definition={tableDefinition}
+                        parameters={tableParameters}
+                        expandedParams={expandedParams}
+                        toggleParam={toggleParam}
+                      />
+                    </div>
+                  </>
                 ) : (
                   <div className="flex items-center justify-center h-full text-zinc-500">
                     {isLoadingDefinition ? 'Loading table definition...' : 'No schema loaded'}

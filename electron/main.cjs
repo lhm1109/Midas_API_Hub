@@ -144,8 +144,13 @@ async function clearServerPorts() {
 }
 
 app.whenReady().then(async () => {
-  // 🔥 앱 시작 전 포트 정리
-  await clearServerPorts();
+  // 🔥 앱 시작 전 포트 정리 (개발 모드에서는 건너뛰기 - concurrently가 이미 서버를 시작했으므로)
+  const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+  if (!isDev) {
+    await clearServerPorts();
+  } else {
+    console.log('🔧 Development mode: skipping port cleanup (servers started by concurrently)');
+  }
 
   // Initialize database
   // db.initDatabase(); // DB 기능은 나중에 활성화

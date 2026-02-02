@@ -359,6 +359,25 @@ export function EditTaskModal({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="deploy" className="text-zinc-300">Deploy</Label>
+            <Select
+              value={formData.deploy as string}
+              onValueChange={(value) => handleChange('deploy', value as StatusType)}
+            >
+              <SelectTrigger className="bg-zinc-950 border-zinc-700 text-zinc-100">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-zinc-100 z-[110]">
+                {statusOptions.map((status) => (
+                  <SelectItem key={status} value={status} className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
+                    {statusLabels[status]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="issue" className="text-zinc-300">Issue</Label>
             <Select
               value={formData.issue as string}

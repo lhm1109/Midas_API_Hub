@@ -40,64 +40,119 @@ layout:
       headerBackground: "bg-zinc-800/50"
 
 # ============================================================================
-# ENHANCED FEATURES - x-* 마커 지원
+# MARKER INTERPRETATION - x-* 마커 UI 해석 규칙
 # ============================================================================
-enhancedFeatures:
-  xui:
+# ⚠️ 핵심 원칙: x-* 마커는 순수 UI 표현용
+#   - 삭제해도 검증 동작에 영향 없음
+#   - 검증 로직은 표준 JSON Schema (allOf if/then) 사용
+#
+# 이 섹션은 UI가 각 x-* 마커를 어떻게 해석하고 렌더링할지 정의
+# ============================================================================
+markerInterpretation:
+  # ────────────────────────────────────────────────────────────────────────────
+  # x-ui: 필드 메타데이터 (label, hint, groupId)
+  # ────────────────────────────────────────────────────────────────────────────
+  x-ui:
     enabled: true
-    features:
-      label: true
-      hint: true
-      sectionId: true  # 🔥 group deprecated → sectionId
-      visibleWhen: false  # 🔥 deprecated → x-required-when/x-optional-when 사용
+    purpose: "필드 라벨, 힌트, 그룹 등 UI 메타데이터"
+    rendering:
+      label:
+        source: "x-ui.label"
+        fallback: "key"  # x-ui.label 없으면 필드 키 사용
+        style: { fontWeight: "font-medium", color: "text-zinc-200" }
+      hint:
+        source: "x-ui.hint"
+        position: "below"
+        style: { color: "text-amber-400", fontSize: "text-[10px]", icon: "💡" }
+      groupId:
+        source: "x-ui.groupId"
+        useFor: "section-grouping"
+      sectionId:
+        source: "x-ui.sectionId"
+        fallback: "SECTION_GENERAL"
 
-  xenumByType:
+  # ────────────────────────────────────────────────────────────────────────────
+  # x-enum-labels: enum 값에 대한 라벨
+  # ────────────────────────────────────────────────────────────────────────────
+  x-enum-labels:
     enabled: true
-    dynamicUpdate: true
+    purpose: "enum 값에 대응하는 UI 라벨"
+    rendering:
+      format: "value - label"
+      display: "select-options"  # Select 컴포넌트에서 표시
+      tableDisplay: "list"       # 테이블에서 리스트로 표시
 
-  xvalueConstraint:
+  # ────────────────────────────────────────────────────────────────────────────
+  # x-enum-labels-by-type: TYPE별 enum 라벨
+  # ⚠️ 실제 enum 값 목록은 allOf[].if.then.properties.*.enum에서 가져옴
+  # ────────────────────────────────────────────────────────────────────────────
+  x-enum-labels-by-type:
     enabled: true
-    display: "hint"
-    icon: "💡"
-    style:
-      color: "text-amber-400"
-      fontSize: "text-[10px]"
+    purpose: "TYPE 조건에 따른 enum 라벨 (UI 표시용만)"
+    triggerField: "TYPE"
+    rendering:
+      format: "value - label"
+      dynamicUpdate: true  # TYPE 변경 시 라벨 동적 업데이트
+      tableDisplay: "grouped-by-type"
+    note: |
+      실제 enum 값 목록은 스키마의 allOf[].if.then에서 읽어옴
+      이 마커는 라벨만 제공
 
-  xnodeCountByType:
+  # ────────────────────────────────────────────────────────────────────────────
+  # x-value-hints-by-type: TYPE별 값 힌트 (권장사항)
+  # ────────────────────────────────────────────────────────────────────────────
+  x-value-hints-by-type:
     enabled: true
-    display: "hint"
-    validationTrigger: "onChange"
+    purpose: "TYPE별 권장 입력 값 안내 (검증 무관)"
+    triggerField: "TYPE"
+    rendering:
+      position: "below-input"
+      style:
+        color: "text-amber-400"
+        fontSize: "text-[10px]"
+        icon: "💡"
+        fontStyle: "italic"
 
-  # 🔥 조건부 마커 표시 스타일 (테이블 헤더용)
-  conditionalMarkers:
-    # 조건부 필수: 조건 충족 시 표시 + required
-    x-required-when:
-      enabled: true
-      label: "Required When"
-      icon: "●"
-      color: "#ff7e7e"       # 빨간색 계열 (필수)
-      textColor: "text-red-300"
-      headerBackground: "bg-red-950/30"
-      headerBorder: "border-red-800/50"
-    
-    # 조건부 선택: 조건 충족 시 표시 + optional
-    x-optional-when:
-      enabled: true
-      label: "Optional When"
-      icon: "○"
-      color: "#7eb8ff"       # 파란색 계열 (선택)
-      textColor: "text-blue-300"
-      headerBackground: "bg-blue-950/30"
-      headerBorder: "border-blue-800/50"
-    
-    # 레거시 호환 (deprecated)
-    x-ui.visibleWhen:
-      enabled: false
-      label: "Visible When"
-      icon: "◐"
-      color: "#4c9aff"
-      deprecated: true
-      replacedBy: "x-required-when or x-optional-when"
+  # ────────────────────────────────────────────────────────────────────────────
+  # x-uiRules: UI 가시성/동작 규칙
+  # ⚠️ 검증은 allOf if/then, 이것은 순수 UI 가시성
+  # ────────────────────────────────────────────────────────────────────────────
+  x-uiRules:
+    enabled: true
+    purpose: "필드 가시성 조건 (UI only)"
+    conditions:
+      visibleWhen:
+        description: "지정된 조건 충족 시 필드 표시"
+        hideMode: "remove"  # 조건 불충족 시 DOM에서 제거
+        evaluateOn: "change"
+
+# ============================================================================
+# LEGACY COMPATIBILITY - 레거시 마커 호환 (deprecated)
+# ============================================================================
+# ⚠️ 아래 마커들은 deprecated이며 새 스키마에서 사용 금지
+# 기존 스키마 호환을 위해 UI에서 여전히 읽지만, 새로 작성 시
+# 표준 allOf if/then + 위 순수 UI 마커 사용 권장
+legacyMarkers:
+  x-required-by-type:
+    deprecated: true
+    migrateTo: "allOf[].if.then.required"
+    uiInterpretation: "Required 상태 표시에 사용, 새 스키마는 allOf 사용"
+  x-enum-by-type:
+    deprecated: true
+    migrateTo: "allOf[].if.then.properties.*.enum"
+    uiInterpretation: "동적 enum 표시에 사용, 새 스키마는 allOf + x-enum-labels-by-type 사용"
+  x-node-count-by-type:
+    deprecated: true
+    migrateTo: "allOf[].if.then.properties.NODE.minItems/maxItems"
+    uiInterpretation: "노드 개수 힌트 표시에 사용, 새 스키마는 allOf 사용"
+  x-required-when:
+    deprecated: true
+    migrateTo: "allOf[].if.then.required + x-uiRules.visibleWhen"
+    uiInterpretation: "조건부 필수 표시에 사용, 새 스키마는 allOf + x-uiRules 사용"
+  x-optional-when:
+    deprecated: true
+    migrateTo: "x-uiRules.visibleWhen"
+    uiInterpretation: "조건부 가시성 표시에 사용, 새 스키마는 x-uiRules 사용"
 
 # ============================================================================
 # RENDERING - 렌더링 공통 규칙
@@ -132,6 +187,7 @@ rendering:
       - "x-ui.hint"
       - "x-value-constraint"
       - "x-node-count-by-type"
+      - "x-value-hints-by-type"  # 🔥 NEW: TYPE별 값 힌트
     style:
       color: "text-amber-400"
       fontSize: "text-[10px]"
@@ -245,6 +301,7 @@ table:
       - { key: "x-enum-labels-by-type", targetProperty: "enumLabelsByType", transformKey: true }
       - { key: "x-node-count-by-type", targetProperty: "nodeCountByType", transformKey: true }
       - { key: "x-value-constraint", targetProperty: "valueConstraint", transformKey: true }
+      - { key: "x-value-hints-by-type", targetProperty: "valueHintsByType", transformKey: true }  # 🔥 NEW
       - { key: "x-required-by-type", targetProperty: "requiredByType", transformKey: true }
       - { key: "x-transport", targetProperty: "x-transport", passthrough: true }
 
@@ -284,6 +341,10 @@ table:
           enabled: true
           title: "**Node Count by Type:**"
           badge: "APP"
+        valueHintsByType:  # 🔥 NEW: TYPE별 값 힌트 표시
+          enabled: true
+          title: "**💡 Value Hints by Type:**"
+          style: "hint"  # 힌트 스타일 (amber 색상)
 
     key:
       format: "\"{key}\""

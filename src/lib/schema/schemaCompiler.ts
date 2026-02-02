@@ -381,23 +381,38 @@ function applySchemaStructurePatterns(
 
   const patterns = getSchemaStructurePatterns(psdSet, schemaType);
 
-  if (!patterns || patterns.length === 0) {
+  console.log(`🔍 applySchemaStructurePatterns: ${patterns?.length || 0} patterns loaded for ${psdSet}/${schemaType}`);
+  console.log('🔍 Schema keys:', Object.keys(schema));
+  console.log('🔍 Schema has properties.Assign?', !!(schema as any).properties?.Assign);
+  console.log('🔍 Schema properties.Assign.additionalProperties?', !!(schema as any).properties?.Assign?.additionalProperties);
+
+  // 🔥 방어: patterns가 배열인지 확인
+  if (!patterns || !Array.isArray(patterns) || patterns.length === 0) {
+    console.warn('⚠️ No patterns loaded or patterns is not an array, returning schema as-is. patterns:', patterns);
     return schema; // No patterns defined, return as-is
   }
 
   // 각 패턴을 순서대로 확인
   for (const pattern of patterns) {
-    if (!pattern.enabled) continue;
+    if (!pattern.enabled) {
+      console.log(`⏭️ Pattern "${pattern.name}" is disabled, skipping`);
+      continue;
+    }
+
+    console.log(`🔍 Testing pattern: "${pattern.name}" with detect rules:`, JSON.stringify(pattern.detect, null, 2));
 
     // 패턴 감지
     if (matchesPattern(schema, pattern.detect)) {
-      console.log(`🔄 Applying schema pattern: ${pattern.name}`);
+      console.log(`✅ Pattern matched: ${pattern.name} - applying transform: ${pattern.transform?.action}`);
 
       // 패턴에 따라 변환 (psdSet, schemaType 전달)
       return transformSchema(schema, pattern.transform, psdSet, schemaType);
+    } else {
+      console.log(`❌ Pattern "${pattern.name}" did not match`);
     }
   }
 
+  console.warn('⚠️ No matching pattern found, returning schema as-is');
   return schema; // No matching pattern
 }
 
@@ -498,12 +513,99 @@ function transformSchema(schema: EnhancedSchema, transform: any, psdSet: string,
       // 이미 extractFields에서 처리됨
       return schema;
 
+    // 🔥 NEW: Assign/Argument + additionalProperties 패턴 처리
+    case 'unwrap-wrapper-with-additionalProperties':
+      return unwrapWrapperWithAdditionalProperties(schema, transform);
+
     default:
       console.warn(`⚠️ Unknown transform action: ${action}`);
       return schema;
   }
 }
 
+/**
+ * 🔥 NEW: Assign/Argument + additionalProperties 패턴 언래핑
+ * 
+ * 입력:
+ * {
+ *   "type": "object",
+ *   "required": ["Assign"],
+ *   "properties": {
+ *     "Assign": {
+ *       "type": "object",
+ *       "additionalProperties": {
+ *         "type": "object",
+ *         "properties": {...},
+ *         "allOf": [...]
+ *       }
+ *     }
+ *   }
+ * }
+ * 
+ * 출력:
+ * {
+ *   "type": "object",
+ *   "title": "Assign",
+ *   "properties": {...},  // additionalProperties 내용
+ *   "required": [...],    // additionalProperties 내용
+ *   "allOf": [...]        // additionalProperties 내용
+ * }
+ */
+function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): EnhancedSchema {
+  // 1. wrapper key 찾기 (Assign, Argument 등)
+  const wrapperKeys = ['Assign', 'Argument'];
+
+  if (!schema.properties) {
+    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: No properties found');
+    return schema as EnhancedSchema;
+  }
+
+  let wrapperKey: string | undefined;
+  for (const key of wrapperKeys) {
+    if (schema.properties[key]?.additionalProperties) {
+      wrapperKey = key;
+      break;
+    }
+  }
+
+  if (!wrapperKey) {
+    // 동적으로 wrapper key 찾기
+    for (const key of Object.keys(schema.properties)) {
+      if (schema.properties[key]?.additionalProperties?.type === 'object') {
+        wrapperKey = key;
+        break;
+      }
+    }
+  }
+
+  if (!wrapperKey) {
+    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: No wrapper key with additionalProperties found');
+    return schema as EnhancedSchema;
+  }
+
+  // 2. additionalProperties에서 엔티티 스키마 추출
+  const entitySchema = schema.properties[wrapperKey].additionalProperties;
+
+  if (!entitySchema || typeof entitySchema !== 'object') {
+    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: Invalid additionalProperties');
+    return schema as EnhancedSchema;
+  }
+
+  console.log(`✅ unwrapWrapperWithAdditionalProperties: Extracting entity from "${wrapperKey}.additionalProperties"`);
+
+  // 3. 새로운 스키마 구성 (엔티티 스키마를 최상위로)
+  const result: EnhancedSchema = {
+    ...entitySchema,
+    title: wrapperKey,
+  };
+
+  // 4. $schema 보존
+  if (schema.$schema) {
+    result.$schema = schema.$schema;
+  }
+
+  return result;
+}
 /**
  * 최상위 wrapper key 제거 (예: { 'Argument': { type, properties } })
  * 
@@ -873,7 +975,15 @@ function extractTypes(schema: EnhancedSchema): string[] {
 function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
   const triggers = new Set<string>();
 
-  // 1. x-ui.visibleWhen에서 추출
+  // 1. x-uiRules.visibleWhen에서 추출 (새 철학)
+  const xUiRules = (prop as any)['x-uiRules'];
+  if (xUiRules?.visibleWhen && typeof xUiRules.visibleWhen === 'object') {
+    for (const key of Object.keys(xUiRules.visibleWhen)) {
+      triggers.add(key);
+    }
+  }
+
+  // 2. x-ui.visibleWhen에서 추출 (레거시 호환)
   const xUi = (prop as any)['x-ui'];
   if (xUi?.visibleWhen && typeof xUi.visibleWhen === 'object') {
     for (const key of Object.keys(xUi.visibleWhen)) {
@@ -881,7 +991,7 @@ function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
     }
   }
 
-  // 2. x-required-when에서 추출
+  // 3. x-required-when에서 추출 (레거시)
   const xRequiredWhen = (prop as any)['x-required-when'];
   if (xRequiredWhen && typeof xRequiredWhen === 'object') {
     for (const key of Object.keys(xRequiredWhen)) {

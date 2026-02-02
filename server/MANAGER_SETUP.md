@@ -38,6 +38,7 @@ Manager 탭을 사용하기 전에 반드시 아래 설정을 완료해야 합�
 | 컬럼명 | 타입 | 설명 |
 |--------|------|------|
 | id | TEXT (PK) | 작업 고유 ID |
+| product | TEXT | Product Ribbon - Product |
 | tab | TEXT | Product Ribbon - Tab |
 | group | TEXT | Product Ribbon - Group |
 | sub1 | TEXT | Product Ribbon - sub1 |
@@ -46,9 +47,12 @@ Manager 탭을 사용하기 전에 반드시 아래 설정을 완료해야 합�
 | seg1 | TEXT | API - seg1 |
 | seg2 | TEXT | API - seg2 |
 | end_point | TEXT | API - End Point |
+| mode | TEXT | API - mode |
+| plan | TEXT | Pipeline - Plan 상태 |
 | dev | TEXT | Pipeline - Dev 상태 |
 | vv | TEXT | Pipeline - V&V 상태 |
 | doc | TEXT | Pipeline - doc. 상태 |
+| deploy | TEXT | Pipeline - 배포 관리 상태 |
 | issue | TEXT | Pipeline - Issue 상태 |
 | status | TEXT | Pipeline - status |
 | charge | TEXT | Pipeline - charge (담당자) |

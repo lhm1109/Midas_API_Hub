@@ -493,10 +493,68 @@ export function generateHTMLDocument(
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTMLLegacy(sections);
 
-  // Zendesk 호환 테이블 (inline 스타일)
+  // 🔥 Wrapper key (Assign/Argument) 정보 추출
+  const wrapperKey = (schema as any).title || 'Assign';
+  const wrapperDescription = getWrapperDescription(schema);
+
+  // Zendesk 호환 테이블 (inline 스타일) - 두 개의 테이블
   return `
+    <!-- 🔥 Table 1: Keyed Object Entry (Map Key Description) -->
+    <h3 id="h_keyed_object_entry">
+      <strong>Keyed Object Entry</strong>
+    </h3>
+    <div class="table-wrap">
+      <table style="border-collapse: collapse; width: 100%;" border="1">
+        <colgroup>
+          <col style="width: 6.00%;">
+          <col style="width: 6.00%;">
+          <col style="width: 44.00%;">
+          <col style="width: 14.00%;">
+          <col style="width: 10.00%;">
+          <col style="width: 10.00%;">
+          <col style="width: 10.00%;">
+        </colgroup>
+        <tbody>
+          <tr>
+            <th style="${ZENDESK_HEADER_STYLE}">No.</th>
+            <th style="${ZENDESK_HEADER_STYLE}" colspan="2">Description</th>
+            <th style="${ZENDESK_HEADER_STYLE}">Key</th>
+            <th style="${ZENDESK_HEADER_STYLE}">Value Type</th>
+            <th style="${ZENDESK_HEADER_STYLE}">Default</th>
+            <th style="${ZENDESK_HEADER_STYLE}">Required</th>
+          </tr>
+          <tr>
+            <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="7">
+              <p><span style="color: #4c9aff;">Root Object</span></p>
+            </td>
+          </tr>
+          <tr>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">1</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}" colspan="2">
+              <p>${wrapperDescription}</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">"${escapeHtml(wrapperKey)}"</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">object</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">-</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">Required</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🔥 Table 2: Item (Value Object Schema) -->
     <h3 id="h_specifications">
-      <strong>Specifications</strong>
+      <strong>Item (Value Object Schema)</strong>
     </h3>
     <div class="table-wrap">
       <table style="border-collapse: collapse; width: 100%;" border="1">
@@ -515,6 +573,24 @@ export function generateHTMLDocument(
   `.trim();
 }
 
+/**
+ * Wrapper description 추출 (schema에서 Assign/Argument의 설명 가져오기)
+ */
+function getWrapperDescription(schema: EnhancedSchema): string {
+  const properties = (schema as any).properties;
+  if (!properties) return 'Map of keyed objects.';
+
+  // Assign 또는 Argument wrapper 찾기
+  const wrapperKeys = ['Assign', 'Argument'];
+  for (const key of wrapperKeys) {
+    if (properties[key]?.description) {
+      return escapeHtml(properties[key].description);
+    }
+  }
+
+  return 'Map of keyed objects where each key is a string identifier.';
+}
+
 function generateTableHTMLLegacy(sections: SectionGroup[]): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
@@ -528,11 +604,18 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
     const fieldsByCondition: Map<string, EnhancedField[]> = new Map();
 
     for (const field of section.fields) {
-      const visibleWhen = (field as any).ui?.visibleWhen || (field as any)['x-ui']?.visibleWhen;
+      // 🔥 조건 소스 확장: visibleWhen + x-required-when + x-optional-when
+      const fieldAny = field as any;
+      const visibleWhen = fieldAny.ui?.visibleWhen || fieldAny['x-ui']?.visibleWhen;
+      const requiredWhen = fieldAny.requiredWhen || fieldAny['x-required-when'];
+      const optionalWhen = fieldAny.optionalWhen || fieldAny['x-optional-when'];
 
-      if (visibleWhen && Object.keys(visibleWhen).length > 0) {
-        // 조건 키 생성 (예: "iMETHOD: 1" 또는 "iMETHOD: [2,4]")
-        const conditionKey = Object.entries(visibleWhen)
+      // 조건 중 하나라도 있으면 조건부 필드로 처리
+      const condition = visibleWhen || requiredWhen || optionalWhen;
+
+      if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
+        // 조건 키 생성 (예: "TYPE: BEAM,TRUSS" 또는 "iMETHOD: [2,4]")
+        const conditionKey = Object.entries(condition)
           .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
           .join(', ');
 
@@ -670,6 +753,16 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
     for (const [type, count] of Object.entries(field.nodeCountByType)) {
       const countStr = Array.isArray(count) ? count.join(' or ') : count;
       parts.push(`<p> • ${escapeHtml(type)}: ${countStr} nodes</p>`);
+    }
+  }
+
+  // 🔥 Value Hints by Type (x-value-hints-by-type)
+  const fieldAny = field as any;
+  const valueHintsByType = fieldAny.valueHintsByType || fieldAny['x-value-hints-by-type'];
+  if (valueHintsByType) {
+    parts.push(`<p><strong>💡 Value Hints by Type:</strong></p>`);
+    for (const [type, hint] of Object.entries(valueHintsByType)) {
+      parts.push(`<p> • <em>${escapeHtml(type)}:</em> ${escapeHtml(String(hint))}</p>`);
     }
   }
 

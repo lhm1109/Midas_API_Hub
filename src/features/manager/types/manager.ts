@@ -22,6 +22,7 @@ export interface ApiTask {
   dev: StatusType;
   vv: StatusType;
   doc: StatusType;
+  deploy: StatusType;
   issue: StatusType;
   status: "In Progress" | "Done" | string;  // Working 제거
   charge: string;
@@ -52,6 +53,7 @@ export const defaultColumns: Column[] = [
   { id: "dev", label: "Dev", visible: true },
   { id: "vv", label: "V&V", visible: true },
   { id: "doc", label: "doc.", visible: true },
+  { id: "deploy", label: "Deploy", visible: true },
   { id: "issue", label: "Issue", visible: true },
   { id: "status", label: "status", visible: true },
   { id: "charge", label: "charge", visible: true },

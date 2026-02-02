@@ -1,7 +1,15 @@
 # ============================================================================
 # SHARED RULES - Original Schema용 공통 규칙 (SSOT v1.5)
 # ============================================================================
-# x-* extensions 미사용 버전 (Plain JSON Schema only)
+# 🔥 Original: 순수 JSON Schema Draft-07만 지원
+#    - x-* extensions 미사용 (표준 호환)
+#    - Enhanced에서 컨버터로 변환 시 x-* 마커가 모두 제거됨
+#
+# 🔥 Enhanced와의 차이점:
+#    - markerRegistry: 빈 배열 (x-* 마커 미지원)
+#    - typeInferenceRegistry: 빈 배열 (접두사 기반 타입 추론 미지원)
+#    - conditionRegistry: 최소 세트만 유지 (has-marker 등 제외)
+#    - visibilityRules: 조건부 필드 표시 미지원
 #
 # ⚠️ SSOT 원칙:
 #   - 버전: versioning 섹션만 책임
@@ -10,6 +18,7 @@
 #   - 조건: conditionRegistry (전역 SSOT)
 #   - 무결성: integrityRules (레퍼런스 검증)
 # ============================================================================
+
 
 # ============================================================================
 # VERSIONING
@@ -235,6 +244,38 @@ schemaLogic:
       additionalProperties: false
 
   schemaStructurePatterns:
+    # 🔥 Pattern 1: Assign + additionalProperties (NEW)
+    # Map 기반 엔티티 컬렉션을 언래핑
+    - name: "Unwrap Wrapper with AdditionalProperties"
+      description: "Assign/Argument 래퍼의 additionalProperties에서 엔티티 스키마 추출"
+      enabled: true
+      priority: 0  # 가장 먼저 체크
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Assign.additionalProperties"
+          exists: true
+        - path: "properties.Assign.additionalProperties.type"
+          value: "object"
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+        
+    # 🔥 Pattern 1b: Argument 래퍼 (Assign 대안)
+    - name: "Unwrap Argument Wrapper with AdditionalProperties"
+      description: "Argument 래퍼의 additionalProperties에서 엔티티 스키마 추출"
+      enabled: true
+      priority: 0
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Argument.additionalProperties"
+          exists: true
+        - path: "properties.Argument.additionalProperties.type"
+          value: "object"
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+
+    # Pattern 2: 기존 unwrap-root-key
     - name: "Unwrap Root Wrapper Key"
       description: "최상위 wrapper key 제거"
       enabled: true

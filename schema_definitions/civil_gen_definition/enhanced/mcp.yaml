@@ -9,6 +9,14 @@ version: "1.0.0"
 extends: "./shared.yaml"
 
 # ============================================================================
+# 🔥 SCHEMA PHILOSOPHY (핵심 원칙)
+# ============================================================================
+# - 검증 로직: 표준 JSON Schema 키워드 (allOf, if/then, required, enum)
+# - UI 표현: x-* 마커 (삭제해도 검증 동작 동일)
+# - AI 스키마 생성 시 이 원칙 준수 필수!
+# ============================================================================
+
+# ============================================================================
 # SECURITY - 보안 정책
 # ============================================================================
 security:
@@ -300,10 +308,21 @@ autoQuestionPatterns:
     question: |
       "{option}" 옵션을 선택하면 별도의 입력 필드가 활성화되나요?
       (예: 숫자 입력, 텍스트 입력)
+    # 🔥 NEW: 표준 JSON Schema 방식 (검증 로직)
     schemaPattern: |
-      visibleWhen:
-        field: "{parentField}"
-        equals: {optionValue}
+      allOf:
+        - if:
+            properties:
+              {parentField}:
+                const: {optionValue}
+          then:
+            required:
+              - {inputField}
+    # 🔥 UI 가시성 (선택적)
+    uiPattern: |
+      x-uiRules:
+        visibleWhen:
+          {parentField}: {optionValue}
   
   # 🔥 TYPE별 조건부 필드 패턴
   typeConditionalFields:
@@ -312,10 +331,28 @@ autoQuestionPatterns:
     question: |
       "{field}" 필드는 특정 TYPE에서만 사용 가능한가요?
       어떤 TYPE에서 사용 가능한지 알려주세요.
+    # 🔥 NEW: 표준 JSON Schema 방식 (검증 로직)
     schemaPattern: |
-      x-required-by-type:
-        TYPE1: true
-        TYPE2: false
+      allOf:
+        - if:
+            properties:
+              TYPE:
+                const: "TYPE1"
+          then:
+            required:
+              - {field}
+            properties:
+              {field}:
+                enum: [...]
+    # 🔥 UI 가시성 + 라벨 (선택적)
+    uiPattern: |
+      x-uiRules:
+        visibleWhen:
+          TYPE: ["TYPE1", "TYPE2"]
+      x-enum-labels-by-type:
+        TYPE1:
+          "1": "Option A"
+          "2": "Option B"
   
   # 🔥 그룹/섹션 토글 패턴
   groupToggle:
@@ -360,19 +397,49 @@ exampleQuestions:
       "Exposure Factor for Crack Width"에서 "User" 옵션을 선택하면 
       별도의 숫자 입력 필드가 활성화되나요? 있다면 기본값은 무엇인가요?
     context: "이미지에서 'User' 옵션 옆에 입력 필드가 보입니다"
+    # 🔥 NEW: 표준 JSON Schema 방식 권장
     suggestion:
       addField: "dEXP_VAL"
       type: "number"
       default: 1
-      visibleWhen:
-        field: "iEXP_FACT"
-        equals: 2  # User 옵션의 값
+      # 검증 로직 (allOf if/then)
+      allOfPattern: |
+        allOf:
+          - if:
+              properties:
+                iEXP_FACT:
+                  const: 2
+            then:
+              required:
+                - dEXP_VAL
+      # UI 가시성 (선택적)
+      uiPattern: |
+        x-uiRules:
+          visibleWhen:
+            iEXP_FACT: 2
         
   - field: "STYPE"
     question: |
       "Element Subtype"은 모든 TYPE에서 사용 가능한가요?
       아니면 특정 TYPE에서만 보이나요?
-    context: "x-enum-by-type을 보면 일부 TYPE에만 값이 정의되어 있음"
+    context: "allOf if/then으로 조건부 enum 정의 필요"
+    # 🔥 NEW: 표준 JSON Schema 방식 권장
     suggestion:
-      usePattern: "x-required-by-type"
+      usePattern: "allOf if/then + x-enum-labels-by-type"
+      example: |
+        allOf:
+          - if:
+              properties:
+                TYPE:
+                  const: "TENSTR"
+            then:
+              properties:
+                STYPE:
+                  enum: [1, 2, 3]
+        # UI 라벨 (검증과 무관)
+        x-enum-labels-by-type:
+          TENSTR:
+            "1": "Truss Type"
+            "2": "Hook Type"
+            "3": "Cable Type"
 

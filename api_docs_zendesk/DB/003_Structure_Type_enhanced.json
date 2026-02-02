@@ -5,7 +5,13 @@
       "STYP": {
         "type": "integer",
         "description": "Structure type",
-        "enum": [0, 1, 2, 3, 4],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
         "x-enum-labels": {
           "0": "3-D",
           "1": "X-Z Plane",
@@ -17,7 +23,10 @@
       "MASS": {
         "type": "integer",
         "description": "Mass type",
-        "enum": [1, 2],
+        "enum": [
+          1,
+          2
+        ],
         "x-enum-labels": {
           "1": "Lumped Mass",
           "2": "Consistent Mass"
@@ -60,17 +69,21 @@
       "SMASS": {
         "type": "integer",
         "description": "Structure mass type",
-        "enum": [1, 2, 3],
+        "enum": [
+          1,
+          2,
+          3
+        ],
         "default": 1,
         "x-enum-labels": {
           "1": "Convert to X, Y, Z",
           "2": "Convert to X, Y",
           "3": "Convert to Z"
         },
-        "x-required-when": {
-          "bSELFWEIGHT": true
-        },
         "x-ui": {
+          "label": "Structure Mass Type"
+        },
+        "x-uiRules": {
           "visibleWhen": {
             "bSELFWEIGHT": true
           }
@@ -87,7 +100,9 @@
           }
         },
         "then": {
-          "required": ["SMASS"]
+          "required": [
+            "SMASS"
+          ]
         }
       }
     ],

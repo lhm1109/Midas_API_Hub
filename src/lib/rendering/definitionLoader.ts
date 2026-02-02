@@ -16,8 +16,11 @@ export interface UIRulesDefinition {
   validation: any;
   conditionalRendering: any;
   styling: any;
-  enhancedFeatures?: any;
+  enhancedFeatures?: any;  // deprecated, use markerInterpretation
+  markerInterpretation?: any;  // 🔥 NEW: x-* 마커 UI 해석 규칙
+  legacyMarkers?: any;  // 🔥 NEW: deprecated 마커 호환성
 }
+
 
 export interface BuilderDefinition extends UIRulesDefinition {
   formLayout: any;
@@ -136,7 +139,9 @@ export interface SharedRulesDefinition {
     id: string;
     key: string;
     description?: string;
-    required?: boolean;
+    pureUI?: boolean;  // 🔥 NEW: true = 삭제해도 검증 영향 없음
+    schema?: any;  // 마커 값 스키마
+    example?: string;  // 사용 예시
   }>;
   // 🔥 v1.4: conditionRegistry 전역 이동
   conditionRegistry: Array<{
@@ -175,12 +180,53 @@ export interface SharedRulesDefinition {
     errors: Array<{ code: string; level: string; message: string; fix?: string }>;
     warnings: Array<{ code: string; level: string; message: string; fix?: string }>;
   };
-  // 🔥 v1.2: defaults + required/onMissing
   outputMeta: {
     defaults: { required: boolean; onMissing: 'warn' | 'error' | 'null' };
     fields: Array<{ alias: string; source: string; required?: boolean; onMissing?: string }>;
   };
   schemaLogic: any;
+  // 🔥 v1.6: schemaStructurePatterns 추가
+  schemaStructurePatterns?: {
+    wrapperKeys: Array<{
+      key: string;
+      description?: string;
+      example?: string;
+    }>;
+    entityCollectionPattern: {
+      detect: Array<{ path: string; value?: any; exists?: boolean }>;
+      entityPath: string;
+      fieldExtractionRules: {
+        properties: string;
+        required: string;
+        allOf: string;
+        xUi: string;
+      };
+    };
+    conditionalValidation: {
+      pattern: string;
+      ifStructure: { properties: string; required: string };
+      thenStructure: { required: string; properties: string };
+    };
+    conditionalRequiredMapping: {
+      conditionField: string;
+      multiCondition: boolean;
+    };
+    conditionalEnumMapping: {
+      extractFrom: string;
+    };
+    conditionalNodeCountMapping: {
+      extractFrom: string;
+    };
+    uiVisibilityRules: {
+      markerKey: string;
+      visibleWhenPath: string;
+      supportedConditionFields: string[];
+      conditionFormats: {
+        single: string;
+        multi: string;
+      };
+    };
+  };
 }
 
 export interface MCPRulesDefinition {

@@ -182,9 +182,18 @@ export async function initSchemaLogicRules(
 
             // 🔥 schemaLogic 네임스페이스에서 추출 (YAML v1.3 구조 대응)
             const schemaLogic = parsed.schemaLogic || {};
+            // 🔥 v1.6: schemaStructurePatterns는 schemaLogic에서 우선 읽음 (배열 형식)
+            // 최상위 schemaStructurePatterns는 문서용 객체이므로 배열인지 확인 필수
+            let schemaStructurePatterns = schemaLogic.schemaStructurePatterns;
+            if (!Array.isArray(schemaStructurePatterns)) {
+                // fallback: 최상위에서 배열인 경우만 사용
+                schemaStructurePatterns = Array.isArray(parsed.schemaStructurePatterns)
+                    ? parsed.schemaStructurePatterns
+                    : [];
+            }
             const rules: SchemaLogicRules = {
                 platformSkeleton: schemaLogic.platformSkeleton,
-                schemaStructurePatterns: schemaLogic.schemaStructurePatterns || [],
+                schemaStructurePatterns: schemaStructurePatterns,
                 sectionRules: schemaLogic.sectionRules || [],
                 sectionOrder: schemaLogic.sectionOrder || [],
                 typeLabels: schemaLogic.typeLabels || {},

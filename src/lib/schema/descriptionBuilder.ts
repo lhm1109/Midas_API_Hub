@@ -90,10 +90,20 @@ export function buildFieldDescription(
     }
   }
 
-  // 6. Hint (x-ui.hint)
+  // 🔥 6. Value Hints by Type (x-value-hints-by-type) - 순수 UI 힌트
+  const valueHintsByType = fieldAny.valueHintsByType || fieldAny['x-value-hints-by-type'];
+  if (valueHintsByType) {
+    descParts.push('**💡 Value Hints by Type:**');
+    for (const [type, hint] of Object.entries(valueHintsByType)) {
+      descParts.push(`• *${type}:* ${hint}`);
+    }
+  }
+
+  // 7. Hint (x-ui.hint)
   if (fieldAny.ui?.hint) {
     descParts.push(`💡 ${fieldAny.ui.hint}`);
   }
+
 
   return descParts.join('\n');
 }

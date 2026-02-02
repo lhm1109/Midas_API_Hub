@@ -69,7 +69,7 @@ const COLUMN_GROUPS = {
   },
   pipeline: {
     label: 'Pipeline',
-    columns: ['plan', 'dev', 'vv', 'doc', 'issue', 'status', 'charge', 'remark'],  // plan 추가
+    columns: ['plan', 'dev', 'vv', 'doc', 'deploy', 'issue', 'status', 'charge', 'remark'],  // deploy 추가
   },
 };
 
@@ -105,7 +105,7 @@ export function ApiTable({
 
   // 기본 컬럼 너비 계산
   const getDefaultColumnWidth = useCallback((columnId: string): number => {
-    const isStatusCol = ['dev', 'vv', 'doc', 'issue', 'status', 'seg1'].includes(columnId);
+    const isStatusCol = ['dev', 'vv', 'doc', 'deploy', 'issue', 'status', 'seg1'].includes(columnId);
     const isProductRibbonCol = ['product', 'tab', 'group', 'sub1', 'sub2', 'sub3'].includes(columnId);
     const isEndpointCol = columnId === 'endPoint';
     return isStatusCol ? 64 : isProductRibbonCol ? 100 : isEndpointCol ? 150 : 80;
@@ -225,7 +225,7 @@ export function ApiTable({
   };
 
   const isStatusColumn = (columnId: string) => {
-    return ['dev', 'vv', 'doc', 'issue'].includes(columnId);
+    return ['dev', 'vv', 'doc', 'deploy', 'issue'].includes(columnId);
   };
 
   const filteredTasks = useMemo(() => {
@@ -269,8 +269,8 @@ export function ApiTable({
   const renderCellContent = (task: ApiTask, columnId: string) => {
     const value = task[columnId];
 
-    // plan, dev, vv, doc, issue는 상태 아이콘으로 표시
-    if (columnId === 'plan' || columnId === 'dev' || columnId === 'vv' || columnId === 'doc' || columnId === 'issue') {
+    // plan, dev, vv, doc, deploy, issue는 상태 아이콘으로 표시
+    if (columnId === 'plan' || columnId === 'dev' || columnId === 'vv' || columnId === 'doc' || columnId === 'deploy' || columnId === 'issue') {
       return (
         <div className="flex justify-center">
           <StatusIcon status={value as any} />

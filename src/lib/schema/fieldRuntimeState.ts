@@ -323,8 +323,12 @@ export function calculateFieldRuntimeStates(
 
   for (const section of sections) {
     for (const field of section.fields) {
-      // 🔥 1. visible 계산 (visibleWhen + x-required-when + x-* + 그룹 기반)
-      let visible = evaluateVisibleWhen(field.ui?.visibleWhen, formValues);
+      // 🔥 1. visible 계산 (x-uiRules.visibleWhen 우선, x-ui.visibleWhen fallback)
+      // 새 철학: x-uiRules.visibleWhen (순수 UI 가시성)
+      // 레거시: x-ui.visibleWhen (하위 호환)
+      const xUiRules = (field as any)['x-uiRules'];
+      const visibleWhenCondition = xUiRules?.visibleWhen ?? field.ui?.visibleWhen;
+      let visible = evaluateVisibleWhen(visibleWhenCondition, formValues);
 
       // 🔥 1.1: x-required-when이 있으면 조건이 맞지 않으면 숨김
       // 예: WALL_ID는 x-required-when: { TYPE: "WALL" } → TYPE=BEAM이면 숨김
@@ -418,7 +422,10 @@ export function calculateFieldRuntimeStates(
       // 🔥 5. 자식 필드들도 처리 (중첩 필드)
       if (field.children && Array.isArray(field.children)) {
         for (const child of field.children) {
-          let childVisible = evaluateVisibleWhen(child.ui?.visibleWhen, formValues);
+          // 새 철학: x-uiRules.visibleWhen 우선, x-ui.visibleWhen fallback
+          const childXUiRules = (child as any)['x-uiRules'];
+          const childVisibleWhenCondition = childXUiRules?.visibleWhen ?? child.ui?.visibleWhen;
+          let childVisible = evaluateVisibleWhen(childVisibleWhenCondition, formValues);
 
           // 🔥 5.1: x-required-when 기반 visibility
           const childXRequiredWhen = (child as any)['x-required-when'];
