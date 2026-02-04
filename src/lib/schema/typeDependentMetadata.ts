@@ -1,22 +1,24 @@
 /**
  * Type-Dependent Metadata Handler
  * 
- * Enhanced Schema의 x-*-by-type 메타데이터를 통합 처리합니다.
+ * ⚠️ DEPRECATED: shared.yaml SSOT에 따라 x-*-by-type 마커들은 제거됨
+ * - x-enum-by-type → allOf[].if.then.properties.*.enum
+ * - x-node-count-by-type → allOf[].if.then.properties.NODE.minItems/maxItems
+ * - x-required-by-type → allOf[].if.then.required
+ * - x-value-constraint → allOf[].if.then (설명은 스키마 description에)
  * 
- * @see api_docs_zendesk/make_enhanced_schema.md
+ * 이 파일은 레거시 스키마 호환을 위해 최소한의 stub만 유지합니다.
  */
 
 import type { EnhancedField } from './schemaCompiler';
 
-export type TypeDependentMetadataType = 
-  | 'enum' 
-  | 'enumLabels' 
-  | 'required' 
-  | 'valueConstraint' 
-  | 'nodeCount';
+export type TypeDependentMetadataType =
+  | 'enum'
+  | 'enumLabels';
 
 /**
  * TYPE 값에 따라 메타데이터 값 가져오기
+ * ⚠️ 순수 UI 메타데이터(enumLabels)만 지원
  */
 export function getTypeDependentValue(
   field: EnhancedField,
@@ -26,34 +28,10 @@ export function getTypeDependentValue(
   const fieldAny = field as any;
 
   switch (metadataType) {
-    case 'enum':
-      // x-enum-by-type에서 해당 TYPE의 enum 값 가져오기
-      const enumByType = fieldAny.enumByType || fieldAny['x-enum-by-type'];
-      return enumByType?.[type] || field.enum;
-
     case 'enumLabels':
-      // x-enum-labels-by-type에서 해당 TYPE의 enum labels 가져오기
+      // x-enum-labels-by-type에서 해당 TYPE의 enum labels 가져오기 (순수 UI 마커)
       const enumLabelsByType = fieldAny.enumLabelsByType || fieldAny['x-enum-labels-by-type'];
       return enumLabelsByType?.[type] || fieldAny.enumLabels || fieldAny['x-enum-labels'];
-
-    case 'required':
-      // x-required-by-type에서 해당 TYPE의 required 상태 가져오기
-      const requiredByType = fieldAny.requiredByType || fieldAny['x-required-by-type'];
-      if (requiredByType?.[type] !== undefined) {
-        return requiredByType[type];
-      }
-      // fallback: required 객체에서 TYPE별 상태 확인
-      return field.required?.[type] || field.required?.['*'] || 'optional';
-
-    case 'valueConstraint':
-      // x-value-constraint에서 해당 TYPE의 제약 조건 가져오기
-      const valueConstraint = fieldAny.valueConstraint || fieldAny['x-value-constraint'];
-      return valueConstraint?.[type];
-
-    case 'nodeCount':
-      // x-node-count-by-type에서 해당 TYPE의 노드 개수 가져오기
-      const nodeCountByType = fieldAny.nodeCountByType || fieldAny['x-node-count-by-type'];
-      return nodeCountByType?.[type];
 
     default:
       return undefined;
@@ -62,45 +40,27 @@ export function getTypeDependentValue(
 
 /**
  * 필드가 TYPE에 의존하는 메타데이터를 가지고 있는지 확인
+ * ⚠️ 순수 UI 메타데이터(enumLabels)만 체크
  */
 export function hasTypeDependentMetadata(field: EnhancedField): boolean {
   const fieldAny = field as any;
-  
+
   return !!(
-    fieldAny.enumByType ||
-    fieldAny['x-enum-by-type'] ||
     fieldAny.enumLabelsByType ||
-    fieldAny['x-enum-labels-by-type'] ||
-    fieldAny.requiredByType ||
-    fieldAny['x-required-by-type'] ||
-    fieldAny.valueConstraint ||
-    fieldAny['x-value-constraint'] ||
-    fieldAny.nodeCountByType ||
-    fieldAny['x-node-count-by-type']
+    fieldAny['x-enum-labels-by-type']
   );
 }
 
 /**
  * 필드의 모든 TYPE별 메타데이터 타입 목록 가져오기
+ * ⚠️ 순수 UI 메타데이터만
  */
 export function getTypeDependentMetadataTypes(field: EnhancedField): TypeDependentMetadataType[] {
   const types: TypeDependentMetadataType[] = [];
   const fieldAny = field as any;
 
-  if (fieldAny.enumByType || fieldAny['x-enum-by-type']) {
-    types.push('enum');
-  }
   if (fieldAny.enumLabelsByType || fieldAny['x-enum-labels-by-type']) {
     types.push('enumLabels');
-  }
-  if (fieldAny.requiredByType || fieldAny['x-required-by-type']) {
-    types.push('required');
-  }
-  if (fieldAny.valueConstraint || fieldAny['x-value-constraint']) {
-    types.push('valueConstraint');
-  }
-  if (fieldAny.nodeCountByType || fieldAny['x-node-count-by-type']) {
-    types.push('nodeCount');
   }
 
   return types;

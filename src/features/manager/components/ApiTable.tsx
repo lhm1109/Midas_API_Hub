@@ -328,10 +328,13 @@ export function ApiTable({
     if (['product', 'tab', 'group', 'sub1', 'sub2', 'sub3'].includes(columnId)) {
       if (!value) return '';
 
+      // sub2, sub3는 왼쪽 정렬, 나머지는 가운데 정렬
+      const isLeftAligned = ['sub2', 'sub3'].includes(columnId);
+
       return (
         <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
-            <div className="truncate cursor-default">
+            <div className={cn("truncate cursor-default", isLeftAligned && "text-left")}>
               {value}
             </div>
           </TooltipTrigger>

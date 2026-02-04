@@ -300,7 +300,7 @@ function renderFieldInput(
   if (field.enum) {
     return (
       <Select
-        value={String(value || '')}
+        value={value !== undefined && value !== null ? String(value) : ''}
         onValueChange={onChange}
         disabled={disabled}
       >
@@ -363,8 +363,16 @@ function renderFieldInput(
     return (
       <Input
         type="number"
-        value={value || ''}
-        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+        value={value !== undefined && value !== null ? value : ''}
+        onChange={(e) => {
+          const val = e.target.value;
+          if (val === '') {
+            onChange(null);
+          } else {
+            const parsed = field.type === 'integer' ? parseInt(val, 10) : parseFloat(val);
+            onChange(isNaN(parsed) ? 0 : parsed);
+          }
+        }}
         className={inputClassName}
         placeholder={field.default?.toString() || '0'}
         min={(field as any).minimum}

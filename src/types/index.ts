@@ -55,6 +55,9 @@ export interface TestCase {
   name: string;
   description?: string;
   requestBody: string;
+  responseBody?: string;  // 🔥 Response 저장용
+  responseStatus?: number;  // 🔥 HTTP 상태 코드
+  responseTime?: number;    // 🔥 응답 시간 (ms)
   createdAt: string;
   updatedAt: string;
 }

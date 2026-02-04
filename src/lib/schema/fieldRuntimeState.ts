@@ -259,7 +259,8 @@ export function calculateFieldRuntimeStates(
   const stateMap: FieldRuntimeStateMap = {};
 
   // 🔥 Step 0: 그룹별 허용 TYPE 사전 계산
-  // 그룹 내 필드들의 x-required-by-type, x-enum-by-type, x-value-constraint에서 허용 TYPE 수집
+  // 그룹 내 필드들의 x-required-when, x-optional-when에서 허용 TYPE 수집
+  // NOTE: x-required-by-type, x-enum-by-type, x-value-constraint는 deprecated (shared.yaml SSOT)
   const groupAllowedTypes = new Map<string, Set<string>>();
 
   for (const section of sections) {
@@ -272,32 +273,6 @@ export function calculateFieldRuntimeStates(
 
       // 이 필드에서 허용 TYPE 수집
       const allowedTypesForField = new Set<string>();
-
-      // x-required-by-type에서 수집
-      const xRequiredByType = (field as any)['x-required-by-type'];
-      if (xRequiredByType && typeof xRequiredByType === 'object') {
-        for (const [typeKey, status] of Object.entries(xRequiredByType)) {
-          if (status !== false) { // true 또는 다른 값이면 허용
-            allowedTypesForField.add(typeKey);
-          }
-        }
-      }
-
-      // x-enum-by-type에서 수집
-      const xEnumByType = (field as any)['x-enum-by-type'];
-      if (xEnumByType && typeof xEnumByType === 'object') {
-        for (const typeKey of Object.keys(xEnumByType)) {
-          allowedTypesForField.add(typeKey);
-        }
-      }
-
-      // x-value-constraint에서 수집
-      const xValueConstraint = (field as any)['x-value-constraint'];
-      if (xValueConstraint && typeof xValueConstraint === 'object') {
-        for (const typeKey of Object.keys(xValueConstraint)) {
-          allowedTypesForField.add(typeKey);
-        }
-      }
 
       // x-required-when에서 수집 (TYPE 조건이 있는 경우)
       const xRequiredWhen = (field as any)['x-required-when'];
@@ -340,51 +315,36 @@ export function calculateFieldRuntimeStates(
         }
       }
 
-      // 🔥 1.2: x-required-by-type 확인
-      // 필드가 특정 TYPE에서만 관련이 있으면, 다른 TYPE에서는 숨김
-      // 예: STYPE는 x-required-by-type: { TENSTR: true, BEAM: undefined } → BEAM에서 숨김
-      const xRequiredByType = (field as any)['x-required-by-type'];
-      if (visible && xRequiredByType && typeof xRequiredByType === 'object') {
-        const currentType = formValues['TYPE'];
-        if (currentType !== undefined) {
-          const typeStatus = xRequiredByType[currentType];
-          // typeStatus가 undefined이면 이 TYPE에는 해당 필드가 관련 없음 → 숨김
-          // typeStatus가 false이면 명시적으로 불필요 → 숨김
-          if (typeStatus === undefined || typeStatus === false) {
+      // 🔥 1.2: x-optional-when이 있으면 조건이 맞지 않으면 숨김
+      // 예: W_TYPE는 x-optional-when: { TYPE: "WALL" } → TYPE=BEAM이면 숨김
+      const xOptionalWhen = (field as any)['x-optional-when'];
+      if (visible && xOptionalWhen) {
+        // 배열 형식 (groupId 포함)
+        if (Array.isArray(xOptionalWhen)) {
+          // 배열의 모든 조건 중 하나라도 맞으면 표시
+          const anyConditionMet = xOptionalWhen.some((item: any) => {
+            if (item.condition && typeof item.condition === 'object') {
+              return evaluateRequiredWhen(item.condition, formValues);
+            }
+            return false;
+          });
+          if (!anyConditionMet) {
+            visible = false;
+          }
+        }
+        // 객체 형식 (단일 조건)
+        else if (typeof xOptionalWhen === 'object') {
+          const conditionMet = evaluateRequiredWhen(xOptionalWhen, formValues);
+          if (!conditionMet) {
             visible = false;
           }
         }
       }
 
-      // 🔥 1.3: x-enum-by-type 확인
-      // 필드가 특정 TYPE에서만 enum을 가지면, 다른 TYPE에서는 숨김
-      // 예: STYPE는 x-enum-by-type: { TENSTR: [1,2,3], ... } → BEAM에서 숨김
-      const xEnumByType = (field as any)['x-enum-by-type'];
-      if (visible && xEnumByType && typeof xEnumByType === 'object') {
-        const currentType = formValues['TYPE'];
-        if (currentType !== undefined) {
-          const enumForType = xEnumByType[currentType];
-          // 이 TYPE에 대한 enum이 없으면 숨김
-          if (enumForType === undefined) {
-            visible = false;
-          }
-        }
-      }
+      // NOTE: x-required-by-type, x-enum-by-type, x-value-constraint visibility 체크는
+      // deprecated (shared.yaml SSOT). allOf[].if.then 기반으로 동적 처리됨.
 
-      // 🔥 1.4: x-value-constraint 확인 (선택적)
-      // 특정 TYPE에서만 value constraint가 있으면, 다른 TYPE에서는 숨김
-      const xValueConstraint = (field as any)['x-value-constraint'];
-      if (visible && xValueConstraint && typeof xValueConstraint === 'object') {
-        const currentType = formValues['TYPE'];
-        if (currentType !== undefined) {
-          const constraintForType = xValueConstraint[currentType];
-          // 이 TYPE에 대한 constraint가 없으면 숨김 (다른 TYPE 전용 필드)
-          if (constraintForType === undefined && Object.keys(xValueConstraint).length > 0) {
-            visible = false;
-          }
-        }
-      }
-      // 🔥 1.5: 그룹별 허용 TYPE 기반 visibility (가장 중요!)
+      // 🔥 1.2: 그룹별 허용 TYPE 기반 visibility (가장 중요!)
       // 그룹 내 다른 필드들에서 수집한 TYPE 제약을 이 필드에도 적용
       const uiGroup = field.ui?.group;
       if (visible && uiGroup && typeof uiGroup === 'string') {
@@ -436,29 +396,29 @@ export function calculateFieldRuntimeStates(
             }
           }
 
-          // 🔥 5.2: x-required-by-type 기반 visibility
-          const childXRequiredByType = (child as any)['x-required-by-type'];
-          if (childVisible && childXRequiredByType && typeof childXRequiredByType === 'object') {
-            const currentType = formValues['TYPE'];
-            if (currentType !== undefined) {
-              const typeStatus = childXRequiredByType[currentType];
-              if (typeStatus === undefined || typeStatus === false) {
+          // 🔥 5.2: x-optional-when 기반 visibility
+          const childXOptionalWhen = (child as any)['x-optional-when'];
+          if (childVisible && childXOptionalWhen) {
+            if (Array.isArray(childXOptionalWhen)) {
+              const anyConditionMet = childXOptionalWhen.some((item: any) => {
+                if (item.condition && typeof item.condition === 'object') {
+                  return evaluateRequiredWhen(item.condition, formValues);
+                }
+                return false;
+              });
+              if (!anyConditionMet) {
+                childVisible = false;
+              }
+            } else if (typeof childXOptionalWhen === 'object') {
+              const conditionMet = evaluateRequiredWhen(childXOptionalWhen, formValues);
+              if (!conditionMet) {
                 childVisible = false;
               }
             }
           }
 
-          // 🔥 5.3: x-enum-by-type 기반 visibility
-          const childXEnumByType = (child as any)['x-enum-by-type'];
-          if (childVisible && childXEnumByType && typeof childXEnumByType === 'object') {
-            const currentType = formValues['TYPE'];
-            if (currentType !== undefined) {
-              const enumForType = childXEnumByType[currentType];
-              if (enumForType === undefined) {
-                childVisible = false;
-              }
-            }
-          }
+          // NOTE: x-required-by-type, x-enum-by-type visibility 체크는
+          // deprecated (shared.yaml SSOT). allOf[].if.then 기반으로 동적 처리됨.
 
           const { required: childRequired, requiredNow: childRequiredNow } = calculateFieldRequired(child, formValues, childVisible);
 

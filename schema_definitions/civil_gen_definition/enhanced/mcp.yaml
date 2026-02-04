@@ -318,11 +318,10 @@ autoQuestionPatterns:
           then:
             required:
               - {inputField}
-    # 🔥 UI 가시성 (선택적)
-    uiPattern: |
-      x-uiRules:
-        visibleWhen:
-          {parentField}: {optionValue}
+    # 🔥 조건부 표시 (x-optional-when 사용)
+    optionalWhenPattern: |
+      x-optional-when:
+        {parentField}: {optionValue}
   
   # 🔥 TYPE별 조건부 필드 패턴
   typeConditionalFields:
@@ -344,11 +343,10 @@ autoQuestionPatterns:
             properties:
               {field}:
                 enum: [...]
-    # 🔥 UI 가시성 + 라벨 (선택적)
-    uiPattern: |
-      x-uiRules:
-        visibleWhen:
-          TYPE: ["TYPE1", "TYPE2"]
+    # 🔥 조건부 표시 + 라벨 (x-optional-when 사용)
+    optionalWhenPattern: |
+      x-optional-when:
+        TYPE: "TYPE1"
       x-enum-labels-by-type:
         TYPE1:
           "1": "Option A"
@@ -412,15 +410,14 @@ exampleQuestions:
             then:
               required:
                 - dEXP_VAL
-      # UI 가시성 (선택적)
-      uiPattern: |
-        x-uiRules:
-          visibleWhen:
-            iEXP_FACT: 2
+      # 조건부 표시 (x-optional-when 사용)
+      optionalWhenPattern: |
+        x-optional-when:
+          iEXP_FACT: 2
         
   - field: "STYPE"
     question: |
-      "Element Subtype"은 모든 TYPE에서 사용 가능한가요?
+      \"Element Subtype\"은 모든 TYPE에서 사용 가능한가요?
       아니면 특정 TYPE에서만 보이나요?
     context: "allOf if/then으로 조건부 enum 정의 필요"
     # 🔥 NEW: 표준 JSON Schema 방식 권장
@@ -443,3 +440,115 @@ exampleQuestions:
             "2": "Hook Type"
             "3": "Cable Type"
 
+# ============================================================================
+# 🔥 AI PROMPTS - MCP 프롬프트 규칙 (SSOT)
+# ============================================================================
+# AI가 prompts/get을 호출하면 이 섹션의 내용이 반환됨
+# 모든 스키마 생성 규칙은 여기에 정의 (TypeScript에 중복 금지)
+# ============================================================================
+aiPrompts:
+  schema_rules:
+    name: "schema_rules"
+    description: "스키마 생성 시 따라야 할 규칙 조회"
+    
+    # 섹션별 규칙 정의
+    sections:
+      conditional: |
+        【조건부 필드 마커 규칙】
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        ✅ 허용된 마커:
+          • x-required-when: 조건 만족 시 필수 + 표시
+          • x-optional-when: 조건 만족 시 선택 + 표시
+        
+        ❌ 금지된 패턴 (자동 변환됨):
+          • x-uiRules.visibleWhen → x-optional-when
+          • x-ui.visibleWhen → x-optional-when
+        
+        📋 객체 형식 (단일 조건):
+          "WALL_ID": {
+            "x-optional-when": { "TYPE": "WALL" }
+          }
+        
+        📋 복합 조건 (AND):
+          "CABLE": {
+            "x-optional-when": { "TYPE": "TENSTR", "STYPE": 3 }
+          }
+        
+        📋 🔥 배열 형식 (여러 조건 + 힌트):
+          "TENS": {
+            "x-optional-when": [
+              { 
+                "condition": { "TYPE": "TENSTR" }, 
+                "hint": "음수 입력 권장 (allowable compression)" 
+              },
+              { 
+                "condition": { "TYPE": "COMPTR" }, 
+                "hint": "양수 입력 권장 (allowable tension)" 
+              }
+            ]
+          }
+        
+        🔥 배열 형식 장점:
+          • 조건별 힌트를 직접 포함 가능
+          • 조건별 다른 그룹ID도 설정 가능
+          • 같은 필드가 여러 조건에서 다르게 표시
+
+      ui: |
+        【UI 마커 규칙】
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        x-ui 객체 구조:
+          {
+            "label": "필드 라벨",          // 필수
+            "groupId": "그룹 ID",          // 선택
+            "order": 10,                   // 선택
+            "placeholder": "힌트 텍스트"   // 선택
+          }
+        
+        ⚠️ x-ui 내에 visibleWhen 사용 금지!
+           → 대신 x-optional-when 또는 x-required-when 사용
+        
+        x-ui 외부 마커:
+          • x-enum-labels: enum 값 라벨
+          • x-enum-labels-by-type: TYPE별 enum 라벨
+
+      validation: |
+        【검증 로직 규칙】
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        핵심 원칙: 검증 로직은 표준 JSON Schema 키워드 사용
+        
+        조건부 필수 필드 (allOf if/then):
+          "allOf": [
+            {
+              "if": { "properties": { "TYPE": { "const": "WALL" } } },
+              "then": { "required": ["WALL_ID", "W_CON"] }
+            }
+          ]
+        
+        정수 enum → oneOf 변환 (자동):
+          ❌ "enum": [1, 2, 3]
+          ✅ "oneOf": [
+               { "const": 1, "title": "Option A" },
+               { "const": 2, "title": "Option B" }
+             ]
+
+      questions: |
+        【질문(questions) 규칙】
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        다음 상황에서는 반드시 questions 배열에 질문 추가:
+        
+        1. 필드 타입/enum 값이 불확실한 경우
+        2. 조건부 로직이 복잡하거나 불명확한 경우
+        3. 기본값이 확실하지 않은 경우
+        4. 필드 간 관계가 이미지에서 명확하지 않은 경우
+        
+        질문 형식:
+          {
+            "field": "필드명",
+            "question": "질문 내용",
+            "context": "상황 설명 (선택)",
+            "suggestion": { "type": "integer", "default": 0 }
+          }

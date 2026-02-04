@@ -604,14 +604,13 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
     const fieldsByCondition: Map<string, EnhancedField[]> = new Map();
 
     for (const field of section.fields) {
-      // 🔥 조건 소스 확장: visibleWhen + x-required-when + x-optional-when
+      // 🔥 조건 소스: x-required-when + x-optional-when (ui.visibleWhen은 사용하지 않음)
       const fieldAny = field as any;
-      const visibleWhen = fieldAny.ui?.visibleWhen || fieldAny['x-ui']?.visibleWhen;
-      const requiredWhen = fieldAny.requiredWhen || fieldAny['x-required-when'];
-      const optionalWhen = fieldAny.optionalWhen || fieldAny['x-optional-when'];
+      const requiredWhen = fieldAny['x-required-when'];
+      const optionalWhen = fieldAny['x-optional-when'];
 
       // 조건 중 하나라도 있으면 조건부 필드로 처리
-      const condition = visibleWhen || requiredWhen || optionalWhen;
+      const condition = requiredWhen || optionalWhen;
 
       if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
         // 조건 키 생성 (예: "TYPE: BEAM,TRUSS" 또는 "iMETHOD: [2,4]")
@@ -636,9 +635,9 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
       }
     }
 
-    // 🔥 조건별 필드 렌더링
+    // 🔥 조건별 필드 렌더링 - "Advanced" 그룹으로 표시
     for (const [conditionKey, fields] of fieldsByCondition.entries()) {
-      const conditionLabel = `${section.name} (When "${conditionKey.split(':')[0].trim()}" is ${conditionKey.split(':')[1].trim()})`;
+      const conditionLabel = `Advanced (When "${conditionKey.split(':')[0].trim()}" is ${conditionKey.split(':')[1].trim()})`;
       html += generateSectionHeaderLegacy(conditionLabel);
       for (const field of fields) {
         html += generateFieldRowLegacy(field, rowNumber++);
@@ -756,13 +755,31 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
     }
   }
 
-  // 🔥 Value Hints by Type (x-value-hints-by-type)
+  // 🔥 Conditional Hints from x-optional-when array format
+  // 확장된 필드는 개별 힌트만 표시, 원본 필드는 모든 힌트 표시
   const fieldAny = field as any;
-  const valueHintsByType = fieldAny.valueHintsByType || fieldAny['x-value-hints-by-type'];
-  if (valueHintsByType) {
-    parts.push(`<p><strong>💡 Value Hints by Type:</strong></p>`);
-    for (const [type, hint] of Object.entries(valueHintsByType)) {
-      parts.push(`<p> • <em>${escapeHtml(type)}:</em> ${escapeHtml(String(hint))}</p>`);
+  const conditionalHint = fieldAny._conditionalHint;
+  const optionalWhen = fieldAny['x-optional-when'];
+
+  if (conditionalHint) {
+    // 🔥 확장된 필드: 해당 조건의 힌트만 표시
+    parts.push(`<p><strong>💡 Hint:</strong> ${escapeHtml(String(conditionalHint))}</p>`);
+  } else if (Array.isArray(optionalWhen)) {
+    // 원본 필드 (확장되지 않음): 모든 조건별 힌트 표시
+    const hintsWithCondition = optionalWhen
+      .filter((item: any) => item.hint && item.condition)
+      .map((item: any) => {
+        const conditionParts = Object.entries(item.condition)
+          .map(([key, val]) => `${key}=${val}`)
+          .join(', ');
+        return { condition: conditionParts, hint: item.hint };
+      });
+
+    if (hintsWithCondition.length > 0) {
+      parts.push(`<p><strong>💡 Value Hints by Type:</strong></p>`);
+      for (const { condition, hint } of hintsWithCondition) {
+        parts.push(`<p> • <em>${escapeHtml(condition)}:</em> ${escapeHtml(String(hint))}</p>`);
+      }
     }
   }
 

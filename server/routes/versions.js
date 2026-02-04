@@ -55,6 +55,9 @@ function parseRunnerData(data, testCases) {
       name: tc.name,
       description: tc.description,
       requestBody: tc.request_body,
+      responseBody: tc.response_body || undefined,       // 🔥 Response 추가
+      responseStatus: tc.response_status || undefined,   // 🔥 HTTP 상태 코드
+      responseTime: tc.response_time || undefined,       // 🔥 응답 시간
       createdAt: tc.created_at,
       updatedAt: tc.updated_at,
     })),
@@ -83,7 +86,7 @@ async function saveManualData(versionId, data) {
       author_id: data.authorId,
       url: data.url
     }, { onConflict: 'version_id' });
-  
+
   if (error) throw error;
 }
 
@@ -97,7 +100,7 @@ async function saveSpecData(versionId, data) {
       json_schema_enhanced: typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
       specifications: data.specifications
     }, { onConflict: 'version_id' });
-  
+
   if (error) throw error;
 }
 
@@ -108,7 +111,7 @@ async function saveBuilderData(versionId, data) {
       version_id: versionId,
       form_data: JSON.stringify(data.formData || {})
     }, { onConflict: 'version_id' });
-  
+
   if (error) throw error;
 }
 
@@ -121,9 +124,9 @@ async function saveRunnerData(versionId, data) {
       request_body: data.requestBody,
       response_body: data.responseBody
     }, { onConflict: 'version_id' });
-  
+
   if (runnerError) throw runnerError;
-  
+
   // Test cases 저장
   if (data.testCases && data.testCases.length > 0) {
     // 기존 test cases 삭제
@@ -131,22 +134,25 @@ async function saveRunnerData(versionId, data) {
       .from('test_cases')
       .delete()
       .eq('version_id', versionId);
-    
-    // 새 test cases 삽입
+
+    // 새 test cases 삽입 (🔥 response 필드 포함)
     const testCasesData = data.testCases.map(tc => ({
       id: tc.id,
       version_id: versionId,
       name: tc.name,
       description: tc.description,
       request_body: tc.requestBody,
+      response_body: tc.responseBody || null,        // 🔥 Response 저장
+      response_status: tc.responseStatus || null,    // 🔥 HTTP 상태 코드
+      response_time: tc.responseTime || null,        // 🔥 응답 시간
       created_at: tc.createdAt,
       updated_at: tc.updatedAt
     }));
-    
+
     const { error: testCasesError } = await supabase
       .from('test_cases')
       .insert(testCasesData);
-    
+
     if (testCasesError) throw testCasesError;
   }
 }
@@ -155,19 +161,19 @@ async function saveRunnerData(versionId, data) {
 router.get('/', async (req, res) => {
   try {
     const { endpoint_id } = req.query;
-    
+
     let query = supabase
       .from('versions')
       .select('*')
       .order('created_at', { ascending: false });
-    
+
     if (endpoint_id) {
       query = query.eq('endpoint_id', endpoint_id);
     }
-    
+
     const { data: versions, error } = await query;
     if (error) throw error;
-    
+
     // 각 버전에 연관 데이터 추가
     const versionsWithData = await Promise.all((versions || []).map(async version => {
       const [manualResult, specResult, builderResult, runnerResult, testCasesResult] = await Promise.all([
@@ -177,13 +183,13 @@ router.get('/', async (req, res) => {
         supabase.from('runner_data').select('*').eq('version_id', version.id).single(),
         supabase.from('test_cases').select('*').eq('version_id', version.id)
       ]);
-      
+
       const manualData = manualResult.error ? null : manualResult.data;
       const specData = specResult.error ? null : specResult.data;
       const builderData = builderResult.error ? null : builderResult.data;
       const runnerData = runnerResult.error ? null : runnerResult.data;
       const testCases = testCasesResult.error ? [] : testCasesResult.data;
-      
+
       return {
         id: version.id,
         version: version.version,
@@ -216,7 +222,7 @@ router.get('/', async (req, res) => {
         runnerData: parseRunnerData(runnerData, testCases),
       };
     }));
-    
+
     res.json(versionsWithData);
   } catch (error) {
     console.error('Error fetching versions:', error);
@@ -228,20 +234,20 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const { data: version, error } = await supabase
       .from('versions')
       .select('*')
       .eq('id', id)
       .single();
-    
+
     if (error) {
       if (error.code === 'PGRST116') {
         return res.status(404).json({ error: 'Version not found' });
       }
       throw error;
     }
-    
+
     const [manualResult, specResult, builderResult, runnerResult, testCasesResult] = await Promise.all([
       supabase.from('manual_data').select('*').eq('version_id', id).single(),
       supabase.from('spec_data').select('*').eq('version_id', id).single(),
@@ -249,13 +255,13 @@ router.get('/:id', async (req, res) => {
       supabase.from('runner_data').select('*').eq('version_id', id).single(),
       supabase.from('test_cases').select('*').eq('version_id', id)
     ]);
-    
+
     const manualData = manualResult.error ? null : manualResult.data;
     const specData = specResult.error ? null : specResult.data;
     const builderData = builderResult.error ? null : builderResult.data;
     const runnerData = runnerResult.error ? null : runnerResult.data;
     const testCases = testCasesResult.error ? [] : testCasesResult.data;
-    
+
     res.json({
       id: version.id,
       version: version.version,
@@ -297,9 +303,9 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { id, version, endpointId, changeLog, author, manualData, specData, builderData, runnerData } = req.body;
-    
+
     const now = new Date().toISOString();
-    
+
     // 버전 생성
     const { error: versionError } = await supabase
       .from('versions')
@@ -312,9 +318,9 @@ router.post('/', async (req, res) => {
         author: author || null,
         change_log: changeLog || null
       });
-    
+
     if (versionError) throw versionError;
-    
+
     // 연관 데이터 저장
     if (manualData) {
       await saveManualData(id, manualData);
@@ -328,7 +334,7 @@ router.post('/', async (req, res) => {
     if (runnerData) {
       await saveRunnerData(id, runnerData);
     }
-    
+
     res.status(201).json({ id, message: 'Version created successfully' });
   } catch (error) {
     console.error('Error creating version:', error);
@@ -341,22 +347,22 @@ router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { version, changeLog, author, manualData, specData, builderData, runnerData } = req.body;
-    
+
     const now = new Date().toISOString();
-    
+
     // 버전 업데이트
     const updateData = { updated_at: now };
     if (version) updateData.version = version;
     if (changeLog !== undefined) updateData.change_log = changeLog;
     if (author !== undefined) updateData.author = author;
-    
+
     const { error: versionError } = await supabase
       .from('versions')
       .update(updateData)
       .eq('id', id);
-    
+
     if (versionError) throw versionError;
-    
+
     // 연관 데이터 업데이트
     if (manualData) {
       await saveManualData(id, manualData);
@@ -370,7 +376,7 @@ router.put('/:id', async (req, res) => {
     if (runnerData) {
       await saveRunnerData(id, runnerData);
     }
-    
+
     res.json({ message: 'Version updated successfully' });
   } catch (error) {
     console.error('Error updating version:', error);
@@ -382,14 +388,14 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const { error } = await supabase
       .from('versions')
       .delete()
       .eq('id', id);
-    
+
     if (error) throw error;
-    
+
     res.json({ message: 'Version deleted successfully' });
   } catch (error) {
     console.error('Error deleting version:', error);
@@ -401,58 +407,58 @@ router.delete('/:id', async (req, res) => {
 router.get('/:id/export', async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // 버전 기본 정보
     const { data: version, error: versionError } = await supabase
       .from('versions')
       .select('*')
       .eq('id', id)
       .single();
-    
+
     if (versionError) throw versionError;
     if (!version) {
       return res.status(404).json({ error: 'Version not found' });
     }
-    
+
     // Manual 데이터
     const { data: manualData } = await supabase
       .from('manual_data')
       .select('*')
       .eq('version_id', id)
       .single();
-    
+
     // Spec 데이터
     const { data: specData } = await supabase
       .from('spec_data')
       .select('*')
       .eq('version_id', id)
       .single();
-    
+
     // Builder 데이터
     const { data: builderData } = await supabase
       .from('builder_data')
       .select('*')
       .eq('version_id', id)
       .single();
-    
+
     // Runner 데이터 및 테스트 케이스
     const { data: runnerData } = await supabase
       .from('runner_data')
       .select('*')
       .eq('version_id', id)
       .single();
-    
+
     const { data: testCases } = await supabase
       .from('test_cases')
       .select('*')
       .eq('version_id', id);
-    
+
     // Export JSON 구조
     const exportData = {
       // 메타 정보
       exportedAt: new Date().toISOString(),
       exportVersion: '1.0',
-      
+
       // 버전 기본 정보
       version: {
         version: version.version,
@@ -460,7 +466,7 @@ router.get('/:id/export', async (req, res) => {
         author: version.author,
         createdAt: version.created_at,
       },
-      
+
       // 스키마 (Original + Enhanced)
       schemas: {
         original: safeParseJSON(specData?.json_schema_original, null),
@@ -468,7 +474,7 @@ router.get('/:id/export', async (req, res) => {
         // 레거시 스키마 (호환성)
         jsonSchema: safeParseJSON(specData?.json_schema, {}),
       },
-      
+
       // 예제 데이터
       examples: {
         request: safeParseJSON(manualData?.request_examples, []),
@@ -476,7 +482,7 @@ router.get('/:id/export', async (req, res) => {
         // 레거시 examples (호환성)
         legacy: safeParseJSON(manualData?.examples, []),
       },
-      
+
       // 매뉴얼 내용
       manual: {
         title: manualData?.title || '',
@@ -484,12 +490,12 @@ router.get('/:id/export', async (req, res) => {
         specifications: manualData?.specifications || '',
         htmlContent: manualData?.html_content || null,
       },
-      
+
       // Builder 데이터 (선택적)
       builder: builderData ? {
         formData: safeParseJSON(builderData.form_data, {}),
       } : null,
-      
+
       // Runner 데이터 (선택적)
       runner: runnerData ? {
         url: runnerData.url,
@@ -504,7 +510,7 @@ router.get('/:id/export', async (req, res) => {
         })) || [],
       } : null,
     };
-    
+
     res.json(exportData);
   } catch (error) {
     console.error('Error exporting version:', error);
@@ -516,11 +522,11 @@ router.get('/:id/export', async (req, res) => {
 router.post('/import', async (req, res) => {
   try {
     const { endpointId, importData } = req.body;
-    
+
     if (!endpointId || !importData) {
       return res.status(400).json({ error: 'endpointId and importData are required' });
     }
-    
+
     // 버전 생성
     const versionData = {
       endpoint_id: endpointId,
@@ -529,17 +535,17 @@ router.post('/import', async (req, res) => {
       author: importData.version?.author || 'System',
       created_at: new Date().toISOString(),
     };
-    
+
     const { data: newVersion, error: versionError } = await supabase
       .from('versions')
       .insert([versionData])
       .select()
       .single();
-    
+
     if (versionError) throw versionError;
-    
+
     const versionId = newVersion.id;
-    
+
     // Manual 데이터 저장
     if (importData.manual || importData.examples) {
       const manualInsert = {
@@ -552,14 +558,14 @@ router.post('/import', async (req, res) => {
         response_examples: JSON.stringify(importData.examples?.response || []),
         examples: JSON.stringify(importData.examples?.legacy || []),
       };
-      
+
       const { error: manualError } = await supabase
         .from('manual_data')
         .insert([manualInsert]);
-      
+
       if (manualError) console.error('Manual data import error:', manualError);
     }
-    
+
     // Spec 데이터 저장
     if (importData.schemas) {
       const specInsert = {
@@ -569,28 +575,28 @@ router.post('/import', async (req, res) => {
         json_schema_enhanced: JSON.stringify(importData.schemas.enhanced || null),
         specifications: importData.manual?.specifications || '',
       };
-      
+
       const { error: specError } = await supabase
         .from('spec_data')
         .insert([specInsert]);
-      
+
       if (specError) console.error('Spec data import error:', specError);
     }
-    
+
     // Builder 데이터 저장 (선택적)
     if (importData.builder) {
       const builderInsert = {
         version_id: versionId,
         form_data: JSON.stringify(importData.builder.formData || {}),
       };
-      
+
       const { error: builderError } = await supabase
         .from('builder_data')
         .insert([builderInsert]);
-      
+
       if (builderError) console.error('Builder data import error:', builderError);
     }
-    
+
     // Runner 데이터 저장 (선택적)
     if (importData.runner) {
       const runnerInsert = {
@@ -600,13 +606,13 @@ router.post('/import', async (req, res) => {
         headers: JSON.stringify(importData.runner.headers || {}),
         body: JSON.stringify(importData.runner.body || {}),
       };
-      
+
       const { data: newRunner, error: runnerError } = await supabase
         .from('runner_data')
         .insert([runnerInsert])
         .select()
         .single();
-      
+
       if (runnerError) {
         console.error('Runner data import error:', runnerError);
       } else if (importData.runner.testCases && importData.runner.testCases.length > 0) {
@@ -618,15 +624,15 @@ router.post('/import', async (req, res) => {
           input: JSON.stringify(tc.input || {}),
           expected_output: JSON.stringify(tc.expectedOutput || {}),
         }));
-        
+
         const { error: testCaseError } = await supabase
           .from('test_cases')
           .insert(testCaseInserts);
-        
+
         if (testCaseError) console.error('Test case import error:', testCaseError);
       }
     }
-    
+
     res.json({
       message: 'Version imported successfully',
       versionId: versionId,
@@ -642,52 +648,52 @@ router.post('/import', async (req, res) => {
 router.patch('/:versionId', async (req, res) => {
   try {
     const { versionId } = req.params;
-    const { 
-      version, 
-      changeLog, 
-      jsonSchema, 
-      jsonSchemaOriginal, 
+    const {
+      version,
+      changeLog,
+      jsonSchema,
+      jsonSchemaOriginal,
       jsonSchemaEnhanced,
       requestExample,
       responseExample,
-      runnerData 
+      runnerData
     } = req.body;
-    
+
     // 🔥 Build update object with only provided fields
     const updateData = {
       updated_at: new Date().toISOString()
     };
-    
+
     if (version !== undefined) updateData.version = version;
     if (changeLog !== undefined) updateData.change_log = changeLog;
-    
+
     // Update version table
     const { error: updateError } = await supabase
       .from('versions')
       .update(updateData)
       .eq('id', versionId);
-    
+
     if (updateError) {
       throw updateError;
     }
-    
+
     // 🔥 Update spec_data if schema fields provided
     if (jsonSchema !== undefined || jsonSchemaOriginal !== undefined || jsonSchemaEnhanced !== undefined) {
       const specUpdateData = {};
       if (jsonSchema !== undefined) specUpdateData.json_schema = typeof jsonSchema === 'string' ? jsonSchema : JSON.stringify(jsonSchema);
       if (jsonSchemaOriginal !== undefined) specUpdateData.json_schema_original = typeof jsonSchemaOriginal === 'string' ? jsonSchemaOriginal : JSON.stringify(jsonSchemaOriginal);
       if (jsonSchemaEnhanced !== undefined) specUpdateData.json_schema_enhanced = typeof jsonSchemaEnhanced === 'string' ? jsonSchemaEnhanced : JSON.stringify(jsonSchemaEnhanced);
-      
+
       const { error: specError } = await supabase
         .from('spec_data')
         .upsert({
           version_id: versionId,
           ...specUpdateData
         }, { onConflict: 'version_id' });
-      
+
       if (specError) console.error('Error updating spec_data:', specError);
     }
-    
+
     // 🔥 Update runner_data if provided
     if (runnerData !== undefined) {
       const { error: runnerError } = await supabase
@@ -697,21 +703,21 @@ router.patch('/:versionId', async (req, res) => {
           request_body: runnerData.requestBody || '{}',
           response_body: runnerData.responseBody || ''
         }, { onConflict: 'version_id' });
-      
+
       if (runnerError) console.error('Error updating runner_data:', runnerError);
     }
-    
+
     // Get updated version
     const { data: updatedVersion, error: fetchError } = await supabase
       .from('versions')
       .select('*')
       .eq('id', versionId)
       .single();
-    
+
     if (fetchError) {
       throw fetchError;
     }
-    
+
     res.json({
       message: 'Version updated successfully',
       version: updatedVersion

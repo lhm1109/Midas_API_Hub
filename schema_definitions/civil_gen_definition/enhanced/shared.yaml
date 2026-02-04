@@ -111,7 +111,10 @@ integrityRules:
 #   - x-required-by-type → allOf[].if.then.required 사용
 #   - x-enum-by-type → allOf[].if.then.properties.*.enum 사용
 #   - x-node-count-by-type → allOf[].if.then.properties.NODE.minItems/maxItems 사용
-#   - x-required-when → allOf[].if.then.required 사용
+#
+# ⚠️ 조건부 UI 표시 마커 (순수 UI용, 검증과 무관):
+#   - x-required-when: 조건 만족 시 UI에서 필수로 표시
+#   - x-optional-when: 조건 만족 시 UI에서 선택적으로 표시
 # ============================================================================
 markerRegistry:
   # ────────────────────────────────────────────────────────────────────────────
@@ -124,10 +127,11 @@ markerRegistry:
     schema:
       type: object
       properties:
-        label: { type: string, description: "필드 라벨 (UI 표시용)" }
-        groupId: { type: string, description: "그룹 ID (섹션 분류용)" }
-        hint: { type: string, description: "힌트 텍스트" }
-        sectionId: { type: string, description: "섹션 ID (sectionRegistry 참조)" }
+        label: { type: string, description: "Field label (for UI display)" }
+        groupId: { type: string, description: "Group ID (refers to x-ui.groups defined at object level)" }
+        hint: { type: string, description: "Hint text" }
+        groups: { type: array, description: "Group definitions (defined at object level)" }
+        component: { type: string, description: "UI component type (e.g., RadioGroup)" }
 
   # ────────────────────────────────────────────────────────────────────────────
   # 전송 메타데이터 (API 정보)
@@ -169,31 +173,72 @@ markerRegistry:
           "2": "Gap"
 
   # ────────────────────────────────────────────────────────────────────────────
-  # 값 힌트 (검증 X, 권장사항만)
-  # ⚠️ 실제 값 제약은 allOf[].if.then에서 정의
-  # ────────────────────────────────────────────────────────────────────────────
-  - id: MARKER_VALUE_HINTS
-    key: "x-value-hints-by-type"
-    description: "TYPE별 값 힌트 (권장사항, 검증 무관)"
-    pureUI: true
-    example: |
-      x-value-hints-by-type:
-        TENSTR: "권장: 음수 입력 (압축 허용치)"
-        COMPTR: "권장: 양수 입력 (인장 허용치)"
-
-  # ────────────────────────────────────────────────────────────────────────────
   # UI 규칙 (가시성 조건 등)
-  # ⚠️ 검증은 allOf if/then, 이것은 순수 UI 가시성만
+  # ⚠️ x-uiRules.visibleWhen → 자동으로 x-optional-when으로 변환됨
   # ────────────────────────────────────────────────────────────────────────────
   - id: MARKER_UI_RULES
     key: "x-uiRules"
-    description: "UI 가시성/동작 규칙 (visibleWhen 등)"
+    description: "UI 가시성/동작 규칙 → schemaCompiler가 x-optional-when으로 변환"
     pureUI: true
+    autoConvertTo: "x-optional-when"
     example: |
       x-uiRules:
         visibleWhen:
           TYPE: "TENSTR"
           STYPE: 3
+      # → x-optional-when: { TYPE: "TENSTR", STYPE: 3 } 으로 변환됨
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 조건부 필드 표시 (UI 전용 - 검증과 무관)
+  # ────────────────────────────────────────────────────────────────────────────
+  - id: MARKER_REQUIRED_WHEN
+    key: "x-required-when"
+    description: "조건 만족 시 UI에서 필수로 표시 (검증은 allOf if/then 사용)"
+    pureUI: true
+    schema:
+      oneOf:
+        - type: object
+          description: "단일 조건"
+        - type: array
+          items:
+            type: object
+            properties:
+              condition: { type: object }
+              hint: { type: string }
+    example: |
+      # 객체 형식 (단일 조건)
+      x-required-when: { "bSELFWT": true }
+      
+      # 배열 형식 (여러 조건 + 힌트)
+      x-required-when:
+        - condition: { "TYPE": "WALL" }
+          hint: "벽체 타입에서 필수"
+
+  - id: MARKER_OPTIONAL_WHEN
+    key: "x-optional-when"
+    description: "조건 만족 시 UI에서 선택적으로 표시 (검증과 무관)"
+    pureUI: true
+    schema:
+      oneOf:
+        - type: object
+          description: "단일 조건"
+        - type: array
+          items:
+            type: object
+            properties:
+              condition: { type: object }
+              hint: { type: string }
+    example: |
+      # 객체 형식 (단일 조건)
+      x-optional-when: { "TYPE": "WALL" }
+      
+      # 배열 형식 (여러 조건 + 힌트)
+      x-optional-when:
+        - condition: { "TYPE": "TENSTR" }
+          hint: "음수 입력 권장"
+        - condition: { "TYPE": "COMPTR" }
+          hint: "양수 입력 권장"
+
 
 # ============================================================================
 # CONDITION REGISTRY - condition type taxonomy (전역 SSOT)
@@ -225,9 +270,9 @@ conditionRegistry:
     requiredParams: []
     description: "type 속성 존재 시 true"
 
-  - type: "has-explicit-sectionId"
+  - type: "has-explicit-groupId"
     requiredParams: []
-    description: "x-ui.sectionId가 명시적으로 존재 시 true (x-ui.group은 deprecated)"
+    description: "x-ui.groupId is explicitly present (true if defined)"
 
   - type: "always"
     requiredParams: []
@@ -246,14 +291,19 @@ conditionRegistry:
     description: "기타 조건 존재 시 true"
 
 # ============================================================================
-# SECTION REGISTRY - 섹션 중앙 관리 (SSOT)
+# GROUP SYSTEM - Inline group definitions (NOT centralized)
 # ============================================================================
-# ⚠️ sectionRules와 sectionOrder는 여기 등록된 id만 참조
-sectionRegistry:
-  - id: SECTION_GENERAL
-    name: "General"
-    description: "기본 섹션"
-    isDefault: true
+# ⚠️ Groups are defined inline within each schema using x-ui.groups
+# ⚠️ sectionRegistry is DEPRECATED - use groupId instead
+#
+# Example:
+#   x-ui:
+#     groups:
+#       - { id: "COMMON", title: "Common Keys" }
+#       - { id: "TENSTR", title: "Tension Only" }
+#   properties:
+#     TYPE:
+#       x-ui: { groupId: "COMMON" }
 
 # 2. Wrapper Rules 레지스트리 (SSOT)
 # ⚠️ 매칭 알고리즘 (결정론 보장):
@@ -281,6 +331,12 @@ wrapperRegistry:
     pattern: "^/doc/"
     wrapper: "Argument"
     priority: 10
+
+  - id: WRAP_DESIGN
+    pattern: "^/design/"
+    wrapper: "Assign"
+    priority: 10
+    description: "Design DB APIs use Assign wrapper"
 
   - id: WRAP_DEFAULT
     pattern: ".*"
@@ -446,7 +502,7 @@ diagnostics:
 # ============================================================================
 schemaLogic:
   schemaStructurePatterns:
-    # 🔥 Pattern 1: Assign/Argument + additionalProperties (NEW)
+    # 🔥 Pattern 1a: Assign + additionalProperties
     # 이 패턴은 Map 기반 엔티티 컬렉션을 처리
     - name: "Unwrap Wrapper with AdditionalProperties"
       description: "Assign/Argument 래퍼의 additionalProperties에서 엔티티 스키마 추출"
@@ -462,7 +518,7 @@ schemaLogic:
       transform:
         action: "unwrap-wrapper-with-additionalProperties"
         
-    # 🔥 Pattern 1b: Argument 래퍼 (Assign 대안)
+    # 🔥 Pattern 1b: Argument + additionalProperties
     - name: "Unwrap Argument Wrapper with AdditionalProperties"
       description: "Argument 래퍼의 additionalProperties에서 엔티티 스키마 추출"
       enabled: true
@@ -474,6 +530,56 @@ schemaLogic:
           exists: true
         - path: "properties.Argument.additionalProperties.type"
           value: "object"
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+
+    # 🔥 Pattern 1c: Assign + patternProperties (NEW)
+    # patternProperties["^[0-9]+$"] 패턴을 사용하는 스키마 지원
+    - name: "Unwrap Assign Wrapper with PatternProperties"
+      description: "Assign 래퍼의 patternProperties에서 엔티티 스키마 추출"
+      enabled: true
+      priority: 0
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Assign.patternProperties"
+          exists: true
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+
+    # 🔥 Pattern 1d: Argument + patternProperties (NEW)
+    - name: "Unwrap Argument Wrapper with PatternProperties"
+      description: "Argument 래퍼의 patternProperties에서 엔티티 스키마 추출"
+      enabled: true
+      priority: 0
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Argument.patternProperties"
+          exists: true
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+
+    # 🔥 Pattern 1e: Argument with direct properties (Table API)
+    # wrapWithSimpleObject로 생성된 Table 스키마 패턴
+    # additionalProperties가 false이거나 없는 경우 (Map 패턴이 아닌 경우)
+    - name: "Unwrap Argument Wrapper with Properties"
+      description: "Argument 래퍼의 properties에서 Table 스키마 추출 (Map 패턴 아님)"
+      enabled: true
+      priority: 0
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Argument.type"
+          value: "object"
+        - path: "properties.Argument.properties"
+          exists: true
+        # additionalProperties가 object 타입이 아닌지 확인 (false 또는 없음)
+        - path: "properties.Argument.additionalProperties.type"
+          exists: false
+        # patternProperties가 없는지 확인
+        - path: "properties.Argument.patternProperties"
+          exists: false
       transform:
         action: "unwrap-wrapper-with-additionalProperties"
 
@@ -717,10 +823,13 @@ schemaStructurePatterns:
     # 결과: { "BEAM": { min: 2, max: 2 }, "PLATE": { min: 3, max: 4 }, ... }
     extractFrom: "allOf[*].then.properties.NODE.{minItems,maxItems}"
 
-  # 🔥 x-uiRules.visibleWhen 처리
+  # 🔥 x-uiRules.visibleWhen → x-optional-when 변환 규칙
+  # schemaCompiler에서 자동으로 x-optional-when으로 변환됨
   uiVisibilityRules:
     markerKey: "x-uiRules"
     visibleWhenPath: "visibleWhen"
+    # ✅ 자동 변환: x-uiRules.visibleWhen → x-optional-when
+    autoConvertTo: "x-optional-when"
     # 조건 필드 (TYPE, STYPE 등)
     supportedConditionFields:
       - "TYPE"
@@ -731,3 +840,283 @@ schemaStructurePatterns:
     conditionFormats:
       single: "{ TYPE: 'TENSTR' }"           # 단일 값
       multi: "{ TYPE: 'TENSTR', STYPE: 3 }"  # 복합 조건
+
+# ============================================================================
+# TABLE SCHEMA REGISTRY - POST Table API 공통 타입 정의 (MCP SSOT)
+# ============================================================================
+# ⚠️ MCP가 Table 스키마 생성 시 이 레지스트리를 참조하여 일관된 구조 유지
+# UI 스크린샷 → 스키마 생성 시 공통 필드는 여기서 가져옴
+# 
+# 참조 분석 기반:
+#   - 013_Displacements_-_Analysis_Result_Table.html
+#   - 024_Plate_Force_Local_-_Analysis_Result_Table.html
+#   - 049_Elastic_Link_-_Analysis_Result_Table.html
+#   - 019_Beam_Force_-_Analysis_Result_Table_enhanced.json
+# ============================================================================
+tableSchemaRegistry:
+  version: "1.0.0"
+  description: "POST Table API 공통 스키마 정의"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 래퍼 구조 (모든 Table 스키마 공통)
+  # ────────────────────────────────────────────────────────────────────────────
+  wrapper:
+    root: "TABLE"
+    bodyRoot: "Argument"
+    structure: |
+      {
+        "TABLE": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "title": "{schemaTitle}",
+          "type": "object",
+          "properties": {
+            "Argument": { ... }
+          }
+        }
+      }
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 공통 필드 정의 (COMMON FIELDS) - 대부분의 Table API에 공통
+  # ────────────────────────────────────────────────────────────────────────────
+  commonFields:
+    TABLE_NAME:
+      type: "string"
+      description: "Response Table Title"
+      default: ""
+      required: false
+      x-ui:
+        label: "Table Name"
+        hint: "Output table title in response"
+
+    TABLE_TYPE:
+      type: "string"
+      description: "Result Table Type"
+      required: true
+      note: "enum values are table-specific (e.g., DISPLACEMENTG, BEAMFORCE)"
+      x-ui:
+        label: "Table Type"
+
+    EXPORT_PATH:
+      type: "string"
+      description: "Result Table Save Path"
+      required: false
+      x-ui:
+        label: "Export Path"
+        hint: "Optional: Save results to file path"
+
+    UNIT:
+      type: "object"
+      description: "Response Unit Setting"
+      required: false
+      properties:
+        FORCE:
+          type: "string"
+          description: "Force unit"
+        DIST:
+          type: "string"
+          description: "Length/Distance unit"
+        HEAT:
+          type: "string"
+          description: "Heat unit"
+        TEMP:
+          type: "string"
+          description: "Temperature unit"
+      x-ui:
+        label: "Unit Settings"
+
+    STYLES:
+      type: "object"
+      description: "Response Number Format"
+      required: false
+      properties:
+        FORMAT:
+          type: "string"
+          description: "Number format"
+          enum: ["Default", "Fixed", "Scientific", "General"]
+        PLACE:
+          type: "integer"
+          description: "Digit place"
+          minimum: 0
+          maximum: 15
+      x-ui:
+        label: "Number Format"
+
+    COMPONENTS:
+      type: "array"
+      description: "Components of Result Table"
+      items:
+        type: "string"
+      required: false
+      note: "enum values are table-specific"
+      x-ui:
+        label: "Components"
+
+    # NODE_ELEMS: 세 가지 방식 중 하나 사용 (KEYS, TO, STRUCTURE_GROUP_NAME)
+    NODE_ELEMS:
+      type: "object"
+      description: "Node/Element No. Input"
+      required: false
+      properties:
+        KEYS:
+          type: "array"
+          description: "Specify Each ID"
+          items:
+            type: "integer"
+        TO:
+          type: "string"
+          description: "Specify ID Range (e.g., '1to160')"
+        STRUCTURE_GROUP_NAME:
+          type: "string"
+          description: "Specify Structure Group Name"
+      x-ui:
+        label: "Node/Element Selection"
+        hint: "Use only ONE of the three methods: KEYS, TO, or STRUCTURE_GROUP_NAME"
+
+    LOAD_CASE_NAMES:
+      type: "array"
+      description: "Load Case/Combination Names"
+      items:
+        type: "string"
+      required: false
+      note: "Format: NAME(ST), NAME(CS), NAME(RS), NAME(CB) etc."
+      x-ui:
+        label: "Load Cases"
+        hint: "Static Load or Load Combination names"
+
+    OPT_CS:
+      type: "boolean"
+      description: "Activation - Construction Stage Step"
+      default: false
+      required: false
+      x-ui:
+        label: "Construction Stage"
+
+    STAGE_STEP:
+      type: "array"
+      description: "Stage Step Names"
+      items:
+        type: "string"
+      required: false
+      x-ui:
+        label: "Stage Steps"
+      x-optional-when:
+        OPT_CS: true
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 테이블별 고유 필드 (TABLE-SPECIFIC FIELDS)
+  # ────────────────────────────────────────────────────────────────────────────
+  tableSpecificFields:
+    # ─── Displacement 전용 ───
+    DISP_OPT:
+      type: "string"
+      description: "Displacement Option"
+      enum: ["Accumulative", "Current", "Real"]
+      tables: ["DISPLACEMENTG", "DISPLACEMENTL"]
+      x-ui:
+        label: "Displacement Option"
+
+    # ─── Beam Force 전용 ───
+    PARTS:
+      type: "array"
+      description: "Element Part Number"
+      items:
+        type: "string"
+        enum: ["PartI", "Part1/4", "Part2/4", "Part3/4", "PartJ"]
+      tables: ["BEAMFORCE", "BEAMFORCEVBM", "BEAMSTRESS"]
+      x-ui:
+        label: "Element Parts"
+
+    BEAM_ITEM_TO_DISPLAY:
+      type: "array"
+      description: "Select Component to Display (Beam)"
+      items:
+        type: "string"
+        enum: ["Force-x", "Shear-y", "Shear-z", "Moment-y", "Moment-z", "Torsion"]
+      tables: ["BEAMFORCE", "BEAMFORCEVBM"]
+      x-ui:
+        label: "Beam Components to Display"
+
+    # ─── Plate Force 전용 ───
+    AVERAGE_NODAL_RESULT:
+      type: "boolean"
+      description: "Average Nodal Result Option"
+      default: false
+      tables: ["PLATEFORCEL", "PLATEFORCEG", "PLATESTRESS"]
+      x-ui:
+        label: "Average Nodal Result"
+
+    # ─── Elastic Link 전용 ───
+    LINK_ITEM_TO_DISPLAY:
+      type: "array"
+      description: "Select Component to Display (Elastic Link)"
+      items:
+        type: "string"
+        enum: ["Axial", "Shear-y", "Shear-z", "Moment-x", "Moment-y", "Moment-z"]
+      tables: ["ELASTICLINK", "ELASTICLINKVBM"]
+      x-ui:
+        label: "Link Components to Display"
+
+    # ─── Element Type 선택 (일부 테이블) ───
+    SELECT_TYPE:
+      type: "string"
+      description: "Element Type Selection"
+      enum: ["TRUSS", "BEAM", "PLANE STRESS", "PLATE", "PLANE STRAIN", "AXISYMMETRIC", "SOLID", "TENS-TRUSS", "COMP-TRUSS"]
+      tables: ["result-tables"]
+      x-ui:
+        label: "Select Type"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # MCP 생성 규칙 (AI가 스키마 생성 시 참조)
+  # ────────────────────────────────────────────────────────────────────────────
+  generationRules:
+    # 항상 포함해야 할 공통 필드
+    alwaysInclude:
+      - TABLE_NAME
+      - TABLE_TYPE
+      - EXPORT_PATH
+      - UNIT
+      - STYLES
+      - COMPONENTS
+
+    # 대부분 포함해야 할 필드
+    usuallyInclude:
+      - NODE_ELEMS
+      - LOAD_CASE_NAMES
+
+    # 조건부 포함 필드
+    conditionalInclude:
+      - field: OPT_CS
+        condition: "Construction Stage 기능 있는 경우"
+      - field: STAGE_STEP
+        condition: "OPT_CS가 true일 때"
+      - field: AVERAGE_NODAL_RESULT
+        condition: "Plate/Solid 타입 결과 테이블"
+
+    # UI 전용 요소 (스키마에 포함하지 않음)
+    excludeFromSchema:
+      - "All button"
+      - "None button"
+      - "Inverse button"
+      - "Prev button"
+      - "Add button"
+      - "Delete button"
+      - "Replace button"
+      - "Intersect button"
+      - "OK button"
+      - "Cancel button"
+      - "Help button"
+      - "Close button"
+
+    # NODE_ELEMS는 반드시 oneOf 패턴 사용
+    nodeElemsRule: |
+      NODE_ELEMS MUST always use oneOf pattern with 3 methods:
+      1. KEYS (array of integers) - Specify each node/element ID
+      2. TO (string, e.g., "1to5") - Specify ID range
+      3. STRUCTURE_GROUP_NAME (string) - Specify structure group name
+
+    # 🚨 불확실할 때 questions 파라미터 사용
+    askQuestions:
+      - "TABLE_TYPE enum 옵션이 1개만 보이면 전체 목록 질문"
+      - "COMPONENTS의 enum 값이 불명확하면 질문"
+      - "테이블별 특수 필드 존재 여부 불확실하면 질문"
+

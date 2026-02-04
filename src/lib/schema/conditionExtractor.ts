@@ -9,13 +9,21 @@
 import type { EnhancedField } from './schemaCompiler';
 import type { TableDefinition } from '../rendering/definitionLoader';
 
+export interface ConditionEntry {
+  condition: Record<string, unknown>; // TYPE: "TENSTR" 등
+  hint?: string; // 조건별 힌트 (선택)
+  groupId?: string; // 조건별 그룹 ID (선택)
+}
+
 export interface FieldCondition {
-  type: string; // 조건 타입 (예: "x-ui.visibleWhen")
+  type: string; // 조건 타입 (예: "x-optional-when")
   label: string; // 표시 레이블
   conditionText: string; // 조건 텍스트 (예: "TYPE is TENSTR")
   color: string; // 표시 색상
   icon: string; // 표시 아이콘
-  value: any; // 원본 조건 값
+  value: unknown; // 원본 조건 값 (객체 또는 배열)
+  // 🔥 배열 형식 지원: 조건별 힌트/그룹 포함
+  conditions?: ConditionEntry[];
 }
 
 export interface FieldConditionInfo {
@@ -40,10 +48,15 @@ const DEFAULT_CONDITIONAL_MARKERS: Record<string, { label: string; icon: string;
     icon: '○',
     color: '#7eb8ff',  // 파란색 계열 (선택)
   },
+  // NOTE: ui.visibleWhen은 사용하지 않음 - x-optional-when으로 대체
 };
 
 /**
  * 필드에서 조건 정보 추출
+ * 
+ * 지원하는 조건 마커:
+ * - x-required-when: 조건부 필수 (조건 만족 시 필수)
+ * - x-optional-when: 조건부 선택 (조건 만족 시 선택적으로 표시)
  * 
  * @param field - Enhanced Schema 필드
  * @param conditionalRules - YAML에서 정의된 조건 규칙
@@ -67,33 +80,94 @@ export function extractFieldConditions(
     };
   };
 
+  /**
+   * 🔥 조건 마커 파싱 (객체 또는 배열 형식 지원)
+   * 
+   * 객체 형식: { TYPE: "WALL" }
+   * 배열 형식: [{ condition: { TYPE: "TENSTR" }, hint: "음수 입력 권장" }, ...]
+   */
+  const parseConditionalMarker = (
+    value: unknown,
+    markerType: string,
+    getStyle: typeof getMarkerStyle
+  ): FieldCondition | null => {
+    if (!value) return null;
+
+    const style = getStyle(markerType);
+
+    // 🔥 배열 형식 처리
+    if (Array.isArray(value)) {
+      if (value.length === 0) return null;
+
+      // ConditionEntry 배열로 정규화
+      const conditions: ConditionEntry[] = value.map((item) => {
+        if (typeof item === 'object' && item !== null) {
+          // { condition: {...}, hint: "..." } 형식
+          if ('condition' in item && typeof item.condition === 'object') {
+            return {
+              condition: item.condition as Record<string, unknown>,
+              hint: item.hint as string | undefined,
+              groupId: item.groupId as string | undefined,
+            };
+          }
+          // { TYPE: "WALL" } 형식 (레거시 호환)
+          return {
+            condition: item as Record<string, unknown>,
+          };
+        }
+        return { condition: {} };
+      }).filter(entry => Object.keys(entry.condition).length > 0);
+
+      if (conditions.length === 0) return null;
+
+      // 모든 조건을 텍스트로 결합
+      const conditionTexts = conditions.map(c => formatConditionText(c.condition));
+      const conditionText = conditionTexts.join(' | ');
+
+      return {
+        type: markerType,
+        label: style.label,
+        conditionText,
+        color: style.color,
+        icon: style.icon,
+        value,
+        conditions, // 🔥 조건별 힌트/그룹 정보 포함
+      };
+    }
+
+    // 🔥 객체 형식 처리 (기존 방식)
+    if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
+      return {
+        type: markerType,
+        label: style.label,
+        conditionText: formatConditionText(value as Record<string, unknown>),
+        color: style.color,
+        icon: style.icon,
+        value,
+        // 객체 형식은 단일 조건이므로 conditions 미사용 (undefined)
+      };
+    }
+
+    return null;
+  };
+
   // 🔥 1. x-required-when 처리 (조건부 필수 = 표시 + required)
   const requiredWhen = fieldAny['x-required-when'];
-  if (requiredWhen && typeof requiredWhen === 'object' && Object.keys(requiredWhen).length > 0) {
-    const style = getMarkerStyle('x-required-when');
-    return {
-      type: 'x-required-when',
-      label: style.label,
-      conditionText: formatConditionText(requiredWhen),
-      color: style.color,
-      icon: style.icon,
-      value: requiredWhen,
-    };
+  if (requiredWhen) {
+    const result = parseConditionalMarker(requiredWhen, 'x-required-when', getMarkerStyle);
+    if (result) return result;
   }
 
   // 🔥 2. x-optional-when 처리 (조건부 선택 = 표시 + optional)
+  // 객체 또는 배열 형식 모두 지원
   const optionalWhen = fieldAny['x-optional-when'];
-  if (optionalWhen && typeof optionalWhen === 'object' && Object.keys(optionalWhen).length > 0) {
-    const style = getMarkerStyle('x-optional-when');
-    return {
-      type: 'x-optional-when',
-      label: style.label,
-      conditionText: formatConditionText(optionalWhen),
-      color: style.color,
-      icon: style.icon,
-      value: optionalWhen,
-    };
+  if (optionalWhen) {
+    const result = parseConditionalMarker(optionalWhen, 'x-optional-when', getMarkerStyle);
+    if (result) return result;
   }
+
+  // NOTE: ui.visibleWhen은 더 이상 지원하지 않음
+  // 조건부 표시가 필요한 경우 x-optional-when 사용
 
   // 🔥 3. YAML 규칙 기반 조건 처리 (기존 로직)
   if (conditionalRules && conditionalRules.length > 0) {
@@ -181,9 +255,11 @@ export function collectFieldConditionInfo(
     let conditionKey = '';
     if (condition) {
       // 조건 키 생성 (그룹핑용)
-      conditionKey = Object.entries(condition.value)
-        .map(([k, v]) => `${k}:${v}`)
-        .join('|');
+      if (condition.value && typeof condition.value === 'object' && !Array.isArray(condition.value)) {
+        conditionKey = Object.entries(condition.value as Record<string, unknown>)
+          .map(([k, v]) => `${k}:${v}`)
+          .join('|');
+      }
     }
 
     fieldInfoMap.set(field, {
@@ -248,4 +324,64 @@ export function groupFieldsByCondition(
   }
 
   return { fieldGroups, noConditionFields };
+}
+
+/**
+ * 🔥 NEW: 배열 groupId가 있는 필드를 조건별로 확장
+ * 
+ * x-optional-when: [
+ *   { condition: { TYPE: "TENSTR" }, groupId: "TENSTR", hint: "..." },
+ *   { condition: { TYPE: "COMPTR" }, groupId: "COMPTR", hint: "..." }
+ * ]
+ * 
+ * → TENSTR 그룹에 TENSTR 힌트가 있는 필드
+ * → COMPTR 그룹에 COMPTR 힌트가 있는 필드
+ */
+export function expandFieldsByArrayGroupId(
+  fields: EnhancedField[],
+  conditionalRules: NonNullable<TableDefinition['schemaExtensions']>['conditional'] = []
+): EnhancedField[] {
+  const expandedFields: EnhancedField[] = [];
+
+  for (const field of fields) {
+    const condition = extractFieldConditions(field, conditionalRules);
+
+    // 배열 형식이고 groupId가 있는지 확인
+    if (condition?.conditions && condition.conditions.some(c => c.groupId)) {
+      // 각 조건별로 별도의 필드 인스턴스 생성
+      for (const entry of condition.conditions) {
+        if (entry.groupId) {
+          // 필드 복제하고 조건/그룹 정보 덮어쓰기
+          const clonedField = {
+            ...field,
+            // 🔥 확장 필드임을 표시
+            _expandedFromArray: true,
+            _arrayConditionEntry: entry,
+          } as EnhancedField;
+
+          // x-ui에 groupId 주입
+          const originalXui = (field as any)['x-ui'] || {};
+          (clonedField as any)['x-ui'] = {
+            ...originalXui,
+            groupId: entry.groupId
+          };
+
+          // 조건을 단일 조건으로 변경 (해당 그룹의 조건만)
+          (clonedField as any)['x-optional-when'] = entry.condition;
+
+          // 힌트가 있으면 _conditionalHint에 저장
+          if (entry.hint) {
+            (clonedField as any)._conditionalHint = entry.hint;
+          }
+
+          expandedFields.push(clonedField);
+        }
+      }
+    } else {
+      // groupId가 없으면 원본 필드 그대로 추가
+      expandedFields.push(field);
+    }
+  }
+
+  return expandedFields;
 }

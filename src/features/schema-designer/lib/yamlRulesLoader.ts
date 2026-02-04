@@ -26,15 +26,13 @@ const DEFAULT_WIDGET_PALETTE: WidgetPaletteItem[] = [
 // ============================================================================
 
 const DEFAULT_X_EXTENSIONS: XExtensionConfig[] = [
-    // Standard
+    // Standard (순수 UI 마커만 - shared.yaml SSOT 기준)
     { name: 'x-ui', category: 'standard', editorType: 'object', description: 'UI 메타데이터 (label, group, hint, visibleWhen)' },
     { name: 'x-transport', category: 'standard', editorType: 'object', description: 'API 전송 설정 (uri, methods, body-root)' },
     { name: 'x-enum-labels', category: 'standard', editorType: 'enum-labels', description: 'Enum 값 레이블' },
-    { name: 'x-enum-by-type', category: 'standard', editorType: 'enum-by-type', description: 'TYPE별 다른 enum 값' },
     { name: 'x-enum-labels-by-type', category: 'standard', editorType: 'enum-by-type', description: 'TYPE별 다른 enum 레이블' },
-    { name: 'x-value-constraint', category: 'standard', editorType: 'condition', description: 'TYPE별 값 제약' },
-    { name: 'x-node-count-by-type', category: 'standard', editorType: 'object', description: 'TYPE별 노드 개수' },
     { name: 'x-exclusive-keys', category: 'standard', editorType: 'array', description: '상호 배타적 키' },
+    // NOTE: x-enum-by-type, x-value-constraint, x-node-count-by-type는 deprecated
 
     // UI
     { name: 'x-section-header', category: 'ui', editorType: 'text', description: '섹션 헤더' },
@@ -44,6 +42,7 @@ const DEFAULT_X_EXTENSIONS: XExtensionConfig[] = [
     // Validation
     { name: 'x-validation-layer', category: 'validation', editorType: 'object', description: '검증 레이어' },
     { name: 'x-required-when', category: 'validation', editorType: 'condition', description: '조건부 필수' },
+    { name: 'x-optional-when', category: 'validation', editorType: 'condition', description: '조건부 선택' },
 ];
 
 // ============================================================================

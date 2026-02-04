@@ -1,0 +1,152 @@
+{
+  "title": "Displacement Table",
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "DISPLACEMENTG",
+            "DISPLACEMENTL"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "DX",
+              "DY",
+              "DZ",
+              "RX",
+              "RY",
+              "RZ"
+            ]
+          },
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Components"
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Node/Element No. Input",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')"
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            }
+          },
+          "x-ui": {
+            "hint": "Use only ONE of the three methods: KEYS, TO, or STRUCTURE_GROUP_NAME",
+            "label": "Node/Element Selection"
+          }
+        },
+        "LOAD_CASE_NAMES": {
+          "type": "array",
+          "description": "Load Case/Combination Names",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "hint": "Static Load or Load Combination names",
+            "label": "Load Cases"
+          }
+        }
+      }
+    }
+  }
+}

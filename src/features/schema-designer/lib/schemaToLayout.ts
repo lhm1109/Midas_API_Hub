@@ -34,10 +34,8 @@ interface EnhancedProperty {
         visibleWhen?: Record<string, any[]>;
     };
     'x-enum-labels'?: Record<string, string>;
-    'x-enum-by-type'?: Record<string, any[]>;
     'x-enum-labels-by-type'?: Record<string, Record<string, string>>;
-    'x-value-constraint'?: Record<string, any>;
-    'x-node-count-by-type'?: Record<string, number>;
+    // NOTE: x-enum-by-type, x-value-constraint, x-node-count-by-type deprecated (shared.yaml SSOT)
     'x-required-when'?: Record<string, any[]>;
 }
 
@@ -170,26 +168,15 @@ function propertyToField(
         };
     }
 
-    // x-enum 확장
+    // x-enum 확장 (순수 UI 마커만)
     if (prop['x-enum-labels']) {
         field.xenumLabels = prop['x-enum-labels'];
-    }
-    if (prop['x-enum-by-type']) {
-        field.xenumByType = prop['x-enum-by-type'];
     }
     if (prop['x-enum-labels-by-type']) {
         field.xenumLabelsByType = prop['x-enum-labels-by-type'];
     }
 
-    // x-value-constraint
-    if (prop['x-value-constraint']) {
-        field.xvalueConstraint = prop['x-value-constraint'];
-    }
-
-    // x-node-count-by-type
-    if (prop['x-node-count-by-type']) {
-        field.xnodeCountByType = prop['x-node-count-by-type'];
-    }
+    // NOTE: x-enum-by-type, x-value-constraint, x-node-count-by-type deprecated (shared.yaml SSOT)
 
     // x-required-when
     if (prop['x-required-when']) {

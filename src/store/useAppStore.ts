@@ -58,7 +58,7 @@ export interface AppState {
   setRunnerData: (data: RunnerData) => void;
   updateRunnerData: (updates: Partial<RunnerData>) => void;
   addTestCase: (name: string, description?: string) => void;
-  updateTestCase: (id: string, updates: Partial<{ name: string; description?: string; requestBody: string }>) => void;
+  updateTestCase: (id: string, updates: Partial<{ name: string; description?: string; requestBody: string; responseBody?: string; responseStatus?: number; responseTime?: number; updatedAt: string }>) => void;
   deleteTestCase: (id: string) => void;
 
   // 🔒 **편집 잠금 관리**

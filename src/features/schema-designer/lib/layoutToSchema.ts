@@ -107,25 +107,12 @@ function fieldToProperty(field: DesignedField): EnhancedSchemaProperty {
         prop['x-enum-labels'] = field.xenumLabels;
     }
 
-    // x-enum-by-type
-    if (field.xenumByType && Object.keys(field.xenumByType).length > 0) {
-        prop['x-enum-by-type'] = field.xenumByType;
-    }
-
-    // x-enum-labels-by-type
+    // x-enum-labels-by-type (순수 UI 마커)
     if (field.xenumLabelsByType && Object.keys(field.xenumLabelsByType).length > 0) {
         prop['x-enum-labels-by-type'] = field.xenumLabelsByType;
     }
 
-    // x-value-constraint
-    if (field.xvalueConstraint && Object.keys(field.xvalueConstraint).length > 0) {
-        prop['x-value-constraint'] = field.xvalueConstraint;
-    }
-
-    // x-node-count-by-type
-    if (field.xnodeCountByType && Object.keys(field.xnodeCountByType).length > 0) {
-        prop['x-node-count-by-type'] = field.xnodeCountByType;
-    }
+    // NOTE: x-enum-by-type, x-value-constraint, x-node-count-by-type는 deprecated (shared.yaml SSOT)
 
     // x-required-when
     if (field.xrequiredWhen && Object.keys(field.xrequiredWhen).length > 0) {

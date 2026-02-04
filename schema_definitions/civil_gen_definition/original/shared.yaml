@@ -244,7 +244,7 @@ schemaLogic:
       additionalProperties: false
 
   schemaStructurePatterns:
-    # 🔥 Pattern 1: Assign + additionalProperties (NEW)
+    # 🔥 Pattern 1a: Assign + additionalProperties
     # Map 기반 엔티티 컬렉션을 언래핑
     - name: "Unwrap Wrapper with AdditionalProperties"
       description: "Assign/Argument 래퍼의 additionalProperties에서 엔티티 스키마 추출"
@@ -260,7 +260,7 @@ schemaLogic:
       transform:
         action: "unwrap-wrapper-with-additionalProperties"
         
-    # 🔥 Pattern 1b: Argument 래퍼 (Assign 대안)
+    # 🔥 Pattern 1b: Argument + additionalProperties
     - name: "Unwrap Argument Wrapper with AdditionalProperties"
       description: "Argument 래퍼의 additionalProperties에서 엔티티 스키마 추출"
       enabled: true
@@ -272,6 +272,32 @@ schemaLogic:
           exists: true
         - path: "properties.Argument.additionalProperties.type"
           value: "object"
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+
+    # 🔥 Pattern 1c: Assign + patternProperties (NEW)
+    - name: "Unwrap Assign Wrapper with PatternProperties"
+      description: "Assign 래퍼의 patternProperties에서 엔티티 스키마 추출"
+      enabled: true
+      priority: 0
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Assign.patternProperties"
+          exists: true
+      transform:
+        action: "unwrap-wrapper-with-additionalProperties"
+
+    # 🔥 Pattern 1d: Argument + patternProperties (NEW)
+    - name: "Unwrap Argument Wrapper with PatternProperties"
+      description: "Argument 래퍼의 patternProperties에서 엔티티 스키마 추출"
+      enabled: true
+      priority: 0
+      detect:
+        - path: "type"
+          value: "object"
+        - path: "properties.Argument.patternProperties"
+          exists: true
       transform:
         action: "unwrap-wrapper-with-additionalProperties"
 

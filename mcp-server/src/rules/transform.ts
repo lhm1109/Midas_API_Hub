@@ -1,60 +1,80 @@
 /**
- * YAML → JSON Schema 변환 규칙 (결정론적)
+ * YAML to JSON Schema Transformation Rules (Deterministic)
+ * Based on shared.yaml SSOT
  */
 
-export const RULES_VERSION = '1.0.0';
+import { loadSharedRules, loadMarkerRegistry, loadTypeInferenceRegistry } from '../utils/rules-loader.js';
+
+export const RULES_VERSION = '2.0.0';  // Upgraded to SSOT-based
 export const JSON_SCHEMA_VERSION = 'http://json-schema.org/draft-07/schema#';
 
 /**
- * URI 패턴 → Wrapper 결정
- */
-export const WRAPPER_RULES = [
-    { pattern: /^\/db\//, wrapper: 'Assign' as const },
-    { pattern: /^\/post\//, wrapper: 'Argument' as const },
-    { pattern: /^\/doc\//, wrapper: 'Argument' as const },
-];
-
-/**
- * Enhanced Schema 마커
- */
-export const ENHANCED_MARKERS = [
-    'x-ui',
-    'x-transport',
-    'x-enum-by-type',
-    'x-node-count-by-type',
-    'x-value-constraint',
-];
-
-/**
- * 필드 타입 추론 규칙 (접두사 기반)
- */
-export const TYPE_INFERENCE_PREFIX: Record<string, string> = {
-    'i': 'integer',   // iMETHOD → integer
-    'b': 'boolean',   // bUSE → boolean
-    'd': 'number',    // dVALUE → number
-    's': 'string',    // sTEXT → string
-    'n': 'number',    // nCOUNT → number
-};
-
-/**
- * URI 패턴에 따른 wrapper 결정
+ * Determine wrapper from URI pattern (based on shared.yaml wrapperRegistry)
  */
 export function getWrapperForUri(uri: string): 'Assign' | 'Argument' | null {
-    for (const rule of WRAPPER_RULES) {
-        if (rule.pattern.test(uri)) {
-            return rule.wrapper;
+    const sharedRules = loadSharedRules();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const wrapperRegistry = (sharedRules as any)?.['wrapperRegistry'] as Array<{
+        id: string;
+        pattern: string;
+        wrapper: string | null;
+        priority: number;
+    }> | undefined;
+
+    if (!wrapperRegistry) {
+        // Fallback to hardcoded rules
+        const WRAPPER_RULES = [
+            { pattern: /^\/db\//, wrapper: 'Assign' as const },
+            { pattern: /^\/post\//, wrapper: 'Argument' as const },
+            { pattern: /^\/doc\//, wrapper: 'Argument' as const },
+        ];
+        for (const rule of WRAPPER_RULES) {
+            if (rule.pattern.test(uri)) {
+                return rule.wrapper;
+            }
+        }
+        return null;
+    }
+
+    // Sort by priority DESC (SSOT policy)
+    const sorted = [...wrapperRegistry].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
+    for (const rule of sorted) {
+        const regex = new RegExp(rule.pattern);
+        if (regex.test(uri)) {
+            return rule.wrapper as 'Assign' | 'Argument' | null;
         }
     }
     return null;
 }
 
 /**
- * Enhanced Schema 마커 개수 카운트
+ * Get enhanced schema marker list (based on markerRegistry SSOT)
+ */
+export function getEnhancedMarkers(): string[] {
+    const markers = loadMarkerRegistry();
+    if (!markers) {
+        // Fallback
+        return [
+            'x-ui',
+            'x-transport',
+            'x-enum-labels',
+            'x-enum-labels-by-type',
+            'x-required-when',
+            'x-optional-when',
+        ];
+    }
+    return markers.map(m => m.key);
+}
+
+/**
+ * Count enhanced schema markers
  */
 export function countEnhancedMarkers(content: string): number {
+    const markers = getEnhancedMarkers();
     let count = 0;
-    for (const marker of ENHANCED_MARKERS) {
-        const regex = new RegExp(marker, 'g');
+    for (const marker of markers) {
+        const regex = new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
         const matches = content.match(regex);
         if (matches) {
             count += matches.length;
@@ -64,10 +84,29 @@ export function countEnhancedMarkers(content: string): number {
 }
 
 /**
- * 필드명에서 타입 추론
+ * Infer type from field name (based on typeInferenceRegistry SSOT)
  */
 export function inferTypeFromFieldName(fieldName: string): string | null {
-    if (fieldName.length < 2) return null;
-    const prefix = fieldName[0].toLowerCase();
-    return TYPE_INFERENCE_PREFIX[prefix] || null;
+    const typeRegistry = loadTypeInferenceRegistry();
+
+    if (!typeRegistry) {
+        // Fallback to hardcoded rules
+        const TYPE_INFERENCE_PREFIX: Record<string, string> = {
+            'i': 'integer',
+            'b': 'boolean',
+            'd': 'number',
+            's': 'string',
+            'n': 'number',
+        };
+        if (fieldName.length < 2) return null;
+        const prefix = fieldName[0].toLowerCase();
+        return TYPE_INFERENCE_PREFIX[prefix] || null;
+    }
+
+    for (const rule of typeRegistry) {
+        if (fieldName.startsWith(rule.prefix)) {
+            return rule.type;
+        }
+    }
+    return null;
 }

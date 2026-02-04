@@ -27,8 +27,26 @@ export function buildFieldDescription(
     descParts.push(`**${field.description}**`);
   }
 
-  // 2. Enum Values (표준 enum)
-  if (field.enum && field.enum.length > 0) {
+  // 2. Enum Values logic (Prioritize oneOf if available to avoid duplication)
+  // oneOf has explicit 'title' and 'const', making it the primary source for documentation
+  if (fieldAny.oneOf && Array.isArray(fieldAny.oneOf)) {
+    // Check if oneOf looks like an enum (has const values)
+    const hasConstValues = fieldAny.oneOf.some((opt: any) => opt.const !== undefined);
+
+    if (hasConstValues) {
+      descParts.push('**Enum Values:**');
+      fieldAny.oneOf.forEach((option: any) => {
+        if (option.const !== undefined) {
+          const val = option.const;
+          const label = option.title || val;
+          const formattedVal = typeof val === 'string' ? `"${val}"` : val;
+          descParts.push(`• ${label} : ${formattedVal}`);
+        }
+      });
+    }
+  }
+  // Fallback to standard enum if oneOf is not present (or doesn't have const)
+  else if (field.enum && field.enum.length > 0) {
     descParts.push('**Enum Values:**');
     field.enum.forEach((val: any) => {
       const label = fieldAny.enumLabels?.[String(val)] ||
@@ -40,62 +58,33 @@ export function buildFieldDescription(
     });
   }
 
-  // 🔥 2-1. oneOf 형식 (JSON Schema 표준 - const + title)
-  if (fieldAny.oneOf && Array.isArray(fieldAny.oneOf)) {
-    descParts.push('**Enum Values:**');
-    fieldAny.oneOf.forEach((option: any) => {
-      const val = option.const;
-      const label = option.title || val;
-      const formattedVal = typeof val === 'string' ? `"${val}"` : val;
-      descParts.push(`• ${label} : ${formattedVal}`);
-    });
-  }
+  // Note: x-enum-by-type, x-value-constraint, x-node-count-by-type는
+  // shared.yaml SSOT에 따라 allOf[].if.then으로 대체되어 제거됨
 
-  // 3. Enum by Type (x-enum-by-type)
-  const enumByType = fieldAny.enumByType || fieldAny['x-enum-by-type'];
-  if (enumByType) {
-    descParts.push('**Enum Values by Type:**');
-    for (const [type, values] of Object.entries(enumByType)) {
-      descParts.push(`*${type}:*`);
-      (values as any[]).forEach((val: any) => {
-        const label = fieldAny.enumLabelsByType?.[type]?.[String(val)] ||
-          fieldAny['x-enum-labels-by-type']?.[type]?.[String(val)] ||
-          val;
-        // 🔥 개선: "설명 : 값" 형식, 문자열은 따옴표로 감싸기
-        const formattedVal = typeof val === 'string' ? `"${val}"` : val;
-        descParts.push(`• ${label} : ${formattedVal}`);
+  // 🔥 6. Conditional Hints from x-optional-when array format
+  // 확장된 필드는 개별 힌트만 표시, 원본 필드는 모든 힌트 표시
+  const conditionalHint = fieldAny._conditionalHint;
+  const optionalWhen = fieldAny['x-optional-when'];
+
+  if (conditionalHint) {
+    // 🔥 확장된 필드: 해당 조건의 힌트만 표시
+    descParts.push(`**💡 Hint:** ${conditionalHint}`);
+  } else if (Array.isArray(optionalWhen)) {
+    // 원본 필드 (확장되지 않음): 모든 조건별 힌트 표시
+    const hintsWithCondition = optionalWhen
+      .filter((item: any) => item.hint && item.condition)
+      .map((item: any) => {
+        const conditionParts = Object.entries(item.condition)
+          .map(([key, val]) => `${key}=${val}`)
+          .join(', ');
+        return { condition: conditionParts, hint: item.hint };
       });
-    }
-  }
 
-  // 4. Value Constraints (x-value-constraint)
-  const valueConstraint = fieldAny.valueConstraint || fieldAny['x-value-constraint'];
-  if (valueConstraint) {
-    descParts.push('**Value Constraints:**');
-    for (const [type, constraint] of Object.entries(valueConstraint)) {
-      descParts.push(`• *${type}:* ${constraint}`);
-    }
-  }
-
-  // 5. Node Count by Type (x-node-count-by-type)
-  const nodeCountByType = fieldAny.nodeCountByType || fieldAny['x-node-count-by-type'];
-  if (nodeCountByType) {
-    descParts.push('**Node Count by Type:**');
-    for (const [type, count] of Object.entries(nodeCountByType)) {
-      if (Array.isArray(count)) {
-        descParts.push(`• *${type}:* ${count.join(', ')} nodes`);
-      } else {
-        descParts.push(`• *${type}:* ${count} nodes`);
+    if (hintsWithCondition.length > 0) {
+      descParts.push('**💡 Value Hints by Type:**');
+      for (const { condition, hint } of hintsWithCondition) {
+        descParts.push(`• *${condition}:* ${hint}`);
       }
-    }
-  }
-
-  // 🔥 6. Value Hints by Type (x-value-hints-by-type) - 순수 UI 힌트
-  const valueHintsByType = fieldAny.valueHintsByType || fieldAny['x-value-hints-by-type'];
-  if (valueHintsByType) {
-    descParts.push('**💡 Value Hints by Type:**');
-    for (const [type, hint] of Object.entries(valueHintsByType)) {
-      descParts.push(`• *${type}:* ${hint}`);
     }
   }
 

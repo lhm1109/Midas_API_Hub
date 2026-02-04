@@ -44,16 +44,11 @@ export interface DesignedField {
         visibleWhen?: Record<string, any[]>;
     };
 
-    // x-enum 확장
+    // x-enum 확장 (순수 UI 마커만)
     xenumLabels?: Record<string, string>;
-    xenumByType?: Record<string, any[]>;
     xenumLabelsByType?: Record<string, Record<string, string>>;
 
-    // x-value-constraint
-    xvalueConstraint?: Record<string, any>;
-
-    // x-node-count-by-type
-    xnodeCountByType?: Record<string, number>;
+    // NOTE: xenumByType, xvalueConstraint, xnodeCountByType는 deprecated (shared.yaml SSOT)
 
     // x-exclusive-keys
     xexclusiveKeys?: string[];
@@ -177,10 +172,8 @@ export interface EnhancedSchemaProperty {
         visibleWhen?: Record<string, any[]>;
     };
     'x-enum-labels'?: Record<string, string>;
-    'x-enum-by-type'?: Record<string, any[]>;
     'x-enum-labels-by-type'?: Record<string, Record<string, string>>;
-    'x-value-constraint'?: Record<string, any>;
-    'x-node-count-by-type'?: Record<string, number>;
+    // NOTE: x-enum-by-type, x-value-constraint, x-node-count-by-type deprecated (shared.yaml SSOT)
     'x-required-when'?: Record<string, any[]>;
 }
 

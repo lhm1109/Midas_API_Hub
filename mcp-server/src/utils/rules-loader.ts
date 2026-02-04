@@ -1,129 +1,39 @@
 /**
- * YAML 규칙 리더
- * MCP가 생성/검증 시 사용할 규칙을 YAML에서 읽음
+ * YAML Rules Loader
+ * Loads rules from shared.yaml for MCP generation/validation (SSOT)
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import yaml from 'js-yaml';
 
-// 기본 규칙 경로
+// Default rules directory path
 const RULES_DIR = path.resolve(
     process.env.APIVERIFICATION_ROOT || process.cwd().replace(/[\\/]mcp-server([\\/]dist)?$/, ''),
     'schema_definitions/civil_gen_definition/enhanced'
 );
 
-export interface GenerationRules {
-    version: string;
-    enumRules: {
-        integerEnumFormat: {
-            type: string;
-            structure: unknown;
-        };
-        stringEnumFormat: {
-            type: string;
-            condition: string;
-        };
-    };
-    fieldNaming: {
-        prefixInference: {
-            enabled: boolean;
-            rules: Array<{ prefix: string; type: string; example: string }>;
-        };
-    };
-    xuiRules: {
-        required: string[];
-        optional: string[];
-        componentInference: Array<{ condition: string; component: string }>;
-    };
+// ============================================================================
+// MARKER REGISTRY TYPES
+// ============================================================================
+
+export interface MarkerDefinition {
+    id: string;
+    key: string;
+    description: string;
+    pureUI: boolean;
+    autoConvertTo?: string;
+    schema?: Record<string, unknown>;
+    example?: string;
 }
 
-export interface ValidationRules {
-    version: string;
-    enumValidation: {
-        integerEnumMustUseOneOf: {
-            enabled: boolean;
-            message: string;
-            fix: {
-                type: string;
-                fallbackLabel: string;
-            };
-        };
-    };
-    requiredProperties: Record<string, {
-        enabled: boolean;
-        path: string;
-        message: string;
-        fix?: Record<string, unknown>;
-    }>;
-    typeValidation: {
-        prefixTypeMatch: {
-            enabled: boolean;
-            rules: Array<{ prefix: string; expectedType: string; message: string }>;
-        };
-    };
-    structureValidation?: {
-        requireSchema?: {
-            enabled: boolean;
-            value: string;
-        };
-        recommendTitle?: {
-            enabled: boolean;
-            level: string;
-        };
-        requiredFieldsExist?: {
-            enabled: boolean;
-            message: string;
-        };
-    };
-}
+// ============================================================================
+// SHARED RULES TYPES (SSOT)
+// ============================================================================
 
-/**
- * 생성 규칙 로드
- */
-export function loadGenerationRules(): GenerationRules | null {
-    const filePath = path.join(RULES_DIR, 'mcp-generation-rules.yaml');
-    try {
-        const content = fs.readFileSync(filePath, 'utf-8');
-        return yaml.load(content) as GenerationRules;
-    } catch (error) {
-        console.error(`Failed to load generation rules: ${filePath}`, error);
-        return null;
-    }
-}
-
-/**
- * 검증 규칙 로드
- */
-export function loadValidationRules(): ValidationRules | null {
-    const filePath = path.join(RULES_DIR, 'mcp-validation-rules.yaml');
-    try {
-        const content = fs.readFileSync(filePath, 'utf-8');
-        return yaml.load(content) as ValidationRules;
-    } catch (error) {
-        console.error(`Failed to load validation rules: ${filePath}`, error);
-        return null;
-    }
-}
-
-/**
- * 규칙 디렉토리 경로 반환
- */
-export function getRulesDir(): string {
-    return RULES_DIR;
-}
-
-/**
- * 🔥 v1.5: shared.yaml에서 SSOT 규칙 로드
- */
 export interface SharedRules {
     versioning: { rulesSpecVersion: string };
-    sectionRegistry: Array<{
-        id: string;
-        name: string;
-        description?: string;
-        isDefault?: boolean;
-    }>;
+    markerRegistry: MarkerDefinition[];
     conditionRegistry: Array<{
         type: string;
         requiredParams: string[];
@@ -131,24 +41,81 @@ export interface SharedRules {
     }>;
     integrityRules: {
         requireMarkerIdInRegistry: boolean;
-        requireSectionIdInRegistry: boolean;
         requireConditionTypeInRegistry: boolean;
-        requireXuiSectionIdInRegistry: boolean;
     };
     wrapperRegistryPolicy: {
         sort: string;
         match: string;
     };
+    typeInferenceRegistry?: Array<{
+        id: string;
+        prefix: string;
+        type: string;
+        example?: string;
+    }>;
+    componentRegistry?: Record<string, {
+        component: string;
+        props: Record<string, unknown>;
+    }>;
 }
 
+// ============================================================================
+// LOADERS
+// ============================================================================
+
+let lastLoadError: string | null = null;
+
+/**
+ * Get the last load error (for debugging)
+ */
+export function getLastLoadError(): string | null {
+    return lastLoadError;
+}
+
+/**
+ * Load SSOT rules from shared.yaml
+ */
 export function loadSharedRules(): SharedRules | null {
     const filePath = path.join(RULES_DIR, 'shared.yaml');
     try {
+        lastLoadError = null;
         const content = fs.readFileSync(filePath, 'utf-8');
         return yaml.load(content) as SharedRules;
     } catch (error) {
+        lastLoadError = error instanceof Error ? error.message : String(error);
         console.error(`Failed to load shared rules: ${filePath}`, error);
         return null;
     }
 }
 
+/**
+ * Load markerRegistry (for x-* marker validation)
+ */
+export function loadMarkerRegistry(): MarkerDefinition[] | null {
+    const sharedRules = loadSharedRules();
+    return sharedRules?.markerRegistry || null;
+}
+
+/**
+ * Get list of valid x-* marker keys
+ */
+export function getValidMarkerKeys(): string[] {
+    const markers = loadMarkerRegistry();
+    if (!markers) return [];
+    return markers.map(m => m.key);
+}
+
+/**
+ * Load typeInferenceRegistry (prefix-type mapping)
+ */
+export function loadTypeInferenceRegistry(): SharedRules['typeInferenceRegistry'] | null {
+    const sharedRules = loadSharedRules();
+    return sharedRules?.typeInferenceRegistry || null;
+}
+
+/**
+ * Get rules directory path
+ */
+export function getRulesDir(): string {
+    return RULES_DIR;
+}

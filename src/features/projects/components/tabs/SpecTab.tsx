@@ -379,7 +379,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             const conditionInfo = fieldsWithCondition[0].conditionInfo;
             params.push({
               no: '',
-              section: `${section.name} (When ${conditionInfo.conditionText})`,
+              section: `Advanced (When ${conditionInfo.conditionText})`,
               name: '',
               type: '',
               default: '',
@@ -795,7 +795,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       }
     }
 
-    // 🎯 스키마 타입에 따라 레이블 설정
+    // 🔥 스키마 타입에 따라 레이블 설정
     let schemaLabel: string;
 
     if (schemaType === 'original') {
@@ -808,17 +808,34 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       schemaLabel = 'Enhanced';
     }
 
+    // 🔥 FIX: Ensure schemas are objects for prettify
+    // DB에서 가져온 데이터가 문자열일 수 있으므로 파싱하여 객체로 변환
+    const safeParse = (val: any) => {
+      if (!val) return {};
+      if (typeof val === 'string') {
+        try {
+          return JSON.parse(val);
+        } catch {
+          return {};
+        }
+      }
+      return val;
+    };
+
+    const parsedOriginal = safeParse(originalSchema);
+    const parsedEnhanced = enhancedSchema ? safeParse(enhancedSchema) : undefined;
+    const selectedSchema = schemaType === 'original' ? parsedOriginal : parsedEnhanced;
+
     // 🔥 기존 ManualData를 유지하면서 업데이트 (누적 방식)
     // 🎯 JSON으로 저장 (HTML이 아닌 실제 JSON 문자열)
-    const selectedSchema = schemaType === 'original' ? originalSchema : enhancedSchema;
     const newManualData: ManualData = {
       title: spec.title || endpoint.name,
       category: endpoint.method,
       inputUri: endpoint.path,
       activeMethods: endpoint.method,
       jsonSchema: JSON.stringify(selectedSchema, null, 2),  // 🔥 선택한 스키마 (JSON)
-      jsonSchemaOriginal: JSON.stringify(originalSchema, null, 2),  // 🔥 항상 Original (JSON)
-      jsonSchemaEnhanced: enhancedSchema ? JSON.stringify(enhancedSchema, null, 2) : undefined,  // 🔥 항상 Enhanced (JSON)
+      jsonSchemaOriginal: JSON.stringify(parsedOriginal, null, 2),  // 🔥 항상 Original (JSON)
+      jsonSchemaEnhanced: parsedEnhanced ? JSON.stringify(parsedEnhanced, null, 2) : undefined,  // 🔥 항상 Enhanced (JSON)
       examples: manualData?.examples || [],  // 🔥 기존 examples 유지
       requestExamples: manualData?.requestExamples || [],  // 🔥 기존 requestExamples 유지
       responseExamples: manualData?.responseExamples || [],  // 🔥 기존 responseExamples 유지
@@ -1097,11 +1114,21 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         : rawSchema?.properties?.Argument ? 'Argument' : null;
                       const wrapperInfo = wrapperKey ? rawSchema?.properties?.[wrapperKey] : null;
 
-                      if (!wrapperKey || !wrapperInfo?.additionalProperties) return null;
+                      // 🔥 Assign은 additionalProperties/patternProperties 사용, Argument는 properties 사용
+                      const isAssignStyle = wrapperInfo?.additionalProperties || wrapperInfo?.patternProperties;
+                      const isArgumentStyle = wrapperKey === 'Argument' && wrapperInfo?.properties;
+
+                      if (!wrapperKey || (!isAssignStyle && !isArgumentStyle)) return null;
+
+                      // Argument 스타일도 'Keyed Object Entry'로 표시 (Assign과 동일)
+                      const sectionTitle = 'Keyed Object Entry';
+                      const descriptionText = isArgumentStyle
+                        ? 'Request body wrapper object for Table API.'
+                        : wrapperInfo.description || 'Map of keyed objects where each key is a string identifier.';
 
                       return (
                         <div>
-                          <h4 className="text-sm font-semibold text-cyan-400 mb-2">Keyed Object Entry</h4>
+                          <h4 className="text-sm font-semibold text-cyan-400 mb-2">{sectionTitle}</h4>
                           <p className="text-xs text-zinc-400 mb-3">
                           </p>
                           <div className="border rounded-lg overflow-hidden border-zinc-800">
@@ -1129,7 +1156,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                                   <td className="p-3 text-zinc-400">1</td>
                                   <td className="p-3">
                                     <div className="text-zinc-300">
-                                      {wrapperInfo.description || 'Map of keyed objects where each key is a string identifier.'}
+                                      {descriptionText}
                                     </div>
                                   </td>
                                   <td className="p-3">

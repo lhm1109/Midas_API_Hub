@@ -1,15 +1,15 @@
 /**
- * 스키마 검증기
- * YAML 규칙 기반으로 스키마 검증 및 자동 변환
+ * Schema Validator
+ * Validates and transforms schemas based on shared.yaml SSOT
  */
 
-import { loadValidationRules, loadGenerationRules, loadSharedRules } from '../utils/rules-loader.js';
+import { loadSharedRules, loadMarkerRegistry, getValidMarkerKeys, loadTypeInferenceRegistry } from '../utils/rules-loader.js';
 
 export interface ValidationResult {
     valid: boolean;
     errors: ValidationError[];
     warnings: ValidationWarning[];
-    transformed: Record<string, unknown>;  // 변환된 스키마
+    transformed: Record<string, unknown>;
 }
 
 export interface ValidationError {
@@ -25,18 +25,19 @@ export interface ValidationWarning {
 }
 
 /**
- * 스키마 검증 및 자동 변환
+ * Validate and transform schema
  */
 export function validateAndTransform(
     schema: Record<string, unknown>
 ): ValidationResult {
-    const validationRules = loadValidationRules();
-    const generationRules = loadGenerationRules();
+    const sharedRules = loadSharedRules();
+    const validMarkerKeys = getValidMarkerKeys();
+    const typeInferenceRegistry = loadTypeInferenceRegistry();
 
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
-    // 깊은 복사로 변환용 스키마 생성
+    // Deep copy for transformation
     const transformed = JSON.parse(JSON.stringify(schema)) as Record<string, unknown>;
 
     const properties = transformed['properties'] as Record<string, unknown> | undefined;
@@ -45,51 +46,59 @@ export function validateAndTransform(
         for (const [fieldName, fieldDef] of Object.entries(properties)) {
             const field = fieldDef as Record<string, unknown>;
 
-            // 1. 정수 enum → oneOf 자동 변환
-            if (validationRules?.enumValidation?.integerEnumMustUseOneOf?.enabled) {
-                const enumValues = field['enum'] as unknown[] | undefined;
-                const fieldType = field['type'] as string | undefined;
-
-                if (enumValues && (fieldType === 'integer' || fieldType === 'number') && !field['oneOf']) {
-                    const fallbackLabel = validationRules.enumValidation.integerEnumMustUseOneOf.fix.fallbackLabel;
-
-                    // x-ui.options에서 라벨 가져오기
-                    const xui = field['x-ui'] as Record<string, unknown> | undefined;
-                    const options = xui?.['options'] as Array<{ value: number; label: string }> | undefined;
-
-                    // oneOf 변환
-                    const oneOf = enumValues.map(value => {
-                        const option = options?.find(o => o.value === value);
-                        const title = option?.label || fallbackLabel.replace('{value}', String(value));
-                        return { const: value, title };
-                    });
-
-                    field['oneOf'] = oneOf;
-                    delete field['enum'];
-
-                    // x-ui.options 제거 (oneOf에 통합됨)
-                    if (xui?.['options']) {
-                        delete xui['options'];
-                    }
-
-                    errors.push({
+            // 1. Validate x-* markers against markerRegistry
+            for (const key of Object.keys(field)) {
+                if (key.startsWith('x-') && validMarkerKeys.length > 0 && !validMarkerKeys.includes(key)) {
+                    warnings.push({
                         field: fieldName,
-                        message: validationRules.enumValidation.integerEnumMustUseOneOf.message,
-                        fixable: true,
-                        fixApplied: true,
+                        message: `Unknown x-* marker: "${key}". Valid markers: ${validMarkerKeys.join(', ')}`
                     });
                 }
             }
 
-            // 2. x-ui.label 필수 체크
-            if (validationRules?.requiredProperties?.xuiLabel?.enabled) {
+            // 2. Auto-convert integer enum to oneOf
+            const enumValues = field['enum'] as unknown[] | undefined;
+            const fieldType = field['type'] as string | undefined;
+
+            if (enumValues && (fieldType === 'integer' || fieldType === 'number') && !field['oneOf']) {
+                const fallbackLabel = 'Option {value}';
+
+                // Get labels from x-ui.options
                 const xui = field['x-ui'] as Record<string, unknown> | undefined;
-                if (!xui?.['label']) {
-                    // 필드명에서 자동 생성
+                const options = xui?.['options'] as Array<{ value: number; label: string }> | undefined;
+
+                // Convert to oneOf
+                const oneOf = enumValues.map(value => {
+                    const option = options?.find(o => o.value === value);
+                    const title = option?.label || fallbackLabel.replace('{value}', String(value));
+                    return { const: value, title };
+                });
+
+                field['oneOf'] = oneOf;
+                delete field['enum'];
+
+                // Remove x-ui.options (merged into oneOf)
+                if (xui?.['options']) {
+                    delete xui['options'];
+                }
+
+                errors.push({
+                    field: fieldName,
+                    message: 'Auto-converted integer enum to oneOf format',
+                    fixable: true,
+                    fixApplied: true,
+                });
+            }
+
+            // 3. Auto-generate x-ui.label
+            {
+                const xui = field['x-ui'] as Record<string, unknown> | undefined;
+                if (!xui?.['label'] && !field['title']) {
+                    // Generate from field name
                     const label = fieldName
-                        .replace(/^[ibds]/, '')  // 접두사 제거
-                        .replace(/_/g, ' ')      // _ → 공백
-                        .replace(/([A-Z])/g, ' $1')  // camelCase 분리
+                        .replace(/^[ibds]/, '')  // Remove type prefix
+                        .replace(/_/g, ' ')      // _ to space
+                        .replace(/([A-Z])/g, ' $1')  // Split camelCase
                         .trim();
 
                     if (!xui) {
@@ -100,88 +109,66 @@ export function validateAndTransform(
 
                     warnings.push({
                         field: fieldName,
-                        message: `x-ui.label 자동 생성: "${label}"`,
+                        message: `Auto-generated x-ui.label: "${label}"`,
                     });
                 }
             }
 
-            // 3. x-ui.sectionId 필수 체크 (🔥 v1.5 SSOT: group → sectionId)
-            if (validationRules?.requiredProperties?.xuiGroup?.enabled) {
+            // 4. Convert x-uiRules.visibleWhen to x-optional-when
+            const xuiRules = field['x-uiRules'] as Record<string, unknown> | undefined;
+            if (xuiRules?.['visibleWhen']) {
+                field['x-optional-when'] = xuiRules['visibleWhen'];
+                delete xuiRules['visibleWhen'];
+
+                if (Object.keys(xuiRules).length === 0) {
+                    delete field['x-uiRules'];
+                }
+
+                errors.push({
+                    field: fieldName,
+                    message: 'Auto-converted x-uiRules.visibleWhen to x-optional-when (deprecated pattern)',
+                    fixable: true,
+                    fixApplied: true,
+                });
+            }
+
+            // 5. Convert x-ui.visibleWhen to x-optional-when
+            {
                 const xui = field['x-ui'] as Record<string, unknown> | undefined;
-                // sectionId가 없고 group도 없으면 기본 sectionId 설정
-                if (!xui?.['sectionId'] && !xui?.['group']) {
-                    // 🔥 v1.5: sectionRegistry에서 isDefault=true인 섹션 찾기
-                    const sharedRules = loadSharedRules();
-                    const defaultSection = sharedRules?.sectionRegistry?.find((s: { isDefault?: boolean }) => s.isDefault);
-                    const defaultSectionId = defaultSection?.id || 'SECTION_GENERAL';
+                if (xui?.['visibleWhen']) {
+                    field['x-optional-when'] = xui['visibleWhen'];
+                    delete xui['visibleWhen'];
 
-                    if (!xui) {
-                        field['x-ui'] = { sectionId: defaultSectionId };
-                    } else {
-                        xui['sectionId'] = defaultSectionId;
-                    }
-
-                    warnings.push({
+                    errors.push({
                         field: fieldName,
-                        message: `x-ui.sectionId 기본값 설정: "${defaultSectionId}" (sectionRegistry SSOT)`,
-                    });
-                }
-                // 🔥 v1.5: group → sectionId 마이그레이션
-                if (xui?.['group'] && !xui?.['sectionId']) {
-                    const groupValue = xui['group'] as string;
-                    // group 문자열을 sectionId 패턴으로 변환
-                    const sectionId = `SECTION_${groupValue.toUpperCase().replace(/\s+/g, '_')}`;
-                    xui['sectionId'] = sectionId;
-                    delete xui['group'];
-
-                    warnings.push({
-                        field: fieldName,
-                        message: `x-ui.group → x-ui.sectionId 마이그레이션: "${groupValue}" → "${sectionId}"`,
+                        message: 'Auto-converted x-ui.visibleWhen to x-optional-when (forbidden pattern)',
+                        fixable: true,
+                        fixApplied: true,
                     });
                 }
             }
 
-            // 4. 접두사-타입 일치 확인
-            if (validationRules?.typeValidation?.prefixTypeMatch?.enabled) {
-                for (const rule of validationRules.typeValidation.prefixTypeMatch.rules) {
+            // 6. Validate prefix-type consistency
+            if (typeInferenceRegistry) {
+                for (const rule of typeInferenceRegistry) {
                     if (fieldName.startsWith(rule.prefix)) {
                         const fieldType = field['type'] as string | undefined;
-                        if (fieldType && fieldType !== rule.expectedType) {
+                        if (fieldType && fieldType !== rule.type) {
                             warnings.push({
                                 field: fieldName,
-                                message: rule.message,
+                                message: `Prefix '${rule.prefix}' expects type '${rule.type}', but got '${fieldType}'`,
                             });
                         }
                         break;
                     }
                 }
             }
-
-            // 🔥 5. sectionId 무결성 검증 (v1.5 SSOT)
-            const sharedRules = loadSharedRules();
-            if (sharedRules?.integrityRules?.requireXuiSectionIdInRegistry) {
-                const xui = field['x-ui'] as Record<string, unknown> | undefined;
-                const sectionId = xui?.['sectionId'] as string | undefined;
-                if (sectionId) {
-                    const validSectionIds = sharedRules.sectionRegistry?.map(s => s.id) || [];
-                    if (!validSectionIds.includes(sectionId)) {
-                        errors.push({
-                            field: fieldName,
-                            message: `x-ui.sectionId "${sectionId}"가 sectionRegistry에 없음. 유효값: ${validSectionIds.join(', ')}`,
-                            fixable: true,
-                            fixApplied: false,
-                        });
-                    }
-                }
-            }
         }
     }
 
-    // 6. $schema 추가
-    if (validationRules?.structureValidation?.requireSchema?.enabled) {
-        if (!transformed['$schema']) {
-            transformed['$schema'] = validationRules.structureValidation.requireSchema.value;
-        }
+    // 9. Add $schema
+    if (!transformed['$schema']) {
+        transformed['$schema'] = 'http://json-schema.org/draft-07/schema#';
     }
 
     return {
@@ -191,4 +178,3 @@ export function validateAndTransform(
         transformed,
     };
 }
-

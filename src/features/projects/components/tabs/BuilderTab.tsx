@@ -729,12 +729,23 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
   // 🎨 JSON 필드 메타데이터 정의 (스키마 기반)
   const getFieldMetadata = (fieldPath: string): { type: 'required' | 'optional'; color: string; label: string } => {
+    // 🔥 숫자 인스턴스 키 특별 처리 (Assign.1, Assign.2 등)
+    // patternProperties의 minProperties: 1 규칙에 따라 최소 1개 인스턴스는 Required
+    const parts = fieldPath.split('.');
+    if (parts.length === 2) {
+      const wrapperKeys = [...new Set(wrapperRules.map(rule => rule.wrapper).filter(Boolean))];
+      if (wrapperKeys.includes(parts[0]) && /^\d+$/.test(parts[1])) {
+        // 래퍼 키 아래의 숫자 키는 Required (Entity Instance)
+        return { type: 'required', color: 'text-red-400', label: 'Required' };
+      }
+    }
+
     // 🔥 중첩 경로 정규화: "Assign.1.TYPE" → "TYPE", "Assign.1.__section_Common Keys and Solid__.TYPE" → "TYPE"
     const normalizeFieldPath = (path: string): string => {
-      const parts = path.split('.');
+      const pathParts = path.split('.');
       // 🔥 래퍼 키, 숫자, __section__ 제거 (wrapper keys는 builder.yaml에서 동적으로 가져옴)
       const wrapperKeys = [...new Set(wrapperRules.map(rule => rule.wrapper).filter(Boolean))];
-      const filtered = parts.filter(p =>
+      const filtered = pathParts.filter(p =>
         !wrapperKeys.includes(p) &&
         !/^\d+$/.test(p) &&
         !p.startsWith('__section_')
@@ -804,10 +815,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     }
 
     // 중첩 필드 체크 (예: UNIT.FORCE)
-    const parts = normalizedPath.split('.');
-    if (parts.length > 1) {
-      const parentName = parts[0];
-      const childName = parts[parts.length - 1];
+    const normalizedParts = normalizedPath.split('.');
+    if (normalizedParts.length > 1) {
+      const parentName = normalizedParts[0];
+      const childName = normalizedParts[normalizedParts.length - 1];
       const parentField = schemaFields.find(f => f.name === parentName);
       if (parentField && parentField.children) {
         const childField = parentField.children.find((c: any) => c.name === childName);

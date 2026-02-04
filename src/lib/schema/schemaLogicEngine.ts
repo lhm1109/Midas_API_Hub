@@ -335,7 +335,7 @@ export function determineSectionName(
     }
 
     // Fallback (shouldn't reach here if YAML has "always" rule)
-    return 'Advanced';
+    return 'General';
 }
 
 /**
@@ -434,14 +434,14 @@ function executeSectionAction(
 
     switch (type) {
         case 'use-explicit-group':
-            return field.ui?.group || 'Advanced';
+            return field.ui?.group || 'General';
 
         case 'assign-section':
-            return action.section || 'Advanced';
+            return action.section || 'General';
 
         case 'join-type-labels': {
             const visibleWhen = field.ui?.visibleWhen;
-            if (!visibleWhen?.TYPE) return 'Advanced';
+            if (!visibleWhen?.TYPE) return 'General';
 
             const visibleTypes = Array.isArray(visibleWhen.TYPE) ? visibleWhen.TYPE : [visibleWhen.TYPE];
             const labels = visibleTypes.map(t => typeLabels[t] || t);
@@ -449,7 +449,7 @@ function executeSectionAction(
         }
 
         default:
-            return 'Advanced';
+            return 'General';
     }
 }
 

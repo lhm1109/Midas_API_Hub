@@ -20,6 +20,7 @@ import {
   getPlatformSkeleton,
 } from './schemaLogicEngine';
 import { schemaCompileCache, generateSchemaHash } from '../cache/schemaCache';
+import { expandFieldsByArrayGroupId } from './conditionExtractor';
 
 // ============================================================================
 // Type Definitions
@@ -57,12 +58,9 @@ export interface EnhancedProperty {
   required?: string[];  // 🔥 중첩 객체의 required 필드
   oneOf?: any[];  // 🔥 oneOf 지원
 
-  // Enhanced extensions (YAML로 활성화 제어)
+  // Enhanced extensions (YAML로 활성화 제어) - 순수 UI 마커만
   'x-enum-labels'?: Record<string, string>;
-  'x-enum-by-type'?: Record<string, (string | number)[]>;
   'x-enum-labels-by-type'?: Record<string, Record<string, string>>;
-  'x-node-count-by-type'?: Record<string, number | number[]>;
-  'x-value-constraint'?: Record<string, string>;
   'x-ui'?: {
     label?: string;
     group?: string;
@@ -191,8 +189,12 @@ export function compileSchema(
 
   // Phase 1: Extract basic info
   const types = extractTypes(transformedSchema);
-  const fields = extractFields(transformedSchema);
+  const rawFields = extractFields(transformedSchema);
   const conditionalRules = extractConditionalRequired(transformedSchema);
+
+  // 🔥 Phase 1.5: Expand fields with array groupId
+  // x-optional-when 배열에 groupId가 있으면 각 조건별로 필드 인스턴스 생성
+  const fields = expandFieldsByArrayGroupId(rawFields, []);
 
   // Phase 2: Calculate required status for each field
   const fieldsWithStatus = fields.map(field => {
@@ -524,31 +526,37 @@ function transformSchema(schema: EnhancedSchema, transform: any, psdSet: string,
 }
 
 /**
- * 🔥 NEW: Assign/Argument + additionalProperties 패턴 언래핑
+ * 🔥 NEW: Assign/Argument + additionalProperties/patternProperties 패턴 언래핑
  * 
- * 입력:
+ * additionalProperties 패턴:
  * {
- *   "type": "object",
- *   "required": ["Assign"],
  *   "properties": {
  *     "Assign": {
  *       "type": "object",
- *       "additionalProperties": {
- *         "type": "object",
- *         "properties": {...},
- *         "allOf": [...]
+ *       "additionalProperties": { ...entitySchema }
+ *     }
+ *   }
+ * }
+ * 
+ * patternProperties 패턴:
+ * {
+ *   "properties": {
+ *     "Assign": {
+ *       "type": "object",
+ *       "additionalProperties": false,
+ *       "patternProperties": {
+ *         "^[0-9]+$": { ...entitySchema }
  *       }
  *     }
  *   }
  * }
  * 
- * 출력:
+ * 결과:
  * {
- *   "type": "object",
  *   "title": "Assign",
- *   "properties": {...},  // additionalProperties 내용
- *   "required": [...],    // additionalProperties 내용
- *   "allOf": [...]        // additionalProperties 내용
+ *   "properties": {...},  // entity 내용
+ *   "required": [...],    // entity 내용
+ *   "allOf": [...]        // entity 내용
  * }
  */
 function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): EnhancedSchema {
@@ -561,37 +569,98 @@ function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): En
   }
 
   let wrapperKey: string | undefined;
+  let entitySchema: any;
+
+  // 먼저 additionalProperties 패턴 확인
   for (const key of wrapperKeys) {
-    if (schema.properties[key]?.additionalProperties) {
+    if (schema.properties[key]?.additionalProperties &&
+      typeof schema.properties[key].additionalProperties === 'object' &&
+      schema.properties[key].additionalProperties.type === 'object') {
       wrapperKey = key;
+      entitySchema = schema.properties[key].additionalProperties;
       break;
     }
   }
 
-  if (!wrapperKey) {
-    // 동적으로 wrapper key 찾기
+  // additionalProperties가 없으면 patternProperties 확인
+  if (!entitySchema) {
+    for (const key of wrapperKeys) {
+      const patternProps = schema.properties[key]?.patternProperties;
+      if (patternProps) {
+        // 숫자 ID 패턴 찾기 (^[0-9]+$ 또는 유사 패턴)
+        const numericPatterns = ['^[0-9]+$', '^\\d+$', '^[1-9][0-9]*$'];
+        for (const pattern of numericPatterns) {
+          if (patternProps[pattern]?.type === 'object') {
+            wrapperKey = key;
+            entitySchema = patternProps[pattern];
+            console.log(`✅ Found entity in patternProperties["${pattern}"]`);
+            break;
+          }
+        }
+        if (entitySchema) break;
+      }
+    }
+  }
+
+  // 동적으로 wrapper key 찾기
+  if (!entitySchema) {
     for (const key of Object.keys(schema.properties)) {
+      // additionalProperties 확인
       if (schema.properties[key]?.additionalProperties?.type === 'object') {
         wrapperKey = key;
+        entitySchema = schema.properties[key].additionalProperties;
+        break;
+      }
+      // patternProperties 확인
+      const patternProps = schema.properties[key]?.patternProperties;
+      if (patternProps) {
+        const patternKey = Object.keys(patternProps).find(p =>
+          patternProps[p]?.type === 'object'
+        );
+        if (patternKey) {
+          wrapperKey = key;
+          entitySchema = patternProps[patternKey];
+          break;
+        }
+      }
+    }
+  }
+
+  // 🔥 NEW: Argument wrapper with direct properties (Table schema pattern)
+  // Pattern: { properties: { Argument: { type: 'object', properties: {...} } } }
+  // This is different from Entity Collection pattern (additionalProperties/patternProperties)
+  if (!entitySchema) {
+    for (const key of wrapperKeys) {
+      const wrapperObj = schema.properties[key];
+      // 🔥 FIX: Check if wrapperObj exists before accessing its properties
+      if (!wrapperObj) continue;
+
+      // Check if it's a simple wrapper with direct properties
+      // additionalProperties can be missing or explicitly false (both are valid for Table schemas)
+      const hasMapPattern = wrapperObj.additionalProperties && typeof wrapperObj.additionalProperties === 'object';
+      if (wrapperObj?.type === 'object' &&
+        wrapperObj.properties &&
+        !hasMapPattern &&
+        !wrapperObj.patternProperties) {
+        wrapperKey = key;
+        entitySchema = wrapperObj;  // Use the entire Argument object as the entity
+        console.log(`✅ Found simple wrapper pattern: "${key}" with direct properties`);
         break;
       }
     }
   }
 
-  if (!wrapperKey) {
-    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: No wrapper key with additionalProperties found');
+  if (!wrapperKey || !entitySchema) {
+    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: No wrapper key with additionalProperties/patternProperties/properties found');
     return schema as EnhancedSchema;
   }
-
-  // 2. additionalProperties에서 엔티티 스키마 추출
-  const entitySchema = schema.properties[wrapperKey].additionalProperties;
 
   if (!entitySchema || typeof entitySchema !== 'object') {
-    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: Invalid additionalProperties');
+    console.warn('⚠️ unwrapWrapperWithAdditionalProperties: Invalid entity schema');
     return schema as EnhancedSchema;
   }
 
-  console.log(`✅ unwrapWrapperWithAdditionalProperties: Extracting entity from "${wrapperKey}.additionalProperties"`);
+  console.log(`✅ unwrapWrapperWithAdditionalProperties: Extracting entity from "${wrapperKey}"`);
 
   // 3. 새로운 스키마 구성 (엔티티 스키마를 최상위로)
   const result: EnhancedSchema = {
@@ -606,6 +675,7 @@ function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): En
 
   return result;
 }
+
 /**
  * 최상위 wrapper key 제거 (예: { 'Argument': { type, properties } })
  * 
@@ -1025,7 +1095,6 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
   const conditionalRequiredMap = normalizeConditionalRequired(schema);
 
   for (const [key, prop] of Object.entries(propsSource)) {
-    console.log(`🔍 extractFields - ${key}:`, { type: prop.type, default: prop.default });
 
     // 🔥 기본 필드 구조
     const field: EnhancedField = {
@@ -1052,11 +1121,47 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       // x-로 시작하는 필드는 그대로 유지
       else if (propKey.startsWith('x-')) {
         field[propKey] = propValue;
+        // 🔥 디버그: x-optional-when 복사 확인
+        if (propKey === 'x-optional-when') {
+          console.log(`🔍 Copied x-optional-when for ${key}:`, propValue);
+        }
       }
       // 그 외 표준 JSON Schema 필드들 (enum, items, minItems, maxItems 등)
       else {
         field[propKey] = propValue;
       }
+    }
+
+    // 🔥 oneOf → enum 변환 (const 값들을 enum으로 추출)
+    if (prop.oneOf && Array.isArray(prop.oneOf) && !field.enum) {
+      const enumValues: any[] = [];
+      const enumLabels: Record<string, string> = {};
+
+      for (const option of prop.oneOf) {
+        if (option.const !== undefined) {
+          enumValues.push(option.const);
+          if (option.title) {
+            enumLabels[String(option.const)] = option.title;
+          }
+        }
+      }
+
+      if (enumValues.length > 0) {
+        field.enum = enumValues;
+        if (Object.keys(enumLabels).length > 0) {
+          field['x-enum-labels'] = enumLabels;
+        }
+        console.log(`✅ Converted oneOf → enum for ${key}:`, enumValues);
+      }
+    }
+
+
+    // 🔥 x-uiRules.visibleWhen → x-optional-when 변환 (ui.visibleWhen은 사용하지 않음)
+    // 조건부 표시 필드는 x-optional-when으로 통일
+    const xUiRules = (prop as any)['x-uiRules'];
+    if (xUiRules?.visibleWhen && !field['x-optional-when'] && !field['x-required-when']) {
+      field['x-optional-when'] = xUiRules.visibleWhen;
+      console.log(`✅ Converted x-uiRules.visibleWhen → x-optional-when for ${key}:`, xUiRules.visibleWhen);
     }
 
     // 🎯 allOf에서 추출한 조건부 required 주입

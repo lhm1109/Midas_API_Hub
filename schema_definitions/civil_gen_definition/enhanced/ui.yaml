@@ -99,21 +99,6 @@ markerInterpretation:
       이 마커는 라벨만 제공
 
   # ────────────────────────────────────────────────────────────────────────────
-  # x-value-hints-by-type: TYPE별 값 힌트 (권장사항)
-  # ────────────────────────────────────────────────────────────────────────────
-  x-value-hints-by-type:
-    enabled: true
-    purpose: "TYPE별 권장 입력 값 안내 (검증 무관)"
-    triggerField: "TYPE"
-    rendering:
-      position: "below-input"
-      style:
-        color: "text-amber-400"
-        fontSize: "text-[10px]"
-        icon: "💡"
-        fontStyle: "italic"
-
-  # ────────────────────────────────────────────────────────────────────────────
   # x-uiRules: UI 가시성/동작 규칙
   # ⚠️ 검증은 allOf if/then, 이것은 순수 UI 가시성
   # ────────────────────────────────────────────────────────────────────────────
@@ -131,7 +116,7 @@ markerInterpretation:
 # ============================================================================
 # ⚠️ 아래 마커들은 deprecated이며 새 스키마에서 사용 금지
 # 기존 스키마 호환을 위해 UI에서 여전히 읽지만, 새로 작성 시
-# 표준 allOf if/then + 위 순수 UI 마커 사용 권장
+# 표준 allOf if/then + x-optional-when 사용 권장
 legacyMarkers:
   x-required-by-type:
     deprecated: true
@@ -145,14 +130,15 @@ legacyMarkers:
     deprecated: true
     migrateTo: "allOf[].if.then.properties.NODE.minItems/maxItems"
     uiInterpretation: "노드 개수 힌트 표시에 사용, 새 스키마는 allOf 사용"
+  # ✅ x-required-when, x-optional-when은 현재 시스템의 표준
   x-required-when:
-    deprecated: true
-    migrateTo: "allOf[].if.then.required + x-uiRules.visibleWhen"
-    uiInterpretation: "조건부 필수 표시에 사용, 새 스키마는 allOf + x-uiRules 사용"
+    deprecated: false
+    purpose: "조건부 필수 - 조건 만족 시 필수 + 표시"
+    uiInterpretation: "Conditional(필수) 상태 표시 + 조건별 그룹화"
   x-optional-when:
-    deprecated: true
-    migrateTo: "x-uiRules.visibleWhen"
-    uiInterpretation: "조건부 가시성 표시에 사용, 새 스키마는 x-uiRules 사용"
+    deprecated: false
+    purpose: "조건부 선택 - 조건 만족 시 선택 + 표시"
+    uiInterpretation: "Conditional(선택) 상태 표시 + 조건별 그룹화"
 
 # ============================================================================
 # RENDERING - 렌더링 공통 규칙
@@ -187,7 +173,6 @@ rendering:
       - "x-ui.hint"
       - "x-value-constraint"
       - "x-node-count-by-type"
-      - "x-value-hints-by-type"  # 🔥 NEW: TYPE별 값 힌트
     style:
       color: "text-amber-400"
       fontSize: "text-[10px]"
@@ -293,16 +278,14 @@ builder:
 # ============================================================================
 table:
   # 스키마 확장 필드 추출 규칙
+  # ⚠️ 순수 UI 마커만 (shared.yaml SSOT 기준)
+  # 검증 마커(x-enum-by-type, x-node-count-by-type, x-required-by-type)는 
+  # allOf[].if.then으로 대체되어 제거됨
   schemaExtensions:
     extractFromSchema:
       - { key: "x-ui", targetProperty: "ui", transformKey: true }
       - { key: "x-enum-labels", targetProperty: "enumLabels", transformKey: true }
-      - { key: "x-enum-by-type", targetProperty: "enumByType", transformKey: true }
       - { key: "x-enum-labels-by-type", targetProperty: "enumLabelsByType", transformKey: true }
-      - { key: "x-node-count-by-type", targetProperty: "nodeCountByType", transformKey: true }
-      - { key: "x-value-constraint", targetProperty: "valueConstraint", transformKey: true }
-      - { key: "x-value-hints-by-type", targetProperty: "valueHintsByType", transformKey: true }  # 🔥 NEW
-      - { key: "x-required-by-type", targetProperty: "requiredByType", transformKey: true }
       - { key: "x-transport", targetProperty: "x-transport", passthrough: true }
 
   # 테이블 구조
@@ -417,3 +400,6 @@ fallbackUI:
     props:
       placeholder: "Enter value as JSON"
     warn: true
+
+# NOTE: tableSchemaRegistry moved to shared.yaml for SSOT
+# See: schema_definitions/civil_gen_definition/enhanced/shared.yaml → tableSchemaRegistry

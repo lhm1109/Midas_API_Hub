@@ -9,15 +9,12 @@
 
 /**
  * Enhanced 스키마에서 사용되는 x-* 확장 마커 목록
- * shared.yaml의 markerRegistry에서 정의된 모든 마커
+ * ⚠️ 순수 UI 마커만 (shared.yaml SSOT 기준)
+ * 검증 마커(x-enum-by-type, x-node-count-by-type등)는 allOf[].if.then으로 대체됨
  */
 export const ENHANCED_MARKERS = [
     'x-ui',
     'x-transport',
-    'x-enum-by-type',
-    'x-node-count-by-type',
-    'x-value-constraint',
-    'x-required-by-type',
     'x-required-when',
     'x-optional-when',
     'x-enum-labels',

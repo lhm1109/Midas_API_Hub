@@ -114,6 +114,9 @@ CREATE TABLE IF NOT EXISTS test_cases (
   name TEXT NOT NULL,
   description TEXT,
   request_body TEXT,
+  response_body TEXT,        -- 🔥 Response 저장
+  response_status INTEGER,   -- 🔥 HTTP 상태 코드
+  response_time INTEGER,     -- 🔥 응답 시간 (ms)
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   FOREIGN KEY (version_id) REFERENCES versions(id) ON DELETE CASCADE

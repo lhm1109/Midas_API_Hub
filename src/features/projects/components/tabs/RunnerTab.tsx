@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Play, Trash2, FileText, Clock, Send } from 'lucide-react';
+import { Play, Trash2, FileText, Clock, Send, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatJsonToHTML } from '@/lib/utils/htmlFormatter';
 import {
@@ -44,14 +44,14 @@ export function RunnerTab({
   endpoint,
   settings,
 }: RunnerTabProps) {
-  const { runnerData, updateRunnerData, deleteTestCase, manualData, setManualData, saveCurrentVersion } = useAppStore();
-  
+  const { runnerData, updateRunnerData, updateTestCase, deleteTestCase, manualData, setManualData, saveCurrentVersion } = useAppStore();
+
   const requestBody = runnerData?.requestBody || '{}';
   const testCases = runnerData?.testCases || [];
-  
+
   // 🎯 메뉴얼 데이터가 있으면 그것의 inputUri를 사용, 없으면 현재 endpoint.path 사용
   const endpointPath = manualData?.inputUri || endpoint.path;
-  
+
   const [method, setMethod] = useState<string>(endpoint.method);
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<{
@@ -60,11 +60,11 @@ export function RunnerTab({
     time: number;
     body: string;
   } | null>(null);
-  
+
   // 🎯 Send to Manual 다이얼로그 상태
   const [showSendToManualDialog, setShowSendToManualDialog] = useState(false);
   const [exampleTitle, setExampleTitle] = useState('');
-  
+
   // 🎯 선택된 Test Case 상태
   const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | null>(null);
 
@@ -76,7 +76,7 @@ export function RunnerTab({
 
     try {
       const parsed = JSON.parse(body);
-      
+
       // 이미 Assign 래퍼가 있으면 그대로 반환
       if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
         return body;
@@ -135,7 +135,7 @@ export function RunnerTab({
       }
 
       // 🔥 Assign 래퍼 적용 (설정에 따라)
-      const finalRequestBody = method !== 'GET' 
+      const finalRequestBody = method !== 'GET'
         ? wrapWithAssign(requestBody, endpoint.name)
         : undefined;
 
@@ -231,7 +231,7 @@ export function RunnerTab({
       if (selectedTestCaseId === caseId) {
         setSelectedTestCaseId(null);
       }
-      
+
       // 🔥 글로벌 저장 (DB에 영구 저장)
       try {
         await saveCurrentVersion();
@@ -242,46 +242,90 @@ export function RunnerTab({
       }
     }
   };
-  
-  // 🎯 Test Case 선택 시 Request Body 로드
+
+  // 🎯 Test Case 선택 시 Request Body + Response 로드
   const handleLoadTestCase = (testCaseId: string) => {
     const testCase = testCases.find(tc => tc.id === testCaseId);
     if (!testCase) return;
-    
+
     // Request Body 로드
     updateRunnerData({ requestBody: testCase.requestBody });
     setSelectedTestCaseId(testCaseId);
-    toast.success(`✅ Test Case "${testCase.name}" loaded successfully`);
+
+    // 🔥 Response도 함께 로드
+    if (testCase.responseBody) {
+      setResponse({
+        status: testCase.responseStatus || 200,
+        statusText: 'Loaded',
+        time: testCase.responseTime || 0,
+        body: testCase.responseBody,
+      });
+      toast.success(`✅ Test Case "${testCase.name}" loaded (with response)`);
+    } else {
+      setResponse(null);  // 저장된 응답이 없으면 초기화
+      toast.success(`✅ Test Case "${testCase.name}" loaded`);
+    }
   };
-  
+
+  // 🎯 Save Test Case 함수: 현재 Response를 선택된 Test Case에 저장
+  const handleSaveTestCase = async () => {
+    if (!selectedTestCaseId) {
+      toast.error('Please select a test case first');
+      return;
+    }
+
+    if (!response) {
+      toast.error('No response to save. Run the request first.');
+      return;
+    }
+
+    try {
+      // Test Case 업데이트
+      updateTestCase(selectedTestCaseId, {
+        requestBody: requestBody,
+        responseBody: response.body,
+        responseStatus: response.status,
+        responseTime: response.time,
+        updatedAt: new Date().toISOString(),
+      });
+
+      // DB에 저장
+      await saveCurrentVersion();
+      toast.success('✅ Test case saved with response!');
+    } catch (error) {
+      console.error('Failed to save test case:', error);
+      toast.error('❌ Failed to save test case');
+    }
+  };
+
   // 🎯 Send to Manual 함수
   const handleSendToManual = () => {
     if (!exampleTitle.trim()) {
       toast.error('Example title is required');
       return;
     }
-    
+
     if (!response) {
       toast.error('No response available. Please run the request first.');
       return;
     }
-    
+
     // Request와 Response를 HTML로 변환
     const requestHTML = formatJsonToHTML(requestBody);
     const responseHTML = formatJsonToHTML(response.body);
-    
+
     // 🎯 Request Example 생성
     const newRequestExample = {
       title: exampleTitle.trim(),
       code: requestHTML
     };
-    
+
     // 🎯 Response Example 생성
     const newResponseExample = {
       title: exampleTitle.trim(),
       code: responseHTML
     };
-    
+
     // Manual Data 업데이트 - Request/Response 분리
     const updatedManualData = {
       ...manualData,
@@ -295,7 +339,7 @@ export function RunnerTab({
       responseExamples: [...(manualData?.responseExamples || []), newResponseExample],
       specifications: manualData?.specifications || '',
     };
-    
+
     setManualData(updatedManualData);
     setShowSendToManualDialog(false);
     setExampleTitle('');
@@ -328,11 +372,10 @@ export function RunnerTab({
                 <div
                   key={testCase.id}
                   onClick={() => handleLoadTestCase(testCase.id)}
-                  className={`group relative p-3 rounded-lg border cursor-pointer transition-all ${
-                    selectedTestCaseId === testCase.id
-                      ? 'bg-blue-900/20 border-blue-700'
-                      : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800'
-                  }`}
+                  className={`group relative p-3 rounded-lg border cursor-pointer transition-all ${selectedTestCaseId === testCase.id
+                    ? 'bg-blue-900/20 border-blue-700'
+                    : 'bg-zinc-900 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800'
+                    }`}
                 >
                   {/* Delete Button */}
                   <Button
@@ -345,9 +388,8 @@ export function RunnerTab({
                   </Button>
 
                   <div className="flex items-start gap-2 mb-2">
-                    <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                      selectedTestCaseId === testCase.id ? 'bg-blue-500' : 'bg-zinc-600'
-                    }`} />
+                    <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${selectedTestCaseId === testCase.id ? 'bg-blue-500' : 'bg-zinc-600'
+                      }`} />
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm font-semibold text-zinc-100 truncate">
                         {testCase.name}
@@ -360,9 +402,20 @@ export function RunnerTab({
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-zinc-500 mt-2">
-                    <Clock className="w-3 h-3" />
-                    <span>{new Date(testCase.createdAt).toLocaleDateString()}</span>
+                  <div className="flex items-center justify-between text-xs text-zinc-500 mt-2">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-3 h-3" />
+                      <span>{new Date(testCase.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    {/* 🔥 Response 저장 상태 표시 */}
+                    {testCase.responseBody && (
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${testCase.responseStatus && testCase.responseStatus >= 200 && testCase.responseStatus < 300
+                          ? 'bg-green-900/50 text-green-400'
+                          : 'bg-red-900/50 text-red-400'
+                        }`}>
+                        {testCase.responseStatus || 'OK'} {testCase.responseTime ? `· ${testCase.responseTime}ms` : ''}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))
@@ -440,7 +493,7 @@ export function RunnerTab({
               {response ? (
                 <CodeEditor
                   value={response.body}
-                  onChange={() => {}}
+                  onChange={() => { }}
                   language="json"
                   readOnly={true}
                   minimap={false}
@@ -453,21 +506,44 @@ export function RunnerTab({
             </div>
           </div>
         </div>
-        
-        {/* Footer with Send to Manual Button */}
-        <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-end flex-shrink-0">
-          <Button
-            onClick={() => setShowSendToManualDialog(true)}
-            disabled={!response}
-            size="sm"
-            className="h-8 text-xs bg-blue-600 hover:bg-blue-500"
-          >
-            <Send className="w-3 h-3 mr-2" />
-            Send to Manual
-          </Button>
+
+        {/* Footer with Save Test Case + Send to Manual Buttons */}
+        <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-between flex-shrink-0">
+          {/* 왼쪽: 선택된 테스트 케이스 정보 */}
+          <div className="text-xs text-zinc-500">
+            {selectedTestCaseId && (
+              <span>
+                📋 Editing: <span className="text-zinc-300 font-medium">
+                  {testCases.find(tc => tc.id === selectedTestCaseId)?.name || 'Unknown'}
+                </span>
+              </span>
+            )}
+          </div>
+
+          {/* 오른쪽: 버튼들 */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleSaveTestCase}
+              disabled={!selectedTestCaseId || !response}
+              size="sm"
+              className="h-8 text-xs bg-green-600 hover:bg-green-500"
+            >
+              <Save className="w-3 h-3 mr-2" />
+              Save Test Case
+            </Button>
+            <Button
+              onClick={() => setShowSendToManualDialog(true)}
+              disabled={!response}
+              size="sm"
+              className="h-8 text-xs bg-blue-600 hover:bg-blue-500"
+            >
+              <Send className="w-3 h-3 mr-2" />
+              Send to Manual
+            </Button>
+          </div>
         </div>
       </div>
-      
+
       {/* 🎯 Send to Manual Dialog */}
       <Dialog open={showSendToManualDialog} onOpenChange={setShowSendToManualDialog}>
         <DialogContent className="bg-zinc-900 border-zinc-700 max-w-md">
@@ -477,7 +553,7 @@ export function RunnerTab({
               Add this test case as an example in the Manual tab
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="example-title" className="text-zinc-200">
@@ -495,7 +571,7 @@ export function RunnerTab({
                 This title will be used in the Manual tab's Examples section
               </p>
             </div>
-            
+
             {response && (
               <div className="p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
                 <p className="text-xs text-zinc-400 mb-2">Preview:</p>
@@ -516,7 +592,7 @@ export function RunnerTab({
               </div>
             )}
           </div>
-          
+
           <DialogFooter>
             <Button
               variant="outline"

@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X, Copy, Edit2, Check } from 'lucide-react';
+import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X, Copy, Edit2, Check, ChevronRight } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { CompareVersionsDialog } from './CompareVersionsDialog';
-import type { ApiEndpoint, Version as _Version, Attachment } from '@/types';
+import { useEndpoints } from '@/hooks/useEndpoints';
+import type { ApiEndpoint, Version as _Version, Attachment, ApiGroup } from '@/types';
 import { toast } from 'sonner';
 
 interface VersionTabProps {
@@ -28,6 +29,44 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     acquireEndpointLock,
     releaseEndpointLock,
   } = useAppStore();
+
+  // 🔥 products 트리에서 경로 계산
+  const { endpoints: products } = useEndpoints();
+
+  // 🔥 endpoint의 전체 경로를 계산하는 함수
+  const endpointBreadcrumb = useMemo(() => {
+    if (!endpoint || products.length === 0) return null;
+
+    // 재귀적으로 그룹 탐색
+    const findPath = (groups: ApiGroup[], targetId: string, path: string[]): string[] | null => {
+      for (const group of groups) {
+        const newPath = [...path, group.name];
+
+        // 현재 그룹의 endpoints에서 찾기
+        const foundEndpoint = group.endpoints?.find(ep => ep.id === targetId);
+        if (foundEndpoint) {
+          return newPath;
+        }
+
+        // 하위 그룹에서 재귀 탐색
+        if (group.subgroups && group.subgroups.length > 0) {
+          const result = findPath(group.subgroups, targetId, newPath);
+          if (result) return result;
+        }
+      }
+      return null;
+    };
+
+    // 모든 product에서 탐색
+    for (const product of products) {
+      const groupPath = findPath(product.groups, endpoint.id, []);
+      if (groupPath) {
+        return [product.name, ...groupPath];
+      }
+    }
+
+    return null;
+  }, [endpoint, products]);
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCompareDialog, setShowCompareDialog] = useState(false);
@@ -523,10 +562,34 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       {/* Header */}
       <div className="border-b border-zinc-800 bg-zinc-900 px-6 py-4 flex items-center justify-between flex-shrink-0">
         <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <GitBranch className="w-5 h-5 text-blue-400" />
-            Version Control
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <GitBranch className="w-5 h-5 text-blue-400" />
+              Version Control
+            </h2>
+            {/* Path Breadcrumb */}
+            <div className="text-sm text-zinc-500 flex items-center gap-1">
+              <span className="text-zinc-600">|</span>
+              {endpointBreadcrumb ? (
+                <span className="flex items-center gap-1">
+                  {endpointBreadcrumb.map((segment, idx) => (
+                    <span key={idx} className="flex items-center">
+                      <span className={idx === endpointBreadcrumb.length - 1 ? 'text-zinc-400' : 'text-zinc-500'}>
+                        {segment}
+                      </span>
+                      {idx < endpointBreadcrumb.length - 1 && (
+                        <ChevronRight className="w-3 h-3 text-zinc-600 mx-0.5" />
+                      )}
+                    </span>
+                  ))}
+                  <ChevronRight className="w-3 h-3 text-zinc-600 mx-0.5" />
+                  <span className="text-blue-400 font-medium">{endpoint.name}</span>
+                </span>
+              ) : (
+                <span className="font-mono text-blue-400">{endpoint.name}</span>
+              )}
+            </div>
+          </div>
           <p className="text-sm text-zinc-500 mt-1">
             Manage versions for <span className="text-white font-mono">{endpoint.name}</span>
           </p>
