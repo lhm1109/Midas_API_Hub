@@ -1,0 +1,285 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "required": [
+        "sDESIGN_CD"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "bCRACK_CTRL": {
+          "type": "boolean",
+          "description": "Crack control output",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputSLS",
+            "label": "Crack Control"
+          }
+        },
+        "bPRIN_CONST": {
+          "type": "boolean",
+          "description": "Principal stress at a construction stage",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputSLS",
+            "label": "Principal Stress (Construction)"
+          }
+        },
+        "bPRIN_SVC": {
+          "type": "boolean",
+          "description": "Principal stress at service loads",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputSLS",
+            "label": "Principal Stress (Service)"
+          }
+        },
+        "bSHEAR_RES": {
+          "type": "boolean",
+          "description": "Shear resistance output",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputULS",
+            "label": "Shear Resistance"
+          }
+        },
+        "bSTRS_CONST": {
+          "type": "boolean",
+          "description": "Stress for cross section at a construction stage",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputSLS",
+            "label": "Stress (Construction Stage)"
+          }
+        },
+        "bSTRS_SVC": {
+          "type": "boolean",
+          "description": "Stress for cross section at service loads",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputSLS",
+            "label": "Stress (Service Loads)"
+          }
+        },
+        "bTENS_STRS": {
+          "type": "boolean",
+          "description": "Tensile stress for prestressing steel",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputSLS",
+            "label": "Tensile Stress (Prestressing)"
+          }
+        },
+        "bTORS_RES": {
+          "type": "boolean",
+          "description": "Torsional resistance output",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputULS",
+            "label": "Torsional Resistance"
+          }
+        },
+        "bULT_BEND": {
+          "type": "boolean",
+          "description": "Ultimate bending resistance output",
+          "default": false,
+          "x-ui": {
+            "groupId": "outputULS",
+            "label": "Ultimate Bending Resistance"
+          }
+        },
+        "bUSER_INPUT": {
+          "type": "boolean",
+          "description": "User input data",
+          "default": false,
+          "x-ui": {
+            "groupId": "inputSLS",
+            "label": "User Input Data"
+          }
+        },
+        "dSTRUT_ANG": {
+          "type": "number",
+          "description": "Strut angle (Degree)",
+          "default": 45,
+          "x-ui": {
+            "groupId": "inputULS",
+            "hint": "Degree",
+            "label": "Strut Angle"
+          }
+        },
+        "iBETA_TYPE": {
+          "type": "integer",
+          "description": "Beta (Interface shear) calculation type",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "1.0",
+              "const": 0
+            },
+            {
+              "title": "Exact design",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "groupId": "inputSLS",
+            "label": "Beta (Interface Shear)"
+          }
+        },
+        "iMOMENT_RES": {
+          "type": "integer",
+          "description": "Moment resistance - Tendon consideration",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "Consider tendons in tensile zone",
+              "const": 0
+            },
+            {
+              "title": "Consider all tendons",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "groupId": "inputULS",
+            "label": "Moment Resistance"
+          }
+        },
+        "iPREST_TYPE": {
+          "type": "integer",
+          "description": "Prestressing steel type",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "Smooth bars and wires",
+              "const": 0
+            },
+            {
+              "title": "Strands",
+              "const": 1
+            },
+            {
+              "title": "Indented wires",
+              "const": 2
+            },
+            {
+              "title": "Ribbed bars",
+              "const": 3
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "groupId": "inputULS",
+            "label": "Prestressing Steel Type"
+          }
+        },
+        "sCEMENT_CLS": {
+          "type": "string",
+          "description": "Cement class for crack control",
+          "default": "Class R (s=0.20)",
+          "oneOf": [
+            {
+              "title": "Class R (s=0.20)",
+              "const": "Class R (s=0.20)"
+            },
+            {
+              "title": "Class N (s=0.25)",
+              "const": "Class N (s=0.25)"
+            },
+            {
+              "title": "Class S (s=0.38)",
+              "const": "Class S (s=0.38)"
+            }
+          ],
+          "x-ui": {
+            "component": "Dropdown",
+            "groupId": "inputSLS",
+            "label": "Cement Class"
+          }
+        },
+        "sDESIGN_CD": {
+          "type": "string",
+          "description": "Design Code",
+          "oneOf": [
+            {
+              "title": "Eurocode2-2:05",
+              "const": "Eurocode2-2:05"
+            },
+            {
+              "title": "Eurocode2-1-1:04",
+              "const": "Eurocode2-1-1:04"
+            },
+            {
+              "title": "Eurocode2-1-1:14",
+              "const": "Eurocode2-1-1:14"
+            }
+          ],
+          "x-ui": {
+            "component": "Dropdown",
+            "groupId": "designCode",
+            "label": "Design Code"
+          }
+        },
+        "sNAT_ANNEX": {
+          "type": "string",
+          "description": "National Annex",
+          "default": "Recommended",
+          "oneOf": [
+            {
+              "title": "Recommended",
+              "const": "Recommended"
+            },
+            {
+              "title": "Germany",
+              "const": "Germany"
+            },
+            {
+              "title": "France",
+              "const": "France"
+            },
+            {
+              "title": "UK",
+              "const": "UK"
+            }
+          ],
+          "x-ui": {
+            "component": "Dropdown",
+            "groupId": "designCode",
+            "label": "National Annex"
+          }
+        }
+      },
+      "x-ui": {
+        "groups": [
+          {
+            "title": "Design Code",
+            "id": "designCode"
+          },
+          {
+            "title": "Input Parameters - Ultimate Limit States",
+            "id": "inputULS"
+          },
+          {
+            "title": "Input Parameters - Serviceability Limit State",
+            "id": "inputSLS"
+          },
+          {
+            "title": "Output Parameters - Ultimate Limit States",
+            "id": "outputULS"
+          },
+          {
+            "title": "Output Parameters - Serviceability Limit States",
+            "id": "outputSLS"
+          }
+        ]
+      }
+    }
+  }
+}

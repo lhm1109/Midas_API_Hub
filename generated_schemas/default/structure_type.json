@@ -1,0 +1,188 @@
+{
+  "title": "Structure Type",
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "required": [
+        "iSTRUCT",
+        "iMASS",
+        "bSELFWT",
+        "dGRAVITY",
+        "dINIT_TEMP"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "bALIGN_BEAM": {
+          "type": "boolean",
+          "description": "Align top of beam section with center line (X-Y Plane) for display",
+          "default": false,
+          "x-ui": {
+            "groupId": "DISPLAY",
+            "label": "Align Top of Beam Section with Center Line (X-Y Plane) for Display"
+          }
+        },
+        "bALIGN_SLAB": {
+          "type": "boolean",
+          "description": "Align top of slab/plate section with center line (X-Y Plane) for display",
+          "default": false,
+          "x-ui": {
+            "groupId": "DISPLAY",
+            "label": "Align Top of Slab(Plate) Section with Center Line (X-Y Plane) for Display"
+          }
+        },
+        "bOFFDIAG": {
+          "type": "boolean",
+          "description": "Consider off-diagonal terms in mass matrix",
+          "default": false,
+          "x-ui": {
+            "groupId": "MASS_CONTROL",
+            "label": "Consider Off-diagonal Masses"
+          },
+          "x-optional-when": {
+            "iMASS": 0
+          }
+        },
+        "bROTMODE": {
+          "type": "boolean",
+          "description": "Consider rotational rigid body mode for modal participation factor",
+          "default": false,
+          "x-ui": {
+            "groupId": "MASS_CONTROL",
+            "label": "Considering Rotational Rigid Body Mode for Modal Participation Factor"
+          },
+          "x-optional-when": {
+            "iMASS": 0
+          }
+        },
+        "bSELFWT": {
+          "type": "boolean",
+          "description": "Convert self-weight into nodal masses",
+          "x-ui": {
+            "groupId": "MASS_CONTROL",
+            "label": "Convert Self-weight into Masses"
+          }
+        },
+        "dGRAVITY": {
+          "type": "number",
+          "description": "Gravitational acceleration value (m/sec²)",
+          "x-ui": {
+            "groupId": "PARAMETERS",
+            "hint": "m/sec²",
+            "label": "Gravity Acceleration"
+          }
+        },
+        "dINIT_TEMP": {
+          "type": "number",
+          "description": "Initial temperature for thermal analysis ([C])",
+          "x-ui": {
+            "groupId": "PARAMETERS",
+            "hint": "[C]",
+            "label": "Initial Temperature"
+          }
+        },
+        "iMASS": {
+          "type": "integer",
+          "description": "Mass matrix type for dynamic analysis",
+          "oneOf": [
+            {
+              "title": "Lumped Mass",
+              "const": 0
+            },
+            {
+              "title": "Consistent Mass",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "groupId": "MASS_CONTROL",
+            "label": "Mass Type"
+          }
+        },
+        "iSELFWT_DIR": {
+          "type": "integer",
+          "description": "Direction for self-weight mass conversion",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "Convert to X, Y, Z",
+              "const": 0
+            },
+            {
+              "title": "Convert to X, Y",
+              "const": 1
+            },
+            {
+              "title": "Convert to Z",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "groupId": "MASS_CONTROL",
+            "label": "Self-weight Direction"
+          },
+          "x-optional-when": {
+            "bSELFWT": true
+          }
+        },
+        "iSTRUCT": {
+          "type": "integer",
+          "description": "Structure type defining the geometry dimension",
+          "oneOf": [
+            {
+              "title": "3-D",
+              "const": 0
+            },
+            {
+              "title": "X-Z Plane",
+              "const": 1
+            },
+            {
+              "title": "Y-Z Plane",
+              "const": 2
+            },
+            {
+              "title": "X-Y Plane",
+              "const": 3
+            },
+            {
+              "title": "Constraint RZ",
+              "const": 4
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "groupId": "STRUCT_TYPE",
+            "label": "Structure Type"
+          }
+        }
+      },
+      "x-ui": {
+        "groups": [
+          {
+            "title": "Structure Type",
+            "id": "STRUCT_TYPE"
+          },
+          {
+            "title": "Mass Control Parameter",
+            "id": "MASS_CONTROL"
+          },
+          {
+            "title": "Parameters",
+            "id": "PARAMETERS"
+          },
+          {
+            "title": "Display Options",
+            "id": "DISPLAY"
+          }
+        ]
+      }
+    }
+  }
+}

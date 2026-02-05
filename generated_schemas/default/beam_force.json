@@ -1,0 +1,252 @@
+{
+  "title": "BeamForce",
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "BEAMFORCE",
+            "BEAMFORCEBYMAX"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Axial",
+              "Shear-y",
+              "Shear-z",
+              "Torsion",
+              "Moment-y",
+              "Moment-z"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "BEAMFORCE": {
+              "Axial": "Axial Force",
+              "Moment-y": "Moment-y",
+              "Moment-z": "Moment-z",
+              "Shear-y": "Shear-y",
+              "Shear-z": "Shear-z",
+              "Torsion": "Torsion"
+            },
+            "BEAMFORCEBYMAX": {
+              "Axial": "Axial Force",
+              "Moment-y": "Moment-y",
+              "Moment-z": "Moment-z",
+              "Shear-y": "Shear-y",
+              "Shear-z": "Shear-z",
+              "Torsion": "Torsion"
+            }
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Node/Element No. Input",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')"
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            }
+          },
+          "x-ui": {
+            "hint": "Use only ONE of the three methods: KEYS, TO, or STRUCTURE_GROUP_NAME",
+            "label": "Node/Element Selection"
+          }
+        },
+        "LOAD_CASE_NAMES": {
+          "type": "array",
+          "description": "Load Case/Combination Names",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "hint": "Static Load or Load Combination names",
+            "label": "Load Cases"
+          }
+        },
+        "PARTS": {
+          "type": "array",
+          "description": "Element Part Number",
+          "items": {
+            "type": "string",
+            "enum": [
+              "All",
+              "Part1",
+              "Part1/4",
+              "Part2/4",
+              "Part3/4",
+              "PartJ"
+            ]
+          },
+          "default": [
+            "All"
+          ],
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Element Parts"
+          }
+        },
+        "OPT_CS": {
+          "type": "boolean",
+          "description": "Activation - Construction Stage Step",
+          "default": false,
+          "x-ui": {
+            "label": "Construction Stage"
+          }
+        },
+        "STAGE_STEP": {
+          "type": "array",
+          "description": "Stage Step Names",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "label": "Stage Steps"
+          },
+          "x-optional-when": {
+            "OPT_CS": true
+          }
+        },
+        "ITEM_TO_DISPLAY": {
+          "type": "array",
+          "description": "SelectComponent",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Axial",
+              "Shear-y",
+              "Shear-z",
+              "Torsion",
+              "Moment-y",
+              "Moment-z"
+            ]
+          },
+          "x-ui": {
+            "component": "MultiSelect",
+            "groupId": "DISPLAY_OPTIONS",
+            "label": "Items to Display"
+          }
+        }
+      },
+      "x-ui": {
+        "groups": [
+          {
+            "title": "Table Information",
+            "id": "TABLE_INFO"
+          },
+          {
+            "title": "Unit & Style",
+            "id": "UNIT_STYLE"
+          },
+          {
+            "title": "Filter",
+            "id": "FILTER"
+          },
+          {
+            "title": "Display Options",
+            "id": "DISPLAY_OPTIONS"
+          }
+        ]
+      }
+    }
+  }
+}

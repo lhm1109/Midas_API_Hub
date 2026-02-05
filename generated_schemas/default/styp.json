@@ -1,0 +1,196 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "STYP",
+          "type": "object",
+          "required": [
+            "STYP",
+            "MASS",
+            "bSELFWEIGHT",
+            "GRAV",
+            "TEMP"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "GRAV": {
+              "type": "number",
+              "description": "Gravity",
+              "x-ui": {
+                "groupId": "PARAMETERS",
+                "hint": "m/sec²",
+                "label": "Gravity Acceleration"
+              }
+            },
+            "MASS": {
+              "type": "integer",
+              "description": "MassType",
+              "oneOf": [
+                {
+                  "title": "Lumped Mass",
+                  "const": 0
+                },
+                {
+                  "title": "Consistent Mass",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "MASS_CONTROL",
+                "label": "Mass Type"
+              }
+            },
+            "SMASS": {
+              "type": "integer",
+              "description": "StructureMassType",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Convert to X, Y, Z",
+                  "const": 0
+                },
+                {
+                  "title": "Convert to X, Y",
+                  "const": 1
+                },
+                {
+                  "title": "Convert to Z",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "MASS_CONTROL",
+                "label": "Self-weight Direction"
+              },
+              "x-optional-when": {
+                "bSELFWEIGHT": true
+              }
+            },
+            "STYP": {
+              "type": "integer",
+              "description": "StructureType",
+              "oneOf": [
+                {
+                  "title": "3-D",
+                  "const": 0
+                },
+                {
+                  "title": "X-Z Plane",
+                  "const": 1
+                },
+                {
+                  "title": "Y-Z Plane",
+                  "const": 2
+                },
+                {
+                  "title": "X-Y Plane",
+                  "const": 3
+                },
+                {
+                  "title": "Constraint RZ",
+                  "const": 4
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "STRUCT_TYPE",
+                "label": "Structure Type"
+              }
+            },
+            "TEMP": {
+              "type": "number",
+              "description": "InitialTemperature",
+              "x-ui": {
+                "groupId": "PARAMETERS",
+                "hint": "[C]",
+                "label": "Initial Temperature"
+              }
+            },
+            "bALIGNBEAM": {
+              "type": "boolean",
+              "description": "AlignTopofBeamSection",
+              "default": false,
+              "x-ui": {
+                "groupId": "DISPLAY",
+                "label": "Align Top of Beam Section with Center Line (X-Y Plane) for Display"
+              }
+            },
+            "bALIGNSLAB": {
+              "type": "boolean",
+              "description": "AlignTopofSlab(Plate)",
+              "default": false,
+              "x-ui": {
+                "groupId": "DISPLAY",
+                "label": "Align Top of Slab(Plate) Section with Center Line (X-Y Plane) for Display"
+              }
+            },
+            "bMASSOFFSET": {
+              "type": "boolean",
+              "description": "ConsiderOffset",
+              "default": false,
+              "x-ui": {
+                "groupId": "MASS_CONTROL",
+                "label": "Consider Off-diagonal Masses"
+              },
+              "x-optional-when": {
+                "MASS": 0
+              }
+            },
+            "bROTRIGID": {
+              "type": "boolean",
+              "description": "ConsideringRotationalRigid",
+              "default": false,
+              "x-ui": {
+                "groupId": "MASS_CONTROL",
+                "label": "Considering Rotational Rigid Body Mode for Modal Participation Factor"
+              },
+              "x-optional-when": {
+                "MASS": 0
+              }
+            },
+            "bSELFWEIGHT": {
+              "type": "boolean",
+              "description": "ConvertSelfWeigth",
+              "x-ui": {
+                "groupId": "MASS_CONTROL",
+                "label": "Convert Self-weight into Masses"
+              }
+            }
+          },
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Structure Type",
+                "id": "STRUCT_TYPE"
+              },
+              {
+                "title": "Mass Control Parameter",
+                "id": "MASS_CONTROL"
+              },
+              {
+                "title": "Parameters",
+                "id": "PARAMETERS"
+              },
+              {
+                "title": "Display Options",
+                "id": "DISPLAY"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

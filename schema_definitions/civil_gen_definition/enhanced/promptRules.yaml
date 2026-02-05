@@ -133,6 +133,88 @@ tableDetectionRules:
           ❌ "ELEMENT_TYPE": { "enum": ["TRUSS", "BEAM"], ... }
 
 # ============================================================================
+# WRAPPER SELECTION RULES - entityType 선택 가이드라인
+# ============================================================================
+wrapperSelectionRules:
+  title: "🔥 MANDATORY: Entity Type Selection (collection vs single)"
+  
+  overview: |
+    MCP는 두 가지 래핑 타입을 지원:
+    - 'collection': Entity Collection (ELEM, NODE 등) → patternProperties 래핑
+    - 'single': Single Object (Settings, Config 등) → 직접 properties 래핑
+  
+  entityTypeCollection:
+    description: "ID 기반 Entity Collection - patternProperties 사용"
+    when:
+      - "스키마가 ELEM, NODE, MATL, SECT 등 entity를 정의"
+      - "API가 { '1': {...}, '2': {...} } 형태로 데이터 전송"
+      - "여러 개의 동일 구조 항목을 ID로 관리"
+    
+    patterns:
+      - "elem, node, matl, sect, thik, bndr, spring, link"
+      - "tendon, cable, rebar, group, line"
+    
+    usage: |
+      mcp_api-schema_save_schema({
+        schemaName: "elem",
+        entityType: "collection",  // ← 명시적
+        ...
+      })
+    
+    output: |
+      {
+        "Assign": {
+          "patternProperties": {
+            "^[0-9]+$": { ... }
+          }
+        }
+      }
+  
+  entityTypeSingle:
+    description: "단일 설정 객체 - 직접 properties 사용"
+    when:
+      - "스키마가 설정/옵션/코드를 정의"
+      - "API가 단일 객체 { key: value } 형태로 데이터 전송"
+      - "Structure Type, Design Code, Settings 등"
+    
+    patterns:
+      - "settings, config, option, type, code"
+      - "preference, parameter, control, analysis"
+    
+    usage: |
+      mcp_api-schema_save_schema({
+        schemaName: "structure_type",
+        entityType: "single",  // ← 명시적
+        ...
+      })
+    
+    output: |
+      {
+        "Assign": {
+          "properties": { ... }
+        }
+      }
+  
+  autoDetection: |
+    entityType을 명시하지 않으면 schemaName에서 자동 감지:
+    - 'settings', 'config', 'preference' 포함 → 'single'
+    - 기타 모든 경우 → 'collection' (Midas API 기본값)
+    
+    ⚠️ 대부분의 Midas API는 Entity Collection 형태:
+    { "Assign": { "1": {...}, "2": {...} } }
+  
+  decisionFlowchart: |
+    START
+     ↓
+    [1] schemaName에 'settings', 'config', 'type', 'code' 포함?
+     ├─ YES → entityType: "single"
+     └─ NO → Continue to [2]
+    
+    [2] schemaName에 'elem', 'node', 'matl', 'sect' 등 포함?
+     ├─ YES → entityType: "collection"
+     └─ NO → Default to "single"
+
+# ============================================================================
 # FIELD NAMING RULES
 # ============================================================================
 fieldNaming:

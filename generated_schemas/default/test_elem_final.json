@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "NODE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "NODE": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Node"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

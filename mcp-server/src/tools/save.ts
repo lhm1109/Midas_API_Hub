@@ -22,8 +22,9 @@ export interface SaveSchemaInput {
     questions?: Question[];
     skipValidation?: boolean;
     confirmed?: boolean;  // NEW: Set to true to skip review and save directly
-    wrapWithEntityCollection?: boolean;
-    wrapWithSimpleObject?: boolean;
+    entityType?: 'collection' | 'single';  // NEW: Explicit entity type selection
+    wrapWithEntityCollection?: boolean;  // DEPRECATED: use entityType: 'collection'
+    wrapWithSimpleObject?: boolean;  // DEPRECATED: use entityType: 'single'
     generateTableSchema?: boolean;
     tableTypeEnums?: string[];
     componentEnums?: string[];
@@ -177,15 +178,32 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
             */
         }
 
-        // 4. Wrap with entity collection structure if requested
-        if (input.wrapWithEntityCollection) {
-            const bodyRoot = input.bodyRoot || 'Assign';
-            schema = wrapWithEntityCollectionStructure(schema, bodyRoot);
+        // 4. Determine entity type with priority: explicit entityType > legacy options > auto-detect
+        const bodyRoot = input.bodyRoot || 'Assign';
+        let effectiveEntityType: 'collection' | 'single' | null = null;
+
+        if (input.entityType) {
+            // Priority 1: Explicit entityType parameter
+            effectiveEntityType = input.entityType;
+            console.error(`[WRAPPER] Using explicit entityType: ${effectiveEntityType}`);
+        } else if (input.wrapWithEntityCollection) {
+            // Priority 2: Legacy wrapWithEntityCollection
+            effectiveEntityType = 'collection';
+            console.error('[WRAPPER] Using legacy wrapWithEntityCollection → collection');
+        } else if (input.wrapWithSimpleObject) {
+            // Priority 3: Legacy wrapWithSimpleObject
+            effectiveEntityType = 'single';
+            console.error('[WRAPPER] Using legacy wrapWithSimpleObject → single');
+        } else {
+            // Priority 4: Auto-detect from schemaName
+            effectiveEntityType = detectEntityType(input.schemaName);
+            console.error(`[WRAPPER] Auto-detected entityType from name "${input.schemaName}": ${effectiveEntityType}`);
         }
 
-        // 4b. Wrap with simple object structure if requested (for POST table schemas)
-        if (input.wrapWithSimpleObject) {
-            const bodyRoot = input.bodyRoot || 'Argument';
+        // Apply wrapping based on entityType
+        if (effectiveEntityType === 'collection') {
+            schema = wrapWithEntityCollectionStructure(schema, bodyRoot);
+        } else if (effectiveEntityType === 'single') {
             schema = wrapWithSimpleObjectStructure(schema, bodyRoot);
         }
 
@@ -294,6 +312,38 @@ function detectTableSchema(schemaName: string): boolean {
 
     const lowerName = schemaName.toLowerCase();
     return tableKeywords.some(keyword => lowerName.includes(keyword));
+}
+
+/**
+ * Auto-detect entity type based on schema name patterns
+ * @returns 'collection' for entity collections (most Midas APIs), 'single' for explicit settings/config
+ * 
+ * Note: Most Midas APIs use Entity Collection format (Assign: { "1": {...} })
+ * Only explicit settings/config dialogs use single format
+ */
+function detectEntityType(schemaName: string): 'collection' | 'single' {
+    const lowerName = schemaName.toLowerCase();
+
+    // Single Object patterns (ONLY explicit settings/config - very restrictive)
+    // These are for dialogs that have a single configuration, not ID-keyed entities
+    const singlePatterns = [
+        'settings',     // General settings (explicit)
+        'config',       // Configuration (explicit)
+        'preference',   // Preferences (explicit)
+        // ❌ Removed: 'type', 'code', 'option', 'parameter', 'control', 'analysis'
+        // These were too broad and incorrectly matched entity schemas like STYP
+    ];
+
+    // Check single patterns (only if explicitly a settings/config dialog)
+    if (singlePatterns.some(pattern => lowerName.includes(pattern))) {
+        console.error(`[WRAPPER] Auto-detected as 'single' (matched settings pattern)`);
+        return 'single';
+    }
+
+    // Default to 'collection' (most Midas APIs are Entity Collections)
+    // Format: { "Assign": { "1": {...}, "2": {...} } }
+    console.error(`[WRAPPER] Auto-detected as 'collection' (default for Midas API)`);
+    return 'collection';
 }
 
 /**
@@ -725,14 +775,22 @@ Example: questions: [{ field: "sDESIGN_CD", question: "What are all dropdown opt
                 description: 'Skip validation (for debugging)',
                 default: false,
             },
+            entityType: {
+                type: 'string',
+                enum: ['collection', 'single'],
+                description: `Entity type for wrapper structure:
+- 'collection': Entity Collection (ELEM, NODE, MATL) → patternProperties wrapper
+- 'single': Single Object (Settings, Config) → direct properties wrapper
+If not specified, auto-detected from schemaName patterns.`,
+            },
             wrapWithEntityCollection: {
                 type: 'boolean',
-                description: 'Wrap schema with Assign → additionalProperties structure (for entity collection APIs)',
+                description: '[DEPRECATED - use entityType: "collection"] Wrap schema with Assign → patternProperties structure (for entity collection APIs)',
                 default: false,
             },
             wrapWithSimpleObject: {
                 type: 'boolean',
-                description: 'Wrap schema with simple Argument object structure. REQUIRED for ALL Table POST body schemas (e.g., dialogs, activation, filtering). Use together with generateTableSchema.',
+                description: '[DEPRECATED - use entityType: "single"] Wrap schema with simple Assign/Argument object structure.',
                 default: false,
             },
             generateTableSchema: {

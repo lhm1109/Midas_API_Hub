@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "TYPE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "enum": [
+                "BEAM",
+                "TRUSS"
+              ],
+              "x-ui": {
+                "label": "Type"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

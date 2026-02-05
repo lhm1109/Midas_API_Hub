@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Structure Type",
+          "type": "object",
+          "required": [
+            "iSTRUCT"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "iSTRUCT": {
+              "type": "integer",
+              "description": "Structure type",
+              "oneOf": [
+                {
+                  "title": "3-D",
+                  "const": 0
+                },
+                {
+                  "title": "X-Z Plane",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "label": "Structure Type"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

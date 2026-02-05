@@ -1,0 +1,631 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "ELEM",
+          "type": "object",
+          "required": [
+            "TYPE",
+            "MATL",
+            "NODE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ANGLE": {
+              "type": "number",
+              "description": "ELEMENTANGLE",
+              "default": 0,
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Beta Angle"
+              }
+            },
+            "CABLE": {
+              "type": "integer",
+              "description": "CABLEOPTION",
+              "oneOf": [
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Option 2",
+                  "const": 2
+                },
+                {
+                  "title": "Option 3",
+                  "const": 3
+                }
+              ],
+              "x-ui": {
+                "groupId": "TC_CABLE",
+                "label": "Cable Type"
+              },
+              "x-enum-labels": {
+                "1": "Pretension",
+                "2": "Horizontal",
+                "3": "Lu"
+              },
+              "x-optional-when": {
+                "STYPE": 3,
+                "TYPE": "TENSTR"
+              }
+            },
+            "C_RAT": {
+              "type": "number",
+              "description": "CABLELENGTHRATIO",
+              "x-ui": {
+                "groupId": "TC_CABLE",
+                "label": "Cable Length Ratio"
+              },
+              "x-optional-when": {
+                "STYPE": 3,
+                "TYPE": "TENSTR"
+              }
+            },
+            "LCAXIS": {
+              "type": "integer",
+              "description": "LOCALAXIS",
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Local Axis"
+              }
+            },
+            "MATL": {
+              "type": "integer",
+              "description": "MATERIALNUM",
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Material No."
+              }
+            },
+            "NODE": {
+              "type": "array",
+              "description": "NODENUM",
+              "items": {
+                "type": "integer"
+              },
+              "maxItems": 8,
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Node No."
+              }
+            },
+            "NON_LEN": {
+              "type": "number",
+              "description": "NONLINIARLENGTH",
+              "default": 0,
+              "x-ui": {
+                "groupId": "TENSTR",
+                "label": "Nonlinear Length"
+              },
+              "x-optional-when": {
+                "TYPE": "TENSTR"
+              }
+            },
+            "SECT": {
+              "type": "integer",
+              "description": "SECTIONNUM",
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Section / Thickness No."
+              }
+            },
+            "STYPE": {
+              "type": "integer",
+              "description": "ELEMENTSUBTYPE",
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Element Subtype"
+              },
+              "x-enum-labels-by-type": {
+                "COMPTR": {
+                  "1": "Truss",
+                  "2": "Gap"
+                },
+                "PLATE": {
+                  "1": "Thick",
+                  "2": "Thin",
+                  "3": "Thick with Drilling DOF",
+                  "4": "Thin with Drilling DOF"
+                },
+                "PLSTRS": {
+                  "1": "With Drilling DOF Inactive",
+                  "2": "With Drilling DOF Active"
+                },
+                "TENSTR": {
+                  "1": "Truss",
+                  "2": "Hook",
+                  "3": "Cable"
+                },
+                "WALL": {
+                  "1": "Membrane",
+                  "2": "Plate"
+                }
+              }
+            },
+            "TENS": {
+              "type": "number",
+              "description": "TENSFORCE",
+              "default": 0,
+              "x-ui": {
+                "groupId": "TENSTR",
+                "label": "Tension / Compression"
+              },
+              "x-optional-when": {
+                "TYPE": "TENSTR"
+              }
+            },
+            "TYPE": {
+              "type": "string",
+              "description": "ELEMENTTYPE",
+              "enum": [
+                "BEAM",
+                "TRUSS",
+                "TENSTR",
+                "COMPTR",
+                "PLATE",
+                "WALL",
+                "PLSTRS",
+                "PLSTRN",
+                "AXISYM",
+                "SOLID"
+              ],
+              "x-ui": {
+                "groupId": "COMMON",
+                "label": "Element Type"
+              }
+            },
+            "T_LIMIT": {
+              "type": "number",
+              "description": "TENSLIMIT",
+              "default": 0,
+              "x-ui": {
+                "groupId": "TENSTR",
+                "label": "Force Limit Value"
+              },
+              "x-optional-when": {
+                "TYPE": "TENSTR"
+              }
+            },
+            "T_bLMT": {
+              "type": "boolean",
+              "description": "USETENSLIMIT?",
+              "default": false,
+              "x-ui": {
+                "groupId": "TENSTR",
+                "label": "Use Force Limit"
+              },
+              "x-optional-when": {
+                "TYPE": "TENSTR"
+              }
+            },
+            "WALL": {
+              "type": "integer",
+              "description": "WALLID",
+              "x-ui": {
+                "groupId": "WALL",
+                "label": "Wall ID"
+              },
+              "x-optional-when": {
+                "TYPE": "WALL"
+              }
+            },
+            "W_CON": {
+              "type": "integer",
+              "description": "CONNECTEDNODENUM",
+              "oneOf": [
+                {
+                  "title": "Option 0",
+                  "const": 0
+                },
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Option 2",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "groupId": "WALL",
+                "label": "Orientation"
+              },
+              "x-enum-labels": {
+                "0": "Beta Angle",
+                "1": "Reference Point",
+                "2": "Reference Vector"
+              },
+              "x-optional-when": {
+                "TYPE": "WALL"
+              }
+            },
+            "W_TYPE": {
+              "type": "integer",
+              "description": "WALLTYPE",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Option 0",
+                  "const": 0
+                },
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Option 2",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "groupId": "WALL",
+                "label": "Wall Type"
+              },
+              "x-enum-labels": {
+                "0": "Plate Base",
+                "1": "CRB - Pin",
+                "2": "CRB - Fixed"
+              },
+              "x-optional-when": {
+                "TYPE": "WALL"
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "enum": [
+                      "BEAM",
+                      "TRUSS",
+                      "TENSTR",
+                      "COMPTR",
+                      "PLATE",
+                      "WALL",
+                      "PLSTRS",
+                      "PLSTRN",
+                      "AXISYM"
+                    ]
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "SECT"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "BEAM"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "NODE": {
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "TRUSS"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "NODE": {
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "TENSTR"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STYPE",
+                  "NON_LEN"
+                ],
+                "properties": {
+                  "NODE": {
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "STYPE": {
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "COMPTR"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STYPE"
+                ],
+                "properties": {
+                  "NODE": {
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "STYPE": {
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "PLATE"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STYPE"
+                ],
+                "properties": {
+                  "NODE": {
+                    "minItems": 3,
+                    "maxItems": 4
+                  },
+                  "STYPE": {
+                    "enum": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "WALL"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STYPE",
+                  "WALL",
+                  "W_CON"
+                ],
+                "properties": {
+                  "NODE": {
+                    "minItems": 4,
+                    "maxItems": 4
+                  },
+                  "STYPE": {
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "PLSTRS"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STYPE"
+                ],
+                "properties": {
+                  "NODE": {
+                    "minItems": 3,
+                    "maxItems": 4
+                  },
+                  "STYPE": {
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "PLSTRN"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "NODE": {
+                    "minItems": 3,
+                    "maxItems": 4
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "AXISYM"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "NODE": {
+                    "minItems": 3,
+                    "maxItems": 4
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE"
+                ],
+                "properties": {
+                  "TYPE": {
+                    "const": "SOLID"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "NODE": {
+                    "oneOf": [
+                      {
+                        "minItems": 4,
+                        "maxItems": 4
+                      },
+                      {
+                        "minItems": 6,
+                        "maxItems": 6
+                      },
+                      {
+                        "minItems": 8,
+                        "maxItems": 8
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TYPE",
+                  "STYPE"
+                ],
+                "properties": {
+                  "STYPE": {
+                    "const": 3
+                  },
+                  "TYPE": {
+                    "const": "TENSTR"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "CABLE"
+                ]
+              }
+            }
+          ],
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Common Keys",
+                "id": "COMMON"
+              },
+              {
+                "title": "Tension Only (TENSTR)",
+                "id": "TENSTR"
+              },
+              {
+                "title": "Compression Only (COMPTR)",
+                "id": "COMPTR"
+              },
+              {
+                "title": "Cable (TENSTR - STYPE 3)",
+                "id": "TC_CABLE"
+              },
+              {
+                "title": "Wall",
+                "id": "WALL"
+              },
+              {
+                "title": "Plate",
+                "id": "PLATE"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
