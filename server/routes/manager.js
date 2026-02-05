@@ -21,7 +21,7 @@ router.get('/tasks', async (req, res) => {
     const { data: tasks, error } = await supabase
       .from('manager_tasks')
       .select('*')
-      .order('created_at', { ascending: true });
+      .order('order_index', { ascending: true });
 
     if (error) throw error;
 

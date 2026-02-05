@@ -118,74 +118,105 @@ export function ManagerProgress({
     }
   };
 
-  // CSV Export
+  // Excel Export (두 개의 시트: 데이터 + 가이드)
   const handleExportCSV = () => {
     try {
-      // CSV 헤더 (deploy 추가)
-      const headers = ['Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
+      // 데이터 시트 준비
+      const headers = ['Order', 'Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
 
-      // CSV 데이터 생성 (데이터베이스 순서 유지: created_at 기준 정렬)
-      const csvRows = [headers.join(',')];
-
-      // 데이터베이스 삽입 순서대로 정렬
+      // 데이터베이스 순서대로 정렬 (order_index 기준)
       const sortedTasks = [...tasks].sort((a, b) => {
-        const aTime = new Date(a.created_at || 0).getTime();
-        const bTime = new Date(b.created_at || 0).getTime();
-        return aTime - bTime;
+        const aOrder = (a as any).order_index ?? 999999;
+        const bOrder = (b as any).order_index ?? 999999;
+        return aOrder - bOrder;
       });
 
-      sortedTasks.forEach(task => {
-        const row = [
-          task.product,
-          task.tab,
-          task.group,
-          task.sub1,
-          task.sub2,
-          task.sub3,
-          task.seg1,
-          task.seg2,
-          task.endPoint,
-          task.mode,
-          task.plan,
-          task.dev,
-          task.vv,
-          task.doc,
-          task.deploy || '',  // deploy 컬럼 추가
-          task.issue,
-          task.status,
-          task.charge,
-          task.remark,
-        ].map(value => {
-          // 'empty' 값은 빈 문자열로 변환 (CSV 가독성 향상)
-          let str = String(value || '');
-          if (str === 'empty') {
-            str = '';
-          }
+      // 데이터 행 생성 (Order 컬럼 추가)
+      const dataRows = sortedTasks.map((task, index) => [
+        index + 1,  // Order 번호 (1부터 시작)
+        task.product,
+        task.tab,
+        task.group,
+        task.sub1,
+        task.sub2,
+        task.sub3,
+        task.seg1,
+        task.seg2,
+        task.endPoint,
+        task.mode,
+        task.plan === 'empty' ? '' : task.plan,
+        task.dev === 'empty' ? '' : task.dev,
+        task.vv === 'empty' ? '' : task.vv,
+        task.doc === 'empty' ? '' : task.doc,
+        task.deploy === 'empty' ? '' : (task.deploy || ''),
+        task.issue === 'empty' ? '' : task.issue,
+        task.status,
+        task.charge,
+        task.remark,
+      ]);
 
-          // CSV 이스케이프: 쉼표나 따옴표가 있으면 감싸기
-          if (str.includes(',') || str.includes('"') || str.includes('\n')) {
-            return `"${str.replace(/"/g, '""')}"`;
-          }
-          return str;
-        });
-        csvRows.push(row.join(','));
-      });
+      // 시트 1: 데이터
+      const dataSheet = XLSX.utils.aoa_to_sheet([headers, ...dataRows]);
 
-      // BOM 추가 (엑셀에서 한글 깨짐 방지)
-      const csvContent = '\uFEFF' + csvRows.join('\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
+      // 시트 2: 참조 가이드
+      const guideData = [
+        ['입력 가능한 값 참조 가이드'],
+        [],
+        ['필드', '입력 가능한 값', '설명'],
+        ['Plan', '(빈 값)', '시작 안함'],
+        ['', 'progress', '작업 중'],
+        ['', 'done', '완료'],
+        ['', 'warning', '경고/문제'],
+        [],
+        ['Dev', '(빈 값)', '시작 안함'],
+        ['', 'progress', '작업 중'],
+        ['', 'done', '완료'],
+        ['', 'warning', '경고/문제'],
+        [],
+        ['V&V', '(빈 값)', '시작 안함'],
+        ['', 'progress', '작업 중'],
+        ['', 'done', '완료'],
+        ['', 'warning', '경고/문제'],
+        [],
+        ['doc', '(빈 값)', '시작 안함'],
+        ['', 'progress', '작업 중'],
+        ['', 'done', '완료'],
+        ['', 'warning', '경고/문제'],
+        [],
+        ['Deploy', '(빈 값)', '시작 안함'],
+        ['', 'progress', '작업 중'],
+        ['', 'done', '완료'],
+        ['', 'warning', '경고/문제'],
+        [],
+        ['Issue', '(빈 값)', '시작 안함'],
+        ['', 'progress', '작업 중'],
+        ['', 'done', '완료'],
+        ['', 'warning', '경고/문제'],
+        [],
+        ['status', 'progress', '진행 중'],
+        ['', 'done', '완료'],
+        ['', 'cancel', '취소'],
+        ['', 'working', '작업 중'],
+        ['', 'none', '없음'],
+        [],
+        ['※ 참고사항'],
+        ['- 대소문자 구분 없이 입력 가능합니다 (예: Done, done, DONE 모두 동일)'],
+        ['- status를 "done"으로 설정하면 모든 단계가 자동으로 "done"이 됩니다'],
+        ['- 개별 단계를 수정하면 status는 자동으로 "progress"로 변경됩니다'],
+      ];
 
-      link.setAttribute('href', url);
-      link.setAttribute('download', `manager_tasks_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const guideSheet = XLSX.utils.aoa_to_sheet(guideData);
+
+      // 워크북 생성
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, dataSheet, 'Tasks');
+      XLSX.utils.book_append_sheet(workbook, guideSheet, '입력 가이드');
+
+      // 파일 다운로드
+      XLSX.writeFile(workbook, `manager_tasks_${new Date().toISOString().split('T')[0]}.xlsx`);
     } catch (error) {
-      console.error('Failed to export CSV:', error);
-      alert('CSV 내보내기 실패');
+      console.error('Failed to export Excel:', error);
+      alert('Excel 내보내기 실패');
     }
   };
 
@@ -204,6 +235,7 @@ export function ManagerProgress({
 
     // 필드명을 헤더 인덱스에 매핑
     const fieldMapping = {
+      order: ['order', 'no', 'number', '#'],  // Order 컬럼 매핑 추가
       product: ['product'],
       tab: ['tab'],
       group: ['group'],
@@ -303,9 +335,10 @@ export function ManagerProgress({
               doc: toStatusType(getField(row, 'doc')),
               deploy: toStatusType(getField(row, 'deploy')),
               issue: toStatusType(getField(row, 'issue')),
-              status: getField(row, 'status') || 'none',
+              status: (getField(row, 'status') || 'none').toLowerCase(), // 대소문자 통일
               charge: getField(row, 'charge'),
               remark: getField(row, 'remark'),
+              order_index: parseInt(getField(row, 'order')) || (index + 1), // Order 컬럼 값 사용, 없으면 행 순서
             };
           });
 
@@ -333,7 +366,13 @@ export function ManagerProgress({
     reader.onload = async (e) => {
       try {
         const text = e.target?.result as string;
-        const lines = text.split('\n').filter(line => line.trim());
+        const lines = text.split('\n')
+          .filter(line => line.trim())  // 빈 라인 제거
+          .filter(line => !line.startsWith('==='))  // 가이드 섹션 구분선 제거
+          .filter(line => !line.startsWith('-'))    // 가이드 리스트 항목 제거
+          .filter(line => !line.startsWith('※'))    // 가이드 참고사항 제거
+          .filter(line => !line.includes('입력 가능한 값'))  // 가이드 제목 제거
+          .filter(line => !line.includes('필드:'));  // 가이드 필드 설명 제거
 
         if (lines.length < 2) {
           alert('CSV 파일이 비어있거나 형식이 잘못되었습니다.');
@@ -411,9 +450,10 @@ export function ManagerProgress({
             doc: toStatusType(getField(values, 'doc')),
             deploy: toStatusType(getField(values, 'deploy')),
             issue: toStatusType(getField(values, 'issue')),
-            status: getField(values, 'status') || 'none',
+            status: (getField(values, 'status') || 'none').toLowerCase(), // 대소문자 통일
             charge: getField(values, 'charge'),
             remark: getField(values, 'remark'),
+            order_index: parseInt(getField(values, 'order')) || (index + 1), // Order 컬럼 값 사용, 없으면 행 순서
           };
         });
 

@@ -27,8 +27,11 @@ export interface ApiTask {
   charge: string;
   remark: string;
   linkedEndpointId?: string; // 프로젝트 탭 엔드포인트 연결
+  order_index?: number; // 정렬 순서
+  created_at?: string; // 생성 시간
+  updated_at?: string; // 수정 시간
   // 커스텀 필드는 여기에 추가 가능
-  [key: string]: string | StatusType | undefined;
+  [key: string]: string | StatusType | number | undefined;
 }
 
 export interface Column {

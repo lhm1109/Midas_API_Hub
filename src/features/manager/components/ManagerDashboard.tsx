@@ -16,8 +16,8 @@ interface ManagerDashboardProps {
 export function ManagerDashboard({ tasks }: ManagerDashboardProps) {
   // 통계 계산
   const totalTasks = tasks.length;
-  const completedTasks = tasks.filter((task) => task.status === 'Done').length;
-  const workingTasks = tasks.filter((task) => task.status === 'In Progress').length;
+  const completedTasks = tasks.filter((task) => task.status === 'done').length;
+  const workingTasks = tasks.filter((task) => task.status === 'progress').length;
   const pendingTasks = totalTasks - completedTasks - workingTasks;
 
   const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
@@ -25,7 +25,7 @@ export function ManagerDashboard({ tasks }: ManagerDashboardProps) {
   // 개발 상태 통계
   const devStats = {
     completed: tasks.filter((task) => task.dev === 'done').length,
-    inProgress: tasks.filter((task) => task.dev === 'wip').length,
+    inProgress: tasks.filter((task) => task.dev === 'progress').length,
     blocked: tasks.filter((task) => task.dev === 'warning').length,
   };
 
@@ -128,13 +128,13 @@ export function ManagerDashboard({ tasks }: ManagerDashboardProps) {
       {(() => {
         // status가 'In Progress'인 작업들만 필터링
         const inProgressTasks = tasks.filter((task) =>
-          task.status === 'In Progress'
+          task.status === 'progress'
         );
         const inProgressTotal = inProgressTasks.length;
 
         // In Progress 작업들 중 dev가 done(완료)인 것들
         const inProgressCompleted = inProgressTasks.filter((task) => task.dev === 'done').length;
-        const inProgressWorking = inProgressTasks.filter((task) => task.dev === 'wip').length;
+        const inProgressWorking = inProgressTasks.filter((task) => task.dev === 'progress').length;
         const inProgressPending = inProgressTotal - inProgressCompleted - inProgressWorking;
 
         const inProgressRate = inProgressTotal > 0 ? (inProgressCompleted / inProgressTotal) * 100 : 0;
@@ -258,10 +258,10 @@ export function ManagerDashboard({ tasks }: ManagerDashboardProps) {
                 className="flex items-start gap-3 pb-3 border-b border-zinc-800 last:border-0"
               >
                 <div className="mt-1">
-                  {task.status === 'Done' && (
+                  {task.status === 'done' && (
                     <CheckCircle2 className="w-4 h-4 text-green-600" />
                   )}
-                  {task.status === 'Working' && (
+                  {task.status === 'working' && (
                     <Loader2 className="w-4 h-4 text-blue-600" />
                   )}
                   {!task.status && <Circle className="w-4 h-4 text-zinc-600" />}

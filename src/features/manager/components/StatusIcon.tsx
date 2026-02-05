@@ -55,7 +55,10 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  if (status === "progress") {
+  // 대소문자 구분 없이 처리하기 위해 소문자로 변환
+  const normalizedStatus = (status || '').toLowerCase();
+
+  if (normalizedStatus === "progress") {
     return (
       <div
         className={cn(
@@ -69,7 +72,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     );
   }
 
-  if (status === "done") {
+  if (normalizedStatus === "done") {
     return (
       <div
         className={cn(
@@ -83,7 +86,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     );
   }
 
-  if (status === "cancel") {
+  if (normalizedStatus === "cancel") {
     return (
       <div
         className={cn(
@@ -96,7 +99,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     );
   }
 
-  if (status === "working") {
+  if (normalizedStatus === "working") {
     return (
       <div
         className={cn(

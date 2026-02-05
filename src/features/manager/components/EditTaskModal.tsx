@@ -60,7 +60,29 @@ export function EditTaskModal({
 
   const handleChange = (field: string, value: string | StatusType) => {
     if (formData) {
-      setFormData({ ...formData, [field]: value });
+      // 상태 필드 목록
+      const statusFields = ['plan', 'dev', 'vv', 'doc', 'deploy', 'issue'];
+
+      // Case 1: status를 'done'으로 변경 → 모든 상태 필드를 'done'으로 설정
+      if (field === 'status' && value === 'done') {
+        const updates: Partial<ApiTask> = { status: value };
+        statusFields.forEach(f => {
+          updates[f as keyof ApiTask] = 'done' as any;
+        });
+        setFormData({ ...formData, ...updates });
+      }
+      // Case 2: 상태 필드 중 하나를 변경 → status가 'done'이면 해제
+      else if (statusFields.includes(field) && formData.status === 'done') {
+        setFormData({
+          ...formData,
+          [field]: value,
+          status: 'progress'  // done에서 progress로 변경
+        });
+      }
+      // Case 3: 일반적인 변경
+      else {
+        setFormData({ ...formData, [field]: value });
+      }
     }
   };
 
