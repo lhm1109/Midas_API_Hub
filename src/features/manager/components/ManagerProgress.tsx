@@ -149,8 +149,13 @@ export function ManagerProgress({
           task.charge,
           task.remark,
         ].map(value => {
+          // 'empty' 값은 빈 문자열로 변환 (CSV 가독성 향상)
+          let str = String(value || '');
+          if (str === 'empty') {
+            str = '';
+          }
+
           // CSV 이스케이프: 쉼표나 따옴표가 있으면 감싸기
-          const str = String(value || '');
           if (str.includes(',') || str.includes('"') || str.includes('\n')) {
             return `"${str.replace(/"/g, '""')}"`;
           }
@@ -267,6 +272,12 @@ export function ManagerProgress({
           const getField = createHeaderMapper(headers);
 
           const newTasks: ApiTask[] = dataRows.map((row, index) => {
+            // 빈 값을 'empty'로 변환하는 헬퍼 함수
+            const toStatusType = (value: string): any => {
+              const trimmed = (value || '').trim();
+              return trimmed === '' ? 'empty' : trimmed;
+            };
+
             return {
               id: `imported-${Date.now()}-${index}`,
               product: getField(row, 'product'),
@@ -279,13 +290,13 @@ export function ManagerProgress({
               seg2: getField(row, 'seg2'),
               endPoint: getField(row, 'endPoint'),
               mode: getField(row, 'mode'),
-              plan: (getField(row, 'plan') as any) || 'empty',
-              dev: (getField(row, 'dev') as any) || 'empty',
-              vv: (getField(row, 'vv') as any) || 'empty',
-              doc: (getField(row, 'doc') as any) || 'empty',
-              deploy: (getField(row, 'deploy') as any) || 'empty',
-              issue: (getField(row, 'issue') as any) || 'empty',
-              status: getField(row, 'status'),
+              plan: toStatusType(getField(row, 'plan')),
+              dev: toStatusType(getField(row, 'dev')),
+              vv: toStatusType(getField(row, 'vv')),
+              doc: toStatusType(getField(row, 'doc')),
+              deploy: toStatusType(getField(row, 'deploy')),
+              issue: toStatusType(getField(row, 'issue')),
+              status: getField(row, 'status') || 'none',
               charge: getField(row, 'charge'),
               remark: getField(row, 'remark'),
             };
@@ -369,6 +380,12 @@ export function ManagerProgress({
           // CSV 파싱 (따옴표 내 쉼표 올바르게 처리)
           const values = parseCSVLine(line);
 
+          // 빈 값을 'empty'로 변환하는 헬퍼 함수
+          const toStatusType = (value: string): any => {
+            const trimmed = (value || '').trim();
+            return trimmed === '' ? 'empty' : trimmed;
+          };
+
           return {
             id: `imported-${Date.now()}-${index}`,
             product: getField(values, 'product'),
@@ -381,13 +398,13 @@ export function ManagerProgress({
             seg2: getField(values, 'seg2'),
             endPoint: getField(values, 'endPoint'),
             mode: getField(values, 'mode'),
-            plan: (getField(values, 'plan') as any) || 'empty',
-            dev: (getField(values, 'dev') as any) || 'empty',
-            vv: (getField(values, 'vv') as any) || 'empty',
-            doc: (getField(values, 'doc') as any) || 'empty',
-            deploy: (getField(values, 'deploy') as any) || 'empty',
-            issue: (getField(values, 'issue') as any) || 'empty',
-            status: getField(values, 'status'),
+            plan: toStatusType(getField(values, 'plan')),
+            dev: toStatusType(getField(values, 'dev')),
+            vv: toStatusType(getField(values, 'vv')),
+            doc: toStatusType(getField(values, 'doc')),
+            deploy: toStatusType(getField(values, 'deploy')),
+            issue: toStatusType(getField(values, 'issue')),
+            status: getField(values, 'status') || 'none',
             charge: getField(values, 'charge'),
             remark: getField(values, 'remark'),
           };
