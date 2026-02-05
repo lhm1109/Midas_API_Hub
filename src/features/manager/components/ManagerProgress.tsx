@@ -124,10 +124,17 @@ export function ManagerProgress({
       // CSV 헤더 (deploy 추가)
       const headers = ['Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
 
-      // CSV 데이터 생성
+      // CSV 데이터 생성 (데이터베이스 순서 유지: created_at 기준 정렬)
       const csvRows = [headers.join(',')];
 
-      tasks.forEach(task => {
+      // 데이터베이스 삽입 순서대로 정렬
+      const sortedTasks = [...tasks].sort((a, b) => {
+        const aTime = new Date(a.created_at || 0).getTime();
+        const bTime = new Date(b.created_at || 0).getTime();
+        return aTime - bTime;
+      });
+
+      sortedTasks.forEach(task => {
         const row = [
           task.product,
           task.tab,
