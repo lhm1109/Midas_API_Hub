@@ -89,12 +89,10 @@ precedence:
 integrityRules:
   # markerId는 반드시 markerRegistry.id에 존재해야 함
   requireMarkerIdInRegistry: true
-  # sectionId는 반드시 sectionRegistry.id에 존재해야 함
-  requireSectionIdInRegistry: true
   # condition.type은 반드시 conditionRegistry.type에 존재해야 함
   requireConditionTypeInRegistry: true
-  # x-ui.sectionId는 반드시 sectionRegistry.id에 존재해야 함
-  requireXuiSectionIdInRegistry: true
+  # 🆕 x-ui.groupId는 반드시 ui.yaml의 groups에 존재해야 함 (optional validation)
+  requireGroupIdInUiGroups: false  # Set to true when ui.yaml groups validation is implemented
 
 # ============================================================================
 # REGISTRIES
@@ -141,18 +139,6 @@ markerRegistry:
     description: "Transport 정보 (uri, method, bodyRoot)"
     pureUI: true
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # Enum 라벨 (검증 X, UI 표시용 라벨만)
-  # ────────────────────────────────────────────────────────────────────────────
-  - id: MARKER_ENUM_LABELS
-    key: "x-enum-labels"
-    description: "enum 값에 대한 라벨 (UI 표시용, 검증 무관)"
-    pureUI: true
-    example: |
-      x-enum-labels:
-        "1": "Pretension"
-        "2": "Horizontal"
-        "3": "Lu"
 
   # ────────────────────────────────────────────────────────────────────────────
   # TYPE별 Enum 라벨 (검증 X, UI 표시용 라벨만)
@@ -172,21 +158,6 @@ markerRegistry:
           "1": "Truss"
           "2": "Gap"
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # UI 규칙 (가시성 조건 등)
-  # ⚠️ x-uiRules.visibleWhen → 자동으로 x-optional-when으로 변환됨
-  # ────────────────────────────────────────────────────────────────────────────
-  - id: MARKER_UI_RULES
-    key: "x-uiRules"
-    description: "UI 가시성/동작 규칙 → schemaCompiler가 x-optional-when으로 변환"
-    pureUI: true
-    autoConvertTo: "x-optional-when"
-    example: |
-      x-uiRules:
-        visibleWhen:
-          TYPE: "TENSTR"
-          STYPE: 3
-      # → x-optional-when: { TYPE: "TENSTR", STYPE: 3 } 으로 변환됨
 
   # ────────────────────────────────────────────────────────────────────────────
   # 조건부 필드 표시 (UI 전용 - 검증과 무관)
@@ -616,25 +587,10 @@ schemaLogic:
       type: "object"
       additionalProperties: false
 
-  sectionRules:
-    - name: "Explicit SectionId"
-      description: "x-ui.sectionId가 명시되어 있으면 그대로 사용 (sectionRegistry.id 참조 필수)"
-      condition:
-        type: "has-explicit-sectionId"
-      action:
-        type: "use-explicit-sectionId"
-        # ⚠️ integrityRules.requireXuiSectionIdInRegistry=true로 검증
-        # ⚠️ x-ui.group은 deprecated - x-ui.sectionId로 대체
-    - name: "Fallback"
-      description: "기본 섹션 (sectionRegistry SSOT)"
-      condition:
-        type: "always"
-      action:
-        type: "assign-section"
-        sectionId: "SECTION_GENERAL"  # 🔥 sectionRegistry.id 참조
-
-  sectionOrder:
-    - "SECTION_GENERAL"  # 🔥 sectionRegistry.id 참조
+  # ⚠️ NOTE: sectionRules deprecated - using x-ui.groupId instead
+  # sectionRegistry does not exist, so sectionId is not used
+  sectionRules: []
+  sectionOrder: []
 
   typeLabels: {}
 
@@ -652,11 +608,8 @@ schemaLogic:
         type: "has-oneOf-with-const"
       description: "oneOf 내부에 const가 있으면 enum"
 
-    - id: ENUM_X_ENUM_BY_TYPE
-      condition:
-        type: "has-marker"
-        markerId: "MARKER_ENUM_BY_TYPE"  # 🔥 markerRegistry.id 참조
-      description: "x-enum-by-type 마커가 있으면 동적 enum"
+    # ⚠️ NOTE: MARKER_ENUM_BY_TYPE removed - not defined in markerRegistry
+    # Use MARKER_ENUM_LABELS_BY_TYPE if needed for type-specific enum labels
 
   visibilityRules:
     - name: "No Conditional Marker"
@@ -711,18 +664,8 @@ schemaLogic:
             type: "has-maxItems"
         - condition:
             type: "has-type"
-    APP:
-      description: "Application-specific validation"
-      triggers:
-        - condition:
-            type: "has-marker"
-            markerId: "MARKER_ENUM_BY_TYPE"
-        - condition:
-            type: "has-marker"
-            markerId: "MARKER_NODE_COUNT"
-        - condition:
-            type: "has-marker"
-            markerId: "MARKER_VALUE_CONSTRAINT"
+    # ⚠️ NOTE: APP validation triggers removed
+    # MARKER_ENUM_BY_TYPE, MARKER_NODE_COUNT, MARKER_VALUE_CONSTRAINT not defined in markerRegistry
 
   descriptionBuildingRules:
     order:
@@ -1021,9 +964,11 @@ tableSchemaRegistry:
       description: "Element Part Number"
       items:
         type: "string"
-        enum: ["PartI", "Part1/4", "Part2/4", "Part3/4", "PartJ"]
+        enum: ["All", "PartI", "Part1/4", "Part2/4", "Part3/4", "PartJ"]
+      default: ["All"]
       tables: ["BEAMFORCE", "BEAMFORCEVBM", "BEAMSTRESS"]
       x-ui:
+        component: "CheckboxGroup"
         label: "Element Parts"
 
     BEAM_ITEM_TO_DISPLAY:
@@ -1064,6 +1009,45 @@ tableSchemaRegistry:
       tables: ["result-tables"]
       x-ui:
         label: "Select Type"
+
+    # ─── Construction Stage Stress 전용 (STRESSCS) ───
+    COMP_TENS:
+      type: "array"
+      description: "Compression/Tension Selection"
+      items:
+        type: "string"
+        enum: ["All", "Compression", "Tension"]
+      default: ["All"]
+      tables: ["STRESSCS"]
+      x-ui:
+        component: "CheckboxGroup"
+        label: "Comp./Tens."
+
+    GIRDER_SLAB:
+      type: "string"
+      description: "Girder or Slab Selection"
+      default: "GIRDER"
+      oneOf:
+        - title: "Girder"
+          const: "GIRDER"
+        - title: "Slab"
+          const: "SLAB"
+      tables: ["STRESSCS"]
+      x-ui:
+        component: "RadioGroup"
+        label: "Girder/Slab"
+
+    PARTS_CS:
+      type: "array"
+      description: "Part Number Selection (Construction Stage)"
+      items:
+        type: "string"
+        enum: ["All", "Part_i", "Part_j"]
+      default: ["All"]
+      tables: ["STRESSCS"]
+      x-ui:
+        component: "CheckboxGroup"
+        label: "Part Number"
 
   # ────────────────────────────────────────────────────────────────────────────
   # MCP 생성 규칙 (AI가 스키마 생성 시 참조)
@@ -1106,6 +1090,8 @@ tableSchemaRegistry:
       - "Cancel button"
       - "Help button"
       - "Close button"
+      - "Select Type dropdown"  # 🚨 UI 전용 - 스키마에 포함 금지
+      - "Element Type dropdown"  # 🚨 UI 전용 - 스키마에 포함 금지
 
     # NODE_ELEMS는 반드시 oneOf 패턴 사용
     nodeElemsRule: |

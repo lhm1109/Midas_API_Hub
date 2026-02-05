@@ -1132,6 +1132,18 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       }
     }
 
+    // 🔍 DEBUG: COMPONENTS 필드 추적
+    if (key === 'COMPONENTS') {
+      console.log('🔍 COMPONENTS field after property copy:', {
+        key: field.key,
+        type: field.type,
+        hasItems: !!field['items'],
+        items: field['items'],
+        hasEnumLabels: !!(field as any)['x-enum-labels-by-type'],
+        enumLabels: (field as any)['x-enum-labels-by-type'],
+      });
+    }
+
     // 🔥 oneOf → enum 변환 (const 값들을 enum으로 추출)
     if (prop.oneOf && Array.isArray(prop.oneOf) && !field.enum) {
       const enumValues: any[] = [];

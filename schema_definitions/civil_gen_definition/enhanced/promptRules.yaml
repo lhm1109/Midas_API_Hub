@@ -1,0 +1,308 @@
+# ============================================================================
+# MCP PROMPT RULES - LLM Schema Generation 가이드라인 (SSOT)
+# ============================================================================
+# AI가 스키마 생성 시 참조해야 할 모든 규칙과 예시
+# save.ts tool description에서 사용 (하드코딩 제거)
+# ============================================================================
+
+version: "1.0.0"
+description: "LLM이 MCP를 통해 스키마 생성 시 따라야 할 모든 규칙"
+
+# ============================================================================
+# CRITICAL WARNINGS
+# ============================================================================
+criticalWarnings:
+  tableSchemas:
+    title: "🚨 CRITICAL: Table Schemas REQUIRE componentEnums (MUST PROVIDE)"
+    rules:
+      - "✅ ALWAYS extract table column headers from the image"
+      - "✅ ALWAYS include componentEnums parameter"
+      - "✅ ALWAYS set generateTableSchema: true"
+      - "✅ ALWAYS set wrapWithSimpleObject: true"
+    example: |
+      mcp_api-schema_save_schema({
+        schemaName: "records_activation_dialog",
+        schema: {/* your schema */},
+        componentEnums: ["Elem", "Part", "Girder/Slab", "Comp./Tens.", "Stage", "CHK", "FT", "FB"],
+        generateTableSchema: true,
+        wrapWithSimpleObject: true
+      })
+    warning: "⚠️ Without componentEnums, COMPONENTS field will have NO enum values!"
+
+# ============================================================================
+# TABLE DETECTION RULES - LLM MUST READ THIS FIRST
+# ============================================================================
+# ⚠️ LLM must explicitly decide generateTableSchema: true/false
+# ⚠️ NO auto-detection by MCP server - LLM makes the decision
+tableDetectionRules:
+  title: "🔥 MANDATORY: Read This BEFORE Calling save_schema"
+  
+  workflow:
+    step1: "Read shared.yaml tableSchemaRegistry"
+    step2: "Read this section (tableDetectionRules)"
+    step3: "Analyze the dialog image/description"
+    step4: "Decide: Is this a TABLE schema or SETTINGS schema?"
+    step5: "Set generateTableSchema: true/false explicitly"
+  
+  isTableSchema:
+    description: "Set generateTableSchema: true when:"
+    criteria:
+      - "Dialog has visible TABLE with column headers (Elem, Load, Part, etc.)"
+      - "Dialog title contains 'Records', 'Activation', 'Result', 'Output'"
+      - "Purpose is to SELECT which table columns/rows to display"
+      - "Dialog configures TABLE FILTERING/DISPLAY options"
+    
+    mustInclude:
+      - "componentEnums: [column headers from table]"
+      - "tableTypeEnums: [TABLE_TYPE value]"
+      - "generateTableSchema: true"
+      - "wrapWithSimpleObject: true"
+    
+    examples:
+      - name: "Construction Stage Stress Activation"
+        image: "Shows table with columns: Elem, Part, Girder/Slab, CHK, FT, FB"
+        decision: "generateTableSchema: true"
+        reason: "Has visible table with column headers"
+      
+      - name: "Beam Force Records Activation"
+        image: "Shows table with columns: Elem, Load, Part, Axial, Shear-y, Moment-z"
+        decision: "generateTableSchema: true"
+        reason: "Result table activation dialog"
+  
+  isSettingsSchema:
+    description: "Set generateTableSchema: false when:"
+    criteria:
+      - "Dialog has NO visible table (only checkboxes, dropdowns, radio buttons)"
+      - "Dialog title contains 'Settings', 'Code', 'Options', 'Preferences'"
+      - "Purpose is to CONFIGURE design parameters/settings"
+      - "Dialog has design code selection, calculation options"
+    
+    mustNotInclude:
+      - "❌ NO componentEnums (no table columns)"
+      - "❌ NO tableTypeEnums"
+      - "❌ NO additionalTableFields"
+    
+    mustInclude:
+      - "generateTableSchema: false (EXPLICIT)"
+      - "wrapWithEntityCollection: true (for Assign wrapper)"
+    
+    examples:
+      - name: "Steel Design Code"
+        image: "Has: Design Code dropdown, checkboxes for options, radio buttons"
+        decision: "generateTableSchema: false"
+        reason: "Settings dialog - NO visible table"
+      
+      - name: "PSC Design Code"
+        image: "Has: Design Code dropdown, boolean options, no table"
+        decision: "generateTableSchema: false"
+        reason: "Configuration dialog - NO table headers"
+  
+  decisionFlowchart: |
+    START
+     ↓
+    [1] Does image show a TABLE with column headers? (Elem, Part, Load, etc.)
+     ├─ YES → generateTableSchema: true + componentEnums: [headers]
+     └─ NO → Continue to [2]
+    
+    [2] Is dialog title "Records Activation" or "Result Table" related?
+     ├─ YES → generateTableSchema: true
+     └─ NO → Continue to [3]
+    
+    [3] Is dialog for Design Code / Settings / Options?
+     ├─ YES → generateTableSchema: false + wrapWithEntityCollection: true
+     └─ NO → ASK USER via 'questions' parameter
+
+
+  uiOnlyElements:
+    title: "🚨 CRITICAL: DO NOT Include UI-Only Elements"
+    neverInclude:
+      - "SELECT_TYPE field (Element Type dropdown)"
+      - "Element Type selection dropdowns"
+      - "\"Select Type\" dropdowns"
+      - "All/None/Inverse/Prev buttons"
+      - "OK/Cancel/Help/Close buttons"
+      - "Add/Delete/Replace/Intersect buttons"
+    reason: |
+      These are UI rendering controls, NOT API request fields.
+      The backend determines element type from NODE_ELEMS data.
+    examples:
+      bad:
+        - |
+          ❌ "SELECT_TYPE": { "enum": ["BEAM"], ... }
+        - |
+          ❌ "ELEMENT_TYPE": { "enum": ["TRUSS", "BEAM"], ... }
+
+# ============================================================================
+# FIELD NAMING RULES
+# ============================================================================
+fieldNaming:
+  principles:
+    - "🚨 DO NOT use long descriptive names like \"bCombinedShearTorsion\""
+    - "✅ Use abbreviated/concise keys with Hungarian notation prefix"
+    - "Max 15-20 characters recommended"
+  
+  prefixes:
+    i: "integer"
+    b: "boolean"
+    d: "number"
+    s: "string"
+    n: "number"
+  
+  style:
+    - "Use UPPERCASE abbreviations after prefix"
+    - "Example: bCOMB_ST, bFLEX_CHK, sDESIGN_CD"
+  
+  examples:
+    - { bad: "bCombinedShearTorsion", good: "bCOMB_ST" }
+    - { bad: "bFlexuralStrengthCheck", good: "bFLEX_CHK" }
+    - { bad: "bPrincipalStressMaxShear", good: "bPRIN_SHEAR" }
+    - { bad: "sDesignCode", good: "sDESIGN_CD" }
+    - { bad: "iTendonType", good: "iTENDON" }
+    - { bad: "dExposureUserValue", good: "dEXP_USER" }
+  
+  abbreviations:
+    Construction: "CONSTR"
+    Combination: "COMB"
+    Principal: "PRINC"
+    Flexural: "FLEX"
+    Strength: "STR"
+    Service: "SVC"
+    Factored: "FACT"
+    Maximum: "MAX"
+    Minimum: "MIN"
+    Shear: "SHEAR"
+    Torsion: "TORS"
+    Combined: "COMB"
+    Check: "CHK"
+    Stress: "STRS"
+    Prestressing: "PREST"
+    Tendons: "TEND"
+    Stage: "STG"
+    Load: "LD"
+    Value: "VAL"
+    Factor: "FACT"
+    Exposure: "EXP"
+    Type: "TYPE"
+    Class: "CLS"
+    Code: "CODE"
+    Design: "DES"
+
+# ============================================================================
+# SCHEMA GENERATION PATTERNS
+# ============================================================================
+patterns:
+  oneOf:
+    description: "Use oneOf with const+title for integer/string options"
+    examples:
+      radioGroup: |
+        "iCONST_TYPE": {
+          "type": "integer",
+          "default": 1,
+          "oneOf": [
+            { "const": 0, "title": "Segmental" },
+            { "const": 1, "title": "Non-Segmental" }
+          ],
+          "x-ui": { "component": "RadioGroup", "label": "Construction Type" }
+        }
+      dropdown: |
+        "sDESIGN_CD": {
+          "type": "string",
+          "default": "AASHTO-LRFD20",
+          "oneOf": [
+            { "const": "AASHTO-LRFD20", "title": "AASHTO-LRFD20" },
+            { "const": "AASHTO-LRFD17", "title": "AASHTO-LRFD17" }
+          ],
+          "x-ui": { "component": "Dropdown", "label": "Design Code" }
+        }
+
+  fieldOrdering:
+    description: "Properties are rendered in the order they appear"
+    guidelines:
+      - "Use x-ui.order for explicit ordering if needed"
+      - "Group related fields together logically"
+    recommendedOrder:
+      - "Primary selection fields (Design Code, Type selectors)"
+      - "Input parameters (grouped by category)"
+      - "Output/calculation options (checkboxes)"
+      - "Conditional fields last"
+
+  sectionGrouping:
+    description: "Use x-ui.groupId to organize fields into visual sections"
+    example: |
+      "iTENDON": {
+        "type": "integer",
+        "x-ui": { "label": "Tendon Type", "groupId": "inputParams" }
+      },
+      "bFLEX_CHK": {
+        "type": "boolean",
+        "x-ui": { "label": "Flexural Strength Check", "groupId": "outputParams" }
+      }
+
+  conditionalFields:
+    description: "Field visible only when another field has specific value"
+    example: |
+      "dEXP_USER": {
+        "type": "number",
+        "x-optional-when": { "iEXP_FACT": 2 },
+        "x-ui": { "label": "User Value" }
+      }
+
+# ============================================================================
+# VALID X-* MARKERS
+# ============================================================================
+validMarkers:
+  - name: "x-ui"
+    description: "UI metadata (label, groupId, hint, groups, component, order)"
+  - name: "x-transport"
+    description: "API transport info"
+  - name: "x-enum-labels"
+    description: "Enum value labels (UI only) - for simple enum arrays"
+  - name: "x-enum-labels-by-type"
+    description: "Enum labels by TYPE"
+  - name: "x-required-when"
+    description: "Show as required in UI when condition is met"
+  - name: "x-optional-when"
+    description: "Show as optional in UI when condition is met"
+
+# ============================================================================
+# QUESTIONS PARAMETER - When to Ask
+# ============================================================================
+questionsPolicy:
+  title: "⚠️ MANDATORY: When to Use 'questions' Parameter (MUST ASK)"
+  doNotGenerateIf:
+    - condition: "Dropdown/Enum options incomplete"
+      example: "If only ONE option is visible (e.g., 'AASHTO-LRFD20' in dropdown)"
+      action: "You MUST ask: 'What are all available options for this dropdown?'"
+    
+    - condition: "Field type/enum values unclear"
+      action: "Ask before assuming string/integer/boolean"
+    
+    - condition: "Conditional logic complex"
+      action: "Ask to clarify dependencies between fields"
+    
+    - condition: "Default values uncertain"
+      action: "Ask what the default should be"
+  
+  howToUse: |
+    {
+      "schemaName": "psc_design_code",
+      "schema": {},  // Empty or partial schema
+      "questions": [
+        {
+          "field": "sDesignCode",
+          "question": "What are all available Design Code options for the dropdown?",
+          "context": "Image shows only 'AASHTO-LRFD20' selected",
+          "suggestion": ["AASHTO-LRFD20", "AASHTO-LRFD17", "Eurocode2"]
+        }
+      ]
+    }
+  
+  behavior: "When questions are provided, tool returns 'pending_questions' status instead of saving."
+
+# ============================================================================
+# CORE PRINCIPLES
+# ============================================================================
+corePrinciples:
+  validation: "Use standard JSON Schema keywords (allOf, if/then, required, enum)"
+  uiMarkers: "x-* prefix (removing them won't affect validation)"
+  reference: "shared.yaml SSOT - all semantic rules from there"

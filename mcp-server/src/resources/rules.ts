@@ -31,21 +31,33 @@ const RULES_BASE_PATH = path.resolve(__dirname, '../../../schema_definitions/civ
  */
 export const allResources: MCPResource[] = [
     {
+        uri: 'mcp://rules/shared.yaml',
+        name: 'Shared Rules (SSOT)',
+        description: '공통 규칙 - 마커 레지스트리, 테이블 스키마 레지스트리, 조건 레지스트리, integrityRules',
+        mimeType: 'application/yaml',
+    },
+    {
         uri: 'mcp://rules/mcp.yaml',
         name: 'MCP Rules',
         description: 'MCP 서버 전용 규칙 - 보안, IO, 결정론, 검증 파이프라인',
         mimeType: 'application/yaml',
     },
     {
-        uri: 'mcp://rules/shared.yaml',
-        name: 'Shared Rules',
-        description: '공통 규칙 - 마커 레지스트리, 조건 레지스트리, 섹션 레지스트리',
-        mimeType: 'application/yaml',
-    },
-    {
         uri: 'mcp://rules/ui.yaml',
         name: 'UI Rules',
         description: 'UI 렌더링 규칙 - 필드 타입, 레이아웃, 상태 표시',
+        mimeType: 'application/yaml',
+    },
+    {
+        uri: 'mcp://rules/accuracyPolicy.yaml',
+        name: 'Accuracy Policy',
+        description: 'Evidence-based 생성 규칙 - 근거 요구사항, 자동 질문 패턴, 품질 관문',
+        mimeType: 'application/yaml',
+    },
+    {
+        uri: 'mcp://rules/promptRules.yaml',
+        name: 'Prompt Rules (LLM Guidelines)',
+        description: 'LLM 스키마 생성 가이드라인 - 필드 네이밍, 패턴, critical warnings, questions policy',
         mimeType: 'application/yaml',
     },
 ];

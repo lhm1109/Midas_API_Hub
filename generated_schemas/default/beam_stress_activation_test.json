@@ -1,0 +1,203 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "description": "Records Activation Dialog - Beam Stress Result Table",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "default": "Beam Stress"
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Table Type",
+          "enum": [
+            "BEAMSTRESS"
+          ]
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Elem",
+              "Load",
+              "Part",
+              "Axial",
+              "Shear-y",
+              "Shear-z",
+              "Bend(+y)",
+              "Bend(-y)",
+              "Bend(+z)",
+              "Bend(-z)",
+              "Cmin(max)",
+              "Cb1(++z)",
+              "Cb2(++z)",
+              "Cb3(++z)",
+              "Cb4(++z)"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "BEAMSTRESS": {
+              "Axial": "Axial Stress",
+              "Bend(-y)": "Bending Stress -Y",
+              "Bend(-z)": "Bending Stress -Z",
+              "Bend(+y)": "Bending Stress +Y",
+              "Bend(+z)": "Bending Stress +Z",
+              "Cb1(++z)": "Combined Bottom 1",
+              "Cb2(++z)": "Combined Bottom 2",
+              "Cb3(++z)": "Combined Bottom 3",
+              "Cb4(++z)": "Combined Bottom 4",
+              "Cmin(max)": "Combined Min/Max",
+              "Elem": "Element Number",
+              "Load": "Load Case",
+              "Part": "Part Number",
+              "Shear-y": "Shear Stress Y",
+              "Shear-z": "Shear Stress Z"
+            }
+          }
+        },
+        "LOAD_CASE_NAMES": {
+          "type": "array",
+          "description": "Load Case/Combination Names",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "hint": "Static Load or Load Combination names",
+            "label": "Load Cases"
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Element Selection",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each Element ID",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range"
+            }
+          },
+          "x-ui": {
+            "hint": "Use only ONE method",
+            "label": "Element Selection"
+          }
+        },
+        "PARTS": {
+          "type": "array",
+          "description": "Part Number",
+          "items": {
+            "type": "string",
+            "enum": [
+              "All",
+              "Part_i",
+              "Part 1/4",
+              "Part 2/4",
+              "Part 3/4",
+              "Part_j"
+            ]
+          },
+          "default": [
+            "All"
+          ],
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Part"
+          }
+        },
+        "SELECT_TYPE": {
+          "type": "string",
+          "description": "Element Type",
+          "enum": [
+            "BEAM"
+          ],
+          "x-ui": {
+            "label": "Element Type"
+          }
+        }
+      }
+    }
+  }
+}

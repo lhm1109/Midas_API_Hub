@@ -453,6 +453,77 @@ aiPrompts:
     
     # 섹션별 규칙 정의
     sections:
+      table_schema: |
+        【Table Schema 생성 규칙】
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        🚨 CRITICAL: 테이블 관련 스키마는 MUST USE generateTableSchema: true
+        
+        ✅ 다음 경우 generateTableSchema: true 필수:
+          • 제목에 "Table", "Check", "Result" 포함
+          • 다이얼로그에 "Records", "Activation", "Filter" 포함
+          • COMPONENTS, UNIT, TABLE_TYPE 필드가 예상되는 경우
+          • Construction Stage, Stress, Force, Displacement 등 결과 테이블
+        
+        🔥 필수 파라미터 조합:
+          {
+            "generateTableSchema": true,
+            "wrapWithSimpleObject": true,
+            "tableTypeEnums": ["STRESSCS", "BEAMFORCE", ...],
+            "componentEnums": ["Elem", "Part", "FT", "FB", ...],
+            "componentEnumLabelsByType": {
+              "STRESSCS": {
+                "FT": "Stress at Top",
+                "FB": "Stress at Bottom"
+              }
+            },
+            "additionalTableFields": ["NODE_ELEMS", "LOAD_CASE_NAMES", "OPT_CS"]
+          }
+        
+        📋 generateTableSchema가 자동 추가하는 필드:
+          • TABLE_NAME: Response Table Title
+          • TABLE_TYPE: Result Table Type (enum)
+          • EXPORT_PATH: Result Table Save Path
+          • UNIT: {FORCE, DIST, HEAT, TEMP}
+          • STYLES: {FORMAT, PLACE}
+          • COMPONENTS: 테이블 컴포넌트 배열 (enum)
+        
+        ⚠️ 주의사항:
+          • generateTableSchema 없이 생성하면 위 필드들이 모두 누락됨
+          • 테이블 다이얼로그도 generateTableSchema 필요
+          • wrapWithSimpleObject는 항상 함께 사용
+        
+        🚨 CRITICAL: COMPONENTS enum 자동 추출 필수
+          • 사용자가 테이블 이미지를 제공하면 YOU MUST:
+            1. 이미지에서 테이블 헤더(컬럼명) 모두 읽기
+            2. componentEnums 파라미터에 제공
+            3. componentEnumLabelsByType에 각 컬럼의 의미 설명 추가
+            4. ⚠️ **단위는 라벨에 포함하지 말 것** (예: "(N/mm²)", "(kN)" 등 제거)
+          
+          • 예시 (Stress Table):
+            "componentEnums": [
+              "Elem", "Part", "Girder/Slab", "Comp./Tens.", 
+              "Stage", "CHK", "FT", "FB", "FTL", "FBL", 
+              "FTR", "FBR", "FMAX", "ALW"
+            ]
+            "componentEnumLabelsByType": {
+              "STRESSCS": {
+                "Elem": "Element Number",
+                "Part": "Part Number",
+                "FT": "Stress at Top",
+                "FB": "Stress at Bottom",
+                "FTL": "Stress at Top Left",
+                "FBL": "Stress at Bottom Left",
+                "FTR": "Stress at Top Right",
+                "FBR": "Stress at Bottom Right",
+                "FMAX": "Maximum Stress",
+                "ALW": "Allowable Stress",
+                "CHK": "Check Result"
+              }
+            }
+          
+          • componentEnums를 제공하지 않으면 COMPONENTS 필드가 빈 enum으로 생성됨!
+      
       conditional: |
         【조건부 필드 마커 규칙】
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -506,12 +577,10 @@ aiPrompts:
             "placeholder": "힌트 텍스트"   // 선택
           }
         
-        ⚠️ x-ui 내에 visibleWhen 사용 금지!
-           → 대신 x-optional-when 또는 x-required-when 사용
+
         
         x-ui 외부 마커:
-          • x-enum-labels: enum 값 라벨
-          • x-enum-labels-by-type: TYPE별 enum 라벨
+          • x-enum-labels-by-type: TABLE_TYPE별 enum 라벨
 
       validation: |
         【검증 로직 규칙】

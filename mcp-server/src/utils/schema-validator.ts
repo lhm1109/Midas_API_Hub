@@ -95,10 +95,18 @@ export function validateAndTransform(
                 const xui = field['x-ui'] as Record<string, unknown> | undefined;
                 if (!xui?.['label'] && !field['title']) {
                     // Generate from field name
-                    const label = fieldName
-                        .replace(/^[ibds]/, '')  // Remove type prefix
-                        .replace(/_/g, ' ')      // _ to space
-                        .replace(/([A-Z])/g, ' $1')  // Split camelCase
+                    // Fixed: Handle TABLE_NAME correctly -> "Table Name" (not "T A B L E  N A M E")
+                    let label = fieldName
+                        .replace(/^[ibds]/, '');  // Remove type prefix (iID -> ID, sNAME -> NAME)
+
+                    // Split by underscore or camelCase
+                    label = label
+                        .replace(/_/g, ' ')           // TABLE_NAME -> TABLE NAME
+                        .replace(/([a-z])([A-Z])/g, '$1 $2')  // camelCase -> camel Case (only lowercase-to-uppercase)
+                        .toLowerCase()                // TABLE NAME -> table name
+                        .split(' ')                   // ["table", "name"]
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))  // Title case
+                        .join(' ')                    // "Table Name"
                         .trim();
 
                     if (!xui) {

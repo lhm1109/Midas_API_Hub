@@ -1,0 +1,169 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "description": "Steel Design Code Settings Dialog",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "label": "Components"
+          }
+        },
+        "bCHK_DEFL": {
+          "type": "boolean",
+          "description": "Check Beam/Column Deflection",
+          "default": true,
+          "x-ui": {
+            "label": "Check Beam/Column Deflection"
+          }
+        },
+        "bLATERAL_BRACE": {
+          "type": "boolean",
+          "description": "All Beams/Girders are Laterally Braced",
+          "default": false,
+          "x-ui": {
+            "label": "All Beams/Girders are Laterally Braced"
+          }
+        },
+        "bSEISMIC_PROV": {
+          "type": "boolean",
+          "description": "Apply Special Provisions for Seismic Design",
+          "default": false,
+          "x-ui": {
+            "label": "Apply Special Provisions for Seismic Design"
+          }
+        },
+        "bUNDERGROUND_LC": {
+          "type": "boolean",
+          "description": "Use Under Ground Load Combination Type for Under Ground Members",
+          "default": true,
+          "x-ui": {
+            "label": "Use Under Ground Load Combination Type for Under Ground Members"
+          }
+        },
+        "sCOMB_RATIO": {
+          "type": "string",
+          "description": "Combined Ratio Method for Circular Section",
+          "default": "SRSS",
+          "oneOf": [
+            {
+              "title": "SRSS( Square root of sum of square)",
+              "const": "SRSS"
+            },
+            {
+              "title": "Linear Sum",
+              "const": "LINEAR"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Combined Ratio Method for Circular Section"
+          }
+        },
+        "sDESIGN_CD": {
+          "type": "string",
+          "description": "Design Code Selection",
+          "default": "KDS 41 30 : 2022",
+          "oneOf": [
+            {
+              "title": "KDS 41 30 : 2022",
+              "const": "KDS 41 30 : 2022"
+            }
+          ],
+          "x-ui": {
+            "component": "Dropdown",
+            "label": "Design Code"
+          }
+        }
+      }
+    }
+  }
+}

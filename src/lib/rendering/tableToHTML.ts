@@ -86,24 +86,23 @@ export function generateHTMLTable(
     if (param.section) {
       const bgColor = sectionStyle.background === 'bg-cyan-950/30' ? '#e6fcff' : '#f0f0f0';
       const textColor = sectionStyle.textColor === 'text-cyan-400' ? '#4c9aff' : '#333';
-      
+
       tableHTML += `
 <tr>
 <td style="background-color: ${bgColor}; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
 <p><span style="color: ${textColor};">${param.section}</span></p>
 </td>
 </tr>`;
-      
+
       if (!param.name || !param.type) {
         return;
       }
     }
 
     // Main row
-    const rowspan = param.children ? param.children.length + 1 : 1;
     tableHTML += `
 <tr>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" ${param.children ? `rowspan="${rowspan}"` : ''}>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
 <p style="text-align: center;">${param.no}</p>
 </td>
 <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
@@ -131,7 +130,7 @@ ${param.options ? param.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
         if (child.section) {
           const bgColor = nestedSectionStyle.background === 'bg-blue-950/30' ? '#e3f2fd' : '#f5f5f5';
           const textColor = nestedSectionStyle.textColor === 'text-blue-400' ? '#1976d2' : '#666';
-          
+
           tableHTML += `
 <tr>
 <td style="background-color: ${bgColor}; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">

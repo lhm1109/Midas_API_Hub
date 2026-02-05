@@ -19,7 +19,7 @@ export function StatusIcon({ status, className }: StatusIconProps) {
           title="시작 안함"
         />
       );
-    case "wip":
+    case "progress":
       return (
         <div title="작업 중">
           <Loader2
@@ -43,18 +43,6 @@ export function StatusIcon({ status, className }: StatusIconProps) {
           />
         </div>
       );
-    case "na":
-      return (
-        <div
-          className={cn(
-            "w-4 h-4 rounded-full bg-zinc-600 border-2 border-black flex items-center justify-center",
-            className
-          )}
-          title="해당없음"
-        >
-          <span className="text-[8px] font-bold text-white">N/A</span>
-        </div>
-      );
     default:
       return null;
   }
@@ -67,7 +55,7 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  if (status === "In Progress") {
+  if (status === "progress") {
     return (
       <div
         className={cn(
@@ -81,7 +69,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     );
   }
 
-  if (status === "Done") {
+  if (status === "done") {
     return (
       <div
         className={cn(
@@ -95,7 +83,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     );
   }
 
-  if (status === "Cancel") {
+  if (status === "cancel") {
     return (
       <div
         className={cn(
@@ -104,6 +92,20 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
         )}
       >
         Cancel
+      </div>
+    );
+  }
+
+  if (status === "working") {
+    return (
+      <div
+        className={cn(
+          "inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-600 text-white text-xs font-medium",
+          className
+        )}
+      >
+        <Loader2 className="w-3 h-3 animate-spin" />
+        Working
       </div>
     );
   }

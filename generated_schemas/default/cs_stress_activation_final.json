@@ -1,0 +1,235 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "description": "Records Activation Dialog - Construction Stage Stress Table",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "default": "Construction Stage Stress",
+          "x-ui": {
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "STRESSCS"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Elem",
+              "Part",
+              "Girder/Slab",
+              "Comp./Tens.",
+              "Stage",
+              "CHK",
+              "FH",
+              "FV",
+              "FH2",
+              "FV2",
+              "FMAX",
+              "ALW"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "STRESSCS": {
+              "ALW": "Allowable Stress",
+              "CHK": "Check Result",
+              "Comp./Tens.": "Compression/Tension",
+              "Elem": "Element Number",
+              "FH": "Horizontal Stress 1",
+              "FH2": "Horizontal Stress 2",
+              "FMAX": "Maximum Stress",
+              "FV": "Vertical Stress 1",
+              "FV2": "Vertical Stress 2",
+              "Girder/Slab": "Girder or Slab",
+              "Part": "Part Number",
+              "Stage": "Stage Name"
+            }
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Node/Element No. Input",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')"
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            }
+          },
+          "x-ui": {
+            "hint": "Use only ONE of the three methods: KEYS, TO, or STRUCTURE_GROUP_NAME",
+            "label": "Node/Element Selection"
+          }
+        },
+        "LOAD_CASE_NAMES": {
+          "type": "array",
+          "description": "Load Case/Combination Names",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "hint": "Static Load or Load Combination names",
+            "label": "Load Cases"
+          }
+        },
+        "OPT_CS": {
+          "type": "boolean",
+          "description": "Activation - Construction Stage Step",
+          "default": false,
+          "x-ui": {
+            "label": "Construction Stage"
+          }
+        },
+        "COMP_TENS": {
+          "type": "array",
+          "description": "Compression/Tension Selection",
+          "items": {
+            "type": "string",
+            "enum": [
+              "All",
+              "Compression",
+              "Tension"
+            ]
+          },
+          "default": [
+            "All"
+          ],
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Comp./Tens."
+          }
+        },
+        "GIRDER_SLAB": {
+          "type": "string",
+          "description": "Girder or Slab Selection",
+          "default": "GIRDER",
+          "oneOf": [
+            {
+              "title": "Girder",
+              "const": "GIRDER"
+            },
+            {
+              "title": "Slab",
+              "const": "SLAB"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Girder/Slab"
+          }
+        },
+        "PARTS_CS": {
+          "type": "array",
+          "description": "Part Number Selection",
+          "items": {
+            "type": "string",
+            "enum": [
+              "All",
+              "Part_i",
+              "Part_j"
+            ]
+          },
+          "default": [
+            "All"
+          ],
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Part Number"
+          }
+        }
+      }
+    }
+  }
+}

@@ -30,6 +30,7 @@ import { StatusIcon, StatusBadge } from './StatusIcon';
 interface ApiTableProps {
   tasks: ApiTask[];
   columns: Column[];
+  searchTerm?: string;
   onColumnVisibilityChange: (columnId: string, visible: boolean) => void;
   onTaskEdit: (task: ApiTask) => void;
   onTaskDelete: (taskId: string) => void;
@@ -57,6 +58,7 @@ const COLUMN_GROUPS = {
 export function ApiTable({
   tasks,
   columns,
+  searchTerm = '',
   onColumnVisibilityChange,
   onTaskEdit,
   onTaskDelete,
@@ -93,6 +95,28 @@ export function ApiTable({
       return sortDirection === 'asc' ? comparison : -comparison;
     });
   }, [tasks, sortColumn, sortDirection]);
+
+  // Filter tasks based on search term
+  const filteredTasks = useMemo(() => {
+    console.log('🔍 Search Term:', searchTerm);
+    console.log('📊 Total Tasks:', sortedTasks.length);
+
+    if (!searchTerm || searchTerm.trim() === '') {
+      return sortedTasks;
+    }
+
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    const filtered = sortedTasks.filter((task) => {
+      // Search across all task fields
+      return Object.values(task).some((value) => {
+        if (value === null || value === undefined) return false;
+        return String(value).toLowerCase().includes(lowerSearchTerm);
+      });
+    });
+
+    console.log('✅ Filtered Tasks:', filtered.length);
+    return filtered;
+  }, [sortedTasks, searchTerm]);
 
   const visibleColumns = columns.filter((col) => col.visible);
 
@@ -248,7 +272,7 @@ export function ApiTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedTasks.map((task) => (
+            {filteredTasks.map((task) => (
               <TableRow key={task.id} className="hover:bg-zinc-900 border-zinc-800">
                 {visibleColumns.map((column, index) => {
                   const isLastColumn = index === visibleColumns.length - 1;
@@ -292,8 +316,10 @@ export function ApiTable({
         </Table>
       </div>
 
-      {sortedTasks.length === 0 && (
-        <div className="text-center py-12 text-zinc-500">데이터가 없습니다</div>
+      {filteredTasks.length === 0 && (
+        <div className="text-center py-12 text-zinc-500">
+          {searchTerm ? '검색 결과가 없습니다' : '데이터가 없습니다'}
+        </div>
       )}
     </div>
   );

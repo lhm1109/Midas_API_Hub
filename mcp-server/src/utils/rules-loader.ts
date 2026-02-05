@@ -119,3 +119,19 @@ export function loadTypeInferenceRegistry(): SharedRules['typeInferenceRegistry'
 export function getRulesDir(): string {
     return RULES_DIR;
 }
+
+/**
+ * Load accuracyPolicy.yaml for evidence-based validation
+ */
+export function loadAccuracyPolicy(): any | null {
+    const filePath = path.join(RULES_DIR, 'accuracyPolicy.yaml');
+    try {
+        lastLoadError = null;
+        const content = fs.readFileSync(filePath, 'utf-8');
+        return yaml.load(content);
+    } catch (error) {
+        lastLoadError = error instanceof Error ? error.message : String(error);
+        console.error(`Failed to load accuracy policy: ${filePath}`, error);
+        return null;
+    }
+}

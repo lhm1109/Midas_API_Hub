@@ -5,6 +5,7 @@ import { ApiTask, Column } from '../types/manager';
 import type { ApiProduct } from '@/types';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Download, Upload } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 interface ManagerProgressProps {
   tasks: ApiTask[];
@@ -85,10 +86,11 @@ export function ManagerProgress({
         seg2: '',
         endPoint: '',
         mode: '',
-        plan: 'empty',  // plan 컬럼 추가
+        plan: 'empty',
         dev: 'empty',
         vv: 'empty',
         doc: 'empty',
+        deploy: 'empty',  // deploy 필드 추가
         issue: 'empty',
         status: '',
         charge: '',
@@ -119,8 +121,8 @@ export function ManagerProgress({
   // CSV Export
   const handleExportCSV = () => {
     try {
-      // CSV 헤더
-      const headers = ['Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Issue', 'status', 'charge', 'remark'];
+      // CSV 헤더 (deploy 추가)
+      const headers = ['Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
 
       // CSV 데이터 생성
       const csvRows = [headers.join(',')];
@@ -137,10 +139,11 @@ export function ManagerProgress({
           task.seg2,
           task.endPoint,
           task.mode,
-          task.plan,  // plan 컬럼 추가
+          task.plan,
           task.dev,
           task.vv,
           task.doc,
+          task.deploy || '',  // deploy 컬럼 추가
           task.issue,
           task.status,
           task.charge,
@@ -174,11 +177,140 @@ export function ManagerProgress({
     }
   };
 
-  // CSV Import
+  // 헤더 매핑 함수 (대소문자 구분 없이)
+  const createHeaderMapper = (headers: string[]) => {
+    // 헤더를 소문자로 정규화하여 인덱스 매핑
+    const headerMap = new Map<string, number>();
+    headers.forEach((header, index) => {
+      const normalized = String(header || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[\s_-]+/g, '')  // 공백, 언더스코어, 하이픈 제거
+        .replace(/[&]/g, 'and');  // & -> and
+      headerMap.set(normalized, index);
+    });
+
+    // 필드명을 헤더 인덱스에 매핑
+    const fieldMapping = {
+      product: ['product'],
+      tab: ['tab'],
+      group: ['group'],
+      sub1: ['sub1'],
+      sub2: ['sub2'],
+      sub3: ['sub3'],
+      seg1: ['seg1'],
+      seg2: ['seg2'],
+      endPoint: ['endpoint', 'endPoint'],
+      mode: ['mode'],
+      plan: ['plan'],
+      dev: ['dev'],
+      vv: ['vv', 'vandv', 'v&v'],
+      doc: ['doc', 'doc.'],
+      deploy: ['deploy'],
+      issue: ['issue'],
+      status: ['status'],
+      charge: ['charge'],
+      remark: ['remark'],
+    };
+
+    // 각 필드의 컬럼 인덱스 찾기
+    const columnIndices: Record<string, number> = {};
+    Object.entries(fieldMapping).forEach(([field, variants]) => {
+      for (const variant of variants) {
+        const normalized = variant.toLowerCase().replace(/[\s_-]+/g, '').replace(/[&]/g, 'and');
+        if (headerMap.has(normalized)) {
+          columnIndices[field] = headerMap.get(normalized)!;
+          break;
+        }
+      }
+    });
+
+    return (row: any[], field: string): string => {
+      const index = columnIndices[field];
+      return index !== undefined ? String(row[index] || '') : '';
+    };
+  };
+
+  // CSV/Excel Import
   const handleImportCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Excel 파일 (.xlsx, .xls, .xlsm) 체크
+    const isExcel = file.name.match(/\.(xlsx|xls|xlsm)$/i);
+
+    if (isExcel) {
+      // Excel 파일 처리
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+
+          // 첫 번째 시트만 읽기
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+
+          // 시트를 JSON으로 변환 (헤더 포함)
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+
+          if (jsonData.length < 2) {
+            alert('Excel 파일이 비어있거나 형식이 잘못되었습니다.');
+            return;
+          }
+
+          // 헤더와 데이터 분리
+          const headers = jsonData[0] || [];
+          const dataRows = jsonData.slice(1);
+
+          // 헤더 매퍼 생성
+          const getField = createHeaderMapper(headers);
+
+          const newTasks: ApiTask[] = dataRows.map((row, index) => {
+            return {
+              id: `imported-${Date.now()}-${index}`,
+              product: getField(row, 'product'),
+              tab: getField(row, 'tab'),
+              group: getField(row, 'group'),
+              sub1: getField(row, 'sub1'),
+              sub2: getField(row, 'sub2'),
+              sub3: getField(row, 'sub3'),
+              seg1: getField(row, 'seg1'),
+              seg2: getField(row, 'seg2'),
+              endPoint: getField(row, 'endPoint'),
+              mode: getField(row, 'mode'),
+              plan: (getField(row, 'plan') as any) || 'empty',
+              dev: (getField(row, 'dev') as any) || 'empty',
+              vv: (getField(row, 'vv') as any) || 'empty',
+              doc: (getField(row, 'doc') as any) || 'empty',
+              deploy: (getField(row, 'deploy') as any) || 'empty',
+              issue: (getField(row, 'issue') as any) || 'empty',
+              status: getField(row, 'status'),
+              charge: getField(row, 'charge'),
+              remark: getField(row, 'remark'),
+            };
+          });
+
+          if (confirm(`${newTasks.length}개의 작업을 가져와서 기존 데이터를 모두 덮어씁니다. 계속하시겠습니까?`)) {
+            await onBulkReplace(newTasks);
+            alert('Excel 가져오기 완료!');
+          }
+        } catch (error) {
+          console.error('Failed to import Excel:', error);
+          alert('Excel 가져오기 실패: 파일 형식을 확인해주세요.');
+        }
+
+        // 파일 입력 초기화
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+      return;
+    }
+
+    // CSV 파일 처리
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
@@ -190,7 +322,8 @@ export function ManagerProgress({
           return;
         }
 
-        // 헤더 제거
+        // 헤더와 데이터 분리
+        const headerLine = lines[0];
         const dataLines = lines.slice(1);
 
         // CSV 라인을 파싱하는 함수 (따옴표 내 쉼표 처리)
@@ -225,30 +358,38 @@ export function ManagerProgress({
           return result;
         };
 
+
+        // 헤더 파싱
+        const headers = parseCSVLine(headerLine);
+
+        // 헤더 매퍼 생성
+        const getField = createHeaderMapper(headers);
+
         const newTasks: ApiTask[] = dataLines.map((line, index) => {
           // CSV 파싱 (따옴표 내 쉼표 올바르게 처리)
           const values = parseCSVLine(line);
 
           return {
             id: `imported-${Date.now()}-${index}`,
-            product: values[0] || '',
-            tab: values[1] || '',
-            group: values[2] || '',
-            sub1: values[3] || '',
-            sub2: values[4] || '',
-            sub3: values[5] || '',
-            seg1: values[6] || '',
-            seg2: values[7] || '',
-            endPoint: values[8] || '',
-            mode: values[9] || '',
-            plan: (values[10] as any) || 'empty',  // plan 컬럼 추가
-            dev: (values[11] as any) || 'empty',
-            vv: (values[12] as any) || 'empty',
-            doc: (values[13] as any) || 'empty',
-            issue: (values[14] as any) || 'empty',
-            status: values[15] || '',
-            charge: values[16] || '',
-            remark: values[17] || '',
+            product: getField(values, 'product'),
+            tab: getField(values, 'tab'),
+            group: getField(values, 'group'),
+            sub1: getField(values, 'sub1'),
+            sub2: getField(values, 'sub2'),
+            sub3: getField(values, 'sub3'),
+            seg1: getField(values, 'seg1'),
+            seg2: getField(values, 'seg2'),
+            endPoint: getField(values, 'endPoint'),
+            mode: getField(values, 'mode'),
+            plan: (getField(values, 'plan') as any) || 'empty',
+            dev: (getField(values, 'dev') as any) || 'empty',
+            vv: (getField(values, 'vv') as any) || 'empty',
+            doc: (getField(values, 'doc') as any) || 'empty',
+            deploy: (getField(values, 'deploy') as any) || 'empty',
+            issue: (getField(values, 'issue') as any) || 'empty',
+            status: getField(values, 'status'),
+            charge: getField(values, 'charge'),
+            remark: getField(values, 'remark'),
           };
         });
 
@@ -306,7 +447,7 @@ export function ManagerProgress({
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv"
+            accept=".csv,.xlsx,.xls,.xlsm"
             onChange={handleImportCSV}
             className="hidden"
           />
@@ -317,7 +458,7 @@ export function ManagerProgress({
             className="bg-zinc-800 border-zinc-700 text-zinc-100 hover:bg-zinc-700"
           >
             <Upload className="w-4 h-4 mr-2" />
-            CSV 가져오기
+            파일 가져오기 (CSV/Excel)
           </Button>
         </div>
       </div>

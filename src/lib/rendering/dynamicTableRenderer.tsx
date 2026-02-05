@@ -267,16 +267,21 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
  * Description 렌더링 (마크다운 지원)
  */
 function renderDescription(description: string) {
+  // 🔥 이미 HTML 태그가 포함된 경우 그대로 사용
+  const hasHTML = /<[a-z][\s\S]*>/i.test(description);
+
   return (
     <div
       className="text-zinc-300 [&_span:not([style])]:text-zinc-400 [&_strong]:text-zinc-300 [&_strong]:font-semibold [&_em]:text-cyan-400 [&_em]:not-italic [&_em]:font-medium"
       dangerouslySetInnerHTML={{
-        __html: description
-          .replace(/\n/g, '<br>')
-          .replace(/• /g, '<span>• </span>')
-          .replace(/- /g, '<span>- </span>')
-          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')  // **bold**
-          .replace(/\*([^*]+)\*/g, '<em>$1</em>')  // 🔥 *italic* (타입 이름 등)
+        __html: hasHTML
+          ? description  // HTML이 이미 있으면 그대로 사용
+          : description
+            .replace(/\n/g, '<br>')
+            .replace(/• /g, '<span>• </span>')
+            .replace(/- /g, '<span>- </span>')
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')  // **bold**
+            .replace(/\*([^*]+)\*/g, '<em>$1</em>')  // 🔥 *italic* (타입 이름 등)
       }}
     />
   );

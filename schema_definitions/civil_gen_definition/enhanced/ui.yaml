@@ -67,9 +67,7 @@ markerInterpretation:
       groupId:
         source: "x-ui.groupId"
         useFor: "section-grouping"
-      sectionId:
-        source: "x-ui.sectionId"
-        fallback: "SECTION_GENERAL"
+      # ⚠️ sectionId deprecated - sectionRegistry does not exist
 
   # ────────────────────────────────────────────────────────────────────────────
   # x-enum-labels: enum 값에 대한 라벨
@@ -390,7 +388,7 @@ fallbackUI:
     label:
       source: "key"
       transform: "humanize"  # "iTENDON_TYPE" → "I Tendon Type"
-    sectionId: "SECTION_GENERAL"  # 🔥 sectionRegistry.id 참조
+    # ⚠️ sectionId deprecated - using groupId instead
     component: "Input"
     warn: true
 

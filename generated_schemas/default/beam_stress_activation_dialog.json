@@ -1,5 +1,4 @@
 {
-  "title": "Displacement Table",
   "type": "object",
   "required": [
     "Argument"
@@ -8,6 +7,7 @@
   "properties": {
     "Argument": {
       "type": "object",
+      "description": "Records Activation Dialog - Beam Stress Result Table",
       "required": [
         "TABLE_TYPE"
       ],
@@ -16,22 +16,15 @@
         "TABLE_NAME": {
           "type": "string",
           "description": "Response Table Title",
-          "default": "",
-          "x-ui": {
-            "hint": "Output table title in response",
-            "label": "Table Name"
-          }
+          "default": "Beam Stress"
         },
         "TABLE_TYPE": {
           "type": "string",
           "description": "Result Table Type",
           "enum": [
-            "DISPLACEMENTG",
-            "DISPLACEMENTL"
+            "BEAMSTRESS"
           ],
-          "x-ui": {
-            "label": "Table Type"
-          }
+          "default": "BEAMSTRESS"
         },
         "EXPORT_PATH": {
           "type": "string",
@@ -97,42 +90,44 @@
           "items": {
             "type": "string",
             "enum": [
-              "DX",
-              "DY",
-              "DZ",
-              "RX",
-              "RY",
-              "RZ"
+              "Elem",
+              "Load",
+              "Part",
+              "Axial",
+              "Shear-y",
+              "Shear-z",
+              "Bend(+y)",
+              "Bend(-y)",
+              "Bend(+z)",
+              "Bend(-z)",
+              "Cmin(max)",
+              "Cb1(++z)",
+              "Cb2(++z)",
+              "Cb3(++z)",
+              "Cb4(++z)"
             ]
           },
           "x-ui": {
-            "component": "CheckboxGroup",
             "label": "Components"
-          }
-        },
-        "NODE_ELEMS": {
-          "type": "object",
-          "description": "Node/Element No. Input",
-          "properties": {
-            "KEYS": {
-              "type": "array",
-              "description": "Specify Each ID",
-              "items": {
-                "type": "integer"
-              }
-            },
-            "TO": {
-              "type": "string",
-              "description": "Specify ID Range (e.g., '1to160')"
-            },
-            "STRUCTURE_GROUP_NAME": {
-              "type": "string",
-              "description": "Specify Structure Group Name"
-            }
           },
-          "x-ui": {
-            "hint": "Use only ONE of the three methods: KEYS, TO, or STRUCTURE_GROUP_NAME",
-            "label": "Node/Element Selection"
+          "x-enum-labels-by-type": {
+            "BEAMSTRESS": {
+              "Axial": "Axial Stress",
+              "Bend(-y)": "Bending Stress -Y",
+              "Bend(-z)": "Bending Stress -Z",
+              "Bend(+y)": "Bending Stress +Y",
+              "Bend(+z)": "Bending Stress +Z",
+              "Cb1(++z)": "Combined Bottom 1",
+              "Cb2(++z)": "Combined Bottom 2",
+              "Cb3(++z)": "Combined Bottom 3",
+              "Cb4(++z)": "Combined Bottom 4",
+              "Cmin(max)": "Combined Min/Max",
+              "Elem": "Element Number",
+              "Load": "Load Case",
+              "Part": "Part Number",
+              "Shear-y": "Shear Stress Y",
+              "Shear-z": "Shear Stress Z"
+            }
           }
         },
         "LOAD_CASE_NAMES": {
@@ -142,8 +137,74 @@
             "type": "string"
           },
           "x-ui": {
-            "hint": "Static Load or Load Combination names",
+            "hint": "Static Load or Load Combination names (e.g., NAME(ST), NAME(CB))",
             "label": "Load Cases"
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Element No. Input",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each Element ID",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')"
+            }
+          },
+          "x-ui": {
+            "hint": "Use only ONE of the three methods: KEYS, TO, or STRUCTURE_GROUP_NAME",
+            "label": "Element Selection"
+          }
+        },
+        "PARTS": {
+          "type": "array",
+          "description": "Part Number Selection",
+          "items": {
+            "type": "string",
+            "enum": [
+              "All",
+              "Part_i",
+              "Part 1/4",
+              "Part 2/4",
+              "Part 3/4",
+              "Part_j"
+            ]
+          },
+          "default": [
+            "All"
+          ],
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Part Number"
+          }
+        },
+        "SELECT_TYPE": {
+          "type": "string",
+          "description": "Element Type Selection",
+          "enum": [
+            "TRUSS",
+            "BEAM",
+            "PLANE STRESS",
+            "PLATE",
+            "PLANE STRAIN",
+            "AXISYMMETRIC",
+            "SOLID",
+            "TENS-TRUSS",
+            "COMP-TRUSS"
+          ],
+          "x-ui": {
+            "label": "Element Type"
           }
         }
       }

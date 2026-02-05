@@ -1,10 +1,9 @@
-// 상태 타입 (단순화됨)
+// 상태 타입 (소문자 통일)
 export type StatusType =
-  | "empty"   // 비어있는원 - 시작 안함
-  | "wip"     // 작업 중 (Work In Progress)
-  | "done"    // 완료
-  | "warning" // 경고/문제
-  | "na";     // N/A - 해당없음
+  | "empty"     // 비어있는원 - 시작 안함
+  | "progress"  // 작업 중 (Work In Progress)
+  | "done"      // 완료
+  | "warning";  // 경고/문제
 
 export interface ApiTask {
   id: string;
@@ -24,7 +23,7 @@ export interface ApiTask {
   doc: StatusType;
   deploy: StatusType;
   issue: StatusType;
-  status: "In Progress" | "Done" | string;  // Working 제거
+  status: string;  // cancel, done, progress, working, none 등
   charge: string;
   remark: string;
   linkedEndpointId?: string; // 프로젝트 탭 엔드포인트 연결

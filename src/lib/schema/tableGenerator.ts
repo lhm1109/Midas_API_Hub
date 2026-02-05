@@ -195,18 +195,53 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
     parts.push(`<strong>${escapeHtml(field.ui.label)}</strong>`);
   }
 
-  // Standard enum
-  if (field.enum && field.enum.length > 0) {
-    parts.push('<strong>Enum Values:</strong>');
-    parts.push('<ul>');
-    field.enum.forEach((val: any) => {
-      const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
-      const label = enumLabels[String(val)] || val;
-      // Format: Label : "value" (shows what to actually use in API)
-      parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
+  // Standard enum (supports both field.enum and field.items.enum for arrays)
+  const fieldEnum = field.enum || ((field as any).items?.enum);
+
+  // 🔍 DEBUG: COMPONENTS 필드 추적
+  if (field.key === 'COMPONENTS') {
+    console.log('🔍 COMPONENTS field debug:', {
+      hasFieldEnum: !!field.enum,
+      hasItemsEnum: !!((field as any).items?.enum),
+      fieldEnum: fieldEnum,
+      enumLabelsByType: (field as any)['x-enum-labels-by-type'],
+      enumLabels: (field as any).enumLabels,
+      items: (field as any).items,
     });
-    parts.push('</ul>');
   }
+
+  if (fieldEnum && fieldEnum.length > 0) {
+    // Check both x-enum-labels-by-type and enumLabels (camelCase version)
+    const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || (field as any).enumLabels;
+    const enumLabelsSimple = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
+
+    // If x-enum-labels-by-type exists, show labels grouped by type
+    // If x-enum-labels-by-type exists, show labels (without type headers)
+    if (enumLabelsByType && Object.keys(enumLabelsByType).length > 0) {
+      parts.push('<strong>Enum Values by Type:</strong>');
+      parts.push('<ul>');
+      // Get the first type's labels (all types should have same enum values)
+      const firstType = Object.keys(enumLabelsByType)[0];
+      const typeLabels = enumLabelsByType[firstType];
+      fieldEnum.forEach((val: any) => {
+        const label = (typeLabels as Record<string, string>)[String(val)] || val;
+        parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
+      });
+      parts.push('</ul>');
+    } else {
+      // Fallback to x-enum-labels
+      parts.push('<strong>Enum Values:</strong>');
+      parts.push('<ul>');
+      fieldEnum.forEach((val: any) => {
+        const label = enumLabelsSimple[String(val)] || val;
+        // Format: Label : "value" (shows what to actually use in API)
+        parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
+      });
+      parts.push('</ul>');
+    }
+  }
+
+
 
   // Enum by type
   if (field.enumByType) {
@@ -493,8 +528,8 @@ export function generateHTMLDocument(
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
   const tableHTML = generateTableHTMLLegacy(sections);
 
-  // 🔥 Wrapper key (Assign/Argument) 정보 추출
-  const wrapperKey = (schema as any).title || 'Assign';
+  // 🔥 Wrapper key (Assign/Argument) 정보 추출 - properties에서 실제 wrapper key 찾기
+  const wrapperKey = getWrapperKey(schema);
   const wrapperDescription = getWrapperDescription(schema);
 
   // Zendesk 호환 테이블 (inline 스타일) - 두 개의 테이블
@@ -571,6 +606,24 @@ export function generateHTMLDocument(
       </table>
     </div>
   `.trim();
+}
+
+/**
+ * Wrapper key 추출 (schema에서 Assign/Argument key 찾기)
+ */
+function getWrapperKey(schema: EnhancedSchema): string {
+  const properties = (schema as any).properties;
+  if (!properties) return 'Assign';
+
+  // Assign 또는 Argument wrapper 찾기
+  const wrapperKeys = ['Assign', 'Argument'];
+  for (const key of wrapperKeys) {
+    if (properties[key]) {
+      return key;
+    }
+  }
+
+  return 'Assign';
 }
 
 /**
@@ -686,10 +739,15 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
   const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array [${field.items?.type || 'any'}]` : field.type;
 
+  // 🔥 Zendesk 스타일: children이 있으면 No. 칼럼에 rowspan 적용
+  const hasChildren = field.children && field.children.length > 0;
+  const rowspanValue = hasChildren ? field.children!.length + 1 : 1;
+  const rowspanAttr = hasChildren ? ` rowspan="${rowspanValue}"` : '';
+
   // Zendesk 스타일: inline 패딩 + <p> 태그 + text-align: center
-  return `
+  let html = `
     <tr>
-      <td style="${ZENDESK_CELL_STYLE}">
+      <td style="${ZENDESK_CELL_STYLE}"${rowspanAttr}>
         <p style="text-align: center;">${rowNumber}</p>
       </td>
       <td style="${ZENDESK_CELL_STYLE}" colspan="2">
@@ -709,6 +767,47 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
       </td>
     </tr>
   `;
+
+  // 🔥 Zendesk 스타일: 중첩 필드는 No. 칼럼 없이, Description이 두 칼럼으로 분리 (인덱스 + 내용)
+  if (hasChildren) {
+    let childNo = 1;
+    for (const child of field.children!) {
+      const childDescriptionHTML = generateFieldDescriptionLegacy(child);
+      const childRequiredHTML = generateRequiredCellLegacy(child);
+      const childDefaultValue = formatDefaultValue(child.default, child.type);
+      const childTypeDisplay = child.type === 'array' ? `Array [${child.items?.type || 'any'}]` : child.type;
+
+      // 중첩 필드의 key에서 부모 prefix 제거 (UNIT.FORCE → FORCE)
+      const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
+
+      // 🔥 Zendesk 스타일: child row는 No. 칼럼 없음 (rowspan으로 parent가 점유)
+      // Description이 두 개의 td로 분리: (인덱스) + (설명)
+      html += `
+        <tr>
+          <td style="${ZENDESK_CELL_STYLE}">
+            <p style="text-align: center;">(${childNo++})</p>
+          </td>
+          <td style="${ZENDESK_CELL_STYLE}">
+            ${childDescriptionHTML}
+          </td>
+          <td style="${ZENDESK_CELL_STYLE}">
+            <p style="text-align: center;">"${escapeHtml(childKeyDisplay || '')}"</p>
+          </td>
+          <td style="${ZENDESK_CELL_STYLE}">
+            <p style="text-align: center;">${childTypeDisplay}</p>
+          </td>
+          <td style="${ZENDESK_CELL_STYLE}">
+            <p style="text-align: center;">${childDefaultValue}</p>
+          </td>
+          <td style="${ZENDESK_CELL_STYLE}">
+            <p style="text-align: center;">${childRequiredHTML}</p>
+          </td>
+        </tr>
+      `;
+    }
+  }
+
+  return html;
 }
 
 function generateFieldDescriptionLegacy(field: EnhancedField): string {
@@ -721,12 +820,42 @@ function generateFieldDescriptionLegacy(field: EnhancedField): string {
   }
 
   // Zendesk 스타일: enum 값은 <p> • value 형식
-  if (field.enum && field.enum.length > 0) {
-    field.enum.forEach((val: any) => {
-      const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
-      const label = enumLabels[String(val)] || val;
-      parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
+  // Support both field.enum and field.items.enum for arrays
+  const fieldEnum = field.enum || ((field as any).items?.enum);
+
+  // 🔍 DEBUG: COMPONENTS 필드 추적 (Legacy)
+  if (field.key === 'COMPONENTS') {
+    console.log('🔍 COMPONENTS field debug (Legacy):', {
+      hasFieldEnum: !!field.enum,
+      hasItemsEnum: !!((field as any).items?.enum),
+      fieldEnum: fieldEnum,
+      enumLabelsByType: (field as any)['x-enum-labels-by-type'],
+      enumLabels: (field as any).enumLabels,
+      items: (field as any).items,
     });
+  }
+
+  if (fieldEnum && fieldEnum.length > 0) {
+    // Check both x-enum-labels-by-type and enumLabels (camelCase version)
+    const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || (field as any).enumLabels;
+    const enumLabelsSimple = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
+
+    // If x-enum-labels-by-type exists, show labels (without type headers)
+    if (enumLabelsByType && Object.keys(enumLabelsByType).length > 0) {
+      // Get the first type's labels (all types should have same enum values)
+      const firstType = Object.keys(enumLabelsByType)[0];
+      const typeLabels = enumLabelsByType[firstType];
+      fieldEnum.forEach((val: any) => {
+        const label = (typeLabels as Record<string, string>)[String(val)] || val;
+        parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
+      });
+    } else {
+      // Fallback to x-enum-labels
+      fieldEnum.forEach((val: any) => {
+        const label = enumLabelsSimple[String(val)] || val;
+        parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
+      });
+    }
   }
 
   if (field.enumByType) {
@@ -1127,13 +1256,30 @@ export function schemaToZendeskTableRows(
       // Description 생성 (enum 값 포함)
       let description = field.ui?.label || field.description || field.key;
 
-      if (field.enum && field.enum.length > 0) {
-        const enumList = field.enum.map((val: any) => {
+      // Support both field.enum and field.items.enum for arrays
+      const fieldEnum = field.enum || ((field as any).items?.enum);
+      if (fieldEnum && fieldEnum.length > 0) {
+        // Check both x-enum-labels-by-type and enumLabels (camelCase version)
+        const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || (field as any).enumLabels;
+
+        if (enumLabelsByType && typeof enumLabelsByType === 'object' && Object.keys(enumLabelsByType).length > 0) {
+          // Render without type headers
+          const firstType = Object.keys(enumLabelsByType)[0];
+          const typeLabels = enumLabelsByType[firstType];
+          const enumList = fieldEnum.map((val: any) => {
+            const label = (typeLabels as Record<string, string>)[String(val)] || val;
+            return `&nbsp;•&nbsp;${label}: "${val}"`;
+          }).join('<br>');
+          description += `<br>${enumList}`;
+        } else {
+          // Fallback to simple labels
           const enumLabels = (field as any).enumLabels || (field as any)['x-enum-labels'] || {};
-          const label = enumLabels[String(val)] || val;
-          return `&nbsp;•&nbsp;${label}: "${val}"`;
-        }).join('<br>');
-        description += `<br>${enumList}`;
+          const enumList = fieldEnum.map((val: any) => {
+            const label = enumLabels[String(val)] || val;
+            return `&nbsp;•&nbsp;${label}: "${val}"`;
+          }).join('<br>');
+          description += `<br>${enumList}`;
+        }
       }
 
       rows.push({
@@ -1151,13 +1297,28 @@ export function schemaToZendeskTableRows(
         for (const child of field.children) {
           let childDescription = child.ui?.label || child.description || child.key;
 
-          if (child.enum && child.enum.length > 0) {
-            const enumList = child.enum.map((val: any) => {
+          // Support both child.enum and child.items.enum for arrays
+          const childEnum = child.enum || ((child as any).items?.enum);
+          if (childEnum && childEnum.length > 0) {
+            const enumLabelsByType = (child as any).enumLabelsByType || (child as any)['x-enum-labels-by-type'] || (child as any).enumLabels;
+
+            if (enumLabelsByType && typeof enumLabelsByType === 'object' && Object.keys(enumLabelsByType).length > 0) {
+              // Render without type headers
+              const firstType = Object.keys(enumLabelsByType)[0];
+              const typeLabels = enumLabelsByType[firstType];
+              const enumList = childEnum.map((val: any) => {
+                const label = (typeLabels as Record<string, string>)[String(val)] || val;
+                return `&nbsp;•&nbsp;${label}: "${val}"`;
+              }).join('<br>');
+              childDescription += `<br>${enumList}`;
+            } else {
               const enumLabels = (child as any).enumLabels || (child as any)['x-enum-labels'] || {};
-              const label = enumLabels[String(val)] || val;
-              return `&nbsp;•&nbsp;${label}: "${val}"`;
-            }).join('<br>');
-            childDescription += `<br>${enumList}`;
+              const enumList = childEnum.map((val: any) => {
+                const label = enumLabels[String(val)] || val;
+                return `&nbsp;•&nbsp;${label}: "${val}"`;
+              }).join('<br>');
+              childDescription += `<br>${enumList}`;
+            }
           }
 
           const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;

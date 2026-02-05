@@ -9,22 +9,29 @@ import { toCanonicalJSON } from '../utils/deterministic-json.js';
 import { sha256 } from '../utils/hash.js';
 import { RULES_VERSION, JSON_SCHEMA_VERSION } from '../rules/transform.js';
 import { validateAndTransform } from '../utils/schema-validator.js';
-import { loadSharedRules, getRulesDir, getLastLoadError } from '../utils/rules-loader.js';
+import { loadSharedRules, getRulesDir, getLastLoadError, loadAccuracyPolicy } from '../utils/rules-loader.js';
+import { validateWithAccuracyPolicy } from '../utils/accuracy-validator.js';
+import type { AccuracyPolicy } from '../types/accuracy-types.js';
+import { removeInternalMarkers } from '../utils/schema-cleaner.js';
 
 export interface SaveSchemaInput {
     schemaName: string;
-    outputDir?: string;
     schema: Record<string, unknown>;
     description?: string;
+    outputDir?: string;
     questions?: Question[];
-    skipValidation?: boolean;  // Skip validation (for debugging)
-    wrapWithEntityCollection?: boolean;  // Wrap schema with Assign → additionalProperties structure
-    wrapWithSimpleObject?: boolean;  // Wrap with simple Argument object (no additionalProperties)
-    bodyRoot?: string;  // Body root key (default: "Assign")
-    excludeSchemaField?: boolean;  // Exclude $schema field from output
-    generateTableSchema?: boolean;  // Generate Table API schema using tableSchemaRegistry
-    tableTypeEnums?: string[];  // TABLE_TYPE enum values (required when generateTableSchema is true)
-    additionalTableFields?: string[];  // Additional fields from tableSchemaRegistry to include
+    skipValidation?: boolean;
+    confirmed?: boolean;  // NEW: Set to true to skip review and save directly
+    wrapWithEntityCollection?: boolean;
+    wrapWithSimpleObject?: boolean;
+    generateTableSchema?: boolean;
+    tableTypeEnums?: string[];
+    componentEnums?: string[];
+    componentEnumLabelsByType?: Record<string, Record<string, string>>;
+    partEnums?: string[];
+    additionalTableFields?: string[];
+    bodyRoot?: string;
+    excludeSchemaField?: boolean;
 }
 
 
@@ -37,14 +44,19 @@ export interface Question {
 
 export interface SaveSchemaResult {
     ok: boolean;
-    status: 'saved' | 'pending_questions';
+    status: 'saved' | 'pending_questions' | 'pending_review';  // NEW: pending_review
     schemaPath?: string;
     metaPath?: string;
     outputHash?: string;
     pendingQuestions?: Question[];
+    processedSchema?: Record<string, unknown>;  // NEW: Schema with auto-additions
+    autoAddedFields?: string[];  // NEW: List of auto-added fields
+    message?: string;  // NEW: Message for LLM
     validation?: {
         errors: Array<{ field: string; message: string; fixApplied?: boolean }>;
         warnings: Array<{ field: string; message: string }>;
+        evidenceCoverage?: number;
+        autoQuestionsGenerated?: number;
     };
     stats?: {
         fieldCount: number;
@@ -59,7 +71,10 @@ export interface SaveSchemaResult {
  */
 export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResult> {
     try {
-        // 1. Validate input
+        // 1. Clean input schema defaults FIRST
+        let schema = cleanInputSchemaDefaults(input.schema);
+
+        // 2. Validate schema if not skippedut
         if (!input.schemaName) {
             throw new Error('schemaName is required');
         }
@@ -82,14 +97,29 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
         console.error('[DEBUG] save_schema input:', JSON.stringify({
             generateTableSchema: input.generateTableSchema,
             tableTypeEnums: input.tableTypeEnums,
+            componentEnums: input.componentEnums,
+            componentEnumLabelsByType: input.componentEnumLabelsByType,
             additionalTableFields: input.additionalTableFields,
         }, null, 2));
 
-        // 3. Generate Table schema from registry if requested
-        let schema = { ...input.schema };
-        if (input.generateTableSchema) {
+        // 3. Generate Table schema ONLY if explicitly requested by LLM
+        // ⚠️ NO AUTO-DETECTION - LLM must read promptRules.yaml and decide
+        // LLM workflow:
+        //   1. Read shared.yaml (tableSchemaRegistry)
+        //   2. Read promptRules.yaml (tableDetectionRules)
+        //   3. Decide if generateTableSchema: true/false
+        //   4. Call save_schema with explicit flag
+        const isTableSchema = input.generateTableSchema === true;
+
+        // 3. Generate Table schema from registry ONLY if LLM explicitly requested
+        if (isTableSchema) {
             console.error('[DEBUG] Generating Table schema from registry...');
-            schema = generateTableSchemaFromRegistry(schema, input.tableTypeEnums, input.additionalTableFields);
+            schema = generateTableSchemaFromRegistry(schema, input.tableTypeEnums, input.componentEnums, input.componentEnumLabelsByType, input.partEnums, input.additionalTableFields);
+
+            // 🔥 CRITICAL: Final cleanup after table schema generation
+            // Remove defaults from required fields (TABLE_TYPE, etc.)
+            console.error('[DEBUG] Final cleanup: removing defaults from required fields...');
+            schema = cleanInputSchemaDefaults(schema);
         }
 
         // 4. Validate and transform based on SSOT rules
@@ -98,6 +128,53 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
         if (!input.skipValidation) {
             validationResult = validateAndTransform(schema);
             schema = validationResult.transformed as Record<string, unknown>;
+        }
+
+        // 4a. Accuracy policy validation (evidence-based)
+        const accuracyPolicy = loadAccuracyPolicy() as AccuracyPolicy | null;
+        let accuracyResult = null;
+        const autoGeneratedQuestions: SaveSchemaInput['questions'] = [];
+
+        if (accuracyPolicy && !input.skipValidation) {
+            console.error('[DEBUG] Running accuracy policy validation...');
+            accuracyResult = validateWithAccuracyPolicy(schema, accuracyPolicy);
+
+            // Convert auto-generated questions to Question format
+            for (const autoQ of accuracyResult.autoQuestions) {
+                autoGeneratedQuestions.push({
+                    field: autoQ.field,
+                    question: autoQ.question,
+                    context: autoQ.context,
+                    suggestion: undefined
+                });
+            }
+
+            // If there are auto-questions or evidence errors, return them
+            if (autoGeneratedQuestions.length > 0 || accuracyResult.errors.length > 0) {
+                console.error(`[DEBUG] Accuracy validation: ${accuracyResult.errors.length} errors, ${autoGeneratedQuestions.length} auto-questions`);
+                console.error('[DEBUG] Evidence coverage:', (accuracyResult.evidenceCoverage * 100).toFixed(0) + '%');
+            }
+        }
+
+        // Return auto-generated questions if present (before wrapping)
+        // 🚨 DISABLED: Questions no longer block saving - treat as warnings only
+        if (autoGeneratedQuestions.length > 0) {
+            console.error(`[WARNING] ${autoGeneratedQuestions.length} auto-questions generated (not blocking save):`);
+            console.error(JSON.stringify(autoGeneratedQuestions, null, 2));
+            // Continue with save instead of blocking
+            /* ORIGINAL BLOCKING CODE:
+            return {
+                ok: true,
+                status: 'pending_questions',
+                pendingQuestions: autoGeneratedQuestions,
+                validation: accuracyResult ? {
+                    errors: [],
+                    warnings: [],
+                    evidenceCoverage: accuracyResult.evidenceCoverage,
+                    autoQuestionsGenerated: autoGeneratedQuestions.length
+                } : undefined
+            };
+            */
         }
 
         // 4. Wrap with entity collection structure if requested
@@ -112,7 +189,18 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
             schema = wrapWithSimpleObjectStructure(schema, bodyRoot);
         }
 
-        // 5. Handle $schema field
+        // 5. Clean up internal markers (x-evidence)
+        // Evidence is for validation only, not for final schema
+        schema = removeInternalMarkers(schema);
+
+        // ⚠️ IMPORTANT: Return processed schema to LLM for review
+        // LLM should show user what was auto-generated (TABLE_NAME, TABLE_TYPE, etc.)
+        // Then LLM calls save_schema again with confirmed: true to actually save
+        // ✅ FIX 3: Remove pending_review workflow - always save directly
+        // LLM should read rules first, generate complete schema, then save
+        // No intermediate confirmation needed
+
+        // 6. Handle $schema field
         // Default: exclude $schema for OpenAPI 3.1 compatibility
         // Only add if explicitly requested (!excludeSchemaField)
         if (input.excludeSchemaField === false && !schema['$schema']) {
@@ -184,6 +272,28 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
             error: message,
         };
     }
+}
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Auto-detect if schema is table-related based on name patterns
+ */
+function detectTableSchema(schemaName: string): boolean {
+    const tableKeywords = [
+        'activation',  // records_activation, beam_activation
+        'records',     // records table
+        'filter',      // result filtering
+        'table',       // explicit table
+        'result',      // result table
+        'output'       // output table
+        // ❌ 'dialog' removed - too broad, catches settings dialogs
+    ];
+
+    const lowerName = schemaName.toLowerCase();
+    return tableKeywords.some(keyword => lowerName.includes(keyword));
 }
 
 /**
@@ -285,6 +395,74 @@ function wrapWithSimpleObjectStructure(
     return wrappedSchema;
 }
 
+/**
+ * Clean input schema defaults:
+ * 1. Remove defaults from required fields (must be user-provided)
+ * 2. Remove multi-value array defaults (should be single value or empty)
+ */
+function cleanInputSchemaDefaults(
+    schema: Record<string, unknown>
+): Record<string, unknown> {
+    const cleaned = JSON.parse(JSON.stringify(schema));
+    const properties = (cleaned.properties as Record<string, any>) || {};
+    const required = (cleaned.required as string[]) || [];
+
+    // Clean direct properties
+    for (const [fieldName, fieldDef] of Object.entries(properties)) {
+        // Remove default if field is required
+        if (required.includes(fieldName) && fieldDef.default !== undefined) {
+            console.error(`[CLEAN] Removing default from required field: ${fieldName}`);
+            delete fieldDef.default;
+        }
+
+        // Remove multi-value array defaults
+        if (Array.isArray(fieldDef.default) && fieldDef.default.length > 1) {
+            console.error(`[CLEAN] Removing multi-value array default from: ${fieldName}`);
+            delete fieldDef.default;
+        }
+
+        // Clean nested Argument wrapper
+        if (fieldName === 'Argument' && fieldDef.properties) {
+            const argRequired = (fieldDef.required as string[]) || [];
+            for (const [argField, argDef] of Object.entries(fieldDef.properties)) {
+                const typedArgDef = argDef as any;
+                if (argRequired.includes(argField) && typedArgDef.default !== undefined) {
+                    console.error(`[CLEAN] Removing default from required Argument field: ${argField}`);
+                    delete typedArgDef.default;
+                }
+                if (Array.isArray(typedArgDef.default) && typedArgDef.default.length > 1) {
+                    console.error(`[CLEAN] Removing multi-value array default from Argument: ${argField}`);
+                    delete typedArgDef.default;
+                }
+            }
+        }
+    }
+
+    return cleaned;
+}
+
+
+/**
+ * Remove units from enum labels
+ * Strips patterns like (N/mm²), (kN), (mm), etc. from label strings
+ */
+function removeUnitsFromLabels(
+    labelsByType: Record<string, Record<string, string>>
+): Record<string, Record<string, string>> {
+    const cleaned: Record<string, Record<string, string>> = {};
+
+    for (const [type, labels] of Object.entries(labelsByType)) {
+        cleaned[type] = {};
+        for (const [key, label] of Object.entries(labels)) {
+            // Remove units in parentheses: (N/mm²), (kN), (mm), etc.
+            // Pattern: \s*\([^)]+\)\s*$ matches whitespace + (anything) at end of string
+            cleaned[type][key] = label.replace(/\s*\([^)]+\)\s*$/g, '').trim();
+        }
+    }
+
+    return cleaned;
+}
+
 
 /**
  * Generate Table schema using tableSchemaRegistry from shared.yaml
@@ -293,6 +471,9 @@ function wrapWithSimpleObjectStructure(
 function generateTableSchemaFromRegistry(
     inputSchema: Record<string, unknown>,
     tableTypeEnums?: string[],
+    componentEnums?: string[],
+    componentEnumLabelsByType?: Record<string, Record<string, string>>,
+    partEnums?: string[],
     additionalFields?: string[]
 ): Record<string, unknown> {
     const sharedRules = loadSharedRules();
@@ -319,6 +500,7 @@ function generateTableSchemaFromRegistry(
     }
 
     const commonFields = tableRegistry.commonFields;
+    const tableSpecificFields = tableRegistry.tableSpecificFields || {};
     const baseFields = tableRegistry.baseFields || ['TABLE_NAME', 'TABLE_TYPE', 'EXPORT_PATH', 'UNIT', 'STYLES', 'COMPONENTS'];
 
     // Start with input schema properties
@@ -338,9 +520,20 @@ function generateTableSchemaFromRegistry(
                 description: fieldDef.description,
             };
 
-            // Add default if present
-            if (fieldDef.default !== undefined) {
-                fieldSchema.default = fieldDef.default;
+            // ✅ FIX 1: Only add default if NOT required (required fields must be user-provided)
+            const isRequired = fieldDef.required === true;
+            if (fieldDef.default !== undefined && !isRequired) {
+                // ✅ FIX 2: For arrays, ensure default has only 0 or 1 element
+                if (Array.isArray(fieldDef.default)) {
+                    if (fieldDef.default.length === 0) {
+                        fieldSchema.default = [];
+                    } else if (fieldDef.default.length === 1) {
+                        fieldSchema.default = fieldDef.default;
+                    }
+                    // Skip if multiple values - no default
+                } else {
+                    fieldSchema.default = fieldDef.default;
+                }
             }
 
             // Special handling for TABLE_TYPE - use provided enums
@@ -348,13 +541,25 @@ function generateTableSchemaFromRegistry(
                 fieldSchema.enum = tableTypeEnums;
             }
 
+            // Special handling for COMPONENTS - use provided enums and labels by type
+            if (fieldName === 'COMPONENTS' && componentEnums && componentEnums.length > 0) {
+                fieldSchema.items = {
+                    type: 'string',
+                    enum: componentEnums
+                };
+                // Add x-enum-labels-by-type if provided (with units removed)
+                if (componentEnumLabelsByType && Object.keys(componentEnumLabelsByType).length > 0) {
+                    fieldSchema['x-enum-labels-by-type'] = removeUnitsFromLabels(componentEnumLabelsByType);
+                }
+            }
+
             // Add nested properties if present (for UNIT, STYLES, NODE_ELEMS)
             if (fieldDef.properties) {
                 fieldSchema.properties = fieldDef.properties;
             }
 
-            // Add array items if present
-            if (fieldDef.items) {
+            // Add array items if present (but not for COMPONENTS if we already set it)
+            if (fieldDef.items && !(fieldName === 'COMPONENTS' && componentEnums && componentEnums.length > 0)) {
                 fieldSchema.items = fieldDef.items;
             }
 
@@ -369,16 +574,17 @@ function generateTableSchemaFromRegistry(
             properties[fieldName] = fieldSchema;
 
             // Mark as required if specified
-            if (fieldDef.required) {
+            if (isRequired) {
                 required.push(fieldName);
             }
         }
     }
 
-    // Add additional fields from registry if specified
+    // Add additional fields from registry if specified (search both commonFields and tableSpecificFields)
     if (additionalFields && additionalFields.length > 0) {
         for (const fieldName of additionalFields) {
-            const fieldDef = commonFields[fieldName];
+            // Look in commonFields first, then tableSpecificFields
+            const fieldDef = commonFields[fieldName] || tableSpecificFields[fieldName];
             if (fieldDef && !properties[fieldName]) {
                 const fieldSchema: Record<string, unknown> = {
                     type: fieldDef.type,
@@ -386,9 +592,21 @@ function generateTableSchemaFromRegistry(
                 };
                 if (fieldDef.default !== undefined) fieldSchema.default = fieldDef.default;
                 if (fieldDef.properties) fieldSchema.properties = fieldDef.properties;
-                if (fieldDef.items) fieldSchema.items = fieldDef.items;
+
+                // Special handling for PARTS - use provided partEnums if available
+                if (fieldName === 'PARTS' && fieldDef.items) {
+                    fieldSchema.items = { ...fieldDef.items };
+                    if (partEnums && partEnums.length > 0) {
+                        (fieldSchema.items as Record<string, unknown>).enum = partEnums;
+                    }
+                } else if (fieldDef.items) {
+                    fieldSchema.items = fieldDef.items;
+                }
+
                 if (fieldDef.enum) fieldSchema.enum = fieldDef.enum;
+                if (fieldDef.oneOf) fieldSchema.oneOf = fieldDef.oneOf;
                 if (fieldDef['x-ui']) fieldSchema['x-ui'] = fieldDef['x-ui'];
+                if (fieldDef['x-optional-when']) fieldSchema['x-optional-when'] = fieldDef['x-optional-when'];
 
                 properties[fieldName] = fieldSchema;
             }
@@ -429,130 +647,45 @@ export const saveSchemaTool = {
     name: 'save_schema',
     description: `Save AI-generated JSON Schema. Auto-validation/transformation based on shared.yaml SSOT.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 Schema Generation Rules (MUST FOLLOW - shared.yaml SSOT)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 MUST READ FIRST: Schema Generation Guidelines
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-【Core Principles】
-- Validation logic: Use standard JSON Schema keywords (allOf, if/then, required, enum)
-- UI markers: x-* prefix (removing them won't affect validation)
+🚨 **REQUIRED WORKFLOW:**
+   1. read_resource('mcp://rules/shared.yaml')     // Table registry, common fields
+   2. read_resource('mcp://rules/promptRules.yaml') // LLM guidelines, critical warnings
+   3. Generate schema following the rules
+   4. Call save_schema with complete schema
 
-【Field Naming Rules (MUST FOLLOW)】
-🚨 DO NOT use long descriptive names like "bCombinedShearTorsion"
-✅ Use abbreviated/concise keys with Hungarian notation prefix:
-   - Prefix: i=integer, b=boolean, d=number, s=string, n=number
-   - Use UPPERCASE abbreviations after prefix
-   - Max 15-20 characters recommended
+⚠️ **DO NOT skip step 1 & 2** - All field naming rules, critical warnings, and
+   patterns are defined in these external files (NOT in this description).
 
-Examples:
-   ❌ bCombinedShearTorsion → ✅ bCOMB_ST
-   ❌ bFlexuralStrengthCheck → ✅ bFLEX_CHK  
-   ❌ bPrincipalStressMaxShear → ✅ bPRIN_SHEAR
-   ❌ sDesignCode → ✅ sDESIGN_CD
-   ❌ iTendonType → ✅ iTENDON
-   ❌ dExposureUserValue → ✅ dEXP_USER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 Quick Reference (Full details in promptRules.yaml)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-【oneOf Pattern (RadioGroup/Dropdown with integer values)】
-🎯 Use oneOf with const+title for integer/string options:
+**Table Schemas:**
+✅ ALWAYS: componentEnums + generateTableSchema: true + wrapWithSimpleObject: true
+❌ NEVER include: SELECT_TYPE, Element Type dropdowns (UI-only controls)
 
-Example - RadioGroup with integer values:
-  "iCONST_TYPE": {
-    "type": "integer",
-    "default": 1,
-    "oneOf": [
-      { "const": 0, "title": "Segmental" },
-      { "const": 1, "title": "Non-Segmental" }
-    ],
-    "x-ui": { "component": "RadioGroup", "label": "Construction Type" }
-  }
+**Field Naming:**
+✅ Use: bCOMB_ST, iFLEX_CHK, sDESIGN_CD (abbreviated, max 15-20 chars)
+❌ Avoid: bCombinedShearTorsion, bFlexuralStrengthCheck (too long)
 
-Example - Dropdown with string values:
-  "sDESIGN_CD": {
-    "type": "string",
-    "default": "AASHTO-LRFD20",
-    "oneOf": [
-      { "const": "AASHTO-LRFD20", "title": "AASHTO-LRFD20" },
-      { "const": "AASHTO-LRFD17", "title": "AASHTO-LRFD17" }
-    ],
-    "x-ui": { "component": "Dropdown", "label": "Design Code" }
-  }
+**When Uncertain:**
+📋 Use 'questions' parameter instead of guessing
+Example: questions: [{ field: "sDESIGN_CD", question: "What are all dropdown options?" }]
 
-【Field Ordering (IMPORTANT)】
-📌 Properties are rendered in the order they appear in the schema.
-📌 Use x-ui.order for explicit ordering if needed.
-📌 Group related fields together logically.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📂 Related Resources (via read_resource)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Recommended field order:
-1. Primary selection fields (Design Code, Type selectors)
-2. Input parameters (grouped by category)
-3. Output/calculation options (checkboxes)
-4. Conditional fields last
+- mcp://rules/shared.yaml        → Table registry, markers, common fields
+- mcp://rules/promptRules.yaml   → LLM guidelines, critical warnings, patterns
+- mcp://rules/mcp.yaml           → Field abbreviations dictionary
+- mcp://rules/accuracyPolicy.yaml → Auto-question patterns
 
-【Section Grouping with x-ui.groupId】
-📌 Use x-ui.groupId to organize fields into visual sections:
-
-Example:
-  "iTENDON": {
-    "type": "integer",
-    "x-ui": { "label": "Tendon Type", "groupId": "inputParams" }
-  },
-  "bFLEX_CHK": {
-    "type": "boolean",
-    "x-ui": { "label": "Flexural Strength Check", "groupId": "outputParams" }
-  }
-
-【Valid x-* Markers (markerRegistry SSOT)】
-✅ x-ui: UI metadata (label, groupId, hint, groups, component, order)
-✅ x-transport: API transport info
-✅ x-enum-labels: Enum value labels (UI only) - for simple enum arrays
-✅ x-enum-labels-by-type: Enum labels by TYPE
-✅ x-required-when: Show as required in UI when condition is met
-✅ x-optional-when: Show as optional in UI when condition is met
-
-【Conditional Fields (x-optional-when)】
-Example - Field visible only when another field has specific value:
-  "dEXP_USER": {
-    "type": "number",
-    "x-optional-when": { "iEXP_FACT": 2 },
-    "x-ui": { "label": "User Value" }
-  }
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ MANDATORY: When to Use 'questions' Parameter (MUST ASK)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🚨 DO NOT generate schema if ANY of these are uncertain:
-
-1. **Dropdown/Enum options incomplete**
-   - If only ONE option is visible (e.g., "AASHTO-LRFD20" in dropdown)
-   - You MUST ask: "What are all available options for this dropdown?"
-   
-2. **Field type/enum values unclear**
-   - Ask before assuming string/integer/boolean
-
-3. **Conditional logic complex**
-   - Ask to clarify dependencies between fields
-
-4. **Default values uncertain**
-   - Ask what the default should be
-
-📋 How to use 'questions' parameter:
-  {
-    "schemaName": "psc_design_code",
-    "schema": {},  // Empty or partial schema
-    "questions": [
-      {
-        "field": "sDesignCode",
-        "question": "What are all available Design Code options for the dropdown?",
-        "context": "Image shows only 'AASHTO-LRFD20' selected",
-        "suggestion": ["AASHTO-LRFD20", "AASHTO-LRFD17", "Eurocode2"]
-      }
-    ]
-  }
-
-When questions are provided, tool returns 'pending_questions' status instead of saving.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
     inputSchema: {
         type: 'object' as const,
         properties: {
@@ -599,18 +732,32 @@ When questions are provided, tool returns 'pending_questions' status instead of 
             },
             wrapWithSimpleObject: {
                 type: 'boolean',
-                description: 'Wrap schema with simple Argument object structure (for POST table schemas). No additionalProperties, just direct properties under Argument.',
+                description: 'Wrap schema with simple Argument object structure. REQUIRED for ALL Table POST body schemas (e.g., dialogs, activation, filtering). Use together with generateTableSchema.',
                 default: false,
             },
             generateTableSchema: {
                 type: 'boolean',
-                description: 'Generate Table API schema using tableSchemaRegistry from shared.yaml. Automatically includes standard fields (TABLE_NAME, TABLE_TYPE, UNIT, STYLES, COMPONENTS, etc.)',
+                description: 'Generate Table API schema using tableSchemaRegistry. REQUIRED for ALL table-related schemas (result tables, dialogs, activation, filtering). Automatically includes TABLE_NAME, TABLE_TYPE, EXPORT_PATH, UNIT, STYLES, COMPONENTS. Set to true for any schema related to table results or table filtering.',
                 default: false,
             },
             tableTypeEnums: {
                 type: 'array',
                 items: { type: 'string' },
                 description: 'TABLE_TYPE enum values. Required when generateTableSchema is true.',
+            },
+            componentEnums: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'COMPONENTS array item enum values. CRITICAL: When user provides a table image, YOU MUST read the column headers from the table and provide them here. Extract ALL visible column names (e.g., ["Elem", "Part", "Girder/Slab", "Comp./Tens.", "Stage", "CHK", "FT", "FB", "FTL", "FBL", "FTR", "FBR", "FMAX", "ALW"]). DO NOT leave this empty if generateTableSchema is true.',
+            },
+            componentEnumLabelsByType: {
+                type: 'object',
+                description: 'x-enum-labels-by-type for COMPONENTS. Maps TABLE_TYPE to enum labels. CRITICAL: When you provide componentEnums, YOU SHOULD also provide meaningful labels for each component. Example: {"STRESSCS": {"FT": "Stress at Top (N/mm²)", "FB": "Stress at Bottom (N/mm²)", "Elem": "Element Number", "Part": "Part Number", "CHK": "Check Result"}}. This helps users understand what each component column represents.',
+            },
+            partEnums: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'PARTS array enum values (e.g., ["PartI", "PartJ", "Part 1/4", "Part 2/4", "Part 3/4"]). Used when additionalTableFields includes "PARTS". This overrides the default PARTS enum from shared.yaml.',
             },
             additionalTableFields: {
                 type: 'array',

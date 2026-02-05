@@ -1,0 +1,264 @@
+# ============================================================================
+# ACCURACY POLICY - Evidence-Based Schema Generation
+# ============================================================================
+# 이 파일은 MCP 스키마 생성 시 정확도를 보장하기 위한 정책을 정의합니다.
+# shared.yaml을 확장하여 사용됩니다.
+# ============================================================================
+
+version: "1.0.0"
+extends: "./shared.yaml"
+
+# ============================================================================
+# EVIDENCE REQUIREMENTS - 근거 요구사항
+# ============================================================================
+# 특정 필드/패턴에 대해 반드시 근거(evidence)가 필요함을 명시
+requireEvidenceFor:
+  # Enum 값 정의 시 반드시 근거 필요
+  - enum
+  # 조건부 required 로직
+  - conditionalRequired
+  # Default 값 설정 시
+  - defaultValue
+  # oneOf 패턴 사용 시
+  - oneOf
+  # x-enum-labels-by-type 사용 시
+  - enumLabelsByType
+
+# ============================================================================
+# EVIDENCE FORMAT - 근거 형식 정의
+# ============================================================================
+evidenceFormat:
+  # 근거 출처
+  source:
+    type: "enum"
+    values:
+      - "doc"          # 문서 (PDF, Word 등)
+      - "image"        # UI 스크린샷
+      - "api_spec"     # API 명세서
+      - "code"         # 기존 코드
+      - "inferred"     # 추론 (낮은 신뢰도)
+  
+  # 참조 위치 (선택사항)
+  ref:
+    type: "string"
+    examples:
+      - "Section 4.2"
+      - "Page 3"
+      - "Figure 12"
+      - "Line 45-50"
+    optional: true
+  
+  # 정확한 인용문 (선택사항)
+  quote:
+    type: "string"
+    description: "Exact text from source"
+    optional: true
+  
+  # 신뢰도
+  confidence:
+    type: "enum"
+    values:
+      - "high"    # 명시적으로 문서에 있음
+      - "medium"  # 문서에서 유추 가능
+      - "low"     # 추측/관행
+
+# ============================================================================
+# AUTO-QUESTION PATTERNS - 자동 질문 생성 패턴
+# ============================================================================
+# 특정 패턴이 감지되면 자동으로 질문을 생성
+autoQuestionPatterns:
+  # 패턴 1: Dropdown에 옵션이 1개만 보일 때
+  - id: "dropdown_single_option"
+    trigger:
+      type: "enum_count"
+      condition: "== 1"
+      context: "User provides dropdown/enum with only one visible option"
+    action:
+      type: "require_question"
+      priority: "high"
+      questionTemplate: "What are all available options for this dropdown/enum field?"
+      contextTemplate: "Image shows only '{firstValue}' selected/visible"
+    example:
+      field: "sDesignCode"
+      enumSeen: ["AASHTO-LRFD20"]
+      question: "What are all available Design Code options for the dropdown?"
+
+  # 패턴 2: "User" 또는 "Custom" 값 발견
+  - id: "user_custom_value"
+    trigger:
+      type: "keyword_detection"
+      keywords: ["User", "Custom", "Manual", "Direct Input"]
+      location: ["enum", "description", "label"]
+    action:
+      type: "require_question"
+      priority: "medium"
+      questionTemplate: "What is the expected value/format when user selects 'User/Custom' option?"
+    example:
+      field: "dEXP_FACT"
+      trigger: "enum includes 'User'"
+      question: "What value should be used when 'User' is selected?"
+
+  # 패턴 3: TYPE 조건 + enum 동시 존재
+  - id: "type_conditional_enum"
+    trigger:
+      type: "pattern_match"
+      pattern: "TYPE dependency + enum field"
+      condition: "allOf with TYPE condition and field has enum"
+    action:
+      type: "require_question"
+      priority: "high"
+      questionTemplate: "Please confirm enum values for all TYPE conditions"
+    example:
+      field: "STYPE"
+      trigger: "enum varies by TYPE"
+      question: "What are the STYPE options for each TYPE value?"
+
+  # 패턴 4: Default 값이 명시되지 않음
+  - id: "missing_default"
+    trigger:
+      type: "field_analysis"
+      condition: "required field without default value"
+      fieldTypes: ["integer", "number", "string"]
+    # 🚨 화이트리스트: 이 필드들은 default 없어도 질문하지 않음
+    whitelist:
+      - "TABLE_NAME"       # 런타임 자동 생성
+      - "TABLE_TYPE"       # enum 첫 번째 값 사용
+      - "EXPORT_PATH"      # Optional - 파일 저장 경로
+      - "UNIT"             # Optional - 단위 설정
+      - "STYLES"           # Optional - 숫자 포맷
+      - "COMPONENTS"       # componentEnums로 생성
+      - "NODE_ELEMS"       # Optional - oneOf 선택
+      - "LOAD_CASE_NAMES"  # Optional - 로드 케이스
+      - "OPT_CS"           # Optional - boolean
+      - "STAGE_STEP"       # Optional - 조건부
+      - "PARTS"            # Optional - All 기본값
+      - "PARTS_CS"         # Optional - All 기본값
+      - "COMP_TENS"        # Optional - All 기본값
+      - "GIRDER_SLAB"      # oneOf 첫 번째 값
+      - "DISP_OPT"         # Optional
+      - "AVERAGE_NODAL_RESULT"  # Optional - boolean
+    action:
+      type: "suggest_question"
+      priority: "low"
+      questionTemplate: "What should be the default value for this required field?"
+
+  # 패턴 5: 조건부 로직이 복잡함
+  - id: "complex_conditional"
+    trigger:
+      type: "complexity_check"
+      condition: "allOf with multiple nested if/then"
+      threshold: 3  # 3개 이상의 if/then
+    action:
+      type: "require_question"
+      priority: "high"
+      questionTemplate: "Please verify the conditional logic for all TYPE combinations"
+
+  # 패턴 6: 테이블 스키마에서 COMPONENTS enum 누락
+  - id: "missing_table_headers"
+    trigger:
+      type: "field_analysis"
+      condition: "COMPONENTS field exists but enum is empty or missing"
+      fieldName: "COMPONENTS"
+    action:
+      type: "require_question"
+      priority: "critical"
+      questionTemplate: "Please extract ALL table column headers visible in the image"
+      contextTemplate: "COMPONENTS field detected but enum values are missing. Table headers (Elem, Part, CHK, FT, FB, etc.) must be explicitly listed."
+    example:
+      field: "COMPONENTS"
+      trigger: "Table schema with empty COMPONENTS enum"
+      question: "What are ALL the column headers visible in the result table? (e.g., Elem, Part, Girder/Slab, Comp./Tens., Stage, CHK, FT, FB, FTL, FBL, FTR, FBR, FMAX, ALW)"
+
+# ============================================================================
+# DETERMINISTIC RULES - 재현성 보장
+# ============================================================================
+validationStrictness:
+  # 근거 없는 enum → 자동 reject
+  missingEvidenceForEnum:
+    action: "reject"
+    message: "Enum values require evidence (source + ref)"
+  
+  # 근거 없는 default → warning
+  missingEvidenceForDefault:
+    action: "warn"
+    message: "Default value should have evidence"
+  
+  # 의심스러운 confidence → 질문 생성
+  lowConfidenceEvidence:
+    action: "generate_question"
+    threshold: "low"
+    message: "Low confidence evidence detected - verification needed"
+
+# ============================================================================
+# DETERMINISTIC RULES - 재현성 보장
+# ============================================================================
+deterministicRules:
+  # 필드 순서 표준화
+  enforceFieldOrder: true
+  fieldOrderPriority:
+    - "type"
+    - "description"
+    - "enum"
+    - "default"
+    - "oneOf"
+    - "x-ui"
+    - "x-evidence"
+  
+  # enum 값 정렬
+  sortEnumValues: false  # 원본 순서 유지 (UI 순서 중요)
+  
+  # 일관된 key naming
+  enforceKeyNamingConvention: true
+  namingConvention:
+    prefix: "hungarian"  # i, b, d, s, n
+    casing: "UPPER_AFTER_PREFIX"  # iTENDON_TYPE, bCHECK
+
+# ============================================================================
+# QUALITY GATES - 품질 관문
+# ============================================================================
+qualityGates:
+  # Gate 1: Schema Structure (항상 필수)
+  schemaStructure:
+    enabled: true
+    checks:
+      - "valid_json_schema"
+      - "no_unknown_markers"
+      - "correct_wrapper_pattern"
+  
+  # Gate 2: Evidence Completeness
+  evidenceCompleteness:
+    enabled: true
+    minimumCoverage: 0.8  # 80% 필드에 근거 필요
+    criticalFields:  # 이 필드들은 100% 근거 필요
+      - "enum"
+      - "oneOf"
+  
+  # Gate 3: Question Quality
+  questionQuality:
+    enabled: true
+    minimumQuestions: 0
+    maximumQuestions: 10  # 너무 많으면 품질 문제
+    requireContext: true  # 모든 질문에 context 필요
+
+# ============================================================================
+# HALLUCINATION PREVENTION - Hallucination 방지
+# ============================================================================
+hallucinationPrevention:
+  # 문서에 없는 필드 감지
+  detectUndocumentedFields:
+    enabled: true
+    action: "require_evidence"
+  
+  # 일반적이지 않은 enum 값 감지
+  detectUnusualEnumValues:
+    enabled: true
+    knownPatterns:
+      - "TYPE values: BEAM, TRUSS, PLATE, etc."
+      - "Boolean checkboxes: 0 (unchecked), 1 (checked)"
+    action: "flag_for_review"
+  
+  # Default 값 추측 금지
+  prohibitInferredDefaults:
+    enabled: true
+    allowedSources: ["doc", "image", "api_spec"]
+    prohibitedSources: ["inferred"]

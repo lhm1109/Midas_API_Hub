@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 import { ApiTable } from './ApiTable';
 import { EditTaskModal } from './EditTaskModal';
 import { ApiTask, Column } from '../../../types/manager';
@@ -18,6 +20,7 @@ export function ManagerProgress({
 }: ManagerProgressProps) {
   const [editingTask, setEditingTask] = useState<ApiTask | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleColumnVisibilityChange = (columnId: string, visible: boolean) => {
     const newColumns = columns.map((col) =>
@@ -78,9 +81,22 @@ export function ManagerProgress({
         <p className="text-zinc-400">API 개발 진행 상황 추적 및 관리</p>
       </div>
 
+      {/* Search Bar */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+        <Input
+          type="text"
+          placeholder="전체 검색..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+        />
+      </div>
+
       <ApiTable
         tasks={tasks}
         columns={columns}
+        searchTerm={searchTerm}
         onColumnVisibilityChange={handleColumnVisibilityChange}
         onTaskEdit={handleTaskEdit}
         onTaskDelete={handleTaskDelete}

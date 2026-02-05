@@ -127,7 +127,7 @@ async function main() {
     console.error('MCP API Schema Server v2.0 running on stdio');
     console.error('  - Tools: save_schema');
     console.error('  - Prompts: schema_rules');
-    console.error('  - Resources: mcp.yaml, shared.yaml, ui.yaml');
+    console.error('  - Resources: shared.yaml, mcp.yaml, ui.yaml, accuracyPolicy.yaml');
 }
 
 main().catch((error) => {

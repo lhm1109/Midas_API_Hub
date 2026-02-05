@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -35,6 +35,7 @@ export function ProductGroupDialog({
 }: ProductGroupDialogProps) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -43,6 +44,10 @@ export function ProductGroupDialog({
       } else {
         setName(groupName || '');
       }
+      // Dialog가 완전히 열린 후 포커스 설정
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
   }, [open, type, productName, groupName]);
 
@@ -123,6 +128,7 @@ export function ProductGroupDialog({
           <div className="space-y-2">
             <Label htmlFor="name">이름 *</Label>
             <Input
+              ref={inputRef}
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}

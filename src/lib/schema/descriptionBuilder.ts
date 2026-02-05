@@ -46,16 +46,37 @@ export function buildFieldDescription(
     }
   }
   // Fallback to standard enum if oneOf is not present (or doesn't have const)
-  else if (field.enum && field.enum.length > 0) {
-    descParts.push('**Enum Values:**');
-    field.enum.forEach((val: any) => {
-      const label = fieldAny.enumLabels?.[String(val)] ||
-        fieldAny['x-enum-labels']?.[String(val)] ||
-        val;
-      // 🔥 개선: "설명 : 값" 형식, 문자열은 따옴표로 감싸기
-      const formattedVal = typeof val === 'string' ? `"${val}"` : val;
-      descParts.push(`• ${label} : ${formattedVal}`);
-    });
+  // Support both field.enum and field.items.enum for arrays
+  else {
+    const fieldEnum = field.enum || fieldAny.items?.enum;
+
+    if (fieldEnum && fieldEnum.length > 0) {
+      // Check both x-enum-labels-by-type and enumLabels (camelCase version)
+      const enumLabelsByType = fieldAny.enumLabelsByType || fieldAny['x-enum-labels-by-type'] || fieldAny.enumLabels;
+
+      // If x-enum-labels-by-type exists, show labels (without type headers)
+      if (enumLabelsByType && typeof enumLabelsByType === 'object' && Object.keys(enumLabelsByType).length > 0) {
+        descParts.push('**Enum Values by Type:**');
+        // Get the first type's labels (all types should have same enum values)
+        const firstType = Object.keys(enumLabelsByType)[0];
+        const typeLabels = enumLabelsByType[firstType];
+        fieldEnum.forEach((val: any) => {
+          const label = (typeLabels as Record<string, string>)[String(val)] || val;
+          const formattedVal = typeof val === 'string' ? `"${val}"` : val;
+          descParts.push(`• ${label} : ${formattedVal}`);
+        });
+      } else {
+        // Fallback to simple enum labels
+        descParts.push('**Enum Values:**');
+        fieldEnum.forEach((val: any) => {
+          const label = fieldAny.enumLabels?.[String(val)] ||
+            fieldAny['x-enum-labels']?.[String(val)] ||
+            val;
+          const formattedVal = typeof val === 'string' ? `"${val}"` : val;
+          descParts.push(`• ${label} : ${formattedVal}`);
+        });
+      }
+    }
   }
 
   // Note: x-enum-by-type, x-value-constraint, x-node-count-by-type는

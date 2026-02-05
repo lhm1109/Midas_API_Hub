@@ -31,18 +31,16 @@ interface EditTaskModalProps {
 
 const statusOptions: StatusType[] = [
   'empty',
-  'wip',
+  'progress',
   'done',
   'warning',
-  'na',
 ];
 
 const statusLabels: Record<StatusType, string> = {
   empty: '시작 안함',
-  wip: '작업 중',
+  progress: '작업 중',
   done: '완료',
   warning: '경고',
-  na: '해당없음 (N/A)',
 };
 
 export function EditTaskModal({
@@ -406,14 +404,17 @@ export function EditTaskModal({
                 <SelectValue placeholder="상태 선택" />
               </SelectTrigger>
               <SelectContent className="bg-zinc-900 border-zinc-700 text-zinc-100 z-[110]">
-                <SelectItem value="In Progress" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
-                  In Progress
+                <SelectItem value="cancel" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
+                  Cancel
                 </SelectItem>
-                <SelectItem value="Done" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
+                <SelectItem value="done" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
                   Done
                 </SelectItem>
-                <SelectItem value="Cancel" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
-                  Cancel
+                <SelectItem value="progress" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
+                  In Progress
+                </SelectItem>
+                <SelectItem value="working" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
+                  Working
                 </SelectItem>
                 <SelectItem value="none" className="text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100">
                   없음

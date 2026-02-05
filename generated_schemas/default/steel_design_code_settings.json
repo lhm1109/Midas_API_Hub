@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "Steel Design Code Settings Dialog",
+          "additionalProperties": false,
+          "properties": {
+            "bCHK_DEFL": {
+              "type": "boolean",
+              "description": "Check Beam/Column Deflection",
+              "default": true,
+              "x-ui": {
+                "label": "Check Beam/Column Deflection"
+              }
+            },
+            "bLATERAL_BRACE": {
+              "type": "boolean",
+              "description": "All Beams/Girders are Laterally Braced",
+              "default": false,
+              "x-ui": {
+                "label": "All Beams/Girders are Laterally Braced"
+              }
+            },
+            "bSEISMIC_PROV": {
+              "type": "boolean",
+              "description": "Apply Special Provisions for Seismic Design",
+              "default": false,
+              "x-ui": {
+                "label": "Apply Special Provisions for Seismic Design"
+              }
+            },
+            "bUNDERGROUND_LC": {
+              "type": "boolean",
+              "description": "Use Under Ground Load Combination Type for Under Ground Members",
+              "default": true,
+              "x-ui": {
+                "label": "Use Under Ground Load Combination Type for Under Ground Members"
+              }
+            },
+            "sCOMB_RATIO": {
+              "type": "string",
+              "description": "Combined Ratio Method for Circular Section",
+              "default": "SRSS",
+              "oneOf": [
+                {
+                  "title": "SRSS( Square root of sum of square)",
+                  "const": "SRSS"
+                },
+                {
+                  "title": "Linear Sum",
+                  "const": "LINEAR"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Combined Ratio Method for Circular Section"
+              }
+            },
+            "sDESIGN_CD": {
+              "type": "string",
+              "description": "Design Code Selection",
+              "default": "KDS 41 30 : 2022",
+              "oneOf": [
+                {
+                  "title": "KDS 41 30 : 2022",
+                  "const": "KDS 41 30 : 2022"
+                }
+              ],
+              "x-ui": {
+                "component": "Dropdown",
+                "label": "Design Code"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
