@@ -65,7 +65,7 @@ const COLUMN_GROUPS = {
   },
   api: {
     label: 'API',
-    columns: ['seg1', 'seg2', 'endPoint', 'mode'],
+    columns: ['seg1', 'seg2', 'seg3', 'seg4', 'endPoint', 'mode'],
   },
   pipeline: {
     label: 'Pipeline',

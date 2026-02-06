@@ -15,6 +15,8 @@ export interface ApiTask {
   sub3: string;
   seg1: string;
   seg2: string;
+  seg3: string;
+  seg4: string;
   endPoint: string;
   mode: string;
   plan: StatusType;  // 새로 추가
@@ -49,6 +51,8 @@ export const defaultColumns: Column[] = [
   { id: "sub3", label: "sub3", visible: true },
   { id: "seg1", label: "seg1", visible: true },
   { id: "seg2", label: "seg2", visible: true },
+  { id: "seg3", label: "seg3", visible: true },
+  { id: "seg4", label: "seg4", visible: true },
   { id: "endPoint", label: "End Point", visible: true },
   { id: "mode", label: "mode", visible: true },
   { id: "plan", label: "Plan", visible: true },  // dev 앞에 추가

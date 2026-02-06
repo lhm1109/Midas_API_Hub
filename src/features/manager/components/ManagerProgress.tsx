@@ -84,6 +84,8 @@ export function ManagerProgress({
         sub3: '',
         seg1: '',
         seg2: '',
+        seg3: '',
+        seg4: '',
         endPoint: '',
         mode: '',
         plan: 'empty',
@@ -122,7 +124,7 @@ export function ManagerProgress({
   const handleExportCSV = () => {
     try {
       // 데이터 시트 준비
-      const headers = ['Order', 'Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
+      const headers = ['Order', 'Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'seg3', 'seg4', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
 
       // 데이터베이스 순서대로 정렬 (order_index 기준)
       const sortedTasks = [...tasks].sort((a, b) => {
@@ -142,6 +144,8 @@ export function ManagerProgress({
         task.sub3,
         task.seg1,
         task.seg2,
+        task.seg3,
+        task.seg4,
         task.endPoint,
         task.mode,
         task.plan === 'empty' ? '' : task.plan,
@@ -244,6 +248,8 @@ export function ManagerProgress({
       sub3: ['sub3'],
       seg1: ['seg1'],
       seg2: ['seg2'],
+      seg3: ['seg3'],
+      seg4: ['seg4'],
       endPoint: ['endpoint', 'endPoint'],
       mode: ['mode'],
       plan: ['plan'],
@@ -327,6 +333,8 @@ export function ManagerProgress({
               sub3: getField(row, 'sub3'),
               seg1: getField(row, 'seg1'),
               seg2: getField(row, 'seg2'),
+              seg3: getField(row, 'seg3'),
+              seg4: getField(row, 'seg4'),
               endPoint: getField(row, 'endPoint'),
               mode: getField(row, 'mode'),
               plan: toStatusType(getField(row, 'plan')),
@@ -442,6 +450,8 @@ export function ManagerProgress({
             sub3: getField(values, 'sub3'),
             seg1: getField(values, 'seg1'),
             seg2: getField(values, 'seg2'),
+            seg3: getField(values, 'seg3'),
+            seg4: getField(values, 'seg4'),
             endPoint: getField(values, 'endPoint'),
             mode: getField(values, 'mode'),
             plan: toStatusType(getField(values, 'plan')),

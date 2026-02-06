@@ -1,0 +1,410 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "WindLoadSpec",
+          "type": "object",
+          "required": [
+            "sLOAD_CASE",
+            "sWIND_CODE",
+            "iMETHOD"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ADD_LOADS": {
+              "type": "array",
+              "description": "AdditionalWindLoads",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "dACROSS_X": {
+                    "type": "number",
+                    "description": "AcrossAdd-X"
+                  },
+                  "dALONG_X": {
+                    "type": "number",
+                    "description": "AlongAdd-X"
+                  },
+                  "dALONG_Y": {
+                    "type": "number",
+                    "description": "AlongAdd-Y"
+                  },
+                  "iSTORY": {
+                    "type": "integer",
+                    "description": "Story"
+                  }
+                }
+              },
+              "x-ui": {
+                "groupId": "ADD_LOADS",
+                "label": "Additional Wind Loads (Unit:kN,m)"
+              }
+            },
+            "bACROSS_WIND": {
+              "type": "boolean",
+              "description": "AcrossWind",
+              "default": false,
+              "x-ui": {
+                "groupId": "BUILDING",
+                "label": "Across Wind"
+              }
+            },
+            "bFORCE_COEFF": {
+              "type": "boolean",
+              "description": "LoadEvaluationUsingForceCoefficient",
+              "default": false,
+              "x-ui": {
+                "groupId": "FORCE_COEFF",
+                "label": "Load Evaluation Using Force Coefficient"
+              }
+            },
+            "bTOPO_EFF": {
+              "type": "boolean",
+              "description": "IncludeTopographicEffects",
+              "default": false,
+              "x-ui": {
+                "groupId": "TOPO",
+                "label": "Include Topographic Effects"
+              }
+            },
+            "bTORS_WIND": {
+              "type": "boolean",
+              "description": "TorsionalWind",
+              "default": false,
+              "x-ui": {
+                "groupId": "BUILDING",
+                "label": "Torsional Wind"
+              }
+            },
+            "bVORTEX": {
+              "type": "boolean",
+              "description": "VortexShedding",
+              "default": false,
+              "x-ui": {
+                "groupId": "BASIC",
+                "label": "Vortex Shedding"
+              }
+            },
+            "bWIND_RESP": {
+              "type": "boolean",
+              "description": "WindResponse",
+              "default": false,
+              "x-ui": {
+                "groupId": "BUILDING",
+                "label": "Wind Response"
+              }
+            },
+            "dAVG_ROOF_HT": {
+              "type": "number",
+              "description": "AverageRoofHeight(m)",
+              "default": 7.675,
+              "x-ui": {
+                "groupId": "WIND_PARAM",
+                "label": "Average Roof Height (m)"
+              }
+            },
+            "dBASIC_SPEED": {
+              "type": "number",
+              "description": "BasicWindSpeed(m/sec)",
+              "default": 28,
+              "x-ui": {
+                "groupId": "WIND_PARAM",
+                "label": "Basic Wind Speed (m/sec)"
+              }
+            },
+            "dFC_USER": {
+              "type": "number",
+              "description": "ForceCoefficient",
+              "default": 1,
+              "x-ui": {
+                "groupId": "FORCE_COEFF",
+                "label": "Force Coefficient"
+              },
+              "x-optional-when": {
+                "bFORCE_COEFF": true,
+                "iFC_METHOD": 0
+              }
+            },
+            "dGDX": {
+              "type": "number",
+              "description": "GustFactorGdx",
+              "default": 2.2,
+              "x-ui": {
+                "groupId": "GUST",
+                "label": "GDx"
+              }
+            },
+            "dGDY": {
+              "type": "number",
+              "description": "GustFactorGdy",
+              "default": 2.2,
+              "x-ui": {
+                "groupId": "GUST",
+                "label": "GDy"
+              }
+            },
+            "dIMP_FACTOR": {
+              "type": "number",
+              "description": "ImportanceFactor",
+              "default": 1,
+              "x-ui": {
+                "groupId": "WIND_PARAM",
+                "label": "Importance Factor"
+              }
+            },
+            "dKDX": {
+              "type": "number",
+              "description": "DirectionalFactorKdx",
+              "default": 1,
+              "x-ui": {
+                "groupId": "DIR_FACTOR",
+                "label": "Kdx"
+              }
+            },
+            "dKDY": {
+              "type": "number",
+              "description": "DirectionalFactorKdy",
+              "default": 1,
+              "x-ui": {
+                "groupId": "DIR_FACTOR",
+                "label": "Kdy"
+              }
+            },
+            "dKZT": {
+              "type": "number",
+              "description": "TopographicFactorAtBuildingGroundLevel",
+              "default": 1,
+              "x-ui": {
+                "groupId": "TOPO",
+                "label": "Kzt"
+              },
+              "x-optional-when": {
+                "bTOPO_EFF": true
+              }
+            },
+            "dSCALE_X": {
+              "type": "number",
+              "description": "WindLoadDirectionFactorX",
+              "default": 1,
+              "x-ui": {
+                "groupId": "SCALE",
+                "label": "X-Dir. Scale Factor"
+              }
+            },
+            "dSCALE_Y": {
+              "type": "number",
+              "description": "WindLoadDirectionFactorY",
+              "default": 1,
+              "x-ui": {
+                "groupId": "SCALE",
+                "label": "Y-Dir. Scale Factor"
+              }
+            },
+            "dSCALE_Z": {
+              "type": "number",
+              "description": "WindLoadDirectionFactorZ",
+              "default": 0,
+              "x-ui": {
+                "groupId": "SCALE",
+                "label": "Z-Rot. Scale Factor"
+              }
+            },
+            "iBLDG_TYPE": {
+              "type": "integer",
+              "description": "BuildingType",
+              "default": 1,
+              "oneOf": [
+                {
+                  "title": "Middle Low Rise Building",
+                  "const": 0
+                },
+                {
+                  "title": "High Rise Building",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "BUILDING",
+                "label": "Building Type"
+              }
+            },
+            "iFC_METHOD": {
+              "type": "integer",
+              "description": "ForceCoeffMethod",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "User Defined",
+                  "const": 0
+                },
+                {
+                  "title": "Auto Calculator",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "FORCE_COEFF",
+                "label": "Method"
+              },
+              "x-optional-when": {
+                "bFORCE_COEFF": true
+              }
+            },
+            "iMETHOD": {
+              "type": "integer",
+              "description": "CalculationMethod",
+              "oneOf": [
+                {
+                  "title": "Simplified Method",
+                  "const": 0
+                },
+                {
+                  "title": "General Method",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "BASIC",
+                "label": "Method"
+              }
+            },
+            "iSTRUCT_TYPE": {
+              "type": "integer",
+              "description": "StructureType",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Rigid Structure",
+                  "const": 0
+                },
+                {
+                  "title": "Flexible Structure",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "GUST",
+                "label": "Structure Type"
+              }
+            },
+            "sDESC": {
+              "type": "string",
+              "description": "Description",
+              "x-ui": {
+                "groupId": "BASIC",
+                "label": "Description"
+              }
+            },
+            "sEXP_CAT": {
+              "type": "string",
+              "description": "ExposureCategory",
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D"
+              ],
+              "default": "B",
+              "x-ui": {
+                "groupId": "WIND_PARAM",
+                "label": "Exposure Category"
+              }
+            },
+            "sFC_STRUCT": {
+              "type": "string",
+              "description": "StructureTypeForAutoCalc",
+              "enum": [
+                "Chimneys, Tanks, and similar structures",
+                "Solid Signs",
+                "Open Signs",
+                "Trussed Towers"
+              ],
+              "default": "Chimneys, Tanks, and similar structures",
+              "x-ui": {
+                "groupId": "FORCE_COEFF",
+                "label": "Structure Type"
+              },
+              "x-optional-when": {
+                "bFORCE_COEFF": true,
+                "iFC_METHOD": 1
+              }
+            },
+            "sLOAD_CASE": {
+              "type": "string",
+              "description": "LoadCaseName",
+              "x-ui": {
+                "groupId": "BASIC",
+                "label": "Load Case Name"
+              }
+            },
+            "sWIND_CODE": {
+              "type": "string",
+              "description": "WindLoadCode",
+              "enum": [
+                "KDS(41-12:2022)"
+              ],
+              "x-ui": {
+                "groupId": "BASIC",
+                "label": "Wind Load Code"
+              }
+            }
+          },
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Basic Settings",
+                "id": "BASIC"
+              },
+              {
+                "title": "Wind Load Parameters",
+                "id": "WIND_PARAM"
+              },
+              {
+                "title": "Topographic Effects",
+                "id": "TOPO"
+              },
+              {
+                "title": "Directional Factor",
+                "id": "DIR_FACTOR"
+              },
+              {
+                "title": "Gust Factor",
+                "id": "GUST"
+              },
+              {
+                "title": "Force Coefficient",
+                "id": "FORCE_COEFF"
+              },
+              {
+                "title": "Building Options",
+                "id": "BUILDING"
+              },
+              {
+                "title": "Scale Factors",
+                "id": "SCALE"
+              },
+              {
+                "title": "Additional Wind Loads",
+                "id": "ADD_LOADS"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

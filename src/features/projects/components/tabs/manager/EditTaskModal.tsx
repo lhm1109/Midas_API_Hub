@@ -157,6 +157,26 @@ export function EditTaskModal({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="seg3" className="text-zinc-300">seg3</Label>
+            <Input
+              id="seg3"
+              value={formData.seg3}
+              onChange={(e) => handleChange('seg3', e.target.value)}
+              className="bg-zinc-950 border-zinc-700 text-zinc-100"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="seg4" className="text-zinc-300">seg4</Label>
+            <Input
+              id="seg4"
+              value={formData.seg4}
+              onChange={(e) => handleChange('seg4', e.target.value)}
+              className="bg-zinc-950 border-zinc-700 text-zinc-100"
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="endPoint" className="text-zinc-300">End Point</Label>
             <Input
               id="endPoint"
