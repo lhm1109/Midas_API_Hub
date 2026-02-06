@@ -1227,6 +1227,10 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       field.children = [];
       const itemRequired = itemSchema.required || [];
 
+      // 🔥 조건 없는 필드와 조건 있는 필드 분리
+      const noConditionChildren: EnhancedField[] = [];
+      const conditionalChildren: Map<string, EnhancedField[]> = new Map();
+
       for (const [childKey, childProp] of Object.entries(itemSchema.properties)) {
         const childField: EnhancedField = {
           key: `${key}[].${childKey}`,
@@ -1251,10 +1255,44 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           }
         }
 
-        field.children.push(childField);
+        // 🔥 x-optional-when 또는 x-required-when 조건이 있으면 별도 그룹으로
+        const condition = childField['x-optional-when'] || childField['x-required-when'];
+        if (condition) {
+          const conditionKey = JSON.stringify(condition);
+          if (!conditionalChildren.has(conditionKey)) {
+            conditionalChildren.set(conditionKey, []);
+          }
+          conditionalChildren.get(conditionKey)!.push(childField);
+        } else {
+          noConditionChildren.push(childField);
+        }
       }
 
-      console.log(`✅ Extracted ${field.children.length} children from array items.properties for ${key}`);
+      // 🔥 조건 없는 필드들 먼저 추가
+      field.children.push(...noConditionChildren);
+
+      // 🔥 조건부 필드들 - 섹션 헤더와 함께 추가
+      for (const [conditionKey, condChildren] of conditionalChildren) {
+        const condition = JSON.parse(conditionKey);
+        const conditionText = Object.entries(condition)
+          .map(([k, v]) => `"${k}" is ${v}`)
+          .join(' and ');
+
+        // 섹션 헤더 추가
+        field.children.push({
+          key: `${key}.__condition_${conditionKey}`,
+          type: 'section-header' as any,
+          required: {},
+          section: `When ${conditionText}`,
+          validationLayers: [],
+          ui: { label: `When ${conditionText}` },
+        });
+
+        // 해당 조건의 자식 필드들 추가
+        field.children.push(...condChildren);
+      }
+
+      console.log(`✅ Extracted ${field.children.length} children from array items.properties for ${key} (${noConditionChildren.length} normal, ${conditionalChildren.size} groups)`);
     }
 
     // 🔥 Object 타입 with oneOf - 상호 배타적 선택 (예: Method 1, 2, 3 중 선택)

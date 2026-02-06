@@ -72,122 +72,6 @@
                 "order": 3
               }
             },
-            "dRMAX": {
-              "type": "number",
-              "description": "Factor Range Max (Rmax)",
-              "default": 1,
-              "oneOf": [
-                {
-                  "title": "Option 1",
-                  "const": 1
-                },
-                {
-                  "title": "Option 0.95",
-                  "const": 0.95
-                },
-                {
-                  "title": "Option 0.9",
-                  "const": 0.9
-                },
-                {
-                  "title": "Option 0.85",
-                  "const": 0.85
-                },
-                {
-                  "title": "Option 0.8",
-                  "const": 0.8
-                },
-                {
-                  "title": "Option 0.75",
-                  "const": 0.75
-                },
-                {
-                  "title": "Option 0.7",
-                  "const": 0.7
-                },
-                {
-                  "title": "Option 0.65",
-                  "const": 0.65
-                },
-                {
-                  "title": "Option 0.6",
-                  "const": 0.6
-                },
-                {
-                  "title": "Option 0.55",
-                  "const": 0.55
-                },
-                {
-                  "title": "Option 0.5",
-                  "const": 0.5
-                }
-              ],
-              "x-ui": {
-                "label": "Max(Rmax)",
-                "order": 4
-              },
-              "x-optional-when": {
-                "iCALC_RULE": 0
-              }
-            },
-            "dRMIN": {
-              "type": "number",
-              "description": "Factor Range Min (Rmin)",
-              "default": 0.5,
-              "oneOf": [
-                {
-                  "title": "Option 1",
-                  "const": 1
-                },
-                {
-                  "title": "Option 0.95",
-                  "const": 0.95
-                },
-                {
-                  "title": "Option 0.9",
-                  "const": 0.9
-                },
-                {
-                  "title": "Option 0.85",
-                  "const": 0.85
-                },
-                {
-                  "title": "Option 0.8",
-                  "const": 0.8
-                },
-                {
-                  "title": "Option 0.75",
-                  "const": 0.75
-                },
-                {
-                  "title": "Option 0.7",
-                  "const": 0.7
-                },
-                {
-                  "title": "Option 0.65",
-                  "const": 0.65
-                },
-                {
-                  "title": "Option 0.6",
-                  "const": 0.6
-                },
-                {
-                  "title": "Option 0.55",
-                  "const": 0.55
-                },
-                {
-                  "title": "Option 0.5",
-                  "const": 0.5
-                }
-              ],
-              "x-ui": {
-                "label": "Min(Rmin)",
-                "order": 5
-              },
-              "x-optional-when": {
-                "iCALC_RULE": 0
-              }
-            },
             "REDUCTION_DATA": {
               "type": "array",
               "description": "Live Load Reduction Factor Table Data",
@@ -201,6 +85,46 @@
                   "dYMAX"
                 ],
                 "properties": {
+                  "sSTORY": {
+                    "type": "string",
+                    "description": "Story Name",
+                    "x-ui": {
+                      "label": "Story",
+                      "order": 1
+                    }
+                  },
+                  "dXMIN": {
+                    "type": "number",
+                    "description": "X Min coordinate",
+                    "x-ui": {
+                      "label": "X Min",
+                      "order": 2
+                    }
+                  },
+                  "dXMAX": {
+                    "type": "number",
+                    "description": "X Max coordinate",
+                    "x-ui": {
+                      "label": "X Max",
+                      "order": 3
+                    }
+                  },
+                  "dYMIN": {
+                    "type": "number",
+                    "description": "Y Min coordinate",
+                    "x-ui": {
+                      "label": "Y Min",
+                      "order": 4
+                    }
+                  },
+                  "dYMAX": {
+                    "type": "number",
+                    "description": "Y Max coordinate",
+                    "x-ui": {
+                      "label": "Y Max",
+                      "order": 5
+                    }
+                  },
                   "dRANGE_MAX": {
                     "type": "number",
                     "description": "Range Max value (only for General Design Code)",
@@ -217,6 +141,11 @@
                       0.55,
                       0.5
                     ],
+                    "default": 1,
+                    "x-ui": {
+                      "label": "Max(Rmax)",
+                      "order": 8
+                    },
                     "x-optional-when": {
                       "iCALC_RULE": 0
                     }
@@ -237,35 +166,20 @@
                       0.55,
                       0.5
                     ],
+                    "default": 0.5,
+                    "x-ui": {
+                      "label": "Min(Rmin)",
+                      "order": 9
+                    },
                     "x-optional-when": {
                       "iCALC_RULE": 0
                     }
-                  },
-                  "dXMAX": {
-                    "type": "number",
-                    "description": "X Max coordinate"
-                  },
-                  "dXMIN": {
-                    "type": "number",
-                    "description": "X Min coordinate"
-                  },
-                  "dYMAX": {
-                    "type": "number",
-                    "description": "Y Max coordinate"
-                  },
-                  "dYMIN": {
-                    "type": "number",
-                    "description": "Y Min coordinate"
-                  },
-                  "sSTORY": {
-                    "type": "string",
-                    "description": "Story Name"
                   }
                 }
               },
               "x-ui": {
                 "label": "Reduction Data Table",
-                "order": 6
+                "order": 4
               }
             }
           }

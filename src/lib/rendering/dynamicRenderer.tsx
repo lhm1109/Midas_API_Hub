@@ -135,6 +135,11 @@ function renderField(
     return renderObjectField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject);
   }
 
+  // 🔥 Array with children (items.type = object with properties)
+  if (field.type === 'array' && field.children && field.children.length > 0) {
+    return renderArrayField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject);
+  }
+
   // 일반 필드
   return renderStandardField(field, definition, dynamicFormData, updateDynamicField, fieldRuntimeStates);
 }
@@ -239,6 +244,205 @@ function renderObjectField(
               </div>
             );
           })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * 🔥 Array 필드 렌더링 (items.type = object)
+ * REDUCTION_DATA처럼 배열 내부에 객체가 있는 경우 처리
+ */
+function renderArrayField(
+  field: UIBuilderField,
+  definition: BuilderDefinition,
+  dynamicFormData: Record<string, any>,
+  updateDynamicField: (key: string, value: any) => void,
+  expandedObjects: Set<string>,
+  toggleObject: (fieldName: string) => void
+): React.ReactNode {
+  const objectStyle = definition.fieldRendering?.object?.style || {};
+
+  // 현재 배열 데이터 가져오기
+  const arrayData = dynamicFormData[field.name] || [];
+  const isExpanded = expandedObjects.has(field.name);
+
+  // 새 아이템 추가
+  const addItem = () => {
+    const newItem: Record<string, any> = {};
+    // 자식 필드들의 기본값으로 초기화
+    field.children!.forEach(child => {
+      if (child.type === 'section-header') return;
+
+      // 🔥 x-required-when 또는 x-optional-when 조건 체크
+      const condition = (child as any)['x-required-when'] || (child as any)['x-optional-when'];
+      if (condition) {
+        // 🔥 FIX: 타입 비교 문제 해결
+        const shouldInclude = Object.entries(condition).every(([key, expectedValue]) => {
+          const actualValue = dynamicFormData[key];
+          if (typeof expectedValue === 'number') {
+            return Number(actualValue) === expectedValue;
+          }
+          return actualValue === expectedValue;
+        });
+        if (!shouldInclude) return; // 조건 불충족 시 필드 추가 안함
+      }
+
+      const childName = child.name.split('.').pop() || child.name;
+      newItem[childName] = child.default ?? (child.type === 'number' || child.type === 'integer' ? 0 : '');
+    });
+    updateDynamicField(field.name, [...arrayData, newItem]);
+  };
+
+  // 아이템 삭제
+  const removeItem = (index: number) => {
+    const newArray = [...arrayData];
+    newArray.splice(index, 1);
+    updateDynamicField(field.name, newArray);
+  };
+
+  // 아이템 필드 업데이트
+  const updateItemField = (index: number, childKey: string, value: any) => {
+    const newArray = [...arrayData];
+    if (!newArray[index]) {
+      newArray[index] = {};
+    }
+    newArray[index][childKey] = value;
+    updateDynamicField(field.name, newArray);
+  };
+
+  return (
+    <div className={objectStyle.border || 'border border-green-700 rounded-md bg-zinc-900/50'}>
+      {/* 헤더 */}
+      <div className={objectStyle.header || 'flex items-center gap-2 p-3 bg-green-900/30'}>
+        <button
+          onClick={() => toggleObject(field.name)}
+          className="flex-1 flex items-center gap-2 text-left hover:text-white transition-colors"
+        >
+          {isExpanded ? (
+            <ChevronDown className="w-4 h-4 text-green-400" />
+          ) : (
+            <ChevronRight className="w-4 h-4 text-green-400" />
+          )}
+          <Label className="text-sm flex items-center gap-2 cursor-pointer">
+            {field.description || field.name}
+            {field.required && <span className="text-red-400">*</span>}
+            <span className="text-[10px] text-green-400 font-mono ml-2">
+              [{arrayData.length} items]
+            </span>
+          </Label>
+        </button>
+        <button
+          onClick={addItem}
+          className="px-2 py-1 text-xs bg-green-600 hover:bg-green-500 text-white rounded"
+        >
+          + Add
+        </button>
+        <span className="text-[10px] text-zinc-600 font-mono">array[object]</span>
+      </div>
+
+      {/* 배열 아이템들 */}
+      {isExpanded && (
+        <div className="p-4 space-y-4 bg-zinc-900/30">
+          {arrayData.length === 0 ? (
+            <div className="text-center py-4 text-zinc-500 text-sm">
+              No items yet. Click "+ Add" to add an item.
+            </div>
+          ) : (
+            arrayData.map((item: any, index: number) => (
+              <div key={index} className="border border-zinc-700 rounded-md bg-zinc-800/50 p-3">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold text-zinc-400">
+                    Item #{index + 1}
+                  </span>
+                  <button
+                    onClick={() => removeItem(index)}
+                    className="text-xs text-red-400 hover:text-red-300"
+                  >
+                    ✕ Remove
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {field.children!.map((child: any) => {
+                    // section-header는 스킵
+                    if (child.type === 'section-header') return null;
+
+                    // 🔥 x-required-when 또는 x-optional-when 조건 체크
+                    const condition = child['x-required-when'] || child['x-optional-when'];
+                    if (condition) {
+                      // 조건 평가 - dynamicFormData에서 상위 폼의 값 확인
+                      // 🔥 FIX: 타입 비교 문제 해결 (문자열 "1" vs 숫자 0)
+                      const shouldShow = Object.entries(condition).every(([key, expectedValue]) => {
+                        const actualValue = dynamicFormData[key];
+                        // 🔥 숫자 비교: 둘 다 숫자로 변환해서 비교
+                        if (typeof expectedValue === 'number') {
+                          return Number(actualValue) === expectedValue;
+                        }
+                        return actualValue === expectedValue;
+                      });
+                      console.log('🔍 Condition check:', { condition, dynamicFormData, shouldShow });
+                      if (!shouldShow) return null; // 조건 불충족 시 숨김
+                    }
+
+                    const childKey = child.name.split('.').pop() || child.name;
+                    const childValue = item[childKey];
+
+                    return (
+                      <div key={child.name} className="space-y-1">
+                        <Label className="text-[10px] text-zinc-400 flex items-center gap-1">
+                          {child.description || childKey}
+                          {/* 🔥 x-required-when 조건 충족 시 Required 별(*) 표시 */}
+                          {child['x-required-when'] && <span className="text-red-400">*</span>}
+                          {child.required && !child['x-required-when'] && <span className="text-red-400">*</span>}
+                        </Label>
+                        {child.enum ? (
+                          <Select
+                            value={childValue !== undefined ? String(childValue) : ''}
+                            onValueChange={(val) => {
+                              const parsed = child.type === 'number' || child.type === 'integer'
+                                ? parseFloat(val)
+                                : val;
+                              updateItemField(index, childKey, parsed);
+                            }}
+                          >
+                            <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
+                              <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {child.enum.map((opt: any) => (
+                                <SelectItem key={String(opt)} value={String(opt)}>
+                                  {String(opt)}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : child.type === 'number' || child.type === 'integer' ? (
+                          <Input
+                            type="number"
+                            value={childValue ?? ''}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const parsed = val === '' ? null :
+                                child.type === 'integer' ? parseInt(val, 10) : parseFloat(val);
+                              updateItemField(index, childKey, parsed);
+                            }}
+                            className="h-8 text-xs bg-zinc-800 border-zinc-700"
+                          />
+                        ) : (
+                          <Input
+                            value={childValue || ''}
+                            onChange={(e) => updateItemField(index, childKey, e.target.value)}
+                            className="h-8 text-xs bg-zinc-800 border-zinc-700"
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>

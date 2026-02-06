@@ -234,17 +234,24 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           items: field.items,
         };
 
-        // 중첩 필드 처리
+        // 중첩 필드 처리 - 🔥 section-header 타입 필터링
         if (field.children && field.children.length > 0) {
-          uiField.children = field.children.map(child => ({
-            name: child.key,
-            type: child.type === 'integer' || child.type === 'number' ? child.type :
-              child.enum ? 'enum' : child.type === 'boolean' ? 'boolean' : 'string',
-            description: child.ui?.label || child.description || child.key,
-            required: typeof child.required === 'boolean' ? child.required : false,
-            default: child.default,
-            enum: child.enum,
-          }));
+          uiField.children = field.children
+            .filter(child => child.type !== 'section-header') // 🔥 섹션 헤더는 Builder 탭에서 제외
+            .map(child => ({
+              name: child.key,
+              type: child.type === 'integer' || child.type === 'number' ? child.type :
+                child.enum ? 'enum' : child.type === 'boolean' ? 'boolean' : 'string',
+              description: child.ui?.label || child.description || child.key,
+              required: typeof child.required === 'boolean'
+                ? child.required
+                : (typeof child.required === 'object' && child.required?.['*'] === 'required'),
+              default: child.default,
+              enum: child.enum,
+              // 🔥 조건부 필드 정보 유지
+              'x-required-when': (child as any)['x-required-when'],
+              'x-optional-when': (child as any)['x-optional-when'],
+            }));
         }
 
         fields.push(uiField);
@@ -682,7 +689,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   // 🎯 Resizable Panel 상태 - 초기값을 화면의 35%로 설정 (빌더 컬럼 확장)
   const [rightPanelWidth, setRightPanelWidth] = useState(() => {
     if (typeof window !== 'undefined') {
-      return Math.min(window.innerWidth * 0.35, 500);  // 🔥 50% → 35%, max 800 → 500
+      return Math.min(window.innerWidth * 0.30, 1200);  // 🔥 50% → 35%, max 800 → 500
     }
     return 400; // fallback for SSR (600 → 400)
   });
@@ -755,6 +762,67 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
     const normalizedPath = normalizeFieldPath(fieldPath);
 
+    // 🔥 배열 아이템 내부 필드 체크 (예: REDUCTION_DATA.0.dRANGE_MAX → REDUCTION_DATA.dRANGE_MAX)
+    // 정규화된 경로가 "PARENT.CHILD" 형태이면 배열의 자식 필드일 수 있음
+    const arrayChildParts = normalizedPath.split('.');
+
+    // 🔥 DEBUG: 배열 아이템 필드 경로 확인
+    if (fieldPath.includes('REDUCTION_DATA')) {
+      console.log('🔍 [getFieldMetadata] Array item path check:', {
+        originalPath: fieldPath,
+        normalizedPath,
+        arrayChildParts,
+        partsLength: arrayChildParts.length
+      });
+    }
+
+    if (arrayChildParts.length === 2) {
+      const [parentName, childFieldName] = arrayChildParts;
+      const parentField = schemaFields.find(f => f.name === parentName);
+
+      // 배열 필드의 children에서 자식 찾기
+      if (parentField && parentField.type === 'array' && parentField.children) {
+        const childField = parentField.children.find((c: any) => {
+          // name이 전체 경로이거나 짧은 이름일 수 있음
+          const childShortName = c.name?.includes('.') ? c.name.split('.').pop() : c.name;
+          return childShortName === childFieldName || c.name === childFieldName;
+        });
+
+        if (childField) {
+          // 🔥 x-required-when 조건 평가
+          const condition = (childField as any)['x-required-when'];
+          if (condition) {
+            const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
+              const actualValue = tempFormValuesForSchema[key];
+              if (typeof expectedValue === 'number') {
+                return Number(actualValue) === expectedValue;
+              }
+              return actualValue === expectedValue;
+            });
+
+            return conditionMet
+              ? { type: 'required' as const, color: 'text-red-400', label: 'Required' }
+              : { type: 'optional' as const, color: 'text-yellow-400', label: 'Conditional' };
+          }
+
+          // 🔥 일반 required 속성 체크 (x-required-when이 없는 경우)
+          // required가 boolean true이거나 { '*': 'required' } 객체 형태일 수 있음
+          const isRequired = childField.required === true ||
+            (typeof childField.required === 'object' && (childField.required as any)?.['*'] === 'required');
+
+          console.log('🔍 [getFieldMetadata] childField required check:', {
+            childFieldName: childField.name,
+            required: childField.required,
+            isRequired
+          });
+
+          if (isRequired) {
+            return { type: 'required' as const, color: 'text-red-400', label: 'Required' };
+          }
+        }
+      }
+    }
+
     // 🎯 Runtime State 우선 확인 (Single Source of Truth)
     const runtimeState = fieldRuntimeStates[normalizedPath];
     if (runtimeState) {
@@ -782,7 +850,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         return { type: 'optional', color: 'text-blue-400', label: 'Optional' };
       }
 
-      // 중첩 필드 체크 (예: UNIT.FORCE)
+      // 중첩 필드 체크 (예: UNIT.FORCE, REDUCTION_DATA.dRANGE_MAX)
       const parts = normalizedPath.split('.');
       if (parts.length > 1) {
         const parentName = parts[0];
@@ -790,13 +858,33 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         const parentField = schemaFields.find(f => f.name === parentName);
         if (parentField && parentField.children) {
           const childField = parentField.children.find(c => c.name === childName);
-          if (childField && childField.required !== undefined) {
-            if (typeof childField.required === 'boolean') {
-              return childField.required
-                ? { type: 'required', color: 'text-red-400', label: 'Required' }
-                : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
+          if (childField) {
+            // 🔥 x-required-when 조건 체크 추가
+            const condition = (childField as any)['x-required-when'];
+            if (condition) {
+              // 조건 평가 - tempFormValuesForSchema에서 상위 폼의 값 확인
+              const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
+                const actualValue = tempFormValuesForSchema[key];
+                // 숫자 비교: 둘 다 숫자로 변환
+                if (typeof expectedValue === 'number') {
+                  return Number(actualValue) === expectedValue;
+                }
+                return actualValue === expectedValue;
+              });
+
+              return conditionMet
+                ? { type: 'required' as const, color: 'text-red-400', label: 'Required' }
+                : { type: 'optional' as const, color: 'text-yellow-400', label: 'Conditional' };
             }
-            return { type: 'optional', color: 'text-blue-400', label: 'Optional' };
+
+            if (childField.required !== undefined) {
+              if (typeof childField.required === 'boolean') {
+                return childField.required
+                  ? { type: 'required', color: 'text-red-400', label: 'Required' }
+                  : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
+              }
+              return { type: 'optional', color: 'text-blue-400', label: 'Optional' };
+            }
           }
         }
       }
@@ -864,12 +952,16 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         return (
           <>
             <span className="text-zinc-500">[</span>
-            {value.map((item, idx) => (
-              <div key={idx} className="pl-4">
-                {renderValue(item, undefined, depth + 1)}
-                {idx < value.length - 1 && <span className="text-zinc-500">,</span>}
-              </div>
-            ))}
+            {value.map((item, idx) => {
+              // 🔥 배열 아이템의 경로 생성 (예: REDUCTION_DATA.0)
+              const itemPath = key ? `${key}.${idx}` : String(idx);
+              return (
+                <div key={idx} className="pl-4">
+                  {renderValue(item, itemPath, depth + 1)}
+                  {idx < value.length - 1 && <span className="text-zinc-500">,</span>}
+                </div>
+              );
+            })}
             <div>
               <span className="text-zinc-500">]</span>
             </div>
@@ -1184,11 +1276,106 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       return nested;
     };
 
+    // 🔥 배열 아이템 내부의 조건부 필드 필터링
+    const filterConditionalArrayFields = (obj: any): any => {
+      if (obj === null || obj === undefined) return obj;
+
+      if (Array.isArray(obj)) {
+        return obj.map(item => filterConditionalArrayFields(item));
+      }
+
+      if (typeof obj === 'object') {
+        const filtered: any = {};
+
+        for (const [key, value] of Object.entries(obj)) {
+          // 배열 필드인지 확인
+          const schemaField = fields.find(f => f.name === key);
+
+          if (schemaField && schemaField.type === 'array' && schemaField.children && Array.isArray(value)) {
+            // 🔥 DEBUG: 배열 필드 + children 정보 출력
+            console.log('🔥 [filterConditionalArrayFields] Found array field:', key, {
+              childrenCount: schemaField.children.length,
+              childrenNames: schemaField.children.map((c: any) => c.name),
+              childrenConditions: schemaField.children.map((c: any) => ({
+                name: c.name,
+                'x-required-when': (c as any)['x-required-when']
+              }))
+            });
+
+            // 배열 아이템에서 조건부 필드 필터링
+            filtered[key] = (value as any[]).map(item => {
+              if (typeof item !== 'object' || item === null) return item;
+
+              const filteredItem: any = {};
+              for (const [itemKey, itemValue] of Object.entries(item)) {
+                // 자식 필드의 x-required-when 조건 체크
+                const childField = schemaField.children!.find((c: any) => {
+                  const shortName = c.name?.includes('.') ? c.name.split('.').pop() : c.name;
+                  return shortName === itemKey || c.name === itemKey;
+                });
+
+                // 🔥 DEBUG: 매칭 결과 확인 (dRANGE_MAX/MIN 필드만)
+                if (itemKey === 'dRANGE_MAX' || itemKey === 'dRANGE_MIN') {
+                  console.log('🔍 [filterConditionalArrayFields] Child matching:', {
+                    itemKey,
+                    childFieldFound: !!childField,
+                    childFieldName: childField?.name,
+                    'x-required-when': (childField as any)?.['x-required-when'],
+                    'x-optional-when': (childField as any)?.['x-optional-when'],
+                    flatDataKeys: Object.keys(flatData),
+                    iCALC_RULE_value: flatData['iCALC_RULE']
+                  });
+                }
+
+                if (childField) {
+                  const condition = (childField as any)['x-required-when'];
+                  if (condition) {
+                    // 조건 평가 - flatData에서 상위 폼의 값 확인
+                    const conditionMet = Object.entries(condition).every(([condKey, expectedValue]) => {
+                      const actualValue = flatData[condKey];
+                      if (typeof expectedValue === 'number') {
+                        return Number(actualValue) === expectedValue;
+                      }
+                      return actualValue === expectedValue;
+                    });
+
+                    console.log('🔍 [filterConditionalArrayFields] Condition check:', {
+                      itemKey,
+                      condition,
+                      actualValue: flatData['iCALC_RULE'],
+                      conditionMet
+                    });
+
+                    if (!conditionMet) {
+                      console.log(`🔥 Filtered out conditional field "${key}.${itemKey}" (condition not met: ${JSON.stringify(condition)})`);
+                      continue; // 조건 불충족 시 필드 제외
+                    }
+                  }
+                }
+
+                filteredItem[itemKey] = filterConditionalArrayFields(itemValue);
+              }
+              return filteredItem;
+            });
+          } else {
+            filtered[key] = filterConditionalArrayFields(value);
+          }
+        }
+
+        return filtered;
+      }
+
+      return obj;
+    };
+
     const nestedDynamicData = convertDotNotationToNested(flatData);
 
+    // 🔥 조건부 배열 필드 필터링 적용
+    const filteredData = filterConditionalArrayFields(nestedDynamicData);
+
     const cleaned: any = {
-      // 🔥 동적 스키마 필드 (중첩 구조로 변환됨, 체크박스 상태 반영)
-      ...nestedDynamicData,
+      // 🔥 동적 스키마 필드 (중첩 구조로 변환됨, 체크박스 상태 반영, 조건부 필터링됨)
+      ...filteredData,
     };
 
     // 🔥 UI 전용 키 제거 (__selectedOption 등)

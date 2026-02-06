@@ -333,9 +333,10 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               required: formatRequiredStatus(field.required),
             };
 
-            // 중첩 필드 처리
+            // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
             if (field.children && field.children.length > 0) {
-              param.children = field.children.map((child: any, idx: number) => {
+              let childNo = 1;
+              param.children = field.children.map((child: any) => {
                 if (child.type === 'section-header') {
                   return {
                     no: '', name: '', type: 'section-header',
@@ -343,13 +344,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     default: '', description: '', required: '',
                   };
                 }
+                const currentNo = childNo++;
                 return {
-                  no: `${rowNumber - 1}.${idx + 1}`,
+                  no: `${rowNumber - 1}.${currentNo}`,
                   name: child.key.split('.').pop() || child.key,
                   type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                   default: child.default !== undefined ? String(child.default) : '-',
-                  description: child.ui?.label || child.description || child.key.split('.').pop() || child.key,
-                  required: formatRequiredStatus(child.required),
+                  // 🔥 Use buildFieldDescription for child fields to show x-optional-when conditions
+                  description: buildFieldDescription(child, tableDefinition),
+                  // 🔥 x-required-when/x-optional-when이면 Conditional로 표시
+                  required: child['x-required-when'] ? 'Conditional' :
+                    child['x-optional-when'] ? 'Conditional' :
+                      formatRequiredStatus(child.required),
                 };
               });
             }
@@ -398,9 +404,10 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 required: formatRequiredStatus(field.required),
               };
 
-              // 중첩 필드 처리
+              // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
               if (field.children && field.children.length > 0) {
-                param.children = field.children.map((child: any, idx: number) => {
+                let childNo = 1;
+                param.children = field.children.map((child: any) => {
                   if (child.type === 'section-header') {
                     return {
                       no: '', name: '', type: 'section-header',
@@ -408,13 +415,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       default: '', description: '', required: '',
                     };
                   }
+                  const currentNo = childNo++;
                   return {
-                    no: `${rowNumber - 1}.${idx + 1}`,
+                    no: `${rowNumber - 1}.${currentNo}`,
                     name: child.key.split('.').pop() || child.key,
                     type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                     default: child.default !== undefined ? String(child.default) : '-',
-                    description: child.ui?.label || child.description || child.key.split('.').pop() || child.key,
-                    required: child.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                    // 🔥 Use buildFieldDescription for child fields to show x-optional-when conditions
+                    description: buildFieldDescription(child, tableDefinition),
+                    // 🔥 x-required-when이면 Conditional, x-optional-when이면 Conditional
+                    required: child['x-required-when'] ? 'Conditional' :
+                      child['x-optional-when'] ? 'Conditional' :
+                        child.required?.['*'] === 'required' ? 'Required' : 'Optional',
                   };
                 });
               }

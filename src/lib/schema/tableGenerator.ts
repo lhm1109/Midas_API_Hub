@@ -740,6 +740,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
   const typeDisplay = field.type === 'array' ? `Array [${field.items?.type || 'any'}]` : field.type;
 
   // 🔥 Zendesk 스타일: children이 있으면 No. 칼럼에 rowspan 적용
+  // section-header도 포함하여 모든 children 수로 계산 (section-header는 colspan=6으로 No. 칼럼 제외)
   const hasChildren = field.children && field.children.length > 0;
   const rowspanValue = hasChildren ? field.children!.length + 1 : 1;
   const rowspanAttr = hasChildren ? ` rowspan="${rowspanValue}"` : '';
@@ -772,6 +773,20 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
   if (hasChildren) {
     let childNo = 1;
     for (const child of field.children!) {
+      // 🔥 section-header 타입 처리: 조건 헤더로 렌더링 (번호 없음)
+      // colspan=6: No. 칼럼은 부모의 rowspan이 점유하므로 제외
+      if (child.type === 'section-header') {
+        const sectionLabel = (child as any).section || child.ui?.label || child.key;
+        html += `
+        <tr>
+          <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="6">
+            <p><span style="color: #4c9aff;">${escapeHtml(sectionLabel)}</span></p>
+          </td>
+        </tr>
+      `;
+        continue; // 번호 증가 없이 다음 child로
+      }
+
       const childDescriptionHTML = generateFieldDescriptionLegacy(child);
       const childRequiredHTML = generateRequiredCellLegacy(child);
       const childDefaultValue = formatDefaultValue(child.default, child.type);
@@ -781,11 +796,12 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
       const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
 
       // 🔥 Zendesk 스타일: child row는 No. 칼럼 없음 (rowspan으로 parent가 점유)
-      // Description이 두 개의 td로 분리: (인덱스) + (설명)
+      // Description이 두 개의 td로 분리: (서브인덱스) + (설명)
+      // 🔥 번호 형식: parent.child (예: 4.1, 4.2, 4.3) - Spec Tab과 동일
       html += `
         <tr>
           <td style="${ZENDESK_CELL_STYLE}">
-            <p style="text-align: center;">(${childNo++})</p>
+            <p style="text-align: center;">${rowNumber}.${childNo++}</p>
           </td>
           <td style="${ZENDESK_CELL_STYLE}">
             ${childDescriptionHTML}
