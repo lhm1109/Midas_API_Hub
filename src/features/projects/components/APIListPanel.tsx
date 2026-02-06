@@ -1483,7 +1483,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       </div>
 
       {/* API Tree */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 overflow-hidden">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}

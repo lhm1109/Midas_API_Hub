@@ -135,29 +135,37 @@ tableDetectionRules:
 # ============================================================================
 # WRAPPER SELECTION RULES - entityType 선택 가이드라인
 # ============================================================================
+# ⚠️ CRITICAL: Midas API는 대부분 Entity Collection (patternProperties) 구조!
+#    'single'은 매우 드문 경우에만 사용 (global preferences 등)
+# ============================================================================
 wrapperSelectionRules:
   title: "🔥 MANDATORY: Entity Type Selection (collection vs single)"
   
   overview: |
     MCP는 두 가지 래핑 타입을 지원:
-    - 'collection': Entity Collection (ELEM, NODE 등) → patternProperties 래핑
-    - 'single': Single Object (Settings, Config 등) → 직접 properties 래핑
+    - 'collection': Entity Collection → patternProperties 래핑 (기본값, 대부분의 Midas API)
+    - 'single': Single Object → 직접 properties 래핑 (매우 드문 경우)
+  
+  # ⚠️ 기본값: collection (Midas API 표준)
+  defaultEntityType: "collection"
   
   entityTypeCollection:
-    description: "ID 기반 Entity Collection - patternProperties 사용"
+    description: "ID 기반 Entity Collection - patternProperties 사용 (기본값)"
     when:
       - "스키마가 ELEM, NODE, MATL, SECT 등 entity를 정의"
       - "API가 { '1': {...}, '2': {...} } 형태로 데이터 전송"
-      - "여러 개의 동일 구조 항목을 ID로 관리"
+      - "Design Code, Structure Type 등 설정 다이얼로그 포함"
+      - "⚠️ 대부분의 Midas API가 이 구조 사용"
     
     patterns:
       - "elem, node, matl, sect, thik, bndr, spring, link"
       - "tendon, cable, rebar, group, line"
+      - "styp, design_code, steel_code, psc_code"  # ← 설정도 collection!
     
     usage: |
       mcp_api-schema_save_schema({
-        schemaName: "elem",
-        entityType: "collection",  // ← 명시적
+        schemaName: "steel_design_code_kds",
+        entityType: "collection",  // ← 명시적 또는 생략 (기본값)
         ...
       })
     
@@ -171,48 +179,54 @@ wrapperSelectionRules:
       }
   
   entityTypeSingle:
-    description: "단일 설정 객체 - 직접 properties 사용"
+    description: "단일 설정 객체 - 직접 properties 사용 (매우 드문 경우)"
     when:
-      - "스키마가 설정/옵션/코드를 정의"
-      - "API가 단일 객체 { key: value } 형태로 데이터 전송"
-      - "Structure Type, Design Code, Settings 등"
+      - "전역 사용자 설정 (global preferences)"
+      - "API가 ID 없이 단일 객체만 전송"
+      - "⚠️ 이 경우는 매우 드물다!"
     
     patterns:
-      - "settings, config, option, type, code"
-      - "preference, parameter, control, analysis"
+      - "global_settings, global_preferences, user_config"
     
     usage: |
       mcp_api-schema_save_schema({
-        schemaName: "structure_type",
-        entityType: "single",  // ← 명시적
+        schemaName: "global_preferences",
+        entityType: "single",  // ← 반드시 명시적으로 지정
         ...
       })
     
     output: |
       {
         "Assign": {
-          "properties": { ... }
+          "properties": { ... }  // patternProperties 없음
         }
       }
   
+  # ⚠️ 수정된 자동 감지 규칙 (collection 우선)
   autoDetection: |
     entityType을 명시하지 않으면 schemaName에서 자동 감지:
-    - 'settings', 'config', 'preference' 포함 → 'single'
-    - 기타 모든 경우 → 'collection' (Midas API 기본값)
     
-    ⚠️ 대부분의 Midas API는 Entity Collection 형태:
-    { "Assign": { "1": {...}, "2": {...} } }
+    🔥 기본값: 'collection' (Midas API 표준)
+    
+    'single'로 감지되는 경우 (매우 좁은 범위):
+    - 'global_settings', 'global_preferences', 'global_config' 포함 시
+    
+    ⚠️ 주의: 'code', 'type', 'settings' 만으로는 single 아님!
+    - 'steel_design_code' → collection ✅
+    - 'structure_type' (styp) → collection ✅
+    - 'psc_design_code' → collection ✅
   
   decisionFlowchart: |
     START
      ↓
-    [1] schemaName에 'settings', 'config', 'type', 'code' 포함?
+    [1] schemaName에 'global_preferences', 'global_settings', 'global_config' 포함?
      ├─ YES → entityType: "single"
-     └─ NO → Continue to [2]
+     └─ NO → entityType: "collection" (기본값)
     
-    [2] schemaName에 'elem', 'node', 'matl', 'sect' 등 포함?
-     ├─ YES → entityType: "collection"
-     └─ NO → Default to "single"
+    ⚠️ 이전 규칙의 오류:
+    - ❌ 'type', 'code' 포함 → single (잘못됨!)
+    - ✅ 'styp' (Structure Type) → collection
+    - ✅ 'steel_design_code' → collection
 
 # ============================================================================
 # FIELD NAMING RULES
@@ -298,10 +312,34 @@ patterns:
         }
 
   fieldOrdering:
-    description: "Properties are rendered in the order they appear"
-    guidelines:
-      - "Use x-ui.order for explicit ordering if needed"
-      - "Group related fields together logically"
+    title: "🚨 CRITICAL: x-ui.order is MANDATORY for Correct Field Ordering"
+    description: |
+      JSON objects do NOT preserve insertion order when transmitted over MCP.
+      You MUST use x-ui.order to specify the exact display order of fields.
+      Without x-ui.order, fields will be sorted alphabetically (WRONG!).
+    
+    rules:
+      - "✅ ALWAYS add x-ui.order to EVERY field based on UI layout (top to bottom)"
+      - "✅ Number fields starting from 1, increment by 1 for each field"
+      - "❌ DO NOT rely on JSON property insertion order (gets lost in MCP)"
+    
+    example: |
+      // UI Order: Design Code → Lateral Bracing → Deflection Check → Seismic...
+      "properties": {
+        "sDESIGN_CD": {     // 1st in UI
+          "x-ui": { "order": 1, "label": "Design Code" }
+        },
+        "bLAT_BRACE": {     // 2nd in UI
+          "x-ui": { "order": 2, "label": "All Beams/Girders are Laterally Braced" }
+        },
+        "bDEFL_CHK": {      // 3rd in UI
+          "x-ui": { "order": 3, "label": "Check Beam/Column Deflection" }
+        },
+        "bSEISMIC": {       // 4th in UI
+          "x-ui": { "order": 4, "label": "Apply Special Provisions..." }
+        }
+      }
+    
     recommendedOrder:
       - "Primary selection fields (Design Code, Type selectors)"
       - "Input parameters (grouped by category)"

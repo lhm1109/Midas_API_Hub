@@ -897,7 +897,17 @@ export function VersionTab({ endpoint }: VersionTabProps) {
 
       {/* Create Version Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="bg-zinc-900 border-zinc-700">
+        <DialogContent
+          className="bg-zinc-900 border-zinc-700"
+          onOpenAutoFocus={(e) => {
+            // Electron에서 모달 포커스 문제 수정
+            e.preventDefault();
+            setTimeout(() => {
+              const input = document.getElementById('version');
+              input?.focus();
+            }, 50);
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="text-zinc-100">🎯 Create New Version</DialogTitle>
             <DialogDescription className="text-zinc-400">Create a new version to track your changes</DialogDescription>
@@ -912,6 +922,7 @@ export function VersionTab({ endpoint }: VersionTabProps) {
                 value={newVersionNumber}
                 onChange={(e) => setNewVersionNumber(e.target.value)}
                 className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                autoFocus
               />
             </div>
 

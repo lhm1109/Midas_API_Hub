@@ -661,12 +661,15 @@ function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): En
   }
 
   console.log(`✅ unwrapWrapperWithAdditionalProperties: Extracting entity from "${wrapperKey}"`);
+  console.log(`🔍 Entity schema required array:`, entitySchema.required);
 
   // 3. 새로운 스키마 구성 (엔티티 스키마를 최상위로)
   const result: EnhancedSchema = {
     ...entitySchema,
     title: wrapperKey,
   };
+
+  console.log(`🔍 Result schema required array:`, result.required);
 
   // 4. $schema 보존
   if (schema.$schema) {

@@ -291,7 +291,7 @@ export default function App() {
                   width: isPanelCollapsed ? '40px' : `${panelWidth}px`,
                   willChange: 'width', // GPU 가속
                 }}
-                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0 overflow-hidden"
+                className="relative bg-zinc-900 border-r border-zinc-800 flex-shrink-0 overflow-hidden h-full"
               >
                 {isPanelCollapsed ? (
                   // 접힌 상태: 펼치기 버튼만 표시
