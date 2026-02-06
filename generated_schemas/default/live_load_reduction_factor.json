@@ -1,0 +1,276 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "iCALC_RULE",
+            "LIVE_LOAD_CASES"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "iCALC_RULE": {
+              "type": "integer",
+              "oneOf": [
+                {
+                  "title": "by General Design Code",
+                  "const": 0
+                },
+                {
+                  "title": "by Chinese Standard",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Calculation Rule",
+                "order": 1
+              }
+            },
+            "APPLIED_COMP": {
+              "type": "array",
+              "description": "Applied Components Selection",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ALL",
+                  "AXIAL",
+                  "MOMENTS",
+                  "SHEAR"
+                ]
+              },
+              "x-ui": {
+                "component": "CheckboxGroup",
+                "label": "Applied Components",
+                "order": 2
+              },
+              "x-enum-labels": {
+                "ALL": "All Forces",
+                "AXIAL": "Axial Force",
+                "MOMENTS": "Moments",
+                "SHEAR": "Shear Forces"
+              }
+            },
+            "LIVE_LOAD_CASES": {
+              "type": "array",
+              "description": "Live Load Case Names (user defined list)",
+              "items": {
+                "type": "string"
+              },
+              "x-ui": {
+                "label": "Live Load Case Name",
+                "order": 3
+              }
+            },
+            "dRMAX": {
+              "type": "number",
+              "description": "Factor Range Max (Rmax)",
+              "default": 1,
+              "oneOf": [
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Option 0.95",
+                  "const": 0.95
+                },
+                {
+                  "title": "Option 0.9",
+                  "const": 0.9
+                },
+                {
+                  "title": "Option 0.85",
+                  "const": 0.85
+                },
+                {
+                  "title": "Option 0.8",
+                  "const": 0.8
+                },
+                {
+                  "title": "Option 0.75",
+                  "const": 0.75
+                },
+                {
+                  "title": "Option 0.7",
+                  "const": 0.7
+                },
+                {
+                  "title": "Option 0.65",
+                  "const": 0.65
+                },
+                {
+                  "title": "Option 0.6",
+                  "const": 0.6
+                },
+                {
+                  "title": "Option 0.55",
+                  "const": 0.55
+                },
+                {
+                  "title": "Option 0.5",
+                  "const": 0.5
+                }
+              ],
+              "x-ui": {
+                "label": "Max(Rmax)",
+                "order": 4
+              },
+              "x-optional-when": {
+                "iCALC_RULE": 0
+              }
+            },
+            "dRMIN": {
+              "type": "number",
+              "description": "Factor Range Min (Rmin)",
+              "default": 0.5,
+              "oneOf": [
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Option 0.95",
+                  "const": 0.95
+                },
+                {
+                  "title": "Option 0.9",
+                  "const": 0.9
+                },
+                {
+                  "title": "Option 0.85",
+                  "const": 0.85
+                },
+                {
+                  "title": "Option 0.8",
+                  "const": 0.8
+                },
+                {
+                  "title": "Option 0.75",
+                  "const": 0.75
+                },
+                {
+                  "title": "Option 0.7",
+                  "const": 0.7
+                },
+                {
+                  "title": "Option 0.65",
+                  "const": 0.65
+                },
+                {
+                  "title": "Option 0.6",
+                  "const": 0.6
+                },
+                {
+                  "title": "Option 0.55",
+                  "const": 0.55
+                },
+                {
+                  "title": "Option 0.5",
+                  "const": 0.5
+                }
+              ],
+              "x-ui": {
+                "label": "Min(Rmin)",
+                "order": 5
+              },
+              "x-optional-when": {
+                "iCALC_RULE": 0
+              }
+            },
+            "REDUCTION_DATA": {
+              "type": "array",
+              "description": "Live Load Reduction Factor Table Data",
+              "items": {
+                "type": "object",
+                "required": [
+                  "sSTORY",
+                  "dXMIN",
+                  "dXMAX",
+                  "dYMIN",
+                  "dYMAX"
+                ],
+                "properties": {
+                  "dRANGE_MAX": {
+                    "type": "number",
+                    "description": "Range Max value (only for General Design Code)",
+                    "enum": [
+                      1,
+                      0.95,
+                      0.9,
+                      0.85,
+                      0.8,
+                      0.75,
+                      0.7,
+                      0.65,
+                      0.6,
+                      0.55,
+                      0.5
+                    ],
+                    "x-optional-when": {
+                      "iCALC_RULE": 0
+                    }
+                  },
+                  "dRANGE_MIN": {
+                    "type": "number",
+                    "description": "Range Min value (only for General Design Code)",
+                    "enum": [
+                      1,
+                      0.95,
+                      0.9,
+                      0.85,
+                      0.8,
+                      0.75,
+                      0.7,
+                      0.65,
+                      0.6,
+                      0.55,
+                      0.5
+                    ],
+                    "x-optional-when": {
+                      "iCALC_RULE": 0
+                    }
+                  },
+                  "dXMAX": {
+                    "type": "number",
+                    "description": "X Max coordinate"
+                  },
+                  "dXMIN": {
+                    "type": "number",
+                    "description": "X Min coordinate"
+                  },
+                  "dYMAX": {
+                    "type": "number",
+                    "description": "Y Max coordinate"
+                  },
+                  "dYMIN": {
+                    "type": "number",
+                    "description": "Y Min coordinate"
+                  },
+                  "sSTORY": {
+                    "type": "string",
+                    "description": "Story Name"
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Reduction Data Table",
+                "order": 6
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

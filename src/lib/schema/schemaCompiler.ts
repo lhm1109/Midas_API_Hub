@@ -1220,6 +1220,43 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       }
     }
 
+    // 🔥 Array 타입 with items.properties - 배열 내부 객체 필드 추출 (NEW)
+    // REDUCTION_DATA처럼 type: array, items: { type: object, properties: {...} } 형태 처리
+    if (prop.type === 'array' && prop.items && (prop.items as any).type === 'object' && (prop.items as any).properties) {
+      const itemSchema = prop.items as any;
+      field.children = [];
+      const itemRequired = itemSchema.required || [];
+
+      for (const [childKey, childProp] of Object.entries(itemSchema.properties)) {
+        const childField: EnhancedField = {
+          key: `${key}[].${childKey}`,
+          type: (childProp as any).type,
+          default: (childProp as any).default,
+          description: (childProp as any).description,
+          required: itemRequired.includes(childKey) ? { '*': 'required' } : { '*': 'optional' },
+          section: '',
+          validationLayers: [],
+        };
+
+        // 🔥 자식 필드도 동적으로 모든 속성 복사
+        for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
+          if (cpKey === 'type' || cpKey === 'default' || cpKey === 'description') continue;
+
+          if (cpKey === 'x-ui') {
+            childField.ui = cpValue;
+          } else if (cpKey.startsWith('x-')) {
+            childField[cpKey] = cpValue;
+          } else {
+            childField[cpKey] = cpValue;
+          }
+        }
+
+        field.children.push(childField);
+      }
+
+      console.log(`✅ Extracted ${field.children.length} children from array items.properties for ${key}`);
+    }
+
     // 🔥 Object 타입 with oneOf - 상호 배타적 선택 (예: Method 1, 2, 3 중 선택)
     if (prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)) {
       field.children = [];
