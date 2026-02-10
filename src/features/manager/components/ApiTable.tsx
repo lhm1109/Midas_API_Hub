@@ -61,7 +61,7 @@ interface FilterConfig {
 const COLUMN_GROUPS = {
   productRibbon: {
     label: 'Product Ribbon',
-    columns: ['product', 'tab', 'group', 'sub1', 'sub2', 'sub3'],
+    columns: ['order_index', 'product', 'tab', 'group', 'sub1', 'sub2', 'sub3'],
   },
   api: {
     label: 'API',
@@ -108,7 +108,8 @@ export function ApiTable({
     const isStatusCol = ['dev', 'vv', 'doc', 'deploy', 'issue', 'status', 'seg1'].includes(columnId);
     const isProductRibbonCol = ['product', 'tab', 'group', 'sub1', 'sub2', 'sub3'].includes(columnId);
     const isEndpointCol = columnId === 'endPoint';
-    return isStatusCol ? 64 : isProductRibbonCol ? 100 : isEndpointCol ? 150 : 80;
+    const isOrderCol = columnId === 'order_index';
+    return isOrderCol ? 50 : isStatusCol ? 64 : isProductRibbonCol ? 100 : isEndpointCol ? 150 : 80;
   }, []);
 
   // 현재 컬럼 너비 (사용자 조절값 또는 기본값)
@@ -214,7 +215,7 @@ export function ApiTable({
   const uniqueValuesMap = useMemo(() => {
     const map: Record<string, string[]> = {};
     columns.forEach(col => {
-      const values = tasks.map(task => task[col.id]).filter(Boolean);
+      const values = tasks.map(task => String(task[col.id] ?? '')).filter(v => v !== '');
       map[col.id] = Array.from(new Set(values)) as string[];
     });
     return map;
@@ -232,7 +233,7 @@ export function ApiTable({
     return sortedTasks.filter((task) => {
       return filters.every((filter) => {
         if (filter.selectedValues.length > 0) {
-          return filter.selectedValues.includes(task[filter.columnId] ?? '');
+          return filter.selectedValues.includes(String(task[filter.columnId] ?? ''));
         }
         return true;
       });
@@ -321,6 +322,14 @@ export function ApiTable({
             </TooltipContent>
           )}
         </Tooltip>
+      );
+    }
+
+    if (['order_index'].includes(columnId)) {
+      return (
+        <div className="text-center text-zinc-400 text-xs">
+          {value !== undefined && value !== null ? value : '-'}
+        </div>
       );
     }
 

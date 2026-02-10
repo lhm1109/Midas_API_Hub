@@ -43,6 +43,7 @@ export interface Column {
 }
 
 export const defaultColumns: Column[] = [
+  { id: "order_index", label: "Order", visible: true },
   { id: "product", label: "Product", visible: true },
   { id: "tab", label: "Tab", visible: true },
   { id: "group", label: "Group", visible: true },

@@ -1,0 +1,112 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "sNAME",
+            "sPART_A",
+            "sPART_B",
+            "sPART_C",
+            "iPOS_TYPE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "sNAME": {
+              "type": "string",
+              "description": "Haunch Name",
+              "x-ui": {
+                "label": "Name",
+                "order": 1
+              }
+            },
+            "sPART_A": {
+              "type": "array",
+              "description": "Element List for Part A",
+              "items": {
+                "type": "string"
+              },
+              "x-ui": {
+                "label": "Part A",
+                "order": 2
+              }
+            },
+            "sPART_B": {
+              "type": "array",
+              "description": "Element List for Part B",
+              "items": {
+                "type": "string"
+              },
+              "x-ui": {
+                "label": "Part B",
+                "order": 3
+              }
+            },
+            "sPART_C": {
+              "type": "array",
+              "description": "Element List for Part C",
+              "items": {
+                "type": "string"
+              },
+              "x-ui": {
+                "label": "Part C",
+                "order": 4
+              }
+            },
+            "iPOS_TYPE": {
+              "type": "integer",
+              "description": "Design Position Type",
+              "oneOf": [
+                {
+                  "title": "Part 1/2",
+                  "const": 0
+                },
+                {
+                  "title": "User",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Define Design Position",
+                "order": 5
+              }
+            },
+            "dL1": {
+              "type": "number",
+              "description": "User defined L1 distance (m)",
+              "x-ui": {
+                "label": "L1",
+                "order": 6
+              },
+              "x-required-when": {
+                "iPOS_TYPE": 1
+              }
+            },
+            "dL2": {
+              "type": "number",
+              "description": "User defined L2 distance (m)",
+              "x-ui": {
+                "label": "L2",
+                "order": 7
+              },
+              "x-required-when": {
+                "iPOS_TYPE": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

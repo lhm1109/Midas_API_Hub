@@ -1,0 +1,275 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "iPRI_SORT": {
+          "type": "integer",
+          "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "SECT",
+              "const": 0
+            },
+            {
+              "title": "MEMB",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Primary Sorting Option",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "STEELCODECHK-MEMB"
+          }
+        },
+        "iRESULT_VIEW": {
+          "type": "integer",
+          "description": "Filter results by check status",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "All",
+              "const": 0
+            },
+            {
+              "title": "OK",
+              "const": 1
+            },
+            {
+              "title": "NG",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Result View Option",
+            "order": 3
+          }
+        },
+        "bVIEW_RATPC": {
+          "type": "boolean",
+          "description": "Filter to show only members with RatPc greater than 0.4",
+          "default": false,
+          "x-ui": {
+            "label": "View RatPc > 0.4",
+            "order": 4
+          }
+        },
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "STEELCODECHK-MEMB",
+            "STEELCODECHK-PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "CHK",
+              "MEMB",
+              "COM",
+              "SECT",
+              "SHR",
+              "Section",
+              "Material",
+              "Fy",
+              "LCB",
+              "Len",
+              "Lb",
+              "Ly",
+              "Lz",
+              "Cb",
+              "Ky",
+              "Kz",
+              "B1y",
+              "B1z",
+              "B2y",
+              "B2z",
+              "RatPc",
+              "Pu",
+              "pPn",
+              "Muy",
+              "pMny",
+              "Muz",
+              "pMnz",
+              "Vuy",
+              "pVny",
+              "Vuz",
+              "pVnz",
+              "Tu",
+              "pTn",
+              "Def",
+              "Defa"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "STEELCODECHK-MEMB": {
+              "B1y": "Moment Magnification Factor B1",
+              "B1z": "Moment Magnification Factor B1",
+              "B2y": "Moment Magnification Factor B2",
+              "B2z": "Moment Magnification Factor B2",
+              "Cb": "Bending Coefficient",
+              "CHK": "Strength Check Result",
+              "COM": "Max Combined Interaction Ratio",
+              "Def": "Serviceability Deflection",
+              "Defa": "Allowable Deflection",
+              "Fy": "Yield Strength",
+              "Ky": "Effective Length Factor",
+              "Kz": "Effective Length Factor",
+              "Lb": "Lateral Bracing Length",
+              "LCB": "Critical Load Combination No.",
+              "Len": "Member Length",
+              "Ly": "Unbraced Length",
+              "Lz": "Unbraced Length",
+              "Material": "Material Name",
+              "MEMB": "Member Number",
+              "Muy": "Required Flexural Strength",
+              "Muz": "Required Flexural Strength",
+              "pMny": "Design Flexural Strength φMny",
+              "pMnz": "Design Flexural Strength φMnz",
+              "pPn": "Design Axial Strength",
+              "pTn": "Design Torsional Strength",
+              "Pu": "Required Axial Strength",
+              "pVny": "Design Shear Strength φVny",
+              "pVnz": "Design Shear Strength φVnz",
+              "RatPc": "Axial Strength Ratio",
+              "SECT": "Section Number",
+              "Section": "Section Name",
+              "SHR": "Shear Stress Ratio",
+              "Tu": "Required Torsional Strength",
+              "Vuy": "Required Shear Strength",
+              "Vuz": "Required Shear Strength"
+            },
+            "STEELCODECHK-PROP": {
+              "B1y": "Moment Magnification Factor B1",
+              "B1z": "Moment Magnification Factor B1",
+              "B2y": "Moment Magnification Factor B2",
+              "B2z": "Moment Magnification Factor B2",
+              "Cb": "Bending Coefficient",
+              "CHK": "Strength Check Result",
+              "COM": "Max Combined Interaction Ratio",
+              "Def": "Serviceability Deflection",
+              "Defa": "Allowable Deflection",
+              "Fy": "Yield Strength",
+              "Ky": "Effective Length Factor",
+              "Kz": "Effective Length Factor",
+              "Lb": "Lateral Bracing Length",
+              "LCB": "Critical Load Combination No.",
+              "Len": "Member Length",
+              "Ly": "Unbraced Length",
+              "Lz": "Unbraced Length",
+              "Material": "Material Name",
+              "MEMB": "Member Number",
+              "Muy": "Required Flexural Strength",
+              "Muz": "Required Flexural Strength",
+              "pMny": "Design Flexural Strength φMny",
+              "pMnz": "Design Flexural Strength φMnz",
+              "pPn": "Design Axial Strength",
+              "pTn": "Design Torsional Strength",
+              "Pu": "Required Axial Strength",
+              "pVny": "Design Shear Strength φVny",
+              "pVnz": "Design Shear Strength φVnz",
+              "RatPc": "Axial Strength Ratio",
+              "SECT": "Section Number",
+              "Section": "Section Name",
+              "SHR": "Shear Stress Ratio",
+              "Tu": "Required Torsional Strength",
+              "Vuy": "Required Shear Strength",
+              "Vuz": "Required Shear Strength"
+            }
+          }
+        }
+      }
+    }
+  }
+}

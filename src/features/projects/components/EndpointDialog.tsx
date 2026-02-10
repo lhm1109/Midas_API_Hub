@@ -54,15 +54,16 @@ export function EndpointDialog({
       return endpoint.id;
     }
 
-    // 새 엔드포인트: path에서 그룹명 추출 후 소문자로 통일
-    // 예: "/db/node" → "db/node", "/gen/project" → "gen/project"
+    // 새 엔드포인트: path에서 첫 번째 세그먼트 + 마지막 세그먼트로 ID 생성
+    // 예: "/DESIGN/STEEL/KDS-41-30-2022/HASSIGN" → "design/hassign"
+    // 예: "/db/node" → "db/node"
     const cleanPath = path.trim().startsWith('/') ? path.trim().slice(1) : path.trim();
     const pathSegments = cleanPath.split('/');
 
     if (pathSegments.length >= 2) {
-      // path가 /group/endpoint 형식인 경우
+      // path가 /group/.../endpoint 형식인 경우: 첫 번째 + 마지막 세그먼트 사용
       const groupFromPath = pathSegments[0].toLowerCase();
-      const endpointFromPath = pathSegments[1].toLowerCase();
+      const endpointFromPath = pathSegments[pathSegments.length - 1].toLowerCase();
       return `${groupFromPath}/${endpointFromPath}`;
     }
 

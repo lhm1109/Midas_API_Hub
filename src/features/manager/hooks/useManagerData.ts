@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ApiTask, Column } from '../types/manager';
+import { ApiTask, Column, defaultColumns } from '../types/manager';
 
 const API_BASE_URL = 'http://localhost:9527/api/manager';
 
@@ -22,13 +22,54 @@ export function useManagerData() {
     }
   }, []);
 
-  // Columns 조회
+  // Columns 조회 (defaultColumns와 병합)
   const fetchColumns = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/columns`);
       if (!response.ok) throw new Error('Failed to fetch columns');
-      const data = await response.json();
-      setColumns(data);
+      const data: Column[] = await response.json();
+
+      // DB에 없는 새 컬럼을 defaultColumns에서 찾아 병합
+      const dbColumnIds = new Set(data.map(c => c.id));
+      const missingColumns = defaultColumns.filter(dc => !dbColumnIds.has(dc.id));
+
+      if (missingColumns.length > 0 && data.length > 0) {
+        // defaultColumns 순서에 따라 올바른 위치에 삽입
+        const merged: Column[] = [];
+        const dbMap = new Map(data.map(c => [c.id, c]));
+
+        for (const dc of defaultColumns) {
+          if (dbMap.has(dc.id)) {
+            merged.push(dbMap.get(dc.id)!);
+          } else {
+            merged.push(dc);
+          }
+        }
+        // DB에만 있는 컬럼도 유지
+        for (const c of data) {
+          if (!defaultColumns.find(dc => dc.id === c.id)) {
+            merged.push(c);
+          }
+        }
+
+        setColumns(merged);
+        // DB에도 동기화
+        fetch(`${API_BASE_URL}/columns`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(merged),
+        }).catch(err => console.error('Error syncing columns:', err));
+      } else if (data.length === 0) {
+        // DB가 비어있으면 defaultColumns 사용
+        setColumns(defaultColumns);
+        fetch(`${API_BASE_URL}/columns`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(defaultColumns),
+        }).catch(err => console.error('Error syncing columns:', err));
+      } else {
+        setColumns(data);
+      }
     } catch (err) {
       console.error('Error fetching columns:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');

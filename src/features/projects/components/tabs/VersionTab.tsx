@@ -900,12 +900,19 @@ export function VersionTab({ endpoint }: VersionTabProps) {
         <DialogContent
           className="bg-zinc-900 border-zinc-700"
           onOpenAutoFocus={(e) => {
-            // Electron에서 모달 포커스 문제 수정
+            // Electron에서 모달 포커스 문제 수정 - 더 강력한 처리
             e.preventDefault();
+            // 🔥 Electron 창에 먼저 포커스를 주고, 그 다음 input에 포커스
+            window.focus();
             setTimeout(() => {
               const input = document.getElementById('version');
-              input?.focus();
-            }, 50);
+              if (input) {
+                input.focus();
+                // 추가: blur 후 다시 focus로 강제 활성화
+                input.blur();
+                input.focus();
+              }
+            }, 100);
           }}
         >
           <DialogHeader>

@@ -1,0 +1,71 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "CURRENT_MODE",
+        "EXPORT_PATH",
+        "sOUTPUT_NAME"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "CURRENT_MODE": {
+          "type": "string",
+          "description": "Report output mode",
+          "oneOf": [
+            {
+              "title": "Graphic (JPG image)",
+              "const": "Graphic"
+            },
+            {
+              "title": "Detail (TXT text)",
+              "const": "Detail"
+            },
+            {
+              "title": "Summary (TXT text)",
+              "const": "Summary"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 1
+          }
+        },
+        "MEMB_LIST": {
+          "type": "array",
+          "description": "List of member numbers to include in the report",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Member Numbers",
+            "order": 2
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "File path to save the report (JPG for Graphic, TXT for Detail/Summary)",
+          "x-ui": {
+            "hint": "e.g. C:\\MIDAS\\Report\\output.jpg or .txt",
+            "label": "Export Path",
+            "order": 3
+          }
+        },
+        "sOUTPUT_NAME": {
+          "type": "string",
+          "description": "Output file base name. For multiple members, files are prefixed with index number and element number (e.g. 001_E123_filename.jpg, 002_E456_filename.jpg)",
+          "x-ui": {
+            "label": "Output File Name",
+            "order": 4
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,435 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "sCODE",
+            "dES",
+            "dPS",
+            "dFU"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "sCODE": {
+              "type": "string",
+              "description": "Steel Material Code. Extensible: add new codes to oneOf array.",
+              "oneOf": [
+                {
+                  "title": "None (User Defined)",
+                  "const": "None"
+                },
+                {
+                  "title": "KS22(S)",
+                  "const": "KS22(S)"
+                }
+              ],
+              "x-ui": {
+                "component": "Dropdown",
+                "label": "Code",
+                "order": 1
+              }
+            },
+            "sGRADE": {
+              "type": "string",
+              "description": "Steel Grade for KS22(S). Auto-fills material properties when selected.",
+              "oneOf": [
+                {
+                  "title": "SS235",
+                  "const": "SS235"
+                },
+                {
+                  "title": "SS275",
+                  "const": "SS275"
+                },
+                {
+                  "title": "SS315",
+                  "const": "SS315"
+                },
+                {
+                  "title": "SS410",
+                  "const": "SS410"
+                },
+                {
+                  "title": "SS450",
+                  "const": "SS450"
+                },
+                {
+                  "title": "SS550",
+                  "const": "SS550"
+                },
+                {
+                  "title": "SM275",
+                  "const": "SM275"
+                },
+                {
+                  "title": "SM355",
+                  "const": "SM355"
+                },
+                {
+                  "title": "SM420",
+                  "const": "SM420"
+                },
+                {
+                  "title": "SM460",
+                  "const": "SM460"
+                },
+                {
+                  "title": "SM275TMC",
+                  "const": "SM275TMC"
+                },
+                {
+                  "title": "SM355TMC",
+                  "const": "SM355TMC"
+                },
+                {
+                  "title": "SM420TMC",
+                  "const": "SM420TMC"
+                },
+                {
+                  "title": "SM460TMC",
+                  "const": "SM460TMC"
+                },
+                {
+                  "title": "SMA275A",
+                  "const": "SMA275A"
+                },
+                {
+                  "title": "SMA275B",
+                  "const": "SMA275B"
+                },
+                {
+                  "title": "SMA275C",
+                  "const": "SMA275C"
+                },
+                {
+                  "title": "SMA355A",
+                  "const": "SMA355A"
+                },
+                {
+                  "title": "SMA355B",
+                  "const": "SMA355B"
+                },
+                {
+                  "title": "SMA355C",
+                  "const": "SMA355C"
+                },
+                {
+                  "title": "SMA460",
+                  "const": "SMA460"
+                },
+                {
+                  "title": "HSM500",
+                  "const": "HSM500"
+                },
+                {
+                  "title": "SN275A",
+                  "const": "SN275A"
+                },
+                {
+                  "title": "SN275B",
+                  "const": "SN275B"
+                },
+                {
+                  "title": "SN275C",
+                  "const": "SN275C"
+                },
+                {
+                  "title": "SN355",
+                  "const": "SN355"
+                },
+                {
+                  "title": "SN460",
+                  "const": "SN460"
+                },
+                {
+                  "title": "SHN275",
+                  "const": "SHN275"
+                },
+                {
+                  "title": "SHN355",
+                  "const": "SHN355"
+                },
+                {
+                  "title": "SHN420",
+                  "const": "SHN420"
+                },
+                {
+                  "title": "SHN460",
+                  "const": "SHN460"
+                },
+                {
+                  "title": "HSB380",
+                  "const": "HSB380"
+                },
+                {
+                  "title": "HSB460",
+                  "const": "HSB460"
+                },
+                {
+                  "title": "HSB690",
+                  "const": "HSB690"
+                },
+                {
+                  "title": "HSA650",
+                  "const": "HSA650"
+                },
+                {
+                  "title": "SGT275",
+                  "const": "SGT275"
+                },
+                {
+                  "title": "SGT355",
+                  "const": "SGT355"
+                },
+                {
+                  "title": "SGT410",
+                  "const": "SGT410"
+                },
+                {
+                  "title": "SGT450",
+                  "const": "SGT450"
+                },
+                {
+                  "title": "SGT550",
+                  "const": "SGT550"
+                },
+                {
+                  "title": "SRT275",
+                  "const": "SRT275"
+                },
+                {
+                  "title": "SRT355",
+                  "const": "SRT355"
+                },
+                {
+                  "title": "SRT410",
+                  "const": "SRT410"
+                },
+                {
+                  "title": "SRT450",
+                  "const": "SRT450"
+                },
+                {
+                  "title": "SRT550",
+                  "const": "SRT550"
+                },
+                {
+                  "title": "SNT275",
+                  "const": "SNT275"
+                },
+                {
+                  "title": "SNT355",
+                  "const": "SNT355"
+                },
+                {
+                  "title": "SNT460",
+                  "const": "SNT460"
+                },
+                {
+                  "title": "SHT410",
+                  "const": "SHT410"
+                },
+                {
+                  "title": "SHT460",
+                  "const": "SHT460"
+                },
+                {
+                  "title": "SNRT295E",
+                  "const": "SNRT295E"
+                },
+                {
+                  "title": "SNRT390E",
+                  "const": "SNRT390E"
+                },
+                {
+                  "title": "SNRT275A",
+                  "const": "SNRT275A"
+                },
+                {
+                  "title": "SNRT355A",
+                  "const": "SNRT355A"
+                },
+                {
+                  "title": "SSC275",
+                  "const": "SSC275"
+                },
+                {
+                  "title": "SWH275",
+                  "const": "SWH275"
+                },
+                {
+                  "title": "SWH355",
+                  "const": "SWH355"
+                },
+                {
+                  "title": "SWH420",
+                  "const": "SWH420"
+                },
+                {
+                  "title": "SWH460",
+                  "const": "SWH460"
+                },
+                {
+                  "title": "SF490",
+                  "const": "SF490"
+                },
+                {
+                  "title": "SF540",
+                  "const": "SF540"
+                },
+                {
+                  "title": "SDP1",
+                  "const": "SDP1"
+                },
+                {
+                  "title": "SDP2",
+                  "const": "SDP2"
+                },
+                {
+                  "title": "SDP3",
+                  "const": "SDP3"
+                },
+                {
+                  "title": "SWPC1",
+                  "const": "SWPC1"
+                },
+                {
+                  "title": "SWPD1",
+                  "const": "SWPD1"
+                },
+                {
+                  "title": "SWPC",
+                  "const": "SWPC"
+                },
+                {
+                  "title": "SWPD",
+                  "const": "SWPD"
+                }
+              ],
+              "x-ui": {
+                "component": "Dropdown",
+                "label": "Grade",
+                "order": 2
+              },
+              "x-required-when": {
+                "sCODE": "KS22(S)"
+              }
+            },
+            "sNAME": {
+              "type": "string",
+              "description": "User-defined material name (when Code is None)",
+              "x-ui": {
+                "label": "Name",
+                "order": 3
+              },
+              "x-required-when": {
+                "sCODE": "None"
+              }
+            },
+            "dES": {
+              "type": "number",
+              "description": "Modulus of Elasticity (kN/m²)",
+              "x-ui": {
+                "label": "Modulus of Elasticity (Es)",
+                "order": 4
+              }
+            },
+            "dPS": {
+              "type": "number",
+              "description": "Poisson's Ratio",
+              "x-ui": {
+                "label": "Poisson's Ratio (Ps)",
+                "order": 5
+              }
+            },
+            "dFU": {
+              "type": "number",
+              "description": "Tensile Strength (kN/m²)",
+              "x-ui": {
+                "label": "Tensile Strength (Fu)",
+                "order": 6
+              }
+            },
+            "dFY": {
+              "type": "number",
+              "description": "Yield Strength for Code=None (single value, kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy)",
+                "order": 7
+              },
+              "x-required-when": {
+                "sCODE": "None"
+              }
+            },
+            "dFY1": {
+              "type": "number",
+              "description": "Yield Strength 1 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy1)",
+                "order": 8
+              },
+              "x-required-when": {
+                "sCODE": "KS22(S)"
+              }
+            },
+            "dFY2": {
+              "type": "number",
+              "description": "Yield Strength 2 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy2)",
+                "order": 9
+              },
+              "x-required-when": {
+                "sCODE": "KS22(S)"
+              }
+            },
+            "dFY3": {
+              "type": "number",
+              "description": "Yield Strength 3 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy3)",
+                "order": 10
+              },
+              "x-required-when": {
+                "sCODE": "KS22(S)"
+              }
+            },
+            "dFY4": {
+              "type": "number",
+              "description": "Yield Strength 4 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy4)",
+                "order": 11
+              },
+              "x-required-when": {
+                "sCODE": "KS22(S)"
+              }
+            },
+            "dFY5": {
+              "type": "number",
+              "description": "Yield Strength 5 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy5)",
+                "order": 12
+              },
+              "x-required-when": {
+                "sCODE": "KS22(S)"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
