@@ -1,0 +1,261 @@
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/ 제시된 예는 Header File에서의 일반적인 Tag 정의 예이다. 
+_/ Tag에 대한 상세설명은 Autoduck.hlp File을 참조 할것 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+
+//@doc   MyClass
+//@class MyClass Class 설명 
+//@base  public BaseClass
+class MyClass : public BaseClass
+{
+public:
+	
+	//@access Creation/initialization (subtopic title)
+
+  syntax )//@cmember type | name | parameter list | description  
+	//@cmember  MemberFuction1 개략 설명 
+	MemberFunction1();
+
+	//@access Attributes (subtopic title)
+	//@cmember  MemberFunction2 개략 설명
+	WORD MemberFunction2( const WORD& wNewStyle );
+
+	//@access Operations  (subtopic title)
+	//@cmember  MemberFunction3 개략 설명
+	virtual int MemberFunction3 ();
+
+protected:
+  //Message Handler 관련 Comment 기술 
+	//@access Overridable
+
+  //{{AFX_MSG(SECDirSelectDlg)
+	//@cmember	Called to initialize the dialog.
+    virtual BOOL OnInitDialog();
+    //}}AFX_MSG
+    DECLARE_MESSAGE_MAP() 
+
+protected:
+
+	//@access Protected data members
+	
+	//@cmember m_MemberData1 Description.
+	WORD m_MemberData1;
+	
+	//@cmember m_MemberData2 Description.
+	TCHAR m_MemberData2;
+	
+	//@cmember m_MemberData3 Description.
+	CWnd* m_MemberData3;
+
+private:
+
+	// Private data members
+
+	// The dialog style flags.
+	static DWORD c_dwFlags;
+
+	// The file filter string.
+	static const TCHAR* c_pcszFilter;
+
+};
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/ 제시된 예는 Source File에서의 일반적인 Tag 정의 예이다. 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+
+//@doc MyClass
+//@mfunc Member Function 설명 
+//@rdesc Return 값에 대한 설명 
+//@parm const CString& | FileSystem | Parameter 설명 
+//@comm  참고 내용 
+//@xref <c MyClass> <mf MyClass::MyFunction2> <== 관련 자료에 대한 Hyper Link
+//@ex | LONG lSize = fs.GetFreeSpace("c:\\"); <== 사용 예제 
+
+LONG MyClass::MyFunction1(const CString& FileSystem)
+{
+
+} 
+
+//@doc  MyClass
+//@mfunc Member Function 설명  
+//@rdesc The total number of bytes on the specified filesystem.
+//@parm const CString& | Parameter1 | Parameter1 설명 
+//@parm const UINT | Parameter2 | Parameter2설명 
+//@comm To get the total number of bytes on a filesystem.
+//@xref <c MyClass> <mf MyClass::MyFunction1> <== 관련 자료에 대한 Hyper Link
+//@ex | LONG lSize = fs.GetTotalSpace("c:\\");
+LONG MyClass::MyFunction2(const CString& Parameter1,UINT Parameter2)
+{
+
+} 
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/ inline member function ,class structure , class enumeration type에 대한 
+_/ comment를 위한 중첩된 topic과 paragraph를 지정할 수 있다. 
+_/ 아래 Class는 중첩된 topic 과 paragraph의 사용에 대한 예제 Class이다. 
+_/
+_/ Inline member function과 struructure , enumberation 은 중첩 Nested Topic tag
+_/ 정의로 documentation 가능하다.  
+_/
+_/ Nested topic을 생성하기 위해서는 topic tag가 paragraph tag와 함께 정의 되어야 한다.
+_/
+_/ topic tag와 paragraph tag을 같은 위치에 정의하기 위해서는 아래 enumeration 과 
+_/ structure에 대한 document tag 정의 형식으로 기술되어야 한다. 
+_/ 제시된 예제의 enumeration 관련 tag에서 //emem 으로 기술된 부분을 볼 수 있는데
+_/ 이것은 기술된 documentation이 main topic 의 일부분이 아니고 subtopic 즉 
+_/ CompareFlags topic의 일부분임을 의미한다. 이것은 topic CompareFlags에 대한 새로운 
+_/ HyperLink를 생성함을 의미한다.  structure 역시 같은 의미로 사용된다. 
+_/
+_/ @menum   enumeration type member data를 의미한다.
+_/ @mstruct structure type member data를 의미한다.
+_/ @emem은 enum member 임을 의미한다. 
+_/ @field는 structure field를 의미한다. 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+//@class A simple string class.
+
+class CString {
+
+public:
+  //@access Costructor & Destructor
+
+	//@cmember,mfunc Constructor, initializes string to empty.
+	CNested(void) { m_szText = NULL; }
+
+	//@cmember,mfunc Destroys the string, if present.
+	~CNested(void) { Reset(); }
+
+	//@access Operation 
+	//@cmember,mfunc Destroys the string, if present.
+	void Reset(void) { if(m_szText) delete m_szText; m_szText = NULL; }
+
+	//@cmember,menum Comparison flags for the <mf .Compare> function.
+	enum CompareFlags {
+    compNormal,       //emem Case-sensitive compare.
+		compIgnoreCase,   //emem Case-insensitive compare.
+		compFuzzy,        //emem Fuzzy compare, if words sound
+	}                   // alike
+
+	
+	//@cmember,mstruct Parsing text structure
+	struct MyStruct
+	{
+	char *szBase;		//field Base of text to parse
+	char *szCur;		//field Current parsing location
+	};
+	
+	//@cmember Comparison function.
+
+	int Compare(const char *szCompText, int nCompFlags = 0);
+
+	//@cmember Sets the text of the string.
+
+	void Set(const char *szText);
+
+private:
+	//@cmember Pointer to string text.
+
+	char *m_szText;
+}
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/  제시된 예는 Nested Item에 대한 topic tag와 paragraph tag의 
+_/  정의 위치분리를 위한 예이다. Nested Item의 topic 과 paragraph의 
+_/  분리를 위해서는 paragraph tag 정의가 선행되어야 한다. 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+//@doc MyClass
+//@mdata CString  | MyClass | m_strFilters | The file filters for 
+// limiting displayed files.
+//@xref <mf MyClass::SetFileFilters>
+
+//@doc MyClass
+//@mdata CString  | MyClass | m_strInitialFile | The initial filename.
+//@xref <mf MyClass::SetInitialFileName>
+
+//@doc MyClass
+//@mdata CString  | MyClass | m_strExt | The default file extension.
+//@xref <mf MyClass::SetDefaultExtension>
+
+//@doc MyClass
+//@mdata DWORD    | MyClass | m_dwDialogStyle | The dialog style flags.
+//@xref <mf MyClass::ModifyDialogStyle>
+
+//@doc MyClass
+//@mfunc void  | MyClass | SetFileFilters | Sets the file filter string.
+//@parm const TCHAR*  | pcszFilters | A string containing the file filters.
+
+//@doc MyClass
+//@mfunc void  | MyClass | SetDefaultExtension | Sets the default file extension.
+//@parm const TCHAR*  | pcszExt | A string containing the file extension.
+
+//@doc MyClass
+//@mfunc void  | MyClass | SetInitialFileName | Sets the initial filename.
+//@parm const TCHAR*  | pcszName | A string containing the initial filename.
+
+//@doc MyClass 
+//@class The MyClass 설명 
+// 
+//@base public | SECBrowseEditBase
+class MyClass : public SECBrowseEditBase
+{
+
+public:                           
+	
+	//@access Creation/initializers
+	
+	//@cmember
+	/* Constructs a MyClass object.*/
+	MyClass();
+
+	//@access Attributes
+
+	//@cmember
+	/* Sets the file filter string.*/
+	void SetFileFilters(const TCHAR* pcszFilters)
+		{ m_strFilters = pcszFilters; }
+	
+	//@cmember
+	/* Sets the default file extension.*/
+	void SetDefaultExtension(const TCHAR* pcszExt)		
+		{ m_strExt = pcszExt; }
+	
+	//@cmember
+	/* Sets the initial filename.*/
+	void SetInitialFileName(const TCHAR* pcszName)		
+		{ m_strInitialFile = pcszName; }
+	
+	//@cmember
+	/* Modifies the current dialog style flags.*/
+	void ModifyDialogStyle( DWORD dwRemove, DWORD dwAdd );
+
+	//@access Operations
+
+	//@cmember
+	/* Launches the file selection dialog.*/
+	vㅇirtual void OnBrowse();
+
+protected:
+
+	//@access Protected data members
+
+	//@cmember
+	/* The current file filters.*/
+	CString m_strFilters;
+	
+	//@cmember
+	/* The initial filename.*/
+	CString m_strInitialFile;
+	
+	//@cmember
+	/* The default file extension.*/
+	CString m_strExt;
+	
+	//@cmember
+	/* The dialog style.*/
+	DWORD   m_dwDialogStyle;
+
+};
+

@@ -1,0 +1,92 @@
+#include "stdafx.h"
+#include "stdafx.h"
+#include "DB_ELEM.h"
+#include "DB_PFCM.h"
+
+#include "DBDoc.h"
+#include "StagCtrl.h"
+
+CDB_PFCM::CDB_PFCM()
+{
+	m_pDoc = CDBDoc::GetDocPoint();
+	m_PFCM.InitHashTable(HASHSIZEPFCM);
+}
+
+CDB_PFCM::~CDB_PFCM()
+{
+
+}
+
+void CDB_PFCM::Add(T_PFCM_K Key,T_PFCM_D& rData,CDB_ELEM* pElem)
+{
+	T_PFCM_D Data;
+	BOOL bExist=m_PFCM.Lookup(Key, Data);
+	m_PFCM.SetAt(Key,rData);
+	if(!bExist)pElem->AddListItem(Key, LT_PFCM_CMD, Key);
+
+	// Current Stage가 Final Stage이면 Stage DB를 Update한다.
+	// 이미 있는 것이 아니면 새로 Active시킨다.
+	if (m_pDoc && m_pDoc->m_pStagCtrl->IsFinalStag())
+	{
+		if (!bExist) m_pDoc->m_pStagCtrl->ActiveDesign(LT_PFCM_CMD, Key);
+	}
+}
+
+BOOL CDB_PFCM::Del(T_PFCM_K Key,CDB_ELEM* pElem)
+{
+	BOOL ret=m_PFCM.RemoveKey(Key);
+	ASSERT(ret);
+	if(ret)
+	{
+		VERIFY(pElem->DelListItem(Key, LT_PFCM_CMD, Key));
+		// Current Stage가 Final Stage이면 Stage DB를 Update한다.
+		if (m_pDoc && m_pDoc->m_pStagCtrl->IsFinalStag())
+			m_pDoc->m_pStagCtrl->DeactiveDesign(LT_PFCM_CMD, Key);
+	}
+	return ret;
+}
+
+//-------------------------------------------------------------------------
+BOOL CDB_PFCM::Get(T_PFCM_K Key,T_PFCM_D& rData)
+{
+	if (m_pDoc && m_pDoc->m_pStagCtrl->GetCurStag() != 0)
+	{
+		if (!m_pDoc->m_pStagCtrl->IsFinalStag()) return FALSE;
+		UINT uTemp;
+		if (!m_pDoc->m_pStagCtrl->m_pfcm->Lookup(Key, uTemp)) return FALSE;
+	}
+	return m_PFCM.Lookup(Key,rData);
+}
+
+int CDB_PFCM::GetCount()
+{
+	if (m_pDoc && m_pDoc->m_pStagCtrl->GetCurStag() != 0)
+	{
+		if (!m_pDoc->m_pStagCtrl->IsFinalStag()) return 0;
+		return m_pDoc->m_pStagCtrl->m_pfcm->GetCount();
+	}
+	return m_PFCM.GetCount();
+}
+
+POSITION CDB_PFCM::GetStart()
+{
+	if (m_pDoc && m_pDoc->m_pStagCtrl->GetCurStag() != 0)
+	{
+		if (!m_pDoc->m_pStagCtrl->IsFinalStag()) return 0;
+		return m_pDoc->m_pStagCtrl->m_pfcm->GetStartPosition();
+	}
+	return m_PFCM.GetStartPosition();
+}
+
+void CDB_PFCM::GetNext(POSITION& rNextPosition,T_PFCM_K& rKey,T_PFCM_D& rData)
+{
+	if (m_pDoc && m_pDoc->m_pStagCtrl->GetCurStag() != 0)
+	{
+		if (!m_pDoc->m_pStagCtrl->IsFinalStag()) { ASSERT(0); return; }
+		UINT uTemp;
+		m_pDoc->m_pStagCtrl->m_pfcm->GetNextAssoc(rNextPosition, rKey, uTemp);
+		m_PFCM.Lookup(rKey, rData);
+		return;
+	}
+	m_PFCM.GetNextAssoc(rNextPosition,rKey,rData);
+}

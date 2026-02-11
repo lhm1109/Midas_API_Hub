@@ -1,0 +1,16 @@
+#pragma once
+
+enum DB_MEMB_TYPE : unsigned int
+{
+	D_MBTP_ETC = 0,
+	D_MBTP_COLUMN,
+	D_MBTP_BEAM,
+	D_MBTP_BRACE,
+	D_MBTP_WALL,
+	D_MBTP_TRUSS,
+	D_MBTP_PLATEBEAM,
+	D_MBTP_PLATECOLM,
+	D_MBTP_SHELL,
+};
+
+#define D_MBTP_COLM  D_MBTP_COLUMN

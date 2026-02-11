@@ -1,0 +1,59 @@
+#if !defined(__CMMVCTCHUSERPAGE_H__)
+#define __CMMVCTCHUSERPAGE_H__
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+// CMMvctCHUserPage.h : header file
+//
+
+/////////////////////////////////////////////////////////////////////////////
+// CCMMvctCHUserPage dialog
+#include "..\wg_db\EditUnit.h"
+
+class CCMMvctCHUserPage : public CInternationalDlg
+{
+// Construction
+public:
+	CCMMvctCHUserPage(T_FREQ_USER* pData, CWnd* pParent = NULL);   // standard constructor
+	
+// Dialog Data
+	//{{AFX_DATA(CCMMvctCHUserPage)
+	enum { IDD = IDD_CMD_ML_MVCT_CHINA_USER };
+	
+	CEditUnit m_edtf;
+	//}}AFX_DATA
+
+
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CCMMvctCHUserPage)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	//}}AFX_VIRTUAL
+
+public:
+	void SetData2Dlg();
+	BOOL SetDlg2Data();
+	void EnableDisableControls(BOOL bImpactFactor);
+
+// Implementation
+protected:
+	void InitUnit();
+
+	T_FREQ_USER* m_pData;
+
+	BOOL m_bImpactFactor;
+	
+	// Generated message map functions
+	//{{AFX_MSG(CCMMvctCHUserPage)
+	virtual BOOL OnInitDialog();
+	//}}AFX_MSG
+
+	DECLARE_MESSAGE_MAP()
+};
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(__CMMVCTCHUSERPAGE_H__)
