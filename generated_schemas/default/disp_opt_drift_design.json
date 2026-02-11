@@ -1,0 +1,452 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "DISP_CTRL",
+        "PROP_PARAM",
+        "SECT_LIST",
+        "OUTPUT"
+      ],
+      "description": "Section Optimization that finds optimal member sections satisfying user-defined lateral displacement limits through iterative structural analysis and design. For Steel-RC composite members, optimization is performed by modifying concrete section size and steel member dimensions; steel shape and rebar quantity cannot be changed. Based on the Virtual Work Method reflecting recent research. Accessed via [Design] tab > [Section for Design] group > [Displacement Optimal Design].",
+      "additionalProperties": false,
+      "properties": {
+        "DISP_CTRL": {
+          "type": "array",
+          "description": "Defines lateral displacement limits and unit load conditions. Combines maximum lateral displacement and story drift constraints for wind/seismic loads with unit load conditions for calculating displacement participation factors. Typically configured separately for X and Y directions.",
+          "items": {
+            "type": "object",
+            "required": [
+              "sDSPL_LC",
+              "dDSPL",
+              "sDRIFT_LC",
+              "dRATIO",
+              "dRMF",
+              "dSCL",
+              "sUNIT_LC",
+              "iNODE",
+              "dANGLE"
+            ],
+            "properties": {
+              "sDSPL_LC": {
+                "type": "string",
+                "description": "Select load case for reviewing maximum lateral displacement under wind load.",
+                "x-ui": {
+                  "groupId": "DISPLACEMENT",
+                  "label": "Dspl.LC",
+                  "order": 1
+                }
+              },
+              "dDSPL": {
+                "type": "number",
+                "description": "Target maximum displacement limit value.",
+                "default": 0.03,
+                "x-ui": {
+                  "groupId": "DISPLACEMENT",
+                  "label": "Dspl.",
+                  "order": 2
+                }
+              },
+              "sDRIFT_LC": {
+                "type": "string",
+                "description": "Select load case for story drift limit. Typically the seismic load case is selected.",
+                "x-ui": {
+                  "groupId": "DRIFT_RATIO",
+                  "label": "Drift LC",
+                  "order": 3
+                }
+              },
+              "dRATIO": {
+                "type": "number",
+                "description": "Allowable story drift ratio.",
+                "default": 0.015,
+                "x-ui": {
+                  "groupId": "DRIFT_RATIO",
+                  "label": "Ratio",
+                  "order": 4
+                }
+              },
+              "dRMF": {
+                "type": "number",
+                "description": "Response Modification Factor for seismic load input, or displacement amplification factor.",
+                "default": 1,
+                "x-ui": {
+                  "groupId": "DRIFT_RATIO",
+                  "label": "RMF",
+                  "order": 5
+                }
+              },
+              "dSCL": {
+                "type": "number",
+                "description": "Scale-up Factor used for dynamic seismic load calculation.",
+                "default": 1,
+                "x-ui": {
+                  "groupId": "DRIFT_RATIO",
+                  "label": "SCL",
+                  "order": 6
+                }
+              },
+              "sUNIT_LC": {
+                "type": "string",
+                "description": "User-defined unit load case name. Since displacement participation factor is determined by the unit load, apply the unit load at the node where maximum lateral displacement is expected, in the same direction as the lateral load for wind/seismic loads.",
+                "x-ui": {
+                  "groupId": "UNIT_LOAD",
+                  "label": "UnitLC",
+                  "order": 7
+                }
+              },
+              "iNODE": {
+                "type": "integer",
+                "description": "Node number where the unit load is applied.",
+                "default": 1,
+                "x-ui": {
+                  "groupId": "UNIT_LOAD",
+                  "label": "Node",
+                  "order": 8
+                }
+              },
+              "dANGLE": {
+                "type": "number",
+                "description": "Unit load direction angle (0~360 degrees, counter-clockwise, X-Y plane). 0 deg = (+)X direction, 90 deg = (+)Y direction.",
+                "default": 0,
+                "x-ui": {
+                  "groupId": "UNIT_LOAD",
+                  "label": "Angle",
+                  "order": 9
+                }
+              }
+            },
+            "x-ui": {
+              "groups": [
+                {
+                  "title": "Displacement",
+                  "id": "DISPLACEMENT"
+                },
+                {
+                  "title": "Drift Ratio",
+                  "id": "DRIFT_RATIO"
+                },
+                {
+                  "title": "Unit Load",
+                  "id": "UNIT_LOAD"
+                }
+              ]
+            }
+          },
+          "x-ui": {
+            "label": "Displacement Control",
+            "order": 1
+          }
+        },
+        "PROP_PARAM": {
+          "type": "array",
+          "description": "Design constraints per member type (Global Parameter). Configures section database, dimension ranges, and width-thickness ratio limits for each member type.",
+          "items": {
+            "type": "object",
+            "required": [
+              "sMEMBER",
+              "sSECT_DB"
+            ],
+            "properties": {
+              "sMEMBER": {
+                "type": "string",
+                "description": "Select the member type for optimal design.",
+                "oneOf": [
+                  {
+                    "title": "Steel Column",
+                    "const": "Steel Column"
+                  },
+                  {
+                    "title": "SRC Column",
+                    "const": "SRC Column"
+                  },
+                  {
+                    "title": "Beam",
+                    "const": "Beam"
+                  },
+                  {
+                    "title": "Brace",
+                    "const": "Brace"
+                  }
+                ],
+                "x-ui": {
+                  "label": "Member",
+                  "order": 1
+                }
+              },
+              "sSECT_DB": {
+                "type": "string",
+                "description": "Section database to be used. When Bt. (Built-up) is selected, optimization is performed according to Parameter of Built Up Section conditions.",
+                "x-ui": {
+                  "label": "Sect.DB",
+                  "order": 2
+                }
+              },
+              "dMAX_HB": {
+                "type": "number",
+                "description": "Maximum difference between section depth (H) and width (B). For SRC: difference between large and small sides of concrete section. For CFT: difference between large and small sides of steel outer section. Enter 0 for square sections.",
+                "default": 0,
+                "x-ui": {
+                  "label": "Max(H-B)",
+                  "order": 3
+                }
+              },
+              "dH_MIN": {
+                "type": "number",
+                "description": "Minimum section height dimension for optimal design (m).",
+                "x-ui": {
+                  "label": "H Min.",
+                  "order": 4
+                }
+              },
+              "dH_MAX": {
+                "type": "number",
+                "description": "Maximum section height dimension for optimal design (m).",
+                "x-ui": {
+                  "label": "H Max.",
+                  "order": 5
+                }
+              },
+              "dH_INC": {
+                "type": "number",
+                "description": "Increment between minimum and maximum section height dimensions (m).",
+                "default": 0.05,
+                "x-ui": {
+                  "label": "H Inc.",
+                  "order": 6
+                }
+              },
+              "dB_MIN": {
+                "type": "number",
+                "description": "Minimum section width dimension for optimal design (m).",
+                "x-ui": {
+                  "label": "B Min.",
+                  "order": 7
+                }
+              },
+              "dB_MAX": {
+                "type": "number",
+                "description": "Maximum section width dimension for optimal design (m).",
+                "x-ui": {
+                  "label": "B Max.",
+                  "order": 8
+                }
+              },
+              "dB_INC": {
+                "type": "number",
+                "description": "Increment between minimum and maximum section width dimensions (m).",
+                "default": 0.05,
+                "x-ui": {
+                  "label": "B Inc.",
+                  "order": 9
+                }
+              },
+              "sWIDTH_RATIO": {
+                "type": "string",
+                "description": "Width-thickness ratio limit setting. Auto: automatically set by code-specified limits. User: user-defined input. No Limit: no width-thickness ratio constraint.",
+                "default": "No Limit",
+                "oneOf": [
+                  {
+                    "title": "No Limit",
+                    "const": "No Limit"
+                  },
+                  {
+                    "title": "User Defined",
+                    "const": "User"
+                  },
+                  {
+                    "title": "Auto",
+                    "const": "Auto"
+                  }
+                ],
+                "x-ui": {
+                  "label": "Width-Ratio",
+                  "order": 10
+                }
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Property Parameters",
+            "order": 2
+          }
+        },
+        "SECT_LIST": {
+          "type": "array",
+          "description": "Design constraints per section type (Property Parameter). Select target sections for optimization and assign parameter type (G=Global, P=Property).",
+          "items": {
+            "type": "object",
+            "required": [
+              "iID",
+              "sSECT_NAME"
+            ],
+            "properties": {
+              "bCHK_DGN": {
+                "type": "boolean",
+                "description": "Check/Design flag for optimization target. Optimization is performed on selected sections.",
+                "default": false,
+                "x-ui": {
+                  "label": "Chk.Dgn.",
+                  "order": 1
+                }
+              },
+              "iID": {
+                "type": "integer",
+                "description": "Section ID number.",
+                "x-ui": {
+                  "label": "ID",
+                  "order": 2
+                }
+              },
+              "sSECT_NAME": {
+                "type": "string",
+                "description": "Original section name as defined by user.",
+                "x-ui": {
+                  "label": "Section Name",
+                  "order": 3
+                }
+              },
+              "sTYPE": {
+                "type": "string",
+                "description": "Member type (e.g., Beam, Stl.Col).",
+                "x-ui": {
+                  "label": "Type",
+                  "order": 4
+                }
+              },
+              "sSIZE": {
+                "type": "string",
+                "description": "Original section size.",
+                "x-ui": {
+                  "label": "Size",
+                  "order": 5
+                }
+              },
+              "sSHAPE": {
+                "type": "string",
+                "description": "Section shape (e.g., H, RHB).",
+                "x-ui": {
+                  "label": "Shape",
+                  "order": 6
+                }
+              },
+              "sPARA": {
+                "type": "string",
+                "description": "Parameter type. G=applies Global Parameter settings, P=applies individual Property Parameter settings.",
+                "oneOf": [
+                  {
+                    "title": "Global",
+                    "const": "G"
+                  },
+                  {
+                    "title": "Property",
+                    "const": "P"
+                  }
+                ],
+                "x-ui": {
+                  "label": "Para.",
+                  "order": 7
+                }
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Section List",
+            "order": 3
+          }
+        },
+        "OUTPUT": {
+          "type": "object",
+          "description": "Output options for displacement-controlled optimal design results. Exports results as various report formats and applies modified sections to the model.",
+          "required": [
+            "sGRAPH_PATH",
+            "sREPORT_PATH"
+          ],
+          "properties": {
+            "bGRAPH_WEIGHT": {
+              "type": "boolean",
+              "description": "Design Ratio and Steel Weight graph showing combined stress ratio (combined strength ratio) and steel weight change per section before and after optimization (saved as JPG).",
+              "default": true,
+              "x-ui": {
+                "label": "Steel Weight",
+                "order": 1
+              }
+            },
+            "bGRAPH_STR_RATIO": {
+              "type": "boolean",
+              "description": "Strength Design Ratio graph (saved as JPG).",
+              "default": true,
+              "x-ui": {
+                "label": "Strength Design Ratio",
+                "order": 2
+              }
+            },
+            "bGRAPH_DISP_TREND": {
+              "type": "boolean",
+              "description": "Trend of total displacement change by each optimization step graph (saved as JPG).",
+              "default": true,
+              "x-ui": {
+                "label": "Trend of Total Displacement Change",
+                "order": 3
+              }
+            },
+            "bGRAPH_DISP_PF_WT": {
+              "type": "boolean",
+              "description": "Displacement participation factor per unit weight change by each optimization step for each member section (saved as JPG).",
+              "default": true,
+              "x-ui": {
+                "label": "Displacement Participation Factor per Weight",
+                "order": 4
+              }
+            },
+            "bGRAPH_DISP_PF": {
+              "type": "boolean",
+              "description": "Displacement participation factor change by each optimization step for each member section (saved as JPG).",
+              "default": true,
+              "x-ui": {
+                "label": "Displacement Participation Factor",
+                "order": 5
+              }
+            },
+            "sGRAPH_PATH": {
+              "type": "string",
+              "description": "File path to save graphic output results (JPG format).",
+              "x-ui": {
+                "hint": "e.g. C:\\MIDAS\\Report\\drift_design_graph.jpg",
+                "label": "Graph Save Path",
+                "order": 6
+              }
+            },
+            "sREPORT_PATH": {
+              "type": "string",
+              "description": "File path to save text report output results (TXT format).",
+              "x-ui": {
+                "hint": "e.g. C:\\MIDAS\\Report\\drift_design_report.txt",
+                "label": "Report Save Path",
+                "order": 7
+              }
+            },
+            "bUPDATE_OPT": {
+              "type": "boolean",
+              "description": "Apply optimized sections to the original model. When true, member sections in the model are updated with optimal design results.",
+              "default": false,
+              "x-ui": {
+                "label": "Update Optimal Sections to Model",
+                "order": 8
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Output Options",
+            "order": 4
+          }
+        }
+      }
+    }
+  }
+}
