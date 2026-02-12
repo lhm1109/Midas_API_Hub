@@ -1,0 +1,257 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Structure Type",
+          "type": "object",
+          "description": "Structure type and mass control parameters",
+          "required": [
+            "STRUC_TYPE",
+            "MASS_TYPE",
+            "STRUC_MASS",
+            "GRAVITY",
+            "INIT_TEMP"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "STRUC_TYPE": {
+              "type": "integer",
+              "description": "Structure type definition",
+              "oneOf": [
+                {
+                  "title": "3-D",
+                  "const": 0
+                },
+                {
+                  "title": "X-Z Plane",
+                  "const": 1
+                },
+                {
+                  "title": "Y-Z Plane",
+                  "const": 2
+                },
+                {
+                  "title": "X-Y Plane",
+                  "const": 3
+                },
+                {
+                  "title": "Constraint RZ",
+                  "const": 4
+                }
+              ],
+              "x-ui": {
+                "controlType": "radio",
+                "group": "Structure Type",
+                "label": "Structure Type"
+              }
+            },
+            "MASS_TYPE": {
+              "type": "integer",
+              "description": "Mass type (Lumped or Consistent)",
+              "oneOf": [
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Lumped Mass",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "controlType": "radio",
+                "group": "Mass Control Parameter",
+                "label": "Mass Type"
+              }
+            },
+            "STRUC_MASS": {
+              "type": "integer",
+              "description": "Structure mass conversion type",
+              "oneOf": [
+                {
+                  "title": "Option 1",
+                  "const": 1
+                },
+                {
+                  "title": "Convert to X, Y, Z",
+                  "const": 2
+                },
+                {
+                  "title": "Convert to X, Y",
+                  "const": 3
+                }
+              ],
+              "x-ui": {
+                "controlType": "radio",
+                "group": "Mass Control Parameter",
+                "label": "Structure Mass"
+              },
+              "x-optional-when": {
+                "CONV": true
+              }
+            },
+            "CONSID_OFF": {
+              "type": "boolean",
+              "description": "Consider off-diagonal masses in lumped mass matrix",
+              "default": false,
+              "x-ui": {
+                "group": "Mass Control Parameter",
+                "label": "Consider Off-diagonal Masses"
+              },
+              "x-optional-when": {
+                "MASS_TYPE": 1
+              }
+            },
+            "CONV": {
+              "type": "boolean",
+              "description": "Convert self weight to masses",
+              "default": false,
+              "x-ui": {
+                "group": "Mass Control Parameter",
+                "label": "Convert Self Weight to Masses"
+              }
+            },
+            "ALIGN_BEAM": {
+              "type": "boolean",
+              "description": "Align beam to floor level",
+              "default": false,
+              "x-ui": {
+                "group": "Mass Control Parameter",
+                "label": "Align Beam (Floor)"
+              }
+            },
+            "ALIGN_SLAB": {
+              "type": "boolean",
+              "description": "Align slab to floor level",
+              "default": false,
+              "x-ui": {
+                "group": "Mass Control Parameter",
+                "label": "Align Slab (Floor)"
+              }
+            },
+            "CONSID_ROT": {
+              "type": "boolean",
+              "description": "Consider rotational rigid body mode for modal participation factor",
+              "default": false,
+              "x-ui": {
+                "group": "Mass Control Parameter",
+                "label": "Consider Rotational Rigid Body Mode for MPF"
+              }
+            },
+            "GRAVITY": {
+              "type": "number",
+              "description": "Gravity acceleration",
+              "x-ui": {
+                "controlType": "number",
+                "group": "Mass Control Parameter",
+                "label": "Gravity Acceleration",
+                "unit": "Acceleration"
+              }
+            },
+            "INIT_TEMP": {
+              "type": "number",
+              "description": "Initial temperature",
+              "x-ui": {
+                "controlType": "number",
+                "group": "Mass Control Parameter",
+                "label": "Initial Temperature",
+                "unit": "Temperature"
+              }
+            }
+          },
+          "allOf": [
+            {
+              "description": "If mass type is Consistent Mass, disable structure mass options",
+              "if": {
+                "properties": {
+                  "MASS_TYPE": {
+                    "const": 2
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "STRUC_MASS": {
+                    "readOnly": true
+                  },
+                  "CONSID_OFF": {
+                    "readOnly": true
+                  }
+                }
+              }
+            },
+            {
+              "description": "Enable Consider Rotational MPF only if Lumped Mass and not considering offset",
+              "if": {
+                "allOf": [
+                  {
+                    "properties": {
+                      "MASS_TYPE": {
+                        "const": 1
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "CONSID_OFF": {
+                        "const": false
+                      }
+                    }
+                  }
+                ]
+              },
+              "then": {
+                "properties": {
+                  "CONSID_ROT": {
+                    "readOnly": false
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "CONSID_ROT": {
+                    "readOnly": true
+                  }
+                }
+              }
+            },
+            {
+              "description": "Enable structure mass options only if Convert Self Weight is enabled",
+              "if": {
+                "properties": {
+                  "CONV": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "STRUC_MASS": {
+                    "readOnly": false
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "STRUC_MASS": {
+                    "readOnly": true
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

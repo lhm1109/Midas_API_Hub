@@ -1,0 +1,288 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "BeamForceTable",
+    "type": "object",
+    "required": [
+        "TABLE_TYPE"
+    ],
+    "properties": {
+        "TABLE_NAME": {
+            "type": "string",
+            "description": "Response table title",
+            "x-ui": {
+                "label": "Table Name",
+                "group": "General"
+            }
+        },
+        "TABLE_TYPE": {
+            "type": "string",
+            "description": "Result table type",
+            "enum": [
+                "BEAMFORCE",
+                "BEAMFORCEBYMAX"
+            ],
+            "x-enum-labels": {
+                "BEAMFORCE": "Beam Force",
+                "BEAMFORCEBYMAX": "Beam Force - View by Max Value"
+            },
+            "x-ui": {
+                "label": "Result Table Type",
+                "group": "General"
+            }
+        },
+        "EXPORT_PATH": {
+            "type": "string",
+            "description": "Result table save path",
+            "x-ui": {
+                "label": "Export Path",
+                "group": "General"
+            }
+        },
+        "UNIT": {
+            "type": "object",
+            "description": "Response unit setting",
+            "properties": {
+                "FORCE": {
+                    "type": "string",
+                    "description": "Force unit"
+                },
+                "DIST": {
+                    "type": "string",
+                    "description": "Length unit"
+                },
+                "HEAT": {
+                    "type": "string",
+                    "description": "Heat unit"
+                },
+                "TEMP": {
+                    "type": "string",
+                    "description": "Temperature unit"
+                }
+            },
+            "additionalProperties": false,
+            "x-ui": {
+                "label": "Units",
+                "group": "Unit"
+            }
+        },
+        "STYLES": {
+            "type": "object",
+            "description": "Response number format",
+            "properties": {
+                "FORMAT": {
+                    "type": "string",
+                    "description": "Number format",
+                    "enum": [
+                        "Default",
+                        "Fixed",
+                        "Scientific",
+                        "General"
+                    ]
+                },
+                "PLACE": {
+                    "type": "integer",
+                    "description": "Digit place",
+                    "minimum": 0,
+                    "maximum": 15
+                }
+            },
+            "additionalProperties": false,
+            "x-ui": {
+                "label": "Number Style",
+                "group": "Format"
+            }
+        },
+        "COMPONENTS": {
+            "type": "array",
+            "description": "Components of result table",
+            "items": {
+                "type": "string"
+            },
+            "x-ui": {
+                "label": "Table Components",
+                "group": "Display"
+            }
+        },
+        "NODE_ELEMS": {
+            "type": "object",
+            "description": "Node or element selection",
+            "properties": {
+                "KEYS": {
+                    "type": "array",
+                    "description": "Specify each ID",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "TO": {
+                    "type": "string",
+                    "description": "Specify ID range"
+                },
+                "STRUCTURE_GROUP_NAME": {
+                    "type": "string",
+                    "description": "Specify structure group name"
+                }
+            },
+            "x-exclusive-keys": [
+                "KEYS",
+                "TO",
+                "STRUCTURE_GROUP_NAME"
+            ],
+            "oneOf": [
+                {
+                    "title": "Method 1: Specify Each ID",
+                    "required": [
+                        "KEYS"
+                    ],
+                    "properties": {
+                        "KEYS": {
+                            "minItems": 1
+                        }
+                    }
+                },
+                {
+                    "title": "Method 2: Specify ID Range",
+                    "required": [
+                        "TO"
+                    ],
+                    "properties": {
+                        "TO": {
+                            "minLength": 1
+                        }
+                    }
+                },
+                {
+                    "title": "Method 3: Specify Structure Group Name",
+                    "required": [
+                        "STRUCTURE_GROUP_NAME"
+                    ],
+                    "properties": {
+                        "STRUCTURE_GROUP_NAME": {
+                            "minLength": 1
+                        }
+                    }
+                },
+                {
+                    "title": "None (optional)",
+                    "properties": {}
+                }
+            ],
+            "additionalProperties": false,
+            "x-ui": {
+                "label": "Target Elements",
+                "group": "Target"
+            }
+        },
+        "LOAD_CASE_NAMES": {
+            "type": "array",
+            "description": "Load case names",
+            "items": {
+                "type": "string"
+            },
+            "x-ui": {
+                "label": "Load Cases",
+                "group": "Load"
+            }
+        },
+        "PARTS": {
+            "type": "array",
+            "description": "Element parts",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "Part1",
+                    "Part1/4",
+                    "Part2/4",
+                    "Part3/4",
+                    "PartJ"
+                ]
+            },
+            "x-ui": {
+                "label": "Element Parts",
+                "group": "Display"
+            }
+        },
+        "OPT_CS": {
+            "type": "boolean",
+            "description": "Construction stage mode flag",
+            "default": false,
+            "x-ui": {
+                "label": "Construction Stage Mode",
+                "group": "Construction Stage"
+            }
+        },
+        "STAGE_STEP": {
+            "type": "array",
+            "description": "Stage step names",
+            "items": {
+                "type": "string"
+            },
+            "x-ui": {
+                "label": "Stage Steps",
+                "group": "Construction Stage",
+                "visibleWhen": {
+                    "OPT_CS": true
+                }
+            }
+        },
+        "ITEM_TO_DISPLAY": {
+            "type": "array",
+            "description": "Components to display by max value",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "Axial",
+                    "Shear-y",
+                    "Shear-z",
+                    "Torsion",
+                    "Moment-y",
+                    "Moment-z"
+                ]
+            },
+            "x-ui": {
+                "label": "Items to Display",
+                "group": "View by Max",
+                "visibleWhen": {
+                    "TABLE_TYPE": "BEAMFORCEBYMAX"
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "OPT_CS": {
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "STAGE_STEP"
+                ]
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "TABLE_TYPE": {
+                        "const": "BEAMFORCEBYMAX"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "ITEM_TO_DISPLAY"
+                ]
+            }
+        }
+    ],
+    "x-transport": {
+        "uri": "post/TABLE",
+        "methods": [
+            "POST"
+        ],
+        "body-root": "Argument"
+    }
+}

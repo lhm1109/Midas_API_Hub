@@ -119,15 +119,17 @@ fieldNaming:
     case: "UPPER_SNAKE"       # UPPER_SNAKE | camelCase | PascalCase
     maxLength: 12             # 최대 12자 권장
     abbreviateCommonWords: true
+    removeHungarianNotation: true  # i, b, d, s 접두사 제거
   
-  # 🔥 접두사 규칙 (타입 추론)
+  # 🔥 접두사 규칙 (타입 추론용, 출력 키에서는 제거됨)
+  # ⚠️ 이 접두사들은 타입 추론에만 사용되고, 최종 스키마에서는 제거됩니다
   prefixes:
-    i: "integer"              # iTENDON_TYPE, iCONSTR_TYPE
-    s: "string"               # sDESIGN_CODE, sTYPE
-    d: "number"               # dEXPOSURE_FACTOR, dANGLE
-    b: "boolean"              # bUSE_LIMIT, bFLEX_CHECK
-    n: "number"               # nVALUE (legacy)
-    arr: "array"              # arrNODE, arrVALUES
+    i: "integer"              # iTENDON_TYPE → TENDON_TYPE
+    s: "string"               # sDESIGN_CODE → DESIGN_CD
+    d: "number"               # dEXPOSURE_FACTOR → EXPOSURE
+    b: "boolean"              # bUSE_LIMIT → USE_LIMIT
+    n: "number"               # nVALUE → VALUE (legacy)
+    arr: "array"              # arrNODE → NODE
   
   # 🔥 축약어 사전 (AI 생성 시 활용)
   abbreviations:
