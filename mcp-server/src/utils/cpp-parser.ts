@@ -353,16 +353,36 @@ function extractBodyFromBrace(content: string, bracePos: number): string | null 
 }
 
 /**
+ * Remove C++ line comments and block comments
+ */
+function stripComments(code: string): string {
+    // Remove block comments /* ... */
+    let result = code.replace(/\/\*[\s\S]*?\*\//g, '');
+    
+    // Remove line comments // ...
+    // Split by lines, remove comment part from each line
+    result = result.split('\n').map(line => {
+        const commentPos = line.indexOf('//');
+        return commentPos >= 0 ? line.substring(0, commentPos) : line;
+    }).join('\n');
+    
+    return result;
+}
+
+/**
  * Extract control enable/show actions from a code block
  */
 function extractControlActions(body: string, controlGroupMap?: Map<string, string[]>): ConditionalAction[] {
     const actions: ConditionalAction[] = [];
+    
+    // 🔥 FIX: Strip comments BEFORE pattern matching to avoid parsing commented-out code
+    const cleanBody = stripComments(body);
 
     // Pattern: GetDlgItem(IDC_xxx)->EnableWindow(expr)
     const enablePattern = /GetDlgItem\s*\(\s*(IDC_\w+|\w+)\s*\)\s*->\s*EnableWindow\s*\(\s*([^)]+)\)/g;
     let m: RegExpExecArray | null;
 
-    while ((m = enablePattern.exec(body)) !== null) {
+    while ((m = enablePattern.exec(cleanBody)) !== null) {
         const controlId = m[1];
         const expr = m[2].trim();
 
@@ -381,7 +401,7 @@ function extractControlActions(body: string, controlGroupMap?: Map<string, strin
     // Pattern: GetDlgItem(IDC_xxx)->ShowWindow(SW_SHOW/SW_HIDE)
     const showPattern = /GetDlgItem\s*\(\s*(IDC_\w+|\w+)\s*\)\s*->\s*ShowWindow\s*\(\s*([^)]+)\)/g;
 
-    while ((m = showPattern.exec(body)) !== null) {
+    while ((m = showPattern.exec(cleanBody)) !== null) {
         const controlId = m[1];
         const expr = m[2].trim();
 
@@ -399,7 +419,7 @@ function extractControlActions(body: string, controlGroupMap?: Map<string, strin
     // Only match IDC_xxx as first arg to avoid false match on CDlgUtil::CtrlEnableDisable(this, ...)
     const ctrlPattern = /CtrlEnableDisable\s*\(\s*(IDC_\w+)\s*,\s*([^)]+)\)/g;
 
-    while ((m = ctrlPattern.exec(body)) !== null) {
+    while ((m = ctrlPattern.exec(cleanBody)) !== null) {
         const controlId = m[1];
         const expr = m[2].trim();
 
@@ -415,7 +435,7 @@ function extractControlActions(body: string, controlGroupMap?: Map<string, strin
     // Pattern: m_ctrlXxx.EnableWindow(expr)
     const memberPattern = /\bm_(\w+)\s*\.\s*EnableWindow\s*\(\s*([^)]+)\)/g;
 
-    while ((m = memberPattern.exec(body)) !== null) {
+    while ((m = memberPattern.exec(cleanBody)) !== null) {
         const varSuffix = m[1];
         const expr = m[2].trim();
         const isDisable = expr === 'FALSE' || expr === '0' || expr === 'false';
@@ -434,7 +454,7 @@ function extractControlActions(body: string, controlGroupMap?: Map<string, strin
     // Expands group variable to individual control IDs using controlGroupMap
     const cdlgUtilPattern = /(?:\w+::\s*)?CtrlEnableDisable\s*\(\s*this\s*,\s*(m_\w+)\s*,\s*([^)]+)\)/g;
 
-    while ((m = cdlgUtilPattern.exec(body)) !== null) {
+    while ((m = cdlgUtilPattern.exec(cleanBody)) !== null) {
         const groupVar = m[1];
         const expr = m[2].trim();
         const callPosition = m.index;
@@ -443,7 +463,8 @@ function extractControlActions(body: string, controlGroupMap?: Map<string, strin
         const isEnable  = expr === 'TRUE'  || expr === '1' || expr === 'true';
 
         // Find the enclosing if-condition for context (to identify trigger variable)
-        const enclosingCond = findNearestIfCondition(body, callPosition);
+        // Use cleanBody since callPosition is from cleanBody
+        const enclosingCond = findNearestIfCondition(cleanBody, callPosition);
 
         // Expand group → individual control IDs
         const controlIds = controlGroupMap?.get(groupVar) ?? [groupVar];
