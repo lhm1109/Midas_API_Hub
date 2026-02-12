@@ -1,0 +1,50 @@
+// 여기에 추가 *^^* 
+// Define Dialog IDs
+
+#define __SECT_PSC_NML__            10
+#define __SECT_PSC_NML_1_CELL__     11
+#define __SECT_PSC_NML_2_CELL__     12
+#define __SECT_PSC_MID__            20
+#define __SECT_PSC_MID_NONE_NONE__  21
+#define __SECT_PSC_MID_NONE_CIRC__  22
+#define __SECT_PSC_MID_CIRC_NONE__  23
+#define __SECT_PSC_MID_CIRC_CIRC__  24
+#define __SECT_PSC_MID_POLY_NONE__  25
+#define __SECT_PSC_MID_NONE_POLY__  26
+#define __SECT_PSC_MID_POLY_POLY__  27
+#define __SECT_PSC_MID_CIRC_POLY__  28
+#define __SECT_PSC_MID_POLY_CIRC__  29
+#define __SECT_PSC_HLF__            30
+#define __SECT_PSC_HLF_LEFT_NONE__  31
+#define __SECT_PSC_HLF_LEFT_CIRC__  32
+#define __SECT_PSC_HLF_LEFT_POLY__  33
+#define __SECT_PSC_HLF_RGHT_NONE__  34
+#define __SECT_PSC_HLF_RGHT_CIRC__  35
+#define __SECT_PSC_HLF_RGHT_POLY__  36
+#define __SECT_PSC_NML_3_CELL__     40
+#define __SECT_PSC_NML_3_CELL_DEF__ 41//KJH
+#define __SECT_PSC_NML_3_CELL_OPT__ 42//KJH
+#define __SECT_PSC_NML_4_CELL__     43
+#define __SECT_PSC_n_CELL__           50
+#define __SECT_PSC_nCELL_POLY1_LEFT__ 51
+#define __SECT_PSC_nCELL_POLY1_RGHT__ 52
+#define __SECT_PSC_nCELL_POLY2_LEFT__ 53
+#define __SECT_PSC_nCELL_POLY2_RGHT__ 54
+#define __SECT_PSC_nCELL_CIRC_LEFT__  55
+#define __SECT_PSC_nCELL_CIRC_RGHT__  56
+#define __SECT_PSC_TEE__            60
+#define __SECT_PSC_PLAT__           70
+#define __SECT_PSC_PLAT_HALF_LEFT__ 71
+#define __SECT_PSC_PLAT_HALF_RGHT__ 72
+#define __SECT_PSC_PLAT_1CEL_POLY__ 73
+#define __SECT_PSC_PLAT_1CEL_CIRC__ 74
+#define __SECT_PSC_PLAT_2CEL__      75
+#define __SECT_PSC_I__              76
+#define __SECT_PSC_VALUE__          80
+#define __SECT_PSC_CMPWEB__         90
+#define __SECT_PSC_CMPWEB_TAP__     91
+
+#define __SECT_COMPO_B__  100
+#define __SECT_COMPO_I__  101
+#define __SECT_COMPO_CI__ 102
+#define __SECT_COMPO_CT__ 103

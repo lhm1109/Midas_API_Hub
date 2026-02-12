@@ -1,0 +1,475 @@
+// CStldWindPressureAreaDlg_KBC2016.cpp : implementation file
+//
+/////////////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "wg_treemenu.h"
+#include "StldWindPressureAreaDlg_KBC2016.h"
+
+#include "StldWindPressureAreaDlg.h"
+#include "StldWindPressureAreaDlg_KBC2009_GustF.h"
+#include "StldWindPressureAreaDlg_KBC2016_FrcCoefAuto.h"
+#include "StldWindPressureVibrationDlg.h"
+
+#include "..\wg_db\wg_db_UnitCtrl.h"
+#include "..\wg_db\wg_db_AttrCtrl.h"
+#include "..\wg_db\wg_db_AttrCtrl2.h"
+#include "..\wg_db\wg_db_ViewBuff.h"
+#include "..\wg_db\wg_db_WindLoadGeneratorCtrl.h"
+
+#include "..\wg_base\wg_base_DlgUtil.h"
+#include "..\wg_base\wg_base_StrParser.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CStldWindPressureAreaDlg_KBC2016 dialog
+
+CStldWindPressureAreaDlg_KBC2016::CStldWindPressureAreaDlg_KBC2016(int nCodeType, CWnd* pParent /*=NULL*/)
+: CCMWindPressureBaseChildDlg(CStldWindPressureAreaDlg_KBC2016::IDD, pParent)
+{
+	m_pData = NULL;
+	m_nCodeType = nCodeType;
+	m_bInAutoCalc = FALSE;
+
+	m_aCtrlMethod.RemoveAll();
+	m_aCtrlMethod.Add(IDC_WG_TREEMENU_METHOD_RDO1);
+	m_aCtrlMethod.Add(IDC_WG_TREEMENU_METHOD_RDO2);
+	m_aCtrlMethod.FreeExtra();
+
+	m_aCtrlBuildingType.RemoveAll();
+	m_aCtrlBuildingType.Add(IDC_WG_TREEMENU_BLDTYPE_RDO1);
+	m_aCtrlBuildingType.Add(IDC_WG_TREEMENU_BLDTYPE_RDO2);
+	m_aCtrlBuildingType.FreeExtra();
+
+	m_aCtrlBuilding.RemoveAll();
+	m_aCtrlBuilding.Add(IDC_WG_TREEMENU_DIR_ACROSS_RDO);
+	m_aCtrlBuilding.Add(IDC_WG_TREEMENU_DIR_TORSIONAL_RDO);
+	m_aCtrlBuilding.FreeExtra();
+
+	m_aCtrlTorsional_Sub.RemoveAll();
+	m_aCtrlTorsional_Sub.Add(IDC_WG_TREEMENU_DIR_POINT_STC);
+	m_aCtrlTorsional_Sub.Add(IDC_WG_TREEMENU_DIR_POINT_EDT);
+	m_aCtrlTorsional_Sub.Add(IDC_WG_TREEMENU_DIR_POINT_UNIT);
+	m_aCtrlTorsional_Sub.FreeExtra();
+}
+
+void CStldWindPressureAreaDlg_KBC2016::DoDataExchange(CDataExchange* pDX)
+{
+	CCMWindPressureBaseChildDlg::DoDataExchange(pDX);
+
+	DDX_Control(pDX, IDC_TM_GUST_FACTOR_EDIT_EX,     m_editGustFactor_Ex);
+	DDX_Control(pDX, IDC_TM_GUST_FACTOR_EDIT_IN,     m_editGustFactor_In);
+	DDX_Control(pDX, IDC_TM_FORCE_COEFF_EDIT_EX,     m_editCoefFactor_Ex);
+	DDX_Control(pDX, IDC_TM_FORCE_COEFF_EDIT_IN,     m_editCoefFactor_In);
+
+	DDX_Control(pDX, IDC_TM_FORCE_COEF_AUTO_CMB,				m_cmbStructureType);
+	DDX_Control(pDX, IDC_WG_TREEMENU_DIR_ALONG_RDO,			m_rdoAlongWind);
+	DDX_Control(pDX, IDC_WG_TREEMENU_DIR_ACROSS_RDO,		m_rdoAcrossWind);
+	DDX_Control(pDX, IDC_WG_TREEMENU_DIR_TORSIONAL_RDO,	m_rdoTorsionalWind);
+
+	DDX_Control(pDX, IDC_WG_TREEMENU_DIR_POINT_EDT,  m_wndCoordXYZ);
+	DDX_Control(pDX, IDC_WG_TREEMENU_DIR_POINT_UNIT,  m_wndCoordUnit);
+}
+
+BEGIN_MESSAGE_MAP(CStldWindPressureAreaDlg_KBC2016, CCMWindPressureBaseChildDlg)
+	ON_BN_CLICKED(IDC_TM_GUST_BTN,              OnCmdGustFactor)
+	ON_BN_CLICKED(IDC_TM_FORCE_COEF_AUTO_BTN,   OnCmdCoefFactor)
+	ON_BN_CLICKED(IDC_WINDP_AUTOCALC_FORCECOEF, OnChkAutoCalcForceCoef)
+	ON_BN_CLICKED(IDC_WG_TREEMENU_DIR_BTN,			OnCmdVibrationBtn)
+	ON_BN_CLICKED(IDC_WG_TREEMENU_BLDTYPE_RDO1, OnCmdBuildingTypeRadio)
+	ON_BN_CLICKED(IDC_WG_TREEMENU_BLDTYPE_RDO2, OnCmdBuildingTypeRadio)
+	ON_BN_CLICKED(IDC_WG_TREEMENU_DIR_ALONG_RDO			, OnCmdWindTypeCheck)
+	ON_BN_CLICKED(IDC_WG_TREEMENU_DIR_ACROSS_RDO		, OnCmdWindTypeCheck)
+	ON_BN_CLICKED(IDC_WG_TREEMENU_DIR_TORSIONAL_RDO	, OnCmdWindTypeCheck)
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CStldWindPressureAreaDlg_KBC2016 message handlers
+
+BOOL CStldWindPressureAreaDlg_KBC2016::OnInitDialog() 
+{
+	CCMWindPressureBaseChildDlg::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	m_editGustFactor_Ex.SetUnitType(D_UNITSYS_NONE);	
+	m_editGustFactor_In.SetUnitType(D_UNITSYS_NONE);	
+	m_editCoefFactor_Ex.SetUnitType(D_UNITSYS_NONE);	
+	m_editCoefFactor_In.SetUnitType(D_UNITSYS_NONE);
+
+	CDlgUtil::CtrlRadioSetCheck(this, m_aCtrlMethod, 1);
+
+	InitStructureTypeCombo();
+
+	m_wndCoordUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);
+	m_wndCoordXYZ.SetAttUcsPos();
+	m_wndCoordXYZ.SetModeToUse(MOUSEEDIT_USE_SET_POS);  
+	m_wndCoordXYZ.SetNextLink(NULL);
+	
+	if(m_pData)
+	{
+		m_pData->nCodeType = m_nCodeType;
+		if(m_pData->GetKBC2016() == NULL) { ASSERT(0); return FALSE; }
+		int    nStore = 0;
+		double dHeight = 0.0;
+		double dThick = 0.0;
+		double dWidth = 0.0;
+		if(CWindLoadGeneratorCtrl::GetModelHeightWidthThickTotal(m_pData->nDirection, m_pData->dAngle, dHeight, nStore, dWidth, dThick))
+		{
+			if(m_pData->GetKBC2016()->dBLy<=0.0) m_pData->GetKBC2016()->dBLy = dWidth;
+			if(m_pData->GetKBC2016()->dBLx<=0.0) m_pData->GetKBC2016()->dBLx = dThick;
+		}
+
+		Data2Dlg( (void*) m_pData);
+	}
+	
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// EXCEPTION: OCX Property Pages should return FALSE
+}
+
+
+BOOL CStldWindPressureAreaDlg_KBC2016::DestroyWindow() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	//Dlg2Data((void*)m_pData);
+	
+	return CCMWindPressureBaseChildDlg::DestroyWindow();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// User Defined Function
+
+void CStldWindPressureAreaDlg_KBC2016::InitDefaultData()
+{
+}
+
+void CStldWindPressureAreaDlg_KBC2016::InitStructureTypeCombo()
+{
+	m_cmbStructureType.ResetContent();
+	int nIndex = 0;
+	nIndex = m_cmbStructureType.AddString(_LS(IDS_CMD_WIND_WNAT_CIRCLE_PLAN)); m_cmbStructureType.SetItemData(nIndex, ENM_T_CIRCLE_PLAN);
+	nIndex = m_cmbStructureType.AddString(_LS(IDS_CMD_WIND_WNAT_LATTICE_TOWERS)); m_cmbStructureType.SetItemData(nIndex, ENM_T_LATTICE_TOWERS);
+	nIndex = m_cmbStructureType.AddString(_LS(IDS_CMD_WIND_WNAT_OPEN_SIGNS_LATTICE_FRAMEWORKS)); m_cmbStructureType.SetItemData(nIndex, ENM_T_OPENSIGNSLF);
+	nIndex = m_cmbStructureType.AddString(_LS(IDS_CMD_WIND_WNAT_CHIMNEYS_TANKS_SIMILARSTRUCTURES)); m_cmbStructureType.SetItemData(nIndex, ENM_T_CHIMNEYSTSS);
+	nIndex = m_cmbStructureType.AddString(_LS(IDS_CMD_WIND_WNAT_FENCES_ON_GROUND)); m_cmbStructureType.SetItemData(nIndex, ENM_T_FENCES_ON_GRND);
+	m_cmbStructureType.SetCurSel(0);
+	CDlgUtil::CobxAdjustListBoxWidth(m_cmbStructureType);
+}
+
+BOOL CStldWindPressureAreaDlg_KBC2016::Dlg2Data( void* pData, BOOL bWarning )
+{
+	m_pData = (T_WDPR_D*)pData;
+
+	if(m_pData->GetKBC2016() == NULL) { ASSERT(0); return FALSE; }
+
+	m_pData->GetKBC2016()->dGfExternal = m_editGustFactor_Ex.GetEditValue();
+	m_pData->GetKBC2016()->dGfInternal = m_editGustFactor_In.GetEditValue();
+	m_pData->GetKBC2016()->dCfExternal = m_editCoefFactor_Ex.GetEditValue();
+	m_pData->GetKBC2016()->dCfInternal = m_editCoefFactor_In.GetEditValue();
+	
+	CButton* pBtn = (CButton*)GetDlgItem(IDC_WINDP_AUTOCALC_FORCECOEF);
+	if(pBtn->GetCheck()) m_pData->GetKBC2016()->bAutoForceCoef = TRUE;
+	else                 m_pData->GetKBC2016()->bAutoForceCoef = FALSE;
+
+	if(m_pData->GetKBC2016()->bAutoForceCoef)
+	{
+		if (m_pData->arKBC2009ForceCoef.GetSize() <= 1 && m_bInAutoCalc == FALSE)
+		{
+			if (bWarning) AfxMessageBox(_LS(IDS_TM_WINDP_KBC2009_NOAUTOCALCINFO));
+			return FALSE;
+		}
+	}
+
+	m_pData->GetKBC2016()->nAutoForceCoefStructType = m_cmbStructureType.GetItemData(m_cmbStructureType.GetCurSel());
+
+	CDlgUtil::CtrlRadioGetCheck(this, m_aCtrlBuildingType, m_pData->GetKBC2016()->nBuildingType);
+	m_pData->GetKBC2016()->bAlongWind = m_rdoAlongWind.GetCheck();
+	m_pData->GetKBC2016()->bAcrossWind = m_rdoAcrossWind.GetCheck();
+	m_pData->GetKBC2016()->bTorsionalWind = m_rdoTorsionalWind.GetCheck();
+
+	if(m_pData->GetKBC2016()->bTorsionalWind)
+	{
+		CString strPos;
+		m_wndCoordXYZ.GetWindowText(strPos);
+		MyParser Parser;
+		if(!Parser.ParsingPositionArg(strPos)) return FALSE;
+		if(!Parser.GetPositionData(m_pData->GetKBC2016()->dCenterPnt[0],m_pData->GetKBC2016()->dCenterPnt[1],m_pData->GetKBC2016()->dCenterPnt[2])) return FALSE;
+	}
+	else
+	{
+		m_pData->GetKBC2016()->dCenterPnt[0] = 0.;
+		m_pData->GetKBC2016()->dCenterPnt[1] = 0.;
+		m_pData->GetKBC2016()->dCenterPnt[2] = 0.;
+	}
+
+	return TRUE;
+}
+
+void CStldWindPressureAreaDlg_KBC2016::Data2Dlg( void* pData, BOOL bWarning )
+{
+	m_pData = (T_WDPR_D*)pData;
+	if(m_pData->GetKBC2016() == NULL) { ASSERT(0); return; }
+
+	T_WVEP_K WvepK;
+	if(m_pParent->GetWvepKey(WvepK))
+	{
+		T_WVEP_D WvepD;
+		CDBDoc* pDoc = CDBDoc::GetDocPoint();
+		if(!pDoc->m_pAttrCtrl2->GetWvep(WvepK, WvepD))
+		{
+			ASSERT(0);
+			WvepD.Initialize();
+		}
+
+		if(WvepD.GetKBC2016() == NULL) { ASSERT(0); return; }
+
+		CDlgUtil::CtrlRadioSetCheck(this, m_aCtrlMethod, WvepD.GetKBC2016()->nMethod);
+		if(WvepD.GetKBC2016()->nMethod==0) m_pData->GetKBC2016()->bAutoForceCoef = FALSE;
+	}
+	
+	m_editGustFactor_Ex.SetEditUnit(m_pData->GetKBC2016()->dGfExternal, 4);
+	m_editGustFactor_In.SetEditUnit(m_pData->GetKBC2016()->dGfInternal, 4);
+	m_editCoefFactor_Ex.SetEditUnit(m_pData->GetKBC2016()->dCfExternal, 4);
+	m_editCoefFactor_In.SetEditUnit(m_pData->GetKBC2016()->dCfInternal, 4);
+	
+	CButton* pBtn = (CButton*)GetDlgItem(IDC_WINDP_AUTOCALC_FORCECOEF);
+	pBtn->SetCheck(m_pData->GetKBC2016()->bAutoForceCoef);
+	CDlgUtil::CtrlRadioSetCheck(this, m_aCtrlBuildingType, m_pData->GetKBC2016()->nBuildingType);
+	CDlgUtil::CtrlEnableDisable(this, IDC_WG_TREEMENU_DIR_TORSIONAL_RDO, m_pData->GetKBC2016()->nBuildingType==1);
+	m_rdoAlongWind.SetCheck(m_pData->GetKBC2016()->bAlongWind);
+	m_rdoAcrossWind.SetCheck(m_pData->GetKBC2016()->bAcrossWind);
+	m_rdoTorsionalWind.SetCheck(m_pData->GetKBC2016()->bTorsionalWind);
+	CDlgUtil::CtrlEnableDisable(this, m_aCtrlTorsional_Sub, m_pData->GetKBC2016()->bTorsionalWind);
+
+	CString strPos;
+	strPos.Format(_T("%g, %g, %g"), m_pData->GetKBC2016()->dCenterPnt[0], m_pData->GetKBC2016()->dCenterPnt[1], m_pData->GetKBC2016()->dCenterPnt[2]);
+	m_wndCoordXYZ.SetWindowText(strPos);
+
+	OnChkAutoCalcForceCoef();
+
+	int nStructType = m_cmbStructureType.GetCount();
+	for(int i=0; i<nStructType; i++)
+	{
+		if(m_cmbStructureType.GetItemData(i)!=m_pData->GetKBC2016()->nAutoForceCoefStructType) continue;
+		m_cmbStructureType.SetCurSel(i);
+		break;
+	}
+
+	int nMethod = 0;
+	CDlgUtil::CtrlRadioGetCheck(this, m_aCtrlMethod, nMethod);
+	CDlgUtil::CtrlEnableDisableByRect(this, IDC_WG_TREEMENU_STATIC0, nMethod==1, TRUE);
+	GetDlgItem(IDC_WINDP_AUTOCALC_FORCECOEF)->EnableWindow(nMethod==1);
+	CDlgUtil::CtrlEnableDisableByRect(this, IDC_WG_TREEMENU_BLDTYPE_GRB, nMethod==1, TRUE);
+	if(nMethod==0)
+	{
+		GetDlgItem(IDC_TM_FORCE_COEF_AUTO_BTN)->EnableWindow(FALSE);
+		GetDlgItem(IDC_TM_FORCE_COEF_AUTO_CMB)->EnableWindow(FALSE);
+		
+		CDlgUtil::CtrlEnableDisableByRect(this, IDC_WG_TREEMENU_DIR_GRB, FALSE, TRUE);
+
+		m_rdoAlongWind.SetCheck(TRUE);
+		m_rdoAcrossWind.SetCheck(FALSE);
+		m_rdoTorsionalWind.SetCheck(FALSE);
+	}
+	GetDlgItem(IDC_WG_TREEMENU_DIR_ALONG_RDO)->EnableWindow(TRUE);
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnCmdGustFactor()
+{
+	if(m_pData->GetKBC2016() == NULL) { ASSERT(0); return; }
+	m_bInAutoCalc = TRUE;
+	if(!m_pParent->Dlg2Data())
+	{
+		m_bInAutoCalc = FALSE;
+		return;
+	}
+	m_bInAutoCalc = FALSE;
+	
+	T_WVEP_K WvepK;
+	if(!m_pParent->GetWvepKey(WvepK))
+	{
+		AfxMessageBox(_LS(IDS_TM_WINDP_NO_SELECTED_WVEP));
+		return;
+	}
+	
+	T_WVEP_D WvepD;
+	CDBDoc* pDoc = CDBDoc::GetDocPoint();
+	if(!pDoc->m_pAttrCtrl2->GetWvep(WvepK, WvepD))
+	{
+		ASSERT(0);
+		WvepD.Initialize();
+	}
+	
+	if(WvepD.GetKBC2016() == NULL) { ASSERT(0); return; }
+	
+	CStldWindPressureAreaDlg_KBC2009_GustF dlg;
+	dlg.SetWindData(*WvepD.GetKBC2016(), m_pData);
+	if(dlg.DoModal() == IDOK)
+	{
+		dlg.GetDlgInfo(m_pData->GetKBC2016()->nRigidity, m_pData->GetKBC2016()->dBreath, m_pData->GetKBC2016()->dNaturalFreq,
+			m_pData->GetKBC2016()->dDampingRatio, m_pData->GetKBC2016()->dGfExternal);
+		
+		Data2Dlg( (void*) m_pData);
+	}
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnCmdCoefFactor()
+{
+	m_bInAutoCalc = TRUE;
+	if(!m_pParent->Dlg2Data())
+	{
+		m_bInAutoCalc = FALSE;
+		return;
+	}
+	m_bInAutoCalc = FALSE;
+
+	T_WVEP_K WvepK=NULL;
+	if(!m_pParent->GetWvepKey(WvepK))
+	{
+		AfxMessageBox(_LS(IDS_TM_WINDP_NO_SELECTED_WVEP));
+		return;
+	}
+
+	int nStructCmbType = m_cmbStructureType.GetItemData(m_cmbStructureType.GetCurSel());
+	CStldWindPressureAreaDlg_KBC2016_FrcCoefAuto dlg(NULL,nStructCmbType,WvepK);
+	dlg.SetData(m_pData);
+	if(dlg.DoModal() == IDOK)
+	{
+		dlg.GetData(m_pData);
+	}
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnChkAutoCalcForceCoef()
+{
+	CButton* pBtn = (CButton*)GetDlgItem(IDC_WINDP_AUTOCALC_FORCECOEF);
+	int nCheck = pBtn->GetCheck();
+
+	GetDlgItem(IDC_TM_FORCE_COEF_AUTO_BTN)->EnableWindow(nCheck==1);
+	GetDlgItem(IDC_TM_FORCE_COEF_AUTO_CMB)->EnableWindow(nCheck==1);
+	GetDlgItem(IDC_TM_FORCE_COEFF_EDIT_EX)->EnableWindow(nCheck==0);
+	GetDlgItem(IDC_TM_FORCE_COEFF_EDIT_IN)->EnableWindow(nCheck==0);
+
+	if(nCheck==1)
+	{
+		m_rdoAlongWind.SetCheck(TRUE);
+		m_rdoAcrossWind.SetCheck(FALSE);
+	}
+
+	CDlgUtil::CtrlEnableDisable(this, m_aCtrlBuildingType, nCheck==0);
+	CDlgUtil::CtrlEnableDisable(this, m_aCtrlBuilding, nCheck==0);
+
+	OnCmdWindTypeCheck();
+
+	if(nCheck==0)
+	{
+		int nBuildingType = 0;
+		CDlgUtil::CtrlRadioGetCheck(this, m_aCtrlBuildingType, nBuildingType);
+		CDlgUtil::CtrlEnableDisable(this, IDC_WG_TREEMENU_DIR_TORSIONAL_RDO, nBuildingType==1);
+	}
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnCmdVibrationBtn() 
+{
+	if(m_pData->GetKBC2016() == NULL) { ASSERT(0); return; }
+	CStldWindPressureVibrationDlg dlg;
+	CDlgUtil::CtrlRadioGetCheck(this, m_aCtrlBuildingType, dlg.m_nBuildingType);
+	dlg.m_nAcrossCheck = m_rdoAcrossWind.GetCheck();
+	dlg.m_nTorsionalCheck = m_rdoTorsionalWind.GetCheck();
+	dlg.SetWindData(m_pData->GetKBC2016(), m_pData->nDirection, m_pData->dAngle);
+	if (dlg.DoModal() == IDOK)
+	{
+		m_pData->GetKBC2016()->dBLy = dlg.m_dBreadthX;
+		m_pData->GetKBC2016()->dBLx = dlg.m_dBreadthY;
+		m_pData->GetKBC2016()->dNoa = dlg.m_dFreqA;
+		m_pData->GetKBC2016()->dNot = dlg.m_dFreqT;
+		m_pData->GetKBC2016()->dZf = dlg.m_dZf;
+	}
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnCmdBuildingTypeRadio()
+{
+	int nBuildingType = 0;
+	CDlgUtil::CtrlRadioGetCheck(this, m_aCtrlBuildingType, nBuildingType);
+	CDlgUtil::CtrlEnableDisable(this, IDC_WG_TREEMENU_DIR_TORSIONAL_RDO, nBuildingType==1);
+
+	if(nBuildingType==0 && m_rdoTorsionalWind.GetCheck())
+	{
+		m_rdoAlongWind.SetCheck(TRUE);
+		m_rdoAcrossWind.SetCheck(FALSE);
+		m_rdoTorsionalWind.SetCheck(FALSE);
+	}
+	OnCmdWindTypeCheck();
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnCmdWindTypeCheck()
+{
+	CButton* pBtn = (CButton*)GetDlgItem(IDC_WINDP_AUTOCALC_FORCECOEF);
+	int nAutoCoefCheck = pBtn->GetCheck();
+	int nBuildingType = 0;
+	CDlgUtil::CtrlRadioGetCheck(this, m_aCtrlBuildingType, nBuildingType);
+	int nAcrossCheck = m_rdoAcrossWind.GetCheck();
+	int nTorsionalCheck = m_rdoTorsionalWind.GetCheck();
+	CDlgUtil::CtrlEnableDisable(this, IDC_WG_TREEMENU_DIR_BTN, nAutoCoefCheck==0 && ((nBuildingType==1&&nAcrossCheck == 1) || nTorsionalCheck == 1));
+
+	CDlgUtil::CtrlEnableDisable(this, m_aCtrlTorsional_Sub, nTorsionalCheck==1);
+	if(nTorsionalCheck==1)
+	{
+		m_wndCoordXYZ.SetFocus();
+	}
+}
+
+void CStldWindPressureAreaDlg_KBC2016::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
+{
+	HWND hWnd;
+	if ((hWnd = GetSafeHwnd()) == 0 || !IsWindow(hWnd)) return;
+
+	switch(lHint)
+	{
+	case D_UPDATE_DBALL:
+	case D_UPDATE_DEFAULT:
+		break;
+	case D_UPDATE_BUFFER_BEFORE:
+		break;
+	case D_UPDATE_BUFFER_AFTER:
+		UpdateBuffer();
+		break;
+	default:
+		//ASSERT(FALSE);
+		break;
+	}
+}
+
+void CStldWindPressureAreaDlg_KBC2016::UpdateBuffer()
+{
+	CViewBuff* pViewBuff = CDBDoc::GetDocPoint()->m_pViewBuff;
+	int nCount = pViewBuff->GetCount();
+	if (nCount == 0) return; 
+	ASSERT(nCount == 1);
+
+	T_UDRD_BUFFER buffer_ur;
+	POSITION pos = pViewBuff->GetStartBuffer();
+
+	while(pos != NULL)
+	{
+		buffer_ur = pViewBuff->GetNextBuffer(pos);
+		int nCmd = buffer_ur.nCmd;
+		int nKey = buffer_ur.nKey;
+
+		switch(nCmd)
+		{
+		case(UR_WVEP_MFD):
+		case(UR_WVEP_LT_ADD):
+		case(UR_WVEP_LT_DEL):
+			{
+				if(m_pData) Data2Dlg( (void*) m_pData);
+			}
+			break;
+		default:
+			break;
+		}
+	} // end of while
+}

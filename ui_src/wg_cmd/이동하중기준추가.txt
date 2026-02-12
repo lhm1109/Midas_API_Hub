@@ -1,0 +1,59 @@
+
+2004. 02. 06   writed by TAE
+
+
+Movint Load에 코드 추가시 다음과 같은 작업이 진행되어야 한다.
+( Dialog / Main Menu / Tree Menu / Worktree / MxT / 기타 )
+
+
+1. Moving Load Code에 새로 추가된 코드 추가
+	
+	: wg_cmd > Moving Load > CMMvcdDlg.cpp 파일 내 MakeCodeData() 함수에서
+	  국가별, Product별로 구분하여 추가할 것. 이것만 해주면 됨. 
+
+
+
+2. 필요시 추가 기준에 해당하는 Dialog, Bitmap, Icon등 추가
+
+
+
+3. 전후처리 메뉴(Main Menu), View Context Menu, Tree menu 처리
+	
+	: 이동하중은 국가별 Product별, 선택된 Code별로 메뉴가 동적으로 변화한다.
+	  따라서 이에 대한 처리가 반드시 필요하다.
+
+	  wg_main > Source Files > CMenuMgr 클래스에서 이러한 작업을 총체적으로 관리하고 있으며 
+	  View Context Menu의 경우 Main Menu를 참조하므로 Main Menu의 관리만으로 자동 관리된다.
+	  따라서 크게 Main Menu의 전후처리 메뉴와 Tree Menu 두가지를 관리해주어야 하며
+	  후처리 메뉴에 관한 사항은 후처리 담당자(현 : 남궁계홍 대리)에게 문의하도록 한다.
+	  
+	  특별히 기능추가가 없는 한 MakeData() 함수에서 기준별로 데이터를 추가하여 주면 되나,
+	  기능추가가 있거나 특별한 처리가 필요한 부분은 직접 구현해주도록 한다.
+	  
+	  반드시 나라별, Product별, 기준별 테스트가 필요하다.
+	  
+
+4. MGT/MCT Command Shell의 Combo Menu 처리 - 동적작동
+
+	:  MxT Command Shell의 Command 명령어 콤보메뉴의 경우도 나라별, Product 별, 기준별로
+	   동적작동을 하므로 반드시 고려되어야 한다.
+	   wg_main > MGT > MgtCommand.cpp 파일의 CustomizeCmd() 함수에서 처리.
+
+	   반드시 나라별, Product별, 기준별 테스트가 필요하다.
+	   새로 추가된 데이터가 있는 경우 MGT/MCT Import/Export 처리 또한 요구됨.
+
+
+
+5. Worktree는 특별히 손대지 않아도 되도록 해두었다. 단 확인은 해보아야 한다.
+
+
+
+6. 이동하중은 복잡하여 꼭 테스트가 필요하다.
+
+
+
+7. 기타작업으로 이동하중 코드를 참조하고 있는 모든 경우를 찾아 확인해야 한다.
+   GetMvcd로 Find All 하여 확인하고 수정하는 작업이 요구된다.. 휴.. 많다...
+	   
+
+

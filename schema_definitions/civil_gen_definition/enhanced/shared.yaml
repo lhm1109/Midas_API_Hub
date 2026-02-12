@@ -158,6 +158,21 @@ markerRegistry:
           "1": "Truss"
           "2": "Gap"
 
+  # ────────────────────────────────────────────────────────────────────────────
+  # Simple Enum 라벨 (단순 배열 형식)
+  # ────────────────────────────────────────────────────────────────────────────
+  - id: MARKER_ENUM_LABELS
+    key: "x-enum-labels"
+    description: "Enum 라벨 배열 (UI 표시용, 검증 무관). enum 값과 순서 일치"
+    pureUI: true
+    schema:
+      type: array
+      items:
+        type: string
+    example: |
+      enum: [0, 1, 2, 3, 4]
+      x-enum-labels: ["3-D", "X-Z Plane", "Y-Z Plane", "X-Y Plane", "Constraint RZ"]
+
 
   # ────────────────────────────────────────────────────────────────────────────
   # 조건부 필드 표시 (UI 전용 - 검증과 무관)

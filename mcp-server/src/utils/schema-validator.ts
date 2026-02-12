@@ -63,21 +63,31 @@ export function validateAndTransform(
             if (enumValues && (fieldType === 'integer' || fieldType === 'number') && !field['oneOf']) {
                 const fallbackLabel = 'Option {value}';
 
-                // Get labels from x-ui.options
+                // Get labels from x-enum-labels (simple array) or x-ui.options (detailed format)
+                const xEnumLabels = field['x-enum-labels'] as string[] | undefined;
                 const xui = field['x-ui'] as Record<string, unknown> | undefined;
                 const options = xui?.['options'] as Array<{ value: number; label: string }> | undefined;
 
                 // Convert to oneOf
-                const oneOf = enumValues.map(value => {
-                    const option = options?.find(o => o.value === value);
-                    const title = option?.label || fallbackLabel.replace('{value}', String(value));
+                const oneOf = enumValues.map((value, index) => {
+                    // Priority: x-enum-labels > x-ui.options > fallback
+                    let title: string;
+                    if (xEnumLabels && xEnumLabels[index]) {
+                        title = xEnumLabels[index];
+                    } else {
+                        const option = options?.find(o => o.value === value);
+                        title = option?.label || fallbackLabel.replace('{value}', String(value));
+                    }
                     return { const: value, title };
                 });
 
                 field['oneOf'] = oneOf;
                 delete field['enum'];
 
-                // Remove x-ui.options (merged into oneOf)
+                // Remove x-enum-labels and x-ui.options (merged into oneOf)
+                if (field['x-enum-labels']) {
+                    delete field['x-enum-labels'];
+                }
                 if (xui?.['options']) {
                     delete xui['options'];
                 }

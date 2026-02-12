@@ -1,0 +1,190 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "required": [
+        "STRUCT_TYP",
+        "MASS_TYP",
+        "GRAV_ACC",
+        "INIT_TEMP"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "STRUCT_TYP": {
+          "type": "integer",
+          "description": "Structure Type",
+          "oneOf": [
+            {
+              "title": "3-D",
+              "const": 0
+            },
+            {
+              "title": "X-Z Plane",
+              "const": 1
+            },
+            {
+              "title": "Y-Z Plane",
+              "const": 2
+            },
+            {
+              "title": "X-Y Plane",
+              "const": 3
+            },
+            {
+              "title": "Constraint RZ",
+              "const": 4
+            }
+          ],
+          "x-ui": {
+            "label": "Struct Typ"
+          }
+        },
+        "MASS_TYP": {
+          "type": "integer",
+          "description": "Mass Control Parameter - Mass Type",
+          "oneOf": [
+            {
+              "title": "Lumped Mass",
+              "const": 1
+            },
+            {
+              "title": "Consistent Mass",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "label": "Mass Typ"
+          }
+        },
+        "STRUCT": {
+          "type": "integer",
+          "description": "Structure Mass Conversion Type",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "Convert to X, Y, Z",
+              "const": 1
+            },
+            {
+              "title": "Convert to X, Y",
+              "const": 2
+            },
+            {
+              "title": "Convert to Z",
+              "const": 3
+            }
+          ],
+          "x-ui": {
+            "label": "Struct Mass"
+          },
+          "x-optional-when": {
+            "oneOf": [
+              {
+                "properties": {
+                  "bCNV_SELF_WT": {
+                    "const": false
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "iMASS_TYP": {
+                    "const": 2
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "GRAV_ACC": {
+          "type": "number",
+          "description": "Gravity Acceleration",
+          "x-unit": "Gravity",
+          "x-ui": {
+            "label": "Grav Acc"
+          }
+        },
+        "INIT_TEMP": {
+          "type": "number",
+          "description": "Initial Temperature",
+          "x-unit": "Temperature",
+          "x-ui": {
+            "label": "Init Temp"
+          }
+        },
+        "CON_OFFSET": {
+          "type": "boolean",
+          "description": "Consider Off-diagonal Masses",
+          "default": false,
+          "x-ui": {
+            "label": "Con Offset"
+          },
+          "x-optional-when": {
+            "properties": {
+              "iMASS_TYP": {
+                "const": 2
+              }
+            }
+          }
+        },
+        "CNV_SELF": {
+          "type": "boolean",
+          "description": "Convert Self Weight to Mass",
+          "default": true,
+          "x-ui": {
+            "label": "Cnv Self Wt"
+          }
+        },
+        "ALIGN_BEAM": {
+          "type": "boolean",
+          "description": "Align Beam for Floor Diaphragm",
+          "default": false,
+          "x-ui": {
+            "label": "Align Beam"
+          }
+        },
+        "ALIGN_SLAB": {
+          "type": "boolean",
+          "description": "Align Slab for Floor Diaphragm",
+          "default": false,
+          "x-ui": {
+            "label": "Align Slab"
+          }
+        },
+        "CON_ROT": {
+          "type": "boolean",
+          "description": "Consider Rotational Mass for Planar Frame Member (Lumped Mass only, when Consider Off-diagonal Masses is OFF)",
+          "default": false,
+          "x-ui": {
+            "label": "Con Rot Mpf"
+          },
+          "x-optional-when": {
+            "not": {
+              "allOf": [
+                {
+                  "properties": {
+                    "iMASS_TYP": {
+                      "const": 1
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "bCON_OFFSET": {
+                      "const": false
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

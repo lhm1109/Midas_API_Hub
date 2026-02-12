@@ -1,0 +1,128 @@
+
+추가된 Class를 Export할 필요가 없으면 아래의 처리를 행하지 않아도 무방하다.  
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/                 DLL Module 에서의 Class 추가후 처리사항                            
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+//  DLL 에서 추가된 Class Header File Template
+//  
+//  Class 정의구문의 전후를 
+//  #include "HeaderPre.h"와 
+//  #include "HeaderPost.h"로 둘러싼다. 
+//  
+//  HeaderPre.h 와 HeaderPost.h File은 Wizard 실행시 
+//  생성된 File이다. 
+//  
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//  #include "HeaderPre.h" 
+//  
+//  __MY_EXT_CLASS__ Macro를 Class 정의에 추가한다. 
+//	
+//  class __MY_EXT_CLASS__ class name 
+//  {
+//  };
+//	
+//  #include "HeaderPost.h" 
+//_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/     DLL 에서 추가된 Class Implementation File Template (cpp File)             
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
+//  #include "stdafx.h"
+//  #include "wg_treemenu.h"  
+//  #include "추가된ClassHeaderFile.H"
+//
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/                              DLL 내용을 Import , Export하기 위한 내용                             
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//
+//  추가된 Class Header File을 wg_treemenuAll.h에 include시킨다. 
+//  include 위치와 상세한 내용을 해당Dll의 wg_treemenuAll.h 을 참조한다. 
+//  
+//  
+//  DLL에서 다른 DLL을 참조 할때는 아래 예와 같이 해당 
+//  DLL의  Interface Header File을 
+//  wg_treemenuAll.h File과 stdafx.h File에 Include 한다.
+//  Include 위치는 해당 파일을 참조할 것 .  
+//  
+//  #if !defined(__WG_BASEALL_H__)
+//  	#include "..\wg_base\wg_baseall.h"
+//  #endif
+//
+//  DLL간 Cross Reference가 가능할까? Extention DLL의 여러가지 특징에서 가능성이 
+//  보인다. 단 Project Dependency 는 설정 할 수 없다. Project Dependency는 Project간 
+//  주종 관계를 설정하는 것이므로 Cross Reference 상황에서는 사용할 수 없다. 
+//  Cross Reference는 Module 결합도에 따라 가능 또는 불가능 할 수 있다. 
+//  표면적으로는 Cross Reference이나 Module간 결합에서는 주종관계가 설정되어야 
+//  한다. 실제로 완전한 Cross Reference는 동일 class또는 동일 Module에서만 
+//  이루어 질 수 있다
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/                               Resource symbol 관련 처리 사항                                 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//  
+//  Dll 사용시 발생할 수 있는 Resource Symbol간 충돌 문제를 해결하기 위한 방안으로 
+//  각 Dll에서 사용하는 Resource Symbol Name 과 Resource Symbol 값을 다르게 한다. 
+//  Symbol Name에는 Prefix를 적용하고 Resource Symbol 값에는 Dll 별로 범위를 
+//  지정한다. App Wizard에서 Resurce Symbol 값의 시작 값을 별도로 지정해 주지만 
+//  때로는 이 시작값에 문제가 있을수 있다.  App Wizard로 Template 생성후 반드시 
+//  확인해 볼것 . 다른 Module 의 Symbol값과 중복 되지 않도록 할 것. 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//  wg_treemenures.h 에서 _APS_NEXT_COMMAND_VALUE는 Menu Command의 Resource 
+//  Symbol의 시작값이다. 이값은 Application Wizard에서 자동으로 지정해 줄수 없으므로 
+//  모듈별 Resource ID 시작값을 작업자가 직접 지정해 주어야 한다. 
+//  wg_treemenures.h 의 #define _APS_NEXT_COMMAND_VALUE   항목 값 변경       
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//  현재 UI 관련 Library 로 Objectve Tool Kit과 Objective Grid를 사용하고 있는데 
+//  이러한 Library들과의 충돌을 피하기 위한 조치로 Library에서 사용되고 있는 Resource 
+//  Symbol 값 과 중복되지 않게 해야 한다. 
+//  현재 OT, OG Library 에서 사용하는 Resource Symbol 값의 시작 값은 0x4E20이다 .
+//  따라서 작업중인 Module의 Resource Symbol 값은 0x4E1F를 넘지 않아야 한다. 
+//  이러한 제한에 적용되지 않는 Resource 는 Dialog Template 내에서 사용되는 Local Symbol
+//  들이다 . Bitmap , Menu, Dialog Template.. 들은 Symbol 값의 중복을 허용하지 않는다. 
+
+/////	Resource Symbol 값에 대한 관리는 Project 전체에 걸쳐 관리되어야 한다. 
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/                                   다른 DLL의 Resource Symbol 참조 하기 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//
+//  View/Resource Includes 의 Read Only Symbol Directives 항목에 참조하고자 하는 Resource
+//  Header File 을 포함시킨다.  Path는 Main Project의 Root Directory 기준의 상대 위치 지정 
+//  형식으로 설정한다. (ex  ..\wg_main\wg_mainres.h)
+//
+//  Class Wizard에서 참조 된 Resource Symbol을 Browse하기 위해 참조될 Rosourec를 Copy 한다 
+//  Resource Header File이 Include 되었으므로 Symbol 값의 충돌은 발생하지 않는다. 
+//
+//  Copy 된 Resource 는 참조가 끝난후 삭제한다.  즉 다른 Module의 Resource이므로 필요할때마다 
+//  임시적으로 Copy 해서 Symbol을 참조한다 .
+//  ==> Resource Copy 시 참조 하고자 하는 Module의 Resource Header File을 Include 가 선행되지  
+//  않으면 Resource Symbol간 충돌이 발생할 수 있다. 
+// 
+//  전술한 내용은 Extention DLL의 경우일 때만 적용된다. 
+//  Extention DLL 은 별도의 Application Instance를 생성하지 않기 때문에 이러한 Trick이 가능하다. 
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/                                   DLL의 Debug Build에서 Link Warning 발생시 ^^
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//	 
+//  Project/Setting 에서 Link Option의 /def:".\wg_treemenu.def" 항목을 삭제한다. 
+//  Export File에 지정된 Module Name과 Module Define File의 이름이 같지 않을 경우 발생한다.
+
+
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+_/                                   Menu Resource 추가시 처리사항 
+_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+//
+//  각 View에 따른 Menu를 구성할 경우 새로운 Menu Resource를 정의하고 Document Template
+//  생성시 그에 따른 Menu Resource를 설정하게 되는데 현재 OT Lib의 Bitmap Menu를 사용하는 
+//  관계로 별도의 처리가 따른다.  Menu Resource 추가에 따른 별도의 처리사항은 다음과 같다. 
+//  CMainFrame::OnCreate Message Handler 에서 pToolBarMgr->SetMenuInfo 함수에 추가된 
+//  Menu Resource를 지정해 준다. 상세한 내용은 ..\wg_main\MainFrm.cpp와 
+//  SECToolBarManager::SetMenuInfo(....)를 참조한다. 
+
+
+
+

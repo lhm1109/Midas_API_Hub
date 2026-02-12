@@ -310,6 +310,28 @@ patterns:
           ],
           "x-ui": { "component": "Dropdown", "label": "Design Code" }
         }
+      integerEnumWithLabels: |
+        // ✅ RECOMMENDED: Use x-enum-labels (simple array format)
+        "iSTRUCT_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3, 4],
+          "x-enum-labels": ["3-D", "X-Z Plane", "Y-Z Plane", "X-Y Plane", "Constraint RZ"],
+          "x-ui": { "label": "Structure Type" }
+        }
+        // Note: MCP auto-converts to oneOf format during save
+
+        // Alternative: Use x-ui.options (verbose format)
+        "iMASS_TYPE": {
+          "type": "integer",
+          "enum": [0, 1],
+          "x-ui": {
+            "label": "Mass Type",
+            "options": [
+              { "value": 0, "label": "Lumped Mass" },
+              { "value": 1, "label": "Consistent Mass" }
+            ]
+          }
+        }
 
   fieldOrdering:
     title: "🚨 CRITICAL: x-ui.order is MANDATORY for Correct Field Ordering"

@@ -7,6 +7,7 @@ const PROJECT_ROOT = process.env.APIVERIFICATION_ROOT
 
 export const SCHEMA_DEFS_DIR = path.join(PROJECT_ROOT, 'schema_definitions');
 export const GENERATED_DIR = path.join(PROJECT_ROOT, 'generated_schemas');
+export const GENERATED_RESOURCES_DIR = path.join(PROJECT_ROOT, 'generated_resources');
 
 export interface WritePaths {
     dir: string;
@@ -136,4 +137,24 @@ export function buildWritePath(outputDir: string, schemaName: string): WritePath
     }
 
     return { dir: dirReal, schemaPath, metaPath };
+}
+
+/**
+ * 리소스 분석 결과 저장 경로 빌드
+ * generated_resources/{className}.json
+ */
+export function buildResourcePath(className: string): string {
+    if (hasTraversalSegment(className) || className.includes('/') || className.includes('\\')) {
+        throw new Error('Invalid className for resource path');
+    }
+
+    if (!fs.existsSync(GENERATED_RESOURCES_DIR)) {
+        fs.mkdirSync(GENERATED_RESOURCES_DIR, { recursive: true });
+    }
+
+    if (isSymlink(GENERATED_RESOURCES_DIR)) {
+        throw new Error('Symbolic links not allowed in resource path');
+    }
+
+    return path.join(GENERATED_RESOURCES_DIR, `${className}.json`);
 }

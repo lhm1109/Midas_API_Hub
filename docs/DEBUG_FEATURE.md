@@ -1,0 +1,142 @@
+# 🐛 Debug 기능 추가 완료
+
+## ✅ 추가된 내용
+
+### 1. 왼쪽 사이드바에 Debug 탭 추가
+
+```
+GlobalSidebar
+├─ Projects
+├─ History
+└─ Debug (NEW!) 🐛
+```
+
+### 2. Debug 기능 구조
+
+```
+src/features/debug/
+├── components/
+│   ├── DebugView.tsx          # 메인 디버그 뷰
+│   ├── index.ts
+│   └── tabs/
+│       ├── DatabaseTab.tsx    # DB 조회 탭 (구현 완료)
+│       └── index.ts
+```
+
+### 3. DatabaseTab 기능
+
+#### 📊 데이터베이스 조회
+- **모든 테이블 데이터 확인**
+  - Versions
+  - Manual Data
+  - Spec Data
+  - Builder Data
+  - Runner Data
+  - Test Cases
+
+#### 📈 실시간 통계
+- 각 테이블의 레코드 수
+- 카드 형태로 요약 표시
+
+#### 🔄 새로고침
+- 실시간 데이터 업데이트
+- Loading 상태 표시
+
+#### 🗑️ DB 초기화
+- 모든 데이터 삭제 (테이블 구조는 유지)
+- 확인 다이얼로그로 안전 장치
+
+### 4. 백엔드 API 추가
+
+#### 새 엔드포인트
+
+```
+GET  /api/debug/database
+     → 모든 테이블 데이터 조회
+
+DELETE /api/debug/database/clear
+       → 데이터베이스 초기화
+
+GET  /api/debug/database/stats
+     → 테이블별 통계
+
+GET  /api/debug/database/table/:tableName
+     → 특정 테이블만 조회
+```
+
+### 5. 향후 추가 예정 탭
+
+```
+DebugView
+├─ 🗄️ Database    (✅ 구현 완료)
+├─ 🌐 Network     (준비 중)
+└─ 📋 Logs        (준비 중)
+```
+
+## 🚀 사용 방법
+
+### 1. 서버 실행
+```bash
+npm run dev:all
+```
+
+### 2. Debug 탭 접속
+1. 왼쪽 사이드바에서 Bug 아이콘 클릭
+2. Database 탭 선택
+3. 데이터 자동 로드
+
+### 3. 기능 사용
+- **새로고침**: 우측 상단 "새로고침" 버튼
+- **DB 초기화**: 우측 상단 "DB 초기화" 버튼
+- **테이블 확인**: 하단 탭에서 원하는 테이블 선택
+
+## 📝 파일 변경 사항
+
+### 프론트엔드
+- `src/features/debug/` - 새 feature 추가
+- `src/components/layouts/GlobalSidebar.tsx` - Debug 버튼 추가
+- `src/App.tsx` - Debug 라우팅 추가
+
+### 백엔드
+- `server/routes/debug.js` - 새 라우트 추가
+- `server/server.js` - Debug 라우트 등록
+
+## 🎯 확장 방법
+
+새 디버그 탭 추가:
+
+```typescript
+// 1. 새 탭 컴포넌트 생성
+src/features/debug/components/tabs/NetworkTab.tsx
+
+// 2. tabs/index.ts에 export 추가
+export { NetworkTab } from './NetworkTab';
+
+// 3. DebugView.tsx에 탭 추가
+<TabsTrigger value="network">
+  <Network className="w-4 h-4 mr-2" />
+  🌐 Network
+</TabsTrigger>
+
+<TabsContent value="network">
+  <NetworkTab />
+</TabsContent>
+```
+
+## ✨ 특징
+
+1. **현재 구조 유지** - 기존 패턴을 따름
+2. **쉬운 확장** - 새 디버그 탭 추가가 간단
+3. **실시간 조회** - 최신 DB 상태 확인 가능
+4. **안전한 삭제** - 확인 다이얼로그로 실수 방지
+5. **깔끔한 UI** - 테이블 형태로 보기 좋게 표시
+
+---
+
+**추가 완료**: 2026-01-08
+
+
+
+
+
+

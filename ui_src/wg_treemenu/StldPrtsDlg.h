@@ -1,0 +1,62 @@
+#if !defined(AFX_STLDPRTSDLG_H__84D2D3A4_C8C8_11D3_92DE_0000C0B0E6B3__INCLUDED_)
+#define AFX_STLDPRTSDLG_H__84D2D3A4_C8C8_11D3_92DE_0000C0B0E6B3__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+// StldPrtsDlg.h : header file
+//
+
+#include "..\wg_db\wg_db_DBDoc.h"
+#include "..\wg_db\wg_db_SelectLC.h"
+#include "..\wg_db\wg_db_EditUnit.h"
+#include "..\wg_db\wg_db_TextUnit.h"
+#include "..\wg_db\wg_db_CobxLdgr.h"
+/////////////////////////////////////////////////////////////////////////////
+// CStldPrtsDlg dialog
+
+class CStldPrtsDlg : public CMenuBarChildDlg
+{
+// Construction
+public:
+	CStldPrtsDlg(CWnd* pParent = NULL);   // standard constructor
+	virtual void Execute() { OnTmExecute(); }
+// Dialog Data
+	//{{AFX_DATA(CStldPrtsDlg)
+	enum { IDD = IDD_TM_STLD_PRTS };
+	CTextUnit	m_wndTensionUnit;
+	CEditUnit	m_wndTension;
+	CSelectLC	m_LoadCase;
+	int		m_nOption;
+	CCobxLdgr m_wndLdgrCobx;
+	//}}AFX_DATA
+
+
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CStldPrtsDlg)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	//}}AFX_VIRTUAL
+
+// Implementation
+protected:
+	CDBDoc* m_pDoc;
+	CArray<UINT, UINT> m_aDeleteCtrl;
+
+	// Generated message map functions
+	//{{AFX_MSG(CStldPrtsDlg)
+	virtual BOOL OnInitDialog();
+	afx_msg void OnTmExecute();
+	afx_msg void OnTmClose();
+	afx_msg void OnClickLoadCaseBtn();
+	afx_msg void OnChangeOption();
+	afx_msg void OnTmDefineLdgrBtn();
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+};
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_STLDPRTSDLG_H__84D2D3A4_C8C8_11D3_92DE_0000C0B0E6B3__INCLUDED_)

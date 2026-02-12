@@ -1,0 +1,362 @@
+{
+  "caption": "Structure Type",
+  "conditionals": [
+    {
+      "action": "enable",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS2",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS3",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS2",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS3",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnableConsiderRotMPF",
+      "controlId": "IDC_ETC_CONSIDER_ROT_RIGID_MPF_CHK",
+      "triggerVariable": "__unknown__",
+      "variable": "m_bConsiderRotMPF"
+    },
+    {
+      "action": "enable",
+      "condition": "m_bConvertSelfWeight",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS",
+      "triggerVariable": "m_bConvertSelfWeight",
+      "variable": "m_nStructureMass"
+    },
+    {
+      "action": "enable",
+      "condition": "m_bConvertSelfWeight",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS2",
+      "triggerVariable": "m_bConvertSelfWeight"
+    },
+    {
+      "action": "enable",
+      "condition": "m_bConvertSelfWeight",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS3",
+      "triggerVariable": "m_bConvertSelfWeight"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nMassType == 1",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS",
+      "triggerVariable": "m_nMassType",
+      "variable": "m_nStructureMass"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nMassType == 1",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS2",
+      "triggerVariable": "m_nMassType"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nMassType == 1",
+      "controlId": "IDC_ETC_PC_STRUCT_MASS3",
+      "triggerVariable": "m_nMassType"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nMassType == 1",
+      "controlId": "IDC_ETC_PC_CONSIDER_OFFSET_CHK",
+      "triggerVariable": "m_nMassType",
+      "variable": "m_bConsiderOffset"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nMassType == 1",
+      "controlId": "IDC_ETC_PC_CONSIDER_OFFSET_CHK",
+      "triggerVariable": "m_nMassType",
+      "variable": "m_bConsiderOffset"
+    }
+  ],
+  "controlGroupArrays": {
+    "m_aCtrlConsiderOffset": [
+      "IDC_ETC_PC_CONSIDER_OFFSET_CHK"
+    ],
+    "m_aCtrlLumpedMass": [
+      "IDC_ETC_PC_STRUCT_MASS",
+      "IDC_ETC_PC_STRUCT_MASS2",
+      "IDC_ETC_PC_STRUCT_MASS3"
+    ]
+  },
+  "controls": [
+    {
+      "type": "GROUPBOX",
+      "caption": "Structure Type",
+      "h": 28,
+      "id": "IDC_WG_CMD_STATIC0",
+      "w": 273,
+      "x": 0,
+      "y": 4
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "3-D",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_ETC_PC_ST_3D",
+      "inferredType": "integer",
+      "variable": "m_nStructType",
+      "w": 31,
+      "x": 4,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "X-Z Plane",
+      "h": 12,
+      "id": "IDC_ETC_PC_ST_XZ",
+      "w": 49,
+      "x": 40,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Y-Z Plane",
+      "h": 12,
+      "id": "IDC_ETC_PC_ST_YZ",
+      "w": 49,
+      "x": 96,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "X-Y Plane",
+      "h": 12,
+      "id": "IDC_ETC_PC_ST_XY",
+      "w": 49,
+      "x": 152,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Constraint RZ",
+      "h": 12,
+      "id": "IDC_ETC_PC_ST_RZ",
+      "w": 56,
+      "x": 210,
+      "y": 16
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Mass Control Parameter",
+      "h": 108,
+      "id": "IDC_WG_CMD_STATIC1",
+      "w": 273,
+      "x": 0,
+      "y": 36
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Lumped Mass",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_ETC_PC_MASS_TYPE2",
+      "inferredType": "integer",
+      "variable": "m_nMassType",
+      "w": 146,
+      "x": 4,
+      "y": 48
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Consistent Mass",
+      "h": 12,
+      "id": "IDC_ETC_PC_MASS_TYPE3",
+      "w": 134,
+      "x": 4,
+      "y": 96
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Convert to X, Y, Z",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_ETC_PC_STRUCT_MASS",
+      "inferredType": "integer",
+      "variable": "m_nStructureMass",
+      "w": 80,
+      "x": 12,
+      "y": 128
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Convert to X, Y",
+      "h": 12,
+      "id": "IDC_ETC_PC_STRUCT_MASS2",
+      "w": 88,
+      "x": 99,
+      "y": 128
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Convert to Z",
+      "h": 12,
+      "id": "IDC_ETC_PC_STRUCT_MASS3",
+      "w": 76,
+      "x": 193,
+      "y": 128
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Gravity Acceleration",
+      "h": 12,
+      "id": "IDC_WG_CMD_STATIC2",
+      "w": 91,
+      "x": 0,
+      "y": 148
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_PC_GRAV",
+      "inferredType": "object",
+      "labelText": "Gravity Acceleration",
+      "variable": "m_ctrlGravity",
+      "w": 48,
+      "x": 93,
+      "y": 148
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_PC_GRAV_UNIT",
+      "inferredType": "object",
+      "variable": "m_ctrlGravUnit",
+      "w": 59,
+      "x": 145,
+      "y": 148
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Initial Temperature",
+      "h": 12,
+      "id": "IDC_WG_CMD_STATIC3",
+      "w": 92,
+      "x": 0,
+      "y": 164
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_PC_TEMP",
+      "inferredType": "object",
+      "labelText": "Initial Temperature",
+      "variable": "m_ctrlIniTemp",
+      "w": 48,
+      "x": 93,
+      "y": 164
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_PC_TEMP_UNIT",
+      "inferredType": "object",
+      "variable": "m_ctrlIniTempUnit",
+      "w": 59,
+      "x": 145,
+      "y": 164
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 167,
+      "y": 218
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Cancel",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 221,
+      "y": 218
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_ETC_PC_CONSIDER_OFFSET_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bConsiderOffset",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_ETC_PC_CONVERT_SELFWEIGHT_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bConvertSelfWeight",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_ETC_PC_ALIGN_BEAM_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bAlignBeam",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_ETC_PC_ALIGN_SLAB_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bAlignSlab",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_ETC_CONSIDER_ROT_RIGID_MPF_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bConsiderRotMPF",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CEtcStypDlg",
+  "dialogId": "IDD_ETC_STYP",
+  "headerFile": "ui_src/wg_cmd/EtcStypDlg.h",
+  "parsedAt": "2026-02-12T06:28:16.094Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CEtcStypDlg)\r\n\tDDX_Control(pDX, IDC_ETC_PC_TEMP                 , m_ctrlIniTemp       );\r\n\tDDX_Control(pDX, IDC_ETC_PC_GRAV                 , m_ctrlGravity       );\r\n\tDDX_Control(pDX, IDC_ETC_PC_TEMP_UNIT            , m_ctrlIniTempUnit   );\r\n\tDDX_Control(pDX, IDC_ETC_PC_GRAV_UNIT            , m_ctrlGravUnit      );\r\n\tDDX_Radio(pDX, IDC_ETC_PC_ST_3D                  , m_nStructType       );\r\n\tDDX_Radio(pDX, IDC_ETC_PC_MASS_TYPE2             , m_nMassType         );\r\n\tDDX_Radio(pDX, IDC_ETC_PC_STRUCT_MASS            , m_nStructureMass    );\r\n\tDDX_Check(pDX, IDC_ETC_PC_CONSIDER_OFFSET_CHK    , m_bConsiderOffset   );\r\n\tDDX_Check(pDX, IDC_ETC_PC_CONVERT_SELFWEIGHT_CHK , m_bConvertSelfWeight);\r\n\tDDX_Check(pDX, IDC_ETC_PC_ALIGN_BEAM_CHK         , m_bAlignBeam        );\r\n\tDDX_Check(pDX, IDC_ETC_PC_ALIGN_SLAB_CHK         , m_bAlignSlab        );\r\n\tDDX_Check(pDX, IDC_ETC_CONSIDER_ROT_RIGID_MPF_CHK, m_bConsiderRotMPF   );\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCDialogMove::OnInitDialog();\r\n\t\r\n\t// TODO: Add extra initialization here\r\n\tm_pDoc = CDBDoc::GetDocPoint();\r\n\t\r\n\t// TODO: Add extra initialization here\r\n\tm_ctrlGravity.SetUnitType(CUnitCtrl::m_STYP_UNIT.dblGravity);\r\n\tm_ctrlGravUnit.SetUnitType(CUnitCtrl::m_STYP_UNIT.dblGravity);\r\n\tm_ctrlIniTemp.SetUnitType(CUnitCtrl::m_STYP_UNIT.dblInitTemp);\r\n\tm_ctrlIniTempUnit.SetUnitType(CUnitCtrl::m_STYP_UNIT.dblInitTemp);\r\n\r\n\tm_aCtrlConsiderOffset.RemoveAll();\r\n\tm_aCtrlLumpedMass.RemoveAll();\r\n\tm_aCtrlConsiderOffset.Add(IDC_ETC_PC_CONSIDER_OFFSET_CHK);\r\n\tm_aCtrlLumpedMass.Add(IDC_ETC_PC_STRUCT_MASS);\r\n\tm_aCtrlLumpedMass.Add(IDC_ETC_PC_STRUCT_MASS2);\r\n\tm_aCtrlLumpedMass.Add(IDC_ETC_PC_STRUCT_MASS3);\r\n\r\n// #if !defined(_CIVIL)\r\n//   GetDlgItem(IDC_ETC_PC_CONSIDER_OFFSET_CHK)->ShowWindow(FALSE);\r\n//   GetDlgItem(IDC_ETC_PC_MASS_TYPE3)->ShowWindow(FALSE);\r\n// #endif\r\n\r\n\tInitDialogData();\r\n\tCtrlManager();\t\r\n\r\n\tUpdateData(FALSE);\r\n\r\n#if defined (_DEBUG) && defined (_MEC)\r\n\tASSERT(FALSE); // MEC�� ��ȭ���ڰ� �ƴմϴ�! Ȯ�� ���.\r\n#endif\r\n\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// CtrlManager:\n//   if(m_nMassType != 1) m_bConsiderOffset = FALSE;\r\n//   if(m_nStructureMass == 1 ||m_nStructureMass == 2) m_bConsiderOffset = FALSE;\r\n// \r\n//   CDlgUtil::CtrlEnableDisable(this, m_aCtrlLumpedMass, m_nMassType == 1);\r\n//   CDlgUtil::CtrlEnableDisable(this, m_aCtrlConsiderOffset, m_nMassType == 1 && m_nStructureMass == 0);\r\n\r\n\tif(m_bConvertSelfWeight)\r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlLumpedMass, TRUE);\r\n\t\tif((m_nMassType == 0 && m_bConsiderOffset))\r\n\t\t{\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS2)->EnableWindow(TRUE);\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS3)->EnableWindow(TRUE);\r\n\t\t}\r\n\t\telse if(m_nMassType == 1)\r\n\t\t{\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS2)->EnableWindow(FALSE);\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS3)->EnableWindow(FALSE);\r\n\t\t}\r\n\t}\r\n\telse \r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlLumpedMass, FALSE);\r\n\t}\r\n\r\n\tif (m_nMassType == 1) CDlgUtil::CtrlEnableDisable(this, m_aCtrlConsiderOffset, FALSE);\r\n\telse                  CDlgUtil::CtrlEnableDisable(this, m_aCtrlConsiderOffset, TRUE);\r\n\r\n\t// _T(\"Lumped Mass\") & Consider Off-diagonal Masses _T(\"OFF\") �� ��츸 Option On/Off ���ð���\r\n\tBOOL bEnableConsiderRotMPF = FALSE;\r\n\tif (m_nMassType == 0 && !m_bConsiderOffset)   bEnableConsiderRotMPF = TRUE;\r\n\tGetDlgItem(IDC_ETC_CONSIDER_ROT_RIGID_MPF_CHK)->EnableWindow(bEnableConsiderRotMPF);\r\n\r\n\t//if(m_nStructureMass == 1 || m_nStructureMass == 2) m_bConsiderOffset = FALSE;\n\n// InitDialogData:\nT_STYP_D data;\r\n\tif (!m_pDoc->m_pAttrCtrl->GetStyp(data)) \r\n\t{\r\n\t\tdata.Initialize();\r\n\t\tdata.dblGravity=m_pDoc->m_pInitCtrl->DefaultGravity();\r\n\t}\r\n\r\n\tCString csGravity;\r\n\tcsGravity.Format(_T(\"%g\"), data.dblGravity);\r\n\tm_ctrlGravity.SetWindowText(csGravity);\r\n\r\n\tCString csIniTemp;\r\n\tcsIniTemp.Format(_T(\"%g\"), data.dblInitTemp);\r\n\tm_ctrlIniTemp.SetWindowText(csIniTemp);\r\n\r\n\tm_nStructType        = data.nStructureType;\r\n\tm_nMassType          = data.nMassType-1;\r\n\tm_nStructureMass     = data.nStructureMass - 1;  \r\n\tm_bConsiderOffset    = data.bConsiderOffset;\r\n\tm_bConvertSelfWeight = data.bConvertSelfWeight;\r\n\tm_bAlignBeam         = data.bFloorBeam;\r\n\tm_bAlignSlab         = data.bFloorSlab;\t\r\n\tm_bConsiderRotMPF    = data.bConsiderRotRigidMPF;\n\n// CtrlManager:\n//   if(m_nMassType != 1) m_bConsiderOffset = FALSE;\r\n//   if(m_nStructureMass == 1 ||m_nStructureMass == 2) m_bConsiderOffset = FALSE;\r\n// \r\n//   CDlgUtil::CtrlEnableDisable(this, m_aCtrlLumpedMass, m_nMassType == 1);\r\n//   CDlgUtil::CtrlEnableDisable(this, m_aCtrlConsiderOffset, m_nMassType == 1 && m_nStructureMass == 0);\r\n\r\n\tif(m_bConvertSelfWeight)\r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlLumpedMass, TRUE);\r\n\t\tif((m_nMassType == 0 && m_bConsiderOffset))\r\n\t\t{\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS2)->EnableWindow(TRUE);\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS3)->EnableWindow(TRUE);\r\n\t\t}\r\n\t\telse if(m_nMassType == 1)\r\n\t\t{\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS2)->EnableWindow(FALSE);\r\n\t\t\tGetDlgItem(IDC_ETC_PC_STRUCT_MASS3)->EnableWindow(FALSE);\r\n\t\t}\r\n\t}\r\n\telse \r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlLumpedMass, FALSE);\r\n\t}\r\n\r\n\tif (m_nMassType == 1) CDlgUtil::CtrlEnableDisable(this, m_aCtrlConsiderOffset, FALSE);\r\n\telse                  CDlgUtil::CtrlEnableDisable(this, m_aCtrlConsiderOffset, TRUE);\r\n\r\n\t// _T(\"Lumped Mass\") & Consider Off-diagonal Masses _T(\"OFF\") �� ��츸 Option On/Off ���ð���\r\n\tBOOL bEnableConsiderRotMPF = FALSE;\r\n\tif (m_nMassType == 0 && !m_bConsiderOffset)   bEnableConsiderRotMPF = TRUE;\r\n\tGetDlgItem(IDC_ETC_CONSIDER_ROT_RIGID_MPF_CHK)->EnableWindow(bEnableConsiderRotMPF);\r\n\r\n\t//if(m_nStructureMass == 1 || m_nStructureMass == 2) m_bConsiderOffset = FALSE;",
+  "rcFile": "ui_src/wg_cmd/wgnx_cmd.rc",
+  "sourceFile": "ui_src/wg_cmd/EtcStypDlg.cpp",
+  "warnings": []
+}
