@@ -1,0 +1,104 @@
+#if !defined(AFX_CPGLATERALTORSIONTABJDLG_H__)
+#define AFX_CPGLATERALTORSIONTABJDLG_H__
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+// CPGLateralTorsionTabJDlg.h : header file
+//
+
+/////////////////////////////////////////////////////////////////////////////
+// CCPGLateralTorsionTabJDlg dialog
+
+#include "..\wg_base\ChildDialog.h"
+
+#include "..\wg_db\wg_db_TextUnit.h"
+#include "..\wg_db\wg_db_EditUnit.h"
+
+#include "..\wg_base\wg_base_NotifyCtrl.h"
+#include "..\wg_db\wg_db_DBDoc.h"
+#include "..\wg_db\wg_db_SelectCtrl.h"
+
+
+/////////////////////////////////
+#include "HeaderPre.h"   //////////
+/////////////////////////////////
+
+class CCPGLateraTorsionDlg;
+
+class __MY_EXT_CLASS__ CCPGLateralTorsionTabJDlg : public CChildDialog
+{
+// Construction
+public:
+	CCPGLateralTorsionTabJDlg(CWnd* pParent = NULL, int nType = 0);   // standard constructor
+
+	
+// Dialog Data
+	//{{AFX_DATA(CCPGLateralTorsionTabJDlg)
+	enum { IDD = IDD_DGN_CPG_RATER_TORSION_TAB_DLG };
+	
+	int m_nType; //0 :PSC Rating.  1 : Steel Rating
+	BOOL	m_bUse;
+
+	CEditUnit	m_dI;
+	CEditUnit	m_dCd;
+	int	m_iAlpha;
+	CEditUnit	m_dA;
+
+	CTextUnit	m_dIUnit;
+	CTextUnit	m_dCdUnit;	
+	CTextUnit	m_dAUnit;
+		// NOTE: the ClassWizard will add data members here
+	//}}AFX_DATA
+
+	//void SetData(T_CGLT_DATA shearData);
+	//T_CGLT_DATA GetData();
+
+// 	CArray <UINT, UINT> m_aAlphaCtrl; // Ctrl ID for Alpha (for k1)
+// 	CArray <UINT, UINT> m_aSBPBCtrl;  // Ctrl ID for spacing between the parallel beam (a)
+
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CCPGLateralTorsionTabJDlg)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	//}}AFX_VIRTUAL
+
+public:
+	void GetCgltData();
+	void SetCgltData();
+	void SetAllControlEnable(bool enable);
+
+	CCPGLateraTorsionDlg* m_pParent;
+	T_CGLT_DATA m_Data;
+
+protected:
+
+	void InitCtrl();
+	void SetInitUnit();
+	void InitialDlgData();
+
+	BOOL Data2Dlg();
+	BOOL Dlg2Data();
+
+// Implementation
+protected:
+
+	// Generated message map functions
+	//{{AFX_MSG(CCPGLateralTorsionTabJDlg)
+	virtual BOOL DestroyWindow();
+	virtual BOOL OnInitDialog();
+	afx_msg void OnUseChk();	
+	
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+};
+
+/////////////////////////////////
+#include "HeaderPost.h"   //////////
+/////////////////////////////////
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_CPGLATERALTORSIONTABJDLG_H__)

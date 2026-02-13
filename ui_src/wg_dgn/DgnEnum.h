@@ -1,0 +1,78 @@
+#pragma once
+
+#define COLPOS_INT 0
+#define COLPOS_EDG 1
+#define COLPOS_COR 2
+
+#define	COLEDGE_DIR_XPOS 0
+#define	COLEDGE_DIR_XNEG 1
+#define	COLEDGE_DIR_YPOS 2
+#define	COLEDGE_DIR_YNEG 3
+#define COLEDGE_DIR_PARX 11 // X축과 평행
+#define COLEDGE_DIR_PARY 12 // Y축과 평행
+
+enum DGN_LCOM_MAX_TYPE
+{
+	DGN_LCOM_MAX = 1, DGN_LCOM_MIN, DGN_LCOM_ALL
+};
+
+enum EN_SHELFORC_IDX
+{
+	EN_SHELFORC_IDX_MXX =  0,
+	EN_SHELFORC_IDX_MYY =  4,
+	EN_SHELFORC_IDX_MXY =  8,
+	EN_SHELFORC_IDX_FXX = 12,
+	EN_SHELFORC_IDX_FYY = 16,
+	EN_SHELFORC_IDX_FXY = 20,
+	EN_SHELFORC_IDX_VXX = 24,
+	EN_SHELFORC_IDX_VYY = 28,
+	EN_SHELFORC_IDX_SXT = 32,
+	EN_SHELFORC_IDX_SNT = 36,
+	EN_SHELFORC_IDX_SXB = 40,
+	EN_SHELFORC_IDX_SNB = 44
+};
+
+enum EN_DGN_SEIS_TYPE
+{
+	EN_DGN_SEIS_NONE = 0, // NONE.
+	EN_DGN_SEIS_XYZ,      // XY, XY+Z.
+	EN_DGN_SEIS_Z,        // Only Z.
+};
+
+enum class EN_DGN_SEIS_CLASS : UINT
+{
+	NONE = 0,
+	PRIMARY,
+	SECONDARY,
+	NONDISSIPATIVE,
+};
+
+enum class EN_DGN_AXIS
+{
+	LY = 0, // local y
+	LZ      // local z
+};
+
+enum class EN_DGNLCOM_APP
+{
+	NONE = 0,
+	STRN_SERV,
+	SPEC_SERV,
+	VERT_SERV,
+	STRN_SERV_UG,
+	SPEC_SERV_UG
+};
+
+enum class dgnCategory : long
+{
+	enNone = 0,
+	enBeamCHK,
+	enBeamDGN,
+	enColmCHK,
+	enColmDGN,
+
+	enPBeamCHK,
+	enPBeamDGN,
+	enPColmCHK,
+	enPColmDGN,
+};
