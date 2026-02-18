@@ -1,0 +1,988 @@
+#include "stdafx.h"
+#include "RptRatingSTL_AASHTO_LRFR19.h"
+
+#include "Dgn_RatingRptManager.h"
+
+#include "..\wg_db\FileCtrl.h"
+#include "..\wg_db\AttrCtrl.h"
+#include "..\wg_db\AttrCtrl2.h"
+#include "..\wg_db\PostCtrl.h"
+#include "..\wg_db\AnalysisResult.h"
+#include "..\wg_db\DBLib.h"
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+CRptRatingSTL_AASHTO_LRFR19::CRptRatingSTL_AASHTO_LRFR19()
+{
+    m_pDoc = CDBDoc::GetDocPoint(); ASSERT(m_pDoc);
+    m_bStopExecute = FALSE;
+    m_RpasD.Initialize();
+    m_pDoc->m_pAttrCtrl2->GetRpas(m_RpasD);
+
+    m_pDoc->SetCivilCodeDgn(STL_AASHTO_LRFD19);
+    m_pDataCtrl = new CCRCDataCtrl();
+
+    m_pForcCtrl = m_pDataCtrl->Get_ForceCtrlPointer();
+    if ( m_pForcCtrl==NULL ) { ASSERT(0); return; }
+
+}
+
+CRptRatingSTL_AASHTO_LRFR19::~CRptRatingSTL_AASHTO_LRFR19()
+{
+    if ( m_pDataCtrl )
+    {
+        delete m_pDataCtrl;
+        m_pDataCtrl = NULL;
+    }
+}
+
+BOOL CRptRatingSTL_AASHTO_LRFR19::Execute_RatingReport(int iDgnCode, CString strPath, int iPrintOpt, BOOL bSaveImage)
+{
+    if ( m_bStopExecute ) return FALSE;
+    Progress(3, 0);
+    int nProgressPercent = 0;
+
+    if ( m_bStopExecute ) return FALSE;
+    nProgressPercent +=5;
+    Progress(0, nProgressPercent);
+    Progress(2, nProgressPercent);
+
+    if ( m_bStopExecute ) return FALSE;
+    nProgressPercent +=5;
+    Progress(0, nProgressPercent);
+    Progress(2, nProgressPercent);
+
+    BOOL bSuccess = TRUE;
+
+    CAnalysisResult *pAnalysisResult = m_pDoc->m_pPostCtrl->GetAnalysisResult();
+
+    T_RPAS_D RpasD; RpasD.Initialize();
+    m_pDoc->m_pAttrCtrl2->GetRpas(RpasD);
+
+    // Print항목이 없을 경우 강제로 ProgressBar를 닫도록 조치!!
+    CArray<T_RPRS_K, T_RPRS_K> aPrintElemKey;
+    m_pDoc->m_pAttrCtrl2->GetRprsKeyList(aPrintElemKey);
+
+    ArrElemPairKey aPrintElemPairKey;
+    CDBLib::ConvertToElemPairKey(EN_EL_BEAM, aPrintElemKey, aPrintElemPairKey);
+
+    CArray<T_RPRV_K, T_RPRV_K> aPrintVBeamKey;
+    m_pDoc->m_pAttrCtrl2->GetRprvKeyList(aPrintVBeamKey);
+
+    if (aPrintVBeamKey.GetSize() > 0)
+    {
+        ArrElemPairKey aPrintVBeamPairKey;
+        CDBLib::ConvertToElemPairKey(EN_EL_VBEAM, aPrintVBeamKey, aPrintVBeamPairKey);
+        aPrintElemPairKey.Append(aPrintVBeamPairKey);
+    }
+
+    int nPrintElemSize = aPrintElemPairKey.GetSize();
+    if ( nPrintElemSize==0 )
+    {
+        if ( m_bStopExecute ) return FALSE;
+        nProgressPercent = 100;
+        Progress(0, nProgressPercent);
+        Progress(2, nProgressPercent);
+
+        CString strErrMessage = _LS(IDS_DGN_PSC_RATING_NOT_INPUT_MEMBER); // _T("출력할 요소의 설계정보가 없습니다.")
+        AfxMessageBox(strErrMessage);
+
+        return FALSE;
+    }
+
+    int nProgressIncrementPercent = nPrintElemSize == 0 ? 40 : 40/nPrintElemSize;
+
+    int i=0; // 요소 
+    int j=0; // I/J
+    int k=0; // Positive / Negative
+    int kk=0;
+    int nIJ=0, nMaxMin=0;
+
+    CDesignLoadRating *pCheckGirder = m_pDoc->m_pPostCtrl->GetLoadRating();
+
+    try
+    {
+        RAT_LRAT_RPT RatResRpt;
+        RatResRpt.nMeasureType =  RpasD.nMeasurement;
+
+        for ( i=0; i<nPrintElemSize; ++i )
+        {
+            auto  ElemK = aPrintElemPairKey[i];
+
+            RAT_ELEM_RES RatElemR;
+            RatElemR.nElem = ElemK.first;
+
+            T_RPRS_D RkpoD; RkpoD.Initialize();  // 출력 위치
+            T_SECT_D SectD; SectD.Initialize();
+
+			if (ElemK.second == EN_EL_BEAM)
+			{
+				if (!m_pDoc->m_pAttrCtrl2->GetRprs(ElemK.first, RkpoD)) continue;
+				T_ELEM_D ElemD; ElemD.Initialize();
+				if (!m_pDoc->m_pAttrCtrl->GetElem(ElemK.first, ElemD)) continue;
+				m_pDoc->m_pPostCtrl->GetSectPost(ElemD.elpro, SectD);
+			}
+			else if (ElemK.second == EN_EL_VBEAM)
+			{
+				T_RPRV_D RprvD; RprvD.Initialize();
+				if (!m_pDoc->m_pAttrCtrl2->GetRprv(ElemK.first, RprvD)) continue;
+                RkpoD=RprvD;
+
+				T_VBEM_D VbemD; VbemD.Initialize();
+				if (m_pDoc->m_pAttrCtrl2->GetVbem(ElemK.first, VbemD))
+				{
+					T_SECV_D SecvD; SecvD.Initialize();
+					m_pDoc->m_pAttrCtrl2->GetSecv(ElemK.first, SecvD);
+					SecvD.ConvertToSect(SectD);
+				}
+			}
+			else ASSERT(0);
+
+            BOOL bPrintI = (RkpoD.nPrintChk == 0 || RkpoD.nPrintChk == 2);
+            BOOL bPrintJ = (RkpoD.nPrintChk == 1 || RkpoD.nPrintChk == 2);
+            RatElemR.nPrtOpt = RkpoD.nPrintChk;
+
+            double dVuFactor = 1.0;
+            if ( SectD.SectBefore.Shape == D_SECT_SHAPE_COMPO_B ||
+                SectD.SectBefore.Shape == D_SECT_SHAPE_COMPO_TUB ||
+                SectD.SectBefore.Shape == D_SECT_SHAPE_COMPO_STLG_B ||
+                SectD.SectBefore.Shape == D_SECT_SHAPE_COMPO_STLG_TUB)
+                dVuFactor = 0.5;
+
+            T_RCFC_D RcfcD_Design;
+            T_RCFC_D RcfcD_Legal;
+            T_RCFC_D RcfcD_Permit;
+
+            T_RCSC_D RcscD_Design;
+            T_RCSC_D RcscD_Legal;
+            T_RCSC_D RcscD_Permit;
+
+            T_RCGS_D RcgsD_Design;
+            T_RCGS_D RcgsD_Legal;
+            T_RCGS_D RcgsD_Permit;
+
+            T_RCFA_INF_LIFE_D RcfaInfD;
+            T_RCFA_FIN_LIFE_D RcfaFinD;
+
+
+            T_RCST_CASE RcstCase; RcstCase.Initialize();
+
+            pAnalysisResult->GetStlRcfcResult19(ElemK, ENUM_DESIGN, RcfcD_Design);
+            pAnalysisResult->GetStlRcfcResult19(ElemK, ENUM_LEGAL, RcfcD_Legal);
+            pAnalysisResult->GetStlRcfcResult19(ElemK, ENUM_PERMIT, RcfcD_Permit);
+
+            RatElemR.FlexR.bChkDesign = CheckFlexReportData(ElemK, RcfcD_Design);
+            RatElemR.FlexR.bChkLegal  = CheckFlexReportData(ElemK, RcfcD_Legal);
+            RatElemR.FlexR.bChkPermit = CheckFlexReportData(ElemK, RcfcD_Permit);
+
+            BOOL bIsFlexRes = RatElemR.FlexR.bChkDesign || RatElemR.FlexR.bChkLegal || RatElemR.FlexR.bChkPermit;
+            RatElemR.FlexR.bChk = bIsFlexRes;
+
+            pAnalysisResult->GetStlRcscResult19(ElemK, ENUM_DESIGN, RcscD_Design);
+            pAnalysisResult->GetStlRcscResult19(ElemK, ENUM_LEGAL, RcscD_Legal);
+            pAnalysisResult->GetStlRcscResult19(ElemK, ENUM_PERMIT, RcscD_Permit);
+
+            RatElemR.ShearR.bChkDesign = CheckShearReportData(ElemK, RcscD_Design);
+            RatElemR.ShearR.bChkLegal  = CheckShearReportData(ElemK, RcscD_Legal);
+            RatElemR.ShearR.bChkPermit = CheckShearReportData(ElemK, RcscD_Permit);
+
+            BOOL bIsShearRes = RatElemR.ShearR.bChkDesign || RatElemR.ShearR.bChkLegal || RatElemR.ShearR.bChkPermit;
+            RatElemR.ShearR.bChk = bIsShearRes;
+
+            pAnalysisResult->GetStlRcgsResult19(ElemK, ENUM_DESIGN, RcgsD_Design);
+            pAnalysisResult->GetStlRcgsResult19(ElemK, ENUM_LEGAL, RcgsD_Legal);
+            pAnalysisResult->GetStlRcgsResult19(ElemK, ENUM_PERMIT, RcgsD_Permit);
+
+            RatElemR.StressR.bChkDesign = CheckSLSReportData(ElemK, RcgsD_Design);
+            RatElemR.StressR.bChkLegal  = CheckSLSReportData(ElemK, RcgsD_Legal);
+            RatElemR.StressR.bChkPermit = CheckSLSReportData(ElemK, RcgsD_Permit);
+
+            BOOL bIsStressRes = RatElemR.StressR.bChkDesign || RatElemR.StressR.bChkLegal || RatElemR.StressR.bChkPermit;
+            RatElemR.StressR.bChk = bIsStressRes;
+
+            pAnalysisResult->GetStlRcfaInfResult(ElemK, RcfaInfD);
+            pAnalysisResult->GetStlRcfaFinResult(ElemK, RcfaFinD);
+
+            RatElemR.FatiInfR.bChk = CheckFatigueReportDataINF(ElemK, RcfaInfD);
+            RatElemR.FatiFinR.bChk = CheckFatigueReportDataFIN(ElemK, RcfaFinD);
+
+            BOOL bIsFatiRes =  RatElemR.FatiInfR.bChk || RatElemR.FatiFinR.bChk;
+     
+            if ( !bIsFlexRes && !bIsShearRes && !bIsStressRes && !bIsFatiRes ) continue;
+
+            // 요소별..
+            for ( j=0; j<2; j++ ) // I,J
+            {
+                if ( j==0 && (!bPrintI) ) continue;
+                if ( j==1 && (!bPrintJ) ) continue;
+
+                if ( bIsFlexRes==TRUE )
+                {
+                    RatElemR.FlexR.bChk = TRUE;
+                    for ( k=0; k<2; ++k )
+                    {
+                        int nIdx=j*2+k;
+                        T_RCCR_BASE &FlexKB_Design = RcfcD_Design.FlexR[nIdx];
+                        ConvertFlexDataForReport(j, k, ENUM_DESIGN, ElemK, FlexKB_Design, RatElemR);
+                        T_RCCR_BASE &FlexKB_Legal = RcfcD_Legal.FlexR[nIdx];
+                        ConvertFlexDataForReport(j, k, ENUM_LEGAL, ElemK, FlexKB_Legal, RatElemR);
+                        T_RCCR_BASE &FlexKB_Permit = RcfcD_Permit.FlexR[nIdx];
+                        ConvertFlexDataForReport(j, k, ENUM_PERMIT, ElemK, FlexKB_Permit, RatElemR);
+                    }
+                }
+
+                if ( bIsShearRes==TRUE )
+                {
+                    RatElemR.ShearR.bChk = TRUE;
+                    T_RCCR_BASE &ShearKB_Design = RcscD_Design.ShearR[j];
+                    ConvertShearDataForReport(j, k, ENUM_DESIGN, dVuFactor, ElemK, ShearKB_Design, RatElemR);
+                    T_RCCR_BASE &ShearKB_Legal = RcscD_Legal.ShearR[j];
+                    ConvertShearDataForReport(j, k, ENUM_LEGAL, dVuFactor, ElemK, ShearKB_Legal, RatElemR);
+                    T_RCCR_BASE &ShearKB_Permit = RcscD_Permit.ShearR[j];
+                    ConvertShearDataForReport(j, k, ENUM_PERMIT, dVuFactor, ElemK, ShearKB_Permit, RatElemR);
+                }
+
+                if ( bIsStressRes==TRUE )
+                {
+                    RatElemR.StressR.bChk = TRUE;
+                    for ( k=0; k<2; ++k )
+                    {
+                        int nIdx=j*3+k+1;
+                        T_RCCR_BASE &StreKB_Design = RcgsD_Design.StressR[nIdx];
+                        ConvertSLSDataForReport(j, k, ENUM_DESIGN, ElemK, StreKB_Design, RatElemR);
+                        T_RCCR_BASE &StreKB_Legal = RcgsD_Legal.StressR[nIdx];
+                        ConvertSLSDataForReport(j, k, ENUM_LEGAL, ElemK, StreKB_Legal, RatElemR);
+                        T_RCCR_BASE &StreKB_Permit = RcgsD_Permit.StressR[nIdx];
+                        ConvertSLSDataForReport(j, k, ENUM_PERMIT, ElemK, StreKB_Permit, RatElemR);
+                    }
+                }
+
+                if ( bIsFatiRes==TRUE )
+                {
+                    RatElemR.FatiR.bChk = TRUE;
+                    for ( k=0; k<4; ++k )
+                    {
+                        int x = k;
+                        if ( j == 1 ) x = 4 + k;
+                        T_RCCR_BASE &FatiINF = RcfaInfD.FatiInfR[x];
+                        if ( FatiINF.ElemK>0 )
+                        {
+                            T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(FatiINF.RCaseK, FatiINF.bDCmax, FatiINF.bDWmax, FatiINF.bTEmax, FatiINF.nConcurrent);
+
+                            T_RCFA_INF_LIFE_CASE FatiInfC;
+                            pAnalysisResult->GetStlFatigueRatingINF(ElemK, RlcsKey, FatiInfC);
+
+                            T_RLCS_D TRlcsD; TRlcsD.Initialize();
+                            m_pDoc->m_pAttrCtrl2->GetRlcs(FatiINF.RCaseK, TRlcsD);
+
+                            RatElemR.FatiInfR.FatiInfChk[x].iEvalMethod = TRlcsD.nEvaluMethod;
+                            RatElemR.FatiInfR.FatiInfChk[x].iLiveModel = TRlcsD.nEvaluation;
+
+                            Convert_FatigueElemPosINF(TRlcsD.strCaseName, j, x, FatiInfC.FatiB[j], RatElemR.FatiInfR.FatiInfChk[x]);
+                        }
+                    }
+
+                    for ( k=0; k<4; ++k )
+                    {
+                        int x = k;
+                        if ( j == 1 ) x = 4 + k;
+
+                        T_RCCR_BASE &FatiFIN = RcfaFinD.FatiFinR[k];
+                        if ( FatiFIN.ElemK>0 )
+                        {
+                            T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(FatiFIN.RCaseK, FatiFIN.bDCmax, FatiFIN.bDWmax, FatiFIN.bTEmax, FatiFIN.nConcurrent);
+
+                            T_RCFA_FIN_LIFE_CASE FatiFinC;
+                            pAnalysisResult->GetStlFatigueRatingFIN(ElemK, RlcsKey, FatiFinC);
+
+                            T_RLCS_D TRlcsD; TRlcsD.Initialize();
+                            m_pDoc->m_pAttrCtrl2->GetRlcs(FatiFIN.RCaseK, TRlcsD);
+
+                            RatElemR.FatiFinR.FatiFinChk[x].iEvalMethod = TRlcsD.nEvaluMethod;
+                            RatElemR.FatiFinR.FatiFinChk[x].iLiveModel = TRlcsD.nEvaluation;
+
+                            Convert_FatigueElemPosFIN(TRlcsD.strCaseName, j, x, FatiFinC.FatiB[j], RatElemR.FatiFinR.FatiFinChk[x]);
+                        }
+                    }
+                }
+            }
+
+            RatElemR.FatiFinR.bReport[0] = RkpoD.bFaT_MIN;
+            RatElemR.FatiFinR.bReport[1] = RkpoD.bFaT_EVL1;
+            RatElemR.FatiFinR.bReport[2] = RkpoD.bFaT_EVL2;
+            RatElemR.FatiFinR.bReport[3] = RkpoD.bFaT_MEAN;
+
+            RatResRpt.aRatElemR.Add(RatElemR);
+        }
+
+        // Summary
+
+        CArray<T_RLCS_K, T_RLCS_K> aRlcsKey;
+        m_pDoc->m_pAttrCtrl2->GetRlcsKeyList(aRlcsKey);
+        int nRlcsKeySize = aRlcsKey.GetSize();
+
+        for ( i=0; i<nRlcsKeySize; ++i )
+        {
+            T_RLCS_K RlcsK = aRlcsKey[i];
+            T_RLCS_D RlcsD; RlcsD.Initialize();
+            if ( !m_pDoc->m_pAttrCtrl2->GetRlcs(RlcsK, RlcsD) ) continue;
+
+            CString strMvldName;
+            GetMvldLoadCaseName(RlcsD.PrimaryVeh.LoadCaseKey, strMvldName);
+
+            RAT_LRSR_RCASE_B LrsrD;
+            LrsrD.nEvaluation  = RlcsD.nEvaluation;
+            LrsrD.nRCaseType   = RlcsD.nLimitState;
+            LrsrD.strRCaseName = RlcsD.strCaseName;
+            LrsrD.strMVName    = strMvldName;
+
+
+            for ( j=0; j<2; ++j )
+            {
+                LrsrD.dFactorDCbe[j] = RlcsD.RateLoad[0].dFactor[j];
+                LrsrD.dFactorDC[j]   = RlcsD.RateLoad[1].dFactor[j];
+                LrsrD.dFactorDW[j]   = RlcsD.RateLoad[2].dFactor[j];
+            }
+            LrsrD.dFactorTE = RlcsD.RateLoad[3].dFactor[0];
+            LrsrD.dFactorTG = RlcsD.RateLoad[4].dFactor[0];
+            LrsrD.dFactorP  = RlcsD.RateLoad[5].dFactor[0];
+            LrsrD.dFactorSE = RlcsD.RateLoad[6].dFactor[0];
+            LrsrD.dFactorUS = RlcsD.RateLoad[7].dFactor[0];
+            LrsrD.dFactorPR = RlcsD.PrimaryVeh.Factor;
+            LrsrD.dFactorAD = RlcsD.AdjacentVeh.Factor;
+
+
+            if ( RlcsD.nLimitState==1 ) // Strength
+            {
+                T_RSCR_STRN StrnCR;
+                pAnalysisResult->GetStlRCaseStrnElem(RlcsK, StrnCR);
+
+                T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RlcsK, StrnCR.FlexR.bDCmax, StrnCR.FlexR.bDWmax, StrnCR.FlexR.bTEmax, StrnCR.FlexR.nConcurrent);
+
+                T_RCST_CASE FlexC;
+				ElemPairK EPairFlexK(StrnCR.FlexR.ElemK, StrnCR.FlexR.nBeamType);
+                pAnalysisResult->GetStlStrengthRating(EPairFlexK, RlcsKey, FlexC);
+
+                RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RlcsK, StrnCR.ShearR.bDCmax, StrnCR.ShearR.bDWmax, StrnCR.ShearR.bTEmax, StrnCR.ShearR.nConcurrent);
+
+                T_RCST_CASE ShearC;
+                ElemPairK EPairShearK(StrnCR.ShearR.ElemK, StrnCR.ShearR.nBeamType);
+                pAnalysisResult->GetStlStrengthRating(EPairShearK, RlcsKey, ShearC);
+
+
+                Convert_FlexureElem4RCase(FlexC.RcstB[StrnCR.FlexR.nPos], LrsrD.FlexD);
+                //
+                Convert_ShearElem4RCase(ShearC.RcstB[StrnCR.ShearR.nPos], LrsrD.ShearD);
+
+                LrsrD.dWeight = FlexC.RcstB[StrnCR.FlexR.nPos].dRT;
+
+            }
+            else if ( RlcsD.nLimitState==0 ) // Service
+            {
+                T_RSCR_SERV ServCR;
+                pAnalysisResult->GetStlRCaseServElem(RlcsK, ServCR);
+
+                T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RlcsK, ServCR.StressR.bDCmax, ServCR.StressR.bDWmax, ServCR.StressR.bTEmax, ServCR.StressR.nConcurrent);
+
+                T_RCSS_CASE RcssC;
+                ElemPairK EPairServK(ServCR.StressR.ElemK, ServCR.StressR.nBeamType);
+                pAnalysisResult->GetStlStressRating(EPairServK, RlcsKey, RcssC);
+
+                Convert_StressElem4RCase(RcssC.StreB[ServCR.StressR.nPos], LrsrD.StressD[0]);
+                LrsrD.dWeight = RcssC.StreB[ServCR.StressR.nPos].dRT[0];
+
+            }
+
+            if ( RlcsD.nLimitState!=2 )
+            {
+                if ( RlcsD.nEvaluation==0 ) RatResRpt.LrsrD.DesignLR.Add(LrsrD);
+                else if ( RlcsD.nEvaluation==1 ) RatResRpt.LrsrD.LegalLR.Add(LrsrD);
+                else if ( RlcsD.nEvaluation==2 ) RatResRpt.LrsrD.PermitLR.Add(LrsrD);
+            }
+        }
+
+        // 계산서 출력
+        CDgn_RatingRptManager myReport;
+
+        CString strDataPath = m_pDoc->GetPathName();
+        CString strBasePath = m_pDoc->GetProgramPath() + _T("Excel Base File\\");
+
+        RatResRpt.nDgnCode = iDgnCode;
+        RatResRpt.strBasePath = strBasePath;
+        RatResRpt.strDataPath = strDataPath;
+        RatResRpt.strPath     = strPath;
+        RatResRpt.nPrintOpt   = iPrintOpt;
+
+        myReport.Print_STLRatingAASHTO(strBasePath, strDataPath, strPath, RatResRpt);
+        //myReport.Print_RFReport(strBasePath, strDataPath, strPath, LcomInfo, OptionData, arStrRptSectD, aRptData, aRptCsdInData);
+    }
+    catch ( ... )
+    {
+        bSuccess = FALSE;
+    }
+
+    return bSuccess;
+}
+
+bool CRptRatingSTL_AASHTO_LRFR19::CheckFlexReportData(ElemPairK ElemK, T_RCFC_D RcfcD)
+{
+    T_RCST_CASE RcstCase; RcstCase.Initialize();
+
+    int j;
+
+    for ( int i=0; i<4; i++ )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RcfcD.FlexR[i].RCaseK, RcfcD.FlexR[i].bDCmax, RcfcD.FlexR[i].bDWmax, RcfcD.FlexR[i].bTEmax, RcfcD.FlexR[i].nConcurrent);
+
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlStrengthRating(ElemK, RlcsKey, RcstCase);
+
+        if ( i==0 || i==1) //I
+        {
+            j = 0;
+        }
+        else //J
+        {
+            j = 1;
+        }
+
+        if ( RcstCase.RcstB[j].bChk ) return true;
+    }
+
+    return false;
+}
+
+bool CRptRatingSTL_AASHTO_LRFR19::CheckShearReportData(ElemPairK ElemK, T_RCSC_D RcscD)
+{
+    T_RCST_CASE RcstCase; RcstCase.Initialize();
+
+    for ( int i=0; i<2; i++ )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RcscD.ShearR[i].RCaseK, RcscD.ShearR[i].bDCmax, RcscD.ShearR[i].bDWmax, RcscD.ShearR[i].bTEmax, RcscD.ShearR[i].nConcurrent);
+
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlStrengthRating(ElemK, RlcsKey, RcstCase);
+
+        if ( RcstCase.RcstB[i].bChk ) return true;
+    }
+
+    return false;
+}
+
+bool CRptRatingSTL_AASHTO_LRFR19::CheckSLSReportData(ElemPairK ElemK, T_RCGS_D RcgsD)
+{
+    T_RCSS_CASE RcssCase; RcssCase.Initialize();
+
+    int j;
+
+    for ( int i=0; i<6; i++ )
+    {
+        if ( i != 0 && i != 3 )
+        {
+            T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RcgsD.StressR[i].RCaseK, RcgsD.StressR[i].bDCmax, RcgsD.StressR[i].bDWmax, RcgsD.StressR[i].bTEmax, RcgsD.StressR[i].nConcurrent);
+
+            m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlStressRating(ElemK, RlcsKey, RcssCase);
+
+            if ( i == 1 || i == 2 )
+            {
+                j = 0;
+            }
+            else
+            {
+                j = 1;
+            }
+            if ( RcssCase.StreB[j].bChk ) return true;
+        }
+    }
+
+    return false;
+}
+
+bool CRptRatingSTL_AASHTO_LRFR19::CheckFatigueReportDataINF(ElemPairK ElemK, T_RCFA_INF_LIFE_D RcfaD)
+{
+    T_RCFA_INF_LIFE_CASE RcfaCase; RcfaCase.Initialize();
+
+    int j;
+
+    for ( int i=0; i<8; i++ )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RcfaD.FatiInfR[i].RCaseK, RcfaD.FatiInfR[i].bDCmax, RcfaD.FatiInfR[i].bDWmax, RcfaD.FatiInfR[i].bTEmax, RcfaD.FatiInfR[i].nConcurrent);
+
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlFatigueRatingINF(ElemK, RlcsKey, RcfaCase);
+
+        if ( i < 4 ) j = 0;
+        else j = 1;
+
+        if ( RcfaCase.FatiB[j].DRCFA.bChk ) return true;
+    }
+
+    return false;
+}
+
+bool CRptRatingSTL_AASHTO_LRFR19::CheckFatigueReportDataFIN(ElemPairK ElemK, T_RCFA_FIN_LIFE_D RcfaD)
+{
+    T_RCFA_FIN_LIFE_CASE RcfaCase; RcfaCase.Initialize();
+
+    int j;
+
+    for ( int i=0; i<8; i++ )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(RcfaD.FatiFinR[i].RCaseK, RcfaD.FatiFinR[i].bDCmax, RcfaD.FatiFinR[i].bDWmax, RcfaD.FatiFinR[i].bTEmax, RcfaD.FatiFinR[i].nConcurrent);
+
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlFatigueRatingFIN(ElemK, RlcsKey, RcfaCase);
+
+        if ( i < 4 ) j = 0;
+        else j = 1;
+
+        if ( RcfaCase.FatiB[j].DRCFA.bChk ) return true;
+    }
+
+    return false;
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::ConvertFlexDataForReport(int j, int k, int nSubType, ElemPairK ElemK, T_RCCR_BASE CriticD, RAT_ELEM_RES &RatElemR)
+{
+    if ( CriticD.ElemK>0 )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(CriticD.RCaseK, CriticD.bDCmax, CriticD.bDWmax, CriticD.bTEmax, CriticD.nConcurrent);
+
+        int nEndIdx = j*2+k;
+        BOOL bPositiveM = (k==0);
+        T_RCST_CASE FlexC;
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlStrengthRating(ElemK, RlcsKey, FlexC);
+
+        T_RLCS_D TRlcsD; TRlcsD.Initialize();
+        m_pDoc->m_pAttrCtrl2->GetRlcs(CriticD.RCaseK, TRlcsD);
+
+        switch ( nSubType )
+        {
+        case ENUM_DESIGN:
+            Convert_FlexureElemPos(TRlcsD.strCaseName, bPositiveM, FlexC.RcstB[j], RatElemR.FlexR.FlexDesign[nEndIdx]);
+            break;
+        case ENUM_LEGAL:
+            Convert_FlexureElemPos(TRlcsD.strCaseName, bPositiveM, FlexC.RcstB[j], RatElemR.FlexR.FlexLegal[nEndIdx]);
+            break;
+        case ENUM_PERMIT:
+            Convert_FlexureElemPos(TRlcsD.strCaseName, bPositiveM, FlexC.RcstB[j], RatElemR.FlexR.FlexPermit[nEndIdx]);
+            break;
+        default:
+            ASSERT(0);
+            break;
+        }
+    }
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::ConvertShearDataForReport(int j, int k, int nSubType, double dVuFactor, ElemPairK ElemK, T_RCCR_BASE CriticD, RAT_ELEM_RES &RatElemR)
+{
+    if ( CriticD.ElemK>0 )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(CriticD.RCaseK, CriticD.bDCmax, CriticD.bDWmax, CriticD.bTEmax, CriticD.nConcurrent);
+
+        T_RCST_CASE ShearC;
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlStrengthRating(ElemK, RlcsKey, ShearC);
+
+        T_RLCS_D TRlcsD; TRlcsD.Initialize();
+        m_pDoc->m_pAttrCtrl2->GetRlcs(CriticD.RCaseK, TRlcsD);
+
+        switch ( nSubType )
+        {
+        case ENUM_DESIGN:
+            Convert_ShearElemPos(dVuFactor, TRlcsD.strCaseName, ShearC.RcstB[j], RatElemR.ShearR.ShrDesign[j]);
+            break;
+        case ENUM_LEGAL:
+            Convert_ShearElemPos(dVuFactor, TRlcsD.strCaseName, ShearC.RcstB[j], RatElemR.ShearR.ShrLegal[j]);
+            break;
+        case ENUM_PERMIT:
+            Convert_ShearElemPos(dVuFactor, TRlcsD.strCaseName, ShearC.RcstB[j], RatElemR.ShearR.ShrPermit[j]);
+            break;
+        default:
+            ASSERT(0);
+            break;
+        }
+    }
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::ConvertSLSDataForReport(int j, int k, int nSubType, ElemPairK ElemK, T_RCCR_BASE CriticD, RAT_ELEM_RES &RatElemR)
+{
+    if ( CriticD.ElemK>0 )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(CriticD.RCaseK, CriticD.bDCmax, CriticD.bDWmax, CriticD.bTEmax, CriticD.nConcurrent);
+
+        int nEndIdx = j*2+k;
+        BOOL bIsComp = (k==0);
+
+        T_RCSS_CASE StressC;
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlStressRating(ElemK, RlcsKey, StressC);
+
+        T_RLCS_D TRlcsD; TRlcsD.Initialize();
+        m_pDoc->m_pAttrCtrl2->GetRlcs(CriticD.RCaseK, TRlcsD);
+
+        switch ( nSubType )
+        {
+        case ENUM_DESIGN:
+            Convert_StressElemPos(TRlcsD.strCaseName, bIsComp, StressC.StreB[j], RatElemR.StressR.StressDesign[nEndIdx]);
+            break;
+        case ENUM_LEGAL:
+            Convert_StressElemPos(TRlcsD.strCaseName, bIsComp, StressC.StreB[j], RatElemR.StressR.StressLegal[nEndIdx]);
+            break;
+        case ENUM_PERMIT:
+            Convert_StressElemPos(TRlcsD.strCaseName, bIsComp, StressC.StreB[j], RatElemR.StressR.StressPermit[nEndIdx]);
+            break;
+        default:
+            ASSERT(0);
+            break;
+        }
+    }
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::ConvertInfinteFatigueDataForReport(int j, int k, ElemPairK ElemK, T_RCCR_BASE CriticD, RAT_ELEM_RES &RatElemR)
+{
+    if ( CriticD.ElemK>0 )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(CriticD.RCaseK, CriticD.bDCmax, CriticD.bDWmax, CriticD.bTEmax, CriticD.nConcurrent);
+
+        int nEndIdx = j*2+k;
+        BOOL bIsComp = (k==0);
+
+        T_RCFA_INF_LIFE_CASE FatigueINF;
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlFatigueRatingINF(ElemK, RlcsKey, FatigueINF);
+
+        T_RLCS_D TRlcsD; TRlcsD.Initialize();
+        m_pDoc->m_pAttrCtrl2->GetRlcs(CriticD.RCaseK, TRlcsD);
+
+        //TODO Convert 작업 필요
+    }
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::ConvertFiniteFatigueDataForReport(int j, int k, ElemPairK ElemK, T_RCCR_BASE CriticD, RAT_ELEM_RES &RatElemR)
+{
+    if ( CriticD.ElemK>0 )
+    {
+        T_RLCS_KEY RlcsKey = m_pDoc->m_pPostCtrl->GetStlRlcsRatingKey(CriticD.RCaseK, CriticD.bDCmax, CriticD.bDWmax, CriticD.bTEmax, CriticD.nConcurrent);
+
+        int nEndIdx = j*2+k;
+        BOOL bIsComp = (k==0);
+
+        T_RCFA_FIN_LIFE_CASE FatigueFIN;
+        m_pDoc->m_pPostCtrl->GetAnalysisResult()->GetStlFatigueRatingFIN(ElemK, RlcsKey, FatigueFIN);
+
+        T_RLCS_D TRlcsD; TRlcsD.Initialize();
+        m_pDoc->m_pAttrCtrl2->GetRlcs(CriticD.RCaseK, TRlcsD);
+
+        //TODO Convert 작업 필요
+    }
+}
+
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_FlexureElemPos(CString strRcaseName, BOOL bPositiveM, T_RCST_BASE &RcstB, RAT_SFLE_BASE &rData)
+{
+    rData.bChk  = RcstB.bChk;
+    rData.nElem = RcstB.ElemK;
+    rData.nPart = RcstB.nPosi;
+    rData.RcaseD.bDCMax   = RcstB.bDCmax;
+    rData.RcaseD.bDWMax   = RcstB.bDWmax;
+    rData.RcaseD.bTEmax   = RcstB.bTEmax;
+    rData.RcaseD.nConcurr = RcstB.nConcurrent;
+    rData.bIsPositive  =bPositiveM;
+    rData.strRcaseName = strRcaseName;
+    rData.dpMn_CA = RcstB.dpMn_CA;
+    rData.dpFn_CA = RcstB.dpFn_CA;
+    rData.dMu_DE  = RcstB.ForSUM.dForce[4];
+    rData.dfbu_DE = RcstB.dfbu_SUM;
+    rData.dMu_PR  = RcstB.ForPR.dForce[4]*RcstB.drPR;
+    rData.dfbu_PR = RcstB.dfbu_PR;
+    rData.nCaseRes= RcstB.nCaseRes;
+    rData.dRF     = RcstB.dRF;
+    rData.dKRF    = RcstB.dKRF;
+    rData.dSF     = RcstB.dRT;
+
+    rData.DtrK.dKa    = RcstB.DtkF.dKa;
+    rData.DtrK.dKb    = RcstB.DtkF.dKb;
+    rData.DtrK.dK     = RcstB.DtkF.dK;
+    rData.DtrK.dEpsiC = RcstB.DtkF.dEpsiC;
+    rData.DtrK.dEpsiT = RcstB.DtkF.dEpsiT;
+
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_ShearElemPos(double dVuFactor, CString strRcaseName, T_RCST_BASE &RcstB, RAT_SSHR_BASE &rData)
+{
+    rData.bChk  = RcstB.bChk;
+    rData.nElem = RcstB.ElemK;
+    rData.nPart = RcstB.nPosi;
+    rData.RcaseD.bDCMax   = RcstB.bDCmax;
+    rData.RcaseD.bDWMax   = RcstB.bDWmax;
+    rData.RcaseD.bTEmax   = RcstB.bTEmax;
+    rData.RcaseD.nConcurr = RcstB.nConcurrent;
+    rData.strRcaseName = strRcaseName;
+    rData.dVr_CA = RcstB.dVr_CA;
+    rData.dVu_DE  = dVuFactor * RcstB.ForSUM.dForce[2];
+    rData.dVu_PR  = dVuFactor * RcstB.ForPR.dForce[2]*RcstB.drPR;
+    rData.dRF     = RcstB.dRFsh;
+    rData.dKRF    = RcstB.dKRFsh;
+    rData.dSF     = RcstB.dRT;
+
+    rData.DtrK.dKa    = RcstB.DtkS.dKa;
+    rData.DtrK.dKb    = RcstB.DtkS.dKb;
+    rData.DtrK.dK     = RcstB.DtkS.dK;
+    rData.DtrK.dEpsiC = RcstB.DtkS.dEpsiC;
+    rData.DtrK.dEpsiT = RcstB.DtkS.dEpsiT;
+
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_StressElemPos(CString strRcaseName, BOOL bIsComp, T_RCSS_BASE &RcssB, RAT_SSTR_BASE &rData)
+{
+    rData.bChk  = RcssB.bChk;
+    rData.nElem = RcssB.ElemK;
+    rData.nPart = RcssB.nPosi;
+    rData.RcaseD.bDCMax   = RcssB.bDCmax;
+    rData.RcaseD.bDWMax   = RcssB.bDWmax;
+    rData.RcaseD.bTEmax   = RcssB.bTEmax;
+    rData.RcaseD.nConcurr = RcssB.nConcurrent;
+    rData.strRcaseName = strRcaseName;
+    memcpy(rData.dStress_AL, RcssB.dStress_AL, sizeof(rData.dStress_AL));
+    rData.StrDE.dfcw    = RcssB.StrSUM.dfcw;
+    rData.StrDE.dfcf    = RcssB.StrSUM.dfcf;
+    rData.StrDE.dftf    = RcssB.StrSUM.dftf;
+    rData.StrDE.bIsTopC = RcssB.StrSUM.bIsTopC;
+    rData.StrPR.dfcw    = RcssB.StrPR.dfcw;
+    rData.StrPR.dfcf    = RcssB.StrPR.dfcf;
+    rData.StrPR.dftf    = RcssB.StrPR.dftf;
+    rData.StrPR.bIsTopC = RcssB.StrPR.bIsTopC;
+    rData.dRF     = (bIsComp==TRUE) ? RcssB.dRF[1] : RcssB.dRF[2];
+    rData.dKRF    = (bIsComp==TRUE) ? RcssB.dKRF[1] : RcssB.dKRF[2];
+    rData.dSF     = RcssB.dRT[0];
+
+    T_RFDT_B &DtkS = (bIsComp==TRUE) ? RcssB.DtkS[1] : RcssB.DtkS[2];
+    rData.DtrK.dKa    = DtkS.dKa;
+    rData.DtrK.dKb    = DtkS.dKb;
+    rData.DtrK.dK     = DtkS.dK;
+    rData.DtrK.dEpsiC = DtkS.dEpsiC;
+    rData.DtrK.dEpsiT = DtkS.dEpsiT;
+
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_FatigueElemPosINF(CString strRcaseName, int nIJ, int nPosition, T_RCFA_INF_BASE &RcfaB, RAT_FATI_BASE &rData)
+{
+    int nOrder = nPosition;
+    if ( nPosition > 3 ) nOrder = nPosition - 4;
+
+    rData.bChk = RcfaB.bChkPosi[nOrder];
+    rData.bSkip = RcfaB.bSkip[nOrder];
+    rData.nElem = RcfaB.DRCFA.ElemK;
+    rData.nPart = RcfaB.DRCFA.nPosi;
+    rData.RcaseD.bDCMax   = RcfaB.DRCFA.bDCmax;
+    rData.RcaseD.bDWMax   = RcfaB.DRCFA.bDWmax;
+    rData.RcaseD.bTEmax   = RcfaB.DRCFA.bTEmax;
+    rData.RcaseD.nConcurr = RcfaB.DRCFA.nConcurrent;
+    rData.strRcaseName = strRcaseName;
+
+    T_RCFA_LOAD &Load = RcfaB.InfLife.LoadCapa[nOrder];
+    T_RFDT_B &DtkS = RcfaB.InfLife.DiagnoTest[nOrder];
+    T_RATING_INF_FATI_LIFE &InfLife = RcfaB.InfLife;
+
+    rData.dRF = RcfaB.dRatFact[nOrder];
+    rData.dKRF = RcfaB.dKRatFact_Load[nOrder];
+    rData.InfLife.dDelfeff = Load.dDelFeff;
+    rData.dDelFmax = Load.dDelFmax;
+    rData.dDelFTH = Load.dpDelF_n;
+    rData.dn = RcfaB.dn;
+    rData.dADTT_Present = RcfaB.dADTT_Present;
+    rData.dSpanLength = RcfaB.dSpan;
+    rData.dnL = RcfaB.dnL;
+    rData.InfLife.dRs = RcfaB.dRs;
+    rData.dRp = RcfaB.dRp;
+
+    rData.dfbu_DE       = Load.dfbuSum;
+    rData.dGammaDelF_PR = Load.dGammaDelF;
+
+    rData.dSF           = RcfaB.DRCFA.dRT;
+
+    rData.DtrK.dKa    = DtkS.dKa;
+    rData.DtrK.dKb    = DtkS.dKb;
+    rData.DtrK.dK     = DtkS.dK;
+    rData.DtrK.dEpsiC = DtkS.dEpsiC;
+    rData.DtrK.dEpsiT = DtkS.dEpsiT;
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_FatigueElemPosFIN(CString strRcaseName, int nIJ, int nPosition, T_RCFA_FIN_BASE &RcfaB, RAT_FATI_BASE &rData)
+{
+    int nOrder = nPosition;
+    if ( nPosition > 3 ) nOrder = nPosition - 4;
+
+    rData.bChk = RcfaB.bChkPosi[nOrder];
+    rData.bSkip = RcfaB.bSkip[nOrder];
+    rData.nElem = RcfaB.DRCFA.ElemK;
+    rData.nPart = RcfaB.DRCFA.nPosi;
+    rData.RcaseD.bDCMax   = RcfaB.DRCFA.bDCmax;
+    rData.RcaseD.bDWMax   = RcfaB.DRCFA.bDWmax;
+    rData.RcaseD.bTEmax   = RcfaB.DRCFA.bTEmax;
+    rData.RcaseD.nConcurr = RcfaB.DRCFA.nConcurrent;
+    rData.strRcaseName = strRcaseName;
+
+    rData.dADTT_SL_0 = RcfaB.dADTT_SL_0;
+    rData.dADTT_SL_Limit = RcfaB.dADTT_SL_Limit;
+    rData.dADTT_SL_Present = RcfaB.dADTT_SL_Present;
+    rData.dg    = RcfaB.dAnnualGrowth;
+    rData.dCur_Age = RcfaB.dCur_Age;
+    rData.dn = RcfaB.dn;
+
+    rData.dDelFeff = RcfaB.dDelFeff[nOrder]; //Only For Rating Factor, Rs = 1.0
+    rData.dDelFmax_FIN = RcfaB.dDelFmax[nOrder];
+    rData.dDelFTH = RcfaB.dCapaDemand[nOrder];
+    rData.dDelF_FIN = RcfaB.dDelF[nOrder];
+    rData.dA = RcfaB.dA[nOrder];
+
+    rData.dG = RcfaB.dG;
+    rData.dI = RcfaB.dI;
+    rData.dR = RcfaB.dR;
+
+    rData.dRF_FIN = RcfaB.dRatFact[nOrder];
+
+    rData.dN1 = RcfaB.dN1;
+    rData.dRp = RcfaB.dRp;
+    rData.dADTT_Present = RcfaB.dADTT_Present;
+
+    for ( int x=0; x<4; x++ )
+    {
+        rData.FinLife[x].dRs = RcfaB.FinLife[x].dRs;
+        rData.FinLife[x].dDel_Fact_f_Tens = RcfaB.FinLife[x].dDel_Fact_f_Tens[nOrder];
+        rData.FinLife[x].dDel_feff = RcfaB.FinLife[x].LoadCapa[nOrder].dDelFeff;
+
+        rData.FinLife[x].dRr = RcfaB.FinLife[x].dRr[nOrder];
+        rData.FinLife[x].dNav = RcfaB.FinLife[x].dNav[nOrder];
+        rData.FinLife[x].dADTT_SL_Future = RcfaB.FinLife[x].dADTT_SL_Future[nOrder];
+        
+        rData.FinLife[x].dY_ADTT_Limit= RcfaB.FinLife[x].dY_ADTT_Limit[nOrder];
+        rData.FinLife[x].dY_Rem = RcfaB.FinLife[x].dY_Rem[nOrder];
+        rData.FinLife[x].dY_Rem_Mod = RcfaB.FinLife[x].dY_Rem_Mod[nOrder];
+        rData.FinLife[x].dY = RcfaB.FinLife[x].dY[nOrder];
+        rData.FinLife[x].dGreaterY = RcfaB.FinLife[x].dGreaterY[nOrder];
+        rData.FinLife[x].dSerIndex = RcfaB.FinLife[x].dSerIndex[nOrder];
+    }
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_FlexureElem4RCase(T_RCST_BASE &RcstB, RAT_LRSR_FLEX_RCASE &rData)
+{
+    rData.nElem          = RcstB.ElemK;
+    rData.nPos           = RcstB.nPosi;
+    rData.dScaleFac4Test = RcstB.DtkF.dK;
+    rData.dSafeCapa      = RcstB.dSLCapa;
+    rData.dMuDe          = RcstB.drPR*RcstB.ForPR.dForce[4];//RcstB.ForSUM.dForce[4];    
+    rData.dfbuDe         = RcstB.dfbu_PR;//RcstB.dfbu_SUM;
+    rData.nCaseRes       = RcstB.nCaseRes;
+    rData.dRF            = RcstB.dRF;
+    rData.dKRF           = RcstB.dKRF;
+
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_ShearElem4RCase(T_RCST_BASE &RcstB, RAT_LRSR_SHEAR_RCASE &rData)
+{
+    rData.nElem          = RcstB.ElemK;
+    rData.nPos           = RcstB.nPosi;
+    rData.dScaleFac4Test = RcstB.DtkS.dK;
+    rData.dSafeCapa      = RcstB.dSLCapaSh;
+    rData.dVuDe          = RcstB.drPR*RcstB.ForPR.dForce[2];//RcstB.ForSUM.dForce[2];
+    rData.dRF            = RcstB.dRFsh;
+    rData.dKRF           = RcstB.dKRFsh;
+}
+
+void CRptRatingSTL_AASHTO_LRFR19::Convert_StressElem4RCase(T_RCSS_BASE &RcssB, RAT_LRSR_STRESS_RCASE &rData)
+{
+    rData.nElem          = RcssB.ElemK;
+    rData.nPos           = RcssB.nPosi;
+    rData.dScaleFac4Test = RcssB.DtkS[RcssB.nCrMinType].dK;
+    rData.dSafeCapa      = RcssB.dSLCapa[RcssB.nCrMinType];
+
+    double dStrDe=0.0;
+    //   if     (RcssB.nCrMinType==0) dStrDe = RcssB.StrSUM.dfcw;
+    //   else if(RcssB.nCrMinType==1) dStrDe = RcssB.StrSUM.dfcf;
+    //   else if(RcssB.nCrMinType==2) dStrDe = RcssB.StrSUM.dftf;
+    if ( RcssB.nCrMinType==0 ) dStrDe = RcssB.StrPR.dfcw;
+    else if ( RcssB.nCrMinType==1 ) dStrDe = RcssB.StrPR.dfcf;
+    else if ( RcssB.nCrMinType==2 ) dStrDe = RcssB.StrPR.dftf;
+    rData.dStressDe      = dStrDe;
+    rData.dRF            = RcssB.dRF[RcssB.nCrMinType];
+    rData.dKRF           = RcssB.dKRF[RcssB.nCrMinType];
+
+}
+
+BOOL CRptRatingSTL_AASHTO_LRFR19::GetMvldLoadCaseName(T_MVLD_K MvldK, CString &strName)
+{
+    T_MVCD_D MvcdD;
+    if ( !m_pDoc->m_pAttrCtrl->GetMvcd(MvcdD) ) return FALSE;
+    switch ( MvcdD.nCodeType )
+    {
+    case D_MOVE_CODE_NONE:
+        break;
+    case D_MOVE_CODE_KOREA:
+    case D_MOVE_CODE_AASHTO_STAN:
+    case D_MOVE_CODE_AASHTO_LRFD:
+    case D_MOVE_CODE_TAIWAN:
+    case D_MOVE_CODE_CANADA:
+    case D_MOVE_CODE_PENDOT:
+    case D_MOVE_CODE_EURO_BS:
+    case D_MOVE_CODE_RUSSIA:
+    case D_MOVE_CODE_KOREA_LRFD_2011:
+    case D_MOVE_CODE_AUSTRALIA:
+    case D_MOVE_CODE_POLAND:
+    case D_MOVE_CODE_SOUTH_AFRICA:
+    case D_MOVE_CODE_NEWZEALAND:
+    case D_MOVE_CODE_BRAZIL:
+        {
+            T_MVLD_D MvldD;
+            if ( !m_pDoc->m_pAttrCtrl->GetMvld(MvldK, MvldD) ) break;
+            strName = MvldD.LoadCaseName;
+        }
+        break;
+    case D_MOVE_CODE_JAPAN:
+        {
+            T_MVLDjp_D MvldJPD;
+            m_pDoc->m_pAttrCtrl->InitializeMvldjp(MvldJPD);
+            if ( !m_pDoc->m_pAttrCtrl->GetMvldjp(MvldK, MvldJPD) ) break;
+            strName = MvldJPD.LoadCaseName;
+        }
+        break;
+    case D_MOVE_CODE_CHINA:
+        {
+            T_MVLDch_D MvldCHD;
+            if ( !m_pDoc->m_pAttrCtrl->GetMvldch(MvldK, MvldCHD) ) break;
+            strName = MvldCHD.LoadCaseName;
+        }
+        break;
+    case D_MOVE_CODE_INDIA:
+        {
+            T_MVLDid_D MvldIDD;
+            if ( !m_pDoc->m_pAttrCtrl->GetMvldid(MvldK, MvldIDD) ) break;
+            strName = MvldIDD.LoadCaseName;
+        }
+        break;
+    case D_MOVE_CODE_BS:
+        {
+            T_MVLDbs_D MvldBSD;
+            if ( !m_pDoc->m_pAttrCtrl->GetMvldbs(MvldK, MvldBSD) ) break;
+            strName = MvldBSD.LoadCaseName;
+        }
+        break;
+    case D_MOVE_CODE_FRANCE:
+        {
+            T_MVLDfr_D MvldfrD;
+            if ( !m_pDoc->m_pAttrCtrl->GetMvldfr(MvldK, MvldfrD) ) break;
+            strName = MvldfrD.LoadCaseName;
+        }
+        break;
+    case D_MOVE_CODE_TRANS:
+        {
+            T_MVLDtr_D MvldTRD;
+            if ( !m_pDoc->m_pAttrCtrl->GetMvldtr(MvldK, MvldTRD) ) break;
+            strName = MvldTRD.LoadCaseName;
+        }
+        break;
+    default:
+        ASSERT(0); break;
+    }
+
+    return TRUE;
+}
