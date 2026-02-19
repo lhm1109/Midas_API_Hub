@@ -1188,7 +1188,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       console.log(`✅ Injected x-required-when for ${key}:`, field['x-required-when']);
     }
 
-    // 🔥 Object 타입 - 중첩 필드 추출
+    // 🔥 Object 타입 - 중첩 필드 추출 (재귀적 처리)
     if (prop.type === 'object' && prop.properties) {
       field.children = [];
       const objRequired = (prop.required as string[]) || [];
@@ -1236,6 +1236,61 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               childField['x-enum-labels'] = enumLabels;
             }
             console.log(`✅ Converted oneOf → enum for object child ${key}.${childKey}:`, enumValues);
+          }
+        }
+
+        // 🔥 3-depth 이상 재귀 처리: childField도 object type이고 properties가 있으면
+        if ((childProp as any).type === 'object' && (childProp as any).properties) {
+          childField.children = [];
+          const childObjRequired = ((childProp as any).required as string[]) || [];
+
+          for (const [grandchildKey, grandchildProp] of Object.entries((childProp as any).properties)) {
+            const grandchildField: EnhancedField = {
+              key: `${key}.${childKey}.${grandchildKey}`,
+              type: (grandchildProp as any).type,
+              default: (grandchildProp as any).default,
+              required: childObjRequired.includes(grandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+              section: '',
+              validationLayers: [],
+            };
+
+            // 🔥 손자 필드도 동적으로 모든 속성 복사
+            for (const [gcKey, gcValue] of Object.entries(grandchildProp as any)) {
+              if (gcKey === 'type' || gcKey === 'default') continue;
+
+              if (gcKey === 'x-ui') {
+                grandchildField.ui = gcValue;
+              } else if (gcKey.startsWith('x-')) {
+                grandchildField[gcKey] = gcValue;
+              } else {
+                grandchildField[gcKey] = gcValue;
+              }
+            }
+
+            // 🔥 oneOf → enum 변환 (grandchildren)
+            if ((grandchildProp as any).oneOf && Array.isArray((grandchildProp as any).oneOf) && !grandchildField.enum) {
+              const enumValues: any[] = [];
+              const enumLabels: Record<string, string> = {};
+
+              for (const option of (grandchildProp as any).oneOf) {
+                if (option.const !== undefined) {
+                  enumValues.push(option.const);
+                  if (option.title) {
+                    enumLabels[String(option.const)] = option.title;
+                  }
+                }
+              }
+
+              if (enumValues.length > 0) {
+                grandchildField.enum = enumValues;
+                if (Object.keys(enumLabels).length > 0) {
+                  grandchildField['x-enum-labels'] = enumLabels;
+                }
+                console.log(`✅ Converted oneOf → enum for grandchild ${key}.${childKey}.${grandchildKey}:`, enumValues);
+              }
+            }
+
+            childField.children.push(grandchildField);
           }
         }
 
@@ -1298,6 +1353,62 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               childField['x-enum-labels'] = enumLabels;
             }
             console.log(`✅ Converted oneOf → enum for array item ${key}[].${childKey}:`, enumValues);
+          }
+        }
+
+        // 🔥 3-depth 이상 재귀 처리 (array items > object > properties)
+        if ((childProp as any).type === 'object' && (childProp as any).properties) {
+          childField.children = [];
+          const childObjRequired = ((childProp as any).required as string[]) || [];
+
+          for (const [grandchildKey, grandchildProp] of Object.entries((childProp as any).properties)) {
+            const grandchildField: EnhancedField = {
+              key: `${key}[].${childKey}.${grandchildKey}`,
+              type: (grandchildProp as any).type,
+              default: (grandchildProp as any).default,
+              description: (grandchildProp as any).description,
+              required: childObjRequired.includes(grandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+              section: '',
+              validationLayers: [],
+            };
+
+            // 🔥 손자 필드도 동적으로 모든 속성 복사
+            for (const [gcKey, gcValue] of Object.entries(grandchildProp as any)) {
+              if (gcKey === 'type' || gcKey === 'default' || gcKey === 'description') continue;
+
+              if (gcKey === 'x-ui') {
+                grandchildField.ui = gcValue;
+              } else if (gcKey.startsWith('x-')) {
+                grandchildField[gcKey] = gcValue;
+              } else {
+                grandchildField[gcKey] = gcValue;
+              }
+            }
+
+            // 🔥 oneOf → enum 변환 (grandchildren)
+            if ((grandchildProp as any).oneOf && Array.isArray((grandchildProp as any).oneOf) && !grandchildField.enum) {
+              const enumValues: any[] = [];
+              const enumLabels: Record<string, string> = {};
+
+              for (const option of (grandchildProp as any).oneOf) {
+                if (option.const !== undefined) {
+                  enumValues.push(option.const);
+                  if (option.title) {
+                    enumLabels[String(option.const)] = option.title;
+                  }
+                }
+              }
+
+              if (enumValues.length > 0) {
+                grandchildField.enum = enumValues;
+                if (Object.keys(enumLabels).length > 0) {
+                  grandchildField['x-enum-labels'] = enumLabels;
+                }
+                console.log(`✅ Converted oneOf → enum for array grandchild ${key}[].${childKey}.${grandchildKey}:`, enumValues);
+              }
+            }
+
+            childField.children.push(grandchildField);
           }
         }
 

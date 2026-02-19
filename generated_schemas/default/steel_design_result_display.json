@@ -1,0 +1,485 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Image file save path and file name",
+          "x-ui": {
+            "hint": "e.g., C:\\MIDAS\\Images\\result.jpg",
+            "label": "Image File Save Path & File Name",
+            "order": 1
+          }
+        },
+        "FIGURE_NAME": {
+          "type": "string",
+          "description": "Smart report image name",
+          "x-ui": {
+            "label": "Smart Report Image Name",
+            "order": 2
+          }
+        },
+        "WIDTH": {
+          "type": "integer",
+          "description": "Image width in pixels",
+          "default": 1000,
+          "minimum": 100,
+          "maximum": 10000,
+          "x-ui": {
+            "label": "Image Width's Pixel Size",
+            "order": 3
+          }
+        },
+        "HEIGHT": {
+          "type": "integer",
+          "description": "Image height in pixels",
+          "default": 1000,
+          "minimum": 100,
+          "maximum": 10000,
+          "x-ui": {
+            "label": "Image Height's Pixel Size",
+            "order": 4
+          }
+        },
+        "STAGE_NAME": {
+          "type": "string",
+          "description": "Construction stage name",
+          "x-ui": {
+            "label": "Construction Stage Name",
+            "order": 5
+          }
+        },
+        "SET_MODE": {
+          "type": "string",
+          "description": "Select analysis mode",
+          "oneOf": [
+            {
+              "title": "Pre-Mode",
+              "const": "pre"
+            },
+            {
+              "title": "Post-Mode",
+              "const": "post"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Select Analysis Mode",
+            "order": 6
+          }
+        },
+        "SET_HIDDEN": {
+          "type": "boolean",
+          "description": "Hidden option (true: hidden, false: not hidden)",
+          "default": false,
+          "x-ui": {
+            "label": "Hidden Option",
+            "order": 7
+          }
+        },
+        "LOAD_CASE_COMB": {
+          "type": "object",
+          "description": "Load case and combinations",
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "description": "Load case type",
+              "oneOf": [
+                {
+                  "title": "Static",
+                  "const": "ST"
+                },
+                {
+                  "title": "Construction Stage",
+                  "const": "CS"
+                },
+                {
+                  "title": "Response Spectrum",
+                  "const": "RS"
+                },
+                {
+                  "title": "Time History",
+                  "const": "TH"
+                },
+                {
+                  "title": "Moving Load",
+                  "const": "MV"
+                },
+                {
+                  "title": "Settlement",
+                  "const": "SM"
+                },
+                {
+                  "title": "Load Combination",
+                  "const": "CB"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Load Case Type",
+                "order": 1
+              }
+            },
+            "NAME": {
+              "type": "string",
+              "description": "Load name",
+              "x-ui": {
+                "hint": "e.g., DL, LL, etc.",
+                "label": "Load Name",
+                "order": 2
+              }
+            },
+            "STEP_INDEX": {
+              "type": "integer",
+              "description": "Step of load case",
+              "default": 1,
+              "minimum": 1,
+              "x-ui": {
+                "label": "Step Index",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Load Cases/Combinations",
+            "order": 8
+          }
+        },
+        "RATIO_COMPONENT": {
+          "type": "string",
+          "description": "Ratio component to display in steel design results",
+          "default": "Combined",
+          "oneOf": [
+            {
+              "title": "Axial",
+              "const": "Axial"
+            },
+            {
+              "title": "Shear-y",
+              "const": "Shear-y"
+            },
+            {
+              "title": "Shear-z",
+              "const": "Shear-z"
+            },
+            {
+              "title": "Bend-y",
+              "const": "Bend-y"
+            },
+            {
+              "title": "Bend-z",
+              "const": "Bend-z"
+            },
+            {
+              "title": "Combined",
+              "const": "Combined"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Ratio by Components",
+            "order": 9
+          }
+        },
+        "TYPE_OF_DISPLAY": {
+          "type": "object",
+          "description": "Display options for steel design result visualization. For detailed field specifications, refer to the Type of Display documentation.",
+          "properties": {
+            "CONTOUR": {
+              "type": "boolean",
+              "description": "Display contour visualization",
+              "default": false,
+              "x-ui": {
+                "label": "Contour",
+                "order": 1
+              }
+            },
+            "LEGEND": {
+              "type": "boolean",
+              "description": "Display legend",
+              "default": false,
+              "x-ui": {
+                "label": "Legend",
+                "order": 2
+              }
+            },
+            "VALUES": {
+              "type": "boolean",
+              "description": "Display values",
+              "default": false,
+              "x-ui": {
+                "label": "Values",
+                "order": 3
+              }
+            },
+            "CODE_CHECKING_RATIO": {
+              "type": "boolean",
+              "description": "Display code checking ratio",
+              "default": false,
+              "x-ui": {
+                "label": "Code Checking Ratio",
+                "order": 4
+              }
+            }
+          },
+          "x-reference": {
+            "article": "35996812786841",
+            "url": "https://support.midasuser.com/hc/en-us/articles/35996812786841",
+            "title": "Type of Display"
+          },
+          "x-ui": {
+            "label": "Type of Display",
+            "order": 10
+          }
+        },
+        "DISPLAY_MEMBERS": {
+          "type": "object",
+          "description": "Member types to display in results. Only available when Code Checking Ratio is enabled.",
+          "x-visible-when": {
+            "CODE_CHECKING_RATIO": true
+          },
+          "properties": {
+            "BEAM": {
+              "type": "boolean",
+              "description": "Display beam members",
+              "default": false,
+              "x-ui": {
+                "label": "Beam",
+                "order": 1
+              }
+            },
+            "COLUMN": {
+              "type": "boolean",
+              "description": "Display column members",
+              "default": false,
+              "x-ui": {
+                "label": "Column",
+                "order": 2
+              }
+            },
+            "BRACE": {
+              "type": "boolean",
+              "description": "Display brace members",
+              "default": false,
+              "x-ui": {
+                "label": "Brace",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Display",
+            "order": 11
+          }
+        },
+        "COLUMN_SECTION_SIZE": {
+          "type": "object",
+          "description": "Column section size display settings",
+          "properties": {
+            "SCALE_FACTOR": {
+              "type": "number",
+              "description": "Scale factor for column section visualization",
+              "default": 1,
+              "minimum": 0.1,
+              "maximum": 100,
+              "x-ui": {
+                "label": "Scale Factor",
+                "order": 1
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Column Section Size",
+            "order": 12
+          }
+        },
+        "VALUE_OPTION": {
+          "type": "object",
+          "description": "Value display format settings",
+          "properties": {
+            "DECIMAL_PLACES": {
+              "type": "integer",
+              "description": "Number of decimal places for display values",
+              "default": 2,
+              "minimum": 0,
+              "maximum": 15,
+              "x-ui": {
+                "label": "Decimal Pt.",
+                "order": 1
+              }
+            },
+            "EXPONENTIAL": {
+              "type": "boolean",
+              "description": "Use exponential notation for display",
+              "default": false,
+              "x-ui": {
+                "label": "Exp.",
+                "order": 2
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Value Option",
+            "order": 13
+          }
+        },
+        "ACTIVE": {
+          "type": "object",
+          "description": "View/Active settings. For detailed field specifications, refer to the Active documentation.",
+          "x-reference": {
+            "article": "PLACEHOLDER_ARTICLE_ID",
+            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID",
+            "title": "Active"
+          },
+          "x-ui": {
+            "label": "Active",
+            "order": 14
+          }
+        },
+        "ANGLE": {
+          "type": "object",
+          "description": "View/Angle settings. For detailed field specifications, refer to the Angle documentation.",
+          "x-reference": {
+            "article": "PLACEHOLDER_ARTICLE_ID",
+            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID",
+            "title": "Angle"
+          },
+          "x-ui": {
+            "label": "Angle",
+            "order": 15
+          }
+        },
+        "DISPLAY": {
+          "type": "object",
+          "description": "View/Display settings. For detailed field specifications, refer to the Display documentation.",
+          "x-reference": {
+            "article": "PLACEHOLDER_ARTICLE_ID",
+            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID",
+            "title": "Display"
+          },
+          "properties": {
+            "PERSPECTIVE": {
+              "type": "boolean",
+              "description": "Enable perspective view",
+              "default": false,
+              "x-ui": {
+                "label": "Perspective",
+                "order": 1
+              }
+            },
+            "ZOOM_LEVEL": {
+              "type": "number",
+              "description": "Zoom level (25: zoom out, 100: fit, 200: zoom in max)",
+              "default": 100,
+              "minimum": 25,
+              "maximum": 200,
+              "x-ui": {
+                "label": "Zoom Level",
+                "order": 2
+              }
+            },
+            "BGCOLOR_TOP": {
+              "type": "object",
+              "description": "Background color top (RGB)",
+              "properties": {
+                "R": {
+                  "type": "integer",
+                  "description": "Red component (0-255)",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "x-ui": {
+                    "label": "Red",
+                    "order": 1
+                  }
+                },
+                "G": {
+                  "type": "integer",
+                  "description": "Green component (0-255)",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "x-ui": {
+                    "label": "Green",
+                    "order": 2
+                  }
+                },
+                "B": {
+                  "type": "integer",
+                  "description": "Blue component (0-255)",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "x-ui": {
+                    "label": "Blue",
+                    "order": 3
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Background Color Top",
+                "order": 3
+              }
+            },
+            "BGCOLOR_BOTTOM": {
+              "type": "object",
+              "description": "Background color bottom (RGB)",
+              "properties": {
+                "R": {
+                  "type": "integer",
+                  "description": "Red component (0-255)",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "x-ui": {
+                    "label": "Red",
+                    "order": 1
+                  }
+                },
+                "G": {
+                  "type": "integer",
+                  "description": "Green component (0-255)",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "x-ui": {
+                    "label": "Green",
+                    "order": 2
+                  }
+                },
+                "B": {
+                  "type": "integer",
+                  "description": "Blue component (0-255)",
+                  "minimum": 0,
+                  "maximum": 255,
+                  "x-ui": {
+                    "label": "Blue",
+                    "order": 3
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Background Color Bottom",
+                "order": 4
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Display Settings",
+            "order": 16
+          }
+        },
+        "RESULT_GRAPHIC": {
+          "type": "object",
+          "description": "View/Result Graphic settings",
+          "x-ui": {
+            "label": "Result Graphic",
+            "order": 17
+          }
+        }
+      }
+    }
+  }
+}
