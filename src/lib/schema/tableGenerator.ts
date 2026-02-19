@@ -1034,11 +1034,22 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
 
           html += `
             <tr style="background-color: rgba(240, 240, 240, 0.3);">
-              <td style="${ZENDESK_CELL_STYLE} padding-left: 20px;">
-                <p style="text-align: center;">${rowNumber}.${currentChildNo}.${grandchildNo++}</p>
-              </td>
-              <td style="${ZENDESK_CELL_STYLE} padding-left: 30px;">
-                ${grandchildDescriptionHTML}
+              <td style="${ZENDESK_CELL_STYLE}"></td>
+              <td style="${ZENDESK_CELL_STYLE}">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <colgroup>
+                    <col style="width: 10%;">
+                    <col style="width: 90%;">
+                  </colgroup>
+                  <tr>
+                    <td style="${ZENDESK_CELL_STYLE} border-right: 1px solid #d0d0d0;">
+                      <p style="text-align: center;">${rowNumber}.${currentChildNo}.${grandchildNo++}</p>
+                    </td>
+                    <td style="${ZENDESK_CELL_STYLE}">
+                      ${grandchildDescriptionHTML}
+                    </td>
+                  </tr>
+                </table>
               </td>
               <td style="${ZENDESK_CELL_STYLE}">
                 <p style="text-align: center;">"${escapeHtml(grandchildKeyDisplay || '')}"</p>
@@ -1123,11 +1134,22 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
 
             html += `
               <tr style="background-color: rgba(240, 240, 240, 0.3);">
-                <td style="${ZENDESK_CELL_STYLE} padding-left: 20px;">
-                  <p style="text-align: center;">${rowNumber}.${currentChildNo}.${grandchildNo++}</p>
-                </td>
-                <td style="${ZENDESK_CELL_STYLE} padding-left: 30px;">
-                  ${grandchildDescriptionHTML}
+                <td style="${ZENDESK_CELL_STYLE}"></td>
+                <td style="${ZENDESK_CELL_STYLE}">
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <colgroup>
+                      <col style="width: 10%;">
+                      <col style="width: 90%;">
+                    </colgroup>
+                    <tr>
+                      <td style="${ZENDESK_CELL_STYLE} border-right: 1px solid #d0d0d0;">
+                        <p style="text-align: center;">${rowNumber}.${currentChildNo}.${grandchildNo++}</p>
+                      </td>
+                      <td style="${ZENDESK_CELL_STYLE}">
+                        ${grandchildDescriptionHTML}
+                      </td>
+                    </tr>
+                  </table>
                 </td>
                 <td style="${ZENDESK_CELL_STYLE}">
                   <p style="text-align: center;">"${escapeHtml(grandchildKeyDisplay || '')}"</p>
