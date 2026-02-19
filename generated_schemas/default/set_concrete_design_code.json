@@ -84,6 +84,9 @@
                   "type": "object",
                   "description": "Shear Wall Type configuration",
                   "additionalProperties": false,
+                                        "x-optional-when": {
+                        "BEAM_COL_JNT_DES": true
+                      },
                   "properties": {
                     "SPEC_RC_WALL": {
                       "type": "boolean",
@@ -114,9 +117,6 @@
                         "component": "RadioGroup",
                         "label": "Boundary Element Method",
                         "order": 2
-                      },
-                      "x-optional-when": {
-                        "SPEC_RC_WALL": true
                       }
                     },
                     "DEFL_AMP_FACT": {
@@ -127,9 +127,6 @@
                       "x-ui": {
                         "label": "Deflection Amplification Factor (Cd)",
                         "order": 3
-                      },
-                      "x-optional-when": {
-                        "SPEC_RC_WALL": true
                       }
                     },
                     "IMP_FACT": {
@@ -140,19 +137,13 @@
                       "x-ui": {
                         "label": "Important Factor (Ie)",
                         "order": 4
-                      },
-                      "x-optional-when": {
-                        "SPEC_RC_WALL": true
                       }
                     }
                   },
                   "x-ui": {
                     "label": "Shear Wall Type",
                     "order": 3
-                  },
-                                        "x-optional-when": {
-                        "SPEC_RC_WALL": true
-                      }
+                  }
                 },
                 "SHEAR_DES": {
                   "type": "object",

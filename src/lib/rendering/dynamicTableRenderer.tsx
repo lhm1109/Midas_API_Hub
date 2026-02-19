@@ -155,6 +155,25 @@ function renderNestedSectionHeader(child: any, definition: TableDefinition, pare
   );
 }
 
+function renderGrandchildSectionHeader(
+  grandchild: any,
+  definition: TableDefinition,
+  parentNo: number,
+  childIdx: number,
+  grandchildIdx: number
+) {
+  const nestedStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
+  const uniqueKey = `grandchild-section-${parentNo}-${childIdx}-${grandchildIdx}-${grandchild.section || grandchild.name || ''}`;
+
+  return (
+    <tr key={uniqueKey} className={nestedStyle.background || 'bg-blue-950/30 border-b border-zinc-800'}>
+      <td colSpan={6} className={`p-2 ${nestedStyle.textColor || 'text-blue-400'} font-semibold text-xs pl-12`}>
+        {grandchild.section}
+      </td>
+    </tr>
+  );
+}
+
 /**
  * 파라미터 행 렌더링
  */
@@ -267,8 +286,13 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
   // 🔥 3-depth: Grandchildren 행들 (always-expanded)
   if (child.children && child.children.length > 0) {
     child.children.forEach((grandchild: any, grandchildIdx: number) => {
+      if (grandchild.type === 'section-header' || grandchild.section) {
+        rows.push(renderGrandchildSectionHeader(grandchild, definition, parentNo, childIdx, grandchildIdx));
+        return;
+      }
+
       const grandchildKey = `grandchild-${parentNo}-${childIdx}-${grandchildIdx}`;
-      
+
       rows.push(
         <tr key={grandchildKey} className="border-b border-zinc-800 bg-zinc-800/30">
           <td className="p-3 text-zinc-500 text-center">{grandchild.no}</td>
