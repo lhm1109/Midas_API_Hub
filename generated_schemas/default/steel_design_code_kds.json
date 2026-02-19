@@ -12,20 +12,18 @@
       "minProperties": 1,
       "patternProperties": {
         "^[0-9]+$": {
+          "title": "Steel Design Code",
           "type": "object",
           "required": [
-            "sDESIGN_CD"
+            "DESIGN_CD"
           ],
           "additionalProperties": false,
           "properties": {
-            "sDESIGN_CD": {
+            "DESIGN_CD": {
               "type": "string",
               "description": "Design Code",
-              "oneOf": [
-                {
-                  "title": "KDS 41 30 : 2022",
-                  "const": "KDS 41 30 : 2022"
-                }
+              "enum": [
+                "KDS 41 30 : 2022"
               ],
               "x-ui": {
                 "component": "Dropdown",
@@ -33,16 +31,16 @@
                 "order": 1
               }
             },
-            "bLAT_BRACE": {
+            "LAT_BRACE": {
               "type": "boolean",
               "description": "All Beams/Girders are Laterally Braced",
-              "default": true,
+              "default": false,
               "x-ui": {
                 "label": "All Beams/Girders are Laterally Braced",
                 "order": 2
               }
             },
-            "bDEFL_CHK": {
+            "DEFL_CHK": {
               "type": "boolean",
               "description": "Check Beam/Column Deflection",
               "default": true,
@@ -51,16 +49,16 @@
                 "order": 3
               }
             },
-            "bSEISMIC": {
+            "SEISMIC": {
               "type": "boolean",
               "description": "Apply Special Provisions for Seismic Design",
-              "default": true,
+              "default": false,
               "x-ui": {
                 "label": "Apply Special Provisions for Seismic Design",
                 "order": 4
               }
             },
-            "iCOMB_RATIO": {
+            "COMB_RATIO": {
               "type": "integer",
               "description": "Combined Ratio Method for Circular Section",
               "default": 0,
@@ -80,68 +78,44 @@
                 "order": 5
               }
             },
-            "sSEIS_SYS": {
+            "SEIS_SYS": {
               "type": "string",
               "description": "Seismic Load Resisting System",
-              "default": "Special Moment Frames",
-              "oneOf": [
-                {
-                  "title": "Special Moment Frames",
-                  "const": "Special Moment Frames"
-                },
-                {
-                  "title": "Intermediate Moment Frames",
-                  "const": "Intermediate Moment Frames"
-                },
-                {
-                  "title": "Ordinary Moment Frames",
-                  "const": "Ordinary Moment Frames"
-                },
-                {
-                  "title": "Special Concentrically Braced Frames",
-                  "const": "Special Concentrically Braced Frames"
-                },
-                {
-                  "title": "Ordinary Concentrically Braced Frames",
-                  "const": "Ordinary Concentrically Braced Frames"
-                },
-                {
-                  "title": "Eccentrically Braced Frames",
-                  "const": "Eccentrically Braced Frames"
-                },
-                {
-                  "title": "Buckling-Restrained Braced Frames",
-                  "const": "Buckling-Restrained Braced Frames"
-                },
-                {
-                  "title": "Special Plate Shear Walls",
-                  "const": "Special Plate Shear Walls"
-                }
+              "enum": [
+                "Special Moment Frames",
+                "Intermediate Moment Frames",
+                "Ordinary Moment Frames",
+                "Special Concentrically Braced Frames",
+                "Ordinary Concentrically Braced Frames",
+                "Eccentrically Braced Frames",
+                "Buckling-Restrained Braced Frames",
+                "Special Plate Shear Walls"
               ],
+              "default": "Special Moment Frames",
               "x-ui": {
                 "component": "Dropdown",
-                "groupId": "seismicSection",
+                "group": "Seismic Load Resisting System",
                 "label": "System",
                 "order": 6
               },
               "x-optional-when": {
-                "bSEISMIC": true
+                "SEISMIC": true
               }
             },
-            "bCOL_WEAK": {
+            "COL_WEAK": {
               "type": "boolean",
               "description": "Consider strong column-weak beam on last floor",
               "default": true,
               "x-ui": {
-                "groupId": "seismicSection",
+                "group": "Seismic Load Resisting System",
                 "label": "Consider strong column-weak beam on last floor",
                 "order": 7
               },
               "x-optional-when": {
-                "bSEISMIC": true
+                "SEISMIC": true
               }
             },
-            "bUNDGR_LD": {
+            "UNDGR_LD": {
               "type": "boolean",
               "description": "Use Under Ground Load Combination Type for Under Ground Members",
               "default": true,
@@ -150,16 +124,6 @@
                 "order": 8
               }
             }
-          },
-          "x-ui": {
-            "title": "Steel Design Code",
-            "groups": [
-              {
-                "title": "Seismic Load Resisting System",
-                "collapsible": false,
-                "id": "seismicSection"
-              }
-            ]
           }
         }
       }

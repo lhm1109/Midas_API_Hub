@@ -1,0 +1,403 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "SECT_LIST"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "SECT_LIST": {
+          "type": "array",
+          "description": "List of sections for optimal design. Each section has its own design criteria (Allow, SectDB, Shape, D1-D6).",
+          "items": {
+            "type": "object",
+            "required": [
+              "SECT_NAME",
+              "SECT_DB",
+              "SHAPE"
+            ],
+            "properties": {
+              "SECT_NAME": {
+                "type": "string",
+                "description": "Section name to perform optimal design",
+                "x-ui": {
+                  "label": "Section Name",
+                  "order": 1
+                }
+              },
+              "ALLOW": {
+                "type": "number",
+                "description": "Allowable combined stress ratio target. The section with the smallest area within this limit will be selected.",
+                "default": 1,
+                "x-ui": {
+                  "label": "Allow",
+                  "order": 2
+                }
+              },
+              "SECT_DB": {
+                "type": "string",
+                "description": "Section database for candidate sections",
+                "oneOf": [
+                  {
+                    "title": "BUILT (Welded sections)",
+                    "const": "BUILT"
+                  },
+                  {
+                    "title": "KS21 (Korean Standard rolled sections)",
+                    "const": "KS21"
+                  },
+                  {
+                    "title": "USER (User-defined sections)",
+                    "const": "USER"
+                  }
+                ],
+                "x-ui": {
+                  "component": "Dropdown",
+                  "label": "SectDB",
+                  "order": 3
+                }
+              },
+              "SHAPE": {
+                "type": "string",
+                "description": "Section shape type",
+                "oneOf": [
+                  {
+                    "title": "L-Angle",
+                    "const": "L"
+                  },
+                  {
+                    "title": "C-Channel",
+                    "const": "C"
+                  },
+                  {
+                    "title": "H-Shape",
+                    "const": "H"
+                  },
+                  {
+                    "title": "T-Shape",
+                    "const": "T"
+                  },
+                  {
+                    "title": "Box Tube",
+                    "const": "B"
+                  },
+                  {
+                    "title": "Pipe",
+                    "const": "P"
+                  },
+                  {
+                    "title": "Round Bar",
+                    "const": "SR"
+                  },
+                  {
+                    "title": "Square Bar",
+                    "const": "SB"
+                  },
+                  {
+                    "title": "Built-up L",
+                    "const": "2L"
+                  },
+                  {
+                    "title": "Built-up C",
+                    "const": "2C"
+                  }
+                ],
+                "x-ui": {
+                  "component": "Dropdown",
+                  "label": "Shape",
+                  "order": 4
+                }
+              },
+              "D1": {
+                "type": "number",
+                "description": "Dimension D1 range. 0 = search all sizes in DB. Meaning by shape: L=H, C=H, H=H, T=H, B(Box)=H, P(Pipe)=D, SR(Round Bar)=D, SB(Square Bar)=H, 2L=H, 2C=H. For rolled sections (±5% tolerance), for welded/BUILT (exact match).",
+                "default": 0,
+                "x-ui": {
+                  "label": "D1",
+                  "order": 5
+                }
+              },
+              "D2": {
+                "type": "number",
+                "description": "Dimension D2 range. 0 = search all sizes in DB. Meaning by shape: L=B, C=B1, H=B1, T=B, B(Box)=B, P(Pipe)=tw, SR=not used, SB=B, 2L=B, 2C=B.",
+                "default": 0,
+                "x-ui": {
+                  "label": "D2",
+                  "order": 6
+                }
+              },
+              "D3": {
+                "type": "number",
+                "description": "Dimension D3 range. 0 = search all sizes in DB. Meaning by shape: L=tw, C=tw, H=tw, T=tw, B(Box)=tw, P/SR=not used, SB=not used, 2L=tw, 2C=tw.",
+                "default": 0,
+                "x-ui": {
+                  "label": "D3",
+                  "order": 7
+                }
+              },
+              "D4": {
+                "type": "number",
+                "description": "Dimension D4 range. 0 = search all sizes in DB. Meaning by shape: L=tf, C=tf1, H=tf1, T=tf, B(Box)=tf1, P/SR/SB=not used, 2L=tf, 2C=tf.",
+                "default": 0,
+                "x-ui": {
+                  "label": "D4",
+                  "order": 8
+                }
+              },
+              "D5": {
+                "type": "number",
+                "description": "Dimension D5 range. 0 = search all sizes in DB. Meaning by shape: L=Rop, C=B2, H=B2, B(Box)=Cw, 2L=C, 2C=C. Not used for T, P, SR, SB.",
+                "default": 0,
+                "x-ui": {
+                  "label": "D5",
+                  "order": 9
+                }
+              },
+              "D6": {
+                "type": "number",
+                "description": "Dimension D6 range. 0 = search all sizes in DB. Meaning by shape: C=tf2, H=tf2, B(Box)=tf2, 2L=Rop. Not used for L, T, P, SR, SB, 2C.",
+                "default": 0,
+                "x-ui": {
+                  "label": "D6",
+                  "order": 10
+                }
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Section List & Design Criteria",
+            "order": 1
+          }
+        },
+        "ANALYSIS_OPT": {
+          "type": "object",
+          "description": "Analysis option - number of re-analysis iterations",
+          "properties": {
+            "ANAL_TIME": {
+              "type": "integer",
+              "description": "Number of re-analysis iterations (max 10). Set 0 for section selection only without re-analysis.",
+              "default": 1,
+              "minimum": 0,
+              "maximum": 10,
+              "x-ui": {
+                "label": "Analysis Time",
+                "order": 1
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Analysis Option",
+            "order": 3
+          }
+        },
+        "PLATE_THICKNESS": {
+          "type": "array",
+          "description": "Plate thickness list for BUILT sections (flange and web thickness, max 50 entries)",
+          "items": {
+            "type": "number"
+          },
+          "x-ui": {
+            "label": "Plate Thickness Data",
+            "order": 4
+          },
+          "x-optional-when": {
+            "SECT_DB": "BUILT"
+          }
+        },
+        "COLUMN_DESIGN": {
+          "type": "object",
+          "description": "Column design settings for optimal design of column members",
+          "properties": {
+            "APPLIED_FORCES": {
+              "type": "integer",
+              "description": "Applied forces and moments method for column design",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Axial Forces and Moments",
+                  "const": 0
+                },
+                {
+                  "title": "Axial Forces Only",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Applied Forces and Moments",
+                "order": 1
+              }
+            },
+            "JOINT_METHOD": {
+              "type": "integer",
+              "description": "Joint method for built-up column splices (H-shape and box sections with BUILT DB)",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Internal Const (Fixed inside, expand outward)",
+                  "const": 0
+                },
+                {
+                  "title": "External Const (Fixed outside, adjust inward)",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Joint Method of Built-Up Column Splices",
+                "order": 2
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Column Design",
+            "order": 5
+          }
+        },
+        "USER_DEFINED_SECT": {
+          "type": "array",
+          "description": "User-defined section database. Each row defines a section with No, Shape, and dimensions D1-D6.",
+          "items": {
+            "type": "object",
+            "required": [
+              "NO",
+              "SHAPE"
+            ],
+            "properties": {
+              "NO": {
+                "type": "integer",
+                "description": "Section No."
+              },
+              "SHAPE": {
+                "type": "string",
+                "description": "Section shape (L, C, H, T, B, P, SR, SB, 2L, 2C)"
+              },
+              "D1": {
+                "type": "number",
+                "default": 0
+              },
+              "D2": {
+                "type": "number",
+                "default": 0
+              },
+              "D3": {
+                "type": "number",
+                "default": 0
+              },
+              "D4": {
+                "type": "number",
+                "default": 0
+              },
+              "D5": {
+                "type": "number",
+                "default": 0
+              },
+              "D6": {
+                "type": "number",
+                "default": 0
+              }
+            }
+          },
+          "x-ui": {
+            "label": "User-Defined Section DB",
+            "order": 6
+          },
+          "x-optional-when": {
+            "SECT_DB": "USER"
+          }
+        },
+        "OUTPUT": {
+          "type": "object",
+          "description": "Output options for optimal design results (can select multiple simultaneously)",
+          "required": [
+            "EXPORT_PATH"
+          ],
+          "properties": {
+            "GRAPH_MAX_RATIO": {
+              "type": "boolean",
+              "description": "Output Max. Ratio graph",
+              "default": true,
+              "x-ui": {
+                "label": "Optimal Design (Max. Ratio)",
+                "order": 1
+              }
+            },
+            "GRAPH_AVG_RATIO": {
+              "type": "boolean",
+              "description": "Output Average Ratio graph",
+              "default": true,
+              "x-ui": {
+                "label": "Optimal Design (Average Ratio)",
+                "order": 2
+              }
+            },
+            "GRAPH_WEIGHT": {
+              "type": "boolean",
+              "description": "Output Weight graph",
+              "default": true,
+              "x-ui": {
+                "label": "Optimal Design (Weight)",
+                "order": 3
+              }
+            },
+            "GRAPH_WEIGHT_SUM": {
+              "type": "boolean",
+              "description": "Output Weight Sum graph",
+              "default": true,
+              "x-ui": {
+                "label": "Optimal Design (Weight Sum)",
+                "order": 4
+              }
+            },
+            "GRAPH_WEIGHT_RATIO": {
+              "type": "boolean",
+              "description": "Output Weight Ratio graph",
+              "default": true,
+              "x-ui": {
+                "label": "Optimal Design (Weight Ratio)",
+                "order": 5
+              }
+            },
+            "TEXT_REPORT": {
+              "type": "boolean",
+              "description": "Output results as text report to screen and file",
+              "default": true,
+              "x-ui": {
+                "label": "Text Report",
+                "order": 6
+              }
+            },
+            "MODEL_UPDATE": {
+              "type": "boolean",
+              "description": "Apply selected optimal sections to the model. Updates sections marked with SEL checkbox and performs re-analysis with changed members.",
+              "default": true,
+              "x-ui": {
+                "label": "Model Update",
+                "order": 7
+              }
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "File path to save report output",
+              "x-ui": {
+                "hint": "e.g. C:\\MIDAS\\Report\\optimal_design",
+                "label": "Export Path",
+                "order": 8
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Output Options",
+            "order": 7
+          }
+        }
+      }
+    }
+  }
+}

@@ -260,6 +260,10 @@ export function collectFieldConditionInfo(
           .map(([k, v]) => `${k}:${v}`)
           .join('|');
       }
+
+      if (!conditionKey && condition.conditionText) {
+        conditionKey = condition.conditionText;
+      }
     }
 
     fieldInfoMap.set(field, {

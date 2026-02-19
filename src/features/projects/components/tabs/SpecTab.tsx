@@ -333,31 +333,151 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               required: formatRequiredStatus(field.required),
             };
 
-            // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
+            // 중첩 필드 처리 - 조건별 그룹화 지원
             if (field.children && field.children.length > 0) {
+              // 🔥 3-depth 필드들을 조건별로 그룹화
+              const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header');
+              
+              const childFieldInfoMap = collectFieldConditionInfo(
+                childrenToProcess,
+                tableDefinition?.schemaExtensions?.conditional || []
+              );
+
+              const { fieldGroups: childGroups, noConditionFields: childrenWithoutCondition } = groupFieldsByCondition(
+                childrenToProcess,
+                childFieldInfoMap
+              );
+
+              param.children = [];
               let childNo = 1;
-              param.children = field.children.map((child: any) => {
-                if (child.type === 'section-header') {
-                  return {
-                    no: '', name: '', type: 'section-header',
-                    section: child.section || child.ui?.label || '',
-                    default: '', description: '', required: '',
-                  };
+
+              const mapGrandchildren = (grandchildren: any[], parentNo: string) => {
+                const grandchildrenToProcess = grandchildren.filter((c: any) => c.type !== 'section-header');
+                const grandchildFieldInfoMap = collectFieldConditionInfo(
+                  grandchildrenToProcess,
+                  tableDefinition?.schemaExtensions?.conditional || []
+                );
+
+                const { fieldGroups: grandchildGroups, noConditionFields: grandchildrenWithoutCondition } = groupFieldsByCondition(
+                  grandchildrenToProcess,
+                  grandchildFieldInfoMap
+                );
+
+                const mappedGrandchildren: any[] = [];
+                let grandchildNo = 1;
+
+                for (const { field: grandchild } of grandchildrenWithoutCondition) {
+                  mappedGrandchildren.push({
+                    no: `${parentNo}.${grandchildNo++}`,
+                    name: grandchild.key.split('.').pop() || grandchild.key,
+                    type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
+                    default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                    description: buildFieldDescription(grandchild, tableDefinition),
+                    required: grandchild['x-required-when'] ? 'Conditional' :
+                      grandchild['x-optional-when'] ? 'Optional' :
+                        formatRequiredStatus(grandchild.required),
+                  });
                 }
+
+                for (const [conditionKey, grandchildrenWithCondition] of grandchildGroups) {
+                  const { conditionInfo } = grandchildrenWithCondition[0];
+                  const isRequired = conditionInfo?.type === 'x-required-when';
+                  const parts = conditionKey.split(':');
+                  const conditionName = parts[0];
+                  const conditionValue = parts.slice(1).join(':');
+                  const conditionText = isRequired
+                    ? `Required (When "${conditionName}" is ${conditionValue})`
+                    : `Optional (When "${conditionName}" is ${conditionValue})`;
+
+                  mappedGrandchildren.push({
+                    no: '', name: '', type: 'section-header',
+                    section: conditionText,
+                    default: '', description: '', required: '',
+                  });
+
+                  for (const { field: grandchild } of grandchildrenWithCondition) {
+                    mappedGrandchildren.push({
+                      no: `${parentNo}.${grandchildNo++}`,
+                      name: grandchild.key.split('.').pop() || grandchild.key,
+                      type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
+                      default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                      description: buildFieldDescription(grandchild, tableDefinition),
+                      required: grandchild['x-required-when'] ? 'Conditional' :
+                        grandchild['x-optional-when'] ? 'Optional' :
+                          formatRequiredStatus(grandchild.required),
+                    });
+                  }
+                }
+
+                return mappedGrandchildren;
+              };
+
+              // 🔥 조건 없는 children 먼저 렌더링
+              for (const { field: child } of childrenWithoutCondition) {
                 const currentNo = childNo++;
-                return {
+                const mappedChild: any = {
                   no: `${rowNumber - 1}.${currentNo}`,
                   name: child.key.split('.').pop() || child.key,
                   type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                   default: child.default !== undefined ? String(child.default) : '-',
-                  // 🔥 Use buildFieldDescription for child fields to show x-optional-when conditions
                   description: buildFieldDescription(child, tableDefinition),
-                  // 🔥 x-required-when/x-optional-when이면 Conditional로 표시
                   required: child['x-required-when'] ? 'Conditional' :
-                    child['x-optional-when'] ? 'Conditional' :
+                    child['x-optional-when'] ? 'Optional' :
                       formatRequiredStatus(child.required),
                 };
-              });
+
+                // 🔥 3-depth: Grandchildren mapping
+                if (child.children && child.children.length > 0) {
+                  mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                }
+
+                param.children.push(mappedChild);
+              }
+
+              // 🔥 조건별 children 렌더링 - section-header 추가
+              for (const [conditionKey, childrenWithCondition] of childGroups) {
+                // 조건 정보 가져오기
+                const { conditionInfo } = childrenWithCondition[0];
+                const isRequired = conditionInfo?.type === 'x-required-when';
+                
+                // 조건 키에서 이름과 값 추출
+                const parts = conditionKey.split(':');
+                const conditionName = parts[0];
+                const conditionValue = parts.slice(1).join(':');
+                
+                const conditionText = isRequired
+                  ? `Required (When "${conditionName}" is ${conditionValue})`
+                  : `Optional (When "${conditionName}" is ${conditionValue})`;
+
+                // section-header 추가
+                param.children.push({
+                  no: '', name: '', type: 'section-header',
+                  section: conditionText,
+                  default: '', description: '', required: '',
+                });
+
+                // 조건에 맞는 children 추가
+                for (const { field: child } of childrenWithCondition) {
+                  const currentNo = childNo++;
+                  const mappedChild: any = {
+                    no: `${rowNumber - 1}.${currentNo}`,
+                    name: child.key.split('.').pop() || child.key,
+                    type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                    default: child.default !== undefined ? String(child.default) : '-',
+                    description: buildFieldDescription(child, tableDefinition),
+                    required: child['x-required-when'] ? 'Conditional' :
+                      child['x-optional-when'] ? 'Optional' :
+                        formatRequiredStatus(child.required),
+                  };
+
+                  // 🔥 3-depth: Grandchildren mapping
+                  if (child.children && child.children.length > 0) {
+                    mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                  }
+
+                  param.children.push(mappedChild);
+                }
+              }
             }
 
             // 🔥 Description 빌드 (모듈화된 함수 사용)
@@ -380,12 +500,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           }
 
           // 🔥 조건별 그룹 렌더링 (조건 헤더 + 필드들)
-          for (const [, fieldsWithCondition] of fieldGroups) {
-            // 조건 헤더 추가
+          for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
+            // 조건 정보 가져오기
             const conditionInfo = fieldsWithCondition[0].conditionInfo;
+            const isRequired = conditionInfo?.type === 'x-required-when';
+            
+            // 조건 헤더 추가
+            const conditionText = isRequired
+              ? `Required (When ${conditionInfo?.conditionText || conditionKey})`
+              : `Optional (When ${conditionInfo?.conditionText || conditionKey})`;
+            
             params.push({
               no: '',
-              section: `Advanced (When ${conditionInfo.conditionText})`,
+              section: conditionText,
               name: '',
               type: '',
               default: '',
@@ -407,28 +534,137 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
               if (field.children && field.children.length > 0) {
                 let childNo = 1;
-                param.children = field.children.map((child: any) => {
-                  if (child.type === 'section-header') {
-                    return {
-                      no: '', name: '', type: 'section-header',
-                      section: child.section || child.ui?.label || '',
-                      default: '', description: '', required: '',
-                    };
+
+                const mapGrandchildren = (grandchildren: any[], parentNo: string) => {
+                  const grandchildrenToProcess = grandchildren.filter((c: any) => c.type !== 'section-header');
+                  const grandchildFieldInfoMap = collectFieldConditionInfo(
+                    grandchildrenToProcess,
+                    tableDefinition?.schemaExtensions?.conditional || []
+                  );
+
+                  const { fieldGroups: grandchildGroups, noConditionFields: grandchildrenWithoutCondition } = groupFieldsByCondition(
+                    grandchildrenToProcess,
+                    grandchildFieldInfoMap
+                  );
+
+                  const mappedGrandchildren: any[] = [];
+                  let grandchildNo = 1;
+
+                  for (const { field: grandchild } of grandchildrenWithoutCondition) {
+                    mappedGrandchildren.push({
+                      no: `${parentNo}.${grandchildNo++}`,
+                      name: grandchild.key.split('.').pop() || grandchild.key,
+                      type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
+                      default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                      description: buildFieldDescription(grandchild, tableDefinition),
+                      required: grandchild['x-required-when'] ? 'Conditional' :
+                        grandchild['x-optional-when'] ? 'Optional' :
+                          grandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                    });
                   }
+
+                  for (const [conditionKey, grandchildrenWithCondition] of grandchildGroups) {
+                    const { conditionInfo } = grandchildrenWithCondition[0];
+                    const isRequired = conditionInfo?.type === 'x-required-when';
+                    const parts = conditionKey.split(':');
+                    const conditionName = parts[0];
+                    const conditionValue = parts.slice(1).join(':');
+                    const conditionText = isRequired
+                      ? `Required (When "${conditionName}" is ${conditionValue})`
+                      : `Optional (When "${conditionName}" is ${conditionValue})`;
+
+                    mappedGrandchildren.push({
+                      no: '', name: '', type: 'section-header',
+                      section: conditionText,
+                      default: '', description: '', required: '',
+                    });
+
+                    for (const { field: grandchild } of grandchildrenWithCondition) {
+                      mappedGrandchildren.push({
+                        no: `${parentNo}.${grandchildNo++}`,
+                        name: grandchild.key.split('.').pop() || grandchild.key,
+                        type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
+                        default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                        description: buildFieldDescription(grandchild, tableDefinition),
+                        required: grandchild['x-required-when'] ? 'Conditional' :
+                          grandchild['x-optional-when'] ? 'Optional' :
+                            grandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                      });
+                    }
+                  }
+
+                  return mappedGrandchildren;
+                };
+
+                const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header');
+                const childFieldInfoMap = collectFieldConditionInfo(
+                  childrenToProcess,
+                  tableDefinition?.schemaExtensions?.conditional || []
+                );
+
+                const { fieldGroups: childGroups, noConditionFields: childrenWithoutCondition } = groupFieldsByCondition(
+                  childrenToProcess,
+                  childFieldInfoMap
+                );
+
+                param.children = [];
+
+                for (const { field: child } of childrenWithoutCondition) {
                   const currentNo = childNo++;
-                  return {
+                  const mappedChild: any = {
                     no: `${rowNumber - 1}.${currentNo}`,
                     name: child.key.split('.').pop() || child.key,
                     type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                     default: child.default !== undefined ? String(child.default) : '-',
-                    // 🔥 Use buildFieldDescription for child fields to show x-optional-when conditions
                     description: buildFieldDescription(child, tableDefinition),
-                    // 🔥 x-required-when이면 Conditional, x-optional-when이면 Conditional
                     required: child['x-required-when'] ? 'Conditional' :
-                      child['x-optional-when'] ? 'Conditional' :
+                      child['x-optional-when'] ? 'Optional' :
                         child.required?.['*'] === 'required' ? 'Required' : 'Optional',
                   };
-                });
+
+                  if (child.children && child.children.length > 0) {
+                    mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                  }
+
+                  param.children.push(mappedChild);
+                }
+
+                for (const [conditionKey, childrenWithCondition] of childGroups) {
+                  const { conditionInfo } = childrenWithCondition[0];
+                  const isRequired = conditionInfo?.type === 'x-required-when';
+                  const parts = conditionKey.split(':');
+                  const conditionName = parts[0];
+                  const conditionValue = parts.slice(1).join(':');
+                  const conditionText = isRequired
+                    ? `Required (When "${conditionName}" is ${conditionValue})`
+                    : `Optional (When "${conditionName}" is ${conditionValue})`;
+
+                  param.children.push({
+                    no: '', name: '', type: 'section-header',
+                    section: conditionText,
+                    default: '', description: '', required: '',
+                  });
+
+                  for (const { field: child } of childrenWithCondition) {
+                    const currentNo = childNo++;
+                    const mappedChild: any = {
+                      no: `${rowNumber - 1}.${currentNo}`,
+                      name: child.key.split('.').pop() || child.key,
+                      type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                      default: child.default !== undefined ? String(child.default) : '-',
+                      description: buildFieldDescription(child, tableDefinition),
+                      required: child['x-required-when'] ? 'Conditional' :
+                        child['x-optional-when'] ? 'Optional' :
+                          child.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                    };
+
+                    if (child.children && child.children.length > 0) {
+                      mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                    }
+
+                    param.children.push(mappedChild);
+                  }
+                }
               }
 
               // 🔥 Description 빌드 (모듈화된 함수 사용)

@@ -17,6 +17,20 @@ import {
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
 
 // ============================================================================
+// Type Definitions
+// ============================================================================
+
+/**
+ * Reference information for footnote generation
+ */
+interface ReferenceInfo {
+  footnoteNumber: string; // ¹⁾, ²⁾, ³⁾, etc.
+  url: string;
+  title: string;
+  article?: string;
+}
+
+// ============================================================================
 // HTML Generation (YAML-based)
 // ============================================================================
 
@@ -30,7 +44,10 @@ export async function generateHTMLDocumentWithYAML(
 ): Promise<string> {
   const template = await loadCachedDefinition(schemaType as 'original' | 'enhanced', 'html') as HTMLTemplateDefinition;
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
-  const tableHTML = generateTableHTML(sections, template);
+  
+  // 🔥 Collect x-reference fields for footnote generation
+  const references = collectReferences(sections);
+  const tableHTML = generateTableHTML(sections, template, references);
 
   return `
 <!DOCTYPE html>
@@ -52,6 +69,7 @@ export async function generateHTMLDocumentWithYAML(
         ${tableHTML}
     </table>
     
+    ${generateFootnoteSection(references)}
     ${generateTransportSection(schema, template)}
 </body>
 </html>
@@ -61,7 +79,7 @@ export async function generateHTMLDocumentWithYAML(
 /**
  * 테이블 HTML 생성 (YAML 기반)
  */
-function generateTableHTML(sections: SectionGroup[], template: HTMLTemplateDefinition): string {
+function generateTableHTML(sections: SectionGroup[], template: HTMLTemplateDefinition, references?: Map<string, ReferenceInfo>): string {
   let html = generateTableHeader(template);
   html += '<tbody>';
 
@@ -70,7 +88,7 @@ function generateTableHTML(sections: SectionGroup[], template: HTMLTemplateDefin
     html += generateSectionHeader(section.name, template);
 
     for (const field of section.fields) {
-      html += generateFieldRow(field, rowNumber++, template);
+      html += generateFieldRow(field, rowNumber++, template, references);
     }
   }
 
@@ -139,8 +157,8 @@ function generateSectionHeader(sectionName: string, template: HTMLTemplateDefini
 /**
  * 필드 행 생성 (YAML 기반, 중첩 객체 지원)
  */
-function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTMLTemplateDefinition): string {
-  const descriptionHTML = generateFieldDescription(field, template);
+function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTMLTemplateDefinition, references?: Map<string, ReferenceInfo>): string {
+  const descriptionHTML = generateFieldDescription(field, template, references);
   const requiredHTML = generateRequiredCell(field, template);
   const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type;
@@ -160,7 +178,6 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
   if (field.children && field.children.length > 0) {
     let childNo = 1;
     for (const child of field.children) {
-      const childDescriptionHTML = generateFieldDescription(child, template);
       const childRequiredHTML = generateRequiredCell(child, template);
       const childDefaultValue = formatDefaultValue(child.default, child.type);
       const childTypeDisplay = child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type;
@@ -168,16 +185,43 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
       // 중첩 필드의 key에서 부모 prefix 제거 (UNIT.FORCE → FORCE)
       const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
 
+      const currentChildNo = childNo++;
+      const childDescriptionHTML = generateFieldDescription(child, template, references);
       html += `
         <tr style="background-color: rgba(255, 255, 255, 0.02);">
-          <td style="text-align: center; padding-left: 2em;">(${childNo++})</td>
-          <td style="padding-left: 2em;">${childDescriptionHTML}</td>
+          <td style="text-align: center; padding-left: 1em;">(${currentChildNo})</td>
+          <td style="padding-left: 1em;">${childDescriptionHTML}</td>
           <td style="text-align: center;"><code>"${escapeHtml(childKeyDisplay || '')}"</code></td>
           <td style="text-align: center;">${childTypeDisplay}</td>
           <td style="text-align: center;">${childDefaultValue}</td>
           <td>${childRequiredHTML}</td>
         </tr>
       `;
+
+      // 🔥 3-depth 중첩 필드 처리 (grandchildren)
+      if (child.children && child.children.length > 0) {
+        let grandchildNo = 1;
+        for (const grandchild of child.children) {
+          const grandchildDescriptionHTML = generateFieldDescription(grandchild, template, references);
+          const grandchildRequiredHTML = generateRequiredCell(grandchild, template);
+          const grandchildDefaultValue = formatDefaultValue(grandchild.default, grandchild.type);
+          const grandchildTypeDisplay = grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type;
+
+          // 3-depth 필드의 key에서 부모 prefix 제거
+          const grandchildKeyDisplay = grandchild.key.includes('.') ? grandchild.key.split('.').pop() : grandchild.key;
+
+          html += `
+            <tr style="background-color: rgba(240, 240, 240, 0.05);">
+              <td style="text-align: center; padding-left: 2em;">${currentChildNo}.${grandchildNo++}</td>
+              <td style="padding-left: 2em;">${grandchildDescriptionHTML}</td>
+              <td style="text-align: center;"><code>"${escapeHtml(grandchildKeyDisplay || '')}"</code></td>
+              <td style="text-align: center;">${grandchildTypeDisplay}</td>
+              <td style="text-align: center;">${grandchildDefaultValue}</td>
+              <td>${grandchildRequiredHTML}</td>
+            </tr>
+          `;
+        }
+      }
     }
   }
 
@@ -187,12 +231,20 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
 /**
  * 필드 설명 생성 (YAML 기반)
  */
-function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateDefinition): string {
+function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateDefinition, references?: Map<string, ReferenceInfo>): string {
   const parts: string[] = [];
 
   // Label
   if (field.ui?.label) {
-    parts.push(`<strong>${escapeHtml(field.ui.label)}</strong>`);
+    let label = `<strong>${escapeHtml(field.ui.label)}</strong>`;
+    
+    // 🔥 Add footnote marker if field has x-reference
+    if (field['x-reference'] && references?.has(field.key)) {
+      const ref = references.get(field.key)!;
+      label += ` <span style="font-size: 16px; color: #bf2600;">${ref.footnoteNumber}</span>`;
+    }
+    
+    parts.push(label);
   }
 
   // Standard enum (supports both field.enum and field.items.enum for arrays)
@@ -498,6 +550,63 @@ function generateTransportSection(schema: EnhancedSchema, template: HTMLTemplate
   `;
 }
 
+// ============================================================================
+// Reference & Footnote Generation
+// ============================================================================
+
+/**
+ * Collect all x-reference fields from sections for footnote generation
+ */
+function collectReferences(sections: SectionGroup[]): Map<string, ReferenceInfo> {
+  const references = new Map<string, ReferenceInfo>();
+  const superscripts = ['¹⁾', '²⁾', '³⁾', '⁴⁾', '⁵⁾', '⁶⁾', '⁷⁾', '⁸⁾', '⁹⁾', '¹⁰⁾'];
+  let footnoteIndex = 0;
+
+  function processField(field: EnhancedField) {
+    if (field['x-reference'] && !references.has(field.key)) {
+      const ref = field['x-reference'] as any;
+      references.set(field.key, {
+        footnoteNumber: superscripts[footnoteIndex++] || `⁽${footnoteIndex}⁾`,
+        url: ref.url || '',
+        title: ref.title || field.ui?.label || field.key,
+        article: ref.article
+      });
+    }
+
+    // Process children recursively
+    if (field.children) {
+      field.children.forEach(processField);
+    }
+  }
+
+  sections.forEach(section => {
+    section.fields.forEach(processField);
+  });
+
+  return references;
+}
+
+/**
+ * Generate footnote section HTML from collected references
+ */
+function generateFootnoteSection(references: Map<string, ReferenceInfo>): string {
+  if (references.size === 0) {
+    return '';
+  }
+
+  const footnotes: string[] = [];
+  references.forEach(ref => {
+    footnotes.push(`
+      <p><span><a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"><span style="font-size: 16px; color: #bf2600;">${ref.footnoteNumber}</span><em> For more details, refer to the ${escapeHtml(ref.title)} ↗</em></a></span></p>
+    `);
+  });
+
+  return `
+<br><br>
+${footnotes.join('\n')}
+  `;
+}
+
 /**
  * HTML Escape
  */
@@ -526,7 +635,10 @@ export function generateHTMLDocument(
   schemaType: string = 'enhanced'
 ): string {
   const sections = compileEnhancedSchema(schema, psdSet, schemaType);
-  const tableHTML = generateTableHTMLLegacy(sections);
+  
+  // 🔥 Collect x-reference fields for footnote generation
+  const references = collectReferences(sections);
+  const tableHTML = generateTableHTMLLegacy(sections, references);
 
   // 🔥 Wrapper key (Assign/Argument) 정보 추출 - properties에서 실제 wrapper key 찾기
   const wrapperKey = getWrapperKey(schema);
@@ -605,6 +717,8 @@ export function generateHTMLDocument(
         ${tableHTML}
       </table>
     </div>
+    
+    ${generateFootnoteSection(references)}
   `.trim();
 }
 
@@ -644,7 +758,7 @@ function getWrapperDescription(schema: EnhancedSchema): string {
   return 'Map of keyed objects where each key is a string identifier.';
 }
 
-function generateTableHTMLLegacy(sections: SectionGroup[]): string {
+function generateTableHTMLLegacy(sections: SectionGroup[], references?: Map<string, ReferenceInfo>): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
   html += generateTableHeaderLegacy();
@@ -654,7 +768,7 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
 
     // 🔥 조건별로 필드 그룹화
     const fieldsWithoutCondition: EnhancedField[] = [];
-    const fieldsByCondition: Map<string, EnhancedField[]> = new Map();
+    const fieldsByCondition: Map<string, { fields: EnhancedField[], isRequired: boolean }> = new Map();
 
     for (const field of section.fields) {
       // 🔥 조건 소스: x-required-when + x-optional-when (ui.visibleWhen은 사용하지 않음)
@@ -664,17 +778,20 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
 
       // 조건 중 하나라도 있으면 조건부 필드로 처리
       const condition = requiredWhen || optionalWhen;
+      const isRequired = !!requiredWhen;
 
       if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
-        // 조건 키 생성 (예: "TYPE: BEAM,TRUSS" 또는 "iMETHOD: [2,4]")
+        // 조건 키 생성 (예: "required:TYPE: BEAM,TRUSS" 또는 "optional:iMETHOD: [2,4]")
         const conditionKey = Object.entries(condition)
           .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
           .join(', ');
+        
+        const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionKey}`;
 
-        if (!fieldsByCondition.has(conditionKey)) {
-          fieldsByCondition.set(conditionKey, []);
+        if (!fieldsByCondition.has(fullKey)) {
+          fieldsByCondition.set(fullKey, { fields: [], isRequired });
         }
-        fieldsByCondition.get(conditionKey)!.push(field);
+        fieldsByCondition.get(fullKey)!.fields.push(field);
       } else {
         fieldsWithoutCondition.push(field);
       }
@@ -684,16 +801,24 @@ function generateTableHTMLLegacy(sections: SectionGroup[]): string {
     if (fieldsWithoutCondition.length > 0) {
       html += generateSectionHeaderLegacy(section.name);
       for (const field of fieldsWithoutCondition) {
-        html += generateFieldRowLegacy(field, rowNumber++);
+        html += generateFieldRowLegacy(field, rowNumber++, references);
       }
     }
 
     // 🔥 조건별 필드 렌더링 - "Advanced" 그룹으로 표시
-    for (const [conditionKey, fields] of fieldsByCondition.entries()) {
-      const conditionLabel = `Advanced (When "${conditionKey.split(':')[0].trim()}" is ${conditionKey.split(':')[1].trim()})`;
+    for (const [fullKey, { fields, isRequired }] of fieldsByCondition.entries()) {
+      // fullKey format: "required:CODE_CHECKING_RATIO: true" or "optional:CODE_CHECKING_RATIO: true"
+      const parts = fullKey.split(':');
+      const conditionName = parts[1].trim();
+      const conditionValue = parts.slice(2).join(':').trim();
+      
+      const conditionLabel = isRequired 
+        ? `Required (When "${conditionName}" is ${conditionValue})`
+        : `Optional (When "${conditionName}" is ${conditionValue})`;
+      
       html += generateSectionHeaderLegacy(conditionLabel);
       for (const field of fields) {
-        html += generateFieldRowLegacy(field, rowNumber++);
+        html += generateFieldRowLegacy(field, rowNumber++, references);
       }
     }
   }
@@ -733,16 +858,71 @@ function generateSectionHeaderLegacy(sectionName: string): string {
   `;
 }
 
-function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string {
-  const descriptionHTML = generateFieldDescriptionLegacy(field);
+function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, references?: Map<string, ReferenceInfo>): string {
+  const descriptionHTML = generateFieldDescriptionLegacy(field, references);
   const requiredHTML = generateRequiredCellLegacy(field);
   const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array [${field.items?.type || 'any'}]` : field.type;
 
-  // 🔥 Zendesk 스타일: children이 있으면 No. 칼럼에 rowspan 적용
-  // section-header도 포함하여 모든 children 수로 계산 (section-header는 colspan=6으로 No. 칼럼 제외)
+  // 🔥 rowspan 계산: children + grandchildren + 조건 헤더 모두 포함
+  const calculateTotalRows = (field: EnhancedField): number => {
+    if (!field.children || field.children.length === 0) return 1;
+    
+    // 🔥 조건별 그룹화를 동일하게 수행하여 정확한 row 수 계산
+    const childrenWithoutCondition: EnhancedField[] = [];
+    const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
+
+    for (const child of field.children) {
+      if (child.type === 'section-header') continue;
+
+      const childAny = child as any;
+      const requiredWhen = childAny['x-required-when'];
+      const optionalWhen = childAny['x-optional-when'];
+      const condition = requiredWhen || optionalWhen;
+      const isRequired = !!requiredWhen;
+
+      if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
+        const conditionKey = Object.entries(condition)
+          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
+          .join(', ');
+        
+        const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionKey}`;
+
+        if (!childrenByCondition.has(fullKey)) {
+          childrenByCondition.set(fullKey, { children: [], isRequired });
+        }
+        childrenByCondition.get(fullKey)!.children.push(child);
+      } else {
+        childrenWithoutCondition.push(child);
+      }
+    }
+
+    let totalRows = 1; // 부모 행
+
+    // 조건 없는 children
+    for (const child of childrenWithoutCondition) {
+      totalRows += 1; // child 행
+      if (child.children && child.children.length > 0) {
+        totalRows += child.children.length; // grandchildren 행들
+      }
+    }
+
+    // 조건별 children (섹션 헤더 + 필드들)
+    for (const [, { children }] of childrenByCondition.entries()) {
+      totalRows += 1; // section-header 행
+      for (const child of children) {
+        totalRows += 1; // child 행
+        if (child.children && child.children.length > 0) {
+          totalRows += child.children.length; // grandchildren 행들
+        }
+      }
+    }
+
+    return totalRows;
+  };
+
   const hasChildren = field.children && field.children.length > 0;
-  const rowspanValue = hasChildren ? field.children!.length + 1 : 1;
+  const rowspanValue = hasChildren ? calculateTotalRows(field) : 1;
   const rowspanAttr = hasChildren ? ` rowspan="${rowspanValue}"` : '';
 
   // Zendesk 스타일: inline 패딩 + <p> 태그 + text-align: center
@@ -771,23 +951,41 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
 
   // 🔥 Zendesk 스타일: 중첩 필드는 No. 칼럼 없이, Description이 두 칼럼으로 분리 (인덱스 + 내용)
   if (hasChildren) {
-    let childNo = 1;
-    for (const child of field.children!) {
-      // 🔥 section-header 타입 처리: 조건 헤더로 렌더링 (번호 없음)
-      // colspan=6: No. 칼럼은 부모의 rowspan이 점유하므로 제외
-      if (child.type === 'section-header') {
-        const sectionLabel = (child as any).section || child.ui?.label || child.key;
-        html += `
-        <tr>
-          <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="6">
-            <p><span style="color: #4c9aff;">${escapeHtml(sectionLabel)}</span></p>
-          </td>
-        </tr>
-      `;
-        continue; // 번호 증가 없이 다음 child로
-      }
+    // 🔥 3-depth 필드 조건별 그룹화
+    const childrenWithoutCondition: EnhancedField[] = [];
+    const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
 
-      const childDescriptionHTML = generateFieldDescriptionLegacy(child);
+    for (const child of field.children!) {
+      // section-header는 skip (자동 생성됨)
+      if (child.type === 'section-header') continue;
+
+      const childAny = child as any;
+      const requiredWhen = childAny['x-required-when'];
+      const optionalWhen = childAny['x-optional-when'];
+      const condition = requiredWhen || optionalWhen;
+      const isRequired = !!requiredWhen;
+
+      if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
+        const conditionKey = Object.entries(condition)
+          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
+          .join(', ');
+        
+        const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionKey}`;
+
+        if (!childrenByCondition.has(fullKey)) {
+          childrenByCondition.set(fullKey, { children: [], isRequired });
+        }
+        childrenByCondition.get(fullKey)!.children.push(child);
+      } else {
+        childrenWithoutCondition.push(child);
+      }
+    }
+
+    let childNo = 1;
+
+    // 🔥 조건 없는 children 먼저 렌더링
+    for (const child of childrenWithoutCondition) {
+      const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
       const childRequiredHTML = generateRequiredCellLegacy(child);
       const childDefaultValue = formatDefaultValue(child.default, child.type);
       const childTypeDisplay = child.type === 'array' ? `Array [${child.items?.type || 'any'}]` : child.type;
@@ -798,10 +996,11 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
       // 🔥 Zendesk 스타일: child row는 No. 칼럼 없음 (rowspan으로 parent가 점유)
       // Description이 두 개의 td로 분리: (서브인덱스) + (설명)
       // 🔥 번호 형식: parent.child (예: 4.1, 4.2, 4.3) - Spec Tab과 동일
+      const currentChildNo = childNo++;
       html += `
         <tr>
           <td style="${ZENDESK_CELL_STYLE}">
-            <p style="text-align: center;">${rowNumber}.${childNo++}</p>
+            <p style="text-align: center;">${rowNumber}.${currentChildNo}</p>
           </td>
           <td style="${ZENDESK_CELL_STYLE}">
             ${childDescriptionHTML}
@@ -820,19 +1019,155 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number): string
           </td>
         </tr>
       `;
+
+      // 🔥 3-depth 중첩 필드 처리 (grandchildren)
+      if (child.children && child.children.length > 0) {
+        let grandchildNo = 1;
+        for (const grandchild of child.children) {
+          const grandchildDescriptionHTML = generateFieldDescriptionLegacy(grandchild, references);
+          const grandchildRequiredHTML = generateRequiredCellLegacy(grandchild);
+          const grandchildDefaultValue = formatDefaultValue(grandchild.default, grandchild.type);
+          const grandchildTypeDisplay = grandchild.type === 'array' ? `Array [${grandchild.items?.type || 'any'}]` : grandchild.type;
+
+          // 3-depth 필드의 key에서 부모 prefix 제거
+          const grandchildKeyDisplay = grandchild.key.includes('.') ? grandchild.key.split('.').pop() : grandchild.key;
+
+          html += `
+            <tr style="background-color: rgba(240, 240, 240, 0.3);">
+              <td style="${ZENDESK_CELL_STYLE} padding-left: 20px;">
+                <p style="text-align: center;">${rowNumber}.${currentChildNo}.${grandchildNo++}</p>
+              </td>
+              <td style="${ZENDESK_CELL_STYLE} padding-left: 30px;">
+                ${grandchildDescriptionHTML}
+              </td>
+              <td style="${ZENDESK_CELL_STYLE}">
+                <p style="text-align: center;">"${escapeHtml(grandchildKeyDisplay || '')}"</p>
+              </td>
+              <td style="${ZENDESK_CELL_STYLE}">
+                <p style="text-align: center;">${grandchildTypeDisplay}</p>
+              </td>
+              <td style="${ZENDESK_CELL_STYLE}">
+                <p style="text-align: center;">${grandchildDefaultValue}</p>
+              </td>
+              <td style="${ZENDESK_CELL_STYLE}">
+                <p style="text-align: center;">${grandchildRequiredHTML}</p>
+              </td>
+            </tr>
+          `;
+        }
+      }
+    }
+
+    // 🔥 조건별 children 렌더링 - 조건 헤더 추가
+    for (const [fullKey, { children, isRequired }] of childrenByCondition.entries()) {
+      // fullKey format: "required:CODE_CHECKING_RATIO: true" or "optional:CODE_CHECKING_RATIO: true"
+      const parts = fullKey.split(':');
+      const conditionName = parts[1].trim();
+      const conditionValue = parts.slice(2).join(':').trim();
+      
+      const conditionLabel = isRequired 
+        ? `Required (When "${conditionName}" is ${conditionValue})`
+        : `Optional (When "${conditionName}" is ${conditionValue})`;
+      
+      // section-header 추가 (colspan=6: No. 칼럼은 부모의 rowspan이 점유)
+      html += `
+        <tr>
+          <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="6">
+            <p><span style="color: #4c9aff;">${escapeHtml(conditionLabel)}</span></p>
+          </td>
+        </tr>
+      `;
+
+      for (const child of children) {
+        const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
+        const childRequiredHTML = generateRequiredCellLegacy(child);
+        const childDefaultValue = formatDefaultValue(child.default, child.type);
+        const childTypeDisplay = child.type === 'array' ? `Array [${child.items?.type || 'any'}]` : child.type;
+
+        const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
+
+        const currentChildNo = childNo++;
+        html += `
+          <tr>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">${rowNumber}.${currentChildNo}</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              ${childDescriptionHTML}
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">"${escapeHtml(childKeyDisplay || '')}"</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">${childTypeDisplay}</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">${childDefaultValue}</p>
+            </td>
+            <td style="${ZENDESK_CELL_STYLE}">
+              <p style="text-align: center;">${childRequiredHTML}</p>
+            </td>
+          </tr>
+        `;
+
+        // 🔥 3-depth 중첩 필드 처리 (grandchildren)
+        if (child.children && child.children.length > 0) {
+          let grandchildNo = 1;
+          for (const grandchild of child.children) {
+            const grandchildDescriptionHTML = generateFieldDescriptionLegacy(grandchild, references);
+            const grandchildRequiredHTML = generateRequiredCellLegacy(grandchild);
+            const grandchildDefaultValue = formatDefaultValue(grandchild.default, grandchild.type);
+            const grandchildTypeDisplay = grandchild.type === 'array' ? `Array [${grandchild.items?.type || 'any'}]` : grandchild.type;
+
+            const grandchildKeyDisplay = grandchild.key.includes('.') ? grandchild.key.split('.').pop() : grandchild.key;
+
+            html += `
+              <tr style="background-color: rgba(240, 240, 240, 0.3);">
+                <td style="${ZENDESK_CELL_STYLE} padding-left: 20px;">
+                  <p style="text-align: center;">${rowNumber}.${currentChildNo}.${grandchildNo++}</p>
+                </td>
+                <td style="${ZENDESK_CELL_STYLE} padding-left: 30px;">
+                  ${grandchildDescriptionHTML}
+                </td>
+                <td style="${ZENDESK_CELL_STYLE}">
+                  <p style="text-align: center;">"${escapeHtml(grandchildKeyDisplay || '')}"</p>
+                </td>
+                <td style="${ZENDESK_CELL_STYLE}">
+                  <p style="text-align: center;">${grandchildTypeDisplay}</p>
+                </td>
+                <td style="${ZENDESK_CELL_STYLE}">
+                  <p style="text-align: center;">${grandchildDefaultValue}</p>
+                </td>
+                <td style="${ZENDESK_CELL_STYLE}">
+                  <p style="text-align: center;">${grandchildRequiredHTML}</p>
+                </td>
+              </tr>
+            `;
+          }
+        }
+      }
     }
   }
 
   return html;
 }
 
-function generateFieldDescriptionLegacy(field: EnhancedField): string {
+function generateFieldDescriptionLegacy(field: EnhancedField, references?: Map<string, ReferenceInfo>): string {
   const parts: string[] = [];
 
   // 🔥 우선순위: x-ui.label > description > key
   const displayLabel = field.ui?.label || field.description || field.key;
   if (displayLabel) {
-    parts.push(`<p>${escapeHtml(displayLabel)}</p>`);
+    let labelHTML = `<p>${escapeHtml(displayLabel)}`;
+    
+    // 🔥 Add footnote marker if field has x-reference
+    if (field['x-reference'] && references?.has(field.key)) {
+      const ref = references.get(field.key)!;
+      labelHTML += ` <span style="font-size: 16px; color: #bf2600;">${ref.footnoteNumber}</span>`;
+    }
+    
+    labelHTML += `</p>`;
+    parts.push(labelHTML);
   }
 
   // Zendesk 스타일: enum 값은 <p> • value 형식

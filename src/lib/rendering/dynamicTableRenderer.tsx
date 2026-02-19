@@ -110,8 +110,8 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
                   return;
                 }
 
-                // 자식 행
-                rows.push(renderChildRow(child, definition, param.no, childIdx));
+                // 자식 행 (🔥 3-depth grandchildren 지원: 배열 spread)
+                rows.push(...renderChildRow(child, definition, param.no, childIdx));
               });
             }
 
@@ -150,6 +150,25 @@ function renderNestedSectionHeader(child: any, definition: TableDefinition, pare
     <tr key={uniqueKey} className={nestedStyle.background || 'bg-blue-950/30 border-b border-zinc-800'}>
       <td colSpan={6} className={`p-2 ${nestedStyle.textColor || 'text-blue-400'} font-semibold text-xs pl-8`}>
         {child.section}
+      </td>
+    </tr>
+  );
+}
+
+function renderGrandchildSectionHeader(
+  grandchild: any,
+  definition: TableDefinition,
+  parentNo: number,
+  childIdx: number,
+  grandchildIdx: number
+) {
+  const nestedStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
+  const uniqueKey = `grandchild-section-${parentNo}-${childIdx}-${grandchildIdx}-${grandchild.section || grandchild.name || ''}`;
+
+  return (
+    <tr key={uniqueKey} className={nestedStyle.background || 'bg-blue-950/30 border-b border-zinc-800'}>
+      <td colSpan={6} className={`p-2 ${nestedStyle.textColor || 'text-blue-400'} font-semibold text-xs pl-12`}>
+        {grandchild.section}
       </td>
     </tr>
   );
@@ -224,15 +243,17 @@ function renderParameterRow(
 }
 
 /**
- * 자식 행 렌더링
+ * 자식 행 렌더링 (3-depth grandchildren 지원)
  */
-function renderChildRow(child: any, definition: TableDefinition, parentNo: number, childIdx: number) {
+function renderChildRow(child: any, definition: TableDefinition, parentNo: number, childIdx: number): JSX.Element[] {
+  const rows: JSX.Element[] = [];
   const nestedStyle = definition.nestedFields?.style || {};
 
   // 고유한 key 생성: 부모 no + 자식 인덱스 + 자식 이름
   const uniqueKey = `child-${parentNo}-${childIdx}-${child.name || child.no || ''}`;
 
-  return (
+  // 자식 행 (기본 2-depth)
+  rows.push(
     <tr key={uniqueKey} className="border-b border-zinc-800 bg-zinc-900/50">
       <td className="p-3 text-zinc-500 text-center">{child.no}</td>
       <td className={`p-3 ${nestedStyle.indentation || 'pl-8'}`}>
@@ -261,6 +282,50 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
       </td>
     </tr>
   );
+
+  // 🔥 3-depth: Grandchildren 행들 (always-expanded)
+  if (child.children && child.children.length > 0) {
+    child.children.forEach((grandchild: any, grandchildIdx: number) => {
+      if (grandchild.type === 'section-header' || grandchild.section) {
+        rows.push(renderGrandchildSectionHeader(grandchild, definition, parentNo, childIdx, grandchildIdx));
+        return;
+      }
+
+      const grandchildKey = `grandchild-${parentNo}-${childIdx}-${grandchildIdx}`;
+
+      rows.push(
+        <tr key={grandchildKey} className="border-b border-zinc-800 bg-zinc-800/30">
+          <td className="p-3 text-zinc-500 text-center">{grandchild.no}</td>
+          <td className="p-3 pl-12"> {/* 🔥 Deeper indentation: pl-12 vs pl-8 */}
+            {grandchild.description && renderDescription(grandchild.description)}
+            {grandchild.options && grandchild.options.length > 0 && (
+              <div className="mt-1 space-y-0.5">
+                {grandchild.options.map((opt: string, optIdx: number) => (
+                  <div
+                    key={`${grandchild.name}-opt-${optIdx}`}
+                    className="text-zinc-300"
+                    dangerouslySetInnerHTML={{ __html: opt.replace(/• /g, '<span class="text-zinc-400">• </span>') }}
+                  />
+                ))}
+              </div>
+            )}
+          </td>
+          <td className="p-3">
+            <code className="font-mono text-yellow-400">"{grandchild.name}"</code> {/* 🔥 Distinct color: yellow vs amber */}
+          </td>
+          <td className="p-3 text-zinc-400">{grandchild.type}</td>
+          <td className="p-3 text-zinc-500 font-mono text-xs">
+            {grandchild.default !== undefined && grandchild.default !== null ? String(grandchild.default) : '-'}
+          </td>
+          <td className="p-3">
+            {renderRequired(grandchild.required, definition)}
+          </td>
+        </tr>
+      );
+    });
+  }
+
+  return rows;
 }
 
 /**
