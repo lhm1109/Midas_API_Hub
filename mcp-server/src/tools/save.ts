@@ -316,33 +316,52 @@ function detectTableSchema(schemaName: string): boolean {
 
 /**
  * Auto-detect entity type based on schema name patterns
- * @returns 'collection' for entity collections (most Midas APIs), 'single' for explicit settings/config
+ * @returns 'collection' for entity assignment APIs (default), 'single' for table/result/graphic outputs
  * 
- * Note: Most Midas APIs use Entity Collection format (Assign: { "1": {...} })
- * Only explicit settings/config dialogs use single format
+ * RULE SUMMARY:
+ * - Collection (Assign + patternProperties): 부재/요소에 설정을 할당하는 API (기본값)
+ *   Examples: set_concrete_design_code, set_beam_properties, assign_material
+ * 
+ * - Single (Argument): 테이블, 그래픽, 결과 출력 등 단일 데이터 조회/표시
+ *   Examples: get_table_force, get_result_displacement, show_graphic_moment
  */
 function detectEntityType(schemaName: string): 'collection' | 'single' {
     const lowerName = schemaName.toLowerCase();
 
-    // Single Object patterns (ONLY explicit settings/config - very restrictive)
-    // These are for dialogs that have a single configuration, not ID-keyed entities
+    // Single Object patterns (Argument wrapper - for output/display/table/result APIs)
+    // These return single data sets, not ID-keyed entity collections
     const singlePatterns = [
-        'settings',     // General settings (explicit)
-        'config',       // Configuration (explicit)
-        'preference',   // Preferences (explicit)
-        // ❌ Removed: 'type', 'code', 'option', 'parameter', 'control', 'analysis'
-        // These were too broad and incorrectly matched entity schemas like STYP
+        // Output/Display APIs
+        'table',        // Table data (get_table_force, table_beam_design)
+        'grid',         // Grid display
+        'result',       // Result output (get_result_displacement, result_stress)
+        'output',       // General output data
+        'report',       // Report generation
+        
+        // Graphics/Visualization  
+        'graphic',      // Graphic display (show_graphic_moment)
+        'chart',        // Chart display
+        'plot',         // Plot display
+        'view',         // View display data
+        'diagram',      // Diagram display (moment_diagram)
+        
+        // Global Settings (not entity-specific)
+        'settings',     // Global settings
+        'config',       // Configuration
+        'preference',   // Preferences
     ];
 
-    // Check single patterns (only if explicitly a settings/config dialog)
+    // Check single patterns
     if (singlePatterns.some(pattern => lowerName.includes(pattern))) {
-        console.error(`[WRAPPER] Auto-detected as 'single' (matched settings pattern)`);
+        const matchedPattern = singlePatterns.find(p => lowerName.includes(p));
+        console.error(`[WRAPPER] Auto-detected as 'single' (matched pattern: ${matchedPattern})`);
         return 'single';
     }
 
-    // Default to 'collection' (most Midas APIs are Entity Collections)
+    // Default to 'collection' (most Midas APIs assign settings to entities)
     // Format: { "Assign": { "1": {...}, "2": {...} } }
-    console.error(`[WRAPPER] Auto-detected as 'collection' (default for Midas API)`);
+    // Examples: set_*, assign_*, define_* APIs for beams, columns, walls, etc.
+    console.error(`[WRAPPER] Auto-detected as 'collection' (default - entity assignment API)`);
     return 'collection';
 }
 

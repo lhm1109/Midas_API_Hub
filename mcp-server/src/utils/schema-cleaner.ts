@@ -1,76 +1,21 @@
 /**
  * Remove Hungarian notation prefix from field name
  * iSTRUC_TYPE → STRUC_TYPE
- * bCONSIDER_OFF → CONSID_OFF (keep meaningful abbreviation)
- * bCONV_SELFWT → CONV_SELF
+ * bTORSION_REDUCTION_FACTOR_FOR_BEAM → TORSION_REDUCTION_FACTOR_FOR_BEAM
  * dGRAVITY → GRAVITY
  * 
  * Strategy: 
- * 1. Remove prefix (i, b, d, s, n, arr)
- * 2. Keep result within 10 characters
- * 3. Preserve meaningful abbreviations by keeping word boundaries
+ * 1. Remove prefix (i, b, d, s, n, arr) only
+ * 2. Keep original field name intact (no truncation/abbreviation)
+ * 3. LLM should use abbreviated names from promptRules.yaml when creating schemas
  */
 function removeHungarianPrefix(key: string): string {
     // Hungarian notation prefixes: i, b, d, s, n, arr
     const prefixMatch = key.match(/^(i|b|d|s|n|arr)([A-Z_].*)$/);
     if (!prefixMatch) return key;
     
-    let cleanKey = prefixMatch[2];
-    
-    // Truncate to max 10 characters while preserving meaning
-    if (cleanKey.length > 10) {
-        const parts = cleanKey.split('_');
-        if (parts.length > 1) {
-            // Multi-part: intelligently abbreviate parts
-            let result = '';
-            let partsToUse = [];
-            
-            // First, try to include first parts
-            for (let i = 0; i < parts.length; i++) {
-                const testResult = partsToUse.concat([parts[i]]).join('_');
-                if (testResult.length <= 10) {
-                    partsToUse.push(parts[i]);
-                } else {
-                    break;
-                }
-            }
-            
-            // If we couldn't fit all parts, try abbreviating them
-            if (partsToUse.length < parts.length && parts.length >= 2) {
-                // Use first part + abbreviated subsequent parts
-                // CONSIDER_OFF → CONSID_OFF
-                // CONSIDER_ROT_MPF → CONSID_ROT
-                partsToUse = [];
-                for (let i = 0; i < parts.length; i++) {
-                    let part = parts[i];
-                    
-                    // Abbreviate long words (keep first 6-7 chars)
-                    if (part.length > 7 && i === 0) {
-                        part = part.substring(0, 6);
-                    }
-                    
-                    const testResult = partsToUse.concat([part]).join('_');
-                    if (testResult.length <= 10) {
-                        partsToUse.push(part);
-                    } else if (partsToUse.length === 0) {
-                        // At least include something
-                        partsToUse.push(part.substring(0, 10));
-                        break;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            
-            result = partsToUse.join('_') || cleanKey.substring(0, 10);
-            cleanKey = result;
-        } else {
-            // Single part: just truncate
-            cleanKey = cleanKey.substring(0, 10);
-        }
-    }
-    
-    return cleanKey;
+    // Simply return the part after prefix - no truncation
+    return prefixMatch[2];
 }
 
 /**

@@ -1,0 +1,68 @@
+{
+  "caption": "Concrete Design Code",
+  "conditionals": [],
+  "controls": [
+    {
+      "type": "LTEXT",
+      "caption": "Design Code",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC0",
+      "w": 47,
+      "x": 0,
+      "y": 5
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 204,
+      "id": "IDC_DGN_CTRLDATA_DESIGNCODE",
+      "inferredType": "object",
+      "labelText": "Design Code",
+      "variable": "m_DesignCode",
+      "w": 137,
+      "x": 63,
+      "y": 5
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 94,
+      "y": 294
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 148,
+      "y": 294
+    },
+    {
+      "type": "LTEXT",
+      "h": 262,
+      "id": "IDC_DGN_CODE_PLACEHOLDER",
+      "w": 200,
+      "x": 0,
+      "y": 22
+    }
+  ],
+  "dialogClass": "CDgnConCodeNewDlg",
+  "dialogId": "IDD_DGN_CON_CODE_NEW_DLG",
+  "headerFile": "ui_src/wg_dgn/DgnConCodeNewDlg.h",
+  "parsedAt": "2026-02-19T07:39:57.855Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnConCodeNewDlg)\r\n\tDDX_Control(pDX, IDC_DGN_CTRLDATA_DESIGNCODE, m_DesignCode);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [
+    {
+      "body": "CString strDesignCode;\r\n\tm_DesignCode.GetWindowText(strDesignCode);\r\n#if defined(_RUS)\r\n\tCInitCtrl::ConvertRusEngDesignCode(strDesignCode);\r\n#endif\r\n\tint nChildDlgIndex = GetChildDlgIndex(strDesignCode);\r\n\tstrDesignCode = CDBLib::ViewConvertCodeName(strDesignCode);\r\n\r\n\tCDconChildDialog *ChildDlg=NULL;\r\n\tif(!m_mapChildDlg.Lookup(nChildDlgIndex, ChildDlg)) { ASSERT(0); return; }\r\n\t\r\n\tCDconChildDialog *ChildDlgOld=NULL;\r\n\tif(!m_mapChildDlg.Lookup(m_nCurrentDlgIndex, ChildDlgOld)) { ASSERT(0); return; }\r\n\tChildDlgOld->Dlg2Data();\r\n\r\n\tif(m_nCurrentDlgIndex != nChildDlgIndex)\r\n\t{\r\n\t\tChildDlgOld->ShowWindow(SW_HIDE);\r\n\t\tm_Data.DesignCode = strDesignCode;\r\n\t\tCWnd* pPlaceHolder = GetDlgItem(IDC_DGN_CODE_PLACEHOLDER);\r\n\t\tChildDlg->CreateInit(pPlaceHolder);  \r\n\t\tChildDlg->UpdateChildData();\r\n\r\n\t\tm_nCurrentDlgIndex = nChildDlgIndex;\r\n\t\tChildDlg->ShowWindow(SW_SHOW);\r\n\t}\r\n\telse m_Data.DesignCode = strDesignCode;\r\n\t\r\n\tChildDlg->ChangeDesignCode();\r\n\t//ChildDlg->SetDesignCode(strDesignCode);\r\n//   ChildDlg->CalcDlgSize();",
+      "name": "OnSelchangeDgnCtrldataDesigncode"
+    }
+  ],
+  "rawUpdateLogic": "// OnInitDialog:\n// TODO: Add extra initialization here\r\n\tCDialogMove::OnInitDialog();\r\n\r\n\tBOOL bExistData=TRUE;\r\n\tif(!CDBDoc::GetDocPoint()->m_pAttrCtrl->GetDcon(m_Data))\r\n\t{\r\n\t\tbExistData=FALSE;\r\n\t\tm_Data.Initialize();\r\n\t}  \r\n\r\n\tm_mapChildDlg.SetAt(EN_CHILD_KCI_ACI_1, new CDgnConCodeNewChild1Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_KCI_ACI_2, new CDgnConCodeNewChild2Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_ACI_3    , new CDgnConCodeNewChild3Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_NSR10_4  , new CDgnConCodeNewChild4Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_TWN_USD_5, new CDgnConCodeNewChild5Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_IS456_6  , new CDgnConCodeNewChild6Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_AIJ_WSD_7, new CDgnConCodeNewChild7Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_GB50010_8, new CDgnConCodeNewChild8Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_EURO204_9, new CDgnConCodeNewChild9Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_ACI318_M_10, new CDgnConCodeNewChild10Dlg(this, &m_Data, bExistData));\r\n    m_mapChildDlg.SetAt(EN_CHILD_TWN_USD_112, new CDgnConCodeNewChild11Dlg(this, &m_Data, bExistData));\r\n    m_mapChildDlg.SetAt(EN_CHILD_ACI318_12, new CDgnConCodeNewChild12Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_KDS2022_13, new CDgnConCodeNewChild13Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_NTC_DCEC_2017, new CDgnConCodeNewChild14Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_SP_63_2018, new CDgnConCodeNewChild15Dlg(this, &m_Data, bExistData));\r\n\tm_mapChildDlg.SetAt(EN_CHILD_NTC_DCEC_2023, new CDgnConCodeNewChild16Dlg(this, &m_Data, bExistData));\r\n\tInitCtrl();\r\n\r\n\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// InitCtrl:\nm_DesignCode.ResetContent();\r\n\r\n\tCStringArray ConCodeName;\r\n\tCDBLib::GetConCodeNameList(ConCodeName, &m_aCodeEnable);\r\n\t\r\n\t// Change, Jaeoh('07.12.26)\r\n\tint iCodeSize = ConCodeName.GetSize();\r\n\tfor(int i=0; i<iCodeSize; i++)\t\r\n\t{\r\n\t\t//(2009.01.15) Add by Unsang :: MNET.3908����, US Units ����\r\n#if defined(_CIVIL)\r\n\t\tCString strConCodeName = CDBLib::ViewConvertCodeName(ConCodeName[i]);\r\n#elif defined(_MGEN)\r\n\t\tCString strConCodeName = ConCodeName[i];\r\n#endif\r\n\t\tif (strConCodeName != _T(\"GB50068-2018\"))\r\n\t\t{\r\n#if defined(_RUS)\r\n\t\t\tCInitCtrl::ConvertEngRusDesignCode(strConCodeName);\r\n#endif\r\n\t\t\tm_DesignCode.AddString(strConCodeName);\r\n\t\t}\r\n\t}\r\n\r\n\tCDBDoc *pDoc = CDBDoc::GetDocPoint();\r\n\r\n\tCString strDesignCode;\r\n\tif(pDoc->m_pAttrCtrl->ExistDcon()) strDesignCode = CDBLib::ViewConvertCodeName(m_Data.DesignCode);\r\n\telse\r\n\t{\r\n\t\tT_PREFERENCE rPref;\r\n\t\trPref.Initialize();\r\n\t\tpDoc->m_pInitCtrl->GetPreference(rPref);\r\n\t\t//(2009.01.15) Add by Unsang :: MNET.3908����, US Units ����\r\n\t\t\r\n\t\t\r\n\t\tstrDesignCode = CDBLib::ViewConvertCodeName(rPref.DgnCode.ConcCode);\r\n\t\tm_Data.DesignCode = strDesignCode;\r\n\t\tm_Data.nNationalAnnex = rPref.DgnCode.nConcNationalAnnex;\r\n\t\tif(strDesignCode == CONCODE_NTC_DCEC_2023) m_Data.nSCWBDgnMethod = 1; // nominal\r\n\t}\r\n\r\n\tCString CodeName;\r\n\tCodeName= strDesignCode;\r\n#if defined(_RUS)\r\n\tCInitCtrl::ConvertEngRusDesignCode(CodeName);\r\n#endif\r\n\tint Index=0;\r\n\tif(strDesignCode!=_T(\"\")) Index = m_DesignCode.FindStringExact(-1, CodeName);\r\n\tif(Index!=-1)\tm_DesignCode.SetCurSel(Index);\r\n\r\n\tm_DesignCode.GetWindowText(strDesignCode);\r\n#if defined(_RUS)\r\n\tCInitCtrl::ConvertRusEngDesignCode(strDesignCode);\r\n#endif\r\n\tm_nCurrentDlgIndex = GetChildDlgIndex(strDesignCode);\r\n\r\n\tCDconChildDialog *ChildDlg=NULL;\r\n\tif(!m_mapChildDlg.Lookup(m_nCurrentDlgIndex, ChildDlg)) { ASSERT(0); return; }\r\n\r\n\tCWnd* pPlaceHolder = GetDlgItem(IDC_DGN_CODE_PLACEHOLDER);\r\n\tChildDlg->CreateInit(pPlaceHolder);  \r\n//   ChildDlg->SetDesignCode(strDesignCode);\r\n\r\n\tResizeDialog();\r\n\tChildDlg->ShowWindow(SW_SHOW);",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnConCodeNewDlg.cpp",
+  "warnings": []
+}
