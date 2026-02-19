@@ -285,11 +285,19 @@ function removeInternalMarkersFromField(field: any): any {
         }
     }
 
-    // Recurse into nested properties
+    // Recurse into nested properties AND rename keys
     if (cleaned.properties) {
+        const newProps: Record<string, any> = {};
         for (const key of Object.keys(cleaned.properties)) {
-            cleaned.properties[key] = removeInternalMarkersFromField(cleaned.properties[key]);
+            const cleanKey = removeHungarianPrefix(key);
+            newProps[cleanKey] = removeInternalMarkersFromField(cleaned.properties[key]);
         }
+        cleaned.properties = newProps;
+    }
+
+    // Update required array to use clean keys
+    if (cleaned.required && Array.isArray(cleaned.required)) {
+        cleaned.required = cleaned.required.map((key: string) => removeHungarianPrefix(key));
     }
 
     // Recurse into items (for arrays)

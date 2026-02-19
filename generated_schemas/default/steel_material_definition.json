@@ -1,0 +1,229 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "CODE",
+            "ES",
+            "PS",
+            "FU"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "description": "Steel Material Code. Extensible: add new codes to oneOf array.",
+              "enum": [
+                "None",
+                "Standard"
+              ],
+              "x-ui": {
+                "component": "Dropdown",
+                "label": "Code",
+                "order": 1
+              },
+              "x-enum-labels": [
+                "None (User Defined)",
+                "Standard"
+              ]
+            },
+            "GRADE": {
+              "type": "string",
+              "description": "Steel Grade for Standard. Auto-fills material properties when selected.",
+              "enum": [
+                "SS235",
+                "SS275",
+                "SS315",
+                "SS410",
+                "SS450",
+                "SS550",
+                "SM275",
+                "SM355",
+                "SM420",
+                "SM460",
+                "SM275TMC",
+                "SM355TMC",
+                "SM420TMC",
+                "SM460TMC",
+                "SMA275A",
+                "SMA275B",
+                "SMA275C",
+                "SMA355A",
+                "SMA355B",
+                "SMA355C",
+                "SMA460",
+                "HSM500",
+                "SN275A",
+                "SN275B",
+                "SN275C",
+                "SN355",
+                "SN460",
+                "SHN275",
+                "SHN355",
+                "SHN420",
+                "SHN460",
+                "HSB380",
+                "HSB460",
+                "HSB690",
+                "HSA650",
+                "SGT275",
+                "SGT355",
+                "SGT410",
+                "SGT450",
+                "SGT550",
+                "SRT275",
+                "SRT355",
+                "SRT410",
+                "SRT450",
+                "SRT550",
+                "SNT275",
+                "SNT355",
+                "SNT460",
+                "SHT410",
+                "SHT460",
+                "SNRT295E",
+                "SNRT390E",
+                "SNRT275A",
+                "SNRT355A",
+                "SSC275",
+                "SWH275",
+                "SWH355",
+                "SWH420",
+                "SWH460",
+                "SF490",
+                "SF540",
+                "SDP1",
+                "SDP2",
+                "SDP3",
+                "SWPC1",
+                "SWPD1",
+                "SWPC",
+                "SWPD"
+              ],
+              "x-ui": {
+                "component": "Dropdown",
+                "label": "Grade",
+                "order": 2
+              },
+              "x-required-when": {
+                "CODE": "Standard"
+              }
+            },
+            "NAME": {
+              "type": "string",
+              "description": "User-defined material name (when Code is None)",
+              "x-ui": {
+                "label": "Name",
+                "order": 3
+              },
+              "x-required-when": {
+                "CODE": "None"
+              }
+            },
+            "ES": {
+              "type": "number",
+              "description": "Modulus of Elasticity (kN/m²)",
+              "x-ui": {
+                "label": "Modulus of Elasticity (Es)",
+                "order": 4
+              }
+            },
+            "PS": {
+              "type": "number",
+              "description": "Poisson's Ratio",
+              "x-ui": {
+                "label": "Poisson's Ratio (Ps)",
+                "order": 5
+              }
+            },
+            "FU": {
+              "type": "number",
+              "description": "Tensile Strength (kN/m²)",
+              "x-ui": {
+                "label": "Tensile Strength (Fu)",
+                "order": 6
+              }
+            },
+            "FY": {
+              "type": "number",
+              "description": "Yield Strength for Code=None (single value, kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy)",
+                "order": 7
+              },
+              "x-required-when": {
+                "CODE": "None"
+              }
+            },
+            "FY1": {
+              "type": "number",
+              "description": "Yield Strength 1 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy1)",
+                "order": 8
+              },
+              "x-required-when": {
+                "CODE": "Standard"
+              }
+            },
+            "FY2": {
+              "type": "number",
+              "description": "Yield Strength 2 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy2)",
+                "order": 9
+              },
+              "x-required-when": {
+                "CODE": "Standard"
+              }
+            },
+            "FY3": {
+              "type": "number",
+              "description": "Yield Strength 3 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy3)",
+                "order": 10
+              },
+              "x-required-when": {
+                "CODE": "Standard"
+              }
+            },
+            "FY4": {
+              "type": "number",
+              "description": "Yield Strength 4 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy4)",
+                "order": 11
+              },
+              "x-required-when": {
+                "CODE": "Standard"
+              }
+            },
+            "FY5": {
+              "type": "number",
+              "description": "Yield Strength 5 (kN/m²)",
+              "x-ui": {
+                "label": "Yield Strength (Fy5)",
+                "order": 12
+              },
+              "x-required-when": {
+                "CODE": "Standard"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

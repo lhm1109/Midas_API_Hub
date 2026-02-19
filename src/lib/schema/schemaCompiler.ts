@@ -1216,6 +1216,29 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           }
         }
 
+        // 🔥 oneOf → enum 변환 (object children)
+        if ((childProp as any).oneOf && Array.isArray((childProp as any).oneOf) && !childField.enum) {
+          const enumValues: any[] = [];
+          const enumLabels: Record<string, string> = {};
+
+          for (const option of (childProp as any).oneOf) {
+            if (option.const !== undefined) {
+              enumValues.push(option.const);
+              if (option.title) {
+                enumLabels[String(option.const)] = option.title;
+              }
+            }
+          }
+
+          if (enumValues.length > 0) {
+            childField.enum = enumValues;
+            if (Object.keys(enumLabels).length > 0) {
+              childField['x-enum-labels'] = enumLabels;
+            }
+            console.log(`✅ Converted oneOf → enum for object child ${key}.${childKey}:`, enumValues);
+          }
+        }
+
         field.children.push(childField);
       }
     }
@@ -1252,6 +1275,29 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             childField[cpKey] = cpValue;
           } else {
             childField[cpKey] = cpValue;
+          }
+        }
+
+        // 🔥 oneOf → enum 변환 (array items 내부 필드)
+        if ((childProp as any).oneOf && Array.isArray((childProp as any).oneOf) && !childField.enum) {
+          const enumValues: any[] = [];
+          const enumLabels: Record<string, string> = {};
+
+          for (const option of (childProp as any).oneOf) {
+            if (option.const !== undefined) {
+              enumValues.push(option.const);
+              if (option.title) {
+                enumLabels[String(option.const)] = option.title;
+              }
+            }
+          }
+
+          if (enumValues.length > 0) {
+            childField.enum = enumValues;
+            if (Object.keys(enumLabels).length > 0) {
+              childField['x-enum-labels'] = enumLabels;
+            }
+            console.log(`✅ Converted oneOf → enum for array item ${key}[].${childKey}:`, enumValues);
           }
         }
 

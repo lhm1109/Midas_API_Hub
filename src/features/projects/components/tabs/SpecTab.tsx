@@ -352,9 +352,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   default: child.default !== undefined ? String(child.default) : '-',
                   // 🔥 Use buildFieldDescription for child fields to show x-optional-when conditions
                   description: buildFieldDescription(child, tableDefinition),
-                  // 🔥 x-required-when/x-optional-when이면 Conditional로 표시
+                  // 🔥 x-required-when이면 Conditional, x-optional-when이면 Optional
                   required: child['x-required-when'] ? 'Conditional' :
-                    child['x-optional-when'] ? 'Conditional' :
+                    child['x-optional-when'] ? 'Optional' :
                       formatRequiredStatus(child.required),
                 };
               });
@@ -423,9 +423,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     default: child.default !== undefined ? String(child.default) : '-',
                     // 🔥 Use buildFieldDescription for child fields to show x-optional-when conditions
                     description: buildFieldDescription(child, tableDefinition),
-                    // 🔥 x-required-when이면 Conditional, x-optional-when이면 Conditional
+                    // 🔥 x-required-when이면 Conditional, x-optional-when이면 Optional
                     required: child['x-required-when'] ? 'Conditional' :
-                      child['x-optional-when'] ? 'Conditional' :
+                      child['x-optional-when'] ? 'Optional' :
                         child.required?.['*'] === 'required' ? 'Required' : 'Optional',
                   };
                 });
