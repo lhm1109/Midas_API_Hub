@@ -1,0 +1,1489 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "BEAM": {
+              "type": "object",
+              "description": "For Beam Design",
+              "additionalProperties": false,
+              "properties": {
+                "MAIN_REBAR": {
+                  "type": "array",
+                  "description": "Main Rebar",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Main Rebar",
+                    "order": 1
+                  }
+                },
+                "STIRRUPS": {
+                  "type": "string",
+                  "description": "Stirrups",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Stirrups",
+                    "order": 2
+                  }
+                },
+                "STIRRUP_ARRANGEMENT": {
+                  "type": "integer",
+                  "description": "Stirrups arrangement",
+                  "oneOf": [
+                    {
+                      "title": "2",
+                      "const": 2
+                    },
+                    {
+                      "title": "3",
+                      "const": 3
+                    },
+                    {
+                      "title": "4",
+                      "const": 4
+                    },
+                    {
+                      "title": "5",
+                      "const": 5
+                    },
+                    {
+                      "title": "6",
+                      "const": 6
+                    },
+                    {
+                      "title": "7",
+                      "const": 7
+                    },
+                    {
+                      "title": "8",
+                      "const": 8
+                    },
+                    {
+                      "title": "9",
+                      "const": 9
+                    },
+                    {
+                      "title": "10",
+                      "const": 10
+                    },
+                    {
+                      "title": "11",
+                      "const": 11
+                    },
+                    {
+                      "title": "12",
+                      "const": 12
+                    },
+                    {
+                      "title": "13",
+                      "const": 13
+                    },
+                    {
+                      "title": "14",
+                      "const": 14
+                    },
+                    {
+                      "title": "15",
+                      "const": 15
+                    },
+                    {
+                      "title": "16",
+                      "const": 16
+                    },
+                    {
+                      "title": "17",
+                      "const": 17
+                    },
+                    {
+                      "title": "18",
+                      "const": 18
+                    },
+                    {
+                      "title": "19",
+                      "const": 19
+                    },
+                    {
+                      "title": "20",
+                      "const": 20
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Arrangement",
+                    "order": 3
+                  }
+                },
+                "SIDE_BAR": {
+                  "type": "string",
+                  "description": "Side Bar",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Side Bar",
+                    "order": 4
+                  }
+                },
+                "DT": {
+                  "type": "number",
+                  "description": "Beam dT",
+                  "x-ui": {
+                    "label": "dT",
+                    "order": 5
+                  }
+                },
+                "DB": {
+                  "type": "number",
+                  "description": "Beam dB",
+                  "x-ui": {
+                    "label": "dB",
+                    "order": 6
+                  }
+                },
+                "DOUBLY_REBAR": {
+                  "type": "boolean",
+                  "description": "Doubly Rebar",
+                  "default": false,
+                  "x-ui": {
+                    "label": "Doubly Rebar",
+                    "order": 7
+                  }
+                },
+                "DOUBLY_K": {
+                  "type": "number",
+                  "description": "k factor for doubly rebar",
+                  "x-ui": {
+                    "label": "k",
+                    "order": 8
+                  },
+                  "x-optional-when": {
+                    "DOUBLY_REBAR": true
+                  }
+                },
+                "AIJ_RECOMMEND": {
+                  "type": "boolean",
+                  "description": "AIJ Recommend",
+                  "default": false,
+                  "x-ui": {
+                    "label": "AIJ Recommend",
+                    "order": 9
+                  }
+                },
+                "AIJ_METHOD": {
+                  "type": "integer",
+                  "description": "AIJ method",
+                  "default": 0,
+                  "oneOf": [
+                    {
+                      "title": "Sided Hook",
+                      "const": 0
+                    },
+                    {
+                      "title": "U-Stirrup",
+                      "const": 1
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "AIJ Method",
+                    "order": 10
+                  },
+                  "x-optional-when": {
+                    "AIJ_RECOMMEND": true
+                  }
+                },
+                "SPACING_LIMIT": {
+                  "type": "boolean",
+                  "description": "Consider Spacing Limit for Main Rebar",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Consider Spacing Limit for Main Rebar",
+                    "order": 11
+                  }
+                },
+                "SPLICED_BARS": {
+                  "type": "integer",
+                  "description": "Spliced Bars",
+                  "default": 0,
+                  "oneOf": [
+                    {
+                      "title": "None",
+                      "const": 0
+                    },
+                    {
+                      "title": "50%",
+                      "const": 1
+                    },
+                    {
+                      "title": "100%",
+                      "const": 2
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "Spliced Bars",
+                    "order": 12
+                  },
+                  "x-optional-when": {
+                    "AIJ_RECOMMEND": false,
+                    "SPACING_LIMIT": true
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Beam"
+              }
+            },
+            "COLUMN": {
+              "type": "object",
+              "description": "For Column Design",
+              "additionalProperties": false,
+              "properties": {
+                "MAIN_REBAR": {
+                  "type": "array",
+                  "description": "Main Rebar",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Main Rebar",
+                    "order": 1
+                  }
+                },
+                "TIES_SPIRALS": {
+                  "type": "string",
+                  "description": "Ties/Spirals",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Ties/Spirals",
+                    "order": 2
+                  }
+                },
+                "ARRANGEMENT_Y": {
+                  "type": "integer",
+                  "description": "Arrangement Y",
+                  "oneOf": [
+                    {
+                      "title": "2",
+                      "const": 2
+                    },
+                    {
+                      "title": "3",
+                      "const": 3
+                    },
+                    {
+                      "title": "4",
+                      "const": 4
+                    },
+                    {
+                      "title": "5",
+                      "const": 5
+                    },
+                    {
+                      "title": "6",
+                      "const": 6
+                    },
+                    {
+                      "title": "7",
+                      "const": 7
+                    },
+                    {
+                      "title": "8",
+                      "const": 8
+                    },
+                    {
+                      "title": "9",
+                      "const": 9
+                    },
+                    {
+                      "title": "10",
+                      "const": 10
+                    },
+                    {
+                      "title": "11",
+                      "const": 11
+                    },
+                    {
+                      "title": "12",
+                      "const": 12
+                    },
+                    {
+                      "title": "13",
+                      "const": 13
+                    },
+                    {
+                      "title": "14",
+                      "const": 14
+                    },
+                    {
+                      "title": "15",
+                      "const": 15
+                    },
+                    {
+                      "title": "16",
+                      "const": 16
+                    },
+                    {
+                      "title": "17",
+                      "const": 17
+                    },
+                    {
+                      "title": "18",
+                      "const": 18
+                    },
+                    {
+                      "title": "19",
+                      "const": 19
+                    },
+                    {
+                      "title": "20",
+                      "const": 20
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Arrangement Y",
+                    "order": 3
+                  }
+                },
+                "ARRANGEMENT_Z": {
+                  "type": "integer",
+                  "description": "Arrangement Z",
+                  "oneOf": [
+                    {
+                      "title": "2",
+                      "const": 2
+                    },
+                    {
+                      "title": "3",
+                      "const": 3
+                    },
+                    {
+                      "title": "4",
+                      "const": 4
+                    },
+                    {
+                      "title": "5",
+                      "const": 5
+                    },
+                    {
+                      "title": "6",
+                      "const": 6
+                    },
+                    {
+                      "title": "7",
+                      "const": 7
+                    },
+                    {
+                      "title": "8",
+                      "const": 8
+                    },
+                    {
+                      "title": "9",
+                      "const": 9
+                    },
+                    {
+                      "title": "10",
+                      "const": 10
+                    },
+                    {
+                      "title": "11",
+                      "const": 11
+                    },
+                    {
+                      "title": "12",
+                      "const": 12
+                    },
+                    {
+                      "title": "13",
+                      "const": 13
+                    },
+                    {
+                      "title": "14",
+                      "const": 14
+                    },
+                    {
+                      "title": "15",
+                      "const": 15
+                    },
+                    {
+                      "title": "16",
+                      "const": 16
+                    },
+                    {
+                      "title": "17",
+                      "const": 17
+                    },
+                    {
+                      "title": "18",
+                      "const": 18
+                    },
+                    {
+                      "title": "19",
+                      "const": 19
+                    },
+                    {
+                      "title": "20",
+                      "const": 20
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Arrangement Z",
+                    "order": 4
+                  }
+                },
+                "DO": {
+                  "type": "number",
+                  "description": "Column do",
+                  "x-ui": {
+                    "label": "do",
+                    "order": 5
+                  }
+                },
+                "AIJ_RECOMMEND": {
+                  "type": "boolean",
+                  "description": "AIJ Recommend",
+                  "default": false,
+                  "x-ui": {
+                    "label": "AIJ Recommend",
+                    "order": 6
+                  }
+                },
+                "SPACING_LIMIT": {
+                  "type": "boolean",
+                  "description": "Consider Spacing Limit for Main Rebar",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Consider Spacing Limit for Main Rebar",
+                    "order": 7
+                  }
+                },
+                "SPLICED_BARS": {
+                  "type": "integer",
+                  "description": "Spliced Bars",
+                  "default": 0,
+                  "oneOf": [
+                    {
+                      "title": "None",
+                      "const": 0
+                    },
+                    {
+                      "title": "50%",
+                      "const": 1
+                    },
+                    {
+                      "title": "100%",
+                      "const": 2
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "Spliced Bars",
+                    "order": 8
+                  },
+                  "x-optional-when": {
+                    "AIJ_RECOMMEND": false,
+                    "SPACING_LIMIT": true
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Column"
+              }
+            },
+            "BRACE": {
+              "type": "object",
+              "description": "For Brace Design",
+              "additionalProperties": false,
+              "properties": {
+                "MAIN_REBAR": {
+                  "type": "array",
+                  "description": "Main Rebar",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Main Rebar",
+                    "order": 1
+                  }
+                },
+                "TIES_SPIRALS": {
+                  "type": "string",
+                  "description": "Ties/Spirals",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Ties/Spirals",
+                    "order": 2
+                  }
+                },
+                "ARRANGEMENT_Y": {
+                  "type": "integer",
+                  "description": "Arrangement Y",
+                  "oneOf": [
+                    {
+                      "title": "2",
+                      "const": 2
+                    },
+                    {
+                      "title": "3",
+                      "const": 3
+                    },
+                    {
+                      "title": "4",
+                      "const": 4
+                    },
+                    {
+                      "title": "5",
+                      "const": 5
+                    },
+                    {
+                      "title": "6",
+                      "const": 6
+                    },
+                    {
+                      "title": "7",
+                      "const": 7
+                    },
+                    {
+                      "title": "8",
+                      "const": 8
+                    },
+                    {
+                      "title": "9",
+                      "const": 9
+                    },
+                    {
+                      "title": "10",
+                      "const": 10
+                    },
+                    {
+                      "title": "11",
+                      "const": 11
+                    },
+                    {
+                      "title": "12",
+                      "const": 12
+                    },
+                    {
+                      "title": "13",
+                      "const": 13
+                    },
+                    {
+                      "title": "14",
+                      "const": 14
+                    },
+                    {
+                      "title": "15",
+                      "const": 15
+                    },
+                    {
+                      "title": "16",
+                      "const": 16
+                    },
+                    {
+                      "title": "17",
+                      "const": 17
+                    },
+                    {
+                      "title": "18",
+                      "const": 18
+                    },
+                    {
+                      "title": "19",
+                      "const": 19
+                    },
+                    {
+                      "title": "20",
+                      "const": 20
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Arrangement Y",
+                    "order": 3
+                  }
+                },
+                "ARRANGEMENT_Z": {
+                  "type": "integer",
+                  "description": "Arrangement Z",
+                  "oneOf": [
+                    {
+                      "title": "2",
+                      "const": 2
+                    },
+                    {
+                      "title": "3",
+                      "const": 3
+                    },
+                    {
+                      "title": "4",
+                      "const": 4
+                    },
+                    {
+                      "title": "5",
+                      "const": 5
+                    },
+                    {
+                      "title": "6",
+                      "const": 6
+                    },
+                    {
+                      "title": "7",
+                      "const": 7
+                    },
+                    {
+                      "title": "8",
+                      "const": 8
+                    },
+                    {
+                      "title": "9",
+                      "const": 9
+                    },
+                    {
+                      "title": "10",
+                      "const": 10
+                    },
+                    {
+                      "title": "11",
+                      "const": 11
+                    },
+                    {
+                      "title": "12",
+                      "const": 12
+                    },
+                    {
+                      "title": "13",
+                      "const": 13
+                    },
+                    {
+                      "title": "14",
+                      "const": 14
+                    },
+                    {
+                      "title": "15",
+                      "const": 15
+                    },
+                    {
+                      "title": "16",
+                      "const": 16
+                    },
+                    {
+                      "title": "17",
+                      "const": 17
+                    },
+                    {
+                      "title": "18",
+                      "const": 18
+                    },
+                    {
+                      "title": "19",
+                      "const": 19
+                    },
+                    {
+                      "title": "20",
+                      "const": 20
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Arrangement Z",
+                    "order": 4
+                  }
+                },
+                "DO": {
+                  "type": "number",
+                  "description": "Brace do",
+                  "x-ui": {
+                    "label": "do",
+                    "order": 5
+                  }
+                },
+                "AIJ_RECOMMEND": {
+                  "type": "boolean",
+                  "description": "AIJ Recommend",
+                  "default": false,
+                  "x-ui": {
+                    "label": "AIJ Recommend",
+                    "order": 6
+                  }
+                },
+                "SPACING_LIMIT": {
+                  "type": "boolean",
+                  "description": "Consider Spacing Limit for Main Rebar",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Consider Spacing Limit for Main Rebar",
+                    "order": 7
+                  }
+                },
+                "SPLICED_BARS": {
+                  "type": "integer",
+                  "description": "Spliced Bars",
+                  "default": 0,
+                  "oneOf": [
+                    {
+                      "title": "None",
+                      "const": 0
+                    },
+                    {
+                      "title": "50%",
+                      "const": 1
+                    },
+                    {
+                      "title": "100%",
+                      "const": 2
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "Spliced Bars",
+                    "order": 8
+                  },
+                  "x-optional-when": {
+                    "AIJ_RECOMMEND": false,
+                    "SPACING_LIMIT": true
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Brace"
+              }
+            },
+            "WALL": {
+              "type": "object",
+              "description": "For Shear Wall Design",
+              "additionalProperties": false,
+              "properties": {
+                "VERTICAL_REBAR": {
+                  "type": "array",
+                  "description": "Vertical Rebar",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Vertical Rebar",
+                    "order": 1
+                  }
+                },
+                "HORIZONTAL_REBAR": {
+                  "type": "string",
+                  "description": "Horizontal Rebar",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Horizontal Rebar",
+                    "order": 2
+                  }
+                },
+                "END_REBAR": {
+                  "type": "string",
+                  "description": "End Rebar",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "End Rebar",
+                    "order": 3
+                  }
+                },
+                "BE_HORZ_REBAR": {
+                  "type": "string",
+                  "description": "Boundary Element Horz. Rebar",
+                  "oneOf": [
+                    {
+                      "title": "D4",
+                      "const": "D4"
+                    },
+                    {
+                      "title": "D5",
+                      "const": "D5"
+                    },
+                    {
+                      "title": "D6",
+                      "const": "D6"
+                    },
+                    {
+                      "title": "D7",
+                      "const": "D7"
+                    },
+                    {
+                      "title": "D8",
+                      "const": "D8"
+                    },
+                    {
+                      "title": "D10",
+                      "const": "D10"
+                    },
+                    {
+                      "title": "D13",
+                      "const": "D13"
+                    },
+                    {
+                      "title": "D16",
+                      "const": "D16"
+                    },
+                    {
+                      "title": "D19",
+                      "const": "D19"
+                    },
+                    {
+                      "title": "D22",
+                      "const": "D22"
+                    },
+                    {
+                      "title": "D25",
+                      "const": "D25"
+                    },
+                    {
+                      "title": "D29",
+                      "const": "D29"
+                    },
+                    {
+                      "title": "D32",
+                      "const": "D32"
+                    },
+                    {
+                      "title": "D35",
+                      "const": "D35"
+                    },
+                    {
+                      "title": "D38",
+                      "const": "D38"
+                    },
+                    {
+                      "title": "D41",
+                      "const": "D41"
+                    },
+                    {
+                      "title": "D43",
+                      "const": "D43"
+                    },
+                    {
+                      "title": "D51",
+                      "const": "D51"
+                    },
+                    {
+                      "title": "D57",
+                      "const": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Boundary Element Horz. Rebar",
+                    "order": 4
+                  }
+                },
+                "BE_HORZ_SPACE": {
+                  "type": "number",
+                  "description": "Boundary Element Horz. Rebar Space",
+                  "x-ui": {
+                    "label": "Boundary Element Horz. Rebar Space",
+                    "order": 5
+                  }
+                },
+                "BE_VERT_SPACE": {
+                  "type": "number",
+                  "description": "Boundary Element Vert. Rebar Space",
+                  "x-ui": {
+                    "label": "Boundary Element Vert. Rebar Space",
+                    "order": 6
+                  }
+                },
+                "DE": {
+                  "type": "number",
+                  "description": "Wall de",
+                  "x-ui": {
+                    "label": "de",
+                    "order": 7
+                  }
+                },
+                "DW": {
+                  "type": "number",
+                  "description": "Wall dw",
+                  "x-ui": {
+                    "label": "dw",
+                    "order": 8
+                  }
+                },
+                "MATERIAL_BY_DIAMETER": {
+                  "type": "boolean",
+                  "description": "Material by Rebar Diameter",
+                  "default": false,
+                  "x-ui": {
+                    "label": "Material by Rebar Diameter",
+                    "order": 9
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Wall"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

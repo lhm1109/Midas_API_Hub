@@ -29,6 +29,30 @@ criticalWarnings:
       })
     warning: "⚠️ Without componentEnums, COMPONENTS field will have NO enum values!"
 
+  arrayEnums:
+    title: "🚨 CRITICAL: Array values MUST use items.enum (not items.oneOf)"
+    rules:
+      - "✅ Use items.enum for multi-select arrays"
+      - "✅ Use x-enum-labels-by-type for UI labels when needed"
+      - "❌ Do NOT use items.oneOf for array enums"
+    example: |
+      "EXCL_MEM_TYPES": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["SUBBEAM", "CANTIL", "UGBEAMCOL"]
+        },
+        "uniqueItems": true,
+        "x-enum-labels-by-type": {
+          "CONCRETE_SEISMIC": {
+            "SUBBEAM": "Sub-Beam",
+            "CANTIL": "Cantilever",
+            "UGBEAMCOL": "Underground Beam/Column"
+          }
+        }
+      }
+    warning: "⚠️ items.oneOf for arrays is not allowed. Use items.enum instead."
+
 # ============================================================================
 # TABLE DETECTION RULES - LLM MUST READ THIS FIRST
 # ============================================================================

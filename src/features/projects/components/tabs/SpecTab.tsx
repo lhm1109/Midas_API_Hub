@@ -336,7 +336,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             // 중첩 필드 처리 - 조건별 그룹화 지원
             if (field.children && field.children.length > 0) {
               // 🔥 3-depth 필드들을 조건별로 그룹화
-              const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header');
+              const childSectionHeaders = field.children.filter((c: any) => c.type === 'section-header' || c.section);
+              const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header' && !c.section);
               
               const childFieldInfoMap = collectFieldConditionInfo(
                 childrenToProcess,
@@ -348,12 +349,49 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 childFieldInfoMap
               );
 
-              param.children = [];
+              param.children = childSectionHeaders.map((header: any) => ({
+                no: '',
+                name: '',
+                type: 'section-header',
+                section: header.section || header.ui?.label || header.description || header.key,
+                default: '',
+                description: '',
+                required: '',
+              }));
               let childNo = 1;
 
-              const mapGrandchildren = (grandchildren: any[], parentNo: string) => {
-                const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string) => {
-                  const greatGrandchildrenToProcess = greatGrandchildren.filter((c: any) => c.type !== 'section-header');
+              const buildArrayItemChildren = (arrayField: any) => {
+                const items = arrayField?.items;
+                if (!items || items.type !== 'object' || !items.properties) {
+                  return [];
+                }
+
+                const itemRequired = items.required || [];
+                return Object.entries(items.properties).map(([itemKey, itemProp]) => {
+                  const mappedItem: any = {
+                    key: `${arrayField.key}[].${itemKey}`,
+                    type: (itemProp as any).type,
+                    default: (itemProp as any).default,
+                    description: (itemProp as any).description,
+                    required: itemRequired.includes(itemKey) ? { '*': 'required' } : { '*': 'optional' },
+                  };
+
+                  if ((itemProp as any).items) mappedItem.items = (itemProp as any).items;
+                  if ((itemProp as any).enum) mappedItem.enum = (itemProp as any).enum;
+                  if ((itemProp as any)['x-ui']) mappedItem.ui = (itemProp as any)['x-ui'];
+                  if ((itemProp as any)['x-optional-when']) mappedItem['x-optional-when'] = (itemProp as any)['x-optional-when'];
+                  if ((itemProp as any)['x-required-when']) mappedItem['x-required-when'] = (itemProp as any)['x-required-when'];
+
+                  return mappedItem;
+                });
+              };
+
+              const mapGrandchildren = (grandchildren: any[], parentNo: string, parentField?: any) => {
+                const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string, grandParentField?: any) => {
+                  const resolvedGreatGrandchildren = greatGrandchildren.length > 0
+                    ? greatGrandchildren
+                    : buildArrayItemChildren(grandParentField);
+                  const greatGrandchildrenToProcess = resolvedGreatGrandchildren.filter((c: any) => c.type !== 'section-header');
                   const greatGrandchildFieldInfoMap = collectFieldConditionInfo(
                     greatGrandchildrenToProcess,
                     tableDefinition?.schemaExtensions?.conditional || []
@@ -413,7 +451,11 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   return mappedGreatGrandchildren;
                 };
 
-                const grandchildrenToProcess = grandchildren.filter((c: any) => c.type !== 'section-header');
+                const resolvedGrandchildren = grandchildren.length > 0
+                  ? grandchildren
+                  : buildArrayItemChildren(parentField);
+                const grandchildSectionHeaders = resolvedGrandchildren.filter((c: any) => c.type === 'section-header' || c.section);
+                const grandchildrenToProcess = resolvedGrandchildren.filter((c: any) => c.type !== 'section-header' && !c.section);
                 const grandchildFieldInfoMap = collectFieldConditionInfo(
                   grandchildrenToProcess,
                   tableDefinition?.schemaExtensions?.conditional || []
@@ -424,7 +466,15 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   grandchildFieldInfoMap
                 );
 
-                const mappedGrandchildren: any[] = [];
+                const mappedGrandchildren: any[] = grandchildSectionHeaders.map((header: any) => ({
+                  no: '',
+                  name: '',
+                  type: 'section-header',
+                  section: header.section || header.ui?.label || header.description || header.key,
+                  default: '',
+                  description: '',
+                  required: '',
+                }));
                 let grandchildNo = 1;
 
                 for (const { field: grandchild } of grandchildrenWithoutCondition) {
@@ -440,7 +490,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   };
 
                   if (grandchild.children && grandchild.children.length > 0) {
-                    mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                    mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
                   }
 
                   mappedGrandchildren.push(mappedGrandchild);
@@ -475,7 +525,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     };
 
                     if (grandchild.children && grandchild.children.length > 0) {
-                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
                     }
 
                     mappedGrandchildren.push(mappedGrandchild);
@@ -500,8 +550,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 };
 
                 // 🔥 3-depth: Grandchildren mapping
-                if (child.children && child.children.length > 0) {
-                  mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
+                  mappedChild.children = mapGrandchildren(child.children || [], `${rowNumber - 1}.${currentNo}`, child);
                 }
 
                 param.children.push(mappedChild);
@@ -545,7 +595,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                   // 🔥 3-depth: Grandchildren mapping
                   if (child.children && child.children.length > 0) {
-                    mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                    mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`, child);
+                  } else if (child.type === 'array' && child.items?.properties) {
+                    mappedChild.children = mapGrandchildren([], `${rowNumber - 1}.${currentNo}`, child);
                   }
 
                   param.children.push(mappedChild);
@@ -608,9 +660,39 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               if (field.children && field.children.length > 0) {
                 let childNo = 1;
 
-                const mapGrandchildren = (grandchildren: any[], parentNo: string) => {
-                  const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string) => {
-                    const greatGrandchildrenToProcess = greatGrandchildren.filter((c: any) => c.type !== 'section-header');
+                const buildArrayItemChildren = (arrayField: any) => {
+                  const items = arrayField?.items;
+                  if (!items || items.type !== 'object' || !items.properties) {
+                    return [];
+                  }
+
+                  const itemRequired = items.required || [];
+                  return Object.entries(items.properties).map(([itemKey, itemProp]) => {
+                    const mappedItem: any = {
+                      key: `${arrayField.key}[].${itemKey}`,
+                      type: (itemProp as any).type,
+                      default: (itemProp as any).default,
+                      description: (itemProp as any).description,
+                      required: itemRequired.includes(itemKey) ? { '*': 'required' } : { '*': 'optional' },
+                    };
+
+                    if ((itemProp as any).items) mappedItem.items = (itemProp as any).items;
+                    if ((itemProp as any).enum) mappedItem.enum = (itemProp as any).enum;
+                    if ((itemProp as any)['x-ui']) mappedItem.ui = (itemProp as any)['x-ui'];
+                    if ((itemProp as any)['x-optional-when']) mappedItem['x-optional-when'] = (itemProp as any)['x-optional-when'];
+                    if ((itemProp as any)['x-required-when']) mappedItem['x-required-when'] = (itemProp as any)['x-required-when'];
+
+                    return mappedItem;
+                  });
+                };
+
+                const mapGrandchildren = (grandchildren: any[], parentNo: string, parentField?: any) => {
+                  const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string, grandParentField?: any) => {
+                    const resolvedGreatGrandchildren = greatGrandchildren.length > 0
+                      ? greatGrandchildren
+                      : buildArrayItemChildren(grandParentField);
+                    const greatGrandchildSectionHeaders = resolvedGreatGrandchildren.filter((c: any) => c.type === 'section-header' || c.section);
+                    const greatGrandchildrenToProcess = resolvedGreatGrandchildren.filter((c: any) => c.type !== 'section-header' && !c.section);
                     const greatGrandchildFieldInfoMap = collectFieldConditionInfo(
                       greatGrandchildrenToProcess,
                       tableDefinition?.schemaExtensions?.conditional || []
@@ -621,7 +703,15 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       greatGrandchildFieldInfoMap
                     );
 
-                    const mappedGreatGrandchildren: any[] = [];
+                    const mappedGreatGrandchildren: any[] = greatGrandchildSectionHeaders.map((header: any) => ({
+                      no: '',
+                      name: '',
+                      type: 'section-header',
+                      section: header.section || header.ui?.label || header.description || header.key,
+                      default: '',
+                      description: '',
+                      required: '',
+                    }));
                     let greatGrandchildNo = 1;
 
                     for (const { field: greatGrandchild } of greatGrandchildrenWithoutCondition) {
@@ -670,7 +760,10 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     return mappedGreatGrandchildren;
                   };
 
-                  const grandchildrenToProcess = grandchildren.filter((c: any) => c.type !== 'section-header');
+                  const resolvedGrandchildren = grandchildren.length > 0
+                    ? grandchildren
+                    : buildArrayItemChildren(parentField);
+                  const grandchildrenToProcess = resolvedGrandchildren.filter((c: any) => c.type !== 'section-header');
                   const grandchildFieldInfoMap = collectFieldConditionInfo(
                     grandchildrenToProcess,
                     tableDefinition?.schemaExtensions?.conditional || []
@@ -697,7 +790,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     };
 
                     if (grandchild.children && grandchild.children.length > 0) {
-                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
                     }
 
                     mappedGrandchildren.push(mappedGrandchild);
@@ -732,7 +825,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       };
 
                       if (grandchild.children && grandchild.children.length > 0) {
-                        mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                        mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
                       }
 
                       mappedGrandchildren.push(mappedGrandchild);
@@ -768,8 +861,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         child.required?.['*'] === 'required' ? 'Required' : 'Optional',
                   };
 
-                  if (child.children && child.children.length > 0) {
-                    mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                  if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
+                    mappedChild.children = mapGrandchildren(child.children || [], `${rowNumber - 1}.${currentNo}`, child);
                   }
 
                   param.children.push(mappedChild);
@@ -806,6 +899,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                     if (child.children && child.children.length > 0) {
                       mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                    } else if (child.type === 'array' && child.items?.properties) {
+                      mappedChild.children = mapGrandchildren([], `${rowNumber - 1}.${currentNo}`, child);
                     }
 
                     param.children.push(mappedChild);

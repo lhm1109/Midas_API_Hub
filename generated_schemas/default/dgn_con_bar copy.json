@@ -1,0 +1,1575 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "BEAM": {
+              "type": "object",
+              "description": "Beam rebar specification and layout",
+              "additionalProperties": false,
+              "properties": {
+                "MAIN_REBAR": {
+                  "type": "array",
+                  "description": "Main rebar sizes (up to 5 types)",
+                  "default": [
+                    "D22"
+                  ],
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Main Rebar",
+                    "order": 1
+                  }
+                },
+                "STIRRUPS": {
+                  "type": "string",
+                  "description": "Stirrup bar size",
+                  "default": "D10",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Stirrups",
+                    "order": 2
+                  }
+                },
+                "STIRRUP_ARRANGEMENT": {
+                  "type": "integer",
+                  "description": "Stirrup leg count",
+                  "default": 2,
+                  "oneOf": [
+                    {
+                      "const": 2,
+                      "title": "2"
+                    },
+                    {
+                      "const": 3,
+                      "title": "3"
+                    },
+                    {
+                      "const": 4,
+                      "title": "4"
+                    },
+                    {
+                      "const": 5,
+                      "title": "5"
+                    },
+                    {
+                      "const": 6,
+                      "title": "6"
+                    },
+                    {
+                      "const": 7,
+                      "title": "7"
+                    },
+                    {
+                      "const": 8,
+                      "title": "8"
+                    },
+                    {
+                      "const": 9,
+                      "title": "9"
+                    },
+                    {
+                      "const": 10,
+                      "title": "10"
+                    },
+                    {
+                      "const": 11,
+                      "title": "11"
+                    },
+                    {
+                      "const": 12,
+                      "title": "12"
+                    },
+                    {
+                      "const": 13,
+                      "title": "13"
+                    },
+                    {
+                      "const": 14,
+                      "title": "14"
+                    },
+                    {
+                      "const": 15,
+                      "title": "15"
+                    },
+                    {
+                      "const": 16,
+                      "title": "16"
+                    },
+                    {
+                      "const": 17,
+                      "title": "17"
+                    },
+                    {
+                      "const": 18,
+                      "title": "18"
+                    },
+                    {
+                      "const": 19,
+                      "title": "19"
+                    },
+                    {
+                      "const": 20,
+                      "title": "20"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Stirrup leg count",
+                    "order": 3
+                  }
+                },
+                "SIDE_BAR": {
+                  "type": "string",
+                  "description": "Side bar size",
+                  "default": "D13",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Side Bar",
+                    "order": 4
+                  }
+                },
+                "DT": {
+                  "type": "number",
+                  "description": "Top cover distance",
+                  "default": 0,
+                  "x-ui": {
+                    "label": "Top cover distance",
+                    "order": 5
+                  }
+                },
+                "DB": {
+                  "type": "number",
+                  "description": "Bottom cover distance",
+                  "default": 0,
+                  "x-ui": {
+                    "label": "Bottom cover distance",
+                    "order": 6
+                  }
+                },
+                "DOUBLY_REBAR": {
+                  "type": "boolean",
+                  "description": "Enable doubly reinforced design",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Use doubly reinforced design",
+                    "order": 7
+                  }
+                },
+                "DOUBLY_K": {
+                  "type": "number",
+                  "description": "Doubly reinforced k factor",
+                  "default": 1,
+                  "x-ui": {
+                    "label": "Doubly reinforced k factor",
+                    "order": 8
+                  },
+                  "x-optional-when": {
+                    "DOUBLY_REBAR": true
+                  }
+                },
+                "SPACING_LIMIT": {
+                  "type": "boolean",
+                  "description": "Consider bar spacing",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Consider Spacing Limit for Main Rebar",
+                    "order": 11
+                  }
+                },
+                "SPLICED_BARS": {
+                  "type": "integer",
+                  "description": "Splice option",
+                  "default": 1,
+                  "oneOf": [
+                    {
+                      "title": "None",
+                      "const": 0
+                    },
+                    {
+                      "title": "50%",
+                      "const": 1
+                    },
+                    {
+                      "title": "100%",
+                      "const": 2
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "Splice option",
+                    "order": 12
+                  },
+                  "x-optional-when": {
+                    "SPACING_LIMIT": true
+                  }
+                }
+              }
+            },
+            "COLUMN": {
+              "type": "object",
+              "description": "Column rebar specification and layout",
+              "additionalProperties": false,
+              "properties": {
+                "MAIN_REBAR": {
+                  "type": "array",
+                  "description": "Main rebar sizes (up to 5 types)",
+                  "default": [
+                    "D22"
+                  ],
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Main Rebar",
+                    "order": 1
+                  }
+                },
+                "TIES_SPIRALS": {
+                  "type": "string",
+                  "description": "Tie/spiral bar size",
+                  "default": "D10",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Ties/Spirals",
+                    "order": 2
+                  }
+                },
+                "ARRANGEMENT_Y": {
+                  "type": "integer",
+                  "description": "Tie leg count (Y)",
+                  "default": 2,
+                  "oneOf": [
+                    {
+                      "const": 2,
+                      "title": "2"
+                    },
+                    {
+                      "const": 3,
+                      "title": "3"
+                    },
+                    {
+                      "const": 4,
+                      "title": "4"
+                    },
+                    {
+                      "const": 5,
+                      "title": "5"
+                    },
+                    {
+                      "const": 6,
+                      "title": "6"
+                    },
+                    {
+                      "const": 7,
+                      "title": "7"
+                    },
+                    {
+                      "const": 8,
+                      "title": "8"
+                    },
+                    {
+                      "const": 9,
+                      "title": "9"
+                    },
+                    {
+                      "const": 10,
+                      "title": "10"
+                    },
+                    {
+                      "const": 11,
+                      "title": "11"
+                    },
+                    {
+                      "const": 12,
+                      "title": "12"
+                    },
+                    {
+                      "const": 13,
+                      "title": "13"
+                    },
+                    {
+                      "const": 14,
+                      "title": "14"
+                    },
+                    {
+                      "const": 15,
+                      "title": "15"
+                    },
+                    {
+                      "const": 16,
+                      "title": "16"
+                    },
+                    {
+                      "const": 17,
+                      "title": "17"
+                    },
+                    {
+                      "const": 18,
+                      "title": "18"
+                    },
+                    {
+                      "const": 19,
+                      "title": "19"
+                    },
+                    {
+                      "const": 20,
+                      "title": "20"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Tie leg count (Y)",
+                    "order": 3
+                  }
+                },
+                "ARRANGEMENT_Z": {
+                  "type": "integer",
+                  "description": "Tie leg count (Z)",
+                  "default": 2,
+                  "oneOf": [
+                    {
+                      "const": 2,
+                      "title": "2"
+                    },
+                    {
+                      "const": 3,
+                      "title": "3"
+                    },
+                    {
+                      "const": 4,
+                      "title": "4"
+                    },
+                    {
+                      "const": 5,
+                      "title": "5"
+                    },
+                    {
+                      "const": 6,
+                      "title": "6"
+                    },
+                    {
+                      "const": 7,
+                      "title": "7"
+                    },
+                    {
+                      "const": 8,
+                      "title": "8"
+                    },
+                    {
+                      "const": 9,
+                      "title": "9"
+                    },
+                    {
+                      "const": 10,
+                      "title": "10"
+                    },
+                    {
+                      "const": 11,
+                      "title": "11"
+                    },
+                    {
+                      "const": 12,
+                      "title": "12"
+                    },
+                    {
+                      "const": 13,
+                      "title": "13"
+                    },
+                    {
+                      "const": 14,
+                      "title": "14"
+                    },
+                    {
+                      "const": 15,
+                      "title": "15"
+                    },
+                    {
+                      "const": 16,
+                      "title": "16"
+                    },
+                    {
+                      "const": 17,
+                      "title": "17"
+                    },
+                    {
+                      "const": 18,
+                      "title": "18"
+                    },
+                    {
+                      "const": 19,
+                      "title": "19"
+                    },
+                    {
+                      "const": 20,
+                      "title": "20"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Tie leg count (Z)",
+                    "order": 4
+                  }
+                },
+                "DO": {
+                  "type": "number",
+                  "description": "Cover distance from main rebar center",
+                  "default": 0,
+                  "x-ui": {
+                    "label": "Cover distance from main rebar center",
+                    "order": 5
+                  }
+                },
+                "SPACING_LIMIT": {
+                  "type": "boolean",
+                  "description": "Consider bar spacing",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Consider Spacing Limit for Main Rebar",
+                    "order": 7
+                  }
+                },
+                "SPLICED_BARS": {
+                  "type": "integer",
+                  "description": "Splice option",
+                  "default": 1,
+                  "oneOf": [
+                    {
+                      "title": "None",
+                      "const": 0
+                    },
+                    {
+                      "title": "50%",
+                      "const": 1
+                    },
+                    {
+                      "title": "100%",
+                      "const": 2
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "Splice option",
+                    "order": 8
+                  },
+                  "x-optional-when": {
+                    "SPACING_LIMIT": true
+                  }
+                }
+              }
+            },
+            "BRACE": {
+              "type": "object",
+              "description": "Brace rebar specification and layout",
+              "additionalProperties": false,
+              "properties": {
+                "MAIN_REBAR": {
+                  "type": "array",
+                  "description": "Main rebar sizes (up to 5 types)",
+                  "default": [
+                    "D22"
+                  ],
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Main Rebar",
+                    "order": 1
+                  }
+                },
+                "TIES_SPIRALS": {
+                  "type": "string",
+                  "description": "Tie/spiral bar size",
+                  "default": "D10",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Ties/Spirals",
+                    "order": 2
+                  }
+                },
+                "ARRANGEMENT_Y": {
+                  "type": "integer",
+                  "description": "Tie leg count (Y)",
+                  "default": 2,
+                  "oneOf": [
+                    {
+                      "const": 2,
+                      "title": "2"
+                    },
+                    {
+                      "const": 3,
+                      "title": "3"
+                    },
+                    {
+                      "const": 4,
+                      "title": "4"
+                    },
+                    {
+                      "const": 5,
+                      "title": "5"
+                    },
+                    {
+                      "const": 6,
+                      "title": "6"
+                    },
+                    {
+                      "const": 7,
+                      "title": "7"
+                    },
+                    {
+                      "const": 8,
+                      "title": "8"
+                    },
+                    {
+                      "const": 9,
+                      "title": "9"
+                    },
+                    {
+                      "const": 10,
+                      "title": "10"
+                    },
+                    {
+                      "const": 11,
+                      "title": "11"
+                    },
+                    {
+                      "const": 12,
+                      "title": "12"
+                    },
+                    {
+                      "const": 13,
+                      "title": "13"
+                    },
+                    {
+                      "const": 14,
+                      "title": "14"
+                    },
+                    {
+                      "const": 15,
+                      "title": "15"
+                    },
+                    {
+                      "const": 16,
+                      "title": "16"
+                    },
+                    {
+                      "const": 17,
+                      "title": "17"
+                    },
+                    {
+                      "const": 18,
+                      "title": "18"
+                    },
+                    {
+                      "const": 19,
+                      "title": "19"
+                    },
+                    {
+                      "const": 20,
+                      "title": "20"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Tie leg count (Y)",
+                    "order": 3
+                  }
+                },
+                "ARRANGEMENT_Z": {
+                  "type": "integer",
+                  "description": "Tie leg count (Z)",
+                  "default": 2,
+                  "oneOf": [
+                    {
+                      "const": 2,
+                      "title": "2"
+                    },
+                    {
+                      "const": 3,
+                      "title": "3"
+                    },
+                    {
+                      "const": 4,
+                      "title": "4"
+                    },
+                    {
+                      "const": 5,
+                      "title": "5"
+                    },
+                    {
+                      "const": 6,
+                      "title": "6"
+                    },
+                    {
+                      "const": 7,
+                      "title": "7"
+                    },
+                    {
+                      "const": 8,
+                      "title": "8"
+                    },
+                    {
+                      "const": 9,
+                      "title": "9"
+                    },
+                    {
+                      "const": 10,
+                      "title": "10"
+                    },
+                    {
+                      "const": 11,
+                      "title": "11"
+                    },
+                    {
+                      "const": 12,
+                      "title": "12"
+                    },
+                    {
+                      "const": 13,
+                      "title": "13"
+                    },
+                    {
+                      "const": 14,
+                      "title": "14"
+                    },
+                    {
+                      "const": 15,
+                      "title": "15"
+                    },
+                    {
+                      "const": 16,
+                      "title": "16"
+                    },
+                    {
+                      "const": 17,
+                      "title": "17"
+                    },
+                    {
+                      "const": 18,
+                      "title": "18"
+                    },
+                    {
+                      "const": 19,
+                      "title": "19"
+                    },
+                    {
+                      "const": 20,
+                      "title": "20"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Tie leg count (Z)",
+                    "order": 4
+                  }
+                },
+                "DO": {
+                  "type": "number",
+                  "description": "Cover distance from main rebar center",
+                  "default": 0,
+                  "x-ui": {
+                    "label": "Cover distance from main rebar center",
+                    "order": 5
+                  }
+                },
+                "SPACING_LIMIT": {
+                  "type": "boolean",
+                  "description": "Consider bar spacing",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Consider Spacing Limit for Main Rebar",
+                    "order": 7
+                  }
+                },
+                "SPLICED_BARS": {
+                  "type": "integer",
+                  "description": "Splice option",
+                  "default": 1,
+                  "oneOf": [
+                    {
+                      "title": "None",
+                      "const": 0
+                    },
+                    {
+                      "title": "50%",
+                      "const": 1
+                    },
+                    {
+                      "title": "100%",
+                      "const": 2
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "RadioGroup",
+                    "label": "Splice option",
+                    "order": 8
+                  },
+                  "x-optional-when": {
+                    "SPACING_LIMIT": true
+                  }
+                }
+              }
+            },
+            "WALL": {
+              "type": "object",
+              "description": "Shear wall rebar specification and layout",
+              "additionalProperties": false,
+              "properties": {
+                "VERTICAL_REBAR": {
+                  "type": "array",
+                  "description": "Vertical rebar sizes (multi-select)",
+                  "default": [
+                    "D13"
+                  ],
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Vertical Rebar",
+                    "order": 1
+                  }
+                },
+                "HORIZONTAL_REBAR": {
+                  "type": "string",
+                  "description": "Horizontal rebar size",
+                  "default": "D10",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Horizontal Rebar",
+                    "order": 2
+                  }
+                },
+                "END_REBAR": {
+                  "type": "string",
+                  "description": "End rebar size",
+                  "default": "D10",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "End Rebar",
+                    "order": 3
+                  }
+                },
+                "BE_HORZ_REBAR": {
+                  "type": "string",
+                  "description": "Boundary element horizontal rebar size",
+                  "default": "D10",
+                  "oneOf": [
+                    {
+                      "const": "D4",
+                      "title": "D4"
+                    },
+                    {
+                      "const": "D5",
+                      "title": "D5"
+                    },
+                    {
+                      "const": "D6",
+                      "title": "D6"
+                    },
+                    {
+                      "const": "D7",
+                      "title": "D7"
+                    },
+                    {
+                      "const": "D8",
+                      "title": "D8"
+                    },
+                    {
+                      "const": "D10",
+                      "title": "D10"
+                    },
+                    {
+                      "const": "D13",
+                      "title": "D13"
+                    },
+                    {
+                      "const": "D16",
+                      "title": "D16"
+                    },
+                    {
+                      "const": "D19",
+                      "title": "D19"
+                    },
+                    {
+                      "const": "D22",
+                      "title": "D22"
+                    },
+                    {
+                      "const": "D25",
+                      "title": "D25"
+                    },
+                    {
+                      "const": "D29",
+                      "title": "D29"
+                    },
+                    {
+                      "const": "D32",
+                      "title": "D32"
+                    },
+                    {
+                      "const": "D35",
+                      "title": "D35"
+                    },
+                    {
+                      "const": "D38",
+                      "title": "D38"
+                    },
+                    {
+                      "const": "D41",
+                      "title": "D41"
+                    },
+                    {
+                      "const": "D43",
+                      "title": "D43"
+                    },
+                    {
+                      "const": "D51",
+                      "title": "D51"
+                    },
+                    {
+                      "const": "D57",
+                      "title": "D57"
+                    }
+                  ],
+                  "x-ui": {
+                    "component": "ComboBox",
+                    "label": "Boundary Element Horz. Rebar",
+                    "order": 4
+                  }
+                },
+                "BE_HORZ_SPACE": {
+                  "type": "number",
+                  "description": "Boundary element horizontal spacing",
+                  "default": 200,
+                  "x-ui": {
+                    "label": "Boundary Element Horz. Rebar Space",
+                    "order": 5
+                  }
+                },
+                "BE_VERT_SPACE": {
+                  "type": "number",
+                  "description": "Boundary element vertical spacing",
+                  "default": 100,
+                  "x-ui": {
+                    "label": "Boundary Element Vert. Rebar Space",
+                    "order": 6
+                  }
+                },
+                "DE": {
+                  "type": "number",
+                  "description": "Edge to first vertical bar",
+                  "default": 0,
+                  "x-ui": {
+                    "label": "Edge to first vertical bar",
+                    "order": 7
+                  }
+                },
+                "DW": {
+                  "type": "number",
+                  "description": "Cover distance to wall face",
+                  "default": 0,
+                  "x-ui": {
+                    "label": "Cover distance to wall face",
+                    "order": 8
+                  }
+                },
+                "MATERIAL_BY_DIAMETER": {
+                  "type": "boolean",
+                  "description": "Use material by diameter",
+                  "default": false,
+                  "x-ui": {
+                    "label": "Material by Rebar Diameter",
+                    "order": 9
+                  }
+                },
+                "MATERIAL_BY_DIAMETER_INPUT": {
+                  "type": "object",
+                  "description": "Material by diameter input",
+                  "additionalProperties": false,
+                  "required": [
+                    "VERTICAL_END_REBAR",
+                    "HORIZONTAL_REBAR"
+                  ],
+                  "properties": {
+                    "VERTICAL_END_REBAR": {
+                      "type": "array",
+                      "description": "Vertical/end rebar material mapping",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "REBAR_DIAMETER": {
+                            "type": "string",
+                            "description": "Rebar diameter",
+                            "enum": [
+                              "D4",
+                              "D5",
+                              "D6",
+                              "D7",
+                              "D8",
+                              "D10",
+                              "D13",
+                              "D16",
+                              "D19",
+                              "D22",
+                              "D25",
+                              "D29",
+                              "D32",
+                              "D35",
+                              "D38",
+                              "D41",
+                              "D43",
+                              "D51",
+                              "D57"
+                            ]
+                          },
+                          "MATERIAL": {
+                            "type": "string",
+                            "description": "Material grade",
+                            "enum": [
+                              "None",
+                              "SD300",
+                              "SD400",
+                              "SD500",
+                              "SD600",
+                              "SD700",
+                              "SD400S",
+                              "SD500S",
+                              "SD600S"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "HORIZONTAL_REBAR": {
+                      "type": "array",
+                      "description": "Horizontal rebar material mapping",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "REBAR_DIAMETER": {
+                            "type": "string",
+                            "description": "Rebar diameter",
+                            "enum": [
+                              "D4",
+                              "D5",
+                              "D6",
+                              "D7",
+                              "D8",
+                              "D10",
+                              "D13",
+                              "D16",
+                              "D19",
+                              "D22",
+                              "D25",
+                              "D29",
+                              "D32",
+                              "D35",
+                              "D38",
+                              "D41",
+                              "D43",
+                              "D51",
+                              "D57"
+                            ]
+                          },
+                          "MATERIAL": {
+                            "type": "string",
+                            "description": "Material grade",
+                            "enum": [
+                              "None",
+                              "SD300",
+                              "SD400",
+                              "SD500",
+                              "SD600",
+                              "SD700",
+                              "SD400S",
+                              "SD500S",
+                              "SD600S"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "x-ui": {
+                    "label": "Material by Rebar Diameter",
+                    "order": 10
+                  },
+                  "x-optional-when": {
+                    "MATERIAL_BY_DIAMETER": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -895,6 +895,7 @@ function renderGreatGrandchildrenLegacy(
   references?: Map<string, ReferenceInfo>
 ): string {
   let html = '';
+  const explicitSectionHeaders = greatGrandchildren.filter((item) => item.type === 'section-header' || item.section);
   const greatGrandchildrenWithoutCondition: EnhancedField[] = [];
   const greatGrandchildrenByCondition: Map<string, { children: EnhancedField[]; isRequired: boolean; conditionText: string }> = new Map();
 
@@ -919,6 +920,21 @@ function renderGreatGrandchildrenLegacy(
     } else {
       greatGrandchildrenWithoutCondition.push(greatGrandchild);
     }
+  }
+
+  for (const header of explicitSectionHeaders) {
+    const headerLabel = header.section || header.ui?.label || header.description || header.key;
+    if (!headerLabel) {
+      continue;
+    }
+    html += `
+      <tr>
+        <td style="${ZENDESK_CELL_STYLE}"></td>
+        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="5">
+          <p><span style="color: #4c9aff;">${escapeHtml(String(headerLabel))}</span></p>
+        </td>
+      </tr>
+    `;
   }
 
   let greatGrandchildNo = 1;
@@ -999,6 +1015,7 @@ function renderGrandchildrenLegacy(
   references?: Map<string, ReferenceInfo>
 ): string {
   let html = '';
+  const explicitSectionHeaders = grandchildren.filter((item) => item.type === 'section-header' || item.section);
   const grandchildrenWithoutCondition: EnhancedField[] = [];
   const grandchildrenByCondition: Map<string, { children: EnhancedField[]; isRequired: boolean; conditionText: string }> = new Map();
 
@@ -1023,6 +1040,21 @@ function renderGrandchildrenLegacy(
     } else {
       grandchildrenWithoutCondition.push(grandchild);
     }
+  }
+
+  for (const header of explicitSectionHeaders) {
+    const headerLabel = header.section || header.ui?.label || header.description || header.key;
+    if (!headerLabel) {
+      continue;
+    }
+    html += `
+      <tr>
+        <td style="${ZENDESK_CELL_STYLE}"></td>
+        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="5">
+          <p><span style="color: #4c9aff;">${escapeHtml(String(headerLabel))}</span></p>
+        </td>
+      </tr>
+    `;
   }
 
   let grandchildNo = 1;
@@ -1142,15 +1174,53 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
   const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array [${field.items?.type || 'any'}]` : field.type;
 
+  const materializeArrayItemChildren = (targetField: EnhancedField): EnhancedField[] => {
+    const items = (targetField as any).items;
+    if (!items || items.type !== 'object' || !items.properties) {
+      return [];
+    }
+
+    const itemRequired = items.required || [];
+    return Object.entries(items.properties).map(([childKey, childProp]) => {
+      const childField: EnhancedField = {
+        key: `${targetField.key}[].${childKey}`,
+        type: (childProp as any).type,
+        default: (childProp as any).default,
+        description: (childProp as any).description,
+        required: itemRequired.includes(childKey) ? { '*': 'required' } : { '*': 'optional' },
+        section: '',
+        validationLayers: [],
+      };
+
+      for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
+        if (cpKey === 'type' || cpKey === 'default' || cpKey === 'description') continue;
+
+        if (cpKey === 'x-ui') {
+          childField.ui = cpValue as any;
+        } else if (cpKey.startsWith('x-')) {
+          (childField as any)[cpKey] = cpValue;
+        } else {
+          (childField as any)[cpKey] = cpValue;
+        }
+      }
+
+      return childField;
+    });
+  };
+
+  const effectiveChildren = field.children && field.children.length > 0
+    ? field.children
+    : materializeArrayItemChildren(field);
+
   // 🔥 rowspan 계산: children + grandchildren + 조건 헤더 모두 포함
-  const calculateTotalRows = (field: EnhancedField): number => {
-    if (!field.children || field.children.length === 0) return 1;
+  const calculateTotalRows = (children: EnhancedField[]): number => {
+    if (!children || children.length === 0) return 1;
     
     // 🔥 조건별 그룹화를 동일하게 수행하여 정확한 row 수 계산
     const childrenWithoutCondition: EnhancedField[] = [];
     const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
 
-    for (const child of field.children) {
+    for (const child of children) {
       if (child.type === 'section-header') continue;
 
       const childAny = child as any;
@@ -1197,10 +1267,13 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
     // 조건 없는 children
     for (const child of childrenWithoutCondition) {
       totalRows += 1; // child 행
-      if (child.children && child.children.length > 0) {
-        totalRows += child.children.length; // grandchildren 행들
-        totalRows += countConditionHeaders(child.children); // grandchildren 조건 헤더
-        for (const grandchild of child.children) {
+      const effectiveGrandchildren = child.children && child.children.length > 0
+        ? child.children
+        : materializeArrayItemChildren(child);
+      if (effectiveGrandchildren.length > 0) {
+        totalRows += effectiveGrandchildren.length; // grandchildren 행들
+        totalRows += countConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
+        for (const grandchild of effectiveGrandchildren) {
           if (grandchild.children && grandchild.children.length > 0) {
             totalRows += grandchild.children.length; // great-grandchildren 행들
             totalRows += countConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
@@ -1214,10 +1287,13 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
       totalRows += 1; // section-header 행
       for (const child of children) {
         totalRows += 1; // child 행
-        if (child.children && child.children.length > 0) {
-          totalRows += child.children.length; // grandchildren 행들
-          totalRows += countConditionHeaders(child.children); // grandchildren 조건 헤더
-          for (const grandchild of child.children) {
+        const effectiveGrandchildren = child.children && child.children.length > 0
+          ? child.children
+          : materializeArrayItemChildren(child);
+        if (effectiveGrandchildren.length > 0) {
+          totalRows += effectiveGrandchildren.length; // grandchildren 행들
+          totalRows += countConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
+          for (const grandchild of effectiveGrandchildren) {
             if (grandchild.children && grandchild.children.length > 0) {
               totalRows += grandchild.children.length; // great-grandchildren 행들
               totalRows += countConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
@@ -1230,8 +1306,8 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
     return totalRows;
   };
 
-  const hasChildren = field.children && field.children.length > 0;
-  const rowspanValue = hasChildren ? calculateTotalRows(field) : 1;
+  const hasChildren = effectiveChildren.length > 0;
+  const rowspanValue = hasChildren ? calculateTotalRows(effectiveChildren) : 1;
   const rowspanAttr = hasChildren ? ` rowspan="${rowspanValue}"` : '';
 
   // Zendesk 스타일: inline 패딩 + <p> 태그 + text-align: center
@@ -1264,7 +1340,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
     const childrenWithoutCondition: EnhancedField[] = [];
     const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
 
-    for (const child of field.children!) {
+    for (const child of effectiveChildren) {
       // section-header는 skip (자동 생성됨)
       if (child.type === 'section-header') continue;
 
@@ -1330,8 +1406,11 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
       `;
 
       // 🔥 3-depth 중첩 필드 처리 (grandchildren)
-      if (child.children && child.children.length > 0) {
-        html += renderGrandchildrenLegacy(child.children, rowNumber, currentChildNo, references);
+      const effectiveGrandchildren = child.children && child.children.length > 0
+        ? child.children
+        : materializeArrayItemChildren(child);
+      if (effectiveGrandchildren.length > 0) {
+        html += renderGrandchildrenLegacy(effectiveGrandchildren, rowNumber, currentChildNo, references);
       }
     }
 
@@ -1388,8 +1467,11 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
         `;
 
         // 🔥 3-depth 중첩 필드 처리 (grandchildren)
-        if (child.children && child.children.length > 0) {
-          html += renderGrandchildrenLegacy(child.children, rowNumber, currentChildNo, references);
+        const effectiveGrandchildren = child.children && child.children.length > 0
+          ? child.children
+          : materializeArrayItemChildren(child);
+        if (effectiveGrandchildren.length > 0) {
+          html += renderGrandchildrenLegacy(effectiveGrandchildren, rowNumber, currentChildNo, references);
         }
       }
     }

@@ -1,0 +1,1308 @@
+{
+  "caption": "Design Criteria for Rebars",
+  "conditionals": [
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_DGN_RC_BEWHBAR1_STC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_DGN_RC_BEWHBAR",
+      "triggerVariable": "__unknown__",
+      "variable": "m_BEWHBar"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_DGN_RC_BEWHBAR3_STC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_DGN_RC_WALL_BEHSPACE_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_BEHSpace"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_STATIC_WALL_BEHSPACE_UNIT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_BEHSpaceUnit"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_DGN_RC_BEWVBAR3_STC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_DGN_RC_WALL_BEVSPACE_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_BEVSpace"
+    },
+    {
+      "action": "enable",
+      "condition": "bEnable",
+      "controlId": "IDC_STATIC_WALL_BEVSPACE_UNIT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_BEVSpaceUnit"
+    }
+  ],
+  "controls": [
+    {
+      "type": "GROUPBOX",
+      "caption": " For Beam Design ",
+      "ddxFunction": "DDX_Control",
+      "h": 116,
+      "id": "IDC_WG_DGN_STATIC0",
+      "inferredType": "object",
+      "variable": "m_wndBeamDgnFrame",
+      "w": 226,
+      "x": 0,
+      "y": 5
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEAM_BTN",
+      "w": 15,
+      "x": 205,
+      "y": 4
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Main Rebar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC1",
+      "w": 38,
+      "x": 6,
+      "y": 17
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC2",
+      "w": 8,
+      "x": 67,
+      "y": 20
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_BMAINBAR",
+      "inferredType": "boolean",
+      "labelText": "Main Rebar",
+      "variable": "m_BMainBar",
+      "w": 103,
+      "x": 75,
+      "y": 17
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Rebar...",
+      "h": 12,
+      "id": "IDC_DGN_RC_SELBARSIZE1",
+      "w": 38,
+      "x": 180,
+      "y": 17
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Stirrups",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC3",
+      "w": 35,
+      "x": 6,
+      "y": 33
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC4",
+      "w": 8,
+      "x": 67,
+      "y": 34
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 208,
+      "id": "IDC_DGN_RC_BSTIRRUP",
+      "inferredType": "object",
+      "labelText": "Stirrups",
+      "variable": "m_BStirrup",
+      "w": 47,
+      "x": 75,
+      "y": 33
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Arrangement",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC5",
+      "w": 50,
+      "x": 133,
+      "y": 33
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC6",
+      "w": 8,
+      "x": 176,
+      "y": 34
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 208,
+      "id": "IDC_DGN_RC_BSTIRRUP_NUM",
+      "inferredType": "object",
+      "labelText": "Arrangement",
+      "variable": "m_BStirrupNum",
+      "w": 35,
+      "x": 184,
+      "y": 33
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Side Bar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC7",
+      "w": 36,
+      "x": 6,
+      "y": 49
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC8",
+      "w": 8,
+      "x": 67,
+      "y": 48
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 228,
+      "id": "IDC_DGN_RC_BSIDE",
+      "inferredType": "object",
+      "labelText": "Side Bar",
+      "variable": "m_BSide",
+      "w": 47,
+      "x": 75,
+      "y": 47
+    },
+    {
+      "type": "LTEXT",
+      "caption": "dT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC9",
+      "w": 10,
+      "x": 8,
+      "y": 63
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC10",
+      "w": 8,
+      "x": 18,
+      "y": 63
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEAMDT",
+      "inferredType": "number",
+      "labelText": "dT",
+      "variable": "m_Dt",
+      "w": 47,
+      "x": 29,
+      "y": 63
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_BEAMDTUNIT",
+      "inferredType": "object",
+      "variable": "m_DtUnit",
+      "w": 18,
+      "x": 80,
+      "y": 63
+    },
+    {
+      "type": "LTEXT",
+      "caption": "dB",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC11",
+      "w": 10,
+      "x": 124,
+      "y": 63
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC12",
+      "w": 8,
+      "x": 135,
+      "y": 63
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEAMDB",
+      "inferredType": "number",
+      "labelText": "dB",
+      "variable": "m_Db",
+      "w": 47,
+      "x": 146,
+      "y": 63
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_BEAMDBUNIT",
+      "inferredType": "object",
+      "variable": "m_DbUnit",
+      "w": 19,
+      "x": 197,
+      "y": 63
+    },
+    {
+      "type": "GROUPBOX",
+      "h": 36,
+      "id": "IDC_DGN_CON_AIJBEAM_SPLICETYPE_FRAME",
+      "w": 69,
+      "x": 5,
+      "y": 80
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "AIJ Recommend",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_DGN_CON_AIJ_BWIDTH_CHECK",
+      "inferredType": "boolean",
+      "variable": "m_bAIJBeamRecommend",
+      "w": 65,
+      "x": 7,
+      "y": 79
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Sided Hook",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CON_AIJ_METHOD1_RADIO",
+      "inferredType": "integer",
+      "labelText": "k* 0.75*Rhob",
+      "variable": "m_iSpliceSubType",
+      "w": 60,
+      "x": 11,
+      "y": 91
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "U-Stirrup",
+      "h": 12,
+      "id": "IDC_DGN_CON_AIJ_METHOD2_RADIO",
+      "labelText": "k ",
+      "w": 56,
+      "x": 11,
+      "y": 103
+    },
+    {
+      "type": "LTEXT",
+      "caption": "k* 0.75*Rhob",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEAM_DOUBLY_REIN_Rhob",
+      "w": 49,
+      "x": 11,
+      "y": 91
+    },
+    {
+      "type": "LTEXT",
+      "caption": "k ",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEAM_DOUBLY_REIN_STATIC",
+      "w": 12,
+      "x": 11,
+      "y": 103
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEAM_DOUBLY_REIN_EDIT",
+      "inferredType": "number",
+      "labelText": "k ",
+      "variable": "m_dDoublyRain",
+      "w": 36,
+      "x": 24,
+      "y": 103
+    },
+    {
+      "type": "GROUPBOX",
+      "h": 36,
+      "id": "IDC_DGN_CON_BSPLICE_FRAME",
+      "w": 144,
+      "x": 77,
+      "y": 80
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Spliced Bars ",
+      "h": 12,
+      "id": "IDC_DGN_CON_BSPLICE_TITLE",
+      "w": 47,
+      "x": 79,
+      "y": 96
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "None",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CON_BSPLICE_NO_RADIO",
+      "inferredType": "integer",
+      "labelText": "Spliced Bars ",
+      "variable": "m_bsplice_radio",
+      "w": 29,
+      "x": 128,
+      "y": 96
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "50%",
+      "h": 12,
+      "id": "IDC_DGN_CON_BSPLICE_SEMI_RADIO",
+      "labelText": "Spliced Bars ",
+      "w": 27,
+      "x": 161,
+      "y": 96
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "100%",
+      "h": 12,
+      "id": "IDC_DGN_CON_BSPLICE_FULL_RADIO",
+      "labelText": "Spliced Bars ",
+      "w": 28,
+      "x": 189,
+      "y": 96
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": " For Column Design ",
+      "ddxFunction": "DDX_Control",
+      "h": 94,
+      "id": "IDC_WG_DGN_STATIC13",
+      "inferredType": "object",
+      "variable": "m_wndColmDgnFrame",
+      "w": 226,
+      "x": 0,
+      "y": 128
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_DGN_RC_COLUMN_BTN",
+      "w": 15,
+      "x": 205,
+      "y": 127
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Main Rebar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC14",
+      "w": 38,
+      "x": 6,
+      "y": 140
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC15",
+      "w": 8,
+      "x": 67,
+      "y": 142
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_CMAINBAR",
+      "inferredType": "string",
+      "labelText": "Main Rebar",
+      "variable": "m_CMainBar",
+      "w": 103,
+      "x": 75,
+      "y": 140
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Rebar...",
+      "h": 12,
+      "id": "IDC_DGN_RC_SELBARSIZE2",
+      "w": 38,
+      "x": 180,
+      "y": 140
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Ties/Spirals",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC16",
+      "w": 52,
+      "x": 6,
+      "y": 156
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC17",
+      "w": 8,
+      "x": 67,
+      "y": 157
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 207,
+      "id": "IDC_DGN_RC_CSTIRRUP",
+      "inferredType": "object",
+      "labelText": "Ties/Spirals",
+      "variable": "m_CStirrup",
+      "w": 47,
+      "x": 75,
+      "y": 156
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Arrangement",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC18",
+      "w": 48,
+      "x": 131,
+      "y": 156
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC19",
+      "w": 8,
+      "x": 176,
+      "y": 158
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Y",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC20",
+      "w": 8,
+      "x": 184,
+      "y": 156
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 208,
+      "id": "IDC_DGN_RC_CSTIRRUP_YNUM",
+      "inferredType": "object",
+      "labelText": "Y",
+      "variable": "m_CStirrupYNum",
+      "w": 29,
+      "x": 193,
+      "y": 156
+    },
+    {
+      "type": "LTEXT",
+      "caption": "do",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC21",
+      "w": 14,
+      "x": 56,
+      "y": 170
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC22",
+      "w": 8,
+      "x": 67,
+      "y": 171
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_COLDO",
+      "inferredType": "string",
+      "labelText": "do",
+      "variable": "m_cDo",
+      "w": 47,
+      "x": 75,
+      "y": 170
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_COLDOUNIT",
+      "inferredType": "object",
+      "variable": "m_cDoUnit",
+      "w": 19,
+      "x": 126,
+      "y": 170
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Z",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC23",
+      "w": 8,
+      "x": 184,
+      "y": 170
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 208,
+      "id": "IDC_DGN_RC_CSTIRRUP_ZNUM",
+      "inferredType": "object",
+      "labelText": "Z",
+      "variable": "m_CStirrupZNum",
+      "w": 29,
+      "x": 193,
+      "y": 170
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "AIJ Recommend",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_DGN_CON_AIJ_CWIDTH_CHECK",
+      "inferredType": "boolean",
+      "variable": "m_bAIJColRecommend",
+      "w": 65,
+      "x": 6,
+      "y": 186
+    },
+    {
+      "type": "GROUPBOX",
+      "h": 28,
+      "id": "IDC_DGN_CON_CSPLICE_FRAME",
+      "w": 144,
+      "x": 77,
+      "y": 188
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Spliced Bars ",
+      "h": 12,
+      "id": "IDC_DGN_CON_CSPLICE_TITLE",
+      "w": 47,
+      "x": 79,
+      "y": 200
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "None",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CON_CSPLICE_NO_RADIO",
+      "inferredType": "integer",
+      "labelText": "Spliced Bars ",
+      "variable": "m_csplice_radio",
+      "w": 29,
+      "x": 128,
+      "y": 199
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "50%",
+      "h": 12,
+      "id": "IDC_DGN_CON_CSPLICE_SEMI_RADIO",
+      "labelText": "Spliced Bars ",
+      "w": 27,
+      "x": 161,
+      "y": 199
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "100%",
+      "h": 12,
+      "id": "IDC_DGN_CON_CSPLICE_FULL_RADIO",
+      "labelText": "Spliced Bars ",
+      "w": 28,
+      "x": 189,
+      "y": 200
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": " For Brace Design ",
+      "ddxFunction": "DDX_Control",
+      "h": 93,
+      "id": "IDC_WG_DGN_STATIC24",
+      "inferredType": "object",
+      "variable": "m_wndBrtrDgnFrame",
+      "w": 226,
+      "x": 0,
+      "y": 229
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_DGN_RC_BRACE_BTN",
+      "w": 15,
+      "x": 205,
+      "y": 228
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Main Rebar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC25",
+      "w": 41,
+      "x": 6,
+      "y": 241
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC26",
+      "w": 8,
+      "x": 67,
+      "y": 244
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_BRMAINBAR",
+      "inferredType": "boolean",
+      "labelText": "Main Rebar",
+      "variable": "m_BrMainBar",
+      "w": 103,
+      "x": 75,
+      "y": 241
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Rebar...",
+      "h": 12,
+      "id": "IDC_DGN_RC_SELBARSIZE3",
+      "w": 38,
+      "x": 180,
+      "y": 241
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Ties/Spirals",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC27",
+      "w": 52,
+      "x": 6,
+      "y": 257
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC28",
+      "w": 8,
+      "x": 67,
+      "y": 258
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 202,
+      "id": "IDC_DGN_RC_BRSTIRRUP",
+      "inferredType": "object",
+      "labelText": "Ties/Spirals",
+      "variable": "m_BrStirrup",
+      "w": 47,
+      "x": 75,
+      "y": 257
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Arrangement",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC29",
+      "w": 48,
+      "x": 131,
+      "y": 257
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC30",
+      "w": 8,
+      "x": 176,
+      "y": 259
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Y",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC31",
+      "w": 8,
+      "x": 184,
+      "y": 257
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 208,
+      "id": "IDC_DGN_RC_BRSTIRRUP_YNUM",
+      "inferredType": "object",
+      "labelText": "Y",
+      "variable": "m_BrStirrupYNum",
+      "w": 29,
+      "x": 193,
+      "y": 257
+    },
+    {
+      "type": "LTEXT",
+      "caption": "do",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC32",
+      "w": 14,
+      "x": 56,
+      "y": 271
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC33",
+      "w": 8,
+      "x": 67,
+      "y": 271
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_BRACEDO",
+      "inferredType": "boolean",
+      "labelText": "do",
+      "variable": "m_brDo",
+      "w": 47,
+      "x": 75,
+      "y": 271
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_BRACEDOUNIT",
+      "inferredType": "object",
+      "variable": "m_brDoUnit",
+      "w": 19,
+      "x": 126,
+      "y": 271
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Z",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC34",
+      "w": 8,
+      "x": 184,
+      "y": 271
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 208,
+      "id": "IDC_DGN_RC_BRSTIRRUP_ZNUM",
+      "inferredType": "object",
+      "labelText": "Z",
+      "variable": "m_BrStirrupZNum",
+      "w": 29,
+      "x": 193,
+      "y": 271
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "AIJ Recommend",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_DGN_CON_AIJ_RWIDTH_CHECK",
+      "inferredType": "boolean",
+      "variable": "m_bAIJBraRecommend",
+      "w": 65,
+      "x": 6,
+      "y": 287
+    },
+    {
+      "type": "GROUPBOX",
+      "h": 28,
+      "id": "IDC_DGN_CON_RSPLICE_FRAME",
+      "w": 144,
+      "x": 77,
+      "y": 289
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Spliced Bars ",
+      "h": 12,
+      "id": "IDC_DGN_CON_RSPLICE_TITLE",
+      "w": 47,
+      "x": 79,
+      "y": 302
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "None",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CON_RSPLICE_NO_RADIO",
+      "inferredType": "integer",
+      "labelText": "Spliced Bars ",
+      "variable": "m_rsplice_radio",
+      "w": 29,
+      "x": 128,
+      "y": 301
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "50%",
+      "h": 12,
+      "id": "IDC_DGN_CON_RSPLICE_SEMI_RADIO",
+      "labelText": "Spliced Bars ",
+      "w": 27,
+      "x": 161,
+      "y": 301
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "100%",
+      "h": 12,
+      "id": "IDC_DGN_CON_RSPLICE_FULL_RADIO",
+      "labelText": "Spliced Bars ",
+      "w": 28,
+      "x": 189,
+      "y": 301
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": " For Shear Wall Design ",
+      "ddxFunction": "DDX_Control",
+      "h": 141,
+      "id": "IDC_DGN_WALL_GROUP_STATIC",
+      "inferredType": "object",
+      "variable": "m_wndWallDgnFrame",
+      "w": 226,
+      "x": 0,
+      "y": 330
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_DGN_RC_WALL_BTN",
+      "w": 15,
+      "x": 205,
+      "y": 329
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Vertical Rebar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC35",
+      "w": 62,
+      "x": 5,
+      "y": 342
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC36",
+      "w": 8,
+      "x": 67,
+      "y": 346
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_WVBAR",
+      "inferredType": "string",
+      "labelText": "Vertical Rebar",
+      "variable": "m_WVBar",
+      "w": 103,
+      "x": 75,
+      "y": 342
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Rebar...",
+      "h": 12,
+      "id": "IDC_DGN_RC_SELBARSIZE4",
+      "w": 38,
+      "x": 180,
+      "y": 342
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Horizontal Rebar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC37",
+      "w": 63,
+      "x": 5,
+      "y": 358
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC38",
+      "w": 8,
+      "x": 67,
+      "y": 361
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 226,
+      "id": "IDC_DGN_RC_WHBAR",
+      "inferredType": "object",
+      "labelText": "Horizontal Rebar",
+      "variable": "m_WHBar",
+      "w": 40,
+      "x": 75,
+      "y": 358
+    },
+    {
+      "type": "LTEXT",
+      "caption": "End Rebar",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC39",
+      "w": 35,
+      "x": 119,
+      "y": 358
+    },
+    {
+      "type": "LTEXT",
+      "caption": "From",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC40",
+      "w": 18,
+      "x": 158,
+      "y": 358
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC41",
+      "w": 8,
+      "x": 174,
+      "y": 361
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 219,
+      "id": "IDC_DGN_RC_WENDREBAR",
+      "inferredType": "object",
+      "labelText": "From",
+      "variable": "m_WEndBar",
+      "w": 40,
+      "x": 180,
+      "y": 358
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Boundary Element Horz. Rebar",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEWHBAR1_STC",
+      "w": 130,
+      "x": 5,
+      "y": 374
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 160,
+      "id": "IDC_DGN_RC_BEWHBAR",
+      "inferredType": "object",
+      "labelText": "Boundary Element Horz. Rebar",
+      "variable": "m_BEWHBar",
+      "w": 40,
+      "x": 148,
+      "y": 374
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Boundary Element Horz. Rebar Space",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEWHBAR3_STC",
+      "w": 130,
+      "x": 5,
+      "y": 390
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_WALL_BEHSPACE_EDT",
+      "inferredType": "boolean",
+      "labelText": "Boundary Element Horz. Rebar Space",
+      "variable": "m_BEHSpace",
+      "w": 47,
+      "x": 148,
+      "y": 390
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_WALL_BEHSPACE_UNIT",
+      "inferredType": "object",
+      "variable": "m_BEHSpaceUnit",
+      "w": 22,
+      "x": 197,
+      "y": 390
+    },
+    {
+      "type": "LTEXT",
+      "caption": "de",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC42",
+      "w": 15,
+      "x": 5,
+      "y": 422
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC43",
+      "w": 8,
+      "x": 18,
+      "y": 426
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_WALLDE",
+      "inferredType": "number",
+      "labelText": "de",
+      "variable": "m_De",
+      "w": 47,
+      "x": 29,
+      "y": 422
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_WALLDEUNIT",
+      "inferredType": "object",
+      "variable": "m_DeUnit",
+      "w": 18,
+      "x": 80,
+      "y": 422
+    },
+    {
+      "type": "LTEXT",
+      "caption": "dw",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC44",
+      "w": 17,
+      "x": 124,
+      "y": 422
+    },
+    {
+      "type": "CTEXT",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC45",
+      "w": 8,
+      "x": 135,
+      "y": 426
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_WALLDW",
+      "inferredType": "number",
+      "labelText": "dw",
+      "variable": "m_Dw",
+      "w": 47,
+      "x": 148,
+      "y": 422
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_WALLDWUNIT",
+      "inferredType": "object",
+      "variable": "m_DwUnit",
+      "w": 22,
+      "x": 197,
+      "y": 422
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Rebar Material",
+      "h": 12,
+      "id": "IDC_DGN_CON_REBAR_MATL_BTN",
+      "w": 101,
+      "x": 120,
+      "y": 438
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Input Additional Wall Data...",
+      "h": 12,
+      "id": "IDC_DGN_ADD_WALLDATA",
+      "w": 144,
+      "x": 77,
+      "y": 454
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Doubly Rebar",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_DGN_CON_AIJ_DOUBLY_REIN_CHECK",
+      "inferredType": "boolean",
+      "variable": "m_bDoublyRain",
+      "w": 58,
+      "x": 7,
+      "y": 79
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 174,
+      "y": 481
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 120,
+      "y": 481
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Boundary Element Vert. Rebar Space",
+      "h": 12,
+      "id": "IDC_DGN_RC_BEWVBAR3_STC",
+      "w": 130,
+      "x": 5,
+      "y": 406
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_RC_WALL_BEVSPACE_EDT",
+      "inferredType": "boolean",
+      "labelText": "Boundary Element Vert. Rebar Space",
+      "variable": "m_BEVSpace",
+      "w": 47,
+      "x": 148,
+      "y": 406
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_STATIC_WALL_BEVSPACE_UNIT",
+      "inferredType": "object",
+      "variable": "m_BEVSpaceUnit",
+      "w": 22,
+      "x": 197,
+      "y": 406
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_DGN_CON_BSPACE_LIMIT",
+      "inferredType": "boolean",
+      "variable": "m_bConsiderSpacingLimitBeam",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_DGN_CON_CSPACE_LIMIT",
+      "inferredType": "boolean",
+      "variable": "m_bConsiderSpacingLimitColumn",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_DGN_CON_RSPACE_LIMIT",
+      "inferredType": "boolean",
+      "variable": "m_bConsiderSpacingLimitBrace",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_DGN_CON_VER_END_CHECK",
+      "inferredType": "boolean",
+      "variable": "m_bVerEndWall",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CDgnConBarDlg",
+  "dialogId": "IDD_DGN_CON_BAR_DLG1",
+  "headerFile": "ui_src/wg_dgn/DgnConBarDlg.h",
+  "parsedAt": "2026-02-20T02:01:17.140Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnConBarDlg)\r\n\tDDX_Control(pDX, IDC_STATIC_WALL_BEHSPACE_UNIT, m_BEHSpaceUnit);\r\n\tDDX_Control(pDX, IDC_STATIC_WALLDWUNIT, m_DwUnit);\r\n\tDDX_Control(pDX, IDC_STATIC_WALLDEUNIT, m_DeUnit);\r\n\tDDX_Control(pDX, IDC_STATIC_COLDOUNIT, m_cDoUnit);\r\n\tDDX_Control(pDX, IDC_STATIC_BRACEDOUNIT, m_brDoUnit);\r\n\tDDX_Control(pDX, IDC_STATIC_BEAMDTUNIT, m_DtUnit);\r\n\tDDX_Control(pDX, IDC_STATIC_BEAMDBUNIT, m_DbUnit);\r\n\tDDX_Control(pDX, IDC_DGN_RC_WENDREBAR, m_WEndBar);\r\n\tDDX_Control(pDX, IDC_DGN_RC_WHBAR, m_WHBar);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BEWHBAR, m_BEWHBar);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BSTIRRUP, m_BStirrup);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BSIDE, m_BSide);\r\n\tDDX_Control(pDX, IDC_DGN_RC_CSTIRRUP, m_CStirrup);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BRSTIRRUP, m_BrStirrup);\r\n\tDDX_Control(pDX, IDC_DGN_RC_CSTIRRUP_YNUM, m_CStirrupYNum);\r\n\tDDX_Control(pDX, IDC_DGN_RC_CSTIRRUP_ZNUM, m_CStirrupZNum);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BRSTIRRUP_YNUM, m_BrStirrupYNum);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BRSTIRRUP_ZNUM, m_BrStirrupZNum);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BSTIRRUP_NUM, m_BStirrupNum);\r\n\tDDX_Control(pDX, IDC_DGN_RC_BEAM_DOUBLY_REIN_EDIT, m_DoublyRainEdit);\r\n\tDDX_Check(pDX, IDC_DGN_CON_AIJ_DOUBLY_REIN_CHECK, m_bDoublyRain);\r\n\tDDX_Text(pDX, IDC_DGN_RC_BEAM_DOUBLY_REIN_EDIT, m_dDoublyRain);\r\n\tDDX_Text(pDX, IDC_DGN_RC_BMAINBAR, m_BMainBar);\r\n\tDDX_Text(pDX, IDC_DGN_RC_CMAINBAR, m_CMainBar);\r\n\tDDX_Text(pDX, IDC_DGN_RC_BRMAINBAR, m_BrMainBar);\r\n\tDDX_Text(pDX, IDC_DGN_RC_WVBAR, m_WVBar);\r\n\tDDX_Text(pDX, IDC_DGN_RC_BEAMDB, m_Db);\r\n\tDDX_Text(pDX, IDC_DGN_RC_BEAMDT, m_Dt);\r\n\tDDX_Text(pDX, IDC_DGN_RC_BRACEDO, m_brDo);\r\n\tDDX_Text(pDX, IDC_DGN_RC_COLDO, m_cDo);\r\n\tDDX_Text(pDX, IDC_DGN_RC_WALL_BEHSPACE_EDT, m_BEHSpace);\r\n\tDDX_Control(pDX, IDC_STATIC_WALL_BEVSPACE_UNIT, m_BEVSpaceUnit);\r\n\tDDX_Text(pDX, IDC_DGN_RC_WALL_BEVSPACE_EDT, m_BEVSpace);\r\n\tDDX_Text(pDX, IDC_DGN_RC_WALLDE, m_De);\r\n\tDDX_Text(pDX, IDC_DGN_RC_WALLDW, m_Dw);\t\r\n\t//add by cylee 05.06.24\r\n\tDDX_Check(pDX, IDC_DGN_CON_AIJ_BWIDTH_CHECK, m_bAIJBeamRecommend);\r\n\tDDX_Radio(pDX, IDC_DGN_CON_AIJ_METHOD1_RADIO,m_iSpliceSubType);\r\n\tDDX_Radio(pDX, IDC_DGN_CON_BSPLICE_NO_RADIO, m_bsplice_radio);\r\n\tDDX_Check(pDX, IDC_DGN_CON_AIJ_CWIDTH_CHECK, m_bAIJColRecommend);\r\n\tDDX_Radio(pDX, IDC_DGN_CON_CSPLICE_NO_RADIO, m_csplice_radio);\r\n\tDDX_Check(pDX, IDC_DGN_CON_AIJ_RWIDTH_CHECK, m_bAIJBraRecommend);\r\n\tDDX_Radio(pDX, IDC_DGN_CON_RSPLICE_NO_RADIO, m_rsplice_radio);\r\n\t// Add by ZINU.('08.03.21). NO:3292, Option to Apply Spacing Limit.\r\n\tDDX_Check(pDX, IDC_DGN_CON_BSPACE_LIMIT, m_bConsiderSpacingLimitBeam);\r\n\tDDX_Check(pDX, IDC_DGN_CON_CSPACE_LIMIT, m_bConsiderSpacingLimitColumn);\r\n\tDDX_Check(pDX, IDC_DGN_CON_RSPACE_LIMIT, m_bConsiderSpacingLimitBrace);\r\n\t// Add by sshan (090222) NO:3909\r\n\t//DDX_Check(pDX, IDC_DGN_CON_VER_END_CHECK, m_bVerEndWall);\r\n\t//DDX_Control(pDX, IDC_DGN_RC_VER_END_WALL, m_ComboVerEndWall);\r\n\t//DDX_Control(pDX, IDC_DGN_RC_VER_END_FY_WALL, m_ComboVerEndFyWall);\r\n\r\n\tDDX_Control(pDX, IDC_DGN_CON_MATL_RBAR_DIAM_CHK, m_chkMatlByRbar);\r\n\tDDX_Control(pDX, IDC_WG_DGN_STATIC0, m_wndBeamDgnFrame);\r\n\tDDX_Control(pDX, IDC_WG_DGN_STATIC13, m_wndColmDgnFrame);\r\n\tDDX_Control(pDX, IDC_WG_DGN_STATIC24, m_wndBrtrDgnFrame);\r\n\tDDX_Control(pDX, IDC_DGN_WALL_GROUP_STATIC, m_wndWallDgnFrame);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nm_pDoc = CDBDoc::GetDocPoint();\r\n\tCDialogMove::OnInitDialog();\r\n\r\n\r\n\r\n\tSetBEControlByRCSpecialWall();\r\n\r\n\t// Initialize Data.\r\n\tInitial_EditStaus(m_pDoc);\r\n\tif(m_pDoc->m_pAttrCtrl->ExistDcrb())\tInitial_ExistData();\r\n\telse\t\t\t\t\t\t\t\t\tInitial_DefaultData();\r\n\tUpdateData(FALSE);\r\n\t// Add by ZINU.('01.7.7). Not used End Rebar if WSD.\r\n\tEnable_EndBarEdit();\r\n\r\n\tCDgnDataCtrl DataCtrl;\r\n\tT_DCON_D rData;\r\n\trData.Initialize();\r\n\tDataCtrl.Get_DgnConDcon(rData);\r\n\tm_strCode = rData.DesignCode;\r\n\tAlignCtrl(m_strCode);\r\n\r\n\tm_wndBeamDgnFrame.InitControl(this, CDgnConBarDlg::IDD, IDC_WG_DGN_STATIC0, TRUE);\r\n\tm_wndColmDgnFrame.InitControl(this, CDgnConBarDlg::IDD, IDC_WG_DGN_STATIC13, TRUE);\r\n\tm_wndBrtrDgnFrame.InitControl(this, CDgnConBarDlg::IDD, IDC_WG_DGN_STATIC24, TRUE);\r\n\tm_wndWallDgnFrame.InitControl(this, CDgnConBarDlg::IDD, IDC_DGN_WALL_GROUP_STATIC, TRUE);\r\n\tm_wndBeamDgnFrame.SetFoldCurHeight(TRUE);\r\n\tm_wndColmDgnFrame.SetFoldCurHeight(TRUE);\r\n\tm_wndBrtrDgnFrame.SetFoldCurHeight(TRUE);\r\n\tm_wndWallDgnFrame.SetFoldCurHeight(TRUE);\r\n\r\n\treturn TRUE;\n\n// SetBEControlByRCSpecialWall:\nBOOL bEnable = m_pDoc->m_pAttrCtrl->IsWallEndHorBarCondition();\r\n\t\r\n\t// Boundary Element Horz. Rebar\r\n\tGetDlgItem(IDC_DGN_RC_BEWHBAR1_STC)->EnableWindow(bEnable);\r\n// \tGetDlgItem(IDC_DGN_RC_BEWHBAR2_STC)->EnableWindow(bEnable);\r\n\tGetDlgItem(IDC_DGN_RC_BEWHBAR)->EnableWindow(bEnable);\r\n\r\n\t// Boundary Element Horz. Rebar Space\r\n\tGetDlgItem(IDC_DGN_RC_BEWHBAR3_STC)->EnableWindow(bEnable);\r\n// \tGetDlgItem(IDC_DGN_RC_BEWHBAR4_STC)->EnableWindow(bEnable);\r\n\tGetDlgItem(IDC_DGN_RC_WALL_BEHSPACE_EDT)->EnableWindow(bEnable);\r\n\tGetDlgItem(IDC_STATIC_WALL_BEHSPACE_UNIT)->EnableWindow(bEnable);\r\n\r\n\t// Boundary Element Vert. Rebar Space\r\n\tbEnable = m_pDoc->m_pAttrCtrl->IsWallEndVerBarCondition();\r\n\tGetDlgItem(IDC_DGN_RC_BEWVBAR3_STC)->EnableWindow(bEnable);\r\n// \tGetDlgItem(IDC_DGN_RC_BEWVBAR4_STC)->EnableWindow(bEnable);\r\n\tGetDlgItem(IDC_DGN_RC_WALL_BEVSPACE_EDT)->EnableWindow(bEnable);\r\n\tGetDlgItem(IDC_STATIC_WALL_BEVSPACE_UNIT)->EnableWindow(bEnable);\n\n// ControlMan:\nif(!Is_KCIUSD07_KS_KS01RC())\r\n\t{\r\n\t\tCRect RectDwWall, RectDlg, RectGroup, RectWallDataBtn, RectOK, RectClose;\r\n\t\tGetWindowRect(&RectDlg);\r\n\t\tGetDlgItem(IDC_DGN_RC_WALLDW)->GetWindowRect(&RectDwWall);\r\n\t\t\r\n\r\n\t\tGetDlgItem(IDC_DGN_WALL_GROUP_STATIC)->GetWindowRect(&RectGroup);\r\n\t\tGetDlgItem(IDC_DGN_ADD_WALLDATA)->GetWindowRect(&RectWallDataBtn);\r\n\t\tGetDlgItem(IDOK)->GetWindowRect(&RectOK);\r\n\t\tGetDlgItem(IDCANCEL)->GetWindowRect(&RectClose);\r\n\t\t\r\n\t\tCRect rWallDataBtn;\r\n\t\trWallDataBtn.left\t\t\t= RectWallDataBtn.left;\r\n\t\trWallDataBtn.right\t\t= RectWallDataBtn.right;\r\n\t\trWallDataBtn.top\t\t\t= RectDwWall.bottom + globalUtils.ScaleByDPI(5);\r\n\t\trWallDataBtn.bottom\t\t= rWallDataBtn.top + RectWallDataBtn.Height();\r\n\t\t\r\n\t\tCRect rGroup;\r\n\t\trGroup.left\t\t\t= RectGroup.left;\r\n\t\trGroup.right\t\t= RectGroup.right;\r\n\t\trGroup.top\t\t\t= RectGroup.top;\r\n\t\trGroup.bottom\t\t= rWallDataBtn.bottom + globalUtils.ScaleByDPI(5);\r\n\t\t\r\n\t\tCRect rOK;\r\n\t\trOK.left\t\t\t= RectOK.left;\r\n\t\trOK.right\t\t\t= RectOK.right;\r\n\t\trOK.top\t\t\t\t= rGroup.bottom + globalUtils.ScaleByDPI(15);\r\n\t\trOK.bottom\t\t= rOK.top + RectOK.Height();\r\n\t\t\r\n\t\tCRect rClose;\r\n\t\trClose.left\t\t= RectClose.left;\r\n\t\trClose.right\t= RectClose.right;\r\n\t\trClose.top\t\t= rOK.top;\r\n\t\trClose.bottom\t= rOK.bottom;\r\n\t\t\r\n\t\tCRect rDlg;\r\n\t\trDlg.left\t\t= RectDlg.left;\r\n\t\trDlg.top\t\t= RectDlg.top;\r\n\t\trDlg.right\t=\tRectDlg.right;\r\n\t\trDlg.bottom\t= rClose.bottom + globalUtils.ScaleByDPI(10);\r\n\t\t\r\n\t\tScreenToClient(rWallDataBtn);\r\n\t\tScreenToClient(rGroup);\r\n\t\tScreenToClient(rOK);\r\n\t\tScreenToClient(rClose);\r\n\t\t\r\n\t\tMoveWindow(rDlg.left, rDlg.top, rDlg.Width(), rDlg.Height());\r\n\t\tGetDlgItem(IDC_DGN_ADD_WALLDATA)->MoveWindow(rWallDataBtn.left, rWallDataBtn.top, rWallDataBtn.Width(), rWallDataBtn.Height());\r\n\t\tGetDlgItem(IDC_DGN_WALL_GROUP_STATIC)->MoveWindow(rGroup.left, rGroup.top, rGroup.Width(), rGroup.Height());\r\n\t\tGetDlgItem(IDOK)->MoveWindow(rOK.left, rOK.top, rOK.Width(), rOK.Height());\r\n\t\tGetDlgItem(IDCANCEL)->MoveWindow(rClose.left, rClose.top, rClose.Width(), rClose.Height());\r\n\t\t//ShowWindow(SW_SHOW);  \r\n\t}\n\n// Initial_ExistData:\nm_pDoc->m_pAttrCtrl->GetDcrb(m_Dcrb);\r\n\r\n\tint Index=0;\r\n\tCString strStirrupNum=_T(\"\"); \r\n\t/////////////////////////////////////////////////////////////////////////////////////\r\n\t// Beam.\r\n\t// Main Rebar.\r\n\tif(m_Dcrb.MainRebarBeam[0]==_T(\"\"))\tCDBLib::GetDefaultMainRebarSize(1, m_BMainBar);\r\n\telse\t\t\t\t\t\t\t\t\t\t\t\t\t\tm_BMainBar = Adding_ReBarSize(m_Dcrb.MainRebarBeam);\r\n\t// Stirrup.\r\n\tif(m_Dcrb.StirrupBarBeam==_T(\"\"))\tCDBLib::GetDefaultSubRebarSize(1, m_Dcrb.StirrupBarBeam);\r\n\tIndex = m_BStirrup.FindStringExact(-1, m_Dcrb.StirrupBarBeam);\r\n\tm_BStirrup.SetCurSel(Index);\r\n\t// Stirrup Arrangement.\r\n\tif(m_Dcrb.iSubRebarNum_Beam==0)\tCDBLib::GetDefaultSubRebarNum(m_Dcrb.iSubRebarNum_Beam);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Beam);\r\n\tIndex = m_BStirrupNum.FindStringExact(-1, strStirrupNum);\r\n\tm_BStirrupNum.SetCurSel(Index<0 ? 0 : Index);\r\n\t// Side Rebar.\r\n\tif(m_Dcrb.SideBarBeam==_T(\"\"))\tCDBLib::GetDefaultSideRebarSize(m_Dcrb.SideBarBeam);\r\n\tIndex = m_BSide.FindStringExact(-1, m_Dcrb.SideBarBeam);\r\n\tm_BSide.SetCurSel(Index);\r\n\t// Covering.\r\n\tm_Db  = m_Dcrb.dB_Beam;\r\n\tm_Dt  = m_Dcrb.dT_Beam;\r\n\t/////////////////////////////////////////////////////////////////////////////////////\r\n\t// Column.\r\n\t// Main Rebar.\r\n\tif(m_Dcrb.MainRebarColumn[0]==_T(\"\"))\tCDBLib::GetDefaultMainRebarSize(2, m_CMainBar);\r\n\telse\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tm_CMainBar = Adding_ReBarSize(m_Dcrb.MainRebarColumn);\r\n\t// Sub Rebar.\r\n\tif(m_Dcrb.StirrupBarColumn==_T(\"\"))  CDBLib::GetDefaultSubRebarSize(2, m_Dcrb.StirrupBarColumn);\r\n\tIndex = m_CStirrup.FindStringExact(-1, m_Dcrb.StirrupBarColumn);\r\n\tm_CStirrup.SetCurSel(Index);\r\n\t// Sub Rebar Arrangement.\r\n\t// Y.\r\n\tif(m_Dcrb.iSubRebarNum_Column[0]==0)\tCDBLib::GetDefaultSubRebarNum(m_Dcrb.iSubRebarNum_Column[0]);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Column[0]);\r\n\tIndex = m_CStirrupYNum.FindStringExact(-1, strStirrupNum);\r\n\tm_CStirrupYNum.SetCurSel(Index);\r\n\t// Z.\r\n\tif(m_Dcrb.iSubRebarNum_Column[1]==0)\tCDBLib::GetDefaultSubRebarNum(m_Dcrb.iSubRebarNum_Column[1]);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Column[1]);\r\n\tIndex = m_CStirrupZNum.FindStringExact(-1, strStirrupNum);\r\n\tm_CStirrupZNum.SetCurSel(Index);\r\n\t// Covering.\r\n\tm_cDo = m_Dcrb.d0_Column;\r\n\t/////////////////////////////////////////////////////////////////////////////////////\r\n\t// Brace.\r\n\t// Main Rebar.\r\n\tif(m_Dcrb.MainRebarBrace[0]==_T(\"\"))\t\tCDBLib::GetDefaultMainRebarSize(3, m_BrMainBar);\r\n\telse\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  m_BrMainBar = Adding_ReBarSize(m_Dcrb.MainRebarBrace);\r\n\t// Sub Rebar.\r\n\tif(m_Dcrb.StirrupBarBrace==_T(\"\"))\tCDBLib::GetDefaultSubRebarSize(3, m_Dcrb.StirrupBarBrace);\r\n\tIndex = m_BrStirrup.FindStringExact(-1, m_Dcrb.StirrupBarBrace);\r\n\tm_BrStirrup.SetCurSel(Index);\r\n\t// Sub Rebar Arrangement.\r\n\t// Y.\r\n\tif(m_Dcrb.iSubRebarNum_Brace[0]==0)\tCDBLib::GetDefaultSubRebarNum(m_Dcrb.iSubRebarNum_Brace[0]);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Brace[0]);\r\n\tIndex = m_BrStirrupYNum.FindStringExact(-1, strStirrupNum);\r\n\tm_BrStirrupYNum.SetCurSel(Index);\r\n\t// Z.\r\n\tif(m_Dcrb.iSubRebarNum_Brace[1]==0)\tCDBLib::GetDefaultSubRebarNum(m_Dcrb.iSubRebarNum_Brace[1]);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Brace[1]);\r\n\tIndex = m_BrStirrupZNum.FindStringExact(-1, strStirrupNum);\r\n\tm_BrStirrupZNum.SetCurSel(Index);\r\n\t// Covering.\r\n\tm_brDo = m_Dcrb.d0_Brace;\r\n\t/////////////////////////////////////////////////////////////////////////////////////\r\n\r\n\tCString strWallMainRebarDefault = _T(\"\");\r\n\tCDBLib::GetDefaultMainRebarSize(4, strWallMainRebarDefault);\r\n\r\n\tCString strWallRebarDefault = _T(\"\");\r\n\tCDBLib::GetDefaultSubRebarSize(4, strWallRebarDefault);\r\n\r\n\t// Wall.\r\n\t// Vertical Rebar.\r\n\tif(m_Dcrb.VerticalRebarWall[0]==_T(\"\"))\tm_WVBar = strWallMainRebarDefault;\r\n\telse\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tm_WVBar = Adding_ReBarSize(m_Dcrb.VerticalRebarWall);\r\n\t// Horizontal Rebar.\r\n\tif(m_Dcrb.HorizontalRebarWall==_T(\"\"))\tm_Dcrb.HorizontalRebarWall = strWallRebarDefault;\r\n\tIndex = m_WHBar.FindStringExact(-1,m_Dcrb.HorizontalRebarWall);\r\n\tm_WHBar.SetCurSel(Index);\r\n\t// End Rebar.\r\n\tif(m_Dcrb.EndRebarWall==_T(\"\"))\tm_Dcrb.EndRebarWall = strWallRebarDefault;\r\n\tIndex = m_WEndBar.FindStringExact(-1, m_Dcrb.EndRebarWall);\r\n\tm_WEndBar.SetCurSel(Index);\r\n\t// Boundary Element Horizontal Rebar.\r\n\tif(m_Dcrb.BEHorizontalRebarWall==_T(\"\"))\tm_Dcrb.BEHorizontalRebarWall = strWallRebarDefault;\r\n\tIndex = m_BEWHBar.FindStringExact(-1,m_Dcrb.BEHorizontalRebarWall);\r\n\tm_BEWHBar.SetCurSel(Index);\r\n\tm_BEHSpace = m_Dcrb.dBEHorizontalRebarSpace;\r\n\tm_BEVSpace = m_Dcrb.dBEVerticalRebarSpace;\r\n\t// Covering.\r\n\tm_De = m_Dcrb.dDe_Wall;\r\n\tm_Dw = m_Dcrb.dDw_Wall;\r\n\t// AIJ Recommendation Check, add by cylee 05.06.24\r\n\tm_bAIJBeamRecommend = m_Dcrb.bSpliceBeamJP;\t\t\t\r\n\tm_bAIJColRecommend = m_Dcrb.bSpliceColumnJP;\t\t\r\n\tm_bAIJBraRecommend = m_Dcrb.bSpliceBraceJP;\t\t\r\n\tm_iSpliceSubType = m_Dcrb.iSpliceBeamSubType;\r\n\t// Beam, Column, Brace Splice, add by cylee 05.06.24\r\n\tm_bsplice_radio = m_Dcrb.iSpliceBeam;\t\t\t\t\r\n\tm_csplice_radio = m_Dcrb.iSpliceColumn;\t\t\t\r\n\tm_rsplice_radio = m_Dcrb.iSpliceBrace;\r\n\t// Add by sshan. MNET:2619.('20070129)\r\n\tm_dDoublyRain = (m_Dcrb.dDoublyBeam < 0.5 || m_Dcrb.dDoublyBeam > 1.0 ? 1.0 : m_Dcrb.dDoublyBeam);\r\n\t// Add by ZINU.('08.04.24). Set m_bDoublyRain by m_Dcrb.\r\n\tm_bDoublyRain = m_Dcrb.bDoublyBeam;\r\n\t// Add by ZINU.('08.03.21). NO:3292, Option to Apply Spacing Limit.\r\n\tm_bConsiderSpacingLimitBeam   = m_Dcrb.bCheckRebarSpacing_Beam;\r\n\tm_bConsiderSpacingLimitColumn = m_Dcrb.bCheckRebarSpacing_Column;\r\n\tm_bConsiderSpacingLimitBrace  = m_Dcrb.bCheckRebarSpacing_Brace;\r\n\r\n\t//m_bVerEndWall = m_Dcrb.bVerEndBar_Wall;\r\n\tif(m_Dcrb.strVerEndBar_Wall==_T(\"\"))\tm_Dcrb.strVerEndBar_Wall = strWallMainRebarDefault;\r\n\t//Index = m_ComboVerEndWall.FindStringExact(-1, m_Dcrb.strVerEndBar_Wall); m_ComboVerEndWall.SetCurSel(Index);\r\n\tCString strMatlDB = MATLCODE_CON_KS;\r\n\tif(m_Dcrb.strVerEndBarFy_Wall==_T(\"\"))\tm_Dcrb.strVerEndBarFy_Wall = CDBLib::GetDefaultRbarMatlDB(strMatlDB);\r\n\t//Index = m_ComboVerEndFyWall.FindStringExact(-1, m_Dcrb.strVerEndBarFy_Wall); m_ComboVerEndFyWall.SetCurSel(Index);\r\n\r\n\tUpdateData(FALSE);\n\n// Initial_UnitData:\nm_BEHSpaceUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_BEVSpaceUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_DwUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_DeUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_cDoUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_brDoUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_DtUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_DbUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\n\n// Initial_DefaultData:\n// Change by ZINU.('05.08.22). m_pDoc->m_pAttrCtrl->GetDcrb() -> CDataCtrl::Get_DgnConDcrb().\r\n\tCDgnDataCtrl DataCtrl;\r\n\tm_Dcrb.Initialize();\r\n\t// Change by ZINU.('06.11.28). NO:2484, Get Rebar Data for Design by Global -> Elem(0).\r\n\tDataCtrl.Get_DgnConDcrb(0, m_Dcrb);\r\n\t// Main Rbar Size.\r\n\tm_BMainBar\t= m_Dcrb.MainRebarBeam[0];\r\n\tm_CMainBar\t= m_Dcrb.MainRebarColumn[0];\r\n\tm_BrMainBar\t= m_Dcrb.MainRebarBrace[0];\r\n\tm_WVBar\t\t\t= m_Dcrb.VerticalRebarWall[0];\r\n\r\n\tCString strRebarDefault = _T(\"\");\r\n\tint nBeamRebarDefaultIndex=0, nColmRebarDefaultIndex=0, nBraceRebarDefaultIndex=0, nWallRebarDefaultIndex=0;\r\n\t// MNET:4076-SHJUNG-20100226\r\n\t// �� ���纰�� Default ���� ��� ����, FindStringExact �� ���� ����Ÿ�Ը� ������ �Ǵϱ�,\r\n\t// WallRebar �޺��� ���� ���ڸ�, m_WHBar, m_WEndBar, m_BEWHBar �̷��� 3���� ������ m_WHBar�� ��ǥ�޺��� ����Ͽ���\r\n\tCDBLib::GetDefaultSubRebarSize(1, strRebarDefault); nBeamRebarDefaultIndex   = m_BStirrup.FindStringExact(-1, strRebarDefault);\r\n\tCDBLib::GetDefaultSubRebarSize(2, strRebarDefault); nColmRebarDefaultIndex   = m_CStirrup.FindStringExact(-1, strRebarDefault);\r\n\tCDBLib::GetDefaultSubRebarSize(3, strRebarDefault); nBraceRebarDefaultIndex  = m_BrStirrup.FindStringExact(-1, strRebarDefault);\r\n\tCDBLib::GetDefaultSubRebarSize(4, strRebarDefault); nWallRebarDefaultIndex   = m_WHBar.FindStringExact(-1, strRebarDefault);\r\n\r\n\t// Sub Rbar Size.\r\n\tint Index=0;\r\n\tIndex = m_BStirrup.FindStringExact(-1, m_Dcrb.StirrupBarBeam);\t\t    Index<0? m_BStirrup.SetCurSel(nBeamRebarDefaultIndex) : m_BStirrup.SetCurSel(Index);\r\n\tIndex = m_BSide.FindStringExact(-1, m_Dcrb.SideBarBeam);\t\t\t\t\t    Index<0? m_BSide.SetCurSel(nBeamRebarDefaultIndex) : m_BSide.SetCurSel(Index);\r\n\tIndex = m_CStirrup.FindStringExact(-1, m_Dcrb.StirrupBarColumn);\t    Index<0? m_CStirrup.SetCurSel(nColmRebarDefaultIndex) : m_CStirrup.SetCurSel(Index);\r\n\tIndex = m_BrStirrup.FindStringExact(-1, m_Dcrb.StirrupBarBrace);\t    Index<0? m_BrStirrup.SetCurSel(nBraceRebarDefaultIndex) : m_BrStirrup.SetCurSel(Index);\r\n\tIndex = m_WHBar.FindStringExact(-1, m_Dcrb.HorizontalRebarWall);\t    Index<0? m_WHBar.SetCurSel(nWallRebarDefaultIndex) : m_WHBar.SetCurSel(Index);\r\n\tIndex = m_WEndBar.FindStringExact(-1, m_Dcrb.EndRebarWall);\t\t\t      Index<0? m_WEndBar.SetCurSel(nWallRebarDefaultIndex) : m_WEndBar.SetCurSel(Index);\r\n\tIndex = m_BEWHBar.FindStringExact(-1, m_Dcrb.BEHorizontalRebarWall);\tIndex<0? m_BEWHBar.SetCurSel(nWallRebarDefaultIndex) : m_BEWHBar.SetCurSel(Index);\r\n\t// Sub Rbar Number.\r\n\tCString strStirrupNum=_T(\"\");\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Beam);\t\t\t\tIndex = m_BStirrupNum.FindStringExact(-1, strStirrupNum);\t\tm_BStirrupNum.SetCurSel(Index);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Column[0]);\tIndex = m_CStirrupYNum.FindStringExact(-1, strStirrupNum);\t\tm_CStirrupYNum.SetCurSel(Index);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Column[1]);\tIndex = m_CStirrupZNum.FindStringExact(-1, strStirrupNum);\t\tm_CStirrupZNum.SetCurSel(Index);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Brace[0]);\t\tIndex = m_BrStirrupYNum.FindStringExact(-1, strStirrupNum);\tm_BrStirrupYNum.SetCurSel(Index);\r\n\tstrStirrupNum.Format(_T(\"%d\"), m_Dcrb.iSubRebarNum_Brace[1]);\t\tIndex = m_BrStirrupZNum.FindStringExact(-1, strStirrupNum);\tm_BrStirrupZNum.SetCurSel(Index);\r\n\r\n\t//Boundary Element Horizontal Rebar Space\r\n\tdouble dSpace = 0.2;\r\n\tT_UNIT_INDEX UnitIndex;\r\n\tCDBDoc::GetDocPoint()->m_pUnitCtrl->GetUnitIndexCurrent(UnitIndex);\r\n\tif(UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_MM || UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_CM ||\r\n\t\tUnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_M)\r\n\t{\r\n\t\tdSpace = CDBDoc::GetDocPoint()->m_pUnitCtrl->ConvertTgtUnitData2CurUnit(0, D_UNITSYS_LENGTH_INDEX_M, D_UNITSYS_BASE_LENGTH, dSpace);\r\n\t}\r\n\telse if(UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_IN || UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_FT)\r\n\t{\r\n\t\tdSpace = CDBDoc::GetDocPoint()->m_pUnitCtrl->ConvertTgtUnitData2CurUnit(0, D_UNITSYS_LENGTH_INDEX_M, D_UNITSYS_BASE_LENGTH, dSpace);\r\n\t}\r\n\telse ASSERT(0);\r\n\r\n\tm_BEHSpace = dSpace;\r\n\r\n\tdSpace = 0.1;\r\n\tif (UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_MM || UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_CM ||\r\n\t\tUnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_M)\r\n\t{\r\n\t\tdSpace = CDBDoc::GetDocPoint()->m_pUnitCtrl->ConvertTgtUnitData2CurUnit(0, D_UNITSYS_LENGTH_INDEX_M, D_UNITSYS_BASE_LENGTH, dSpace);\r\n\t}\r\n\telse if (UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_IN || UnitIndex.nBase_Length == D_UNITSYS_LENGTH_INDEX_FT)\r\n\t{\r\n\t\tdSpace = CDBDoc::GetDocPoint()->m_pUnitCtrl->ConvertTgtUnitData2CurUnit(0, D_UNITSYS_LENGTH_INDEX_M, D_UNITSYS_BASE_LENGTH, dSpace);\r\n\t}\r\n\telse ASSERT(0);\r\n\r\n\tm_BEVSpace = dSpace;\r\n\r\n\t// Covering.\r\n\tm_Db  = 0.0;\r\n\tm_Dt  = 0.0;\r\n\tm_brDo= 0.0;\r\n\tm_cDo = 0.0;\r\n\tm_De  = 0.0;\r\n\tm_Dw  = 0.0;\r\n\t// AIJ Recommendation Check, add by cylee 05.06.24\r\n\tm_bAIJBeamRecommend\t= m_Dcrb.bSpliceBeamJP;\r\n\tm_bAIJColRecommend\t= m_Dcrb.bSpliceColumnJP;\r\n\tm_bAIJBraRecommend\t= m_Dcrb.bSpliceBraceJP;\r\n\tm_iSpliceSubType\t\t= m_Dcrb.iSpliceBeamSubType;\r\n\t// Beam, Column, Brace Splice, add by cylee 05.06.24\r\n\tm_bsplice_radio = m_Dcrb.iSpliceBeam;\r\n\tm_csplice_radio = m_Dcrb.iSpliceColumn;\r\n\tm_rsplice_radio = m_Dcrb.iSpliceBrace;\r\n\r\n\t// Coded by Seungjun ('20071113) MNet:No.3087. Default 1.0����.\r\n\tm_dDoublyRain = 1.0;\r\n\tm_bDoublyRain = TRUE;\r\n\t// Add by ZINU.('08.03.21). NO:3292, Option to Apply Spacing Limit.\r\n\tm_bConsiderSpacingLimitBeam = TRUE;\r\n\tm_bConsiderSpacingLimitColumn = TRUE;\r\n\tm_bConsiderSpacingLimitBrace = TRUE;\r\n\r\n\tCString strWallMainRebarDefault = _T(\"\");\r\n\tCDBLib::GetDefaultMainRebarSize(4, strWallMainRebarDefault);\r\n\r\n\t//m_bVerEndWall = m_Dcrb.bVerEndBar_Wall;\r\n\tif(m_Dcrb.strVerEndBar_Wall==_T(\"\"))\tm_Dcrb.strVerEndBar_Wall = strWallMainRebarDefault;\r\n\t//Index = m_ComboVerEndWall.FindStringExact(-1, m_Dcrb.strVerEndBar_Wall); m_ComboVerEndWall.SetCurSel(Index);\r\n\tCString strMatlDB = MATLCODE_CON_KS19;\r\n\tif(m_Dcrb.strVerEndBarFy_Wall==_T(\"\"))\tm_Dcrb.strVerEndBarFy_Wall = CDBLib::GetDefaultRbarMatlDB(strMatlDB);\r\n\t//Index = m_ComboVerEndFyWall.FindStringExact(-1, m_Dcrb.strVerEndBarFy_Wall); m_ComboVerEndFyWall.SetCurSel(Index);\r\n\r\n\tT_PREFERENCE rPref;\r\n\trPref.Initialize();\r\n\tm_pDoc->m_pInitCtrl->GetPreference(rPref);\r\n\r\n\tm_Dcrb.bMatlByDia = FALSE;\r\n\tm_Dcrb.strMatlCode = rPref.DgnCode.ConcRebarMatlCode;\r\n\tm_Dcrb.aVertMatlByDia.RemoveAll();\r\n\tm_Dcrb.aHorzMatlByDia.RemoveAll();\r\n\r\n\tif(m_Dcrb.strMatlCode == MATLCODE_CON_KS19)\r\n\t{\r\n\t\tT_MATLRBDIA_D bufData;\r\n\t\tT_MATL_REBAR bufRbar;\r\n\t\tBOOL bResult = FALSE;\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D10\");\r\n\t\tbufData.strMatl = _T(\"SD400\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D13\");\r\n\t\tbufData.strMatl = _T(\"SD400\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D16\");\r\n\t\tbufData.strMatl = _T(\"SD500\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D19\");\r\n\t\tbufData.strMatl = _T(\"SD500\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D22\");\r\n\t\tbufData.strMatl = _T(\"SD600\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D25\");\r\n\t\tbufData.strMatl = _T(\"SD600\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D10\");\r\n\t\tbufData.strMatl = _T(\"SD400\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aHorzMatlByDia.Add(bufData);\r\n\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D13\");\r\n\t\tbufData.strMatl = _T(\"SD500\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aHorzMatlByDia.Add(bufData);\r\n\t}\r\n    else if ( m_Dcrb.strMatlCode == MATLCODE_CON_KS )\r\n\t{\r\n\t\tT_MATLRBDIA_D bufData;\r\n\t\tT_MATL_REBAR bufRbar;\r\n\t\tBOOL bResult = FALSE;\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D10\");\r\n\t\tbufData.strMatl = _T(\"SD40\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D13\");\r\n\t\tbufData.strMatl = _T(\"SD40\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D16\");\r\n\t\tbufData.strMatl = _T(\"SD50\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D19\");\r\n\t\tbufData.strMatl = _T(\"SD50\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D22\");\r\n\t\tbufData.strMatl = _T(\"SD50\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D25\");\r\n\t\tbufData.strMatl = _T(\"SD50\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aVertMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D10\");\r\n\t\tbufData.strMatl = _T(\"SD40\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aHorzMatlByDia.Add(bufData);\r\n\t\t\r\n\t\tbufData.Initialize();\r\n\t\tbufRbar.Initialize();\r\n\t\tbufData.strDia = _T(\"D13\");\r\n\t\tbufData.strMatl = _T(\"SD50\");\r\n\t\tbResult = m_pDoc->m_pMatlDB->GetRebarData(m_Dcrb.strMatlCode, bufData.strMatl, bufRbar);\r\n\t\tASSERT(bResult);\r\n\t\tbufData.dFy = bufRbar.B_fy;\r\n\t\tif(bResult) m_Dcrb.aHorzMatlByDia.Add(bufData);\r\n\t}\r\n\r\n\tUpdateData(FALSE);\n\n// Enable_EndBarEdit:\n// Change by ZINU.('01.9.14). Although WSD, Let's usd All Methods.\r\n/*/\r\n\tCDgnDataCtrl DataCtrl;\r\n\tT_DCON_D rData;\r\n\trData.Initialize();\r\n\tDataCtrl.Get_DgnConDcon(rData);\r\n\tCString strCode = rData.DesignCode;\r\n\tif(strCode==_T(\"AIK-WSD2K\") || strCode==_T(\"AIJ-WSD99\"))\t// WSD.\r\n\t{\r\n\t\tGetDlgItem(IDC_DGN_RC_WENDREBAR)->EnableWindow(FALSE);\r\n\t}\r\n\telse\t// USD, LSD.\r\n\t{\r\n\t\tGetDlgItem(IDC_DGN_RC_WENDREBAR)->EnableWindow(TRUE);\r\n\t}\r\n/*/",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnConBarDlg.cpp",
+  "warnings": []
+}

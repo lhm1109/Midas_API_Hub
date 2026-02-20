@@ -46,6 +46,9 @@
               "type": "object",
               "description": "Seismic design parameters",
               "additionalProperties": false,
+              "x-optional-when": {
+                "SEISMIC_PROV": true
+              },
               "properties": {
                 "FRAME_TYPE": {
                   "type": "string",
@@ -74,7 +77,7 @@
                 "STRONG_COL_WEAK_LAST": {
                   "type": "boolean",
                   "description": "Consider strong column-weak beam on last floor",
-                  "default": false,
+                  "default": true,
                   "x-ui": {
                     "label": "Consider strong column-weak beam on last floor",
                     "order": 2
@@ -85,13 +88,20 @@
                   "description": "Shear Wall Type configuration",
                   "additionalProperties": false,
                   "x-optional-when": {
-                    "FRAME_TYPE": ["Special", "Intermediate"]
+                    "FRAME_TYPE": [
+                      "Special",
+                      "Intermediate"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Shear Wall Type",
+                    "order": 3
                   },
                   "properties": {
                     "SPEC_RC_WALL": {
                       "type": "boolean",
                       "description": "Special RC Structural Wall",
-                      "default": false,
+                      "default": true,
                       "x-ui": {
                         "component": "Switch",
                         "label": "Special RC Structural Wall",
@@ -117,6 +127,9 @@
                         "component": "RadioGroup",
                         "label": "Boundary Element Method",
                         "order": 2
+                      },
+                      "x-optional-when": {
+                        "SPEC_RC_WALL": true
                       }
                     },
                     "DEFL_AMP_FACT": {
@@ -127,6 +140,10 @@
                       "x-ui": {
                         "label": "Deflection Amplification Factor (Cd)",
                         "order": 3
+                      },
+                      "x-optional-when": {
+                        "SPEC_RC_WALL": true,
+                        "BDRY_ELEM_MTHD": "Displacement"
                       }
                     },
                     "IMP_FACT": {
@@ -137,12 +154,12 @@
                       "x-ui": {
                         "label": "Important Factor (Ie)",
                         "order": 4
+                      },
+                      "x-optional-when": {
+                        "SPEC_RC_WALL": true,
+                        "BDRY_ELEM_MTHD": "Displacement"
                       }
                     }
-                  },
-                  "x-ui": {
-                    "label": "Shear Wall Type",
-                    "order": 3
                   }
                 },
                 "SHEAR_DES": {
@@ -150,9 +167,29 @@
                   "description": "Shear for Design configuration",
                   "additionalProperties": false,
                   "x-optional-when": {
-                    "FRAME_TYPE": ["Special", "Intermediate"]
+                    "FRAME_TYPE": [
+                      "Special",
+                      "Intermediate"
+                    ]
+                  },
+                  "x-ui": {
+                    "label": "Shear for Design",
+                    "order": 4
                   },
                   "properties": {
+                    "R": {
+                      "type": "number",
+                      "description": "Special-only R factor input shown as 'R*Vc(a1*Σ(Mpr)/L) ≥ max(Ve1,Ve2)/2 , R='",
+                      "default": 0,
+                      "minimum": 0,
+                      "x-ui": {
+                        "label": "R*Vc(a1*Σ(Mpr)/L) ≥ max(Ve1,Ve2)/2 , R",
+                        "order": 0
+                      },
+                      "x-optional-when": {
+                        "FRAME_TYPE": "Special"
+                      }
+                    },
                     "MTHD": {
                       "type": "string",
                       "description": "Calculation method",
@@ -201,10 +238,6 @@
                         "order": 3
                       }
                     }
-                  },
-                  "x-ui": {
-                    "label": "Shear for Design",
-                    "order": 4
                   }
                 },
                 "BEAM_COL_JNT_DES": {
@@ -216,7 +249,10 @@
                     "order": 5
                   },
                   "x-optional-when": {
-                    "FRAME_TYPE": ["Special", "Intermediate"]
+                    "FRAME_TYPE": [
+                      "Special",
+                      "Intermediate"
+                    ]
                   }
                 },
                 "JOINT": {
@@ -224,14 +260,17 @@
                   "description": "Beam-Column Joint configuration",
                   "additionalProperties": false,
                   "x-optional-when": {
-                    "FRAME_TYPE": ["Special", "Intermediate"],
+                    "FRAME_TYPE": "Special",
                     "BEAM_COL_JNT_DES": true
+                  },
+                  "x-ui": {
+                    "order": 6
                   },
                   "properties": {
                     "CHK_POS": {
                       "type": "string",
                       "description": "Select Check Position",
-                      "default": "Top",
+                      "default": "Bottom",
                       "oneOf": [
                         {
                           "title": "Top",
@@ -249,55 +288,40 @@
                       }
                     },
                     "EXCL_MEM_TYPES": {
-                      "type": "object",
+                      "type": "array",
                       "description": "Member Types to be excluded in Seismic Design",
-                      "additionalProperties": false,
-                      "properties": {
-                        "SUB_BEAM": {
-                          "type": "boolean",
-                          "description": "Exclude Sub-Beam",
-                          "default": false,
-                          "x-ui": {
-                            "label": "Sub-Beam",
-                            "order": 1
-                          }
-                        },
-                        "CANTILEVER": {
-                          "type": "boolean",
-                          "description": "Exclude Cantilever",
-                          "default": false,
-                          "x-ui": {
-                            "label": "Cantilever",
-                            "order": 2
-                          }
-                        },
-                        "UG_BEAM_COL": {
-                          "type": "boolean",
-                          "description": "Exclude Underground Beam/Column",
-                          "default": false,
-                          "x-ui": {
-                            "label": "Underground Beam/Column",
-                            "order": 3
-                          }
-                        }
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "SUBBEAM",
+                          "CANTIL",
+                          "UGBEAMCOL"
+                        ]
                       },
+                      "uniqueItems": true,
+                      "default": [
+                        "SUBBEAM",
+                        "CANTIL",
+                        "UGBEAMCOL"
+                      ],
                       "x-ui": {
                         "label": "Member Types to be excluded in Seismic Design",
                         "order": 2
+                      },
+                      "x-enum-labels-by-type": {
+                        "CONCRETE_SEISMIC": {
+                          "SUBBEAM": "Sub-Beam",
+                          "CANTIL": "Cantilever",
+                          "UGBEAMCOL": "Underground Beam/Column"
+                        }
                       }
                     }
-                  },
-                  "x-ui": {
-                    "order": 6
                   }
                 }
               },
               "x-ui": {
                 "label": "Seismic Design Parameter",
                 "order": 3
-              },
-              "x-optional-when": {
-                "SEISMIC_PROV": true
               }
             },
             "TORS_DES": {

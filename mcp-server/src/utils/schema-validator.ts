@@ -100,6 +100,35 @@ export function validateAndTransform(
                 });
             }
 
+            // 2a. Auto-convert array items.oneOf to items.enum when safe
+            if (fieldType === 'array') {
+                const items = field['items'] as Record<string, unknown> | undefined;
+                const itemOneOf = items?.['oneOf'] as Array<Record<string, unknown>> | undefined;
+                const itemEnum = items?.['enum'] as unknown[] | undefined;
+
+                if (items && itemOneOf && !itemEnum) {
+                    const canConvert = itemOneOf.every((entry) => {
+                        const hasConst = Object.prototype.hasOwnProperty.call(entry, 'const');
+                        if (!hasConst) return false;
+                        const entryConst = entry['const'];
+                        const entryTitle = entry['title'];
+                        return entryTitle === undefined || String(entryTitle) === String(entryConst);
+                    });
+
+                    if (canConvert) {
+                        items['enum'] = itemOneOf.map((entry) => entry['const']);
+                        delete items['oneOf'];
+
+                        errors.push({
+                            field: fieldName,
+                            message: 'Auto-converted array items.oneOf to items.enum',
+                            fixable: true,
+                            fixApplied: true,
+                        });
+                    }
+                }
+            }
+
             // 3. Auto-generate x-ui.label
             {
                 const xui = field['x-ui'] as Record<string, unknown> | undefined;
