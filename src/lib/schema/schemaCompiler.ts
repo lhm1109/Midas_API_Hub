@@ -1290,6 +1290,117 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               }
             }
 
+            // 🔥 4-depth 이상 재귀 처리: grandchildField도 object type이고 properties가 있으면
+            if ((grandchildProp as any).type === 'object' && (grandchildProp as any).properties) {
+              grandchildField.children = [];
+              const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
+
+              for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
+                const greatGrandchildField: EnhancedField = {
+                  key: `${key}.${childKey}.${grandchildKey}.${greatGrandchildKey}`,
+                  type: (greatGrandchildProp as any).type,
+                  default: (greatGrandchildProp as any).default,
+                  required: grandchildObjRequired.includes(greatGrandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+                  section: '',
+                  validationLayers: [],
+                };
+
+                // 🔥 증손자 필드도 동적으로 모든 속성 복사
+                for (const [ggKey, ggValue] of Object.entries(greatGrandchildProp as any)) {
+                  if (ggKey === 'type' || ggKey === 'default') continue;
+
+                  if (ggKey === 'x-ui') {
+                    greatGrandchildField.ui = ggValue;
+                  } else if (ggKey.startsWith('x-')) {
+                    greatGrandchildField[ggKey] = ggValue;
+                  } else {
+                    greatGrandchildField[ggKey] = ggValue;
+                  }
+                }
+
+                // 🔥 oneOf → enum 변환 (great-grandchildren)
+                if ((greatGrandchildProp as any).oneOf && Array.isArray((greatGrandchildProp as any).oneOf) && !greatGrandchildField.enum) {
+                  const enumValues: any[] = [];
+                  const enumLabels: Record<string, string> = {};
+
+                  for (const option of (greatGrandchildProp as any).oneOf) {
+                    if (option.const !== undefined) {
+                      enumValues.push(option.const);
+                      if (option.title) {
+                        enumLabels[String(option.const)] = option.title;
+                      }
+                    }
+                  }
+
+                  if (enumValues.length > 0) {
+                    greatGrandchildField.enum = enumValues;
+                    if (Object.keys(enumLabels).length > 0) {
+                      greatGrandchildField['x-enum-labels'] = enumLabels;
+                    }
+                    console.log(`✅ Converted oneOf → enum for great-grandchild ${key}.${childKey}.${grandchildKey}.${greatGrandchildKey}:`, enumValues);
+                  }
+                }
+
+                grandchildField.children.push(greatGrandchildField);
+              }
+            }
+
+            // 🔥 4-depth 이상 재귀 처리 (array items > object > properties)
+            if ((grandchildProp as any).type === 'object' && (grandchildProp as any).properties) {
+              grandchildField.children = [];
+              const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
+
+              for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
+                const greatGrandchildField: EnhancedField = {
+                  key: `${key}[].${childKey}.${grandchildKey}.${greatGrandchildKey}`,
+                  type: (greatGrandchildProp as any).type,
+                  default: (greatGrandchildProp as any).default,
+                  description: (greatGrandchildProp as any).description,
+                  required: grandchildObjRequired.includes(greatGrandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+                  section: '',
+                  validationLayers: [],
+                };
+
+                // 🔥 증손자 필드도 동적으로 모든 속성 복사
+                for (const [ggKey, ggValue] of Object.entries(greatGrandchildProp as any)) {
+                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description') continue;
+
+                  if (ggKey === 'x-ui') {
+                    greatGrandchildField.ui = ggValue;
+                  } else if (ggKey.startsWith('x-')) {
+                    greatGrandchildField[ggKey] = ggValue;
+                  } else {
+                    greatGrandchildField[ggKey] = ggValue;
+                  }
+                }
+
+                // 🔥 oneOf → enum 변환 (array great-grandchildren)
+                if ((greatGrandchildProp as any).oneOf && Array.isArray((greatGrandchildProp as any).oneOf) && !greatGrandchildField.enum) {
+                  const enumValues: any[] = [];
+                  const enumLabels: Record<string, string> = {};
+
+                  for (const option of (greatGrandchildProp as any).oneOf) {
+                    if (option.const !== undefined) {
+                      enumValues.push(option.const);
+                      if (option.title) {
+                        enumLabels[String(option.const)] = option.title;
+                      }
+                    }
+                  }
+
+                  if (enumValues.length > 0) {
+                    greatGrandchildField.enum = enumValues;
+                    if (Object.keys(enumLabels).length > 0) {
+                      greatGrandchildField['x-enum-labels'] = enumLabels;
+                    }
+                    console.log(`✅ Converted oneOf → enum for array great-grandchild ${key}[].${childKey}.${grandchildKey}.${greatGrandchildKey}:`, enumValues);
+                  }
+                }
+
+                grandchildField.children.push(greatGrandchildField);
+              }
+            }
+
             childField.children.push(grandchildField);
           }
         }

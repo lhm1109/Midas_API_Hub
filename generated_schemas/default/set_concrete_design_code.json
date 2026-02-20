@@ -84,9 +84,9 @@
                   "type": "object",
                   "description": "Shear Wall Type configuration",
                   "additionalProperties": false,
-                                        "x-optional-when": {
-                        "BEAM_COL_JNT_DES": true
-                      },
+                  "x-optional-when": {
+                    "FRAME_TYPE": ["Special", "Intermediate"]
+                  },
                   "properties": {
                     "SPEC_RC_WALL": {
                       "type": "boolean",
@@ -149,6 +149,9 @@
                   "type": "object",
                   "description": "Shear for Design configuration",
                   "additionalProperties": false,
+                  "x-optional-when": {
+                    "FRAME_TYPE": ["Special", "Intermediate"]
+                  },
                   "properties": {
                     "MTHD": {
                       "type": "string",
@@ -211,12 +214,19 @@
                   "x-ui": {
                     "label": "Beam-Column Joint Design",
                     "order": 5
+                  },
+                  "x-optional-when": {
+                    "FRAME_TYPE": ["Special", "Intermediate"]
                   }
                 },
                 "JOINT": {
                   "type": "object",
                   "description": "Beam-Column Joint configuration",
                   "additionalProperties": false,
+                  "x-optional-when": {
+                    "FRAME_TYPE": ["Special", "Intermediate"],
+                    "BEAM_COL_JNT_DES": true
+                  },
                   "properties": {
                     "CHK_POS": {
                       "type": "string",
@@ -279,9 +289,6 @@
                   },
                   "x-ui": {
                     "order": 6
-                  },
-                  "x-optional-when": {
-                    "BEAM_COL_JNT_DES": true
                   }
                 }
               },

@@ -352,6 +352,67 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               let childNo = 1;
 
               const mapGrandchildren = (grandchildren: any[], parentNo: string) => {
+                const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string) => {
+                  const greatGrandchildrenToProcess = greatGrandchildren.filter((c: any) => c.type !== 'section-header');
+                  const greatGrandchildFieldInfoMap = collectFieldConditionInfo(
+                    greatGrandchildrenToProcess,
+                    tableDefinition?.schemaExtensions?.conditional || []
+                  );
+
+                  const { fieldGroups: greatGrandchildGroups, noConditionFields: greatGrandchildrenWithoutCondition } = groupFieldsByCondition(
+                    greatGrandchildrenToProcess,
+                    greatGrandchildFieldInfoMap
+                  );
+
+                  const mappedGreatGrandchildren: any[] = [];
+                  let greatGrandchildNo = 1;
+
+                  for (const { field: greatGrandchild } of greatGrandchildrenWithoutCondition) {
+                    mappedGreatGrandchildren.push({
+                      no: `${grandParentNo}.${greatGrandchildNo++}`,
+                      name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
+                      type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
+                      default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                      description: buildFieldDescription(greatGrandchild, tableDefinition),
+                      required: greatGrandchild['x-required-when'] ? 'Conditional' :
+                        greatGrandchild['x-optional-when'] ? 'Optional' :
+                          formatRequiredStatus(greatGrandchild.required),
+                    });
+                  }
+
+                  for (const [conditionKey, greatGrandchildrenWithCondition] of greatGrandchildGroups) {
+                    const { conditionInfo } = greatGrandchildrenWithCondition[0];
+                    const isRequired = conditionInfo?.type === 'x-required-when';
+                    const parts = conditionKey.split(':');
+                    const conditionName = parts[0];
+                    const conditionValue = parts.slice(1).join(':');
+                    const conditionText = isRequired
+                      ? `Required (When "${conditionName}" is ${conditionValue})`
+                      : `Optional (When "${conditionName}" is ${conditionValue})`;
+
+                    mappedGreatGrandchildren.push({
+                      no: '', name: '', type: 'section-header',
+                      section: conditionText,
+                      default: '', description: '', required: '',
+                    });
+
+                    for (const { field: greatGrandchild } of greatGrandchildrenWithCondition) {
+                      mappedGreatGrandchildren.push({
+                        no: `${grandParentNo}.${greatGrandchildNo++}`,
+                        name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
+                        type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
+                        default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                        description: buildFieldDescription(greatGrandchild, tableDefinition),
+                        required: greatGrandchild['x-required-when'] ? 'Conditional' :
+                          greatGrandchild['x-optional-when'] ? 'Optional' :
+                            formatRequiredStatus(greatGrandchild.required),
+                      });
+                    }
+                  }
+
+                  return mappedGreatGrandchildren;
+                };
+
                 const grandchildrenToProcess = grandchildren.filter((c: any) => c.type !== 'section-header');
                 const grandchildFieldInfoMap = collectFieldConditionInfo(
                   grandchildrenToProcess,
@@ -367,7 +428,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 let grandchildNo = 1;
 
                 for (const { field: grandchild } of grandchildrenWithoutCondition) {
-                  mappedGrandchildren.push({
+                  const mappedGrandchild: any = {
                     no: `${parentNo}.${grandchildNo++}`,
                     name: grandchild.key.split('.').pop() || grandchild.key,
                     type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
@@ -376,7 +437,13 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     required: grandchild['x-required-when'] ? 'Conditional' :
                       grandchild['x-optional-when'] ? 'Optional' :
                         formatRequiredStatus(grandchild.required),
-                  });
+                  };
+
+                  if (grandchild.children && grandchild.children.length > 0) {
+                    mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                  }
+
+                  mappedGrandchildren.push(mappedGrandchild);
                 }
 
                 for (const [conditionKey, grandchildrenWithCondition] of grandchildGroups) {
@@ -396,7 +463,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   });
 
                   for (const { field: grandchild } of grandchildrenWithCondition) {
-                    mappedGrandchildren.push({
+                    const mappedGrandchild: any = {
                       no: `${parentNo}.${grandchildNo++}`,
                       name: grandchild.key.split('.').pop() || grandchild.key,
                       type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
@@ -405,7 +472,13 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       required: grandchild['x-required-when'] ? 'Conditional' :
                         grandchild['x-optional-when'] ? 'Optional' :
                           formatRequiredStatus(grandchild.required),
-                    });
+                    };
+
+                    if (grandchild.children && grandchild.children.length > 0) {
+                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                    }
+
+                    mappedGrandchildren.push(mappedGrandchild);
                   }
                 }
 
@@ -536,6 +609,67 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 let childNo = 1;
 
                 const mapGrandchildren = (grandchildren: any[], parentNo: string) => {
+                  const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string) => {
+                    const greatGrandchildrenToProcess = greatGrandchildren.filter((c: any) => c.type !== 'section-header');
+                    const greatGrandchildFieldInfoMap = collectFieldConditionInfo(
+                      greatGrandchildrenToProcess,
+                      tableDefinition?.schemaExtensions?.conditional || []
+                    );
+
+                    const { fieldGroups: greatGrandchildGroups, noConditionFields: greatGrandchildrenWithoutCondition } = groupFieldsByCondition(
+                      greatGrandchildrenToProcess,
+                      greatGrandchildFieldInfoMap
+                    );
+
+                    const mappedGreatGrandchildren: any[] = [];
+                    let greatGrandchildNo = 1;
+
+                    for (const { field: greatGrandchild } of greatGrandchildrenWithoutCondition) {
+                      mappedGreatGrandchildren.push({
+                        no: `${grandParentNo}.${greatGrandchildNo++}`,
+                        name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
+                        type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
+                        default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                        description: buildFieldDescription(greatGrandchild, tableDefinition),
+                        required: greatGrandchild['x-required-when'] ? 'Conditional' :
+                          greatGrandchild['x-optional-when'] ? 'Optional' :
+                            greatGrandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                      });
+                    }
+
+                    for (const [conditionKey, greatGrandchildrenWithCondition] of greatGrandchildGroups) {
+                      const { conditionInfo } = greatGrandchildrenWithCondition[0];
+                      const isRequired = conditionInfo?.type === 'x-required-when';
+                      const parts = conditionKey.split(':');
+                      const conditionName = parts[0];
+                      const conditionValue = parts.slice(1).join(':');
+                      const conditionText = isRequired
+                        ? `Required (When "${conditionName}" is ${conditionValue})`
+                        : `Optional (When "${conditionName}" is ${conditionValue})`;
+
+                      mappedGreatGrandchildren.push({
+                        no: '', name: '', type: 'section-header',
+                        section: conditionText,
+                        default: '', description: '', required: '',
+                      });
+
+                      for (const { field: greatGrandchild } of greatGrandchildrenWithCondition) {
+                        mappedGreatGrandchildren.push({
+                          no: `${grandParentNo}.${greatGrandchildNo++}`,
+                          name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
+                          type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
+                          default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                          description: buildFieldDescription(greatGrandchild, tableDefinition),
+                          required: greatGrandchild['x-required-when'] ? 'Conditional' :
+                            greatGrandchild['x-optional-when'] ? 'Optional' :
+                              greatGrandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                        });
+                      }
+                    }
+
+                    return mappedGreatGrandchildren;
+                  };
+
                   const grandchildrenToProcess = grandchildren.filter((c: any) => c.type !== 'section-header');
                   const grandchildFieldInfoMap = collectFieldConditionInfo(
                     grandchildrenToProcess,
@@ -551,7 +685,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   let grandchildNo = 1;
 
                   for (const { field: grandchild } of grandchildrenWithoutCondition) {
-                    mappedGrandchildren.push({
+                    const mappedGrandchild: any = {
                       no: `${parentNo}.${grandchildNo++}`,
                       name: grandchild.key.split('.').pop() || grandchild.key,
                       type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
@@ -560,7 +694,13 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       required: grandchild['x-required-when'] ? 'Conditional' :
                         grandchild['x-optional-when'] ? 'Optional' :
                           grandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
-                    });
+                    };
+
+                    if (grandchild.children && grandchild.children.length > 0) {
+                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                    }
+
+                    mappedGrandchildren.push(mappedGrandchild);
                   }
 
                   for (const [conditionKey, grandchildrenWithCondition] of grandchildGroups) {
@@ -580,7 +720,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     });
 
                     for (const { field: grandchild } of grandchildrenWithCondition) {
-                      mappedGrandchildren.push({
+                      const mappedGrandchild: any = {
                         no: `${parentNo}.${grandchildNo++}`,
                         name: grandchild.key.split('.').pop() || grandchild.key,
                         type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
@@ -589,7 +729,13 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         required: grandchild['x-required-when'] ? 'Conditional' :
                           grandchild['x-optional-when'] ? 'Optional' :
                             grandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
-                      });
+                      };
+
+                      if (grandchild.children && grandchild.children.length > 0) {
+                        mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`);
+                      }
+
+                      mappedGrandchildren.push(mappedGrandchild);
                     }
                   }
 
@@ -1245,7 +1391,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               </div>
 
               {/* Monaco Editor - Full Height */}
-              <div className="flex-1 relative">
+              <div className="flex-1 relative min-h-0">
                 <CodeEditor
                   value={editableSchema}
                   onChange={(value) => handleSchemaChange(value || '')}
@@ -1262,7 +1408,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               </div>
 
               {/* Footer with Save Button */}
-              <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-between flex-shrink-0">
+              <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-between flex-shrink-0 sticky bottom-0 z-10">
                 <div className="flex items-center gap-2 text-xs text-zinc-500">
                   {isSchemaModified ? (
                     <>

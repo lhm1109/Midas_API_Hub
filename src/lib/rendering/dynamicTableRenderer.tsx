@@ -174,6 +174,26 @@ function renderGrandchildSectionHeader(
   );
 }
 
+function renderGreatGrandchildSectionHeader(
+  greatGrandchild: any,
+  definition: TableDefinition,
+  parentNo: number,
+  childIdx: number,
+  grandchildIdx: number,
+  greatGrandchildIdx: number
+) {
+  const nestedStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
+  const uniqueKey = `greatgrandchild-section-${parentNo}-${childIdx}-${grandchildIdx}-${greatGrandchildIdx}-${greatGrandchild.section || greatGrandchild.name || ''}`;
+
+  return (
+    <tr key={uniqueKey} className={nestedStyle.background || 'bg-blue-950/30 border-b border-zinc-800'}>
+      <td colSpan={6} className={`p-2 ${nestedStyle.textColor || 'text-blue-400'} font-semibold text-xs pl-16`}>
+        {greatGrandchild.section}
+      </td>
+    </tr>
+  );
+}
+
 /**
  * 파라미터 행 렌더링
  */
@@ -322,6 +342,54 @@ function renderChildRow(child: any, definition: TableDefinition, parentNo: numbe
           </td>
         </tr>
       );
+
+      if (grandchild.children && grandchild.children.length > 0) {
+        grandchild.children.forEach((greatGrandchild: any, greatGrandchildIdx: number) => {
+          if (greatGrandchild.type === 'section-header' || greatGrandchild.section) {
+            rows.push(renderGreatGrandchildSectionHeader(
+              greatGrandchild,
+              definition,
+              parentNo,
+              childIdx,
+              grandchildIdx,
+              greatGrandchildIdx
+            ));
+            return;
+          }
+
+          const greatGrandchildKey = `greatgrandchild-${parentNo}-${childIdx}-${grandchildIdx}-${greatGrandchildIdx}`;
+
+          rows.push(
+            <tr key={greatGrandchildKey} className="border-b border-zinc-800 bg-zinc-900/30">
+              <td className="p-3 text-zinc-500 text-center">{greatGrandchild.no}</td>
+              <td className="p-3 pl-16">
+                {greatGrandchild.description && renderDescription(greatGrandchild.description)}
+                {greatGrandchild.options && greatGrandchild.options.length > 0 && (
+                  <div className="mt-1 space-y-0.5">
+                    {greatGrandchild.options.map((opt: string, optIdx: number) => (
+                      <div
+                        key={`${greatGrandchild.name}-opt-${optIdx}`}
+                        className="text-zinc-300"
+                        dangerouslySetInnerHTML={{ __html: opt.replace(/• /g, '<span class="text-zinc-400">• </span>') }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </td>
+              <td className="p-3">
+                <code className="font-mono text-yellow-300">"{greatGrandchild.name}"</code>
+              </td>
+              <td className="p-3 text-zinc-400">{greatGrandchild.type}</td>
+              <td className="p-3 text-zinc-500 font-mono text-xs">
+                {greatGrandchild.default !== undefined && greatGrandchild.default !== null ? String(greatGrandchild.default) : '-'}
+              </td>
+              <td className="p-3">
+                {renderRequired(greatGrandchild.required, definition)}
+              </td>
+            </tr>
+          );
+        });
+      }
     });
   }
 
