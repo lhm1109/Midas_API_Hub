@@ -1405,18 +1405,18 @@
                 "BE_HORZ_SPACE": {
                   "type": "number",
                   "description": "Boundary element horizontal spacing",
-                  "default": 200,
+                  "default": 0.2,
                   "x-ui": {
-                    "label": "Boundary Element Horz. Rebar Space",
+                    "label": "Boundary Element Horz. Rebar Space (0.2 m)",
                     "order": 5
                   }
                 },
                 "BE_VERT_SPACE": {
                   "type": "number",
                   "description": "Boundary element vertical spacing",
-                  "default": 100,
+                  "default": 0.1,
                   "x-ui": {
-                    "label": "Boundary Element Vert. Rebar Space",
+                    "label": "Boundary Element Vert. Rebar Space (0.1 m)",
                     "order": 6
                   }
                 },
@@ -1451,10 +1451,6 @@
                   "type": "object",
                   "description": "Material by diameter input",
                   "additionalProperties": false,
-                  "required": [
-                    "VERTICAL_END_REBAR",
-                    "HORIZONTAL_REBAR"
-                  ],
                   "properties": {
                     "VERTICAL_END_REBAR": {
                       "type": "array",
@@ -1563,6 +1559,159 @@
                   },
                   "x-optional-when": {
                     "MATERIAL_BY_DIAMETER": true
+                  }
+                },
+                "ADDITIONAL_WALL_DATA": {
+                  "type": "object",
+                  "description": "Additional wall data",
+                  "additionalProperties": false,
+                  "properties": {
+                    "OUT_OF_PLANE_BENDING": {
+                      "type": "boolean",
+                      "description": "Design of out-of-plane bending",
+                      "default": false,
+                      "x-ui": {
+                        "label": "Design of Out-of-plane Bending",
+                        "order": 1
+                      }
+                    },
+                    "VERTICAL_REBAR_SPACING": {
+                      "type": "array",
+                      "description": "Spacing of vertical rebars",
+                      "default": [
+                        "@100",
+                        "@150",
+                        "@200",
+                        "@300",
+                        "@400"
+                      ],
+                      "items": {
+                        "type": "string"
+                      },
+                      "x-ui": {
+                        "label": "Spacing of Vertical Rebars",
+                        "order": 2
+                      }
+                    },
+                    "HORIZONTAL_REBAR_SPACING_FROM": {
+                      "type": "number",
+                      "description": "Spacing of horizontal rebars (from). Default is 0.05 when unit is m; auto-converted for other units.",
+                      "default": 0.05,
+                      "x-ui": {
+                        "label": "Spacing of Horizontal Rebars (From) - default 0.05 m (auto-converted)",
+                        "order": 3
+                      }
+                    },
+                    "END_REBAR_METHOD": {
+                      "type": "integer",
+                      "description": "End rebar design method",
+                      "default": 1,
+                      "oneOf": [
+                        {
+                          "title": "Method-1",
+                          "const": 1
+                        },
+                        {
+                          "title": "Method-2",
+                          "const": 2
+                        },
+                        {
+                          "title": "Method-3",
+                          "const": 3
+                        },
+                        {
+                          "title": "Method-4",
+                          "const": 4
+                        }
+                      ],
+                      "x-ui": {
+                        "component": "RadioGroup",
+                        "label": "End Rebar Design Method",
+                        "order": 4
+                      }
+                    },
+                    "DIST1": {
+                      "type": "number",
+                      "description": "End rebar spacing for 4 rebars",
+                      "default": 0.3,
+                      "x-ui": {
+                        "label": "Dist1 (default 0.3 m)",
+                        "order": 5
+                      },
+                      "x-optional-when": [
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 2
+                          }
+                        },
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 3
+                          }
+                        },
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 4
+                          }
+                        }
+                      ]
+                    },
+                    "DIST2": {
+                      "type": "number",
+                      "description": "End rebar spacing for 6 rebars",
+                      "default": 0.15,
+                      "x-ui": {
+                        "label": "Dist2 (default 0.15 m)",
+                        "order": 6
+                      },
+                      "x-optional-when": [
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 2
+                          }
+                        },
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 3
+                          }
+                        },
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 4
+                          }
+                        }
+                      ]
+                    },
+                    "DIST3": {
+                      "type": "number",
+                      "description": "End rebar spacing for 8 or more rebars",
+                      "default": 0.1,
+                      "x-ui": {
+                        "label": "Dist3 (default 0.1 m)",
+                        "order": 7
+                      },
+                      "x-optional-when": [
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 2
+                          }
+                        },
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 3
+                          }
+                        },
+                        {
+                          "condition": {
+                            "END_REBAR_METHOD": 4
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "x-ui": {
+                    "label": "Additional Wall Data",
+                    "order": 11
                   }
                 }
               }

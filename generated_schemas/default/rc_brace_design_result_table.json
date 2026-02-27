@@ -1,0 +1,245 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "PRI_SORT": {
+          "type": "integer",
+          "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "SECT",
+              "const": 0
+            },
+            {
+              "title": "MEMB",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Primary Sorting Option",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "RCBRACEDESIGN-MEMB"
+          }
+        },
+        "RESULT": {
+          "type": "integer",
+          "description": "Filter results by design status",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "All",
+              "const": 0
+            },
+            {
+              "title": "OK",
+              "const": 1
+            },
+            {
+              "title": "NG",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Result View Option",
+            "order": 3
+          }
+        },
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "RC Brace Design Result",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "RCBRACEDESIGN-MEMB",
+            "RCBRACEDESIGN-PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MEMB",
+              "SECT",
+              "Section",
+              "Bc",
+              "Hc",
+              "Height",
+              "fck",
+              "fy",
+              "fys",
+              "LCB",
+              "φPn.max",
+              "Pu",
+              "φPn",
+              "Rat-P",
+              "Mc",
+              "φMn",
+              "Rat-M",
+              "Rat-My",
+              "Rat-Mz",
+              "Mc/Pu",
+              "Mcz/Mcy",
+              "Ast",
+              "V-Rebar",
+              "Vu",
+              "Rat-V",
+              "As-H",
+              "H-Rebar",
+              "CHK"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "RCBRACEDESIGN-MEMB": {
+              "MEMB": "Element Number",
+              "SECT": "Section Property Number",
+              "Section": "Sectional Shape",
+              "Bc": "Width of Brace Member",
+              "Hc": "Depth of Brace Member",
+              "Height": "Height of Brace Member",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Main Rebars",
+              "fys": "Design Yield Strength of Shear Rebars",
+              "LCB": "Load Combination for P-M Interaction",
+              "φPn.max": "Maximum Design Axial Strength",
+              "Pu": "Factored Axial Force",
+              "φPn": "Design Axial Strength",
+              "Rat-P": "Axial Strength Ratio (Pu/φPn)",
+              "Mc": "Factored Moment",
+              "φMn": "Design Moment Strength",
+              "Rat-M": "Moment Strength Ratio (Mc/φMn)",
+              "Rat-My": "Y-axis Moment Strength Ratio",
+              "Rat-Mz": "Z-axis Moment Strength Ratio",
+              "Mc/Pu": "Eccentricity",
+              "Mcz/Mcy": "Moment Rotation (Mcz/Mcy)",
+              "Ast": "Quantity of Main Rebars",
+              "V-Rebar": "Vertical Rebar Configuration",
+              "Vu": "Maximum Factored Shear Force",
+              "Rat-V": "Shear Strength Ratio (Vu/φVn)",
+              "As-H": "Reinforcing Steel Area for Shear",
+              "H-Rebar": "Shear Rebar Spacing",
+              "CHK": "Status of Design Results"
+            },
+            "RCBRACEDESIGN-PROP": {
+              "MEMB": "Element Number (0 for Property-based)",
+              "SECT": "Section Property Number",
+              "Section": "Sectional Shape",
+              "Bc": "Width of Brace Member",
+              "Hc": "Depth of Brace Member",
+              "Height": "Height of Brace Member",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Main Rebars",
+              "fys": "Design Yield Strength of Shear Rebars",
+              "LCB": "Load Combination for P-M Interaction",
+              "φPn.max": "Maximum Design Axial Strength",
+              "Pu": "Factored Axial Force (Maximum for Property)",
+              "φPn": "Design Axial Strength",
+              "Rat-P": "Axial Strength Ratio (Pu/φPn, Maximum for Property)",
+              "Mc": "Factored Moment (Maximum for Property)",
+              "φMn": "Design Moment Strength",
+              "Rat-M": "Moment Strength Ratio (Mc/φMn, Maximum for Property)",
+              "Rat-My": "Y-axis Moment Strength Ratio",
+              "Rat-Mz": "Z-axis Moment Strength Ratio",
+              "Mc/Pu": "Eccentricity",
+              "Mcz/Mcy": "Moment Rotation (Mcz/Mcy)",
+              "Ast": "Quantity of Main Rebars (Maximum for Property)",
+              "V-Rebar": "Vertical Rebar Configuration",
+              "Vu": "Maximum Factored Shear Force (Maximum for Property)",
+              "Rat-V": "Shear Strength Ratio (Vu/φVn, Maximum for Property)",
+              "As-H": "Reinforcing Steel Area for Shear (Maximum for Property)",
+              "H-Rebar": "Shear Rebar Spacing",
+              "CHK": "Status of Design Results"
+            }
+          }
+        }
+      }
+    }
+  }
+}

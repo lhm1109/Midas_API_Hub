@@ -9,7 +9,6 @@
       "type": "object",
       "required": [
         "REPORT_TYPE",
-        "CURRENT_MODE",
         "EXPORT_PATH",
         "OUTPUT_NAME"
       ],
@@ -19,25 +18,47 @@
           "type": "string",
           "description": "Report Table Type",
           "enum": [
-            "STEELCODECHK-MEMB",
-            "STEELCODECHK-PROP"
+            "RCCOLUMNDESIGN-MEMB",
+            "RCCOLUMNDESIGN-PROP"
           ],
           "x-ui": {
             "label": "Table Type",
             "order": 1
           }
         },
-        "CURRENT_MODE": {
+        "CURRENT_MODE_MEMB": {
           "type": "string",
-          "description": "Report output mode",
+          "description": "Report output mode for element-based report",
           "oneOf": [
             {
               "title": "Graphic (JPG image)",
               "const": "Graphic"
             },
             {
-              "title": "Detail (DOC document)",
-              "const": "Detail"
+              "title": "Summary (TXT text)",
+              "const": "Summary"
+            },
+            {
+              "title": "PM Curve (JPG image)",
+              "const": "PMCurve"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 2
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCCOLUMNDESIGN-MEMB"
+          }
+        },
+        "CURRENT_MODE_PROP": {
+          "type": "string",
+          "description": "Report output mode for property-based report",
+          "oneOf": [
+            {
+              "title": "Graphic (JPG image)",
+              "const": "Graphic"
             },
             {
               "title": "Summary (TXT text)",
@@ -48,6 +69,9 @@
             "component": "RadioGroup",
             "label": "Report Mode",
             "order": 2
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCCOLUMNDESIGN-PROP"
           }
         },
         "ELEMENT_LIST": {
@@ -61,7 +85,7 @@
             "order": 3
           },
           "x-optional-when": {
-            "REPORT_TYPE": "STEELCODECHK-MEMB"
+            "REPORT_TYPE": "RCCOLUMNDESIGN-MEMB"
           }
         },
         "SECTION_LIST": {
@@ -75,21 +99,21 @@
             "order": 3
           },
           "x-optional-when": {
-            "REPORT_TYPE": "STEELCODECHK-PROP"
+            "REPORT_TYPE": "RCCOLUMNDESIGN-PROP"
           }
         },
         "EXPORT_PATH": {
           "type": "string",
-          "description": "File path to save the report (JPG for Graphic, DOC for Detail, TXT for Summary)",
+          "description": "Directory path to save the report files",
           "x-ui": {
-            "hint": "e.g. C:\\MIDAS\\Report\\output.jpg, .doc or .txt",
+            "hint": "e.g. C:\\MIDAS\\Report\\",
             "label": "Export Path",
             "order": 4
           }
         },
         "OUTPUT_NAME": {
           "type": "string",
-          "description": "Output file base name. For multiple members, files are prefixed with index number and element number (e.g. 001_E123_filename.jpg, 002_E456_filename.jpg)",
+          "description": "Output file base name. For multiple elements, files are prefixed with index and element number (e.g. 001_E100_filename.jpg, 002_E865_filename.jpg)",
           "x-ui": {
             "label": "Output File Name",
             "order": 5

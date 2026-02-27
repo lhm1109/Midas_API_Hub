@@ -1,0 +1,278 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "WID+STORY",
+            "WID"
+          ],
+          "x-ui": {
+            "label": "Table Type",
+            "order": 1
+          }
+        },
+        "PRI_SORT": {
+          "type": "integer",
+          "description": "Sorting criteria for WID+STORY output (by WID or Story)",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "Story",
+              "const": 0
+            },
+            {
+              "title": "WID",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Primary Sorting Option",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "WID+STORY"
+          }
+        },
+        "PRI_SORT_WID": {
+          "type": "integer",
+          "description": "Sorting criteria for WID output (by Wall Mark or WID)",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "Wall Mark",
+              "const": 0
+            },
+            {
+              "title": "WID",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Primary Sorting Option",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "WID"
+          }
+        },
+        "RESULT": {
+          "type": "integer",
+          "description": "Filter results by design status",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "All",
+              "const": 0
+            },
+            {
+              "title": "OK",
+              "const": 1
+            },
+            {
+              "title": "NG",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Result View Option",
+            "order": 3
+          }
+        },
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "RC Wall Design Result",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "WID",
+              "Story",
+              "Wall Mark",
+              "Lw",
+              "HTw",
+              "hw",
+              "fck",
+              "fy",
+              "fys",
+              "φPn.max",
+              "Pu",
+              "φPny",
+              "φPnz",
+              "Rat-Py",
+              "Rat-Pz",
+              "LCB_Mc",
+              "Mcy",
+              "Mcz",
+              "φMny",
+              "φMnz",
+              "Rat-My",
+              "Rat-Mz",
+              "LCB_Vu",
+              "Vu",
+              "As-V",
+              "V-Rebar",
+              "As-H",
+              "H-Rebar",
+              "End-Rebar",
+              "Bar Layer",
+              "CHK"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "WID+STORY": {
+              "WID": "Wall Number",
+              "Story": "Story Name",
+              "Wall Mark": "Designation for Shear Wall Member",
+              "Lw": "Length of Shear Wall Member",
+              "HTw": "Story Height of Shear Wall Member",
+              "hw": "Thickness of Shear Wall Member",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Vertical Rebars",
+              "fys": "Design Yield Strength of Horizontal Rebars",
+              "φPn.max": "Maximum Design Axial Strength",
+              "Pu": "Factored Compression (Tension) Force (Maximum for Wall Mark)",
+              "φPny": "Design Axial Strength in Y-direction",
+              "φPnz": "Design Axial Strength in Z-direction",
+              "Rat-Py": "Axial Strength Ratio in Y-direction (Maximum for Wall Mark)",
+              "Rat-Pz": "Axial Strength Ratio in Z-direction (Maximum for Wall Mark)",
+              "LCB_Mc": "Load Combination for Moment",
+              "Mcy": "Factored Moment in Y-direction (Maximum for Wall Mark)",
+              "Mcz": "Factored Moment in Z-direction (Maximum for Wall Mark)",
+              "φMny": "Design Moment Strength in Y-direction",
+              "φMnz": "Design Moment Strength in Z-direction",
+              "Rat-My": "Moment Strength Ratio in Y-direction (Maximum for Wall Mark)",
+              "Rat-Mz": "Moment Strength Ratio in Z-direction (Maximum for Wall Mark)",
+              "LCB_Vu": "Load Combination for Shear Force",
+              "Vu": "Maximum Factored Shear Force (Maximum for Wall Mark)",
+              "As-V": "Vertical Rebar Quantity (Maximum for Wall Mark, LengthUnit²/LengthUnit × 100)",
+              "V-Rebar": "Vertical Rebar Placement",
+              "As-H": "Horizontal Reinforcing Steel Area (LengthUnit²/LengthUnit × 100)",
+              "H-Rebar": "Horizontal Rebar Spacing",
+              "End-Rebar": "Vertical End Rebar",
+              "Bar Layer": "Number of Layers for Vertical Rebars (2 Layers)",
+              "CHK": "Status of Design Results (OK, P**, *M*, **V, PM*, *MV, P*V, PMV)"
+            },
+            "WID": {
+              "WID": "Wall Number",
+              "Story": "Story Name",
+              "Wall Mark": "Designation for Shear Wall Member",
+              "Lw": "Length of Shear Wall Member",
+              "HTw": "Story Height of Shear Wall Member",
+              "hw": "Thickness of Shear Wall Member",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Vertical Rebars",
+              "fys": "Design Yield Strength of Horizontal Rebars",
+              "φPn.max": "Maximum Design Axial Strength",
+              "Pu": "Factored Compression (Tension) Force",
+              "φPny": "Design Axial Strength in Y-direction",
+              "φPnz": "Design Axial Strength in Z-direction",
+              "Rat-Py": "Axial Strength Ratio in Y-direction",
+              "Rat-Pz": "Axial Strength Ratio in Z-direction",
+              "LCB_Mc": "Load Combination for Moment",
+              "Mcy": "Factored Moment in Y-direction",
+              "Mcz": "Factored Moment in Z-direction",
+              "φMny": "Design Moment Strength in Y-direction",
+              "φMnz": "Design Moment Strength in Z-direction",
+              "Rat-My": "Moment Strength Ratio in Y-direction",
+              "Rat-Mz": "Moment Strength Ratio in Z-direction",
+              "LCB_Vu": "Load Combination for Shear Force",
+              "Vu": "Maximum Factored Shear Force",
+              "As-V": "Vertical Rebar Quantity (LengthUnit²/LengthUnit × 100)",
+              "V-Rebar": "Vertical Rebar Placement",
+              "As-H": "Horizontal Reinforcing Steel Area (LengthUnit²/LengthUnit × 100)",
+              "H-Rebar": "Horizontal Rebar Spacing",
+              "End-Rebar": "Vertical End Rebar",
+              "Bar Layer": "Number of Layers for Vertical Rebars (2 Layers)",
+              "CHK": "Status of Design Results (OK, P**, *M*, **V, PM*, *MV, P*V, PMV)"
+            }
+          }
+        }
+      }
+    }
+  }
+}

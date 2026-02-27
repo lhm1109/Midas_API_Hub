@@ -209,9 +209,10 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
 
   // 🔥 중첩 필드 처리 (children이 있으면 하위 행 추가)
   if (field.children && field.children.length > 0) {
+    const parentConditional = isConditionalField(field);
     let childNo = 1;
     for (const child of field.children) {
-      const childRequiredHTML = generateRequiredCell(child, template);
+      const childRequiredHTML = generateRequiredCell(child, template, parentConditional);
       const childDefaultValue = formatDefaultValue(child.default, child.type);
       const childTypeDisplay = child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type;
 
@@ -233,10 +234,11 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
 
       // 🔥 3-depth 중첩 필드 처리 (grandchildren)
       if (child.children && child.children.length > 0) {
+        const childConditional = parentConditional || isConditionalField(child);
         let grandchildNo = 1;
         for (const grandchild of child.children) {
           const grandchildDescriptionHTML = generateFieldDescription(grandchild, template, references);
-          const grandchildRequiredHTML = generateRequiredCell(grandchild, template);
+          const grandchildRequiredHTML = generateRequiredCell(grandchild, template, childConditional);
           const grandchildDefaultValue = formatDefaultValue(grandchild.default, grandchild.type);
           const grandchildTypeDisplay = grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type;
 
@@ -373,10 +375,23 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
   return parts.join('\n');
 }
 
+const isConditionalField = (field: EnhancedField): boolean => {
+  const fieldAny = field as any;
+  return Boolean(fieldAny['x-required-when'] || fieldAny['x-optional-when']);
+};
+
 /**
  * Required 셀 생성 (YAML 기반)
  */
-function generateRequiredCell(field: EnhancedField, _template: HTMLTemplateDefinition): string {
+function generateRequiredCell(
+  field: EnhancedField,
+  _template: HTMLTemplateDefinition,
+  _inheritedConditional: boolean = false
+): string {
+  if (isConditionalField(field)) {
+    return '<span class="badge badge-conditional">Conditional</span>';
+  }
+
   const requiredStatuses = Object.values(field.required);
   const hasRequired = requiredStatuses.some(s => s === 'required');
   const hasOptional = requiredStatuses.some(s => s === 'optional');
@@ -687,24 +702,26 @@ export function generateHTMLDocument(
       <table style="border-collapse: collapse; width: 100%;" border="1">
         <colgroup>
           <col style="width: 6.00%;">
+          <col style="width: 4.00%;">
           <col style="width: 6.00%;">
-          <col style="width: 44.00%;">
+          <col style="width: 6.00%;">
+          <col style="width: 28.00%;">
           <col style="width: 14.00%;">
           <col style="width: 10.00%;">
           <col style="width: 10.00%;">
-          <col style="width: 10.00%;">
+          <col style="width: 16.00%;">
         </colgroup>
         <tbody>
           <tr>
             <th style="${ZENDESK_HEADER_STYLE}">No.</th>
-            <th style="${ZENDESK_HEADER_STYLE}" colspan="2">Description</th>
+            <th style="${ZENDESK_HEADER_STYLE}" colspan="4">Description</th>
             <th style="${ZENDESK_HEADER_STYLE}">Key</th>
             <th style="${ZENDESK_HEADER_STYLE}">Value Type</th>
             <th style="${ZENDESK_HEADER_STYLE}">Default</th>
             <th style="${ZENDESK_HEADER_STYLE}">Required</th>
           </tr>
           <tr>
-            <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="7">
+            <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="9">
               <p><span style="color: #4c9aff;">Root Object</span></p>
             </td>
           </tr>
@@ -712,7 +729,7 @@ export function generateHTMLDocument(
             <td style="${ZENDESK_CELL_STYLE}">
               <p style="text-align: center;">1</p>
             </td>
-            <td style="${ZENDESK_CELL_STYLE}" colspan="2">
+            <td style="${ZENDESK_CELL_STYLE}" colspan="4">
               <p>${wrapperDescription}</p>
             </td>
             <td style="${ZENDESK_CELL_STYLE}">
@@ -740,12 +757,14 @@ export function generateHTMLDocument(
       <table style="border-collapse: collapse; width: 100%;" border="1">
         <colgroup>
           <col style="width: 6.00%;">
-          <col style="width: 6.00%;">
-          <col style="width: 44.00%;">
+          <col style="width: 7.00%;">
+          <col style="width: 7.00%;">
+          <col style="width: 8.00%;">
+          <col style="width: 26.00%;">
           <col style="width: 14.00%;">
           <col style="width: 10.00%;">
           <col style="width: 10.00%;">
-          <col style="width: 10.00%;">
+          <col style="width: 20.00%;">
         </colgroup>
         ${tableHTML}
       </table>
@@ -892,7 +911,8 @@ function renderGreatGrandchildrenLegacy(
   rowNumber: number,
   currentChildNo: number,
   currentGrandchildNo: number,
-  references?: Map<string, ReferenceInfo>
+  references?: Map<string, ReferenceInfo>,
+  inheritedConditional: boolean = false
 ): string {
   let html = '';
   const explicitSectionHeaders = greatGrandchildren.filter((item) => item.type === 'section-header' || item.section);
@@ -930,7 +950,8 @@ function renderGreatGrandchildrenLegacy(
     html += `
       <tr>
         <td style="${ZENDESK_CELL_STYLE}"></td>
-        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="5">
+        <td style="${ZENDESK_CELL_STYLE}"></td>
+        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="6">
           <p><span style="color: #4c9aff;">${escapeHtml(String(headerLabel))}</span></p>
         </td>
       </tr>
@@ -940,7 +961,7 @@ function renderGreatGrandchildrenLegacy(
   let greatGrandchildNo = 1;
   const renderGreatGrandchildRow = (greatGrandchild: EnhancedField) => {
     const greatGrandchildDescriptionHTML = generateFieldDescriptionLegacy(greatGrandchild, references);
-    const greatGrandchildRequiredHTML = generateRequiredCellLegacy(greatGrandchild);
+    const greatGrandchildRequiredHTML = generateRequiredCellLegacy(greatGrandchild, inheritedConditional);
     const greatGrandchildDefaultValue = formatDefaultValue(greatGrandchild.default, greatGrandchild.type);
     const greatGrandchildTypeDisplay = greatGrandchild.type === 'array' ? `Array [${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type;
     const greatGrandchildKeyDisplay = greatGrandchild.key.includes('.') ? greatGrandchild.key.split('.').pop() : greatGrandchild.key;
@@ -948,34 +969,23 @@ function renderGreatGrandchildrenLegacy(
     html += `
       <tr>
         <td style="${ZENDESK_CELL_STYLE}"></td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.2);">
-          <table style="width: 100%; border-collapse: collapse;">
-            <colgroup>
-              <col style="width: 8%;">
-              <col style="width: 12%;">
-              <col style="width: 80%;">
-            </colgroup>
-            <tr>
-              <td style="${ZENDESK_CELL_STYLE} border-right: 1px solid #d0d0d0;">&nbsp;</td>
-              <td style="${ZENDESK_CELL_STYLE} border-right: 1px solid #d0d0d0;">
-                <p style="text-align: center;">${rowNumber}.${currentChildNo}.${currentGrandchildNo}.${greatGrandchildNo++}</p>
-              </td>
-              <td style="${ZENDESK_CELL_STYLE}">
-                ${greatGrandchildDescriptionHTML}
-              </td>
-            </tr>
-          </table>
+        <td style="${ZENDESK_CELL_STYLE}"></td>
+        <td style="${ZENDESK_CELL_STYLE}">
+          <p style="text-align: center;">${rowNumber}.${currentChildNo}.${currentGrandchildNo}.${greatGrandchildNo++}</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.2);">
+        <td style="${ZENDESK_CELL_STYLE}">
+          ${greatGrandchildDescriptionHTML}
+        </td>
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">"${escapeHtml(greatGrandchildKeyDisplay || '')}"</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.2);">
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">${greatGrandchildTypeDisplay}</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.2);">
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">${greatGrandchildDefaultValue}</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.2);">
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">${greatGrandchildRequiredHTML}</p>
         </td>
       </tr>
@@ -994,7 +1004,8 @@ function renderGreatGrandchildrenLegacy(
     html += `
       <tr>
         <td style="${ZENDESK_CELL_STYLE}"></td>
-        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="5">
+        <td style="${ZENDESK_CELL_STYLE}"></td>
+        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="6">
           <p><span style="color: #4c9aff;">${escapeHtml(conditionLabel)}</span></p>
         </td>
       </tr>
@@ -1012,7 +1023,8 @@ function renderGrandchildrenLegacy(
   grandchildren: EnhancedField[],
   rowNumber: number,
   currentChildNo: number,
-  references?: Map<string, ReferenceInfo>
+  references?: Map<string, ReferenceInfo>,
+  inheritedConditional: boolean = false
 ): string {
   let html = '';
   const explicitSectionHeaders = grandchildren.filter((item) => item.type === 'section-header' || item.section);
@@ -1050,7 +1062,7 @@ function renderGrandchildrenLegacy(
     html += `
       <tr>
         <td style="${ZENDESK_CELL_STYLE}"></td>
-        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="5">
+        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="7">
           <p><span style="color: #4c9aff;">${escapeHtml(String(headerLabel))}</span></p>
         </td>
       </tr>
@@ -1061,7 +1073,7 @@ function renderGrandchildrenLegacy(
   const renderGrandchildRow = (grandchild: EnhancedField) => {
     const currentGrandchildNo = grandchildNo++;
     const grandchildDescriptionHTML = generateFieldDescriptionLegacy(grandchild, references);
-    const grandchildRequiredHTML = generateRequiredCellLegacy(grandchild);
+    const grandchildRequiredHTML = generateRequiredCellLegacy(grandchild, inheritedConditional);
     const grandchildDefaultValue = formatDefaultValue(grandchild.default, grandchild.type);
     const grandchildTypeDisplay = grandchild.type === 'array' ? `Array [${grandchild.items?.type || 'any'}]` : grandchild.type;
     const grandchildKeyDisplay = grandchild.key.includes('.') ? grandchild.key.split('.').pop() : grandchild.key;
@@ -1069,32 +1081,22 @@ function renderGrandchildrenLegacy(
     html += `
       <tr>
         <td style="${ZENDESK_CELL_STYLE}"></td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.3);">
-          <table style="width: 100%; border-collapse: collapse;">
-            <colgroup>
-              <col style="width: 10%;">
-              <col style="width: 90%;">
-            </colgroup>
-            <tr>
-              <td style="${ZENDESK_CELL_STYLE} border-right: 1px solid #d0d0d0;">
-                <p style="text-align: center;">${rowNumber}.${currentChildNo}.${currentGrandchildNo}</p>
-              </td>
-              <td style="${ZENDESK_CELL_STYLE}">
-                ${grandchildDescriptionHTML}
-              </td>
-            </tr>
-          </table>
+        <td style="${ZENDESK_CELL_STYLE}">
+          <p style="text-align: center;">${rowNumber}.${currentChildNo}.${currentGrandchildNo}</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.3);">
+        <td style="${ZENDESK_CELL_STYLE}" colspan="2">
+          ${grandchildDescriptionHTML}
+        </td>
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">"${escapeHtml(grandchildKeyDisplay || '')}"</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.3);">
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">${grandchildTypeDisplay}</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.3);">
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">${grandchildDefaultValue}</p>
         </td>
-        <td style="${ZENDESK_CELL_STYLE} background-color: rgba(240, 240, 240, 0.3);">
+        <td style="${ZENDESK_CELL_STYLE}">
           <p style="text-align: center;">${grandchildRequiredHTML}</p>
         </td>
       </tr>
@@ -1106,7 +1108,8 @@ function renderGrandchildrenLegacy(
         rowNumber,
         currentChildNo,
         currentGrandchildNo,
-        references
+        references,
+        inheritedConditional || isConditionalFieldLegacy(grandchild)
       );
     }
   };
@@ -1123,7 +1126,7 @@ function renderGrandchildrenLegacy(
     html += `
       <tr>
         <td style="${ZENDESK_CELL_STYLE}"></td>
-        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="5">
+        <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="7">
           <p><span style="color: #4c9aff;">${escapeHtml(conditionLabel)}</span></p>
         </td>
       </tr>
@@ -1137,17 +1140,15 @@ function renderGrandchildrenLegacy(
   return html;
 }
 
-// Zendesk 호환 테이블 스타일 (기존 Zendesk 문서와 동일한 형태)
-// 헤더: 배경색은 CSS에서 처리 (th { background-color: #3498db; color: white; })
+// Zendesk 호환 테이블 스타일 (inline styles)
 const ZENDESK_HEADER_STYLE = 'padding: 15px 5px 15px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;';
-// 일반 셀: 배경색은 CSS에서 처리 (tr:nth-child(even) { background-color: #f2f2f2; })
 const ZENDESK_CELL_STYLE = 'padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;';
 
 function generateTableHeaderLegacy(): string {
   return `
     <tr>
       <th style="${ZENDESK_HEADER_STYLE}">No.</th>
-      <th style="${ZENDESK_HEADER_STYLE}" colspan="2">Description</th>
+      <th style="${ZENDESK_HEADER_STYLE}" colspan="4">Description</th>
       <th style="${ZENDESK_HEADER_STYLE}">Key</th>
       <th style="${ZENDESK_HEADER_STYLE}">Value Type</th>
       <th style="${ZENDESK_HEADER_STYLE}">Default</th>
@@ -1157,11 +1158,9 @@ function generateTableHeaderLegacy(): string {
 }
 
 function generateSectionHeaderLegacy(sectionName: string): string {
-  // Zendesk 스타일: inline 배경색 + 파란 텍스트
-  // 전체 7개 열 병합 (No. ~ Required 까지 전체)
   return `
     <tr>
-      <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="7">
+      <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="9">
         <p><span style="color: #4c9aff;">${escapeHtml(sectionName)}</span></p>
       </td>
     </tr>
@@ -1316,7 +1315,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
       <td style="${ZENDESK_CELL_STYLE}"${rowspanAttr}>
         <p style="text-align: center;">${rowNumber}</p>
       </td>
-      <td style="${ZENDESK_CELL_STYLE}" colspan="2">
+      <td style="${ZENDESK_CELL_STYLE}" colspan="4">
         ${descriptionHTML}
       </td>
       <td style="${ZENDESK_CELL_STYLE}">
@@ -1336,6 +1335,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
 
   // 🔥 Zendesk 스타일: 중첩 필드는 No. 칼럼 없이, Description이 두 칼럼으로 분리 (인덱스 + 내용)
   if (hasChildren) {
+    const parentConditional = isConditionalFieldLegacy(field);
     // 🔥 3-depth 필드 조건별 그룹화
     const childrenWithoutCondition: EnhancedField[] = [];
     const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
@@ -1371,7 +1371,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
     // 🔥 조건 없는 children 먼저 렌더링
     for (const child of childrenWithoutCondition) {
       const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
-      const childRequiredHTML = generateRequiredCellLegacy(child);
+      const childRequiredHTML = generateRequiredCellLegacy(child, parentConditional);
       const childDefaultValue = formatDefaultValue(child.default, child.type);
       const childTypeDisplay = child.type === 'array' ? `Array [${child.items?.type || 'any'}]` : child.type;
 
@@ -1379,7 +1379,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
       const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
 
       // 🔥 Zendesk 스타일: child row는 No. 칼럼 없음 (rowspan으로 parent가 점유)
-      // Description이 두 개의 td로 분리: (서브인덱스) + (설명)
+      // D0에 인덱스, D1~D3에 설명 병합
       // 🔥 번호 형식: parent.child (예: 4.1, 4.2, 4.3) - Spec Tab과 동일
       const currentChildNo = childNo++;
       html += `
@@ -1387,7 +1387,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
           <td style="${ZENDESK_CELL_STYLE}">
             <p style="text-align: center;">${rowNumber}.${currentChildNo}</p>
           </td>
-          <td style="${ZENDESK_CELL_STYLE}">
+          <td style="${ZENDESK_CELL_STYLE}" colspan="3">
             ${childDescriptionHTML}
           </td>
           <td style="${ZENDESK_CELL_STYLE}">
@@ -1410,7 +1410,13 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
         ? child.children
         : materializeArrayItemChildren(child);
       if (effectiveGrandchildren.length > 0) {
-        html += renderGrandchildrenLegacy(effectiveGrandchildren, rowNumber, currentChildNo, references);
+        html += renderGrandchildrenLegacy(
+          effectiveGrandchildren,
+          rowNumber,
+          currentChildNo,
+          references,
+          parentConditional || isConditionalFieldLegacy(child)
+        );
       }
     }
 
@@ -1425,10 +1431,10 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
         ? `Required (When "${conditionName}" is ${conditionValue})`
         : `Optional (When "${conditionName}" is ${conditionValue})`;
       
-      // section-header 추가 (colspan=6: No. 칼럼은 부모의 rowspan이 점유)
+      // section-header 추가 (D0~D3 + Key~Required까지 병합)
       html += `
         <tr>
-          <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="6">
+          <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="8">
             <p><span style="color: #4c9aff;">${escapeHtml(conditionLabel)}</span></p>
           </td>
         </tr>
@@ -1436,7 +1442,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
 
       for (const child of children) {
         const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
-        const childRequiredHTML = generateRequiredCellLegacy(child);
+        const childRequiredHTML = generateRequiredCellLegacy(child, parentConditional);
         const childDefaultValue = formatDefaultValue(child.default, child.type);
         const childTypeDisplay = child.type === 'array' ? `Array [${child.items?.type || 'any'}]` : child.type;
 
@@ -1448,7 +1454,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
             <td style="${ZENDESK_CELL_STYLE}">
               <p style="text-align: center;">${rowNumber}.${currentChildNo}</p>
             </td>
-            <td style="${ZENDESK_CELL_STYLE}">
+            <td style="${ZENDESK_CELL_STYLE}" colspan="3">
               ${childDescriptionHTML}
             </td>
             <td style="${ZENDESK_CELL_STYLE}">
@@ -1471,7 +1477,13 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
           ? child.children
           : materializeArrayItemChildren(child);
         if (effectiveGrandchildren.length > 0) {
-          html += renderGrandchildrenLegacy(effectiveGrandchildren, rowNumber, currentChildNo, references);
+          html += renderGrandchildrenLegacy(
+            effectiveGrandchildren,
+            rowNumber,
+            currentChildNo,
+            references,
+            parentConditional || isConditionalFieldLegacy(child)
+          );
         }
       }
     }
@@ -1598,10 +1610,28 @@ function generateFieldDescriptionLegacy(field: EnhancedField, references?: Map<s
   return parts.join('\n');
 }
 
-function generateRequiredCellLegacy(field: EnhancedField): string {
+const isConditionalFieldLegacy = (field: EnhancedField): boolean => {
+  const fieldAny = field as any;
+  return Boolean(fieldAny['x-required-when']);
+};
+
+function generateRequiredCellLegacy(field: EnhancedField, _inheritedConditional: boolean = false): string {
+  const fieldAny = field as any;
+  if (fieldAny['x-required-when']) {
+    return '<span class="badge badge-conditional">Conditional</span>';
+  }
+
+  if (fieldAny['x-optional-when']) {
+    return '<span class="badge badge-optional">Optional</span>';
+  }
+
+  if (fieldAny._requiredByParent) {
+    return '<span class="badge badge-required">Required</span>';
+  }
+
   // 🔥 field.required가 undefined이거나 빈 객체인 경우 처리
   if (!field.required || Object.keys(field.required).length === 0) {
-    return 'Optional';
+    return '<span class="badge badge-optional">Optional</span>';
   }
 
   const requiredStatuses = Object.values(field.required);
@@ -1611,7 +1641,7 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
 
   // 🔥 1. Conditional 상태 처리
   if (hasConditional) {
-    return 'Conditional';
+    return '<span class="badge badge-conditional">Conditional</span>';
   }
 
   // 🔥 2. Required/Optional 혼재 (타입별로 다름) - Zendesk 스타일로 간소화
@@ -1624,21 +1654,21 @@ function generateRequiredCellLegacy(field: EnhancedField): string {
 
     const parts: string[] = [];
     if (grouped.required.length > 0) {
-      parts.push(`Required: ${grouped.required.join(', ')}`);
+      parts.push(`<span class="badge badge-required">Required</span>`);
     }
     if (grouped.optional.length > 0) {
-      parts.push(`Optional: ${grouped.optional.join(', ')}`);
+      parts.push(`<span class="badge badge-optional">Optional</span>`);
     }
-    return parts.join('<br>');
+    return parts.join(' ');
   }
 
   // 🔥 3. Required
   if (hasRequired) {
-    return 'Required';
+    return '<span class="badge badge-required">Required</span>';
   }
 
   // 🔥 4. Optional (기본값)
-  return 'Optional';
+  return '<span class="badge badge-optional">Optional</span>';
 }
 
 function _generateCSSLegacy(): string {
@@ -1795,6 +1825,11 @@ function _generateTransportSectionLegacy(schema: EnhancedSchema): string {
     </div>
   `;
 }
+
+void _generateCSSLegacy;
+void _generateInfoSectionLegacy;
+void _generateValidationArchitectureSectionLegacy;
+void _generateTransportSectionLegacy;
 
 // ============================================================================
 // Zendesk Compatible Table Generator (Inline Styles)

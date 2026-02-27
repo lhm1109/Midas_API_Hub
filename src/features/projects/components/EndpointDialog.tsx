@@ -58,13 +58,17 @@ export function EndpointDialog({
     // 예: "/DESIGN/STEEL/KDS-41-30-2022/HASSIGN" → "design/hassign"
     // 예: "/db/node" → "db/node"
     const cleanPath = path.trim().startsWith('/') ? path.trim().slice(1) : path.trim();
-    const pathSegments = cleanPath.split('/');
+    const pathSegments = cleanPath
+      .split('/')
+      .map((segment) => segment.trim())
+      .filter((segment) => segment.length > 0)
+      .map((segment) => segment.toLowerCase());
 
     if (pathSegments.length >= 2) {
-      // path가 /group/.../endpoint 형식인 경우: 첫 번째 + 마지막 세그먼트 사용
-      const groupFromPath = pathSegments[0].toLowerCase();
-      const endpointFromPath = pathSegments[pathSegments.length - 1].toLowerCase();
-      return `${groupFromPath}/${endpointFromPath}`;
+      if (pathSegments.length === 2) {
+        return `${pathSegments[0]}/${pathSegments[1]}`;
+      }
+      return pathSegments.join('/');
     }
 
     // path가 명확하지 않으면 fallback: groupName/nameSlug

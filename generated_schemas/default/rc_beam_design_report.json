@@ -1,0 +1,153 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "REPORT_TYPE",
+        "EXPORT_PATH",
+        "OUTPUT_NAME"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "REPORT_TYPE": {
+          "type": "string",
+          "description": "Report Table Type",
+          "enum": [
+            "RCBEAMDESIGN-MEMB",
+            "RCBEAMDESIGN-PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type",
+            "order": 1
+          }
+        },
+        "CURRENT_MODE_MEMB": {
+          "type": "string",
+          "description": "Report output mode for element-based report",
+          "oneOf": [
+            {
+              "title": "Graphic (JPG image)",
+              "const": "Graphic"
+            },
+            {
+              "title": "Detail (DOC document)",
+              "const": "Detail"
+            },
+            {
+              "title": "Summary (TXT text)",
+              "const": "Summary"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 2
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCBEAMDESIGN-MEMB"
+          }
+        },
+        "CURRENT_MODE_PROP": {
+          "type": "string",
+          "description": "Report output mode for property-based report",
+          "oneOf": [
+            {
+              "title": "Graphic (JPG image)",
+              "const": "Graphic"
+            },
+            {
+              "title": "Summary (TXT text)",
+              "const": "Summary"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 2
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCBEAMDESIGN-PROP"
+          }
+        },
+        "ELEMENT_LIST": {
+          "type": "array",
+          "description": "List of element numbers to include in the report",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Element Numbers",
+            "order": 3
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCBEAMDESIGN-MEMB"
+          }
+        },
+        "SECTION_LIST": {
+          "type": "array",
+          "description": "List of section numbers to include in the report",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Section Numbers",
+            "order": 3
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCBEAMDESIGN-PROP"
+          }
+        },
+        "DETAIL_POSITIONS": {
+          "type": "object",
+          "description": "Print positions for Detail report",
+          "properties": {
+            "END_I": {
+              "type": "boolean",
+              "description": "Include End I position",
+              "default": true
+            },
+            "MID": {
+              "type": "boolean",
+              "description": "Include Mid position",
+              "default": false
+            },
+            "END_J": {
+              "type": "boolean",
+              "description": "Include End J position",
+              "default": false
+            }
+          },
+          "x-ui": {
+            "label": "Option for Detail Print Position",
+            "order": 4
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "RCBEAMDESIGN-MEMB"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Directory path to save the report files",
+          "x-ui": {
+            "hint": "e.g. C:\\MIDAS\\Report\\",
+            "label": "Export Path",
+            "order": 5
+          }
+        },
+        "OUTPUT_NAME": {
+          "type": "string",
+          "description": "Output file base name. For multiple elements, files are prefixed with index and element number (e.g. 001_E859_filename.jpg, 002_E1_filename.jpg)",
+          "x-ui": {
+            "label": "Output File Name",
+            "order": 6
+          }
+        }
+      }
+    }
+  }
+}

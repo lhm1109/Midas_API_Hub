@@ -1,0 +1,151 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "RESULT": {
+          "type": "integer",
+          "description": "Filter results by design status",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "All",
+              "const": 0
+            },
+            {
+              "title": "OK",
+              "const": 1
+            },
+            {
+              "title": "NG",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Result View Option",
+            "order": 2
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "HCBM",
+              "Section",
+              "Bc-I",
+              "Hc-I",
+              "Bc-J",
+              "Hc-J",
+              "POS",
+              "N(-)Mu",
+              "LCB_NegMu",
+              "AsTop",
+              "Rebar_Top",
+              "P(+)Mu",
+              "LCB_PosMu",
+              "AsBot",
+              "Rebar_Bot",
+              "Vu",
+              "LCB_Vu",
+              "AsV",
+              "Stirrup",
+              "CHK"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels": {
+            "HCBM": "Haunched Beam Number",
+            "Section": "Section Property Name",
+            "Bc-I": "Width at I-end of Member",
+            "Hc-I": "Height at I-end of Member",
+            "Bc-J": "Width at J-end of Member",
+            "Hc-J": "Height at J-end of Member",
+            "POS": "Automatic Design Positions (I, M, J)",
+            "N(-)Mu": "Maximum Factored Negative Moment",
+            "LCB_NegMu": "Load Combination for Negative Moment",
+            "AsTop": "Area of Required Top Rebars",
+            "Rebar_Top": "Top Rebar Configuration (Rebar(AsTop))",
+            "P(+)Mu": "Maximum Factored Positive Moment",
+            "LCB_PosMu": "Load Combination for Positive Moment",
+            "AsBot": "Area of Required Bottom Rebars",
+            "Rebar_Bot": "Bottom Rebar Configuration (Rebar(AsBot))",
+            "Vu": "Maximum Factored Shear Force",
+            "LCB_Vu": "Load Combination for Shear",
+            "AsV": "Shear Reinforcing Steel Area (LengthUnit²/LengthUnit × 100)",
+            "Stirrup": "Required Stirrup Spacing",
+            "CHK": "Status of Design Results (OK, N**, *P*, **V, NP*, *PV, N*V, NPV)"
+          }
+        }
+      }
+    }
+  }
+}

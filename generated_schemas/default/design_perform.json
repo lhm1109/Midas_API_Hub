@@ -1,5 +1,15 @@
 {
-  "title": "design/perform",
   "type": "object",
-  "properties": {}
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "description": "Execute design calculation",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  }
 }

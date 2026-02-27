@@ -521,6 +521,7 @@ function renderGroupTree(
             isOver={deps.activeDroppableId === DndId.groupContainer(productId, group.id)}
           >
             <SortableContext
+              id={DndId.groupContainer(productId, group.id)}
               items={subgroupItems}
               strategy={verticalListSortingStrategy}
             >
@@ -545,6 +546,7 @@ function renderGroupTree(
             isOver={deps.activeDroppableId === DndId.endpointContainer(productId, group.id)}
           >
             <SortableContext
+              id={DndId.endpointContainer(productId, group.id)}
               items={endpointItems}
               strategy={verticalListSortingStrategy}
             >
@@ -855,6 +857,33 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     return null;
   };
 
+  // ???ш??곸쑝濡?洹몃৯怨?遺紐? ?뺣낫 李얘린
+  const findGroupWithParent = (
+    groups: ApiGroup[],
+    groupId: string,
+    parentId: string | null
+  ): { group: ApiGroup; parentId: string | null } | null => {
+    for (const group of groups) {
+      if (group.id === groupId) {
+        return { group, parentId };
+      }
+      if (group.subgroups && group.subgroups.length > 0) {
+        const result = findGroupWithParent(group.subgroups, groupId, group.id);
+        if (result) return result;
+      }
+    }
+    return null;
+  };
+
+  // ???ш??곸쑝濡?洹몃９ ?먯떇/??손?뺤씤 (自??ڷ? 諛⑹?)
+  const isDescendantGroup = (parent: ApiGroup, candidateId: string): boolean => {
+    for (const sg of parent.subgroups ?? []) {
+      if (sg.id === candidateId) return true;
+      if (isDescendantGroup(sg, candidateId)) return true;
+    }
+    return false;
+  };
+
   const handleGroupDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -865,88 +894,149 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     const activeId = String(active.id);
     const overId = String(over.id);
 
-    // ✅ 새로운 ID 체계: g:{groupId}
+    // ???????ID ???: g:{groupId}
     const activeParsed = parseDndId(activeId);
     const overParsed = parseDndId(overId);
 
-    if (activeParsed.type !== 'group' || overParsed.type !== 'group') {
+    if (activeParsed.type !== 'group') {
       console.error('Invalid group drag IDs:', { activeId, overId });
       return;
     }
 
-    // 그룹 찾기
-    let activeGroup: ApiGroup | null = null;
-    let overGroup: ApiGroup | null = null;
-    let activeProduct: ApiProduct | null = null;
-    let overProduct: ApiProduct | null = null;
+    // active group & parent/product info
+    let activeInfo: { group: ApiGroup; parentId: string | null; product: ApiProduct } | null = null;
+    let overInfo: { group: ApiGroup; parentId: string | null; product: ApiProduct } | null = null;
 
     for (const product of products) {
-      const foundActive = findGroupById(product.groups, activeParsed.itemId);
-      const foundOver = findGroupById(product.groups, overParsed.itemId);
-      if (foundActive) {
-        activeGroup = foundActive;
-        activeProduct = product;
+      if (!activeInfo) {
+        const foundActive = findGroupWithParent(product.groups, activeParsed.itemId, null);
+        if (foundActive) {
+          activeInfo = { ...foundActive, product };
+        }
       }
-      if (foundOver) {
-        overGroup = foundOver;
-        overProduct = product;
+      if (overParsed.type === 'group' && !overInfo) {
+        const foundOver = findGroupWithParent(product.groups, overParsed.itemId, null);
+        if (foundOver) {
+          overInfo = { ...foundOver, product };
+        }
       }
     }
 
-    if (!activeGroup || !overGroup || !activeProduct || !overProduct) {
-      console.error('Groups not found:', { activeId, overId });
+    if (!activeInfo) {
+      console.error('Active group not found:', activeId);
       return;
     }
 
-    // 같은 제품 내에서만 그룹 순서 변경 가능 (일단)
-    if (activeProduct.id !== overProduct.id) {
-      console.log('⚠️ Cross-product group move not supported yet');
+    // === Move to subgroup container (become child) ===
+    if (overParsed.type === 'groupContainer') {
+      const targetProductId = overParsed.productId;
+      const targetParentId = overParsed.containerParentId === 'root' ? null : overParsed.containerParentId;
+
+      if (!targetProductId) {
+        console.error('Invalid group container target:', overId);
+        return;
+      }
+
+      if (targetProductId !== activeInfo.product.id) {
+        console.log('??? Cross-product group move not supported');
+        return;
+      }
+
+      if (targetParentId === activeInfo.group.id) {
+        alert('??Group cannot be moved into itself.');
+        return;
+      }
+
+      if (targetParentId && isDescendantGroup(activeInfo.group, targetParentId)) {
+        alert('??Cannot move a group into its own subgroup.');
+        return;
+      }
+
+      if (targetParentId === activeInfo.parentId) {
+        console.log('??? Same parent container, no move needed');
+        return;
+      }
+
+      try {
+        const result = await apiClient.moveGroup(activeInfo.group.id, targetParentId);
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        console.log('??Group moved successfully');
+        if (onEndpointsChange) {
+          onEndpointsChange();
+        }
+      } catch (error) {
+        console.error('Failed to move group:', error);
+        alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
       return;
     }
 
-    // 같은 부모 내의 그룹들만 재정렬
-    // TODO: cross-parent group move 지원
-    const parentGroups = activeProduct.groups; // root level만 일단 지원
+    // === Reorder within same parent ===
+    if (overParsed.type === 'group') {
+      if (!overInfo) {
+        console.error('Over group not found:', overId);
+        return;
+      }
 
-    const oldIndex = parentGroups.findIndex((g) => g.id === activeParsed.itemId);
-    const newIndex = parentGroups.findIndex((g) => g.id === overParsed.itemId);
+      if (activeInfo.product.id !== overInfo.product.id) {
+        console.log('??? Cross-product group reorder not supported');
+        return;
+      }
 
-    if (oldIndex === -1 || newIndex === -1) {
-      console.log('⚠️ Groups not at root level, nested group reorder not yet supported');
+      if (activeInfo.parentId !== overInfo.parentId) {
+        console.log('??? Different parents - drop into subgroup container to move');
+        return;
+      }
+
+      const getGroupSiblings = (product: ApiProduct, parentId: string | null) => {
+        if (!parentId) return product.groups;
+        const parentGroup = findGroupById(product.groups, parentId);
+        return parentGroup?.subgroups ?? [];
+      };
+
+      const siblings = getGroupSiblings(activeInfo.product, activeInfo.parentId);
+      const oldIndex = siblings.findIndex((g) => g.id === activeInfo.group.id);
+      const newIndex = siblings.findIndex((g) => g.id === overInfo.group.id);
+
+      if (oldIndex === -1 || newIndex === -1) {
+        console.error('??Index not found for group reorder:', { oldIndex, newIndex });
+        return;
+      }
+
+      console.log('?? Reorder groups:', {
+        product: activeInfo.product.id,
+        parent: activeInfo.parentId || 'root',
+        from: oldIndex,
+        to: newIndex,
+      });
+
+      const reorderedGroups = arrayMove(siblings, oldIndex, newIndex);
+      const updates = reorderedGroups.map((group, index) => ({
+        id: group.id,
+        order_index: index,
+      }));
+
+      try {
+        const result = await apiClient.reorderGroups(updates);
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        console.log('??Groups reordered successfully');
+        if (onEndpointsChange) {
+          onEndpointsChange();
+        }
+      } catch (error) {
+        console.error('Failed to reorder groups:', error);
+        alert(`??Reorder failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
       return;
     }
 
-    console.log('🔄 Reorder groups:', {
-      product: activeProduct.id,
-      from: oldIndex,
-      to: newIndex,
-    });
-
-    // 순서 변경
-    const reorderedGroups = arrayMove(parentGroups, oldIndex, newIndex);
-
-    // order_index 업데이트
-    const updates = reorderedGroups.map((group, index) => ({
-      id: group.id,
-      order_index: index,
-    }));
-
-    try {
-      const result = await apiClient.reorderGroups(updates);
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      console.log('✅ Groups reordered successfully');
-
-      // UI 업데이트
-      if (onEndpointsChange) {
-        onEndpointsChange();
-      }
-    } catch (error) {
-      console.error('Failed to reorder groups:', error);
-      alert(`❌ Reorder failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+    console.log('??? Unsupported group drop target:', overParsed.type);
   };
 
   const toggleProduct = (productId: string) => {
@@ -1521,6 +1611,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
                       isOver={activeDroppableId === DndId.rootGroupContainer(product.id)}
                     >
                       <SortableContext
+                        id={DndId.rootGroupContainer(product.id)}
                         items={product.groups.map(g => DndId.groupItem(g.id))}
                         strategy={verticalListSortingStrategy}
                       >

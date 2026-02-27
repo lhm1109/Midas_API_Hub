@@ -261,6 +261,40 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     return 'Optional'; // Default fallback
   };
 
+  const formatDefaultValue = (value: any): string => {
+    if (value === undefined || value === null) return '-';
+
+    if (Array.isArray(value)) {
+      return `[${value.map((item) => formatDefaultValue(item)).join(', ')}]`;
+    }
+
+    if (typeof value === 'string') return `"${value}"`;
+    if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+    if (typeof value === 'object') return JSON.stringify(value);
+
+    return String(value);
+  };
+
+  const isConditionalField = (field: any): boolean => {
+    return Boolean(field?.['x-required-when'] || field?.['x-optional-when']);
+  };
+
+  const getRequiredLabel = (field: any, _inheritedConditional: boolean = false): string => {
+    if (field?.['x-required-when']) {
+      return 'Conditional';
+    }
+
+    if (field?.['x-optional-when']) {
+      return 'Optional';
+    }
+
+    if (field?._requiredByParent) {
+      return 'Required';
+    }
+
+    return formatRequiredStatus(field?.required);
+  };
+
   // 🔥 NEW: UI Schema Adapter로 테이블 스키마 생성
   const tableParameters = useMemo(() => {
     // 🔥 현재 schemaView에 맞는 schemaType 결정
@@ -328,13 +362,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               no: rowNumber++,
               name: field.key,
               type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
-              default: field.default !== undefined ? String(field.default) : '-',
+              default: formatDefaultValue(field.default),
               description: field.ui?.label || field.description || field.key,
-              required: formatRequiredStatus(field.required),
+              required: getRequiredLabel(field),
             };
 
             // 중첩 필드 처리 - 조건별 그룹화 지원
             if (field.children && field.children.length > 0) {
+              const parentConditional = isConditionalField(field);
               // 🔥 3-depth 필드들을 조건별로 그룹화
               const childSectionHeaders = field.children.filter((c: any) => c.type === 'section-header' || c.section);
               const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header' && !c.section);
@@ -386,8 +421,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 });
               };
 
-              const mapGrandchildren = (grandchildren: any[], parentNo: string, parentField?: any) => {
-                const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string, grandParentField?: any) => {
+              const mapGrandchildren = (grandchildren: any[], parentNo: string, parentField?: any, inheritedConditional: boolean = false) => {
+                const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string, grandParentField?: any, inheritedConditionalForGreat: boolean = false) => {
                   const resolvedGreatGrandchildren = greatGrandchildren.length > 0
                     ? greatGrandchildren
                     : buildArrayItemChildren(grandParentField);
@@ -410,11 +445,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       no: `${grandParentNo}.${greatGrandchildNo++}`,
                       name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
                       type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
-                      default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                      default: formatDefaultValue(greatGrandchild.default),
                       description: buildFieldDescription(greatGrandchild, tableDefinition),
-                      required: greatGrandchild['x-required-when'] ? 'Conditional' :
-                        greatGrandchild['x-optional-when'] ? 'Optional' :
-                          formatRequiredStatus(greatGrandchild.required),
+                      required: getRequiredLabel(greatGrandchild, inheritedConditionalForGreat),
                     });
                   }
 
@@ -439,11 +472,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         no: `${grandParentNo}.${greatGrandchildNo++}`,
                         name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
                         type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
-                        default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                        default: formatDefaultValue(greatGrandchild.default),
                         description: buildFieldDescription(greatGrandchild, tableDefinition),
-                        required: greatGrandchild['x-required-when'] ? 'Conditional' :
-                          greatGrandchild['x-optional-when'] ? 'Optional' :
-                            formatRequiredStatus(greatGrandchild.required),
+                        required: getRequiredLabel(greatGrandchild, inheritedConditionalForGreat),
                       });
                     }
                   }
@@ -482,15 +513,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     no: `${parentNo}.${grandchildNo++}`,
                     name: grandchild.key.split('.').pop() || grandchild.key,
                     type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
-                    default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                    default: formatDefaultValue(grandchild.default),
                     description: buildFieldDescription(grandchild, tableDefinition),
-                    required: grandchild['x-required-when'] ? 'Conditional' :
-                      grandchild['x-optional-when'] ? 'Optional' :
-                        formatRequiredStatus(grandchild.required),
+                    required: getRequiredLabel(grandchild, inheritedConditional),
                   };
 
                   if (grandchild.children && grandchild.children.length > 0) {
-                    mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
+                    mappedGrandchild.children = mapGreatGrandchildren(
+                      grandchild.children,
+                      `${parentNo}.${grandchildNo - 1}`,
+                      grandchild,
+                      inheritedConditional || isConditionalField(grandchild)
+                    );
                   }
 
                   mappedGrandchildren.push(mappedGrandchild);
@@ -517,15 +551,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       no: `${parentNo}.${grandchildNo++}`,
                       name: grandchild.key.split('.').pop() || grandchild.key,
                       type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
-                      default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                      default: formatDefaultValue(grandchild.default),
                       description: buildFieldDescription(grandchild, tableDefinition),
-                      required: grandchild['x-required-when'] ? 'Conditional' :
-                        grandchild['x-optional-when'] ? 'Optional' :
-                          formatRequiredStatus(grandchild.required),
+                      required: getRequiredLabel(grandchild, inheritedConditional),
                     };
 
                     if (grandchild.children && grandchild.children.length > 0) {
-                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
+                      mappedGrandchild.children = mapGreatGrandchildren(
+                        grandchild.children,
+                        `${parentNo}.${grandchildNo - 1}`,
+                        grandchild,
+                        inheritedConditional || isConditionalField(grandchild)
+                      );
                     }
 
                     mappedGrandchildren.push(mappedGrandchild);
@@ -542,16 +579,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   no: `${rowNumber - 1}.${currentNo}`,
                   name: child.key.split('.').pop() || child.key,
                   type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
-                  default: child.default !== undefined ? String(child.default) : '-',
+                  default: formatDefaultValue(child.default),
                   description: buildFieldDescription(child, tableDefinition),
-                  required: child['x-required-when'] ? 'Conditional' :
-                    child['x-optional-when'] ? 'Optional' :
-                      formatRequiredStatus(child.required),
+                  required: getRequiredLabel(child, parentConditional),
                 };
 
                 // 🔥 3-depth: Grandchildren mapping
                 if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
-                  mappedChild.children = mapGrandchildren(child.children || [], `${rowNumber - 1}.${currentNo}`, child);
+                  mappedChild.children = mapGrandchildren(
+                    child.children || [],
+                    `${rowNumber - 1}.${currentNo}`,
+                    child,
+                    parentConditional || isConditionalField(child)
+                  );
                 }
 
                 param.children.push(mappedChild);
@@ -586,18 +626,26 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     no: `${rowNumber - 1}.${currentNo}`,
                     name: child.key.split('.').pop() || child.key,
                     type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
-                    default: child.default !== undefined ? String(child.default) : '-',
+                    default: formatDefaultValue(child.default),
                     description: buildFieldDescription(child, tableDefinition),
-                    required: child['x-required-when'] ? 'Conditional' :
-                      child['x-optional-when'] ? 'Optional' :
-                        formatRequiredStatus(child.required),
+                    required: getRequiredLabel(child, parentConditional),
                   };
 
                   // 🔥 3-depth: Grandchildren mapping
                   if (child.children && child.children.length > 0) {
-                    mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`, child);
+                    mappedChild.children = mapGrandchildren(
+                      child.children,
+                      `${rowNumber - 1}.${currentNo}`,
+                      child,
+                      parentConditional || isConditionalField(child)
+                    );
                   } else if (child.type === 'array' && child.items?.properties) {
-                    mappedChild.children = mapGrandchildren([], `${rowNumber - 1}.${currentNo}`, child);
+                    mappedChild.children = mapGrandchildren(
+                      [],
+                      `${rowNumber - 1}.${currentNo}`,
+                      child,
+                      parentConditional || isConditionalField(child)
+                    );
                   }
 
                   param.children.push(mappedChild);
@@ -651,13 +699,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 no: rowNumber++,
                 name: field.key,
                 type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
-                default: field.default !== undefined ? String(field.default) : '-',
+                default: formatDefaultValue(field.default),
                 description: field.ui?.label || field.description || field.key,
-                required: formatRequiredStatus(field.required),
+                required: getRequiredLabel(field),
               };
 
               // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
               if (field.children && field.children.length > 0) {
+                const parentConditional = isConditionalField(field);
                 let childNo = 1;
 
                 const buildArrayItemChildren = (arrayField: any) => {
@@ -686,8 +735,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   });
                 };
 
-                const mapGrandchildren = (grandchildren: any[], parentNo: string, parentField?: any) => {
-                  const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string, grandParentField?: any) => {
+                const mapGrandchildren = (grandchildren: any[], parentNo: string, parentField?: any, inheritedConditional: boolean = false) => {
+                  const mapGreatGrandchildren = (greatGrandchildren: any[], grandParentNo: string, grandParentField?: any, inheritedConditionalForGreat: boolean = false) => {
                     const resolvedGreatGrandchildren = greatGrandchildren.length > 0
                       ? greatGrandchildren
                       : buildArrayItemChildren(grandParentField);
@@ -719,11 +768,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         no: `${grandParentNo}.${greatGrandchildNo++}`,
                         name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
                         type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
-                        default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                        default: formatDefaultValue(greatGrandchild.default),
                         description: buildFieldDescription(greatGrandchild, tableDefinition),
-                        required: greatGrandchild['x-required-when'] ? 'Conditional' :
-                          greatGrandchild['x-optional-when'] ? 'Optional' :
-                            greatGrandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                        required: getRequiredLabel(greatGrandchild, inheritedConditionalForGreat),
                       });
                     }
 
@@ -748,11 +795,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                           no: `${grandParentNo}.${greatGrandchildNo++}`,
                           name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
                           type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
-                          default: greatGrandchild.default !== undefined ? String(greatGrandchild.default) : '-',
+                          default: formatDefaultValue(greatGrandchild.default),
                           description: buildFieldDescription(greatGrandchild, tableDefinition),
-                          required: greatGrandchild['x-required-when'] ? 'Conditional' :
-                            greatGrandchild['x-optional-when'] ? 'Optional' :
-                              greatGrandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                          required: getRequiredLabel(greatGrandchild, inheritedConditionalForGreat),
                         });
                       }
                     }
@@ -782,15 +827,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       no: `${parentNo}.${grandchildNo++}`,
                       name: grandchild.key.split('.').pop() || grandchild.key,
                       type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
-                      default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                      default: formatDefaultValue(grandchild.default),
                       description: buildFieldDescription(grandchild, tableDefinition),
-                      required: grandchild['x-required-when'] ? 'Conditional' :
-                        grandchild['x-optional-when'] ? 'Optional' :
-                          grandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                      required: getRequiredLabel(grandchild, inheritedConditional),
                     };
 
                     if (grandchild.children && grandchild.children.length > 0) {
-                      mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
+                      mappedGrandchild.children = mapGreatGrandchildren(
+                        grandchild.children,
+                        `${parentNo}.${grandchildNo - 1}`,
+                        grandchild,
+                        inheritedConditional || isConditionalField(grandchild)
+                      );
                     }
 
                     mappedGrandchildren.push(mappedGrandchild);
@@ -817,15 +865,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         no: `${parentNo}.${grandchildNo++}`,
                         name: grandchild.key.split('.').pop() || grandchild.key,
                         type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
-                        default: grandchild.default !== undefined ? String(grandchild.default) : '-',
+                        default: formatDefaultValue(grandchild.default),
                         description: buildFieldDescription(grandchild, tableDefinition),
-                        required: grandchild['x-required-when'] ? 'Conditional' :
-                          grandchild['x-optional-when'] ? 'Optional' :
-                            grandchild.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                        required: getRequiredLabel(grandchild, inheritedConditional),
                       };
 
                       if (grandchild.children && grandchild.children.length > 0) {
-                        mappedGrandchild.children = mapGreatGrandchildren(grandchild.children, `${parentNo}.${grandchildNo - 1}`, grandchild);
+                        mappedGrandchild.children = mapGreatGrandchildren(
+                          grandchild.children,
+                          `${parentNo}.${grandchildNo - 1}`,
+                          grandchild,
+                          inheritedConditional || isConditionalField(grandchild)
+                        );
                       }
 
                       mappedGrandchildren.push(mappedGrandchild);
@@ -854,15 +905,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     no: `${rowNumber - 1}.${currentNo}`,
                     name: child.key.split('.').pop() || child.key,
                     type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
-                    default: child.default !== undefined ? String(child.default) : '-',
+                    default: formatDefaultValue(child.default),
                     description: buildFieldDescription(child, tableDefinition),
-                    required: child['x-required-when'] ? 'Conditional' :
-                      child['x-optional-when'] ? 'Optional' :
-                        child.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                    required: getRequiredLabel(child, parentConditional),
                   };
 
                   if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
-                    mappedChild.children = mapGrandchildren(child.children || [], `${rowNumber - 1}.${currentNo}`, child);
+                    mappedChild.children = mapGrandchildren(
+                      child.children || [],
+                      `${rowNumber - 1}.${currentNo}`,
+                      child,
+                      parentConditional || isConditionalField(child)
+                    );
                   }
 
                   param.children.push(mappedChild);
@@ -890,17 +944,25 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       no: `${rowNumber - 1}.${currentNo}`,
                       name: child.key.split('.').pop() || child.key,
                       type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
-                      default: child.default !== undefined ? String(child.default) : '-',
+                      default: formatDefaultValue(child.default),
                       description: buildFieldDescription(child, tableDefinition),
-                      required: child['x-required-when'] ? 'Conditional' :
-                        child['x-optional-when'] ? 'Optional' :
-                          child.required?.['*'] === 'required' ? 'Required' : 'Optional',
+                      required: getRequiredLabel(child, parentConditional),
                     };
 
                     if (child.children && child.children.length > 0) {
-                      mappedChild.children = mapGrandchildren(child.children, `${rowNumber - 1}.${currentNo}`);
+                      mappedChild.children = mapGrandchildren(
+                        child.children,
+                        `${rowNumber - 1}.${currentNo}`,
+                        child,
+                        parentConditional || isConditionalField(child)
+                      );
                     } else if (child.type === 'array' && child.items?.properties) {
-                      mappedChild.children = mapGrandchildren([], `${rowNumber - 1}.${currentNo}`, child);
+                      mappedChild.children = mapGrandchildren(
+                        [],
+                        `${rowNumber - 1}.${currentNo}`,
+                        child,
+                        parentConditional || isConditionalField(child)
+                      );
                     }
 
                     param.children.push(mappedChild);
@@ -965,9 +1027,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           no: rowNumber++,
           name: field.key,
           type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
-          default: field.default !== undefined ? String(field.default) : '-',
+          default: formatDefaultValue(field.default),
           description: field.ui?.label || field.description || field.key,
-          required: formatRequiredStatus(field.required),
+          required: getRequiredLabel(field),
         });
       }
     }

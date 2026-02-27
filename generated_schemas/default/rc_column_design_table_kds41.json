@@ -1,0 +1,268 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "PRI_SORT": {
+          "type": "integer",
+          "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "SECT",
+              "const": 0
+            },
+            {
+              "title": "MEMB",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Primary Sorting Option",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "MEMB"
+          }
+        },
+        "RESULT": {
+          "type": "integer",
+          "description": "Filter results by design status",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "All",
+              "const": 0
+            },
+            {
+              "title": "OK",
+              "const": 1
+            },
+            {
+              "title": "NG",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Result View Option",
+            "order": 3
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MEMB",
+              "SECT",
+              "Section",
+              "Bc",
+              "Hc",
+              "fck",
+              "Height",
+              "fy",
+              "fys",
+              "LCB",
+              "¥õPn.max",
+              "Pu",
+              "¥õPn",
+              "Rat-P",
+              "Mc",
+              "¥õMn",
+              "Rat-M",
+              "Rat-My",
+              "Rat-Mz",
+              "Mc/Pu",
+              "Mcz/Mcy",
+              "Ast",
+              "V-Rebar",
+              "LCB_Vu",
+              "Vu.end",
+              "Vu.mid",
+              "Rat-V.end",
+              "Rat-V.mid",
+              "As-H.end",
+              "As-H.mid",
+              "H-Rebar.end",
+              "H-Rebar.mid",
+              "CHK"
+            ]
+          },
+          "x-ui": {
+            "label": "Components",
+            "order": 8
+          },
+          "x-enum-labels-by-type": {
+            "MEMB": {
+              "As-H.end": "Reinforcing Steel Area for Shear at End",
+              "As-H.mid": "Reinforcing Steel Area for Shear at Mid",
+              "Ast": "Quantity of Main Rebars",
+              "Bc": "Width of Column Member",
+              "CHK": "Status of Design Results",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Main Rebars",
+              "fys": "Design Yield Strength of Shear Rebars",
+              "H-Rebar.end": "Shear Rebar at End",
+              "H-Rebar.mid": "Shear Rebar at Mid",
+              "Hc": "Depth of Column Member",
+              "Height": "Height of Column Member",
+              "LCB": "Load Combination for P-M Interaction",
+              "LCB_Vu": "Load Combination for Shear Force",
+              "Mc": "Factored Moment",
+              "Mc/Pu": "Eccentricity",
+              "Mcz/Mcy": "Moment Rotation (Mcz/Mcy)",
+              "MEMB": "Element Number",
+              "Pu": "Factored Axial Force",
+              "Rat-M": "Moment Strength Ratio (Mc/¥õMn)",
+              "Rat-My": "Y-axis Moment Strength Ratio",
+              "Rat-Mz": "Z-axis Moment Strength Ratio",
+              "Rat-P": "Axial Strength Ratio (Pu/¥õPn)",
+              "Rat-V.end": "Shear Strength Ratio at End (Vu/¥õVn)",
+              "Rat-V.mid": "Shear Strength Ratio at Mid (Vu/¥õVn)",
+              "SECT": "Section Property Number",
+              "Section": "Sectional Shape",
+              "V-Rebar": "Vertical Rebar",
+              "Vu.end": "Maximum Factored Shear Force at End",
+              "Vu.mid": "Maximum Factored Shear Force at Mid",
+              "¥õMn": "Design Moment Strength",
+              "¥õPn": "Design Axial Strength",
+              "¥õPn.max": "Maximum Design Axial Strength"
+            },
+            "PROP": {
+              "As-H.end": "Reinforcing Steel Area for Shear at End (Maximum for Property)",
+              "As-H.mid": "Reinforcing Steel Area for Shear at Mid (Maximum for Property)",
+              "Ast": "Quantity of Main Rebars (Maximum for Property)",
+              "Bc": "Width of Column Member",
+              "CHK": "Status of Design Results",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Main Rebars",
+              "fys": "Design Yield Strength of Shear Rebars",
+              "H-Rebar.end": "Shear Rebar at End",
+              "H-Rebar.mid": "Shear Rebar at Mid",
+              "Hc": "Depth of Column Member",
+              "Height": "Height of Column Member",
+              "LCB": "Load Combination for P-M Interaction",
+              "LCB_Vu": "Load Combination for Shear Force",
+              "Mc": "Factored Moment (Maximum for Property)",
+              "Mc/Pu": "Eccentricity",
+              "Mcz/Mcy": "Moment Rotation (Mcz/Mcy)",
+              "MEMB": "Element Number (0 for Property-based)",
+              "Pu": "Factored Axial Force (Maximum for Property)",
+              "Rat-M": "Moment Strength Ratio (Mc/¥õMn, Maximum for Property)",
+              "Rat-My": "Y-axis Moment Strength Ratio",
+              "Rat-Mz": "Z-axis Moment Strength Ratio",
+              "Rat-P": "Axial Strength Ratio (Pu/¥õPn, Maximum for Property)",
+              "Rat-V.end": "Shear Strength Ratio at End (Vu/¥õVn, Maximum for Property)",
+              "Rat-V.mid": "Shear Strength Ratio at Mid (Vu/¥õVn, Maximum for Property)",
+              "SECT": "Section Property Number",
+              "Section": "Sectional Shape",
+              "V-Rebar": "Vertical Rebar",
+              "Vu.end": "Maximum Factored Shear Force at End (Maximum for Property)",
+              "Vu.mid": "Maximum Factored Shear Force at Mid (Maximum for Property)",
+              "¥õMn": "Design Moment Strength",
+              "¥õPn": "Design Axial Strength",
+              "¥õPn.max": "Maximum Design Axial Strength"
+            }
+          }
+        },
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "RC Column Design Result",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name",
+            "order": 4
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "MEMB",
+            "PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type",
+            "order": 1
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path",
+            "order": 5
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "default": "System",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings",
+            "order": 6
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "default": "System",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format",
+            "order": 7
+          }
+        }
+      }
+    }
+  }
+}

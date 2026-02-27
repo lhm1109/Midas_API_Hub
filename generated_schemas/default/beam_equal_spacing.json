@@ -1,0 +1,108 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "MEMBER_SELECTION",
+            "ASSIGN_TYPE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "MEMBER_SELECTION": {
+              "type": "string",
+              "description": "Select all members or specific members by selection",
+              "default": "All",
+              "oneOf": [
+                {
+                  "title": "All",
+                  "const": "All"
+                },
+                {
+                  "title": "By Selection",
+                  "const": "By Selection"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Member Selection",
+                "order": 1
+              }
+            },
+            "ASSIGN_TYPE": {
+              "type": "string",
+              "description": "Assign to all or straight line",
+              "default": "All",
+              "oneOf": [
+                {
+                  "title": "All",
+                  "const": "All"
+                },
+                {
+                  "title": "Straight Line",
+                  "const": "Straight Line"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Assign Type",
+                "order": 2
+              }
+            },
+            "SELECTED_MEMBERS": {
+              "type": "array",
+              "description": "Node and element list pairs when MEMBER_SELECTION is 'By Selection'",
+              "items": {
+                "type": "object",
+                "required": [
+                  "NODE",
+                  "ELEMENTS"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "NODE": {
+                    "type": "integer",
+                    "description": "Node number between two elements",
+                    "x-ui": {
+                      "label": "Node : Node number between two elements"
+                    }
+                  },
+                  "ELEMENTS": {
+                    "type": "array",
+                    "description": "Array of exactly 2 element numbers where the node is located between them",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "x-ui": {
+                      "label": "Elem. List : Array of exactly 2 element numbers where the node is located between them"
+                    }
+                  }
+                }
+              },
+              "x-ui": {
+                "component": "Table",
+                "label": "Selected Members",
+                "order": 3
+              },
+              "x-optional-when": {
+                "MEMBER_SELECTION": "By Selection"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

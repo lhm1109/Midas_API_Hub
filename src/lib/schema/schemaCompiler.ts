@@ -196,15 +196,15 @@ export function compileSchema(
   // x-optional-when 배열에 groupId가 있으면 각 조건별로 필드 인스턴스 생성
   const fields = expandFieldsByArrayGroupId(rawFields, []);
 
-  // Phase 2: Calculate required status for each field
-  const fieldsWithStatus = fields.map(field => {
-    const layers = determineValidationLayersDynamic(field, psdSet, schemaType);
-    return {
-      ...field,
-      required: calculateRequiredStatus(field, types, transformedSchema.required || [], conditionalRules),
-      validationLayers: layers as ValidationLayer[],
-    };
-  });
+    // Phase 2: Calculate required status for each field
+    const fieldsWithStatus = fields.map(field => {
+      const layers = determineValidationLayersDynamic(field, psdSet, schemaType);
+      return {
+        ...field,
+        required: calculateRequiredStatus(field, types, transformedSchema.required || [], conditionalRules),
+        validationLayers: layers as ValidationLayer[],
+      };
+    });
 
   // Phase 3: Group by sections (YAML-based, 동기)
   const sections = groupFieldsBySectionsDynamic(fieldsWithStatus, types, psdSet, schemaType, transformedSchema);
@@ -1075,6 +1075,15 @@ function extractRuntimeTriggers(prop: EnhancedProperty): string[] {
   return Array.from(triggers);
 }
 
+// Display default "System" for UNIT/STYLES in spec/manual tables
+// when schema doesn't explicitly define a default.
+const SYSTEM_DEFAULT_KEYS = new Set(['UNIT', 'STYLES']);
+function resolveFieldDefault(key: string, prop: EnhancedProperty): any {
+  if (prop.default !== undefined) return prop.default;
+  if (prop.type === 'object' && SYSTEM_DEFAULT_KEYS.has(key)) return 'System';
+  return undefined;
+}
+
 /**
  * 모든 필드 추출 (중첩 객체 포함)
  */
@@ -1104,7 +1113,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       key,
       type: prop.type,
       description: prop.description,
-      default: prop.default,
+      default: resolveFieldDefault(key, prop),
       required: {},
       section: '',
       validationLayers: [],
@@ -1194,18 +1203,20 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       const objRequired = (prop.required as string[]) || [];
 
       for (const [childKey, childProp] of Object.entries(prop.properties)) {
+        const isRequiredByParent = objRequired.includes(childKey);
         const childField: EnhancedField = {
           key: `${key}.${childKey}`,
           type: (childProp as any).type,
           default: (childProp as any).default,
-          required: objRequired.includes(childKey) ? { '*': 'required' } : { '*': 'optional' },
+          required: isRequiredByParent ? { '*': 'required' } : { '*': 'optional' },
           section: '',
           validationLayers: [],
+          _requiredByParent: isRequiredByParent,
         };
 
         // 🔥 자식 필드도 동적으로 모든 속성 복사
         for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
-          if (cpKey === 'type' || cpKey === 'default') continue;
+          if (cpKey === 'type' || cpKey === 'default' || cpKey === 'required') continue;
 
           if (cpKey === 'x-ui') {
             childField.ui = cpValue;
@@ -1246,19 +1257,21 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           childField.children = [];
 
           for (const [grandchildKey, grandchildProp] of Object.entries(itemSchema.properties)) {
+            const isGrandchildRequired = itemRequired.includes(grandchildKey);
             const grandchildField: EnhancedField = {
               key: `${key}.${childKey}[].${grandchildKey}`,
               type: (grandchildProp as any).type,
               default: (grandchildProp as any).default,
               description: (grandchildProp as any).description,
-              required: itemRequired.includes(grandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+              required: isGrandchildRequired ? { '*': 'required' } : { '*': 'optional' },
               section: '',
               validationLayers: [],
+              _requiredByParent: isGrandchildRequired,
             };
 
             // 🔥 손자 필드도 동적으로 모든 속성 복사
             for (const [gcKey, gcValue] of Object.entries(grandchildProp as any)) {
-              if (gcKey === 'type' || gcKey === 'default' || gcKey === 'description') continue;
+              if (gcKey === 'type' || gcKey === 'default' || gcKey === 'description' || gcKey === 'required') continue;
 
               if (gcKey === 'x-ui') {
                 grandchildField.ui = gcValue;
@@ -1298,18 +1311,20 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
+                const isGreatGrandchildRequired = grandchildObjRequired.includes(greatGrandchildKey);
                 const greatGrandchildField: EnhancedField = {
                   key: `${key}.${childKey}[].${grandchildKey}.${greatGrandchildKey}`,
                   type: (greatGrandchildProp as any).type,
                   default: (greatGrandchildProp as any).default,
                   description: (greatGrandchildProp as any).description,
-                  required: grandchildObjRequired.includes(greatGrandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+                  required: isGreatGrandchildRequired ? { '*': 'required' } : { '*': 'optional' },
                   section: '',
                   validationLayers: [],
+                  _requiredByParent: isGreatGrandchildRequired,
                 };
 
                 for (const [ggKey, ggValue] of Object.entries(greatGrandchildProp as any)) {
-                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description') continue;
+                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description' || ggKey === 'required') continue;
 
                   if (ggKey === 'x-ui') {
                     greatGrandchildField.ui = ggValue;
@@ -1356,13 +1371,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           const childObjRequired = ((childProp as any).required as string[]) || [];
 
           for (const [grandchildKey, grandchildProp] of Object.entries((childProp as any).properties)) {
+            const isGrandchildRequired = childObjRequired.includes(grandchildKey);
             const grandchildField: EnhancedField = {
               key: `${key}.${childKey}.${grandchildKey}`,
               type: (grandchildProp as any).type,
               default: (grandchildProp as any).default,
-              required: childObjRequired.includes(grandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+              required: isGrandchildRequired ? { '*': 'required' } : { '*': 'optional' },
               section: '',
               validationLayers: [],
+              _requiredByParent: isGrandchildRequired,
             };
 
             // 🔥 손자 필드도 동적으로 모든 속성 복사
@@ -1408,18 +1425,20 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               grandchildField.children = [];
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries(itemSchema.properties)) {
+                const isGreatGrandchildRequired = itemRequired.includes(greatGrandchildKey);
                 const greatGrandchildField: EnhancedField = {
                   key: `${key}.${childKey}.${grandchildKey}[].${greatGrandchildKey}`,
                   type: (greatGrandchildProp as any).type,
                   default: (greatGrandchildProp as any).default,
                   description: (greatGrandchildProp as any).description,
-                  required: itemRequired.includes(greatGrandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+                  required: isGreatGrandchildRequired ? { '*': 'required' } : { '*': 'optional' },
                   section: '',
                   validationLayers: [],
+                  _requiredByParent: isGreatGrandchildRequired,
                 };
 
                 for (const [ggKey, ggValue] of Object.entries(greatGrandchildProp as any)) {
-                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description') continue;
+                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description' || ggKey === 'required') continue;
 
                   if (ggKey === 'x-ui') {
                     greatGrandchildField.ui = ggValue;
@@ -1462,18 +1481,20 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
+                const isGreatGrandchildRequired = grandchildObjRequired.includes(greatGrandchildKey);
                 const greatGrandchildField: EnhancedField = {
                   key: `${key}.${childKey}.${grandchildKey}.${greatGrandchildKey}`,
                   type: (greatGrandchildProp as any).type,
                   default: (greatGrandchildProp as any).default,
-                  required: grandchildObjRequired.includes(greatGrandchildKey) ? { '*': 'required' } : { '*': 'optional' },
+                  required: isGreatGrandchildRequired ? { '*': 'required' } : { '*': 'optional' },
                   section: '',
                   validationLayers: [],
+                  _requiredByParent: isGreatGrandchildRequired,
                 };
 
                 // 🔥 증손자 필드도 동적으로 모든 속성 복사
                 for (const [ggKey, ggValue] of Object.entries(greatGrandchildProp as any)) {
-                  if (ggKey === 'type' || ggKey === 'default') continue;
+                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'required') continue;
 
                   if (ggKey === 'x-ui') {
                     greatGrandchildField.ui = ggValue;
@@ -1529,7 +1550,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
 
                 // 🔥 증손자 필드도 동적으로 모든 속성 복사
                 for (const [ggKey, ggValue] of Object.entries(greatGrandchildProp as any)) {
-                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description') continue;
+                  if (ggKey === 'type' || ggKey === 'default' || ggKey === 'description' || ggKey === 'required') continue;
 
                   if (ggKey === 'x-ui') {
                     greatGrandchildField.ui = ggValue;
@@ -1599,7 +1620,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
 
         // 🔥 자식 필드도 동적으로 모든 속성 복사
         for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
-          if (cpKey === 'type' || cpKey === 'default' || cpKey === 'description') continue;
+          if (cpKey === 'type' || cpKey === 'default' || cpKey === 'description' || cpKey === 'required') continue;
 
           if (cpKey === 'x-ui') {
             childField.ui = cpValue;
@@ -1651,7 +1672,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
 
             // 🔥 손자 필드도 동적으로 모든 속성 복사
             for (const [gcKey, gcValue] of Object.entries(grandchildProp as any)) {
-              if (gcKey === 'type' || gcKey === 'default' || gcKey === 'description') continue;
+              if (gcKey === 'type' || gcKey === 'default' || gcKey === 'description' || gcKey === 'required') continue;
 
               if (gcKey === 'x-ui') {
                 grandchildField.ui = gcValue;
@@ -1765,7 +1786,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
 
           // 🔥 동적으로 모든 속성 복사
           for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
-            if (cpKey === 'type' || cpKey === 'default') continue;
+            if (cpKey === 'type' || cpKey === 'default' || cpKey === 'required') continue;
 
             if (cpKey === 'x-ui') {
               childField.ui = cpValue;
@@ -1889,6 +1910,11 @@ function calculateRequiredStatus(
   conditionalRules: ConditionalRule[]
 ): RequiredStatus {
   const status: RequiredStatus = {};
+
+  // Preserve explicit required/optional set for nested fields.
+  if ((field.key.includes('.') || field.key.includes('[]')) && field.required && Object.keys(field.required).length > 0) {
+    return field.required;
+  }
 
   // 🔥 TYPE 필드가 없는 스키마 (e.g., SKEW with iMETHOD)
   // → 트리거 필드 기반 조건부 required 확인

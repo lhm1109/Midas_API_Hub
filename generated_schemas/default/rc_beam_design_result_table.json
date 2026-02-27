@@ -1,0 +1,236 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "PRI_SORT": {
+          "type": "integer",
+          "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
+          "default": 1,
+          "oneOf": [
+            {
+              "title": "SECT",
+              "const": 0
+            },
+            {
+              "title": "MEMB",
+              "const": 1
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Primary Sorting Option",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "RCBEAMDESIGN-MEMB"
+          }
+        },
+        "RESULT": {
+          "type": "integer",
+          "description": "Filter results by design status",
+          "default": 0,
+          "oneOf": [
+            {
+              "title": "All",
+              "const": 0
+            },
+            {
+              "title": "OK",
+              "const": 1
+            },
+            {
+              "title": "NG",
+              "const": 2
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Result View Option",
+            "order": 3
+          }
+        },
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "RC Beam Design Result",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "RCBEAMDESIGN-MEMB",
+            "RCBEAMDESIGN-PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MEMB",
+              "SECT",
+              "Span",
+              "Section",
+              "Bc",
+              "Hc",
+              "bf",
+              "hf",
+              "fck",
+              "fy",
+              "fys",
+              "POS",
+              "N(-)/Mu",
+              "LCB_NegMu",
+              "AsTop",
+              "Rebar_Top",
+              "P(+)/Mu",
+              "LCB_PosMu",
+              "AsBot",
+              "Rebar_Bot",
+              "Vu",
+              "LCB_Vu",
+              "AsV",
+              "Stirrup",
+              "CHK"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels-by-type": {
+            "RCBEAMDESIGN-MEMB": {
+              "MEMB": "Element Number",
+              "SECT": "Section Property Number",
+              "Span": "Length of Beam Member",
+              "Section": "Sectional Shape (SB: Rectangular, TEE: T-shape)",
+              "Bc": "Width of Beam Member",
+              "Hc": "Height (Depth) of Beam Member",
+              "bf": "Width of Flange (T-shape Section)",
+              "hf": "Thickness of Flange (T-shape Section)",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Main Rebars",
+              "fys": "Design Yield Strength of Shear Rebars",
+              "POS": "Section Design Points (I, M, J)",
+              "N(-)/Mu": "Maximum Factored Negative Moment",
+              "LCB_NegMu": "Load Combination for Negative Moment",
+              "AsTop": "Area of Required Top Rebars",
+              "Rebar_Top": "Top Rebar Configuration",
+              "P(+)/Mu": "Maximum Factored Positive Moment",
+              "LCB_PosMu": "Load Combination for Positive Moment",
+              "AsBot": "Area of Required Bottom Rebars",
+              "Rebar_Bot": "Bottom Rebar Configuration",
+              "Vu": "Maximum Factored Shear Force",
+              "LCB_Vu": "Load Combination for Shear",
+              "AsV": "Shear Reinforcing Steel Area (Av)",
+              "Stirrup": "Required Stirrup",
+              "CHK": "Status of Design Results (OK, NPV, N**, M, V, +, -, etc.)"
+            },
+            "RCBEAMDESIGN-PROP": {
+              "MEMB": "Element Number (0 for Property-based)",
+              "SECT": "Section Property Number",
+              "Span": "Length of Beam Member",
+              "Section": "Sectional Shape (SB: Rectangular, TEE: T-shape)",
+              "Bc": "Width of Beam Member",
+              "Hc": "Height (Depth) of Beam Member",
+              "bf": "Width of Flange (T-shape Section)",
+              "hf": "Thickness of Flange (T-shape Section)",
+              "fck": "Design Compressive Strength of Concrete (f'c)",
+              "fy": "Design Yield Strength of Main Rebars",
+              "fys": "Design Yield Strength of Shear Rebars",
+              "POS": "Section Design Points (I, M, J)",
+              "N(-)/Mu": "Maximum Factored Negative Moment",
+              "LCB_NegMu": "Load Combination for Negative Moment",
+              "AsTop": "Area of Required Top Rebars (Maximum for Property)",
+              "Rebar_Top": "Top Rebar Configuration",
+              "P(+)/Mu": "Maximum Factored Positive Moment",
+              "LCB_PosMu": "Load Combination for Positive Moment",
+              "AsBot": "Area of Required Bottom Rebars (Maximum for Property)",
+              "Rebar_Bot": "Bottom Rebar Configuration",
+              "Vu": "Maximum Factored Shear Force",
+              "LCB_Vu": "Load Combination for Shear",
+              "AsV": "Shear Reinforcing Steel Area (Av)",
+              "Stirrup": "Required Stirrup",
+              "CHK": "Status of Design Results (OK, NPV, N**, M, V, +, -, etc.)"
+            }
+          }
+        }
+      }
+    }
+  }
+}

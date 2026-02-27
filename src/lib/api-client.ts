@@ -153,6 +153,13 @@ class ApiClient {
     });
   }
 
+  async moveGroup(id: string, parent_group_id: string | null, order_index?: number) {
+    return this.request<{ message: string; count: number }>(`/groups/${encodeURIComponent(id)}/move`, {
+      method: 'PUT',
+      body: JSON.stringify({ parent_group_id, order_index }),
+    });
+  }
+
   async deleteGroup(id: string) {
     return this.request<{ message: string }>(`/groups/${encodeURIComponent(id)}`, {
       method: 'DELETE',

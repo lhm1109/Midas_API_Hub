@@ -1,0 +1,216 @@
+{
+  "conditionals": [
+    {
+      "action": "disable",
+      "controlId": "IDC_DGN_BEAM_EQUAL_LIST",
+      "triggerVariable": "__unknown__",
+      "variable": "m_List"
+    },
+    {
+      "action": "enable",
+      "controlId": "IDC_DGN_BEAM_EQUAL_LIST",
+      "triggerVariable": "__unknown__",
+      "variable": "m_List"
+    },
+    {
+      "action": "disable",
+      "condition": "bDonotConsider",
+      "controlId": "IDC_DGN_BEAM_EQUAL_ASSIGN_ALL",
+      "triggerVariable": "__unknown__",
+      "variable": "m_nAssignType"
+    },
+    {
+      "action": "disable",
+      "condition": "bDonotConsider",
+      "controlId": "IDC_DGN_BEAM_EQUAL_ASSIGN_LINE",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bDonotConsider",
+      "controlId": "IDC_DGN_BEAM_EQUAL_SELECT_ALL",
+      "triggerVariable": "__unknown__",
+      "variable": "m_nSelectType"
+    },
+    {
+      "action": "disable",
+      "condition": "bDonotConsider",
+      "controlId": "IDC_DGN_BEAM_EQUAL_SELECT_SEL",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nOption == 0",
+      "controlId": "IDC_DGN_BEAM_EQUAL_ASSIGN_ALL",
+      "triggerVariable": "m_nOption",
+      "variable": "m_nAssignType"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nOption == 0",
+      "controlId": "IDC_DGN_BEAM_EQUAL_ASSIGN_LINE",
+      "triggerVariable": "m_nOption"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nOption == 0",
+      "controlId": "IDC_DGN_BEAM_EQUAL_SELECT_ALL",
+      "triggerVariable": "m_nOption",
+      "variable": "m_nSelectType"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nOption == 0",
+      "controlId": "IDC_DGN_BEAM_EQUAL_SELECT_SEL",
+      "triggerVariable": "m_nOption"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nOption == 1",
+      "controlId": "IDC_DGN_BEAM_EQUAL_ASSIGN_ALL",
+      "triggerVariable": "m_nOption",
+      "variable": "m_nAssignType"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nOption == 1",
+      "controlId": "IDC_DGN_BEAM_EQUAL_ASSIGN_LINE",
+      "triggerVariable": "m_nOption"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nOption == 1",
+      "controlId": "IDC_DGN_BEAM_EQUAL_SELECT_ALL",
+      "triggerVariable": "m_nOption",
+      "variable": "m_nSelectType"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nOption == 1",
+      "controlId": "IDC_DGN_BEAM_EQUAL_SELECT_SEL",
+      "triggerVariable": "m_nOption"
+    }
+  ],
+  "controlGroupArrays": {
+    "m_aCtrlAll": [
+      "IDC_DGN_BEAM_EQUAL_ASSIGN_ALL",
+      "IDC_DGN_BEAM_EQUAL_ASSIGN_LINE",
+      "IDC_DGN_BEAM_EQUAL_SELECT_ALL",
+      "IDC_DGN_BEAM_EQUAL_SELECT_SEL"
+    ]
+  },
+  "controls": [
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Add/Replace",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_BEAM_EQUAL_AR",
+      "inferredType": "integer",
+      "variable": "m_nOption",
+      "w": 58,
+      "x": 8,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Delete",
+      "h": 12,
+      "id": "IDC_DGN_BEAM_EQUAL_DEL",
+      "w": 36,
+      "x": 74,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "All",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_BEAM_EQUAL_SELECT_ALL",
+      "inferredType": "integer",
+      "variable": "m_nSelectType",
+      "w": 38,
+      "x": 8,
+      "y": 49
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "By Selection",
+      "h": 12,
+      "id": "IDC_DGN_BEAM_EQUAL_SELECT_SEL",
+      "w": 51,
+      "x": 57,
+      "y": 49
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "All",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_BEAM_EQUAL_ASSIGN_ALL",
+      "inferredType": "integer",
+      "variable": "m_nAssignType",
+      "w": 38,
+      "x": 8,
+      "y": 82
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Straight Line",
+      "h": 12,
+      "id": "IDC_DGN_BEAM_EQUAL_ASSIGN_LINE",
+      "w": 53,
+      "x": 57,
+      "y": 82
+    },
+    {
+      "type": "SYSLISTVIEW32",
+      "caption": "List1",
+      "ddxFunction": "DDX_Control",
+      "h": 244,
+      "id": "IDC_DGN_BEAM_EQUAL_LIST",
+      "inferredType": "object",
+      "variable": "m_List",
+      "w": 119,
+      "x": 3,
+      "y": 103
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Option",
+      "h": 29,
+      "id": "IDC_DGN_BEAM_EQUAL_OPTION_GROUP",
+      "w": 119,
+      "x": 3,
+      "y": 4
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Member Selection",
+      "h": 29,
+      "id": "IDC_DGN_BEAM_EQUAL_MEMBER_GROUP",
+      "w": 119,
+      "x": 3,
+      "y": 37
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Assign Type",
+      "h": 29,
+      "id": "IDC_DGN_BEAM_EQUAL_ASSIGN_GROUP",
+      "w": 119,
+      "x": 3,
+      "y": 70
+    }
+  ],
+  "dialogClass": "CDgnConBeamEqualDlg",
+  "dialogId": "IDD_DGN_CON_BEAM_EQUAL_DLG",
+  "headerFile": "ui_src/wg_dgn/DgnConBeamEqualDlg.h",
+  "parsedAt": "2026-02-23T08:39:22.303Z",
+  "rawDoDataExchange": "CMenuBarChildDlg::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnConBeamEqualDlg)\r\n\tDDX_Radio  (pDX, IDC_DGN_BEAM_EQUAL_AR, m_nOption);\r\n\tDDX_Radio  (pDX, IDC_DGN_BEAM_EQUAL_ASSIGN_ALL, m_nAssignType);\r\n\tDDX_Radio  (pDX, IDC_DGN_BEAM_EQUAL_SELECT_ALL, m_nSelectType); \r\n\tDDX_Control(pDX, IDC_DGN_BEAM_EQUAL_LIST, m_List);\r\n\tDDX_Control(pDX, IDC_DGN_BEAM_EQUAL_ASSIGN_NOTCONSIDER, m_ChkNotConsider);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCMenuBarChildDlg::OnInitDialog();\r\n\tm_aCtrlAll.Add(IDC_DGN_BEAM_EQUAL_ASSIGN_ALL);\r\n\tm_aCtrlAll.Add(IDC_DGN_BEAM_EQUAL_ASSIGN_LINE);\r\n\tm_aCtrlAll.Add(IDC_DGN_BEAM_EQUAL_SELECT_ALL);\r\n\tm_aCtrlAll.Add(IDC_DGN_BEAM_EQUAL_SELECT_SEL);\r\n\r\n\tBOOL bDonotConsider=FALSE;\r\n\tCArray<T_BREQ_K, T_BREQ_K> aBreqK;\r\n\tm_pDoc->m_pAttrCtrl2->GetBreqKeyList(aBreqK);\r\n\tif(aBreqK.GetSize() > 0)\r\n\t{\r\n\t\tT_BREQ_D BreqD;\r\n\t\tif(m_pDoc->m_pAttrCtrl2->GetBreq(aBreqK[0], BreqD))\r\n\t\t{\r\n\t\t\tbDonotConsider = BreqD.bDonotConsider;\r\n\t\t}\r\n\t}\r\n\r\n\tCheckDlgButton(IDC_DGN_BEAM_EQUAL_ASSIGN_NOTCONSIDER, bDonotConsider);\r\n\tSetListCtrlHeader();\r\n\tMakeItemEx();\r\n\t\r\n\tCtrlManager();  \r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// CtrlManager:\nUpdateData(TRUE);    \r\n\r\n\tBOOL bDonotConsider=FALSE;\r\n\tif(m_ChkNotConsider.GetCheck()) bDonotConsider=TRUE;  //üũ�ڽ��� ���� ���� ����.\r\n\r\n\tif(bDonotConsider)\r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlAll, FALSE);  \r\n\t\tGetDlgItem(IDC_DGN_BEAM_EQUAL_LIST)->EnableWindow(FALSE);\r\n\t}\r\n\telse\r\n\t{\r\n\t\tGetDlgItem(IDC_DGN_BEAM_EQUAL_LIST)->EnableWindow(TRUE);\r\n\t\tif(m_nOption == 0)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlAll, TRUE);\r\n\t\t}\r\n\t\telse if(m_nOption == 1)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlAll, FALSE);    \r\n\t\t}\r\n\t}\r\n\t\r\n\tUpdateData(FALSE);\n\n// CtrlManager:\nUpdateData(TRUE);    \r\n\r\n\tBOOL bDonotConsider=FALSE;\r\n\tif(m_ChkNotConsider.GetCheck()) bDonotConsider=TRUE;  //üũ�ڽ��� ���� ���� ����.\r\n\r\n\tif(bDonotConsider)\r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlAll, FALSE);  \r\n\t\tGetDlgItem(IDC_DGN_BEAM_EQUAL_LIST)->EnableWindow(FALSE);\r\n\t}\r\n\telse\r\n\t{\r\n\t\tGetDlgItem(IDC_DGN_BEAM_EQUAL_LIST)->EnableWindow(TRUE);\r\n\t\tif(m_nOption == 0)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlAll, TRUE);\r\n\t\t}\r\n\t\telse if(m_nOption == 1)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrlAll, FALSE);    \r\n\t\t}\r\n\t}\r\n\t\r\n\tUpdateData(FALSE);\n\n// InitSelectedItem:\nif(m_pDoc==NULL)\treturn;\r\n\tif(m_pDoc->m_pViewCtrl->SelectedElemCount()) m_pDoc->m_pViewCtrl->UnselectAll(NULL);\n\n// UpdateBuffer:\nCViewBuff* pViewBuff = m_pDoc->m_pViewBuff;\r\n\tint nCount = pViewBuff->GetCount();\r\n\tif (nCount == 0) return; \r\n\tASSERT(nCount == 1);\r\n\r\n\tT_UDRD_BUFFER buffer_ur;\r\n\tPOSITION pos = pViewBuff->GetStartBuffer();\r\n\r\n\tT_BREQ_K Key;\r\n\tT_BREQ_D Data;\r\n\r\n\twhile(pos != NULL)\r\n\t{\r\n\t\tbuffer_ur = pViewBuff->GetNextBuffer(pos);\r\n\r\n\t\tint nCmd = buffer_ur.nCmd;\r\n\t\tint nKey = buffer_ur.nKey;\r\n\t\t\r\n\t\tswitch(nCmd)\r\n\t\t{\r\n\t\tcase(UR_BREQ_ADD):\r\n\t\t\t{\r\n\t\t\t\tpViewBuff->GetBreq(nKey, Key, Data);\r\n\t\t\t\tInsertItem(Key);\r\n\t\t\t}\r\n\t\t\tbreak;\r\n\t\tcase(UR_BREQ_DEL):\r\n\t\t\t{\r\n\t\t\t\tpViewBuff->GetBreq(nKey, Key, Data);\r\n\t\t\t\tDeleteItem(Key);\r\n\t\t\t}\r\n\t\t\tbreak;\r\n\t\tcase(UR_BREQ_MFS):\r\n\t\tcase(UR_BREQ_MFD):\r\n\t\t\t{\r\n\t\t\t\tpViewBuff->GetBreq(nKey, Key, Data);\r\n\t\t\t\tDeleteItem(Key);\r\n\t\t\t\tInsertItem(Key);        \r\n\t\t\t}\r\n\t\t\tbreak;\r\n\t\tdefault:\r\n\t\t\tbreak;\r\n\t\t}\r\n\t}\n\n// SetListCtrlHeader:\nCString aTitle[] = {_LS(IDS_DGN_CPG_NODE), _LS(IDS_DGN_CHK_ELEM_LIST)};  // _T(\"Index_T(\", \")Element List\")\r\n\tint nColWidth[] = {50, 180};\r\n\tint nAlign[] = {LVCFMT_CENTER, LVCFMT_LEFT};\r\n\tint nColNum = sizeof(nColWidth)/sizeof(int);\r\n\tCString title;  \r\n\tLV_COLUMN lvcolumn;\r\n\t\r\n\tDWORD dwStyle;\r\n\tdwStyle = ListView_GetExtendedListViewStyle(m_List.GetSafeHwnd());\r\n\tdwStyle |= LVS_EX_FULLROWSELECT; \r\n\tListView_SetExtendedListViewStyle(m_List.GetSafeHwnd(), dwStyle);\r\n\r\n\tfor(int i = 0; i < nColNum; i++)\r\n\t{\r\n\t\ttitle = aTitle[i];\r\n\t\tlvcolumn.mask = LVCF_FMT|LVCF_SUBITEM|LVCF_TEXT|LVCF_WIDTH;\r\n\t\tlvcolumn.fmt = nAlign[i];\r\n\r\n\t\tlvcolumn.iSubItem = i;\r\n\t\tlvcolumn.cx = globalUtils.ScaleByDPI(nColWidth[i]);\r\n\t\tlvcolumn.pszText = title.GetBuffer(0);\r\n\t\tm_List.InsertColumn(i,&lvcolumn);\r\n\t\tm_List.SetColumn(i, &lvcolumn);\r\n\t\ttitle.ReleaseBuffer();\r\n\t}",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnConBeamEqualDlg.cpp",
+  "warnings": []
+}

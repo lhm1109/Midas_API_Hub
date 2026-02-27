@@ -206,6 +206,181 @@ router.put('/reorder', async (req, res) => {
 });
 
 /**
+ * PUT /api/groups/:id/move
+ * ?? ?? (parent_group_id ?? + depth ???)
+ */
+router.put('/:id/move', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { parent_group_id, order_index } = req.body;
+    const now = new Date().toISOString();
+
+    // 1. ?? ?? ??
+    const { data: group, error: groupError } = await supabase
+      .from('groups')
+      .select('id, product_id, parent_group_id, depth')
+      .eq('id', id)
+      .single();
+
+    if (groupError) {
+      if (groupError.code === 'PGRST116') {
+        return res.status(404).json({ error: 'Group not found' });
+      }
+      throw groupError;
+    }
+
+    const targetParentId = parent_group_id || null;
+    const movingSameParent = (group.parent_group_id || null) === targetParentId;
+    const hasOrderIndex = Number.isInteger(order_index);
+
+    // 2. ?? ?? + order_index ???? ?? ??
+    if (movingSameParent && !hasOrderIndex) {
+      return res.json({ message: 'No changes', group });
+    }
+
+    // 3. ?? ? ?? ?? ??
+    const { data: allGroups, error: allGroupsError } = await supabase
+      .from('groups')
+      .select('id, parent_group_id, depth, order_index, product_id, created_at')
+      .eq('product_id', group.product_id);
+
+    if (allGroupsError) throw allGroupsError;
+
+    const groupsData = allGroups || [];
+    const groupMap = new Map(groupsData.map(g => [g.id, g]));
+    const parentMap = new Map(groupsData.map(g => [g.id, g.parent_group_id || null]));
+
+    // 4. ?? ?? ?? + ?? ?? ??
+    if (targetParentId) {
+      const parentGroup = groupMap.get(targetParentId);
+      if (!parentGroup) {
+        return res.status(400).json({ error: 'Parent group not found' });
+      }
+      if (parentGroup.product_id !== group.product_id) {
+        return res.status(400).json({ error: 'Cross-product group move is not allowed' });
+      }
+
+      let current = targetParentId;
+      while (current) {
+        if (current === id) {
+          return res.status(400).json({ error: 'Cannot move group into its own subtree' });
+        }
+        current = parentMap.get(current) || null;
+      }
+    }
+
+    // 5. children map ??
+    const childrenMap = new Map();
+    for (const g of groupsData) {
+      const parentId = g.parent_group_id || null;
+      if (!childrenMap.has(parentId)) {
+        childrenMap.set(parentId, []);
+      }
+      childrenMap.get(parentId).push(g.id);
+    }
+
+    // 6. ?? ? depth ?? + ?? depth(5) ??
+    const parentDepth = targetParentId ? (groupMap.get(targetParentId)?.depth || 1) : 0;
+    const newDepth = parentDepth + 1;
+
+    let maxRelativeDepth = 0;
+    const depthStack = [{ id, rel: 0 }];
+    while (depthStack.length > 0) {
+      const { id: currentId, rel } = depthStack.pop();
+      maxRelativeDepth = Math.max(maxRelativeDepth, rel);
+      const children = childrenMap.get(currentId) || [];
+      for (const childId of children) {
+        depthStack.push({ id: childId, rel: rel + 1 });
+      }
+    }
+
+    if (newDepth + maxRelativeDepth > 5) {
+      return res.status(400).json({ error: 'Maximum group depth (5) exceeded' });
+    }
+
+    // 7. depth ???? ?
+    const updatesById = new Map();
+    const ensureUpdate = (groupId) => {
+      if (!updatesById.has(groupId)) {
+        updatesById.set(groupId, { updated_at: now });
+      }
+      return updatesById.get(groupId);
+    };
+
+    const stack = [{ id, rel: 0 }];
+    while (stack.length > 0) {
+      const { id: currentId, rel } = stack.pop();
+      const update = ensureUpdate(currentId);
+      update.depth = newDepth + rel;
+
+      const children = childrenMap.get(currentId) || [];
+      for (const childId of children) {
+        stack.push({ id: childId, rel: rel + 1 });
+      }
+    }
+
+    // 8. order_index ???
+    const sortByOrder = (a, b) => {
+      const orderA = a.order_index ?? 0;
+      const orderB = b.order_index ?? 0;
+      if (orderA !== orderB) return orderA - orderB;
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    };
+
+    const getSiblings = (parentId) =>
+      groupsData
+        .filter(g => (g.parent_group_id || null) === parentId && g.id !== id)
+        .sort(sortByOrder);
+
+    const oldParentId = group.parent_group_id || null;
+    const oldSiblings = movingSameParent ? [] : getSiblings(oldParentId);
+    const newSiblings = getSiblings(targetParentId);
+
+    const insertIndex = hasOrderIndex
+      ? Math.max(0, Math.min(order_index, newSiblings.length))
+      : newSiblings.length;
+
+    newSiblings.splice(insertIndex, 0, group);
+
+    const applyOrder = (siblings) => {
+      siblings.forEach((g, index) => {
+        const update = ensureUpdate(g.id);
+        update.order_index = index;
+      });
+    };
+
+    if (!movingSameParent) {
+      applyOrder(oldSiblings);
+    }
+    applyOrder(newSiblings);
+
+    // 9. parent_group_id ????
+    const mainUpdate = ensureUpdate(id);
+    mainUpdate.parent_group_id = targetParentId;
+
+    // 10. DB ????
+    let successCount = 0;
+    for (const [groupId, update] of updatesById.entries()) {
+      const { error } = await supabase
+        .from('groups')
+        .update(update)
+        .eq('id', groupId);
+
+      if (error) {
+        console.error('? Move group update error:', groupId, error);
+        return res.status(500).json({ error: error.message, group: groupId });
+      }
+      successCount++;
+    }
+
+    res.json({ message: 'Group moved successfully', count: successCount });
+  } catch (error) {
+    console.error('? Move group error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
  * PUT /api/groups/:id
  * 그룹 수정
  */

@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "CURRENT_MODE",
+        "HCBM_LIST",
+        "EXPORT_PATH",
+        "OUTPUT_NAME"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "CURRENT_MODE": {
+          "type": "string",
+          "description": "Report output mode",
+          "enum": [
+            "Graphic"
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 1
+          }
+        },
+        "HCBM_LIST": {
+          "type": "array",
+          "description": "List of haunched beam numbers to include in the report",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Haunched Beam Numbers",
+            "order": 2
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Directory path to save the report files (.jpg format)",
+          "x-ui": {
+            "hint": "e.g. C:\\MIDAS\\Report\\",
+            "label": "Export Path",
+            "order": 3
+          }
+        },
+        "OUTPUT_NAME": {
+          "type": "string",
+          "description": "Output file base name. For multiple haunched beams, files are prefixed with index and beam number (e.g. 001_HCBM1_filename.jpg, 002_HCBM2_filename.jpg)",
+          "x-ui": {
+            "label": "Output File Name",
+            "order": 4
+          }
+        }
+      }
+    }
+  }
+}
