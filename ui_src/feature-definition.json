@@ -1,0 +1,121 @@
+[
+  {
+    "designType": "steel Design",
+    "designCode": {
+      "name": "KDS 41 30 : 2022"
+    },
+    "Design Input Data": {
+      "Design Code Option": "DgnStlCodeDlg.cpp",
+      "Design Parameters": {
+        "Definition of Frame": "DgnGenFrameDlg.cpp",
+        "Live Load Reduction Factor": "DgnGenLrdfDlg.cpp",
+        "Load Contribution for Nonlinear Load Case": "CMResultLctbDlg.cpp",
+        "Member Assignment": "DgnGenMembDlg.cpp",
+        "Reverse Member Local Direction": "DgnGenMembChgDlg.cpp",
+        "Haunched Beam Assignment": "DgnGenHcbmDlg.cpp",
+        "Unbraced Length(L_Lb)": "DgnGenLengDlg.cpp",
+        "Effective Length Factor(K)": "DgnGenKFacDlg.cpp",
+        "Limiting Slenderness Ratio": "DgnGenSlenDlg.cpp",
+        "Modify Live Load Reduction Factor": "DgnGenLrdfModDlg.cpp",
+        "Scale up Factor for Earthquake": "DgnGenSueqDlg.cpp",
+        "Modify Member Type": "DgnGenMemberTypeDlg.cpp",
+        "Underground Load Combination Type": "DgnGenUnderLcomTypeDlg.cpp",
+        "Strength Reduction Factors": "DgnStlPhiDlg.cpp",
+        "Serviceability Parameters": "DgnStlServiceLimitDlg.cpp",
+        "Bending Coefficient(Cb)": "DgnStlCbDlg.cpp",
+        "Seismic Load Resisting System by Member": "DgnStlSLRSDlg.cpp",
+        "Combined Ratio Calculation Method for Circular Section": "DgnStlSMSPDlg.cpp"
+      },
+      "Modify Steel Material": "DgnStlMatDlg.cpp"
+    },
+    "Design Section": {
+      "Section for Design": "CMSectionPage.cpp"
+    },
+    "Batch Processing": {
+      "Performance Batch Design": "BatchDesignDlg.cpp"
+    }
+  },
+  {
+    "designType": "RC Design",
+    "designCode": {
+      "name": "KDS 41 30 : 2022"
+    },
+    "Design Input Data": {
+      "Design Code Option": "DgnConCodeNewDlg.cpp",
+      "Design Parameters": {
+        "Definition of Frame": "DgnGenFrameDlg.cpp",
+        "Live Load Reduction Factor": "DgnGenLrdfDlg.cpp",
+        "Load Contribution for Nonlinear Load Case": "CMResultLctbDlg.cpp",
+        "Member Assignment": "DgnGenMembDlg.cpp",
+        "Reverse Member Local Direction": "DgnGenMembChgDlg.cpp",
+        "Haunched Beam Assignment": "DgnGenHcbmDlg.cpp",
+        "Unbraced Length(L_Lb)": "DgnGenLengDlg.cpp",
+        "Effective Length Factor(K)": "DgnGenKFacDlg.cpp",
+        "Modify Live Load Reduction Factor": "DgnGenLrdfModDlg.cpp",
+        "Scale up Factor for Earthquake": "DgnGenSueqDlg.cpp",
+        "Modify Member Type": "DgnGenMemberTypeDlg.cpp",
+        "Underground Load Combination Type": "DgnGenUnderLcomTypeDlg.cpp",
+        "Strength Reduction Factors": "DgnConPhiDlg.cpp",
+        "Moment Redistribution Factor": "DgnConMRFTDlg.cpp",
+        "Torsion Reduction Factor": "DgnConTRFTDlg.cpp",
+        "Moment Calculation Method for Beam": "DgnConMCMBDlg.cpp",
+        "Design Force for Beam Assigned as Member": "DgnConDFBADlg.cpp",
+        "P-M Curve Calculation Method": "DgnConPmdmDlg.cpp",
+        "Seismic Column Type": "DgnConScolDlg.cpp",
+        "Modify Wall Mark Data": "DgnConWallMarkDlg.cpp"
+      },
+      "Rebar Input": {
+        "Limiting Maximum Rebar Ratio": "DgnConBarRatioDlg.cpp",
+        "Design Criteria for Rebar": "DgnConBarDlg.cpp",
+        "Design Criteria for Rebars by Member": "DgnConBarSectDlg.cpp",
+        "Same Beam Rebar at Joints": "DgnConBeamEqualDlg.cpp",
+        "Rebar Exposure Condition": "DgnConExposureCondiDlg.cpp",
+        "Modify Beam Rebar Data": "DgnConBeamNewDlg.cpp",
+        "Modify Column Rebar Data": "DgnConColmNewDlg.cpp",
+        "Modify Brace Rebar Data": "DgnConBraceNewDlg.cpp",
+        "Modify Wall Rebar Data": "DgnConWallNewDlg.cpp"
+      },
+      "Modify Concrete Material": "DgnConMatDlg.cpp"
+    },
+    "Design Section": {
+      "Section for Design": "CMSectionPage.cpp"
+    },
+    "Batch Processing": {
+      "Performance Batch Design": "BatchDesignDlg.cpp"
+    }
+  },
+  {
+    "designType": "SRC Design",
+    "designCode": {
+      "name": "AIK-SRC2K"
+    },
+    "Design Input Data": {
+      "Design Code Option": "DgnSrcCodeDlg.cpp",
+      "Design Parameters": {
+        "Definition of Frame": "DgnGenFrameDlg.cpp",
+        "Live Load Reduction Factor": "DgnGenLrdfDlg.cpp",
+        "Load Contribution for Nonlinear Load Case": "CMResultLctbDlg.cpp",
+        "Member Assignment": "DgnGenMembDlg.cpp",
+        "Reverse Member Local Direction": "DgnGenMembChgDlg.cpp",
+        "Haunched Beam Assignment": "DgnGenHcbmDlg.cpp",
+        "Unbraced Length(L_Lb)": "DgnGenLengDlg.cpp",
+        "Effective Length Factor(K)": "DgnGenKFacDlg.cpp",
+        "Limiting Slenderness Ratio": "DgnGenSlenDlg.cpp",
+        "Modify Live Load Reduction Factor": "DgnGenLrdfModDlg.cpp",
+        "Scale up Factor for Earthquake": "DgnGenSueqDlg.cpp",
+        "Modify Member Type": "DgnGenMemberTypeDlg.cpp"
+      },
+      "Modify SRC Material": "DgnSrcMatDlg.cpp",
+      "Rebar Data": {
+        "Modify SRC Beam Section Data": "DgnSrcBeamDlg.cpp",
+        "Modify SRC Column Section Data": "DgnSrcSectDlg.cpp"
+      }
+    },
+    "Design Section": {
+      "Section for Design": "CMSectionPage.cpp"
+    },
+    "Batch Processing": {
+      "Performance Batch Design": "BatchDesignDlg.cpp"
+    }
+  }
+]
