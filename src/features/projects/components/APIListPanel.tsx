@@ -31,6 +31,9 @@ import {
   useSensors,
   DragEndEvent,
   DragOverEvent,
+  DragStartEvent,
+  DragMoveEvent,
+  DragCancelEvent,
   useDroppable,
   closestCorners,  // ✅ closestCenter 대신 closestCorners 사용
 } from '@dnd-kit/core';
@@ -59,6 +62,7 @@ interface SortableEndpointItemProps {
   onDelete: (endpoint: ApiEndpoint) => void;
   onDuplicate: (endpoint: ApiEndpoint) => void;
   getStatusIndicator: (endpointId: string) => JSX.Element | null;
+  dropLinePosition?: 'before' | 'after' | null;
 }
 
 // ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
@@ -72,6 +76,7 @@ const SortableEndpointItem = memo(function SortableEndpointItem({
   onDelete,
   onDuplicate,
   getStatusIndicator,
+  dropLinePosition,
 }: SortableEndpointItemProps) {
   const {
     attributes,
@@ -94,11 +99,16 @@ const SortableEndpointItem = memo(function SortableEndpointItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group flex items-center gap-1 rounded text-sm ${isSelected
+      className={`group relative flex items-center gap-1 rounded text-sm ${isSelected
         ? 'bg-blue-600 text-white'
         : 'text-zinc-300 hover:bg-zinc-800'
         }`}
     >
+      {dropLinePosition && (
+        <div
+          className={`pointer-events-none absolute left-1 right-1 h-[2px] rounded bg-blue-400 ${dropLinePosition === 'before' ? '-top-[2px]' : '-bottom-[2px]'}`}
+        />
+      )}
       {/* Drag Handle */}
       <button
         {...attributes}
@@ -283,12 +293,15 @@ interface SortableGroupItemProps {
   groupName: string;
   depth: number;
   isExpanded: boolean;
+  isNestTarget?: boolean;
+  nestTargetLabel?: string;
   onToggle: () => void;
   onAddEndpoint: () => void;
   onAddSubgroup: () => void;
   onDelete: () => void;
   onRename: () => void;  // 이름 변경
   children: React.ReactNode;
+  dropLinePosition?: 'before' | 'after' | null;
 }
 
 // ⚡ React.memo로 최적화: props가 같으면 리렌더링 방지
@@ -299,12 +312,15 @@ const SortableGroupItem = memo(function SortableGroupItem({
   groupName,
   depth,
   isExpanded,
+  isNestTarget,
+  nestTargetLabel,
   onToggle,
   onAddEndpoint,
   onAddSubgroup,
   onDelete,
   onRename,
   children,
+  dropLinePosition,
 }: SortableGroupItemProps) {
   const {
     attributes,
@@ -328,7 +344,12 @@ const SortableGroupItem = memo(function SortableGroupItem({
   const folderColor = depthColors[(depth - 1) % depthColors.length];
 
   return (
-    <div ref={setNodeRef} style={style} className="mb-1">
+    <div ref={setNodeRef} style={style} className="mb-1 relative">
+      {dropLinePosition && (
+        <div
+          className={`pointer-events-none absolute left-1 right-1 h-[2px] rounded bg-blue-400 ${dropLinePosition === 'before' ? '-top-[2px]' : '-bottom-[2px]'}`}
+        />
+      )}
       <div className="flex items-center gap-1 group">
         {/* Drag Handle */}
         <button
@@ -342,7 +363,7 @@ const SortableGroupItem = memo(function SortableGroupItem({
 
         <button
           onClick={onToggle}
-          className="flex-1 flex items-center gap-2 px-2 py-1 hover:bg-zinc-800 rounded text-sm text-zinc-300"
+          className={`flex-1 flex items-center gap-2 px-2 py-1 hover:bg-zinc-800 rounded text-sm text-zinc-300 ${isNestTarget ? 'ring-1 ring-blue-500 bg-blue-900/30' : ''}`}
         >
           {isExpanded ? (
             <ChevronDown className="w-3 h-3" />
@@ -351,6 +372,9 @@ const SortableGroupItem = memo(function SortableGroupItem({
           )}
           <FolderClosed className={`w-3 h-3 ${folderColor}`} />
           <span className="flex-1 text-left">{groupName}</span>
+          {isNestTarget && (
+            <span className="text-[10px] text-blue-300">하위로 이동</span>
+          )}
           {depth > 1 && (
             <span className="text-xs text-zinc-500">L{depth}</span>
           )}
@@ -473,6 +497,9 @@ interface RenderGroupDeps {
   searchTerm: string;
   activeDroppableId: string | null;
   linkedEndpointIds?: Set<string>;  // Manager 탭과 연결된 엔드포인트 ID
+  nestTargetGroupId?: string | null;
+  nestTargetKind?: 'group' | 'endpoint' | 'outdent' | null;
+  dropIndicator?: { type: 'group' | 'endpoint'; itemId: string; position: 'before' | 'after' } | null;
 }
 
 function renderGroupTree(
@@ -487,6 +514,7 @@ function renderGroupTree(
     ep.name.toLowerCase().includes(deps.searchTerm.toLowerCase())
   );
   const shouldExpand = isExpanded || !!(deps.searchTerm && hasMatchingEndpoints);
+  const isNestTarget = deps.nestTargetGroupId === group.id;
 
   // ✅ 필터 결과 단일화 - 한 번만 계산
   const filteredSubgroups = group.subgroups ?? [];
@@ -507,6 +535,9 @@ function renderGroupTree(
       groupName={group.name}
       depth={group.depth}
       isExpanded={shouldExpand}
+      dropLinePosition={deps.dropIndicator?.type === 'group' && deps.dropIndicator.itemId === group.id ? deps.dropIndicator.position : null}
+      isNestTarget={isNestTarget}
+      nestTargetLabel={isNestTarget ? (deps.nestTargetKind === 'endpoint' ? '? ???? ??' : deps.nestTargetKind === 'outdent' ? '?? ??? ??' : '??? ??') : undefined}
       onToggle={() => deps.toggleGroup(group.id)}
       onAddEndpoint={() => deps.handleAddEndpoint(productId, group.id)}
       onAddSubgroup={() => deps.handleAddSubgroup(productId, group.id)}
@@ -563,6 +594,7 @@ function renderGroupTree(
                       endpoint={ep}
                       isSelected={deps.selectedEndpoint === ep.id}
                       isLinked={deps.linkedEndpointIds?.has(ep.id)}
+                      dropLinePosition={deps.dropIndicator?.type === 'endpoint' && deps.dropIndicator.itemId === ep.id ? deps.dropIndicator.position : null}
                       onSelect={deps.onEndpointSelect}
                       onEdit={(e) => deps.handleEditEndpoint(e, productId, group.id)}
                       onDelete={deps.handleDeleteEndpoint}
@@ -635,6 +667,14 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const [productGroupDialogProductId, setProductGroupDialogProductId] = useState<string>('');
   const [productGroupDialogParentGroupId, setProductGroupDialogParentGroupId] = useState<string | null>(null);
   const [activeDroppableId, setActiveDroppableId] = useState<string | null>(null);
+  const [dropIndicator, setDropIndicator] = useState<{ type: 'group' | 'endpoint'; itemId: string; position: 'before' | 'after' } | null>(null);
+  const [nestTargetGroupId, setNestTargetGroupId] = useState<string | null>(null);
+  const [nestTargetKind, setNestTargetKind] = useState<'group' | 'endpoint' | 'outdent' | null>(null);
+  const pointerYRef = useRef<number | null>(null);
+  const pointerXRef = useRef<number | null>(null);
+  const pointerListenerRef = useRef<((e: PointerEvent) => void) | null>(null);
+  const dragOffsetXRef = useRef(0);
+  const NEST_THRESHOLD = 24;
   const [isRefreshingLock, setIsRefreshingLock] = useState(false);
 
   // Rename Dialog 상태
@@ -766,6 +806,15 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     localStorage.setItem('expandedGroups', JSON.stringify(Array.from(expandedGroups)));
   }, [expandedGroups]);
 
+  useEffect(() => {
+    return () => {
+      if (pointerListenerRef.current) {
+        window.removeEventListener('pointermove', pointerListenerRef.current);
+        pointerListenerRef.current = null;
+      }
+    };
+  }, []);
+
   // 🔥 성능 최적화: 드래그 센서 설정
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -780,9 +829,226 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     })
   );
 
+  const resetDragState = () => {
+    setActiveDroppableId(null);
+    setNestTargetGroupId(null);
+    setNestTargetKind(null);
+    setDropIndicator(null);
+    dragOffsetXRef.current = 0;
+    pointerYRef.current = null;
+    pointerXRef.current = null;
+
+    if (pointerListenerRef.current) {
+      window.removeEventListener('pointermove', pointerListenerRef.current);
+      pointerListenerRef.current = null;
+    }
+  };
+
+  const handleDragStart = (_event: DragStartEvent) => {
+    dragOffsetXRef.current = 0;
+    setNestTargetGroupId(null);
+    setNestTargetKind(null);
+    setDropIndicator(null);
+
+    if (!pointerListenerRef.current) {
+      pointerListenerRef.current = (e: PointerEvent) => {
+        pointerYRef.current = e.clientY;
+        pointerXRef.current = e.clientX;
+      };
+      window.addEventListener('pointermove', pointerListenerRef.current);
+    }
+  };
+
+  const handleDragMove = (event: DragMoveEvent) => {
+    dragOffsetXRef.current = event.delta.x;
+  };
+
+  const handleDragCancel = (_event: DragCancelEvent) => {
+    resetDragState();
+  };
+
   const handleDragOver = (event: DragOverEvent) => {
-    const { over } = event;
+    const { over, active } = event;
     setActiveDroppableId(over ? String(over.id) : null);
+
+    if (!over) {
+      if (nestTargetGroupId !== null) {
+        setNestTargetGroupId(null);
+        setNestTargetKind(null);
+      }
+      if (dropIndicator !== null) {
+        setDropIndicator(null);
+      }
+      return;
+    }
+
+    const activeParsed = parseDndId(String(active.id));
+    const overParsed = parseDndId(String(over.id));
+
+    const overRect = over.rect;
+    const pointerY = pointerYRef.current;
+    const pointerX = pointerXRef.current;
+
+    const leftZone = overRect && pointerX !== null ? overRect.left + overRect.width * 0.35 : null;
+    const rightZone = overRect && pointerX !== null ? overRect.left + overRect.width * 0.65 : null;
+
+    const shouldNest = rightZone !== null && pointerX !== null
+      ? pointerX > rightZone
+      : dragOffsetXRef.current > NEST_THRESHOLD;
+
+    const shouldOutdent = leftZone !== null && pointerX !== null
+      ? pointerX < leftZone
+      : dragOffsetXRef.current < -NEST_THRESHOLD;
+
+    const getPosition = () => {
+      if (!overRect || pointerY === null) return null;
+      const mid = overRect.top + overRect.height / 2;
+      return pointerY < mid ? 'before' : 'after';
+    };
+
+    const getGroupInfo = (groupId: string): { group: ApiGroup; parentId: string | null; productId: string } | null => {
+      const findLocal = (groups: ApiGroup[], targetId: string, parentId: string | null): { group: ApiGroup; parentId: string | null } | null => {
+        for (const group of groups) {
+          if (group.id === targetId) {
+            return { group, parentId };
+          }
+          if (group.subgroups && group.subgroups.length > 0) {
+            const result = findLocal(group.subgroups, targetId, group.id);
+            if (result) return result;
+          }
+        }
+        return null;
+      };
+
+      for (const product of products) {
+        const found = findLocal(product.groups, groupId, null);
+        if (found) {
+          return { ...found, productId: product.id };
+        }
+      }
+      return null;
+    };
+
+    const activeGroupInfo = activeParsed.type === 'group' ? getGroupInfo(activeParsed.itemId) : null;
+    const overGroupInfo = overParsed.type === 'group' ? getGroupInfo(overParsed.itemId) : null;
+
+    const isHoveringParent = !!activeGroupInfo && !!overGroupInfo
+      && activeGroupInfo.productId === overGroupInfo.productId
+      && activeGroupInfo.parentId === overGroupInfo.group.id;
+
+    if (activeParsed.type === 'group' && overParsed.type === 'group' && isHoveringParent) {
+      if (nestTargetGroupId !== overParsed.itemId) {
+        setNestTargetGroupId(overParsed.itemId);
+      }
+      if (nestTargetKind !== 'outdent') {
+        setNestTargetKind('outdent');
+      }
+      if (dropIndicator !== null) {
+        setDropIndicator(null);
+      }
+      return;
+    }
+
+    // ??? ?? ???? ???? ?? ?? ?? ??
+    if (activeParsed.type === 'group' && overParsed.type === 'groupContainer' && activeGroupInfo && overParsed.containerParentId === activeGroupInfo.parentId) {
+      if (nestTargetGroupId !== overParsed.containerParentId) {
+        setNestTargetGroupId(overParsed.containerParentId);
+      }
+      if (nestTargetKind !== 'outdent') {
+        setNestTargetKind('outdent');
+      }
+      if (dropIndicator !== null) {
+        setDropIndicator(null);
+      }
+      return;
+    }
+
+    // ?? ? ??, ??? ???? ??? ??
+    if (activeParsed.type === 'group' && overParsed.type === 'group' && shouldNest) {
+      if (nestTargetGroupId !== overParsed.itemId) {
+        setNestTargetGroupId(overParsed.itemId);
+      }
+      if (nestTargetKind !== 'group') {
+        setNestTargetKind('group');
+      }
+      if (dropIndicator !== null) {
+        setDropIndicator(null);
+      }
+      return;
+    }
+
+    // ?? ? ??, ?? ???? ?? ?? ??
+    if (activeParsed.type === 'group' && overParsed.type === 'group' && shouldOutdent) {
+      const canOutdent = !!activeGroupInfo && !!overGroupInfo
+        && activeGroupInfo.productId === overGroupInfo.productId
+        && activeGroupInfo.parentId !== overGroupInfo.parentId;
+
+      if (canOutdent) {
+        if (nestTargetGroupId !== overParsed.itemId) {
+          setNestTargetGroupId(overParsed.itemId);
+        }
+        if (nestTargetKind !== 'outdent') {
+          setNestTargetKind('outdent');
+        }
+        if (dropIndicator !== null) {
+          setDropIndicator(null);
+        }
+        return;
+      }
+    }
+
+    // ?? ??? ?? ??
+    if (activeParsed.type === 'group' && overParsed.type === 'group') {
+      const position = getPosition();
+      if (!position) {
+        if (dropIndicator !== null) {
+          setDropIndicator(null);
+        }
+      } else if (!dropIndicator || dropIndicator.type !== 'group' || dropIndicator.itemId !== overParsed.itemId || dropIndicator.position !== position) {
+        setDropIndicator({ type: 'group', itemId: overParsed.itemId, position });
+      }
+      if (nestTargetGroupId !== null) {
+        setNestTargetGroupId(null);
+        setNestTargetKind(null);
+      }
+      return;
+    }
+
+    // ????? ? ????? ?? ??
+    if (activeParsed.type === 'endpoint' && overParsed.type === 'endpoint') {
+      const position = getPosition();
+      if (!position) {
+        if (dropIndicator !== null) {
+          setDropIndicator(null);
+        }
+      } else if (!dropIndicator || dropIndicator.type !== 'endpoint' || dropIndicator.itemId !== overParsed.itemId || dropIndicator.position !== position) {
+        setDropIndicator({ type: 'endpoint', itemId: overParsed.itemId, position });
+      }
+      return;
+    }
+
+    // ????? ? ?? ?? ? ?? ?????? ??
+    if (activeParsed.type === 'endpoint' && overParsed.type === 'group') {
+      if (nestTargetGroupId !== overParsed.itemId) {
+        setNestTargetGroupId(overParsed.itemId);
+      }
+      if (nestTargetKind !== 'endpoint') {
+        setNestTargetKind('endpoint');
+      }
+      if (dropIndicator !== null) {
+        setDropIndicator(null);
+      }
+      return;
+    }
+
+    if (nestTargetGroupId !== null) {
+      setNestTargetGroupId(null);
+      setNestTargetKind(null);
+    }
+
+    if (dropIndicator !== null) {
+      setDropIndicator(null);
+    }
   };
 
   const handleProductDragEnd = async (event: DragEndEvent) => {
@@ -844,6 +1110,26 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
     return null;
   };
+
+  const reorderWithIndicator = <T extends { id: string }>(
+    items: T[],
+    activeId: string,
+    overId: string,
+    position: 'before' | 'after'
+  ): T[] => {
+    const activeItem = items.find((item) => item.id === activeId);
+    if (!activeItem) return items;
+
+    const filtered = items.filter((item) => item.id !== activeId);
+    const overIndex = filtered.findIndex((item) => item.id === overId);
+    if (overIndex === -1) return items;
+
+    const insertIndex = position === 'after' ? overIndex + 1 : overIndex;
+    const result = [...filtered];
+    result.splice(insertIndex, 0, activeItem);
+    return result;
+  };
+
 
   // ✅ 재귀적으로 그룹 ID로 그룹 찾기
   const findGroupById = (groups: ApiGroup[], groupId: string): ApiGroup | null => {
@@ -927,6 +1213,44 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
+    // === Outdent via parent container ===
+    if (overParsed.type === 'groupContainer' && nestTargetKind === 'outdent') {
+      const targetParentId = overParsed.containerParentId
+        ? findGroupWithParent(activeInfo.product.groups, overParsed.containerParentId, null)?.parentId ?? null
+        : null;
+
+      if (targetParentId === activeInfo.group.id) {
+        alert('??Group cannot be moved into itself.');
+        return;
+      }
+
+      if (targetParentId && isDescendantGroup(activeInfo.group, targetParentId)) {
+        alert('??Cannot move a group into its own subgroup.');
+        return;
+      }
+
+      if (targetParentId === activeInfo.parentId) {
+        console.log('??? Same parent container, no move needed');
+        return;
+      }
+
+      try {
+        const result = await apiClient.moveGroup(activeInfo.group.id, targetParentId);
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        console.log('??Group moved successfully');
+        if (onEndpointsChange) {
+          onEndpointsChange();
+        }
+      } catch (error) {
+        console.error('Failed to move group:', error);
+        alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+      return;
+    }
+
     // === Move to subgroup container (become child) ===
     if (overParsed.type === 'groupContainer') {
       const targetProductId = overParsed.productId;
@@ -974,7 +1298,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       return;
     }
 
-    // === Reorder within same parent ===
+    // === Reorder or nest into another group ===
     if (overParsed.type === 'group') {
       if (!overInfo) {
         console.error('Over group not found:', overId);
@@ -982,12 +1306,109 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       }
 
       if (activeInfo.product.id !== overInfo.product.id) {
-        console.log('??? Cross-product group reorder not supported');
+        console.log('??? Cross-product group move not supported');
         return;
       }
 
+      const shouldNest = nestTargetKind === 'group';
+      const shouldOutdent = nestTargetKind === 'outdent';
+
+      // ?? ?? ?? ???? ?? ??? ??
+      if (activeInfo.parentId === overInfo.group.id) {
+        const targetParentId = overInfo.parentId ?? null;
+
+        if (targetParentId === activeInfo.group.id) {
+          alert('??Group cannot be moved into itself.');
+          return;
+        }
+
+        if (targetParentId && isDescendantGroup(activeInfo.group, targetParentId)) {
+          alert('??Cannot move a group into its own subgroup.');
+          return;
+        }
+
+        try {
+          const result = await apiClient.moveGroup(activeInfo.group.id, targetParentId);
+          if (result.error) {
+            throw new Error(result.error);
+          }
+
+          console.log('??Group moved successfully');
+          if (onEndpointsChange) {
+            onEndpointsChange();
+          }
+        } catch (error) {
+          console.error('Failed to move group:', error);
+          alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        return;
+      }
+
+
+      if (shouldNest) {
+        const targetParentId = overInfo.group.id;
+
+        if (targetParentId === activeInfo.group.id) {
+          alert('??Group cannot be moved into itself.');
+          return;
+        }
+
+        if (isDescendantGroup(activeInfo.group, targetParentId)) {
+          alert('??Cannot move a group into its own subgroup.');
+          return;
+        }
+
+        try {
+          const result = await apiClient.moveGroup(activeInfo.group.id, targetParentId);
+          if (result.error) {
+            throw new Error(result.error);
+          }
+
+          console.log('??Group moved successfully');
+          if (onEndpointsChange) {
+            onEndpointsChange();
+          }
+        } catch (error) {
+          console.error('Failed to move group:', error);
+          alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        return;
+      }
+
+      if (shouldOutdent) {
+        const targetParentId = overInfo.parentId ?? null;
+
+        if (targetParentId === activeInfo.group.id) {
+          alert('??Group cannot be moved into itself.');
+          return;
+        }
+
+        if (targetParentId && isDescendantGroup(activeInfo.group, targetParentId)) {
+          alert('??Cannot move a group into its own subgroup.');
+          return;
+        }
+
+        if (targetParentId !== activeInfo.parentId) {
+          try {
+            const result = await apiClient.moveGroup(activeInfo.group.id, targetParentId);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+
+            console.log('??Group moved successfully');
+            if (onEndpointsChange) {
+              onEndpointsChange();
+            }
+          } catch (error) {
+            console.error('Failed to move group:', error);
+            alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          }
+          return;
+        }
+      }
+
       if (activeInfo.parentId !== overInfo.parentId) {
-        console.log('??? Different parents - drop into subgroup container to move');
+        console.log('??? Different parents - drag right to nest');
         return;
       }
 
@@ -1006,14 +1427,22 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
         return;
       }
 
+      const indicator = dropIndicator && dropIndicator.type === 'group' && dropIndicator.itemId === overInfo.group.id
+        ? dropIndicator.position
+        : null;
+
+      const reorderedGroups = indicator
+        ? reorderWithIndicator(siblings, activeInfo.group.id, overInfo.group.id, indicator)
+        : arrayMove(siblings, oldIndex, newIndex);
+
       console.log('?? Reorder groups:', {
         product: activeInfo.product.id,
         parent: activeInfo.parentId || 'root',
         from: oldIndex,
         to: newIndex,
+        position: indicator || 'auto',
       });
 
-      const reorderedGroups = arrayMove(siblings, oldIndex, newIndex);
       const updates = reorderedGroups.map((group, index) => ({
         id: group.id,
         order_index: index,
@@ -1037,6 +1466,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
 
     console.log('??? Unsupported group drop target:', overParsed.type);
+
   };
 
   const toggleProduct = (productId: string) => {
@@ -1190,218 +1620,276 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   };
 
   const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
+    try {
+      const { active, over } = event;
 
-    if (!over) {
-      return;
-    }
-
-    const activeId = String(active.id);
-    const overId = String(over.id);
-
-    // ✅ 새로운 ID 체계 파싱
-    const activeParsed = parseDndId(activeId);
-    const overParsed = parseDndId(overId);
-
-    console.log('🔄 Drag end:', { activeId, overId, activeParsed, overParsed });
-
-    // 제품 드래그인지 확인 (제품은 아직 prefix 없음)
-    const isProductDrag = products.some((p) => p.id === activeId);
-    if (isProductDrag) {
-      await handleProductDragEnd(event);
-      return;
-    }
-
-    // ✅ 그룹 드래그 (g: prefix)
-    if (activeParsed.type === 'group') {
-      await handleGroupDragEnd(event);
-      return;
-    }
-
-    // ✅ 엔드포인트 드래그 (e: prefix)
-    if (activeParsed.type !== 'endpoint') {
-      console.log('⚠️ Unknown drag type:', activeParsed.type);
-      return;
-    }
-
-    const draggedEndpointId = activeParsed.itemId;
-
-    // 드래그된 엔드포인트 찾기 (재귀적)
-    let draggedEndpoint: ApiEndpoint | null = null;
-    let sourceProductId: string = '';
-    let sourceGroup: ApiGroup | null = null;
-
-    for (const product of products) {
-      const result = findEndpointInGroups(product.groups, draggedEndpointId);
-      if (result) {
-        draggedEndpoint = result.endpoint;
-        sourceGroup = result.group;
-        sourceProductId = product.id;
-        break;
-      }
-    }
-
-    if (!draggedEndpoint || !sourceGroup) {
-      console.error('Dragged endpoint not found:', draggedEndpointId);
-      return;
-    }
-
-    console.log('🔄 Drag from:', {
-      product: sourceProductId,
-      group: sourceGroup.name,
-      endpoint: draggedEndpoint.name,
-    });
-
-    // ✅ over가 엔드포인트 컨테이너인 경우 (ep:productId:groupId) - 그룹으로 이동
-    if (overParsed.type === 'endpointContainer') {
-      const targetGroupId = overParsed.containerParentId;
-
-      if (!targetGroupId) {
-        console.error('Invalid endpoint container:', overId);
+      if (!over) {
         return;
       }
 
-      // 같은 그룹이면 무시
-      if (targetGroupId === sourceGroup.id) {
-        console.log('⚠️ Same group, no move needed');
+      const activeId = String(active.id);
+      const overId = String(over.id);
+
+      // ???????ID ??? ???
+      const activeParsed = parseDndId(activeId);
+      const overParsed = parseDndId(overId);
+
+      console.log('?? Drag end:', { activeId, overId, activeParsed, overParsed });
+
+      // ??? ???????? ??? (????? ??? prefix ???)
+      const isProductDrag = products.some((p) => p.id === activeId);
+      if (isProductDrag) {
+        await handleProductDragEnd(event);
         return;
       }
 
-      // 대상 그룹 찾기
-      let targetGroup: ApiGroup | null = null;
-      let targetProductId: string = '';
+      // ????? ?????(g: prefix)
+      if (activeParsed.type === 'group') {
+        await handleGroupDragEnd(event);
+        return;
+      }
+
+      // ???????????????(e: prefix)
+      if (activeParsed.type !== 'endpoint') {
+        console.log('??? Unknown drag type:', activeParsed.type);
+        return;
+      }
+
+      const draggedEndpointId = activeParsed.itemId;
+
+      // ?????? ??????????? (?????
+      let draggedEndpoint: ApiEndpoint | null = null;
+      let sourceProductId: string = '';
+      let sourceGroup: ApiGroup | null = null;
 
       for (const product of products) {
-        const found = findGroupById(product.groups, targetGroupId);
-        if (found) {
-          targetGroup = found;
-          targetProductId = product.id;
-          break;
-        }
-      }
-
-      if (!targetGroup) {
-        console.error('Target group not found:', targetGroupId);
-        return;
-      }
-
-      console.log('📍 Move to group:', { targetProductId, targetGroup: targetGroup.name });
-
-      try {
-        // 새로운 move API 호출 (group_id 사용)
-        const result = await apiClient.moveEndpointToGroup(
-          draggedEndpointId,
-          targetGroupId,
-          0
-        );
-
-        if (result.error) {
-          throw new Error(result.error);
-        }
-
-        console.log('✅ Endpoint moved successfully');
-        if (onEndpointsChange) {
-          onEndpointsChange();
-        }
-      } catch (error) {
-        console.error('Failed to move endpoint:', error);
-        alert(`❌ Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-      return;
-    }
-
-    // ✅ over가 엔드포인트인 경우 (e:endpointId) - 재정렬 또는 이동
-    if (overParsed.type === 'endpoint') {
-      const targetEndpointId = overParsed.itemId;
-
-      if (draggedEndpointId === targetEndpointId) {
-        console.log('⚠️ Same endpoint, no action');
-        return;
-      }
-
-      // 대상 엔드포인트 찾기 (재귀적)
-      let targetGroup: ApiGroup | null = null;
-
-      for (const product of products) {
-        const result = findEndpointInGroups(product.groups, targetEndpointId);
+        const result = findEndpointInGroups(product.groups, draggedEndpointId);
         if (result) {
-          targetGroup = result.group;
-          // _targetProductId = product.id; // Not currently used
+          draggedEndpoint = result.endpoint;
+          sourceGroup = result.group;
+          sourceProductId = product.id;
           break;
         }
       }
 
-      if (!targetGroup) {
-        console.error('Target endpoint not found:', targetEndpointId);
+      if (!draggedEndpoint || !sourceGroup) {
+        console.error('Dragged endpoint not found:', draggedEndpointId);
         return;
       }
 
-      // 같은 그룹 내 재정렬
-      if (sourceGroup.id === targetGroup.id) {
-        console.log('� Reordering within same group');
+      console.log('?? Drag from:', {
+        product: sourceProductId,
+        group: sourceGroup.name,
+        endpoint: draggedEndpoint.name,
+      });
 
-        const targetGroupEndpoints = targetGroup.endpoints;
-        const oldIndex = targetGroupEndpoints.findIndex((e) => e.id === draggedEndpointId);
-        const newIndex = targetGroupEndpoints.findIndex((e) => e.id === targetEndpointId);
+      // ??over?? ?????? ??? - ?????? ???
+      if (overParsed.type === 'group') {
+        const targetGroupId = overParsed.itemId;
 
-        if (oldIndex === -1 || newIndex === -1) {
-          console.error('❌ Index not found:', { oldIndex, newIndex });
+        if (targetGroupId === sourceGroup.id) {
+          console.log('??? Same group, no move needed');
           return;
         }
 
-        console.log('📊 Reorder:', { from: oldIndex, to: newIndex });
+        let targetGroup: ApiGroup | null = null;
+        for (const product of products) {
+          const found = findGroupById(product.groups, targetGroupId);
+          if (found) {
+            targetGroup = found;
+            break;
+          }
+        }
 
-        const reorderedEndpoints = arrayMove(targetGroupEndpoints, oldIndex, newIndex);
-        const updates = reorderedEndpoints.map((endpoint, index) => ({
-          id: endpoint.id,
-          order_index: index,
-        }));
+        if (!targetGroup) {
+          console.error('Target group not found:', targetGroupId);
+          return;
+        }
+
+        const targetIndex = targetGroup.endpoints.length;
 
         try {
-          const result = await apiClient.reorderEndpoints(updates);
+          const result = await apiClient.moveEndpointToGroup(
+            draggedEndpointId,
+            targetGroup.id,
+            targetIndex
+          );
+
           if (result.error) {
             throw new Error(result.error);
           }
 
-          console.log('✅ Reorder successful');
+          console.log('??Endpoint moved successfully');
           if (onEndpointsChange) {
             onEndpointsChange();
           }
         } catch (error) {
-          console.error('Failed to reorder endpoints:', error);
-          alert(`❌ Reorder failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          console.error('Failed to move endpoint:', error);
+          alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
         return;
       }
 
-      // 다른 그룹으로 이동
-      console.log('� Moving to different group');
-      const targetIndex = targetGroup.endpoints.findIndex((e) => e.id === targetEndpointId);
+      // ??over?? ??????????????????? (ep:productId:groupId) - ?????? ???
+      if (overParsed.type === 'endpointContainer') {
+        const targetGroupId = overParsed.containerParentId;
 
-      try {
-        const result = await apiClient.moveEndpointToGroup(
-          draggedEndpointId,
-          targetGroup.id,
-          targetIndex
-        );
-
-        if (result.error) {
-          throw new Error(result.error);
+        if (!targetGroupId) {
+          console.error('Invalid endpoint container:', overId);
+          return;
         }
 
-        console.log('✅ Endpoint moved successfully');
-        if (onEndpointsChange) {
-          onEndpointsChange();
+        // ??? ?????? ???
+        if (targetGroupId === sourceGroup.id) {
+          console.log('??? Same group, no move needed');
+          return;
         }
-      } catch (error) {
-        console.error('Failed to move endpoint:', error);
-        alert(`❌ Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
+        // ??????? ???
+        let targetGroup: ApiGroup | null = null;
+        let targetProductId: string = '';
+
+        for (const product of products) {
+          const found = findGroupById(product.groups, targetGroupId);
+          if (found) {
+            targetGroup = found;
+            targetProductId = product.id;
+            break;
+          }
+        }
+
+        if (!targetGroup) {
+          console.error('Target group not found:', targetGroupId);
+          return;
+        }
+
+        console.log('?? Move to group:', { targetProductId, targetGroup: targetGroup.name });
+
+        try {
+          // ?????move API ??? (group_id ???)
+          const result = await apiClient.moveEndpointToGroup(
+            draggedEndpointId,
+            targetGroupId,
+            0
+          );
+
+          if (result.error) {
+            throw new Error(result.error);
+          }
+
+          console.log('??Endpoint moved successfully');
+          if (onEndpointsChange) {
+            onEndpointsChange();
+          }
+        } catch (error) {
+          console.error('Failed to move endpoint:', error);
+          alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        return;
       }
-      return;
-    }
 
-    console.log('⚠️ Unhandled drop target type:', overParsed.type);
-  };
+      // ??over?? ????????? ??? (e:endpointId) - ???????? ???
+      if (overParsed.type === 'endpoint') {
+        const targetEndpointId = overParsed.itemId;
+
+        if (draggedEndpointId === targetEndpointId) {
+          console.log('??? Same endpoint, no action');
+          return;
+        }
+
+        // ??????????????? (?????
+        let targetGroup: ApiGroup | null = null;
+
+        for (const product of products) {
+          const result = findEndpointInGroups(product.groups, targetEndpointId);
+          if (result) {
+            targetGroup = result.group;
+            // _targetProductId = product.id; // Not currently used
+            break;
+          }
+        }
+
+        if (!targetGroup) {
+          console.error('Target endpoint not found:', targetEndpointId);
+          return;
+        }
+
+        // ??? ??? ???????
+        if (sourceGroup.id === targetGroup.id) {
+          console.log('??Reordering within same group');
+
+          const targetGroupEndpoints = targetGroup.endpoints;
+          const oldIndex = targetGroupEndpoints.findIndex((e) => e.id === draggedEndpointId);
+          const newIndex = targetGroupEndpoints.findIndex((e) => e.id === targetEndpointId);
+
+          if (oldIndex === -1 || newIndex === -1) {
+            console.error('??Index not found:', { oldIndex, newIndex });
+            return;
+          }
+
+          console.log('??Reorder:', { from: oldIndex, to: newIndex });
+
+          const indicator = dropIndicator && dropIndicator.type === 'endpoint' && dropIndicator.itemId === targetEndpointId
+            ? dropIndicator.position
+            : null;
+
+          const reorderedEndpoints = indicator
+            ? reorderWithIndicator(targetGroupEndpoints, draggedEndpointId, targetEndpointId, indicator)
+            : arrayMove(targetGroupEndpoints, oldIndex, newIndex);
+
+          const updates = reorderedEndpoints.map((endpoint, index) => ({
+            id: endpoint.id,
+            order_index: index,
+          }));
+
+          try {
+            const result = await apiClient.reorderEndpoints(updates);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+
+            console.log('??Reorder successful');
+            if (onEndpointsChange) {
+              onEndpointsChange();
+            }
+          } catch (error) {
+            console.error('Failed to reorder endpoints:', error);
+            alert(`??Reorder failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          }
+          return;
+        }
+
+        // ??? ?????? ???
+        console.log('??Moving to different group');
+        const targetIndex = targetGroup.endpoints.findIndex((e) => e.id === targetEndpointId);
+
+        try {
+          const result = await apiClient.moveEndpointToGroup(
+            draggedEndpointId,
+            targetGroup.id,
+            targetIndex
+          );
+
+          if (result.error) {
+            throw new Error(result.error);
+          }
+
+          console.log('??Endpoint moved successfully');
+          if (onEndpointsChange) {
+            onEndpointsChange();
+          }
+        } catch (error) {
+          console.error('Failed to move endpoint:', error);
+          alert(`??Move failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        return;
+      }
+
+      console.log('??? Unhandled drop target type:', overParsed.type);
+    } finally {
+      resetDragState();
+    }
+  };;
 
   const handleDialogSuccess = () => {
     if (onEndpointsChange) {
@@ -1577,8 +2065,11 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
           onDragEnd={handleDragEnd}
           onDragOver={handleDragOver}
+          onDragCancel={handleDragCancel}
         >
           <div className="p-2">
             {/* Add Product Button */}
@@ -1633,6 +2124,9 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
                               searchTerm,
                               activeDroppableId,
                               linkedEndpointIds,
+                              nestTargetGroupId,
+                              nestTargetKind,
+                              dropIndicator,
                             })
                           )}
                         </div>
