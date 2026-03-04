@@ -1,6 +1,6 @@
-import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2 } from 'lucide-react';
+import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2, SplitSquareHorizontal } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab } from './tabs';
+import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab, SchemaSplitTab } from './tabs';
 import type { ApiEndpoint } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/ui/button';
@@ -229,6 +229,14 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               <Rocket className="w-4 h-4 mr-2" />
               Runner
             </TabsTrigger>
+            <TabsTrigger
+              value="split"
+              disabled={isLocked}
+              className="px-4 py-2 rounded-md text-sm font-medium transition-colors data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <SplitSquareHorizontal className="w-4 h-4 mr-2" />
+              Split
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -293,6 +301,21 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               key={`runner-${endpoint.id}-${currentVersionId || 'none'}`}
               endpoint={endpoint}
               settings={settings}
+            />
+          )}
+        </TabsContent>
+        <TabsContent value="split" className="flex-1 m-0 overflow-hidden data-[state=active]:flex">
+          {isLocked ? (
+            <div className="flex-1 flex items-center justify-center text-zinc-600">
+              <div className="text-center">
+                <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p className="text-sm">Please create or load a version to access Split tab</p>
+              </div>
+            </div>
+          ) : (
+            <SchemaSplitTab
+              key={`split-${endpoint.id}-${currentVersionId || 'none'}`}
+              endpoint={endpoint}
             />
           )}
         </TabsContent>

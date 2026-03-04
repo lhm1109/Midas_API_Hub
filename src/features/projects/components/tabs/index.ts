@@ -4,6 +4,7 @@ export { ManualTab } from './ManualTab';
 export { SpecTab } from './SpecTab';
 export { BuilderTab } from './BuilderTab';
 export { RunnerTab } from './RunnerTab';
+export { SchemaSplitTab } from './SchemaSplitTab';
 export { ManagerTab } from './ManagerTab';
 export { CompareVersionsDialog } from './CompareVersionsDialog';
 

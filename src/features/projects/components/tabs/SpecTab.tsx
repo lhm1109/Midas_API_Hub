@@ -42,6 +42,235 @@ interface SpecTabProps {
   settings?: Settings;
 }
 
+type SchemaView = 'original' | 'enhanced' | 'merged';
+type EnhancedSubView = 'request' | 'response';
+
+const SCHEMA_KEYWORDS = [
+  'type',
+  'properties',
+  '$ref',
+  'allOf',
+  'oneOf',
+  'anyOf',
+  'items',
+  'required',
+  'additionalProperties',
+];
+
+const parseIfString = (value: any) => {
+  if (!value) return value;
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }
+  return value;
+};
+
+const hasSchemaKeywords = (schema: any): boolean => {
+  if (!schema || typeof schema !== 'object') return false;
+  return SCHEMA_KEYWORDS.some((key) => Object.prototype.hasOwnProperty.call(schema, key));
+};
+
+const isSchemaBundle = (schema: any): boolean => {
+  if (!schema || typeof schema !== 'object') return false;
+  const hasRequest = Object.prototype.hasOwnProperty.call(schema, 'request');
+  const hasResponse = Object.prototype.hasOwnProperty.call(schema, 'response');
+  if (!hasRequest && !hasResponse) return false;
+  return !hasSchemaKeywords(schema);
+};
+
+const extractEnhancedBundle = (value: any) => {
+  const parsed = parseIfString(value);
+  if (!parsed || typeof parsed !== 'object') {
+    return { request: undefined, response: undefined, isBundle: false };
+  }
+  if (isSchemaBundle(parsed)) {
+    return {
+      request: parseIfString((parsed as any).request),
+      response: parseIfString((parsed as any).response),
+      isBundle: true,
+    };
+  }
+  return { request: parsed, response: undefined, isBundle: false };
+};
+
+const deepClone = <T,>(value: T): T => {
+  if (value === undefined) return value;
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch {
+    return value;
+  }
+};
+
+const stableStringify = (value: any): string => {
+  if (value === null || value === undefined) return String(value);
+  if (typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(',')}]`;
+  }
+  const keys = Object.keys(value).sort();
+  return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(',')}}`;
+};
+
+const extractComponents = (schema: any) => {
+  if (!schema || typeof schema !== 'object') {
+    return { schema: {}, components: {} };
+  }
+
+  const components = schema?.components?.schemas;
+  const baseSchema = { ...schema };
+  if (baseSchema.components) {
+    delete baseSchema.components;
+  }
+
+  return {
+    schema: baseSchema,
+    components: components && typeof components === 'object' ? components : {},
+  };
+};
+
+const rewriteRefs = (node: any, refMap: Record<string, string>): any => {
+  if (!node || typeof node !== 'object') return node;
+  if (Array.isArray(node)) {
+    return node.map((item) => rewriteRefs(item, refMap));
+  }
+
+  const next: any = {};
+  for (const [key, value] of Object.entries(node)) {
+    if (key === '$ref' && typeof value === 'string' && refMap[value]) {
+      next[key] = refMap[value];
+      continue;
+    }
+    next[key] = rewriteRefs(value, refMap);
+  }
+  return next;
+};
+
+const mergeRequestResponseSchemas = (requestSchema: any, responseSchema: any) => {
+  const requestClone = deepClone(requestSchema ?? {});
+  const responseClone = deepClone(responseSchema ?? {});
+
+  const { schema: requestBody, components: requestComponents } = extractComponents(requestClone);
+  const { schema: responseBody, components: responseComponents } = extractComponents(responseClone);
+
+  const mergedComponents: Record<string, any> = { ...requestComponents };
+  const usedNames = new Set(Object.keys(mergedComponents));
+  const refMap: Record<string, string> = {};
+
+  for (const [name, schema] of Object.entries(responseComponents)) {
+    if (!mergedComponents[name]) {
+      mergedComponents[name] = schema;
+      usedNames.add(name);
+      continue;
+    }
+
+    if (stableStringify(mergedComponents[name]) === stableStringify(schema)) {
+      continue;
+    }
+
+    let newName = `Response_${name}`;
+    let counter = 1;
+    while (usedNames.has(newName)) {
+      newName = `Response_${name}_${counter++}`;
+    }
+
+    mergedComponents[newName] = schema;
+    usedNames.add(newName);
+    refMap[`#/components/schemas/${name}`] = `#/components/schemas/${newName}`;
+  }
+
+  const getUniqueName = (base: string) => {
+    if (!usedNames.has(base)) {
+      usedNames.add(base);
+      return base;
+    }
+    let counter = 1;
+    let candidate = `${base}_${counter}`;
+    while (usedNames.has(candidate)) {
+      counter += 1;
+      candidate = `${base}_${counter}`;
+    }
+    usedNames.add(candidate);
+    return candidate;
+  };
+
+  const stripOrigin = (schema: any) => {
+    if (!schema || typeof schema !== 'object') return schema;
+    const cloned = deepClone(schema);
+    if (cloned && typeof cloned === 'object') {
+      delete (cloned as any)['x-origin-name'];
+    }
+    return cloned;
+  };
+
+  const resolveOriginName = (schema: any, fallback: string) => {
+    const origin = schema?.['x-origin-name'];
+    if (typeof origin === 'string' && origin.trim().length > 0) {
+      return origin.trim();
+    }
+    return fallback;
+  };
+
+  const findMatchingComponentName = (schema: any) => {
+    const target = stripOrigin(schema);
+    const targetSig = stableStringify(target);
+    for (const [name, comp] of Object.entries(mergedComponents)) {
+      if (stableStringify(stripOrigin(comp)) === targetSig) {
+        return name;
+      }
+    }
+    return null;
+  };
+
+  const resolveComponentName = (schema: any, fallback: string) => {
+    const origin = resolveOriginName(schema, '');
+    const match = findMatchingComponentName(schema);
+    return origin || match || fallback;
+  };
+
+  const pickComponentName = (schema: any, fallback: string) => {
+    const desired = resolveComponentName(schema, fallback);
+    if (mergedComponents[desired] && stableStringify(stripOrigin(mergedComponents[desired])) === stableStringify(stripOrigin(schema))) {
+      return desired;
+    }
+    return getUniqueName(desired);
+  };
+
+  const normalizedResponse = Object.keys(refMap).length > 0
+    ? rewriteRefs(responseBody, refMap)
+    : responseBody;
+  const requestName = pickComponentName(requestBody, 'Request');
+  const responseName = pickComponentName(normalizedResponse, 'Response');
+
+  if (requestBody && typeof requestBody === 'object') {
+    delete (requestBody as any)['x-origin-name'];
+  }
+  if (normalizedResponse && typeof normalizedResponse === 'object') {
+    delete (normalizedResponse as any)['x-origin-name'];
+  }
+
+  const nextSchemas: Record<string, any> = { ...mergedComponents };
+  const hasComponents = Object.keys(nextSchemas).length > 0;
+  if (!hasComponents) {
+    if (!nextSchemas[requestName] || stableStringify(stripOrigin(nextSchemas[requestName])) !== stableStringify(stripOrigin(requestBody))) {
+      nextSchemas[requestName] = requestBody;
+    }
+    if (!nextSchemas[responseName] || stableStringify(stripOrigin(nextSchemas[responseName])) !== stableStringify(stripOrigin(normalizedResponse))) {
+      nextSchemas[responseName] = normalizedResponse;
+    }
+  }
+
+  return {
+    components: {
+      schemas: nextSchemas,
+    },
+  };
+};
+
 export function SpecTab({ endpoint, settings }: SpecTabProps) {
   const {
     setManualData,
@@ -88,19 +317,6 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
   // specData와 fallback을 결합 (specData 변경 시 재계산)
   const combinedSpecData = useMemo(() => {
-    // 문자열인 경우 파싱, 이미 객체인 경우 그대로 사용
-    const parseIfString = (value: any) => {
-      if (!value) return value;
-      if (typeof value === 'string') {
-        try {
-          return JSON.parse(value);
-        } catch {
-          return value;
-        }
-      }
-      return value;
-    };
-
     const result = {
       jsonSchema: parseIfString(specData?.jsonSchema) || parseIfString(specData?.jsonSchemaOriginal) || fallbackSpec.jsonSchema,
       jsonSchemaOriginal: parseIfString(specData?.jsonSchemaOriginal) || parseIfString(specData?.jsonSchema) || fallbackSpec.jsonSchema,
@@ -110,6 +326,85 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
     return result;
   }, [specData, fallbackSpec]);
+
+  const enhancedBundle = useMemo(() => {
+    return extractEnhancedBundle(combinedSpecData.jsonSchemaEnhanced);
+  }, [combinedSpecData.jsonSchemaEnhanced]);
+
+  const enhancedRequestSchema = useMemo(() => {
+    return enhancedBundle.request
+      || combinedSpecData.jsonSchemaOriginal
+      || combinedSpecData.jsonSchema
+      || {};
+  }, [enhancedBundle.request, combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchema]);
+
+  const enhancedResponseSchema = useMemo(() => {
+    return enhancedBundle.response || {};
+  }, [enhancedBundle.response]);
+
+  const mergedSchema = useMemo(() => {
+    const merged = mergeRequestResponseSchemas(enhancedRequestSchema, enhancedResponseSchema);
+    const mergedComponents = merged?.components?.schemas;
+    const mergedKeys = mergedComponents && typeof mergedComponents === 'object'
+      ? Object.keys(mergedComponents)
+      : [];
+    const isRequestResponseOnly = mergedKeys.length > 0
+      && mergedKeys.every((key) => key === 'Request' || key === 'Response');
+
+    const originalComponents = combinedSpecData?.jsonSchemaOriginal?.components?.schemas;
+    if (isRequestResponseOnly && originalComponents && typeof originalComponents === 'object') {
+      return {
+        components: {
+          schemas: deepClone(originalComponents),
+        },
+      };
+    }
+
+    return merged;
+  }, [enhancedRequestSchema, enhancedResponseSchema, combinedSpecData.jsonSchemaOriginal]);
+
+  const computeMergedSnapshot = () => {
+    const merged = mergeRequestResponseSchemas(enhancedRequestSchema, enhancedResponseSchema);
+    const mergedComponents = merged?.components?.schemas;
+    const mergedKeys = mergedComponents && typeof mergedComponents === 'object'
+      ? Object.keys(mergedComponents)
+      : [];
+    const isRequestResponseOnly = mergedKeys.length > 0
+      && mergedKeys.every((key) => key === 'Request' || key === 'Response');
+
+    if (!isRequestResponseOnly) return merged;
+
+    const originalComponents = combinedSpecData?.jsonSchemaOriginal?.components?.schemas
+      || combinedSpecData?.jsonSchema?.components?.schemas;
+    if (originalComponents && typeof originalComponents === 'object' && Object.keys(originalComponents).length > 0) {
+      return {
+        components: {
+          schemas: deepClone(originalComponents),
+        },
+      };
+    }
+
+    try {
+      const cached = localStorage.getItem(`schemaSplit:${endpoint.id}`);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        const sourceSchema = typeof parsed?.sourceSchema === 'string' ? JSON.parse(parsed.sourceSchema) : null;
+        const cachedComponents = sourceSchema?.components?.schemas;
+        if (cachedComponents && typeof cachedComponents === 'object') {
+          return {
+            components: {
+              schemas: deepClone(cachedComponents),
+            },
+          };
+        }
+      }
+    } catch {
+      // ignore cache errors
+    }
+
+    return merged;
+  };
+
 
   // 🎯 활성 스키마 (우선순위: savedSchema > enhanced > original)
   const activeSchema = resolveActiveSchema(combinedSpecData);
@@ -147,20 +442,27 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     return isNewEnhancedSchema ? 'enhanced' : 'original';
   }, [settings?.schemaDefinition, isNewEnhancedSchema]);
 
-  // 🎯 Schema View Toggle: 'original' | 'enhanced' (⚠️ tableParameters보다 먼저 선언)
+  // 🎯 Schema View Toggle: 'original' | 'enhanced' (⚠️ table view보다 먼저 선언)
   // 🔥 일반 모드에서는 schemaView 고정 (탭 숨김)
-  const [schemaView, setSchemaView] = useState<'original' | 'enhanced'>(() => {
+  const [schemaView, setSchemaView] = useState<SchemaView>(() => {
     if (settings?.schemaMode === 'normal') {
       return 'original'; // 일반 모드는 항상 original
     }
     return hasEnhancedSchema ? 'enhanced' : 'original';
   });
+  const [enhancedSubView, setEnhancedSubView] = useState<EnhancedSubView>('request');
+  const [mergedSnapshot, setMergedSnapshot] = useState<any | null>(null);
+
+  const [tableView, setTableView] = useState<'request' | 'response' | 'merged'>('request');
+
 
   // 🎨 Designer Mode Toggle: 'code' | 'visual'
   const [designerMode, _setDesignerMode] = useState<'code' | 'visual'>('code');
 
   // 🔥 endpoint 변경 시 schemaView 재설정 (Enhanced 우선)
   useEffect(() => {
+    setEnhancedSubView('request');
+
     // 일반 모드에서는 항상 original
     if (settings?.schemaMode === 'normal') {
       setSchemaView('original');
@@ -182,6 +484,17 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       setSchemaView('original');
     }
   }, [endpoint.id, hasEnhancedSchema, isNewEnhancedSchema, settings?.schemaMode]);
+
+  useEffect(() => {
+    if (schemaView === 'original') {
+      setTableView('request');
+      return;
+    }
+
+    if (schemaView === 'merged') {
+      setTableView('merged');
+    }
+  }, [schemaView, endpoint.id]);
 
   // 🔥 YAML Definition 로드 (schemaView 변경 시)
   useEffect(() => {
@@ -295,10 +608,91 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     return formatRequiredStatus(field?.required);
   };
 
+  const getWrapperKey = (schema: any) => {
+    if (!schema || typeof schema !== 'object') return null;
+    const props = schema?.properties;
+    if (!props || typeof props !== 'object') return null;
+    if (props.Assign) return 'Assign';
+    if (props.Argument) return 'Argument';
+    if (props.MCD) return 'MCD';
+    const keys = Object.keys(props);
+    if (keys.length === 1) {
+      const loneKey = keys[0];
+      const loneProp = props[loneKey];
+      if (loneProp && typeof loneProp === 'object' && (loneProp.additionalProperties || loneProp.patternProperties)) {
+        return loneKey;
+      }
+    }
+    return null;
+  };
+
+  const resolveRefName = (ref: string) => {
+    const match = ref.match(/^#\/components\/schemas\/(.+)$/);
+    return match ? match[1] : null;
+  };
+
+  const inlineSchemaRefsForTable = (schema: any) => {
+    if (!schema || typeof schema !== 'object') return schema;
+    const cloned = deepClone(schema);
+    const components = cloned?.components?.schemas && typeof cloned.components.schemas === 'object'
+      ? cloned.components.schemas
+      : {};
+
+    const dereference = (node: any, refStack = new Set<string>()): any => {
+      if (!node || typeof node !== 'object') return node;
+      if (Array.isArray(node)) return node.map((item) => dereference(item, refStack));
+
+      if (typeof node.$ref === 'string') {
+        const ref = node.$ref;
+        const refName = resolveRefName(ref);
+        if (!refName) return node;
+        if (refStack.has(ref)) return node;
+        const target = components?.[refName];
+        if (!target || typeof target !== 'object') return node;
+        const nextStack = new Set(refStack);
+        nextStack.add(ref);
+        const resolved = dereference(target, nextStack);
+        const { $ref, ...rest } = node;
+        return dereference({ ...resolved, ...rest }, nextStack);
+      }
+
+      const result: Record<string, any> = {};
+      for (const [key, value] of Object.entries(node)) {
+        result[key] = dereference(value, refStack);
+      }
+      return result;
+    };
+
+    const inlined = dereference(cloned, new Set());
+    if (inlined && typeof inlined === 'object' && 'components' in inlined) {
+      delete (inlined as any).components;
+    }
+    return inlined;
+  };
+
+  const unwrapSchemaForTable = (schema: any) => {
+    if (!schema || typeof schema !== 'object') return schema;
+    const wrapperKey = getWrapperKey(schema);
+    if (!wrapperKey) return schema;
+    const wrapperInfo = schema?.properties?.[wrapperKey];
+    if (!wrapperInfo || typeof wrapperInfo !== 'object') return schema;
+
+    const patternProps = wrapperInfo.patternProperties;
+    if (patternProps && typeof patternProps === 'object') {
+      const first = Object.values(patternProps)[0];
+      if (first && typeof first === 'object') return first;
+    }
+
+    const additionalProps = wrapperInfo.additionalProperties;
+    if (additionalProps && typeof additionalProps === 'object') {
+      return additionalProps;
+    }
+
+    return schema;
+  };
+
   // 🔥 NEW: UI Schema Adapter로 테이블 스키마 생성
-  const tableParameters = useMemo(() => {
-    // 🔥 현재 schemaView에 맞는 schemaType 결정
-    const currentSchemaType = schemaView === 'original' ? 'original' : schemaType;
+  const buildTableParametersForSchema = (schemaToUse: any, isEnhancedStructure: boolean, currentSchemaType: string) => {
     const key = `${psdSet}/${currentSchemaType}`;
 
     // 🔥 YAML 규칙이 초기화되었는지 확인
@@ -306,26 +700,17 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       return [];
     }
 
-    // 🔥 schemaView에 따라 사용할 스키마 결정
-    // Enhanced 탭: jsonSchemaEnhanced가 있으면 사용, 없으면 jsonSchemaOriginal을 Enhanced로 처리
-    // Original 탭: jsonSchemaOriginal 사용
-    const schemaToUse = schemaView === 'enhanced'
-      ? (combinedSpecData.jsonSchemaEnhanced || combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema)
-      : (combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema);
-
-    // 🔥 Enhanced 스키마 구조 감지 (현재 뷰 기준)
-    // schemaView === 'enhanced'이면 무조건 Enhanced 컴파일러 사용 (사용자 선택 우선)
-    const isEnhancedStructure = schemaView === 'enhanced';
-
     // 🔥 스키마가 비어있거나 유효하지 않으면 빈 배열 반환
     if (!schemaToUse || typeof schemaToUse !== 'object' || Object.keys(schemaToUse).length === 0) {
       return [];
     }
 
+    const effectiveSchema = unwrapSchemaForTable(inlineSchemaRefsForTable(schemaToUse));
+
     if (isEnhancedStructure) {
       // New Enhanced Schema: 새 컴파일러로 섹션 생성
       try {
-        const sections = compileEnhancedSchema(schemaToUse as EnhancedSchema, psdSet, currentSchemaType);
+        const sections = compileEnhancedSchema(effectiveSchema as EnhancedSchema, psdSet, currentSchemaType);
 
         // Convert sections to table parameters format
         const params: any[] = [];
@@ -371,8 +756,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             if (field.children && field.children.length > 0) {
               const parentConditional = isConditionalField(field);
               // 🔥 3-depth 필드들을 조건별로 그룹화
-              const childSectionHeaders = field.children.filter((c: any) => c.type === 'section-header' || c.section);
-              const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header' && !c.section);
+              const childSectionHeaders = field.children.filter((c: any) => c.type === 'section-header');
+              const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header');
               
               const childFieldInfoMap = collectFieldConditionInfo(
                 childrenToProcess,
@@ -485,8 +870,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 const resolvedGrandchildren = grandchildren.length > 0
                   ? grandchildren
                   : buildArrayItemChildren(parentField);
-                const grandchildSectionHeaders = resolvedGrandchildren.filter((c: any) => c.type === 'section-header' || c.section);
-                const grandchildrenToProcess = resolvedGrandchildren.filter((c: any) => c.type !== 'section-header' && !c.section);
+                const grandchildSectionHeaders = resolvedGrandchildren.filter((c: any) => c.type === 'section-header');
+                const grandchildrenToProcess = resolvedGrandchildren.filter((c: any) => c.type !== 'section-header');
                 const grandchildFieldInfoMap = collectFieldConditionInfo(
                   grandchildrenToProcess,
                   tableDefinition?.schemaExtensions?.conditional || []
@@ -740,8 +1125,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     const resolvedGreatGrandchildren = greatGrandchildren.length > 0
                       ? greatGrandchildren
                       : buildArrayItemChildren(grandParentField);
-                    const greatGrandchildSectionHeaders = resolvedGreatGrandchildren.filter((c: any) => c.type === 'section-header' || c.section);
-                    const greatGrandchildrenToProcess = resolvedGreatGrandchildren.filter((c: any) => c.type !== 'section-header' && !c.section);
+                    const greatGrandchildSectionHeaders = resolvedGreatGrandchildren.filter((c: any) => c.type === 'section-header');
+                    const greatGrandchildrenToProcess = resolvedGreatGrandchildren.filter((c: any) => c.type !== 'section-header');
                     const greatGrandchildFieldInfoMap = collectFieldConditionInfo(
                       greatGrandchildrenToProcess,
                       tableDefinition?.schemaExtensions?.conditional || []
@@ -1002,7 +1387,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     // schemaView가 'original'이면 Original 스키마로 컴파일
     // currentSchemaType은 위에서 이미 선언됨
     const sections = schemaView === 'original'
-      ? compileSchema(schemaToUse, psdSet, currentSchemaType)
+      ? compileSchema(effectiveSchema, psdSet, currentSchemaType)
       : canonicalFields;
 
     // Convert sections to table parameters format (same as Enhanced)
@@ -1035,7 +1420,49 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     }
 
     return params;
-  }, [initializedSchemaTypes, canonicalFields, isNewEnhancedSchema, schemaView, combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchemaEnhanced, combinedSpecData.jsonSchema, psdSet, schemaType, tableDefinition]);
+  };
+
+  const requestTableParameters = useMemo(
+    () => buildTableParametersForSchema(enhancedRequestSchema, true, schemaType),
+    [enhancedRequestSchema, initializedSchemaTypes, psdSet, schemaType, tableDefinition]
+  );
+
+  const responseTableParameters = useMemo(
+    () => buildTableParametersForSchema(enhancedResponseSchema, true, schemaType),
+    [enhancedResponseSchema, initializedSchemaTypes, psdSet, schemaType, tableDefinition]
+  );
+
+  const originalTableParameters = useMemo(
+    () => buildTableParametersForSchema(
+      combinedSpecData.jsonSchemaOriginal || combinedSpecData.jsonSchema,
+      false,
+      'original'
+    ),
+    [combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchema, initializedSchemaTypes, psdSet, tableDefinition]
+  );
+
+  const activeTableParameters = useMemo(() => {
+    if (schemaView === 'original') {
+      return originalTableParameters;
+    }
+
+    if (schemaView === 'enhanced') {
+      if (tableView === 'response') return responseTableParameters;
+      if (tableView === 'merged') return [];
+      return requestTableParameters;
+    }
+
+    if (tableView === 'response') return responseTableParameters;
+    if (tableView === 'request') return requestTableParameters;
+    return [];
+  }, [schemaView, tableView, originalTableParameters, requestTableParameters, responseTableParameters]);
+
+  const canSendTable = useMemo(() => {
+    if (schemaView !== 'original' && tableView === 'merged') {
+      return requestTableParameters.length > 0 || responseTableParameters.length > 0;
+    }
+    return activeTableParameters.length > 0;
+  }, [schemaView, tableView, activeTableParameters, requestTableParameters, responseTableParameters]);
 
   const spec = useMemo(() => ({
     title: fallbackSpec.title,
@@ -1049,18 +1476,26 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   // Track which parameters are expanded
   const [expandedParams, setExpandedParams] = useState<Set<number>>(new Set());
 
+  const tableParamsForExpansion = useMemo(() => {
+    if (schemaView !== 'original' && tableView === 'merged') {
+      return [...requestTableParameters, ...responseTableParameters];
+    }
+
+    return activeTableParameters;
+  }, [schemaView, tableView, activeTableParameters, requestTableParameters, responseTableParameters]);
+
   // 🔥 초기 로드 시 모든 아코디언을 열린 상태로 설정
   useEffect(() => {
-    if (tableParameters && tableParameters.length > 0) {
+    if (tableParamsForExpansion && tableParamsForExpansion.length > 0) {
       const allParamsWithChildren = new Set<number>();
-      tableParameters.forEach((param: any) => {
+      tableParamsForExpansion.forEach((param: any) => {
         if (param.children && param.children.length > 0) {
           allParamsWithChildren.add(param.no);
         }
       });
       setExpandedParams(allParamsWithChildren);
     }
-  }, [tableParameters]);
+  }, [tableParamsForExpansion]);
 
   // 🎯 Editable Schema State
   const [editableSchema, setEditableSchema] = useState<string>('');
@@ -1070,15 +1505,17 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   const [, setSavedSchema] = useState<any>(null);
 
   // 🔥 FIX: 이전 schemaView를 추적하여 탭 전환 감지
-  const [prevSchemaView, setPrevSchemaView] = useState<'original' | 'enhanced'>(schemaView);
+  const getViewKey = () => (schemaView === 'enhanced' ? `${schemaView}:${enhancedSubView}` : schemaView);
+  const [prevViewKey, setPrevViewKey] = useState<string>(() => getViewKey());
 
   // Initialize editable schema
   useEffect(() => {
     // 🔥 FIX: schemaView가 변경되면 무조건 리셋 (탭 전환)
-    const isTabSwitch = prevSchemaView !== schemaView;
+    const currentViewKey = getViewKey();
+    const isTabSwitch = prevViewKey !== currentViewKey;
 
     if (isTabSwitch) {
-      setPrevSchemaView(schemaView);
+      setPrevViewKey(currentViewKey);
       // 탭 전환 시 수정 상태도 리셋
       setIsSchemaModified(false);
     } else {
@@ -1092,9 +1529,11 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     const getSchemaForView = () => {
       if (schemaView === 'original') {
         return spec.jsonSchema;
-      } else {
-        return spec.jsonSchemaEnhanced;
       }
+      if (schemaView === 'enhanced') {
+        return enhancedSubView === 'response' ? enhancedResponseSchema : enhancedRequestSchema;
+      }
+      return mergedSnapshot ?? mergedSchema;
     };
 
     const schemaForView = getSchemaForView();
@@ -1113,10 +1552,13 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       setEditableSchema(JSON.stringify(schemaForView, null, 2));
     }
     setIsSchemaModified(false);
-  }, [schemaView, endpoint.id, spec.jsonSchema, spec.jsonSchemaEnhanced, prevSchemaView]); // spec 의존성 추가
+  }, [schemaView, enhancedSubView, endpoint.id, spec.jsonSchema, spec.jsonSchemaEnhanced, enhancedRequestSchema, enhancedResponseSchema, mergedSchema, mergedSnapshot, prevViewKey]); // spec 의존성 추가
 
   // Handle schema changes
   const handleSchemaChange = (value: string) => {
+    if (schemaView === 'merged') {
+      return;
+    }
     setEditableSchema(value);
     setIsSchemaModified(true);
   };
@@ -1131,12 +1573,42 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
       // 현재 스키마 뷰에 따라 적절한 스키마 업데이트
       // 항상 JSON 문자열로 저장 (서버와 호환성을 위해)
+      if (schemaView === 'merged') {
+        toast.info('Merged schema is read-only.');
+        return;
+      }
+
+      const preserveComponents = (nextSchema: any, baseSchema: any) => {
+        if (!nextSchema || typeof nextSchema !== 'object') return nextSchema;
+        const result = deepClone(nextSchema);
+        if (!result.components && baseSchema?.components) {
+          result.components = deepClone(baseSchema.components);
+        }
+        if (!result['x-origin-name'] && baseSchema?.['x-origin-name']) {
+          result['x-origin-name'] = baseSchema['x-origin-name'];
+        }
+        return result;
+      };
+
       const updates: any = {};
       if (schemaView === 'original') {
         updates.jsonSchemaOriginal = JSON.stringify(parsedSchema);
         updates.jsonSchema = updates.jsonSchemaOriginal; // 호환성을 위해
       } else {
-        updates.jsonSchemaEnhanced = JSON.stringify(parsedSchema);
+        const baseRequest = enhancedBundle.request
+          || combinedSpecData.jsonSchemaOriginal
+          || combinedSpecData.jsonSchema
+          || {};
+        const baseResponse = enhancedBundle.response || {};
+        const nextRequestRaw = enhancedSubView === 'request' ? parsedSchema : baseRequest;
+        const nextResponseRaw = enhancedSubView === 'response' ? parsedSchema : baseResponse;
+        const nextRequest = preserveComponents(nextRequestRaw, baseRequest);
+        const nextResponse = preserveComponents(nextResponseRaw, baseResponse);
+
+        updates.jsonSchemaEnhanced = JSON.stringify({
+          request: nextRequest,
+          response: nextResponse,
+        });
       }
 
       console.log('💾 handleSaveSchema - updates:', updates);
@@ -1178,20 +1650,29 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
   // 🎯 Reset Schema - 원래 스키마로 되돌리기
   const handleResetSchema = () => {
+    if (schemaView === 'merged') {
+      const currentMerged = mergedSnapshot ?? mergedSchema;
+      setEditableSchema(JSON.stringify(currentMerged, null, 2));
+      setIsSchemaModified(false);
+      return;
+    }
+
     if (schemaView === 'original') {
       setEditableSchema(JSON.stringify(spec.jsonSchema, null, 2));
     } else {
-      setEditableSchema(
-        spec.jsonSchemaEnhanced
-          ? JSON.stringify(spec.jsonSchemaEnhanced, null, 2)
-          : '// Enhanced schema not available yet\n// Add enhanced schema to apiSpecs data'
-      );
+      const resetSchema = enhancedSubView === 'response' ? enhancedResponseSchema : enhancedRequestSchema;
+      setEditableSchema(JSON.stringify(resetSchema || {}, null, 2));
     }
     setIsSchemaModified(false);
   };
 
   // 🎯 Prettify Schema - 배열을 한 줄로 정렬
   const handlePrettifySchema = () => {
+    if (schemaView === 'merged') {
+      toast.info('Merged schema is read-only.');
+      return;
+    }
+
     try {
       const parsed = JSON.parse(editableSchema);
 
@@ -1249,6 +1730,11 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
   // 🎯 Enhanced → Original 변환 (Original 탭에 저장)
   const handleConvertToOriginal = () => {
+    if (schemaView !== 'enhanced' || enhancedSubView !== 'request') {
+      toast.info('Convert is available only for Enhanced Request schema.');
+      return;
+    }
+
     try {
       const parsedSchema = JSON.parse(editableSchema);
 
@@ -1291,8 +1777,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
 
 
-  // 🎯 Display parameters - 이제 tableParameters 직접 사용
-  // const displayParameters = tableParameters; // Unused - using tableParameters directly
+  // 🎯 Display parameters - 이제 table view 직접 사용
+  // const displayParameters = table view; // Unused - using table view directly
 
   const toggleParam = (paramNo: number) => {
     setExpandedParams((prev) => {
@@ -1304,6 +1790,67 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       }
       return next;
     });
+  };
+
+  const renderWrapperInfoTable = (rawSchema: any) => {
+    const wrapperKey = getWrapperKey(rawSchema);
+    const wrapperInfo = wrapperKey ? rawSchema?.properties?.[wrapperKey] : null;
+
+    const isAssignStyle = wrapperInfo?.additionalProperties || wrapperInfo?.patternProperties;
+    const isArgumentStyle = wrapperKey === 'Argument' && wrapperInfo?.properties;
+
+    if (!wrapperKey || (!isAssignStyle && !isArgumentStyle)) return null;
+
+    const sectionTitle = 'Keyed Object Entry';
+    const descriptionText = isArgumentStyle
+      ? 'Request body wrapper object for Table API.'
+      : wrapperKey === 'MCD'
+        ? 'Response body wrapper object (keyed map).'
+        : wrapperInfo.description || 'Map of keyed objects where each key is a string identifier.';
+
+    return (
+      <div>
+        <h4 className="text-sm font-semibold text-cyan-400 mb-2">{sectionTitle}</h4>
+        <p className="text-xs text-zinc-400 mb-3"></p>
+        <div className="border rounded-lg overflow-hidden border-zinc-800">
+          <table className="w-full text-sm">
+            <thead className="bg-zinc-900">
+              <tr>
+                <th className="text-left p-3 border-b border-zinc-800" style={{ width: '6%' }}>No.</th>
+                <th className="text-left p-3 border-b border-zinc-800" style={{ width: '35%' }}>Description</th>
+                <th className="text-left p-3 border-b border-zinc-800" style={{ width: '14%' }}>Key</th>
+                <th className="text-left p-3 border-b border-zinc-800" style={{ width: '10%' }}>Value Type</th>
+                <th className="text-left p-3 border-b border-zinc-800" style={{ width: '10%' }}>Default</th>
+                <th className="text-left p-3 border-b border-zinc-800" style={{ width: '25%' }}>Required</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="bg-cyan-950/30 border-b border-zinc-800">
+                <td colSpan={6} className="p-2 text-cyan-400 font-semibold text-xs">
+                  Root Object
+                </td>
+              </tr>
+              <tr className="border-b border-zinc-800 hover:bg-zinc-800/30">
+                <td className="p-3 text-zinc-400">1</td>
+                <td className="p-3">
+                  <div className="text-zinc-300">
+                    {descriptionText}
+                  </div>
+                </td>
+                <td className="p-3">
+                  <code className="font-mono text-blue-400">"{wrapperKey}"</code>
+                </td>
+                <td className="p-3 text-zinc-400">object</td>
+                <td className="p-3 text-zinc-500 font-mono text-xs">-</td>
+                <td className="p-3">
+                  <span className="px-2 py-0.5 text-xs rounded bg-red-600/20 text-red-400">Required</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   };
 
   // 🎯 Schema를 Manual로 전송
@@ -1347,6 +1894,9 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     }
 
     // 🔥 스키마 타입에 따라 레이블 설정
+    const enhancedBundleForManual = extractEnhancedBundle(enhancedSchema);
+    const normalizedEnhancedSchema = enhancedBundleForManual.request || enhancedSchema;
+
     let schemaLabel: string;
 
     if (schemaType === 'original') {
@@ -1374,7 +1924,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     };
 
     const parsedOriginal = safeParse(originalSchema);
-    const parsedEnhanced = enhancedSchema ? safeParse(enhancedSchema) : undefined;
+    const parsedEnhanced = normalizedEnhancedSchema ? safeParse(normalizedEnhancedSchema) : undefined;
     const selectedSchema = schemaType === 'original' ? parsedOriginal : parsedEnhanced;
 
     // 🔥 기존 ManualData를 유지하면서 업데이트 (누적 방식)
@@ -1401,12 +1951,30 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   const handleSendTableToManual = () => {
     let specificationsHTML = '';
 
-    // 🔥 NEW: Enhanced Schema 또는 Enhanced View인 경우 HTML 생성
-    if (isNewEnhancedSchema || (schemaView === 'enhanced' && activeSchema)) {
+    if (schemaView !== 'original' && tableView === 'merged') {
+      if (!tableDefinition) {
+        toast.error('? Table definition not loaded!');
+        return;
+      }
+
+      const requestHtml = requestTableParameters.length > 0
+        ? generateHTMLTable(requestTableParameters as TableParameter[], tableDefinition)
+        : '<p>No request schema available.</p>';
+      const responseHtml = responseTableParameters.length > 0
+        ? generateHTMLTable(responseTableParameters as TableParameter[], tableDefinition)
+        : '<p>No response schema available.</p>';
+
+      specificationsHTML = `
+<h3>Request</h3>
+${requestHtml}
+<br/>
+<h3>Response</h3>
+${responseHtml}`.trim();
+    } else if ((isNewEnhancedSchema || (schemaView === 'enhanced' && activeSchema)) && tableView !== 'response') {
       try {
         const htmlDocument = generateHTMLDocument(activeSchema as EnhancedSchema, psdSet, schemaType);
 
-        // 🔥 Extract body content only (remove <!DOCTYPE>, <html>, <head>, <body> tags)
+        // ?? Extract body content only (remove <!DOCTYPE>, <html>, <head>, <body> tags)
         const bodyMatch = htmlDocument.match(/<body[^>]*>([\s\S]*)<\/body>/i);
         if (bodyMatch && bodyMatch[1]) {
           specificationsHTML = bodyMatch[1].trim();
@@ -1414,20 +1982,20 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           specificationsHTML = htmlDocument;
         }
       } catch (error) {
-        console.error('❌ Failed to generate HTML:', error);
-        toast.error('❌ Failed to generate schema table');
+        console.error('?Failed to generate HTML:', error);
+        toast.error('?Failed to generate schema table');
         return;
       }
     } else {
-      // 🔥 YAML 기반: 테이블 정의를 사용하여 HTML 생성
+      // ?? YAML ??: ??? ??? ???? HTML ??
       if (!tableDefinition) {
-        toast.error('❌ Table definition not loaded!');
+        toast.error('? Table definition not loaded!');
         return;
       }
-      specificationsHTML = generateHTMLTable(tableParameters as TableParameter[], tableDefinition);
+      specificationsHTML = generateHTMLTable(activeTableParameters as TableParameter[], tableDefinition);
     }
 
-    // 🎯 기존 데이터 유지하면서 업데이트
+    // ?? ?? ??? ????? ????
     const newManualData: ManualData = {
       title: spec.title || endpoint.name,
       category: endpoint.method,
@@ -1439,12 +2007,13 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       examples: manualData?.examples || [],  // deprecated
       requestExamples: manualData?.requestExamples || [],
       responseExamples: manualData?.responseExamples || [],
-      specifications: specificationsHTML,  // 🔥 테이블 HTML 조각만 저장
+      specifications: specificationsHTML,  // ?? ??? HTML ??? ??
     };
 
     setManualData(newManualData);
-    toast.success('✅ Table sent to Manual tab!');
+    toast.success('?Table sent to Manual tab!');
   };
+
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -1458,7 +2027,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
           {/* 중앙: 토글 버튼 (절대 위치) - 개선 모드에서만 표시 */}
           {settings?.schemaMode !== 'normal' && (
-            <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1 w-[240px]">
+            <div className="flex items-center gap-1 bg-zinc-800 rounded-lg p-1 w-[320px]">
               <button
                 onClick={() => setSchemaView('original')}
                 className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${schemaView === 'original'
@@ -1477,6 +2046,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               >
                 Enhanced
               </button>
+              <button
+                onClick={() => {
+                  const recomputed = computeMergedSnapshot();
+                  setMergedSnapshot(recomputed);
+                  setSchemaView('merged');
+                }}
+                className={`flex-1 py-1.5 text-xs rounded transition-colors font-medium ${schemaView === 'merged'
+                  ? 'bg-amber-600 text-white'
+                  : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+              >
+                Merged
+              </button>
             </div>
           )}
 
@@ -1493,9 +2075,11 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               <span className="text-xs text-zinc-500">
                 {schemaView === 'original'
                   ? '(Original schema definition)'
-                  : hasEnhancedSchema || isNewEnhancedSchema
-                    ? '(Enhanced with x-ui, x-transport, conditions)'
-                    : '(No enhanced schema - showing original)'}
+                  : schemaView === 'enhanced'
+                    ? (hasEnhancedSchema || isNewEnhancedSchema
+                      ? '(Enhanced with x-ui, x-transport, conditions)'
+                      : '(No enhanced schema - showing original)')
+                    : '(Merged request + response with $ref)'}
               </span>
             </div>
           )}
@@ -1532,7 +2116,34 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
               <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">JSON Schema Editor</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-medium">JSON Schema Editor</h3>
+                    {schemaView === 'enhanced' && (
+                      <div className="flex items-center gap-1 bg-zinc-800 rounded-md p-1">
+                        <button
+                          onClick={() => setEnhancedSubView('request')}
+                          className={`px-2 py-0.5 text-[10px] rounded transition-colors ${enhancedSubView === 'request'
+                            ? 'bg-blue-600 text-white'
+                            : 'text-zinc-400 hover:text-zinc-200'
+                            }`}
+                        >
+                          Request
+                        </button>
+                        <button
+                          onClick={() => setEnhancedSubView('response')}
+                          className={`px-2 py-0.5 text-[10px] rounded transition-colors ${enhancedSubView === 'response'
+                            ? 'bg-emerald-600 text-white'
+                            : 'text-zinc-400 hover:text-zinc-200'
+                            }`}
+                        >
+                          Response
+                        </button>
+                      </div>
+                    )}
+                    {schemaView === 'merged' && (
+                      <span className="text-xs text-zinc-500">Read-only</span>
+                    )}
+                  </div>
 
                   {/* Prettify Button */}
                   <Button
@@ -1540,6 +2151,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     variant="outline"
                     size="sm"
                     className="h-7 px-2 text-xs"
+                    disabled={schemaView === 'merged'}
                   >
                     <Sparkles className="w-3 h-3 mr-1" />
                     Prettify
@@ -1554,6 +2166,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   onChange={(value) => handleSchemaChange(value || '')}
                   language="json"
                   minimap={true}
+                  readOnly={schemaView === 'merged'}
                 />
 
                 {/* Modified Indicator */}
@@ -1585,7 +2198,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     onClick={handleResetSchema}
                     variant="outline"
                     size="sm"
-                    disabled={!isSchemaModified}
+                    disabled={!isSchemaModified || schemaView === 'merged'}
                     className="h-7 px-2 text-xs"
                   >
                     Reset
@@ -1594,7 +2207,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   <Button
                     onClick={handleSaveSchema}
                     size="sm"
-                    disabled={!isSchemaModified}
+                    disabled={!isSchemaModified || schemaView === 'merged'}
                     className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Save className="w-3 h-3 mr-1" />
@@ -1602,7 +2215,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   </Button>
 
                   {/* Enhanced → Original 변환 버튼 */}
-                  {schemaView === 'enhanced' && (
+                  {schemaView === 'enhanced' && enhancedSubView === 'request' && (
                     <Button
                       onClick={handleConvertToOriginal}
                       variant="outline"
@@ -1648,101 +2261,119 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium">Visual Schema Table</h3>
+                  {schemaView !== 'original' && (
+                    <div className="flex items-center gap-1 bg-zinc-800 rounded-md p-1">
+                      <button
+                        onClick={() => setTableView('request')}
+                        className={`px-2 py-0.5 text-[10px] rounded transition-colors ${tableView === 'request'
+                          ? 'bg-blue-600 text-white'
+                          : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                      >
+                        Request
+                      </button>
+                      <button
+                        onClick={() => setTableView('response')}
+                        className={`px-2 py-0.5 text-[10px] rounded transition-colors ${tableView === 'response'
+                          ? 'bg-emerald-600 text-white'
+                          : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                      >
+                        Response
+                      </button>
+                      <button
+                        onClick={() => setTableView('merged')}
+                        className={`px-2 py-0.5 text-[10px] rounded transition-colors ${tableView === 'merged'
+                          ? 'bg-amber-600 text-white'
+                          : 'text-zinc-400 hover:text-zinc-200'
+                          }`}
+                      >
+                        Merged
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Table Content - Scrollable */}
               <div className="flex-1 overflow-auto p-4 space-y-6">
-                {tableParameters.length > 0 && tableDefinition ? (
-                  <>
-                    {/* 🔥 Table 1: Keyed Object Entry (Map Key Description) */}
-                    {(() => {
-                      // 원본 스키마에서 wrapper 정보 확인 (schemaView에 따라)
-                      const rawSchema = schemaView === 'enhanced'
-                        ? combinedSpecData.jsonSchemaEnhanced
-                        : combinedSpecData.jsonSchemaOriginal;
-                      const wrapperKey = rawSchema?.properties?.Assign ? 'Assign'
-                        : rawSchema?.properties?.Argument ? 'Argument' : null;
-                      const wrapperInfo = wrapperKey ? rawSchema?.properties?.[wrapperKey] : null;
-
-                      // 🔥 Assign은 additionalProperties/patternProperties 사용, Argument는 properties 사용
-                      const isAssignStyle = wrapperInfo?.additionalProperties || wrapperInfo?.patternProperties;
-                      const isArgumentStyle = wrapperKey === 'Argument' && wrapperInfo?.properties;
-
-                      if (!wrapperKey || (!isAssignStyle && !isArgumentStyle)) return null;
-
-                      // Argument 스타일도 'Keyed Object Entry'로 표시 (Assign과 동일)
-                      const sectionTitle = 'Keyed Object Entry';
-                      const descriptionText = isArgumentStyle
-                        ? 'Request body wrapper object for Table API.'
-                        : wrapperInfo.description || 'Map of keyed objects where each key is a string identifier.';
-
-                      return (
-                        <div>
-                          <h4 className="text-sm font-semibold text-cyan-400 mb-2">{sectionTitle}</h4>
-                          <p className="text-xs text-zinc-400 mb-3">
-                          </p>
-                          <div className="border rounded-lg overflow-hidden border-zinc-800">
-                            <table className="w-full text-sm">
-                              {/* 동일한 컬럼 너비 사용 (ui.yaml과 일치) */}
-                              <thead className="bg-zinc-900">
-                                <tr>
-                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '6%' }}>No.</th>
-                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '35%' }}>Description</th>
-                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '14%' }}>Key</th>
-                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '10%' }}>Value Type</th>
-                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '10%' }}>Default</th>
-                                  <th className="text-left p-3 border-b border-zinc-800" style={{ width: '25%' }}>Required</th>
-                                </tr>
-                              </thead>
-                              <tbody className="text-sm">
-                                {/* Section Header */}
-                                <tr className="bg-cyan-950/30 border-b border-zinc-800">
-                                  <td colSpan={6} className="p-2 text-cyan-400 font-semibold text-xs">
-                                    Root Object
-                                  </td>
-                                </tr>
-                                {/* Data Row */}
-                                <tr className="border-b border-zinc-800 hover:bg-zinc-800/30">
-                                  <td className="p-3 text-zinc-400">1</td>
-                                  <td className="p-3">
-                                    <div className="text-zinc-300">
-                                      {descriptionText}
-                                    </div>
-                                  </td>
-                                  <td className="p-3">
-                                    <code className="font-mono text-blue-400">"{wrapperKey}"</code>
-                                  </td>
-                                  <td className="p-3 text-zinc-400">object</td>
-                                  <td className="p-3 text-zinc-500 font-mono text-xs">-</td>
-                                  <td className="p-3">
-                                    <span className="px-2 py-0.5 text-xs rounded bg-red-600/20 text-red-400">Required</span>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      );
-                    })()}
-
-                    {/* 🔥 Table 2: Item (Value Object Schema) */}
+                {schemaView !== 'original' && tableView === 'merged' ? (
+                  <div className="space-y-8">
                     <div>
-                      <h4 className="text-sm font-semibold text-cyan-400 mb-2">Item (Value Object Schema)</h4>
-                      <p className="text-xs text-zinc-400 mb-3">
-                      </p>
-                      <DynamicTableRenderer
-                        definition={tableDefinition}
-                        parameters={tableParameters}
-                        expandedParams={expandedParams}
-                        toggleParam={toggleParam}
-                      />
+                      <h4 className="text-sm font-semibold text-cyan-400 mb-2">Request</h4>
+                      {requestTableParameters.length > 0 && tableDefinition ? (
+                        <>
+                          {renderWrapperInfoTable(enhancedRequestSchema)}
+                          <div>
+                            <h4 className="text-sm font-semibold text-cyan-400 mb-2">Item (Value Object Schema)</h4>
+                            <p className="text-xs text-zinc-400 mb-3"></p>
+                            <DynamicTableRenderer
+                              definition={tableDefinition}
+                              parameters={requestTableParameters}
+                              expandedParams={expandedParams}
+                              toggleParam={toggleParam}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-center h-32 text-zinc-500">
+                          No request schema loaded
+                        </div>
+                      )}
                     </div>
-                  </>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-zinc-500">
-                    {isLoadingDefinition ? 'Loading table definition...' : 'No schema loaded'}
+
+                    <div>
+                      <h4 className="text-sm font-semibold text-cyan-400 mb-2">Response</h4>
+                      {responseTableParameters.length > 0 && tableDefinition ? (
+                        <>
+                          {renderWrapperInfoTable(enhancedResponseSchema)}
+                          <div>
+                            <h4 className="text-sm font-semibold text-cyan-400 mb-2">Item (Value Object Schema)</h4>
+                            <p className="text-xs text-zinc-400 mb-3"></p>
+                            <DynamicTableRenderer
+                              definition={tableDefinition}
+                              parameters={responseTableParameters}
+                              expandedParams={expandedParams}
+                              toggleParam={toggleParam}
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center justify-center h-32 text-zinc-500">
+                          No response schema loaded
+                        </div>
+                      )}
+                    </div>
                   </div>
+                ) : (
+                  activeTableParameters.length > 0 && tableDefinition ? (
+                    <>
+                      {(() => {
+                        const rawSchema = schemaView === 'enhanced'
+                          ? (tableView === 'response' ? enhancedResponseSchema : enhancedRequestSchema)
+                          : combinedSpecData.jsonSchemaOriginal;
+
+                        return renderWrapperInfoTable(rawSchema);
+                      })()}
+
+                      <div>
+                        <h4 className="text-sm font-semibold text-cyan-400 mb-2">Item (Value Object Schema)</h4>
+                        <p className="text-xs text-zinc-400 mb-3"></p>
+                        <DynamicTableRenderer
+                          definition={tableDefinition}
+                          parameters={activeTableParameters}
+                          expandedParams={expandedParams}
+                          toggleParam={toggleParam}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-zinc-500">
+                      {schemaView === 'merged'
+                        ? 'Merged schema preview only'
+                        : isLoadingDefinition ? 'Loading table definition...' : 'No schema loaded'}
+                    </div>
+                  )
                 )}
               </div>
 
@@ -1752,7 +2383,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                   variant="outline"
                   size="sm"
                   onClick={handleSendTableToManual}
-                  disabled={tableParameters.length === 0}
+                  disabled={!canSendTable}
                   className="text-xs"
                 >
                   📤 Send Table to Manual

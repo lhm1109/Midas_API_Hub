@@ -179,7 +179,6 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
         }
 
         // 4. Determine entity type with priority: explicit entityType > legacy options > auto-detect
-        const bodyRoot = input.bodyRoot || 'Assign';
         let effectiveEntityType: 'collection' | 'single' | null = null;
 
         if (input.entityType) {
@@ -200,11 +199,34 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
             console.error(`[WRAPPER] Auto-detected entityType from name "${input.schemaName}": ${effectiveEntityType}`);
         }
 
+        // Determine bodyRoot default based on effective entity type (unless explicitly provided)
+        const resolvedBodyRoot = input.bodyRoot || (effectiveEntityType === 'single' ? 'Argument' : 'Assign');
+
+        // If schema already has a wrapper, do NOT wrap again
+        const existingWrapper =
+            schema?.type === 'object' &&
+            Array.isArray(schema.required) &&
+            schema.properties &&
+            (schema.required.includes('Assign') || schema.required.includes('Argument'))
+                ? (schema.required.includes('Assign') ? 'Assign' : 'Argument')
+                : null;
+
+        if (existingWrapper) {
+            if (effectiveEntityType === 'collection' && existingWrapper !== 'Assign') {
+                console.error(`[WRAPPER] Warning: schema already wrapped with ${existingWrapper} but entityType=collection requested. Skipping wrap.`);
+            } else if (effectiveEntityType === 'single' && existingWrapper !== 'Argument') {
+                console.error(`[WRAPPER] Warning: schema already wrapped with ${existingWrapper} but entityType=single requested. Skipping wrap.`);
+            } else {
+                console.error(`[WRAPPER] Schema already wrapped with ${existingWrapper}. Skipping wrap.`);
+            }
+            effectiveEntityType = null;
+        }
+
         // Apply wrapping based on entityType
         if (effectiveEntityType === 'collection') {
-            schema = wrapWithEntityCollectionStructure(schema, bodyRoot);
+            schema = wrapWithEntityCollectionStructure(schema, resolvedBodyRoot);
         } else if (effectiveEntityType === 'single') {
-            schema = wrapWithSimpleObjectStructure(schema, bodyRoot);
+            schema = wrapWithSimpleObjectStructure(schema, resolvedBodyRoot);
         }
 
         // 5. Clean up internal markers (x-evidence)

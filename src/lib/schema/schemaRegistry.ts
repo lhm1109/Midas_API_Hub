@@ -12,6 +12,38 @@ export interface SchemaData {
   savedSchema?: any;
 }
 
+const SCHEMA_KEYWORDS = [
+  'type',
+  'properties',
+  '$ref',
+  'allOf',
+  'oneOf',
+  'anyOf',
+  'items',
+  'required',
+  'additionalProperties',
+];
+
+function hasSchemaKeywords(schema: any): boolean {
+  if (!schema || typeof schema !== 'object') return false;
+  return SCHEMA_KEYWORDS.some(key => Object.prototype.hasOwnProperty.call(schema, key));
+}
+
+function isSchemaBundle(schema: any): boolean {
+  if (!schema || typeof schema !== 'object') return false;
+  const hasRequest = Object.prototype.hasOwnProperty.call(schema, 'request');
+  const hasResponse = Object.prototype.hasOwnProperty.call(schema, 'response');
+  if (!hasRequest && !hasResponse) return false;
+  return !hasSchemaKeywords(schema);
+}
+
+function unwrapSchemaBundle(schema: any): any {
+  if (!isSchemaBundle(schema)) return schema;
+  if (schema.request && typeof schema.request === 'object') return schema.request;
+  if (schema.response && typeof schema.response === 'object') return schema.response;
+  return schema;
+}
+
 /**
  * 스키마가 유효한지 확인 (빈 객체가 아닌지)
  */
@@ -38,12 +70,14 @@ export function resolveActiveSchema(specData: SchemaData | null | undefined): an
   if (!specData) return null;
   
   // 우선순위 순서대로 체크, 유효한 첫 번째 스키마 반환
-  if (isValidSchema(specData.savedSchema)) {
-    return specData.savedSchema;
+  const savedSchema = unwrapSchemaBundle(specData.savedSchema);
+  if (isValidSchema(savedSchema)) {
+    return savedSchema;
   }
   
-  if (isValidSchema(specData.jsonSchemaEnhanced)) {
-    return specData.jsonSchemaEnhanced;
+  const enhancedSchema = unwrapSchemaBundle(specData.jsonSchemaEnhanced);
+  if (isValidSchema(enhancedSchema)) {
+    return enhancedSchema;
   }
   
   if (isValidSchema(specData.jsonSchemaOriginal)) {
@@ -62,9 +96,8 @@ export function resolveActiveSchema(specData: SchemaData | null | undefined): an
  */
 export function isEnhancedSchemaActive(specData: SchemaData | null | undefined): boolean {
   if (!specData) return false;
-  
-  const active = resolveActiveSchema(specData);
-  return active === specData.jsonSchemaEnhanced || active === specData.savedSchema;
+
+  return isValidSchema(specData.jsonSchemaEnhanced);
 }
 
 /**
@@ -76,9 +109,8 @@ export function getSchemaSource(specData: SchemaData | null | undefined): 'saved
   const active = resolveActiveSchema(specData);
   
   if (active === specData.savedSchema) return 'saved';
-  if (active === specData.jsonSchemaEnhanced) return 'enhanced';
+  if (isValidSchema(specData.jsonSchemaEnhanced)) return 'enhanced';
   if (active === specData.jsonSchemaOriginal || active === specData.jsonSchema) return 'original';
   
   return 'none';
 }
-

@@ -3,7 +3,7 @@ import apiClient from '@/lib/api-client';
 import type { Version, ManualData, SpecData, BuilderData, RunnerData, ApiEndpoint } from '@/types';
 
 export interface AppState {
-  currentTab: 'version' | 'manual' | 'spec' | 'builder' | 'runner';
+  currentTab: 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split';
 
   // 🎯 **Version 관리** (최상위)
   versions: Version[];
@@ -30,7 +30,7 @@ export interface AppState {
   endpoint: ApiEndpoint | null; // 현재 선택된 엔드포인트
 
   // Tab actions
-  setCurrentTab: (tab: 'version' | 'manual' | 'spec' | 'builder' | 'runner') => void;
+  setCurrentTab: (tab: 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split') => void;
 
   // 🎯 **서버 연결 확인**
   checkServerConnection: () => Promise<boolean>;

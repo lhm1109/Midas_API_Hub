@@ -10,7 +10,8 @@
       "required": [
         "EXPORT_PATH",
         "FIGURE_NAME",
-        "RESULT_GRAPHIC"
+        "RESULT_GRAPHIC",
+        "SET_MODE"
       ],
       "additionalProperties": false,
       "properties": {
@@ -93,9 +94,9 @@
           "type": "object",
           "description": "View/Active settings. For detailed field specifications, refer to the Active documentation.",
           "x-reference": {
+            "title": "Active",
             "article": "PLACEHOLDER_ARTICLE_ID",
-            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID",
-            "title": "Active"
+            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID"
           },
           "x-ui": {
             "label": "Active",
@@ -106,9 +107,9 @@
           "type": "object",
           "description": "View/Angle settings. For detailed field specifications, refer to the Angle documentation.",
           "x-reference": {
+            "title": "Angle",
             "article": "PLACEHOLDER_ARTICLE_ID",
-            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID",
-            "title": "Angle"
+            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID"
           },
           "x-ui": {
             "label": "Angle",
@@ -118,11 +119,6 @@
         "DISPLAY": {
           "type": "object",
           "description": "View/Display settings. For detailed field specifications, refer to the Display documentation.",
-          "x-reference": {
-            "article": "PLACEHOLDER_ARTICLE_ID",
-            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID",
-            "title": "Display"
-          },
           "properties": {
             "PERSPECTIVE": {
               "type": "boolean",
@@ -225,6 +221,11 @@
               }
             }
           },
+          "x-reference": {
+            "title": "Display",
+            "article": "PLACEHOLDER_ARTICLE_ID",
+            "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID"
+          },
           "x-ui": {
             "label": "Display Settings",
             "order": 10
@@ -232,31 +233,24 @@
         },
         "RESULT_GRAPHIC": {
           "type": "object",
+          "description": "SRC design result graphic display settings",
           "required": [],
-          "description": "Steel design result graphic display settings",
           "properties": {
             "LOAD_CASE_COMB": {
               "type": "object",
+              "description": "Load case and combinations",
               "required": [
                 "TYPE",
-                "NAME",
-                "STEP_INDEX"
+                "NAME"
               ],
-              "description": "Load case and combinations",
-              "x-optional-when": {
-                "SET_MODE": "post"
-              },
-              "x-required-when": {
-                "SET_MODE": "post"
-              },
               "properties": {
                 "TYPE": {
                   "type": "string",
                   "description": "Load case type",
                   "oneOf": [
                     {
-                      "title": "Steel Design Load Combination",
-                      "const": "CBS"
+                      "title": "SRC Design Load Combination",
+                      "const": "CBR"
                     }
                   ],
                   "x-ui": {
@@ -277,11 +271,17 @@
               "x-ui": {
                 "label": "Load Cases/Combinations",
                 "order": 1
+              },
+              "x-required-when": {
+                "SET_MODE": "post"
+              },
+              "x-optional-when": {
+                "SET_MODE": "post"
               }
             },
             "COMPONENTS": {
               "type": "string",
-              "description": "Ratio component to display in steel design results",
+              "description": "Ratio component to display in SRC design results",
               "default": "Combined",
               "oneOf": [
                 {
@@ -317,7 +317,7 @@
             },
             "TYPE_OF_DISPLAY": {
               "type": "object",
-              "description": "Display options for steel design result visualization. For detailed field specifications, refer to the Type of Display documentation.",
+              "description": "Display options for SRC design result visualization.",
               "properties": {
                 "CONTOUR": {
                   "type": "boolean",
@@ -345,43 +345,64 @@
                     "label": "Values",
                     "order": 3
                   }
-                },
-                "CODE_CHECKING_RATIO": {
-                  "type": "boolean",
-                  "description": "Display code checking ratio",
-                  "default": false,
-                  "x-ui": {
-                    "label": "Code Checking Ratio",
-                    "order": 4
-                  },
-                  "x-optional-when": {
-                    "COMPONENTS": "Combined"
-                  }
                 }
-              },
-              "x-reference": {
-                "article": "35996812786841",
-                "url": "https://support.midasuser.com/hc/en-us/articles/35996812786841",
-                "title": "Type of Display"
               },
               "x-ui": {
                 "label": "Type of Display",
                 "order": 3
+              },
+              "x-reference": {
+                "title": "Type of Display",
+                "article": "35996812786841",
+                "url": "https://support.midasuser.com/hc/en-us/articles/35996812786841"
+              },
+              "x-optional-when": {
+                "REINFORCEMENT": false
+              }
+            },
+            "REINFORCEMENT": {
+              "type": "boolean",
+              "description": "Display reinforcement information",
+              "default": false,
+              "x-ui": {
+                "label": "Reinforcement",
+                "order": 4
+              },
+              "x-optional-when": {
+                "COMPONENTS": "Combined"
+              }
+            },
+            "REINFORCEMENT_TYPE": {
+              "type": "string",
+              "description": "Reinforcement display type",
+              "default": "REBAR",
+              "oneOf": [
+                {
+                  "title": "Rebar",
+                  "const": "REBAR"
+                },
+                {
+                  "title": "Area",
+                  "const": "AREA"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Reinforcement Type",
+                "order": 5
+              },
+              "x-optional-when": {
+                "REINFORCEMENT": true
               }
             },
             "DISPLAY_MEMBERS": {
               "type": "object",
-              "description": "Member types to display in results. Only available when Code Checking Ratio is enabled.",
-              "x-optional-when": {
-                "COMPONENTS": "Combined",
-                "CODE_CHECKING_RATIO": true,
-                "COLUMN": true
-              },
+              "description": "Member types to display in results.",
               "properties": {
                 "BEAM": {
                   "type": "boolean",
                   "description": "Display beam members",
-                  "default": false,
+                  "default": true,
                   "x-ui": {
                     "label": "Beam",
                     "order": 1
@@ -390,25 +411,19 @@
                 "COLUMN": {
                   "type": "boolean",
                   "description": "Display column members",
-                  "default": false,
+                  "default": true,
                   "x-ui": {
                     "label": "Column",
                     "order": 2
-                  }
-                },
-                "BRACE": {
-                  "type": "boolean",
-                  "description": "Display brace members",
-                  "default": false,
-                  "x-ui": {
-                    "label": "Brace",
-                    "order": 3
                   }
                 }
               },
               "x-ui": {
                 "label": "Display",
-                "order": 4
+                "order": 6
+              },
+              "x-optional-when": {
+                "REINFORCEMENT": true
               }
             },
             "COLUMN_SECTION_SIZE": {
@@ -427,13 +442,13 @@
                   }
                 }
               },
-              "x-optional-when": {
-                "COMPONENTS": "Combined",
-                "CODE_CHECKING_RATIO": true
-              },
               "x-ui": {
                 "label": "Column Section Size",
-                "order": 5
+                "order": 7
+              },
+              "x-optional-when": {
+                "COLUMN": true,
+                "REINFORCEMENT": true
               }
             },
             "VALUE_OPTION": {
@@ -461,13 +476,91 @@
                   }
                 }
               },
-              "x-optional-when": {
-                "COMPONENTS": "Combined",
-                "CODE_CHECKING_RATIO": true
-              },
               "x-ui": {
                 "label": "Value Option",
-                "order": 6
+                "order": 8
+              },
+              "x-optional-when": {
+                "VALUES": true
+              }
+            },
+            "OUTPUT_SECT_LOCATION": {
+              "type": "object",
+              "description": "Output section location settings (Beam)",
+              "properties": {
+                "OPT_I": {
+                  "type": "boolean",
+                  "description": "Output Start Location",
+                  "default": false,
+                  "x-ui": {
+                    "label": "I",
+                    "order": 1
+                  },
+                  "x-optional-when": {
+                    "OPT_ALL": false,
+                    "OPT_MAX": false,
+                    "VALUES": true
+                  }
+                },
+                "OPT_CENTER_MID": {
+                  "type": "boolean",
+                  "description": "Output Center/Mid Location",
+                  "default": false,
+                  "x-ui": {
+                    "label": "Center",
+                    "order": 2
+                  },
+                  "x-optional-when": {
+                    "OPT_ALL": false,
+                    "OPT_MAX": false,
+                    "VALUES": true
+                  }
+                },
+                "OPT_J": {
+                  "type": "boolean",
+                  "description": "Output End Location",
+                  "default": false,
+                  "x-ui": {
+                    "label": "J",
+                    "order": 3
+                  },
+                  "x-optional-when": {
+                    "OPT_ALL": false,
+                    "OPT_MAX": false,
+                    "VALUES": true
+                  }
+                },
+                "OPT_MAX": {
+                  "type": "boolean",
+                  "description": "Max",
+                  "default": true,
+                  "x-ui": {
+                    "label": "Max",
+                    "order": 4
+                  },
+                  "x-optional-when": {
+                    "VALUES": true
+                  }
+                },
+                "OPT_ALL": {
+                  "type": "boolean",
+                  "description": "All",
+                  "default": false,
+                  "x-ui": {
+                    "label": "All",
+                    "order": 5
+                  },
+                  "x-optional-when": {
+                    "VALUES": true
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Output Section Location",
+                "order": 9
+              },
+              "x-optional-when": {
+                "VALUES": true
               }
             }
           },
@@ -476,6 +569,9 @@
             "order": 11
           }
         }
+      },
+      "x-ui": {
+        "label": "Argument"
       }
     }
   }
