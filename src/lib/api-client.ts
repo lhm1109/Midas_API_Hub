@@ -7,6 +7,37 @@ interface ApiResponse<T> {
   error?: string;
 }
 
+export interface SchemaSplitResult {
+  requestKey: string;
+  responseKey: string;
+  requestSchema: any;
+  responseSchema: any;
+}
+
+export interface SchemaCompareResult {
+  matches: boolean;
+  missingInMerged: string[];
+  extraInMerged: string[];
+  changedSchemas: string[];
+}
+
+export interface SchemaMergeResponse {
+  mergedSchema: any;
+  expectedSchema: any | null;
+  matchesSource: boolean | null;
+  comparison: SchemaCompareResult | null;
+  autoFixedMerged: any | null;
+}
+
+export interface SchemaRoundtripResponse {
+  splitResult: SchemaSplitResult;
+  mergedSchema: any;
+  expectedSchema: any;
+  matchesSource: boolean;
+  comparison: SchemaCompareResult;
+  autoFixedMerged: any | null;
+}
+
 class ApiClient {
   private baseUrl: string;
 
@@ -261,6 +292,38 @@ class ApiClient {
   async clearAllWorkingData() {
     return this.request<{ message: string }>('/data/all', {
       method: 'DELETE',
+    });
+  }
+
+  // Schema Tools API
+  async splitSchema(sourceSchema: any) {
+    return this.request<SchemaSplitResult>('/schema-tools/split', {
+      method: 'POST',
+      body: JSON.stringify({ sourceSchema }),
+    });
+  }
+
+  async mergeSchema(payload: {
+    requestSchema: any;
+    responseSchema: any;
+    requestKey?: string;
+    responseKey?: string;
+    sourceSchema?: any;
+    autoFixAgainstSource?: boolean;
+  }) {
+    return this.request<SchemaMergeResponse>('/schema-tools/merge', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async roundtripSchema(payload: {
+    sourceSchema: any;
+    autoFixAgainstSource?: boolean;
+  }) {
+    return this.request<SchemaRoundtripResponse>('/schema-tools/roundtrip', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   }
 

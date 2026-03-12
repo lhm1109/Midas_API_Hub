@@ -13,6 +13,8 @@ import groupsRouter from './routes/groups.js';
 import schemaDefinitionsRouter from './routes/schema-definitions.js';
 import managerRouter from './routes/manager.js';
 import databaseRouter from './routes/database.js';
+import schemaToolsRouter from './routes/schema-tools.js';
+import zendeskRouter from './routes/zendesk.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -42,6 +44,8 @@ app.use('/api/attachments', attachmentsRouter);
 app.use('/api/locks', locksRouter);
 app.use('/api/manager', managerRouter);
 app.use('/api/database', databaseRouter);
+app.use('/api/schema-tools', schemaToolsRouter);
+app.use('/api/zendesk', zendeskRouter);
 
 // 실제 비즈니스 API (자동 문서화)
 app.use('/api/civil/db', apiRouter);

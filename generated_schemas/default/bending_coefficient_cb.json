@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "description": "Bending Coefficient (Cb) settings (name changed: BCOEF -> CBFT). Supported methods: GET, PUT. Checklist Text (view-only).",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by ID strings (e.g., \"1\"), where each entry represents an element.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "AUTO_CB": {
+              "type": "boolean",
+              "description": "Auto Calculate by Program",
+              "default": false,
+              "x-ui": {
+                "label": "Auto Calculate by Program",
+                "order": 1
+              }
+            },
+            "CB": {
+              "type": "number",
+              "description": "Bending Coefficient (Cb) Value",
+              "default": 1.0,
+              "x-ui": {
+                "label": "Bending Coefficient (Cb) Value",
+                "order": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

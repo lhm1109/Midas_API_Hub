@@ -155,6 +155,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         requestBody: '{}',
         responseBody: '',
         testCases: [],
+        selectedTestCaseId: null,
+        selectedTestCaseDraftBody: null,
       },
     };
 
@@ -280,6 +282,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         requestBody: '{}',
         responseBody: '',
         testCases: [],
+        selectedTestCaseId: null,
+        selectedTestCaseDraftBody: null,
       },
       hasUnsavedChanges: false,
     });
@@ -416,7 +420,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       });
 
       if (response.ok) {
-        const _data = await response.json();
+        await response.json();
         // 🔥 자기 자신의 잠금은 잠금으로 표시하지 않음
         set({ endpointLock: { locked: false, lockedBy: currentUserId } });
         return true;

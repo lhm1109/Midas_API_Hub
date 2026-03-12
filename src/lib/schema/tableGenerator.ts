@@ -24,11 +24,12 @@ import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/
  * Reference information for footnote generation
  */
 interface ReferenceInfo {
-  footnoteNumber: string; // ¹⁾, ²⁾, ³⁾, etc.
   url: string;
   title: string;
   article?: string;
 }
+
+type FieldReferenceMap = Map<string, ReferenceInfo[]>;
 
 // ============================================================================
 // HTML Generation (YAML-based)
@@ -79,7 +80,7 @@ export async function generateHTMLDocumentWithYAML(
 /**
  * 테이블 HTML 생성 (YAML 기반)
  */
-function generateTableHTML(sections: SectionGroup[], template: HTMLTemplateDefinition, references?: Map<string, ReferenceInfo>): string {
+function generateTableHTML(sections: SectionGroup[], template: HTMLTemplateDefinition, references?: FieldReferenceMap): string {
   let html = generateTableHeader(template);
   html += '<tbody>';
 
@@ -190,7 +191,7 @@ function generateSectionHeader(sectionName: string, template: HTMLTemplateDefini
 /**
  * 필드 행 생성 (YAML 기반, 중첩 객체 지원)
  */
-function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTMLTemplateDefinition, references?: Map<string, ReferenceInfo>): string {
+function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTMLTemplateDefinition, references?: FieldReferenceMap): string {
   const descriptionHTML = generateFieldDescription(field, template, references);
   const requiredHTML = generateRequiredCell(field, template);
   const defaultValue = formatDefaultValue(field.default, field.type);
@@ -266,17 +267,17 @@ function generateFieldRow(field: EnhancedField, rowNumber: number, template: HTM
 /**
  * 필드 설명 생성 (YAML 기반)
  */
-function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateDefinition, references?: Map<string, ReferenceInfo>): string {
+function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateDefinition, references?: FieldReferenceMap): string {
   const parts: string[] = [];
 
   // Label
   if (field.ui?.label) {
     let label = `<strong>${escapeHtml(field.ui.label)}</strong>`;
     
-    // 🔥 Add footnote marker if field has x-reference
-    if (field['x-reference'] && references?.has(field.key)) {
-      const ref = references.get(field.key)!;
-      label += ` <span style="font-size: 16px; color: #bf2600;">${ref.footnoteNumber}</span>`;
+    // 🔥 Add footnote marker(s) if field has x-reference / x-references
+    const footnoteMarkers = generateFieldFootnoteMarkers(field.key, references);
+    if (footnoteMarkers) {
+      label += ` ${footnoteMarkers}`;
     }
     
     parts.push(label);
@@ -603,22 +604,17 @@ function generateTransportSection(schema: EnhancedSchema, template: HTMLTemplate
 // ============================================================================
 
 /**
- * Collect all x-reference fields from sections for footnote generation
+ * Collect all x-reference / x-references fields from sections for footnote generation
  */
-function collectReferences(sections: SectionGroup[]): Map<string, ReferenceInfo> {
-  const references = new Map<string, ReferenceInfo>();
-  const superscripts = ['¹⁾', '²⁾', '³⁾', '⁴⁾', '⁵⁾', '⁶⁾', '⁷⁾', '⁸⁾', '⁹⁾', '¹⁰⁾'];
-  let footnoteIndex = 0;
+function collectReferences(sections: SectionGroup[]): FieldReferenceMap {
+  const references: FieldReferenceMap = new Map();
 
   function processField(field: EnhancedField) {
-    if (field['x-reference'] && !references.has(field.key)) {
-      const ref = field['x-reference'] as any;
-      references.set(field.key, {
-        footnoteNumber: superscripts[footnoteIndex++] || `⁽${footnoteIndex}⁾`,
-        url: ref.url || '',
-        title: ref.title || field.ui?.label || field.key,
-        article: ref.article
-      });
+    if (!references.has(field.key)) {
+      const fieldReferences = extractFieldReferences(field);
+      if (fieldReferences.length > 0) {
+        references.set(field.key, fieldReferences);
+      }
     }
 
     // Process children recursively
@@ -634,19 +630,75 @@ function collectReferences(sections: SectionGroup[]): Map<string, ReferenceInfo>
   return references;
 }
 
+function extractFieldReferences(field: EnhancedField): ReferenceInfo[] {
+  const fieldAny = field as any;
+  const rawReferences: any[] = [];
+
+  if (fieldAny['x-reference']) {
+    rawReferences.push(fieldAny['x-reference']);
+  }
+
+  if (Array.isArray(fieldAny['x-references'])) {
+    rawReferences.push(...fieldAny['x-references']);
+  }
+
+  const uniqueReferences = new Set<string>();
+  const extracted: ReferenceInfo[] = [];
+
+  for (const rawReference of rawReferences) {
+    if (!rawReference || typeof rawReference !== 'object') {
+      continue;
+    }
+
+    const rawUrl = typeof rawReference.url === 'string' ? rawReference.url.trim() : '';
+    if (!rawUrl) {
+      continue;
+    }
+
+    const rawTitle = typeof rawReference.title === 'string' ? rawReference.title.trim() : '';
+    const title = rawTitle || field.ui?.label || field.key;
+    const article = typeof rawReference.article === 'string' ? rawReference.article : undefined;
+
+    const dedupeKey = `${rawUrl}|${title}|${article || ''}`;
+    if (uniqueReferences.has(dedupeKey)) {
+      continue;
+    }
+    uniqueReferences.add(dedupeKey);
+
+    extracted.push({
+      url: rawUrl,
+      title,
+      article
+    });
+  }
+
+  return extracted;
+}
+
+function generateFieldFootnoteMarkers(fieldKey: string, references?: FieldReferenceMap): string {
+  const fieldReferences = references?.get(fieldKey);
+  if (!fieldReferences || fieldReferences.length === 0) {
+    return '';
+  }
+
+  return `<sup style="font-size: 14px; color: #bf2600;">*)</sup>`;
+}
+
 /**
  * Generate footnote section HTML from collected references
  */
-function generateFootnoteSection(references: Map<string, ReferenceInfo>): string {
+function generateFootnoteSection(references: FieldReferenceMap): string {
   if (references.size === 0) {
     return '';
   }
 
   const footnotes: string[] = [];
-  references.forEach(ref => {
-    footnotes.push(`
-      <p><span><a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"><span style="font-size: 16px; color: #bf2600;">${ref.footnoteNumber}</span><em> For more details, refer to the ${escapeHtml(ref.title)} ↗</em></a></span></p>
+  references.forEach((fieldReferences) => {
+    fieldReferences.forEach((ref) => {
+      footnotes.push(`
+      <p>- <a href="${escapeHtml(ref.url)}" target="_blank" rel="noopener noreferrer"><em>${escapeHtml(ref.title)} ↗</em></a></p>
     `);
+    });
   });
 
   return `
@@ -810,7 +862,7 @@ function getWrapperDescription(schema: EnhancedSchema): string {
   return 'Map of keyed objects where each key is a string identifier.';
 }
 
-function generateTableHTMLLegacy(sections: SectionGroup[], references?: Map<string, ReferenceInfo>): string {
+function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldReferenceMap): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
   html += generateTableHeaderLegacy();
@@ -911,7 +963,7 @@ function renderGreatGrandchildrenLegacy(
   rowNumber: number,
   currentChildNo: number,
   currentGrandchildNo: number,
-  references?: Map<string, ReferenceInfo>,
+  references?: FieldReferenceMap,
   inheritedConditional: boolean = false
 ): string {
   let html = '';
@@ -1023,7 +1075,7 @@ function renderGrandchildrenLegacy(
   grandchildren: EnhancedField[],
   rowNumber: number,
   currentChildNo: number,
-  references?: Map<string, ReferenceInfo>,
+  references?: FieldReferenceMap,
   inheritedConditional: boolean = false
 ): string {
   let html = '';
@@ -1167,7 +1219,7 @@ function generateSectionHeaderLegacy(sectionName: string): string {
   `;
 }
 
-function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, references?: Map<string, ReferenceInfo>): string {
+function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, references?: FieldReferenceMap): string {
   const descriptionHTML = generateFieldDescriptionLegacy(field, references);
   const requiredHTML = generateRequiredCellLegacy(field);
   const defaultValue = formatDefaultValue(field.default, field.type);
@@ -1492,7 +1544,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
   return html;
 }
 
-function generateFieldDescriptionLegacy(field: EnhancedField, references?: Map<string, ReferenceInfo>): string {
+function generateFieldDescriptionLegacy(field: EnhancedField, references?: FieldReferenceMap): string {
   const parts: string[] = [];
 
   // 🔥 우선순위: x-ui.label > description > key
@@ -1500,10 +1552,10 @@ function generateFieldDescriptionLegacy(field: EnhancedField, references?: Map<s
   if (displayLabel) {
     let labelHTML = `<p>${escapeHtml(displayLabel)}`;
     
-    // 🔥 Add footnote marker if field has x-reference
-    if (field['x-reference'] && references?.has(field.key)) {
-      const ref = references.get(field.key)!;
-      labelHTML += ` <span style="font-size: 16px; color: #bf2600;">${ref.footnoteNumber}</span>`;
+    // 🔥 Add footnote marker(s) if field has x-reference / x-references
+    const footnoteMarkers = generateFieldFootnoteMarkers(field.key, references);
+    if (footnoteMarkers) {
+      labelHTML += ` ${footnoteMarkers}`;
     }
     
     labelHTML += `</p>`;

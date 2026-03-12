@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "description": "Design Steel Code (shared structure: T_DSTL_D). Supported methods: GET, PUT.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "DGNCODE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "DGNCODE": {
+              "type": "string",
+              "description": "Design Code",
+              "enum": [
+                "KDS 41 30 : 2022"
+              ],
+              "x-ui": {
+                "label": "Design Code",
+                "order": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

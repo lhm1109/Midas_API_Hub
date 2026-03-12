@@ -58,6 +58,8 @@ export function ManagerProgress({
       sub3: '',
       seg1: '',
       seg2: '',
+      seg3: '',
+      seg4: '',
       endPoint: '',
       dev: 'empty',
       vv: 'empty',

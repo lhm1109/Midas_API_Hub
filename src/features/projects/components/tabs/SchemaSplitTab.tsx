@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, SplitSquareHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAppStore } from '@/store/useAppStore';
+import { apiClient } from '@/lib/api-client';
 import type { ApiEndpoint } from '@/types';
 
 interface SchemaSplitTabProps {
@@ -25,23 +26,57 @@ const deepClone = <T,>(value: T): T => {
   }
 };
 
-const normalizeSchema = (root: any, components: Record<string, any>) => {
-  const clonedRoot = deepClone(root);
-  const clonedComponents = deepClone(components);
-  return {
-    ...clonedRoot,
-    components: {
-      schemas: clonedComponents,
-    },
+const resolveRefName = (ref: any): string | null => {
+  if (typeof ref !== 'string') return null;
+  const match = ref.match(/^#\/components\/schemas\/(.+)$/);
+  return match ? match[1] : null;
+};
+
+const inlineRefsToSingleSchema = (root: any, components: Record<string, any>) => {
+  const dereference = (node: any, refStack = new Set<string>()): any => {
+    if (!node || typeof node !== 'object') return node;
+    if (Array.isArray(node)) {
+      return node.map((item) => dereference(item, refStack));
+    }
+
+    if (typeof node.$ref === 'string') {
+      const refName = resolveRefName(node.$ref);
+      if (refName && components[refName] && !refStack.has(refName)) {
+        const nextStack = new Set(refStack);
+        nextStack.add(refName);
+        const resolved = dereference(deepClone(components[refName]), nextStack);
+        const { $ref, ...rest } = node;
+        return dereference({ ...resolved, ...rest }, nextStack);
+      }
+      return node;
+    }
+
+    const next: Record<string, any> = {};
+    for (const [key, value] of Object.entries(node)) {
+      if (key === 'components') continue;
+      next[key] = dereference(value, refStack);
+    }
+    return next;
   };
+
+  const inlined = dereference(deepClone(root), new Set());
+  if (inlined && typeof inlined === 'object' && 'components' in inlined) {
+    delete (inlined as any).components;
+  }
+  if (inlined && typeof inlined === 'object' && 'x-origin-name' in inlined) {
+    delete (inlined as any)['x-origin-name'];
+  }
+  return inlined;
 };
 
 export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
   const { updateSpecData } = useAppStore();
   const [sourceSchema, setSourceSchema] = useState('');
   const [splitResult, setSplitResult] = useState<SplitResult | null>(null);
+  const [isApiRunning, setIsApiRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const storageKey = useMemo(() => `schemaSplit:${endpoint.id}`, [endpoint.id]);
+  const roundtripKey = useMemo(() => `schemaRoundtrip:${endpoint.id}`, [endpoint.id]);
 
   const computeSplitFromParsed = (parsed: any): SplitResult => {
     const schemas = parsed?.components?.schemas;
@@ -64,9 +99,8 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
 
     const requestKey = requestKeys[0];
     const responseKey = responseKeys[0];
-    const requestSchema = normalizeSchema(schemas[requestKey], schemas);
-    const responseSchema = normalizeSchema(schemas[responseKey], schemas);
-
+    const requestSchema = inlineRefsToSingleSchema(schemas[requestKey], schemas);
+    const responseSchema = inlineRefsToSingleSchema(schemas[responseKey], schemas);
     if (requestSchema && typeof requestSchema === 'object') {
       (requestSchema as any)['x-origin-name'] = requestKey;
     }
@@ -84,6 +118,15 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
       const parsed = JSON.parse(raw);
       if (typeof parsed?.sourceSchema === 'string') {
         setSourceSchema(parsed.sourceSchema);
+        try {
+          const sourceParsed = JSON.parse(parsed.sourceSchema || '{}');
+          const recomputed = computeSplitFromParsed(sourceParsed);
+          setSplitResult(recomputed);
+          setError(null);
+          return;
+        } catch {
+          // ignore and fallback to cached splitResult
+        }
       }
       if (parsed?.splitResult) {
         setSplitResult(parsed.splitResult as SplitResult);
@@ -155,10 +198,76 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
       jsonSchemaEnhanced: JSON.stringify({
         request: result.requestSchema,
         response: result.responseSchema,
+        requestKey: result.requestKey,
+        responseKey: result.responseKey,
       }),
     });
 
     toast.success('✅ Request/Response schemas saved to Enhanced Spec');
+  };
+
+  const handleApiRoundtrip = async () => {
+    if (!sourceSchema) {
+      toast.error('No source schema available. Please paste the schema first.');
+      return;
+    }
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(sourceSchema || '{}');
+    } catch {
+      toast.error('Invalid JSON. Please fix the syntax errors first.');
+      return;
+    }
+
+    setIsApiRunning(true);
+    try {
+      const { data, error: apiError } = await apiClient.roundtripSchema({
+        sourceSchema: parsed,
+        autoFixAgainstSource: true,
+      });
+      if (apiError || !data) {
+        toast.error(apiError || 'Schema roundtrip API failed.');
+        return;
+      }
+
+      const result = data.splitResult;
+      setSplitResult(result);
+      updateSpecData({
+        jsonSchemaEnhanced: JSON.stringify({
+          request: result.requestSchema,
+          response: result.responseSchema,
+          requestKey: result.requestKey,
+          responseKey: result.responseKey,
+        }),
+      });
+
+      try {
+        localStorage.setItem(
+          roundtripKey,
+          JSON.stringify({
+            sourceSchema: parsed,
+            ...data,
+            ranAt: new Date().toISOString(),
+          })
+        );
+      } catch {
+        // ignore cache errors
+      }
+
+      if (data.matchesSource) {
+        toast.success('API roundtrip passed. Enhanced Request/Response and Merged output are consistent.');
+      } else {
+        const diffSummary = [
+          `missing:${data.comparison?.missingInMerged?.length || 0}`,
+          `extra:${data.comparison?.extraInMerged?.length || 0}`,
+          `changed:${data.comparison?.changedSchemas?.length || 0}`,
+        ].join(', ');
+        toast.warning(`API roundtrip found mismatch (${diffSummary}). Auto-fix snapshot stored.`);
+      }
+    } finally {
+      setIsApiRunning(false);
+    }
   };
 
   const previewRequest = useMemo(() => {
@@ -195,6 +304,15 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
               className="h-7 px-3 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Apply to Spec (Enhanced)
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleApiRoundtrip}
+              disabled={!sourceSchema || isApiRunning}
+              className="h-7 px-3 text-xs"
+            >
+              {isApiRunning ? 'API Roundtrip...' : 'API Roundtrip + AutoFix'}
             </Button>
           </div>
         </div>

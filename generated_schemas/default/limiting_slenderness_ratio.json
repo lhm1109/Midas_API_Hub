@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "description": "Limiting Slenderness Ratio settings.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "COMP",
+            "TENS"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "bNOTCHECK": {
+              "type": "boolean",
+              "description": "Do not check for Slenderness Ratio",
+              "default": false,
+              "x-ui": {
+                "label": "Do not check for Slenderness Ratio",
+                "order": 1
+              }
+            },
+            "COMP": {
+              "type": "number",
+              "description": "Limiting Slenderness Ratio for Compression",
+              "x-ui": {
+                "label": "Limiting Slenderness Ratio for Compression",
+                "order": 2
+              }
+            },
+            "TENS": {
+              "type": "number",
+              "description": "Limiting Slenderness Ratio for Tension",
+              "x-ui": {
+                "label": "Limiting Slenderness Ratio for Tension",
+                "order": 3
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

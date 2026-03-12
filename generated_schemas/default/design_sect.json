@@ -1,0 +1,139 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Section for Design",
+          "type": "object",
+          "description": "Change section properties for design post-processing without FEM re-analysis.",
+          "required": [
+            "SECT_ID",
+            "SECT"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "SECT_ID": {
+              "type": "integer",
+              "description": "Target Section ID to be changed for design analysis only.",
+              "minimum": 1,
+              "x-ui": {
+                "label": "Section ID",
+                "order": 1
+              }
+            },
+            "SECT": {
+              "type": "object",
+              "description": "Section property body. Use the same payload structure as /db/SECT.\nReference source: api_docs_zendesk/main_kr.html (/db/SECT section)\n- Common: https://support.midasuser.com/hc/ko/articles/35808653964185\n- DB/User: https://support.midasuser.com/hc/ko/articles/35809067039513\n- Value: https://support.midasuser.com/hc/ko/articles/35839753881497\n- SRC: https://support.midasuser.com/hc/ko/articles/35845378225689\n- Combined: https://support.midasuser.com/hc/ko/articles/35851350827801\n- PSC: https://support.midasuser.com/hc/ko/articles/35851688190105\n- PSC Value: https://support.midasuser.com/hc/ko/articles/39233604772633\n- Composite PSC: https://support.midasuser.com/hc/ko/articles/35938998724377\n- Composite Steel: https://support.midasuser.com/hc/ko/articles/35939122737689\n- Steel Girder: https://support.midasuser.com/hc/ko/articles/35939506348697\n- Tapered DB/User: https://support.midasuser.com/hc/ko/articles/35852806893593\n- Tapered Value: https://support.midasuser.com/hc/ko/articles/35938685208089\n- Tapered PSC: https://support.midasuser.com/hc/ko/articles/35941360898713\n- Tapered PSC Value: https://support.midasuser.com/hc/ko/articles/39233752695321\n- Tapered Composite PSC: https://support.midasuser.com/hc/ko/articles/35941514067225\n- Tapered Composite Steel: https://support.midasuser.com/hc/ko/articles/35941644806553\n- Tapered Steel Girder: https://support.midasuser.com/hc/ko/articles/35941809011225",
+              "x-reference": {
+                "title": "Section Properties - /db/SECT (All Types)",
+                "article": "35808653964185,35809067039513,35839753881497,35845378225689,35851350827801,35851688190105,39233604772633,35938998724377,35939122737689,35939506348697,35852806893593,35938685208089,35941360898713,39233752695321,35941514067225,35941644806553,35941809011225",
+                "url": "https://support.midasuser.com/hc/ko/articles/35808653964185"
+              },
+              "x-references": [
+                {
+                  "title": "Section Properties - Common",
+                  "article": "35808653964185",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35808653964185"
+                },
+                {
+                  "title": "Section Properties - DB/User",
+                  "article": "35809067039513",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35809067039513"
+                },
+                {
+                  "title": "Section Properties - Value",
+                  "article": "35839753881497",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35839753881497"
+                },
+                {
+                  "title": "Section Properties - SRC",
+                  "article": "35845378225689",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35845378225689"
+                },
+                {
+                  "title": "Section Properties - Combined",
+                  "article": "35851350827801",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35851350827801"
+                },
+                {
+                  "title": "Section Properties - PSC",
+                  "article": "35851688190105",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35851688190105"
+                },
+                {
+                  "title": "Section Properties - PSC Value",
+                  "article": "39233604772633",
+                  "url": "https://support.midasuser.com/hc/ko/articles/39233604772633"
+                },
+                {
+                  "title": "Section Properties - Composite - PSC",
+                  "article": "35938998724377",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35938998724377"
+                },
+                {
+                  "title": "Section Properties - Composite - Steel",
+                  "article": "35939122737689",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35939122737689"
+                },
+                {
+                  "title": "Section Properties - Steel Girder",
+                  "article": "35939506348697",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35939506348697"
+                },
+                {
+                  "title": "Section Properties - Tapered - DB/User",
+                  "article": "35852806893593",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35852806893593"
+                },
+                {
+                  "title": "Section Properties - Tapered - Value",
+                  "article": "35938685208089",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35938685208089"
+                },
+                {
+                  "title": "Section Properties - Tapered - PSC",
+                  "article": "35941360898713",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35941360898713"
+                },
+                {
+                  "title": "Section Properties - Tapered - PSC Value",
+                  "article": "39233752695321",
+                  "url": "https://support.midasuser.com/hc/ko/articles/39233752695321"
+                },
+                {
+                  "title": "Section Properties - Tapered - Composite PSC",
+                  "article": "35941514067225",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35941514067225"
+                },
+                {
+                  "title": "Section Properties - Tapered - Composite Steel",
+                  "article": "35941644806553",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35941644806553"
+                },
+                {
+                  "title": "Section Properties - Tapered - Steel Girder",
+                  "article": "35941809011225",
+                  "url": "https://support.midasuser.com/hc/ko/articles/35941809011225"
+                }
+              ],
+              "additionalProperties": true,
+              "x-ui": {
+                "label": "SECT Body (/db/SECT)",
+                "order": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

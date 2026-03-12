@@ -390,8 +390,12 @@ function applySchemaStructurePatterns(
 
   // 🔥 방어: patterns가 배열인지 확인
   if (!patterns || !Array.isArray(patterns) || patterns.length === 0) {
-    console.warn('⚠️ No patterns loaded or patterns is not an array, returning schema as-is. patterns:', patterns);
-    return schema; // No patterns defined, return as-is
+    console.warn('⚠️ No patterns loaded or patterns is not an array. Try fallback unwrap. patterns:', patterns);
+    if (isSingleMapWrapperSchema(schema)) {
+      console.log('✅ Fallback matched (no patterns): single map-wrapper schema, applying unwrap-wrapper-with-additionalProperties');
+      return unwrapWrapperWithAdditionalProperties(schema as any, { action: 'unwrap-wrapper-with-additionalProperties' });
+    }
+    return schema; // No patterns and no fallback match
   }
 
   // 각 패턴을 순서대로 확인
@@ -414,8 +418,43 @@ function applySchemaStructurePatterns(
     }
   }
 
+  // 🔥 Fallback: custom single map-wrapper (e.g., KFAC, HHCT, STYPE...) 지원
+  // YAML pattern이 Assign/Argument 중심이라 매칭되지 않는 경우,
+  // 단일 루트 wrapper + (additionalProperties|patternProperties) 형태를 자동 언래핑한다.
+  if (isSingleMapWrapperSchema(schema)) {
+    console.log('✅ Fallback matched: single map-wrapper schema, applying unwrap-wrapper-with-additionalProperties');
+    return unwrapWrapperWithAdditionalProperties(schema as any, { action: 'unwrap-wrapper-with-additionalProperties' });
+  }
+
   console.warn('⚠️ No matching pattern found, returning schema as-is');
   return schema; // No matching pattern
+}
+
+function isSingleMapWrapperSchema(schema: any): boolean {
+  if (!schema || typeof schema !== 'object') return false;
+  if (schema.type !== 'object') return false;
+  if (!schema.properties || typeof schema.properties !== 'object') return false;
+
+  const keys = Object.keys(schema.properties);
+  if (keys.length !== 1) return false;
+
+  const wrapper = schema.properties[keys[0]];
+  if (!wrapper || typeof wrapper !== 'object') return false;
+  if (wrapper.type !== 'object') return false;
+
+  const hasObjectAdditional =
+    wrapper.additionalProperties &&
+    typeof wrapper.additionalProperties === 'object' &&
+    wrapper.additionalProperties.type === 'object';
+
+  const hasPatternPropertiesObject =
+    wrapper.patternProperties &&
+    typeof wrapper.patternProperties === 'object' &&
+    Object.values(wrapper.patternProperties).some((value: any) =>
+      value && typeof value === 'object' && value.type === 'object'
+    );
+
+  return Boolean(hasObjectAdditional || hasPatternPropertiesObject);
 }
 
 /**

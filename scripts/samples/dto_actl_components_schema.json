@@ -1,0 +1,133 @@
+{
+  "components": {
+    "schemas": {
+      "DTO_ACTL_REQUEST_MAP_BODY": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["Assign"],
+        "properties": {
+          "Assign": {
+            "type": "object",
+            "description": "Key는 문자열(예: \"1\")이며 각 항목은 Main Control Data 설정 객체입니다.",
+            "minProperties": 1,
+            "additionalProperties": { "$ref": "#/components/schemas/DTO_ACTL_ITEM" }
+          }
+        }
+      },
+      "DTO_ACTL_RESPONSE_MAP_BODY": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ACTL": {
+            "type": "object",
+            "description": "Key는 문자열(예: \"1\")이며 각 항목은 Main Control Data 설정 객체입니다.",
+            "minProperties": 1,
+            "additionalProperties": { "$ref": "#/components/schemas/DTO_ACTL_ITEM" }
+          }
+        }
+      },
+      "DTO_ACTL_ITEM": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ARCD": { "type": "boolean", "default": true },
+          "ANRC": { "type": "boolean", "default": true },
+          "CLFORM": { "type": "boolean", "default": false },
+          "CSECF": { "type": "boolean", "default": false },
+          "TRS": { "type": "boolean", "default": true },
+          "BMSTRESS": { "type": "boolean", "default": false },
+          "CRBAR": { "type": "boolean", "default": false },
+          "CLATS": { "type": "boolean", "default": false },
+          "CABINIT": { "type": "boolean", "default": true },
+          "BSCHG": {
+            "type": "string",
+            "enum": ["CONSTANT", "CHANGE"],
+            "default": "CHANGE",
+            "description": "Beam Section Property Changes"
+          },
+          "TCELEM": { "$ref": "#/components/schemas/DTO_TCELEM_ITEM" }
+        }
+      },
+      "DTO_TCELEM_ITEM": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "NUMINC": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Number of Increments"
+          },
+          "INTOUT": {
+            "type": "string",
+            "enum": ["EVERY", "LAST"],
+            "default": "LAST",
+            "description": "Intermediate Output Request"
+          },
+          "CONVERGENCE": {
+            "$ref": "#/components/schemas/DTO_TCELEM_CONVERGENCE",
+            "default": {
+              "DISPL": { "OPT_USE": true, "VALUE": 0.001 },
+              "LOAD": { "OPT_USE": false },
+              "WORK": { "OPT_USE": false }
+            }
+          }
+        },
+        "default": {
+          "NUMINC": 1,
+          "INTOUT": "LAST",
+          "CONVERGENCE": {
+            "DISPL": { "OPT_USE": true, "VALUE": 0.001 },
+            "LOAD": { "OPT_USE": false },
+            "WORK": { "OPT_USE": false }
+          }
+        }
+      },
+      "DTO_TCELEM_CONVERGENCE": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "DISPL": { "$ref": "#/components/schemas/DTO_TCELEM_CONV_ITEM" },
+          "LOAD": { "$ref": "#/components/schemas/DTO_TCELEM_CONV_ITEM" },
+          "WORK": { "$ref": "#/components/schemas/DTO_TCELEM_CONV_ITEM" }
+        },
+        "default": {
+          "DISPL": { "OPT_USE": true, "VALUE": 0.001 },
+          "LOAD": { "OPT_USE": false },
+          "WORK": { "OPT_USE": false }
+        }
+      },
+      "DTO_TCELEM_CONV_ITEM": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "OPT_USE": {
+            "type": "boolean",
+            "default": false,
+            "description": "체크 여부(선택되면 true)"
+          },
+          "VALUE": {
+            "type": "number",
+            "description": "허용오차(선택된 경우만 입력)"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": { "OPT_USE": { "const": true } },
+              "required": ["OPT_USE"]
+            },
+            "then": { "required": ["VALUE"] }
+          },
+          {
+            "if": {
+              "properties": { "OPT_USE": { "const": false } },
+              "required": ["OPT_USE"]
+            },
+            "then": { "not": { "required": ["VALUE"] } }
+          }
+        ]
+      }
+    }
+  }
+}

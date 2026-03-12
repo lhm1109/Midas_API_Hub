@@ -1,0 +1,52 @@
+{
+  "type": "object",
+  "description": "Equivalent Moment Correction Factor settings (name changed: EMCF -> CMFT). Checklist Text (view-only).",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "OPT_AUTO": {
+              "type": "boolean",
+              "description": "Auto Calculate",
+              "default": false,
+              "x-ui": {
+                "label": "Auto Calculate",
+                "order": 1
+              }
+            },
+            "CMY": {
+              "type": "number",
+              "description": "CMy",
+              "default": 0.0,
+              "x-ui": {
+                "label": "CMy",
+                "order": 2
+              }
+            },
+            "CMZ": {
+              "type": "number",
+              "description": "CMz",
+              "default": 0.0,
+              "x-ui": {
+                "label": "CMz",
+                "order": 3
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+﻿{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "LCTB": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "NAME",
+            "BASE_ITEM"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Load Contribution Name"
+            },
+            "DESC": {
+              "type": "string",
+              "description": "Description",
+              "default": ""
+            },
+            "BASE_ITEM": {
+              "type": "array",
+              "description": "Load Contribution Items",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "FACTOR"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "FACTOR": {
+                    "type": "number",
+                    "description": "Factor"
+                  },
+                  "LOAD_CASE_NAME": {
+                    "type": "string",
+                    "description": "Load Case Name",
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

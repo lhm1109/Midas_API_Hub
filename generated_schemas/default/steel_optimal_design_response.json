@@ -1,0 +1,99 @@
+{
+  "type": "object",
+  "required": [
+    "OCHECK"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "OCHECK": {
+      "type": "object",
+      "description": "Steel optimal design results grouped by time step (e.g., Time 1, Time 2).",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[Tt]ime\\s*\\d+$": {
+          "type": "object",
+          "description": "Result for a specific time step.",
+          "required": [
+            "TABLE",
+            "IMAGES"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "TABLE": {
+              "type": "object",
+              "description": "Result table for the time step.",
+              "required": [
+                "HEAD",
+                "DATA"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "HEAD": {
+                  "type": "array",
+                  "description": "Column headers (no units).",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [
+                    "SEL",
+                    "No",
+                    "Name",
+                    "Size",
+                    "Area",
+                    "COM",
+                    "Axial",
+                    "Ben-y",
+                    "Ben-z",
+                    "Shear"
+                  ]
+                },
+                "DATA": {
+                  "type": "array",
+                  "description": "Table rows. Each row is an array of cell values.",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "IMAGES": {
+              "type": "array",
+              "description": "Output image information for this time step.",
+              "items": {
+                "type": "object",
+                "required": [
+                  "PATH"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Image name or title."
+                  },
+                  "PATH": {
+                    "type": "string",
+                    "description": "Image file path."
+                  },
+                  "WIDTH": {
+                    "type": "integer",
+                    "description": "Image width in pixels.",
+                    "minimum": 1
+                  },
+                  "HEIGHT": {
+                    "type": "integer",
+                    "description": "Image height in pixels.",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -120,9 +120,10 @@ export class LRUCache<K, V> {
  * 스키마 해시 생성 (빠른 비교용)
  */
 export function generateSchemaHash(schema: any, psdSet: string, schemaType: string): string {
+  const COMPILER_CACHE_VERSION = 'schema-compiler-v2';
   // null 체크
   if (!schema) {
-    return `${psdSet}:${schemaType}:empty`;
+    return `${COMPILER_CACHE_VERSION}:${psdSet}:${schemaType}:empty`;
   }
   
   // 🔥 스키마 전체를 JSON 문자열로 변환하여 해시 생성
@@ -131,12 +132,12 @@ export function generateSchemaHash(schema: any, psdSet: string, schemaType: stri
     const schemaStr = JSON.stringify(schema);
     // 간단한 해시 생성 (문자열 길이 + 일부 내용)
     const hash = schemaStr.length + ':' + schemaStr.substring(0, 100);
-    return `${psdSet}:${schemaType}:${hash}`;
+    return `${COMPILER_CACHE_VERSION}:${psdSet}:${schemaType}:${hash}`;
   } catch (error) {
     // JSON.stringify 실패 시 폴백
     const keys = Object.keys(schema.properties || {}).sort().join(',');
     const requiredKeys = (schema.required || []).sort().join(',');
-    return `${psdSet}:${schemaType}:${keys}:${requiredKeys}`;
+    return `${COMPILER_CACHE_VERSION}:${psdSet}:${schemaType}:${keys}:${requiredKeys}`;
   }
 }
 

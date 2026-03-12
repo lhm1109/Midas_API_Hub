@@ -45,9 +45,12 @@ export interface BuilderData {
 
 // Runner 데이터 타입
 export interface RunnerData {
+  url?: string;
   requestBody: string;
   responseBody: string;
   testCases: TestCase[];
+  selectedTestCaseId?: string | null;
+  selectedTestCaseDraftBody?: string | null;
 }
 
 export interface TestCase {

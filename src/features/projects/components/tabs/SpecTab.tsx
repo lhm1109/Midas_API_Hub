@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
 import { useAppStore } from '@/store/useAppStore';
-// import { apiClient } from '@/lib/api-client'; // Unused
+import { apiClient } from '@/lib/api-client';
 import type { ManualData, Settings } from '@/types';
 import { toast } from 'sonner';
 import {
@@ -85,16 +85,20 @@ const isSchemaBundle = (schema: any): boolean => {
 const extractEnhancedBundle = (value: any) => {
   const parsed = parseIfString(value);
   if (!parsed || typeof parsed !== 'object') {
-    return { request: undefined, response: undefined, isBundle: false };
+    return { request: undefined, response: undefined, requestKey: undefined, responseKey: undefined, isBundle: false };
   }
+  const requestKey = typeof (parsed as any).requestKey === 'string' ? (parsed as any).requestKey : undefined;
+  const responseKey = typeof (parsed as any).responseKey === 'string' ? (parsed as any).responseKey : undefined;
   if (isSchemaBundle(parsed)) {
     return {
       request: parseIfString((parsed as any).request),
       response: parseIfString((parsed as any).response),
+      requestKey,
+      responseKey,
       isBundle: true,
     };
   }
-  return { request: parsed, response: undefined, isBundle: false };
+  return { request: parsed, response: undefined, requestKey, responseKey, isBundle: false };
 };
 
 const deepClone = <T,>(value: T): T => {
@@ -150,7 +154,301 @@ const rewriteRefs = (node: any, refMap: Record<string, string>): any => {
   return next;
 };
 
-const mergeRequestResponseSchemas = (requestSchema: any, responseSchema: any) => {
+const toSchemaToken = (value: string): string => {
+  return String(value || '')
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .toUpperCase();
+};
+
+const resolveRefNameFromRef = (ref: any): string | null => {
+  if (typeof ref !== 'string') return null;
+  const match = ref.match(/^#\/components\/schemas\/(.+)$/);
+  return match ? match[1] : null;
+};
+
+const inferMapBodyComponentName = (
+  schema: any,
+  kind: 'request' | 'response'
+): string => {
+  const defaultName = kind === 'request' ? 'Request' : 'Response';
+  if (!schema || typeof schema !== 'object') return defaultName;
+
+  const origin = schema?.['x-origin-name'];
+  if (typeof origin === 'string' && origin.trim().length > 0) {
+    return origin.trim();
+  }
+
+  const props = schema?.properties;
+  if (!props || typeof props !== 'object') return defaultName;
+  const propKeys = Object.keys(props);
+  if (propKeys.length !== 1) return defaultName;
+
+  const wrapperKey = propKeys[0];
+  const wrapperSchema: any = (props as any)[wrapperKey];
+  if (!wrapperSchema || typeof wrapperSchema !== 'object') return defaultName;
+
+  const refCandidates: string[] = [];
+  const additionalRef = resolveRefNameFromRef(wrapperSchema?.additionalProperties?.$ref);
+  if (additionalRef) refCandidates.push(additionalRef);
+
+  const patternProps = wrapperSchema?.patternProperties;
+  if (patternProps && typeof patternProps === 'object') {
+    for (const candidate of Object.values(patternProps as Record<string, any>)) {
+      const refName = resolveRefNameFromRef((candidate as any)?.$ref);
+      if (refName) refCandidates.push(refName);
+    }
+  }
+
+  const requestOrResponse = kind === 'request' ? 'REQUEST' : 'RESPONSE';
+
+  for (const refName of refCandidates) {
+    if (/_ITEM$/i.test(refName)) {
+      const prefix = refName.replace(/_ITEM$/i, '');
+      if (prefix) return `${prefix}_${requestOrResponse}_MAP_BODY`;
+    }
+
+    if (/_REQUEST_MAP_BODY$/i.test(refName) || /_RESPONSE_MAP_BODY$/i.test(refName)) {
+      const prefix = refName.replace(/_(REQUEST|RESPONSE)_MAP_BODY$/i, '');
+      if (prefix) return `${prefix}_${requestOrResponse}_MAP_BODY`;
+    }
+  }
+
+  const wrapperToken = toSchemaToken(wrapperKey);
+  if (wrapperToken && !['ASSIGN', 'ARGUMENT', 'MCD'].includes(wrapperToken)) {
+    return `DTO_${wrapperToken}_${requestOrResponse}_MAP_BODY`;
+  }
+
+  return defaultName;
+};
+
+const isNonEmptySchemaObject = (value: any): boolean => {
+  return !!(value && typeof value === 'object' && Object.keys(value).length > 0);
+};
+
+type MapEntryContext = {
+  wrapperKey: string;
+  mode: 'additionalProperties' | 'patternProperties';
+  patternKey?: string;
+  entrySchema: any;
+};
+
+const RESERVED_WRAPPER_KEYS = new Set(['ASSIGN', 'ARGUMENT', 'MCD']);
+
+const getMapEntryContext = (schema: any): MapEntryContext | null => {
+  if (!schema || typeof schema !== 'object') return null;
+  const props = schema.properties;
+  if (!props || typeof props !== 'object') return null;
+  const keys = Object.keys(props);
+  if (keys.length !== 1) return null;
+
+  const wrapperKey = keys[0];
+  const wrapper = props[wrapperKey];
+  if (!wrapper || typeof wrapper !== 'object') return null;
+
+  const additionalProps = wrapper.additionalProperties;
+  if (additionalProps && typeof additionalProps === 'object' && !Array.isArray(additionalProps)) {
+    return {
+      wrapperKey,
+      mode: 'additionalProperties',
+      entrySchema: additionalProps,
+    };
+  }
+
+  const patternProps = wrapper.patternProperties;
+  if (patternProps && typeof patternProps === 'object') {
+    const entries = Object.entries(patternProps).filter(([, value]) => value && typeof value === 'object');
+    if (entries.length === 1) {
+      const [patternKey, entrySchema] = entries[0];
+      return {
+        wrapperKey,
+        mode: 'patternProperties',
+        patternKey,
+        entrySchema,
+      };
+    }
+  }
+
+  return null;
+};
+
+const applyMapEntryRef = (schema: any, ctx: MapEntryContext, refName: string) => {
+  if (!schema?.properties?.[ctx.wrapperKey]) return;
+  const wrapper = schema.properties[ctx.wrapperKey];
+  const refNode = { $ref: `#/components/schemas/${refName}` };
+
+  // Canonical map-body style for merged schema:
+  // always represent entry schema by additionalProperties + $ref.
+  wrapper.additionalProperties = refNode;
+  if (wrapper.patternProperties && typeof wrapper.patternProperties === 'object') {
+    delete wrapper.patternProperties;
+  }
+};
+
+const parseMapBodyPrefix = (name: string): string | null => {
+  if (typeof name !== 'string' || !name) return null;
+  const match = name.match(/^(.*)_(REQUEST|RESPONSE)_MAP_BODY$/i);
+  return match ? match[1] : null;
+};
+
+const pickMapBodyKey = (keys: string[], kind: 'request' | 'response'): string | undefined => {
+  if (!Array.isArray(keys) || keys.length === 0) return undefined;
+  const tokenRegex = kind === 'request' ? /_REQUEST(_|$)/i : /_RESPONSE(_|$)/i;
+  const mapBodyRegex = kind === 'request' ? /_REQUEST_MAP_BODY$/i : /_RESPONSE_MAP_BODY$/i;
+  const tokenCandidates = keys.filter((key) => tokenRegex.test(key));
+  if (tokenCandidates.length === 0) return undefined;
+
+  const mapBodyCandidates = tokenCandidates.filter((key) => mapBodyRegex.test(key));
+  if (mapBodyCandidates.length === 1) return mapBodyCandidates[0];
+  if (tokenCandidates.length === 1) return tokenCandidates[0];
+
+  const sorted = (mapBodyCandidates.length > 1 ? mapBodyCandidates : tokenCandidates)
+    .slice()
+    .sort((a, b) => a.localeCompare(b));
+  return sorted[0];
+};
+
+const getRequestResponseNameHints = (schema: any): { requestKey?: string; responseKey?: string } => {
+  const componentSchemas = schema?.components?.schemas;
+  if (!componentSchemas || typeof componentSchemas !== 'object') return {};
+  const keys = Object.keys(componentSchemas);
+  if (keys.length === 0) return {};
+
+  return {
+    requestKey: pickMapBodyKey(keys, 'request'),
+    responseKey: pickMapBodyKey(keys, 'response'),
+  };
+};
+
+const getSplitCacheSourceSchema = (endpointId: string): any => {
+  if (typeof window === 'undefined') return undefined;
+
+  try {
+    const raw = localStorage.getItem(`schemaSplit:${endpointId}`);
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.sourceSchema !== 'string') return undefined;
+    return JSON.parse(parsed.sourceSchema);
+  } catch {
+    return undefined;
+  }
+};
+
+const getSplitCacheNameHints = (endpointId: string): { requestKey?: string; responseKey?: string } => {
+  if (typeof window === 'undefined') return {};
+
+  try {
+    const raw = localStorage.getItem(`schemaSplit:${endpointId}`);
+    if (!raw) return {};
+
+    const parsed = JSON.parse(raw);
+    const fromSplitResult = {
+      requestKey: typeof parsed?.splitResult?.requestKey === 'string' ? parsed.splitResult.requestKey : undefined,
+      responseKey: typeof parsed?.splitResult?.responseKey === 'string' ? parsed.splitResult.responseKey : undefined,
+    };
+    if (fromSplitResult.requestKey || fromSplitResult.responseKey) {
+      return fromSplitResult;
+    }
+
+    const sourceSchema = typeof parsed?.sourceSchema === 'string' ? JSON.parse(parsed.sourceSchema) : undefined;
+    return getRequestResponseNameHints(sourceSchema);
+  } catch {
+    return {};
+  }
+};
+
+const pickMapBodyNameByWrapper = (
+  components: Record<string, any> | undefined,
+  wrapperKey: string | undefined,
+  kind: 'request' | 'response'
+): string | undefined => {
+  if (!components || typeof components !== 'object' || !wrapperKey) return undefined;
+  const nameRegex = kind === 'request' ? /_REQUEST_MAP_BODY$/i : /_RESPONSE_MAP_BODY$/i;
+  const candidates = Object.entries(components)
+    .filter(([name, schema]) => {
+      if (!nameRegex.test(name)) return false;
+      const ctx = getMapEntryContext(schema);
+      return ctx?.wrapperKey === wrapperKey;
+    })
+    .map(([name]) => name);
+
+  if (candidates.length === 1) return candidates[0];
+  return undefined;
+};
+
+const getNameHintsFromSourceComponents = (
+  requestSchema: any,
+  responseSchema: any,
+  components: Record<string, any> | undefined
+): { requestKey?: string; responseKey?: string } => {
+  if (!components || typeof components !== 'object') return {};
+
+  const requestCtx = getMapEntryContext(requestSchema);
+  const responseCtx = getMapEntryContext(responseSchema);
+  if (!requestCtx && !responseCtx) return {};
+
+  let requestKey = pickMapBodyNameByWrapper(components, requestCtx?.wrapperKey, 'request');
+  let responseKey = pickMapBodyNameByWrapper(components, responseCtx?.wrapperKey, 'response');
+
+  if (!requestKey && responseKey) {
+    const prefix = parseMapBodyPrefix(responseKey);
+    if (prefix) requestKey = `${prefix}_REQUEST_MAP_BODY`;
+  }
+  if (!responseKey && requestKey) {
+    const prefix = parseMapBodyPrefix(requestKey);
+    if (prefix) responseKey = `${prefix}_RESPONSE_MAP_BODY`;
+  }
+
+  return { requestKey, responseKey };
+};
+
+const getOriginNameHints = (requestSchema: any, responseSchema: any): { requestKey?: string; responseKey?: string } => {
+  const requestOrigin = typeof requestSchema?.['x-origin-name'] === 'string'
+    ? String(requestSchema['x-origin-name']).trim()
+    : '';
+  const responseOrigin = typeof responseSchema?.['x-origin-name'] === 'string'
+    ? String(responseSchema['x-origin-name']).trim()
+    : '';
+
+  const requestKey = /_REQUEST(_|$)/i.test(requestOrigin) ? requestOrigin : undefined;
+  const responseKey = /_RESPONSE(_|$)/i.test(responseOrigin) ? responseOrigin : undefined;
+  return { requestKey, responseKey };
+};
+
+const inferDtoPrefixFromPath = (path: string): string | undefined => {
+  if (typeof path !== 'string' || !path.trim()) return undefined;
+  const tokens = path
+    .toUpperCase()
+    .split(/[^A-Z0-9]+/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+  if (tokens.length === 0) return undefined;
+
+  const ignored = new Set([
+    'API', 'DB', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE',
+    'V', 'V1', 'V2', 'V3', 'V4'
+  ]);
+  const candidate = [...tokens]
+    .reverse()
+    .find((token) => !ignored.has(token) && /[A-Z]/.test(token) && !/^\d+$/.test(token));
+  if (!candidate) return undefined;
+  return `DTO_${candidate}`;
+};
+
+const getPathNameHints = (path: string): { requestKey?: string; responseKey?: string } => {
+  const prefix = inferDtoPrefixFromPath(path);
+  if (!prefix) return {};
+  return {
+    requestKey: `${prefix}_REQUEST_MAP_BODY`,
+    responseKey: `${prefix}_RESPONSE_MAP_BODY`,
+  };
+};
+
+const mergeRequestResponseSchemas = (
+  requestSchema: any,
+  responseSchema: any,
+  options?: { requestNameHint?: string; responseNameHint?: string }
+) => {
   const requestClone = deepClone(requestSchema ?? {});
   const responseClone = deepClone(responseSchema ?? {});
 
@@ -243,8 +541,28 @@ const mergeRequestResponseSchemas = (requestSchema: any, responseSchema: any) =>
   const normalizedResponse = Object.keys(refMap).length > 0
     ? rewriteRefs(responseBody, refMap)
     : responseBody;
-  const requestName = pickComponentName(requestBody, 'Request');
-  const responseName = pickComponentName(normalizedResponse, 'Response');
+  const requestNameHint = typeof options?.requestNameHint === 'string' && options.requestNameHint.trim().length > 0
+    ? options.requestNameHint.trim()
+    : undefined;
+  const responseNameHint = typeof options?.responseNameHint === 'string' && options.responseNameHint.trim().length > 0
+    ? options.responseNameHint.trim()
+    : undefined;
+  let requestName = pickComponentName(
+    requestBody,
+    requestNameHint || inferMapBodyComponentName(requestBody, 'request')
+  );
+  let responseName = pickComponentName(
+    normalizedResponse,
+    responseNameHint || inferMapBodyComponentName(normalizedResponse, 'response')
+  );
+
+  const responsePrefix = parseMapBodyPrefix(responseName);
+  const requestPrefix = parseMapBodyPrefix(requestName);
+  if (requestName === 'Request' && responsePrefix) {
+    requestName = pickComponentName(requestBody, `${responsePrefix}_REQUEST_MAP_BODY`);
+  } else if (responseName === 'Response' && requestPrefix) {
+    responseName = pickComponentName(normalizedResponse, `${requestPrefix}_RESPONSE_MAP_BODY`);
+  }
 
   if (requestBody && typeof requestBody === 'object') {
     delete (requestBody as any)['x-origin-name'];
@@ -254,19 +572,141 @@ const mergeRequestResponseSchemas = (requestSchema: any, responseSchema: any) =>
   }
 
   const nextSchemas: Record<string, any> = { ...mergedComponents };
-  const hasComponents = Object.keys(nextSchemas).length > 0;
-  if (!hasComponents) {
+
+  const reserveComponentName = (preferred: string, schema: any) => {
+    if (!preferred || typeof preferred !== 'string') {
+      return getUniqueName('DTO_COMMON_ITEM');
+    }
+    if (!nextSchemas[preferred]) {
+      if (!usedNames.has(preferred)) usedNames.add(preferred);
+      return preferred;
+    }
+    if (stableStringify(stripOrigin(nextSchemas[preferred])) === stableStringify(stripOrigin(schema))) {
+      return preferred;
+    }
+    return getUniqueName(preferred);
+  };
+
+  const requestMap = getMapEntryContext(requestBody);
+  const responseMap = getMapEntryContext(normalizedResponse);
+  const requestEntryIsRef = !!requestMap?.entrySchema?.$ref;
+  const responseEntryIsRef = !!responseMap?.entrySchema?.$ref;
+
+  if (requestMap && responseMap && !requestEntryIsRef && !responseEntryIsRef) {
+    const prefixFromHint = parseMapBodyPrefix(responseNameHint || '') || parseMapBodyPrefix(requestNameHint || '');
+    const prefixFromName = prefixFromHint || parseMapBodyPrefix(responseName) || parseMapBodyPrefix(requestName);
+    const wrapperCandidate = [responseMap.wrapperKey, requestMap.wrapperKey]
+      .map((key) => toSchemaToken(key))
+      .find((key) => key && !RESERVED_WRAPPER_KEYS.has(key));
+    const itemPrefix = prefixFromName
+      || (wrapperCandidate ? `DTO_${wrapperCandidate}` : 'DTO_COMMON');
+
+    const requestEntrySig = stableStringify(stripOrigin(requestMap.entrySchema));
+    const responseEntrySig = stableStringify(stripOrigin(responseMap.entrySchema));
+
+    if (requestEntrySig === responseEntrySig) {
+      const sharedItemName = getUniqueName(`${itemPrefix}_ITEM`);
+      nextSchemas[sharedItemName] = deepClone(requestMap.entrySchema);
+      applyMapEntryRef(requestBody, requestMap, sharedItemName);
+      applyMapEntryRef(normalizedResponse, responseMap, sharedItemName);
+    } else {
+      const requestItemName = getUniqueName(`${itemPrefix}_REQUEST_ITEM`);
+      const responseItemName = getUniqueName(`${itemPrefix}_RESPONSE_ITEM`);
+      nextSchemas[requestItemName] = deepClone(requestMap.entrySchema);
+      nextSchemas[responseItemName] = deepClone(responseMap.entrySchema);
+      applyMapEntryRef(requestBody, requestMap, requestItemName);
+      applyMapEntryRef(normalizedResponse, responseMap, responseItemName);
+    }
+  }
+
+  if (isNonEmptySchemaObject(requestBody)) {
     if (!nextSchemas[requestName] || stableStringify(stripOrigin(nextSchemas[requestName])) !== stableStringify(stripOrigin(requestBody))) {
       nextSchemas[requestName] = requestBody;
     }
+  }
+  if (isNonEmptySchemaObject(normalizedResponse)) {
     if (!nextSchemas[responseName] || stableStringify(stripOrigin(nextSchemas[responseName])) !== stableStringify(stripOrigin(normalizedResponse))) {
       nextSchemas[responseName] = normalizedResponse;
     }
   }
 
+  const normalizeMapBodyRefs = (): string[] => {
+    const requestMapBody = nextSchemas[requestName];
+    const responseMapBody = nextSchemas[responseName];
+    const reqCtx = getMapEntryContext(requestMapBody);
+    const resCtx = getMapEntryContext(responseMapBody);
+    if (!reqCtx || !resCtx) return [];
+
+    const reqRefName = resolveRefNameFromRef(reqCtx.entrySchema?.$ref);
+    const resRefName = resolveRefNameFromRef(resCtx.entrySchema?.$ref);
+    const reqEntrySource = reqRefName && nextSchemas[reqRefName] ? nextSchemas[reqRefName] : reqCtx.entrySchema;
+    const resEntrySource = resRefName && nextSchemas[resRefName] ? nextSchemas[resRefName] : resCtx.entrySchema;
+    if (!reqEntrySource || !resEntrySource || typeof reqEntrySource !== 'object' || typeof resEntrySource !== 'object') {
+      return [];
+    }
+
+    const reqEntry = deepClone(reqEntrySource);
+    const resEntry = deepClone(resEntrySource);
+    const reqSig = stableStringify(stripOrigin(reqEntry));
+    const resSig = stableStringify(stripOrigin(resEntry));
+
+    const prefixFromHint = parseMapBodyPrefix(responseNameHint || '') || parseMapBodyPrefix(requestNameHint || '');
+    const prefixFromName = prefixFromHint || parseMapBodyPrefix(responseName) || parseMapBodyPrefix(requestName);
+    const refPrefixCandidate = (reqRefName || resRefName || '')
+      .replace(/_(REQUEST_ITEM|RESPONSE_ITEM|ITEM)$/i, '')
+      .trim();
+    const wrapperCandidate = [resCtx.wrapperKey, reqCtx.wrapperKey]
+      .map((key) => toSchemaToken(key))
+      .find((key) => key && !RESERVED_WRAPPER_KEYS.has(key));
+    const itemPrefix = prefixFromName
+      || refPrefixCandidate
+      || (wrapperCandidate ? `DTO_${wrapperCandidate}` : 'DTO_COMMON');
+
+    const promotedNames: string[] = [];
+    if (reqSig === resSig) {
+      const preferredShared = (reqRefName && /_ITEM$/i.test(reqRefName))
+        ? reqRefName
+        : (resRefName && /_ITEM$/i.test(resRefName))
+          ? resRefName
+          : `${itemPrefix}_ITEM`;
+      const sharedName = reserveComponentName(preferredShared, reqEntry);
+      nextSchemas[sharedName] = reqEntry;
+      applyMapEntryRef(requestMapBody, reqCtx, sharedName);
+      applyMapEntryRef(responseMapBody, resCtx, sharedName);
+      promotedNames.push(sharedName);
+    } else {
+      const preferredReq = (reqRefName && /_ITEM$/i.test(reqRefName)) ? reqRefName : `${itemPrefix}_REQUEST_ITEM`;
+      const preferredRes = (resRefName && /_ITEM$/i.test(resRefName)) ? resRefName : `${itemPrefix}_RESPONSE_ITEM`;
+      const reqName = reserveComponentName(preferredReq, reqEntry);
+      const resName = reserveComponentName(preferredRes, resEntry);
+      nextSchemas[reqName] = reqEntry;
+      nextSchemas[resName] = resEntry;
+      applyMapEntryRef(requestMapBody, reqCtx, reqName);
+      applyMapEntryRef(responseMapBody, resCtx, resName);
+      promotedNames.push(reqName, resName);
+    }
+
+    nextSchemas[requestName] = requestMapBody;
+    nextSchemas[responseName] = responseMapBody;
+    return promotedNames;
+  };
+
+  const promotedMapItemNames = normalizeMapBodyRefs();
+  const orderedSchemas: Record<string, any> = {};
+  for (const key of [requestName, responseName, ...promotedMapItemNames]) {
+    if (key && nextSchemas[key] && !orderedSchemas[key]) {
+      orderedSchemas[key] = nextSchemas[key];
+    }
+  }
+  for (const [name, schema] of Object.entries(nextSchemas)) {
+    if (!orderedSchemas[name]) {
+      orderedSchemas[name] = schema;
+    }
+  }
+
   return {
     components: {
-      schemas: nextSchemas,
+      schemas: orderedSchemas,
     },
   };
 };
@@ -342,8 +782,66 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     return enhancedBundle.response || {};
   }, [enhancedBundle.response]);
 
+  const sourceSchemaForApi = useMemo(() => {
+    const candidates = [combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchema];
+    return candidates.find((candidate) => candidate?.components?.schemas && typeof candidate.components.schemas === 'object');
+  }, [combinedSpecData.jsonSchemaOriginal, combinedSpecData.jsonSchema]);
+
+  const mergeNameHints = useMemo(() => {
+    let requestKey = enhancedBundle.requestKey;
+    let responseKey = enhancedBundle.responseKey;
+
+    const applyCandidate = (candidate: { requestKey?: string; responseKey?: string }) => {
+      if (!requestKey && candidate.requestKey) requestKey = candidate.requestKey;
+      if (!responseKey && candidate.responseKey) responseKey = candidate.responseKey;
+    };
+
+    applyCandidate(getOriginNameHints(enhancedRequestSchema, enhancedResponseSchema));
+    applyCandidate(getRequestResponseNameHints(combinedSpecData.jsonSchemaOriginal));
+    applyCandidate(getRequestResponseNameHints(combinedSpecData.jsonSchema));
+    applyCandidate(getSplitCacheNameHints(endpoint.id));
+    applyCandidate(
+      getNameHintsFromSourceComponents(
+        enhancedRequestSchema,
+        enhancedResponseSchema,
+        combinedSpecData?.jsonSchemaOriginal?.components?.schemas
+      )
+    );
+    applyCandidate(
+      getNameHintsFromSourceComponents(
+        enhancedRequestSchema,
+        enhancedResponseSchema,
+        combinedSpecData?.jsonSchema?.components?.schemas
+      )
+    );
+
+    const splitCacheSourceSchema = getSplitCacheSourceSchema(endpoint.id);
+    applyCandidate(
+      getNameHintsFromSourceComponents(
+        enhancedRequestSchema,
+        enhancedResponseSchema,
+        splitCacheSourceSchema?.components?.schemas
+      )
+    );
+    applyCandidate(getPathNameHints(endpoint.path));
+
+    return { requestKey, responseKey };
+  }, [
+    enhancedBundle.requestKey,
+    enhancedBundle.responseKey,
+    enhancedRequestSchema,
+    enhancedResponseSchema,
+    combinedSpecData.jsonSchemaOriginal,
+    combinedSpecData.jsonSchema,
+    endpoint.id,
+    endpoint.path,
+  ]);
+
   const mergedSchema = useMemo(() => {
-    const merged = mergeRequestResponseSchemas(enhancedRequestSchema, enhancedResponseSchema);
+    const merged = mergeRequestResponseSchemas(enhancedRequestSchema, enhancedResponseSchema, {
+      requestNameHint: mergeNameHints.requestKey,
+      responseNameHint: mergeNameHints.responseKey,
+    });
     const mergedComponents = merged?.components?.schemas;
     const mergedKeys = mergedComponents && typeof mergedComponents === 'object'
       ? Object.keys(mergedComponents)
@@ -361,10 +859,19 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     }
 
     return merged;
-  }, [enhancedRequestSchema, enhancedResponseSchema, combinedSpecData.jsonSchemaOriginal]);
+  }, [
+    enhancedRequestSchema,
+    enhancedResponseSchema,
+    mergeNameHints.requestKey,
+    mergeNameHints.responseKey,
+    combinedSpecData.jsonSchemaOriginal
+  ]);
 
   const computeMergedSnapshot = () => {
-    const merged = mergeRequestResponseSchemas(enhancedRequestSchema, enhancedResponseSchema);
+    const merged = mergeRequestResponseSchemas(enhancedRequestSchema, enhancedResponseSchema, {
+      requestNameHint: mergeNameHints.requestKey,
+      responseNameHint: mergeNameHints.responseKey,
+    });
     const mergedComponents = merged?.components?.schemas;
     const mergedKeys = mergedComponents && typeof mergedComponents === 'object'
       ? Object.keys(mergedComponents)
@@ -452,6 +959,8 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
   });
   const [enhancedSubView, setEnhancedSubView] = useState<EnhancedSubView>('request');
   const [mergedSnapshot, setMergedSnapshot] = useState<any | null>(null);
+  const [isSchemaApiBusy, setIsSchemaApiBusy] = useState(false);
+  const roundtripStorageKey = useMemo(() => `schemaRoundtrip:${endpoint.id}`, [endpoint.id]);
 
   const [tableView, setTableView] = useState<'request' | 'response' | 'merged'>('request');
 
@@ -1604,11 +2113,15 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         const nextResponseRaw = enhancedSubView === 'response' ? parsedSchema : baseResponse;
         const nextRequest = preserveComponents(nextRequestRaw, baseRequest);
         const nextResponse = preserveComponents(nextResponseRaw, baseResponse);
-
-        updates.jsonSchemaEnhanced = JSON.stringify({
+        const nextEnhancedBundle: Record<string, any> = {
           request: nextRequest,
           response: nextResponse,
-        });
+        };
+        const nextRequestKey = enhancedBundle.requestKey || mergeNameHints.requestKey;
+        const nextResponseKey = enhancedBundle.responseKey || mergeNameHints.responseKey;
+        if (nextRequestKey) nextEnhancedBundle.requestKey = nextRequestKey;
+        if (nextResponseKey) nextEnhancedBundle.responseKey = nextResponseKey;
+        updates.jsonSchemaEnhanced = JSON.stringify(nextEnhancedBundle);
       }
 
       console.log('💾 handleSaveSchema - updates:', updates);
@@ -1725,6 +2238,121 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
       toast.success('✅ Schema prettified successfully');
     } catch (error) {
       toast.error('❌ Invalid JSON!\n\nCannot prettify invalid JSON.');
+    }
+  };
+
+  const getComparisonSummary = (comparison: any) => {
+    if (!comparison) return 'comparison unavailable';
+    return [
+      `missing:${Array.isArray(comparison.missingInMerged) ? comparison.missingInMerged.length : 0}`,
+      `extra:${Array.isArray(comparison.extraInMerged) ? comparison.extraInMerged.length : 0}`,
+      `changed:${Array.isArray(comparison.changedSchemas) ? comparison.changedSchemas.length : 0}`,
+    ].join(', ');
+  };
+
+  const handleApiMergeFromEnhanced = async () => {
+    setIsSchemaApiBusy(true);
+    try {
+      const sourceSchema = sourceSchemaForApi || undefined;
+      const { data, error } = await apiClient.mergeSchema({
+        requestSchema: enhancedRequestSchema,
+        responseSchema: enhancedResponseSchema,
+        requestKey: mergeNameHints.requestKey,
+        responseKey: mergeNameHints.responseKey,
+        sourceSchema,
+        autoFixAgainstSource: true,
+      });
+
+      if (error || !data) {
+        toast.error(error || 'Schema merge API failed.');
+        return;
+      }
+
+      const nextMerged = data.autoFixedMerged || data.mergedSchema;
+      setMergedSnapshot(nextMerged);
+      setSchemaView('merged');
+
+      try {
+        localStorage.setItem(
+          roundtripStorageKey,
+          JSON.stringify({
+            sourceSchema,
+            mergedSchema: data.mergedSchema,
+            expectedSchema: data.expectedSchema,
+            comparison: data.comparison,
+            matchesSource: data.matchesSource,
+            autoFixedMerged: data.autoFixedMerged,
+            ranAt: new Date().toISOString(),
+            mode: 'merge',
+          })
+        );
+      } catch {
+        // ignore cache errors
+      }
+
+      if (data.matchesSource === false) {
+        toast.warning(`API merge mismatch detected (${getComparisonSummary(data.comparison)}). Auto-fixed merged output applied.`);
+      } else if (data.matchesSource === true) {
+        toast.success('API merge completed and matched source schema.');
+      } else {
+        toast.success('API merge completed.');
+      }
+    } finally {
+      setIsSchemaApiBusy(false);
+    }
+  };
+
+  const handleApiRoundtripAutofix = async () => {
+    if (!sourceSchemaForApi) {
+      toast.error('No source components schema available for roundtrip.');
+      return;
+    }
+
+    setIsSchemaApiBusy(true);
+    try {
+      const { data, error } = await apiClient.roundtripSchema({
+        sourceSchema: sourceSchemaForApi,
+        autoFixAgainstSource: true,
+      });
+      if (error || !data) {
+        toast.error(error || 'Schema roundtrip API failed.');
+        return;
+      }
+
+      const split = data.splitResult;
+      updateSpecData({
+        jsonSchemaEnhanced: JSON.stringify({
+          request: split.requestSchema,
+          response: split.responseSchema,
+          requestKey: split.requestKey,
+          responseKey: split.responseKey,
+        }),
+      });
+
+      setMergedSnapshot(data.autoFixedMerged || data.mergedSchema);
+      setSchemaView('merged');
+
+      try {
+        localStorage.setItem(
+          roundtripStorageKey,
+          JSON.stringify({
+            sourceSchema: sourceSchemaForApi,
+            ...data,
+            ranAt: new Date().toISOString(),
+            mode: 'roundtrip',
+          })
+        );
+      } catch {
+        // ignore cache errors
+      }
+
+      if (data.matchesSource) {
+        toast.success('API roundtrip passed. Enhanced Request/Response and merged output are synchronized.');
+      } else {
+        toast.warning(`API roundtrip mismatch detected (${getComparisonSummary(data.comparison)}). Auto-fixed merged output applied.`);
+      }
+    } finally {
+      setIsSchemaApiBusy(false);
     }
   };
 
@@ -2145,17 +2773,40 @@ ${responseHtml}`.trim();
                     )}
                   </div>
 
-                  {/* Prettify Button */}
-                  <Button
-                    onClick={handlePrettifySchema}
-                    variant="outline"
-                    size="sm"
-                    className="h-7 px-2 text-xs"
-                    disabled={schemaView === 'merged'}
-                  >
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    Prettify
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={handlePrettifySchema}
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                      disabled={schemaView === 'merged'}
+                    >
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Prettify
+                    </Button>
+                    {settings?.schemaMode !== 'normal' && (
+                      <Button
+                        onClick={handleApiMergeFromEnhanced}
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2 text-xs"
+                        disabled={isSchemaApiBusy}
+                      >
+                        {isSchemaApiBusy ? 'API...' : 'API Merge'}
+                      </Button>
+                    )}
+                    {settings?.schemaMode !== 'normal' && (
+                      <Button
+                        onClick={handleApiRoundtripAutofix}
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2 text-xs"
+                        disabled={isSchemaApiBusy || !sourceSchemaForApi}
+                      >
+                        {isSchemaApiBusy ? 'API...' : 'API Roundtrip AutoFix'}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 

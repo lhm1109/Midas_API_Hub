@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "description": "Serviceability Parameters settings (name changed: SPAR -> SERV). Supported methods: GET, PUT. Checklist Text (view-only).",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by ID strings (e.g., \"1\"), where each entry represents an element.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "DEFLECT_CONTROL": {
+              "type": "number",
+              "description": "Deflection Control",
+              "default": 300,
+              "x-ui": {
+                "label": "Deflection Control",
+                "order": 1
+              }
+            },
+            "DAF": {
+              "type": "number",
+              "description": "Deflection Amplification Factor",
+              "default": 1.0,
+              "x-ui": {
+                "label": "Deflection Amplification Factor",
+                "order": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

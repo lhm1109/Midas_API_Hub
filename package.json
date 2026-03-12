@@ -16,7 +16,9 @@
     "electron:build": "npm run build && electron-builder",
     "migrate": "node server/migrate-to-supabase.js",
     "validate:shared": "node scripts/validate-shared-yaml.cjs",
-    "validate:shared:all": "node scripts/validate-shared-yaml.cjs enhanced && node scripts/validate-shared-yaml.cjs original"
+    "validate:shared:all": "node scripts/validate-shared-yaml.cjs enhanced && node scripts/validate-shared-yaml.cjs original",
+    "schema:roundtrip": "node scripts/schema-roundtrip-api.mjs",
+    "schema:roundtrip:actl": "node scripts/schema-roundtrip-api.mjs --input scripts/samples/dto_actl_components_schema.json --write-request scripts/samples/out/dto_actl_request.json --write-response scripts/samples/out/dto_actl_response.json --write-merged scripts/samples/out/dto_actl_merged.json --write-fixed scripts/samples/out/dto_actl_merged_fixed.json --write-report scripts/samples/out/dto_actl_report.json --autofix --strict"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

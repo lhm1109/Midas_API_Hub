@@ -13,6 +13,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { CodeEditor } from '@/components/common';
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
@@ -36,7 +43,6 @@ import {
   type FieldRuntimeStateMap
 } from '@/lib/schema/fieldRuntimeState';
 import { compileSchemaWithContext } from '@/lib/schema/schemaCompiler';
-// 🔥 PR#1: 순수 함수 추출 - builder.logic.ts에서 import
 import {
   getDefaultValue,
   buildInitialDynamicFormData,
@@ -49,8 +55,234 @@ interface BuilderTabProps {
     mapiKey: string;
     commonHeaders: string;
     useAssignWrapper?: boolean;
-    schemaDefinition?: DefinitionType;  // 🔥 NEW: YAML 정의 타입
+    schemaDefinition?: DefinitionType;
   };
+}
+
+function resolveNestedFieldKey(parentFieldName: string, childFieldName: string): string {
+  if (!childFieldName) return childFieldName;
+  if (childFieldName === parentFieldName || childFieldName.startsWith(`${parentFieldName}.`)) {
+    return childFieldName;
+  }
+  return `${parentFieldName}.${childFieldName}`;
+}
+
+function buildConditionFormValues(source: Record<string, any>): Record<string, any> {
+  const nextValues: Record<string, any> = {};
+
+  for (const [key, value] of Object.entries(source)) {
+    if (key.endsWith('._enabled') || key.startsWith('__section_')) {
+      continue;
+    }
+
+    nextValues[key] = value;
+  }
+
+  return nextValues;
+}
+
+type WrapperShape = 'map' | 'single';
+
+interface SchemaWrapperInfo {
+  key: string;
+  shape: WrapperShape;
+}
+
+function normalizeWrapperKey(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const lowered = trimmed.toLowerCase();
+  if (lowered === 'null' || lowered === 'undefined') return null;
+  return trimmed;
+}
+
+function normalizeArrayToken(token: string): string {
+  return token.trim().replace(/^["']|["']$/g, '');
+}
+
+function parseLooseArrayString(raw: string): string[] | null {
+  const trimmed = raw.trim();
+  if (!trimmed.startsWith('[') || !trimmed.endsWith(']')) {
+    return null;
+  }
+
+  const inner = trimmed.slice(1, -1).trim();
+  if (!inner) return [];
+
+  return inner
+    .split(',')
+    .map(normalizeArrayToken)
+    .filter(Boolean);
+}
+
+function castScalarByType(value: any, type?: string): any {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+
+  if (type === 'integer') {
+    const parsed = Number.parseInt(trimmed, 10);
+    return Number.isNaN(parsed) ? value : parsed;
+  }
+
+  if (type === 'number') {
+    const parsed = Number.parseFloat(trimmed);
+    return Number.isNaN(parsed) ? value : parsed;
+  }
+
+  if (type === 'boolean') {
+    if (trimmed.toLowerCase() === 'true') return true;
+    if (trimmed.toLowerCase() === 'false') return false;
+  }
+
+  return value;
+}
+
+function normalizeStringValue(value: any): any {
+  if (typeof value !== 'string') return value;
+
+  const trimmed = value.trim();
+  if (trimmed.length < 2) return value;
+
+  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (typeof parsed === 'string') {
+        return parsed;
+      }
+    } catch {
+      return value;
+    }
+  }
+
+  if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+    return trimmed.slice(1, -1);
+  }
+
+  return value;
+}
+
+function coerceArrayValue(value: any, itemType?: string): any {
+  if (Array.isArray(value)) {
+    return value.map((item) => castScalarByType(item, itemType));
+  }
+
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => castScalarByType(item, itemType));
+    }
+  } catch {
+    // no-op: fallback below
+  }
+
+  const looseParsed = parseLooseArrayString(trimmed);
+  if (looseParsed) {
+    return looseParsed.map((item) => castScalarByType(item, itemType));
+  }
+
+  return [castScalarByType(normalizeArrayToken(trimmed), itemType)];
+}
+
+function coerceValueForField(value: any, field?: UIBuilderField): any {
+  if (!field) return value;
+
+  if (field.type === 'array') {
+    return coerceArrayValue(value, field.items?.type);
+  }
+
+  if (field.type === 'number' || field.type === 'integer' || field.type === 'boolean') {
+    return castScalarByType(value, field.type);
+  }
+
+  if (field.type === 'string') {
+    return normalizeStringValue(value);
+  }
+
+  return value;
+}
+
+function findChildFieldByPath(children: UIBuilderField[] | undefined, childPath: string): UIBuilderField | undefined {
+  if (!children || children.length === 0) return undefined;
+  const shortKey = childPath.split('.').pop() || childPath;
+  return children.find((child) => {
+    if (child.name === childPath) return true;
+    if (child.name === shortKey) return true;
+    return child.name.endsWith(`.${shortKey}`);
+  });
+}
+
+function resolveFieldByPath(path: string, fields: UIBuilderField[]): UIBuilderField | undefined {
+  const direct = fields.find((field) => field.name === path);
+  if (direct) return direct;
+
+  if (!path.includes('.')) return undefined;
+  const parentPath = path.split('.')[0];
+  const parentField = fields.find((field) => field.name === parentPath);
+  if (!parentField) return undefined;
+
+  const child = findChildFieldByPath(parentField.children, path);
+  if (child) return child;
+
+  return parentField.type === 'array' ? parentField : undefined;
+}
+
+function detectSchemaWrapperInfo(schema: any): SchemaWrapperInfo | null {
+  if (!schema || typeof schema !== 'object') return null;
+
+  const props = schema?.properties;
+  if (!props || typeof props !== 'object') return null;
+
+  const preferredKeys = ['Assign', 'Argument', 'MCD'];
+  const preferredKey = preferredKeys.find((key) => props[key]);
+
+  let wrapperKey: string | null = preferredKey ?? null;
+  if (!wrapperKey) {
+    const keys = Object.keys(props);
+    if (keys.length === 1) {
+      wrapperKey = keys[0];
+    }
+  }
+  if (!wrapperKey) return null;
+
+  const wrapperSchema = props[wrapperKey];
+  if (!wrapperSchema || typeof wrapperSchema !== 'object') return null;
+
+  const isMapWrapper = Boolean(wrapperSchema.additionalProperties || wrapperSchema.patternProperties);
+  const isSingleWrapper = Boolean(
+    wrapperSchema.properties ||
+    wrapperSchema.required ||
+    wrapperSchema.allOf ||
+    wrapperSchema.oneOf ||
+    wrapperSchema.anyOf
+  );
+
+  if (!isMapWrapper && !isSingleWrapper && !preferredKey) {
+    return null;
+  }
+
+  return {
+    key: wrapperKey,
+    shape: isMapWrapper ? 'map' : 'single',
+  };
+}
+
+function flattenObjectToDotNotation(obj: any, target: Record<string, any>, prefix = ''): void {
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key];
+    const newKey = prefix ? `${prefix}.${key}` : key;
+
+    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+      target[`${newKey}._enabled`] = true;
+      flattenObjectToDotNotation(value, target, newKey);
+    } else {
+      target[newKey] = value;
+    }
+  });
 }
 
 export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
@@ -62,22 +294,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     specData,
     saveCurrentVersion,
   } = useAppStore();
-
-  // 🔥 제품 ID로 PSD 설정 가져오기 (로컬 매핑)
   const { endpoints: products } = useEndpoints();
   const currentProduct = products.find(p => p.id === (endpoint as any).product);
   const productId = (endpoint as any).product || currentProduct?.id;
-
-  // PSD 매핑 (로컬 관리)
   const { psdSet, schemaType: defaultSchemaType } = useMemo(() => {
     return getPSDForProduct(productId);
   }, [productId]);
   const schemaType = defaultSchemaType as 'original' | 'enhanced';
 
   const testCases = runnerData?.testCases || [];
-
-  // 🔥 Schema Registry로 활성 스키마 결정
-  // 문자열인 경우 파싱, 이미 객체인 경우 그대로 사용
   const parseIfString = (value: any) => {
     if (!value) return value;
     if (typeof value === 'string') {
@@ -101,8 +326,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
   const activeSchema = resolveActiveSchema(combinedSpecData);
   const hasEnhancedSchema = isEnhancedSchemaActive(combinedSpecData);
-
-  // ⚠️ specData가 없거나 activeSchema가 비어있으면 안내 메시지 표시
+  const schemaWrapperInfo = useMemo(() => detectSchemaWrapperInfo(activeSchema), [activeSchema]);
   if (!specData || !activeSchema || (typeof activeSchema === 'object' && Object.keys(activeSchema).length === 0)) {
     return (
       <div className="flex-1 flex items-center justify-center bg-zinc-950 text-zinc-600">
@@ -114,61 +338,44 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       </div>
     );
   }
-
-  // 🔥 Builder Rules에서 wrapper rules 및 enhanced schema markers 로드
   const [wrapperRules, setWrapperRules] = useState<Array<{ pattern: string; wrapper: string; priority?: number }>>([]);
-  const [wrapperPriorityDefault, setWrapperPriorityDefault] = useState<number>(0);  // 🔥 shared.yaml에서 로드
+  const [wrapperPriorityDefault, setWrapperPriorityDefault] = useState<number>(0);
   const [enhancedSchemaMarkers, setEnhancedSchemaMarkers] = useState<string[]>([]);
 
   useEffect(() => {
     const loadBuilderConfig = async () => {
       try {
-        // 🔥 제품의 PSD 설정 사용
         const builderDef = await loadBuilderRules(psdSet, schemaType);
 
         if (builderDef.wrapperRules) {
-          console.log('✅ Loaded wrapper rules from', `${psdSet}/${schemaType}:`, builderDef.wrapperRules);
+          console.log('[BuilderTab] Loaded wrapper rules from', `${psdSet}/${schemaType}:`, builderDef.wrapperRules);
           setWrapperRules(builderDef.wrapperRules as Array<{ pattern: string; wrapper: string; priority?: number }>);
         }
 
         if (builderDef.enhancedSchemaMarkers) {
-          console.log('✅ Loaded enhanced schema markers:', builderDef.enhancedSchemaMarkers);
+          console.log('[BuilderTab] Loaded enhanced schema markers:', builderDef.enhancedSchemaMarkers);
           setEnhancedSchemaMarkers(builderDef.enhancedSchemaMarkers);
         }
-
-        // 🔥 NEW: wrapperPriorityDefault 로드 (shared.yaml에서)
         if (builderDef.wrapperPriorityDefault !== undefined) {
-          console.log('✅ Loaded wrapperPriorityDefault:', builderDef.wrapperPriorityDefault);
+          console.log('[BuilderTab] Loaded wrapperPriorityDefault:', builderDef.wrapperPriorityDefault);
           setWrapperPriorityDefault(builderDef.wrapperPriorityDefault);
         }
       } catch (error) {
-        console.error('❌ Failed to load builder config:', error);
+        console.error('[BuilderTab] Failed to load builder config:', error);
       }
     };
     loadBuilderConfig();
   }, [psdSet, schemaType]);
-
-  // 🔥 NEW Enhanced Schema 감지: builder.yaml의 enhancedSchemaMarkers 사용
   const isNewEnhancedSchema = useMemo(() => {
     if (enhancedSchemaMarkers.length === 0) {
-      // 마커가 로드되지 않았으면 기본값 사용 (폴백)
       return false;
     }
 
     const schemaStr = JSON.stringify(activeSchema);
     return enhancedSchemaMarkers.some(marker => schemaStr.includes(marker));
   }, [activeSchema, enhancedSchemaMarkers]);
-
-  // 🎯 스키마 기반 동적 상태 (기존 하드코딩 대체)
-  // 초기값은 빈 객체로 설정하고, schemaFields가 준비되면 useEffect에서 초기화
   const [dynamicFormData, setDynamicFormData] = useState<any>({});
-
-  // 🔥 Temporary state to track form values for enhanced schema
-  // 초기값은 빈 객체로 설정하고, schemaFields가 준비되면 useEffect에서 초기화
   const [tempFormValuesForSchema, setTempFormValuesForSchema] = useState<Record<string, any>>({});
-
-  // 🎯 NEW: Field Runtime States 계산 (Single Source of Truth)
-  // ⚠️ useMemo로 계산 (useState 아님!) → 무한 루프 방지
   const compiledSchemaContext = useMemo(() => {
     if (!activeSchema || typeof activeSchema !== 'object' || Object.keys(activeSchema).length === 0) {
       return { sections: [], variantAxes: [] };
@@ -176,18 +383,16 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     try {
       return compileSchemaWithContext(activeSchema, psdSet, schemaType);
     } catch (error) {
-      console.error('❌ Failed to compile schema:', error);
+      console.error('[BuilderTab] Failed to compile schema:', error);
       return { sections: [], variantAxes: [] };
     }
   }, [activeSchema, psdSet, schemaType]);
 
   const compiledSchemaSections = compiledSchemaContext.sections;
   const variantAxes = compiledSchemaContext.variantAxes;
-
-  // 🎯 VariantAxes 디버그 로그
   useEffect(() => {
     if (variantAxes.length > 0) {
-      console.log('🎯 VariantAxes detected:', variantAxes.map(axis => ({
+      console.log('[BuilderTab] Variant axes detected:', variantAxes.map(axis => ({
         field: axis.field,
         type: axis.type,
         values: axis.values,
@@ -195,19 +400,73 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       })));
     }
   }, [variantAxes]);
-
-  // 🔥 NEW: UI Schema Adapter로 빌더 필드 생성
-  // ⚠️ 주의: compiledSchemaSections 기반으로 필드 생성 (unwrap 완료된 상태)
   const schemaFields: UIBuilderField[] = useMemo(() => {
     if (compiledSchemaSections.length === 0) {
       return [];
     }
-
-    // 🔥 compiledSchemaSections에서 필드를 직접 추출하여 UIBuilderField로 변환
     const fields: UIBuilderField[] = [];
 
+    const toUIBuilderField = (compiledField: any): UIBuilderField => {
+      const uiHint = compiledField.ui?.hint;
+      const minHint = compiledField.minimum !== undefined
+        ? `min: ${compiledField.minimum}`
+        : (typeof compiledField.exclusiveMinimum === 'number' ? `>${compiledField.exclusiveMinimum}` : undefined);
+      const maxHint = compiledField.maximum !== undefined
+        ? `max: ${compiledField.maximum}`
+        : (typeof compiledField.exclusiveMaximum === 'number' ? `<${compiledField.exclusiveMaximum}` : undefined);
+      const rangeHint = minHint || maxHint
+        ? `Range ${[minHint, maxHint].filter(Boolean).join(', ')}`
+        : undefined;
+      const placeholder = [uiHint, rangeHint].filter(Boolean).join(' | ') || undefined;
+
+      const mappedType: UIBuilderField['type'] =
+        compiledField.type === 'array' ? 'array' :
+          compiledField.type === 'object' ? 'object' :
+            compiledField.type === 'integer' || compiledField.type === 'number' ? compiledField.type :
+              compiledField.type === 'boolean' ? 'boolean' :
+                compiledField.enum || compiledField.enumByType ? 'enum' : 'string';
+
+      const uiField: UIBuilderField = {
+        name: compiledField.key,
+        type: mappedType,
+        description: compiledField.ui?.label || compiledField.description || compiledField.key,
+        required: typeof compiledField.required === 'boolean'
+          ? compiledField.required
+          : (typeof compiledField.required === 'object' && compiledField.required?.['*'] === 'required'),
+        default: compiledField.default,
+        enum: compiledField.enum || (compiledField.enumByType ? Object.values(compiledField.enumByType)[0] as any[] : undefined),
+        enumLabels: compiledField['x-enum-labels'] || compiledField.enumLabels,
+        placeholder,
+        items: compiledField.items
+          ? {
+              type: compiledField.items.type || 'any',
+              enum: Array.isArray(compiledField.items?.enum) ? compiledField.items.enum : undefined,
+            }
+          : undefined,
+        uiComponent: compiledField.ui?.component,
+        enumLabelsByType: compiledField['x-enum-labels-by-type'] || compiledField.enumLabelsByType,
+      };
+
+      if (compiledField.children && compiledField.children.length > 0) {
+        uiField.children = compiledField.children
+          .filter((child: any) => child.type !== 'section-header')
+          .map((child: any) => toUIBuilderField(child));
+      }
+
+      if (compiledField['x-required-when']) {
+        (uiField as any)['x-required-when'] = compiledField['x-required-when'];
+      }
+      if (compiledField['x-optional-when']) {
+        (uiField as any)['x-optional-when'] = compiledField['x-optional-when'];
+      }
+      if (compiledField.optionIndex !== undefined) {
+        (uiField as any).optionIndex = compiledField.optionIndex;
+      }
+
+      return uiField;
+    };
+
     for (const section of compiledSchemaSections) {
-      // 섹션 헤더 추가
       if (section.name) {
         fields.push({
           name: `__section_${section.name}__`,
@@ -216,94 +475,44 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           required: false,
         });
       }
-
-      // 섹션의 필드들을 UIBuilderField로 변환
       for (const field of section.fields) {
-        const uiField: UIBuilderField = {
-          name: field.key,
-          type: field.type === 'integer' || field.type === 'number' ? field.type :
-            field.enum || field.enumByType ? 'enum' :
-              field.type === 'boolean' ? 'boolean' :
-                field.type === 'array' ? 'array' :
-                  field.type === 'object' ? 'object' : 'string',
-          description: field.ui?.label || field.description || field.key,
-          required: typeof field.required === 'boolean' ? field.required :
-            typeof field.required === 'object' && field.required['*'] === 'required',
-          default: field.default,
-          enum: field.enum || (field.enumByType ? Object.values(field.enumByType)[0] as any[] : undefined),
-          items: field.items,
-        };
-
-        // 중첩 필드 처리 - 🔥 section-header 타입 필터링
-        if (field.children && field.children.length > 0) {
-          uiField.children = field.children
-            .filter(child => child.type !== 'section-header') // 🔥 섹션 헤더는 Builder 탭에서 제외
-            .map(child => ({
-              name: child.key,
-              type: child.type === 'integer' || child.type === 'number' ? child.type :
-                child.enum ? 'enum' : child.type === 'boolean' ? 'boolean' : 'string',
-              description: child.ui?.label || child.description || child.key,
-              required: typeof child.required === 'boolean'
-                ? child.required
-                : (typeof child.required === 'object' && child.required?.['*'] === 'required'),
-              default: child.default,
-              enum: child.enum,
-              // 🔥 조건부 필드 정보 유지
-              'x-required-when': (child as any)['x-required-when'],
-              'x-optional-when': (child as any)['x-optional-when'],
-            }));
-        }
-
-        fields.push(uiField);
+        fields.push(toUIBuilderField(field));
       }
     }
 
     return fields;
   }, [compiledSchemaSections]);
-
-  // 🔥 schemaFields가 준비되면 트리거 필드 및 기본값이 있는 필드를 자동으로 초기화
-  // visibleWhen 조건에 사용되는 필드(iMETHOD, TYPE 등)를 스키마에서 자동 감지
   useEffect(() => {
     if (schemaFields.length > 0 && Object.keys(tempFormValuesForSchema).length === 0) {
       const initialValues: Record<string, any> = {};
-
-      // 🎯 Step 1: 스키마에서 자동으로 트리거 필드 추출
       let triggerFieldNames: string[] = [];
       if (activeSchema && typeof activeSchema === 'object') {
         try {
           triggerFieldNames = extractTriggerFields(activeSchema as EnhancedSchema, psdSet, schemaType);
-          console.log('🎯 Auto-detected trigger fields from schema:', triggerFieldNames);
+          console.log('[BuilderTab] Auto-detected trigger fields from schema:', triggerFieldNames);
         } catch (error) {
-          console.warn('⚠️ Failed to extract trigger fields:', error);
+          console.warn('[BuilderTab] Failed to extract trigger fields:', error);
         }
       }
-
-      // 🎯 Step 2: 트리거 필드는 반드시 초기화 (기본값 또는 enum 첫 번째 값)
       for (const triggerFieldName of triggerFieldNames) {
         const field = schemaFields.find(f => f.name === triggerFieldName);
         if (field) {
           if (field.default !== undefined && field.default !== null) {
             initialValues[field.name] = field.default;
-            console.log(`✅ Trigger field "${field.name}" initialized with default:`, field.default);
+            console.log(`[BuilderTab] Trigger field "${field.name}" initialized with default:`, field.default);
           } else if (field.type === 'enum' && field.enum && field.enum.length > 0) {
             initialValues[field.name] = field.enum[0];
-            console.log(`✅ Trigger field "${field.name}" initialized with first enum:`, field.enum[0]);
+            console.log(`[BuilderTab] Trigger field "${field.name}" initialized with first enum:`, field.enum[0]);
           }
         }
       }
 
-      // 🔥 Step 3 제거: Optional 필드는 초기화하지 않음
-      // ⚠️ 중요: Optional/Conditional 필드는 사용자가 입력할 때 state에 추가됨
-      //         초기에 key를 만들면 JSON에 불필요하게 포함됨
-
       if (Object.keys(initialValues).length > 0) {
-        console.log('🎯 Initializing tempFormValuesForSchema (Trigger only):', initialValues);
+        console.log('[BuilderTab] Initializing tempFormValuesForSchema (trigger only):', initialValues);
         setTempFormValuesForSchema(initialValues);
       }
     }
   }, [schemaFields, activeSchema, psdSet, schemaType]);
-
-  // 🔥 PR#1: getDefaultValue는 builder.logic.ts에서 import됨
 
   const fieldRuntimeStates: FieldRuntimeStateMap = useMemo(() => {
     if (compiledSchemaSections.length === 0) {
@@ -311,47 +520,94 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     }
 
     try {
-      // 🔥 현재 폼 값(tempFormValuesForSchema + dynamicFormData)과 함께 런타임 상태 계산
-      const combinedFormValues = { ...tempFormValuesForSchema, ...dynamicFormData };
+      const combinedFormValues = buildConditionFormValues({
+        ...tempFormValuesForSchema,
+        ...dynamicFormData,
+      });
       const runtimeStates = calculateFieldRuntimeStates(compiledSchemaSections, combinedFormValues, variantAxes);
-
-      // 🔍 디버깅: Required 필드 상태 출력
       const requiredFields = Object.entries(runtimeStates).filter(([_, state]) => state.requiredNow);
       if (requiredFields.length > 0) {
-        console.log('🎯 Required fields (requiredNow=true):',
+        console.log('[BuilderTab] Required fields (requiredNow=true):',
           requiredFields.map(([name, state]) => `${name} (visible: ${state.visible})`).join(', ')
         );
       }
 
       return runtimeStates;
     } catch (error) {
-      console.error('❌ Failed to calculate field runtime states:', error);
+      console.error('[BuilderTab] Failed to calculate field runtime states:', error);
       return {};
     }
   }, [compiledSchemaSections, tempFormValuesForSchema, dynamicFormData, variantAxes]);
-
-  // 🎯 schemaFields가 준비되면 dynamicFormData 초기화 (Trigger + Required 필드만)
-  // 🔥 PR#1: buildInitialDynamicFormData로 대체
   useEffect(() => {
     if (schemaFields.length > 0 && Object.keys(dynamicFormData).length === 0) {
       const initialData = buildInitialDynamicFormData(schemaFields, {});
       setDynamicFormData(initialData);
-      console.log('🎯 Initialized dynamicFormData (Trigger + Required only):', initialData);
+      console.log('[BuilderTab] Initialized dynamicFormData (trigger + required only):', initialData);
     }
   }, [schemaFields]);
-
-  // 🔥 Assign 인스턴스 관리 (여러 노드를 위한 상태)
-  // 🔥 PR#1: buildInitialDynamicFormData로 대체
   const [assignInstances, setAssignInstances] = useState<{ [key: string]: any }>(() => {
     const initialData = buildInitialDynamicFormData(schemaFields, {});
     return { "1": initialData };
   });
+  const [currentInstanceKey, setCurrentInstanceKey] = useState<string>("1");
+  const [instanceKeyDraft, setInstanceKeyDraft] = useState<string>("1");
+  const [selectionSourceType, setSelectionSourceType] = useState<'NODE' | 'ELEM'>('ELEM');
+  const [isLoadingSelectionInstances, setIsLoadingSelectionInstances] = useState(false);
 
-  // Assign 인스턴스 추가
-  // 🔥 PR#1: buildInitialDynamicFormData로 대체
+  const enableAssignInstances = useMemo(() => {
+    if (settings.useAssignWrapper === false) {
+      return false;
+    }
+    if (schemaWrapperInfo?.shape === 'single') {
+      return false;
+    }
+    if (schemaWrapperInfo?.shape === 'map') {
+      return true;
+    }
+    if (settings.useAssignWrapper === true) {
+      return true;
+    }
+    const path = endpoint.path || '';
+    if (!path || wrapperRules.length === 0) {
+      return false;
+    }
+
+    const sortedRules = [...wrapperRules]
+      .map((rule, index) => ({ ...rule, _originalIndex: index }))
+      .sort((a, b) => {
+        const priorityA = a.priority ?? wrapperPriorityDefault;
+        const priorityB = b.priority ?? wrapperPriorityDefault;
+        if (priorityB !== priorityA) {
+          return priorityB - priorityA;
+        }
+        return (a as any)._originalIndex - (b as any)._originalIndex;
+      });
+
+    return sortedRules.some((rule) => {
+      const wrapperKey = normalizeWrapperKey((rule as any).wrapper);
+      if (!wrapperKey) {
+        return false;
+      }
+      try {
+        return new RegExp(rule.pattern).test(path);
+      } catch {
+        return false;
+      }
+    });
+  }, [
+    settings.useAssignWrapper,
+    schemaWrapperInfo,
+    endpoint.path,
+    wrapperRules,
+    wrapperPriorityDefault,
+  ]);
+
   const addAssignInstance = () => {
     const keys = Object.keys(assignInstances);
-    const nextKey = String(Math.max(...keys.map(k => parseInt(k) || 0)) + 1);
+    const numericKeys = keys
+      .map((k) => Number.parseInt(k, 10))
+      .filter((num) => Number.isFinite(num));
+    const nextKey = String((numericKeys.length > 0 ? Math.max(...numericKeys) : 0) + 1);
     const newInstanceData = buildInitialDynamicFormData(schemaFields, {});
 
     setAssignInstances(prev => ({
@@ -359,59 +615,195 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       [nextKey]: newInstanceData
     }));
     setCurrentInstanceKey(nextKey);
+    setInstanceKeyDraft(nextKey);
   };
-
-  // Assign 인스턴스 삭제
   const removeAssignInstance = (key: string) => {
     if (Object.keys(assignInstances).length <= 1) {
-      toast.error('❌ At least one instance is required');
+      toast.error('At least one instance is required.');
       return;
     }
 
     setAssignInstances(prev => {
       const next = { ...prev };
       delete next[key];
+      if (currentInstanceKey === key) {
+        const remaining = Object.keys(next)
+          .sort((a, b) => Number.parseInt(a, 10) - Number.parseInt(b, 10));
+        if (remaining.length > 0) {
+          setCurrentInstanceKey(remaining[0]);
+        }
+      }
       return next;
     });
+  };
 
-    // 삭제된 인스턴스가 현재 선택된 것이면 다른 인스턴스로 변경
-    if (currentInstanceKey === key) {
-      const remaining = Object.keys(assignInstances).filter(k => k !== key);
-      setCurrentInstanceKey(remaining[0]);
+  const renameAssignInstance = (nextKeyRaw: string) => {
+    const nextKey = nextKeyRaw.trim();
+    if (!nextKey || nextKey === currentInstanceKey) {
+      setInstanceKeyDraft(currentInstanceKey);
+      return;
+    }
+    if (!/^\d+$/.test(nextKey)) {
+      toast.error('Instance key must be a numeric string.');
+      setInstanceKeyDraft(currentInstanceKey);
+      return;
+    }
+    if (Object.prototype.hasOwnProperty.call(assignInstances, nextKey)) {
+      toast.error(`Instance key "${nextKey}" already exists.`);
+      setInstanceKeyDraft(currentInstanceKey);
+      return;
+    }
+
+    setAssignInstances((prev) => {
+      if (!Object.prototype.hasOwnProperty.call(prev, currentInstanceKey)) {
+        return prev;
+      }
+      const next = { ...prev };
+      const currentData = next[currentInstanceKey];
+      delete next[currentInstanceKey];
+      next[nextKey] = currentData;
+      return next;
+    });
+    setCurrentInstanceKey(nextKey);
+    setInstanceKeyDraft(nextKey);
+  };
+
+  const loadAssignInstancesFromSelect = async () => {
+    const baseUrl = (settings.baseUrl || '').trim().replace(/\/+$/, '');
+    if (!baseUrl) {
+      toast.error('Base URL is empty. Please configure it in Settings.');
+      return;
+    }
+
+    const selectUrl = `${baseUrl}/view/SELECT`;
+    setIsLoadingSelectionInstances(true);
+
+    try {
+      const headers: Record<string, string> = {
+        Accept: 'application/json',
+      };
+
+      try {
+        const commonHeaders = JSON.parse(settings.commonHeaders || '{}');
+        if (commonHeaders && typeof commonHeaders === 'object' && !Array.isArray(commonHeaders)) {
+          Object.entries(commonHeaders).forEach(([k, v]) => {
+            if (typeof v === 'string') {
+              headers[k] = v;
+            }
+          });
+        }
+      } catch (error) {
+        console.warn('[BuilderTab] Failed to parse common headers:', error);
+      }
+
+      if (settings.mapiKey) {
+        headers['MAPI-Key'] = settings.mapiKey;
+      }
+
+      const response = await fetch(selectUrl, {
+        method: 'GET',
+        headers,
+      });
+
+      const responseText = await response.text();
+      let responseJson: any = {};
+      try {
+        responseJson = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        throw new Error(`Invalid JSON response from ${selectUrl}`);
+      }
+
+      if (!response.ok) {
+        const message =
+          responseJson?.error?.message ||
+          responseJson?.message ||
+          `Failed to load selection (${response.status} ${response.statusText})`;
+        throw new Error(message);
+      }
+
+      const selectPayload = responseJson?.SELECT ?? responseJson;
+      const listKey = selectionSourceType === 'NODE' ? 'NODE_LIST' : 'ELEM_LIST';
+      const rawList = selectPayload?.[listKey];
+
+      if (!Array.isArray(rawList)) {
+        throw new Error(`${listKey} is missing in SELECT response.`);
+      }
+
+      const instanceKeys = [...new Set(rawList
+        .map((value: unknown) => String(value).trim())
+        .filter((value: string) => /^\d+$/.test(value)))];
+
+      if (instanceKeys.length === 0) {
+        toast.info(`No ${selectionSourceType === 'NODE' ? 'node' : 'element'} IDs found in ${listKey}.`);
+        return;
+      }
+
+      const templateData =
+        Object.keys(dynamicFormData || {}).length > 0
+          ? { ...dynamicFormData }
+          : buildInitialDynamicFormData(schemaFields, {});
+
+      const nextInstances = instanceKeys.reduce((acc, key) => {
+        acc[key] = { ...templateData };
+        return acc;
+      }, {} as Record<string, any>);
+
+      const firstKey = instanceKeys
+        .slice()
+        .sort((a, b) => Number.parseInt(a, 10) - Number.parseInt(b, 10))[0];
+
+      setAssignInstances(nextInstances);
+      setCurrentInstanceKey(firstKey);
+      setInstanceKeyDraft(firstKey);
+      setDynamicFormData(nextInstances[firstKey]);
+
+      toast.success(`Loaded ${instanceKeys.length} ${selectionSourceType === 'NODE' ? 'node' : 'element'} IDs from view/SELECT.`);
+    } catch (error) {
+      console.error('[BuilderTab] Failed to load selection instances:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to load selection from view/SELECT.');
+    } finally {
+      setIsLoadingSelectionInstances(false);
     }
   };
 
-  // 현재 선택된 인스턴스
-  const [currentInstanceKey, setCurrentInstanceKey] = useState<string>("1");
-
-  // 현재 인스턴스의 데이터를 dynamicFormData에 반영
   useEffect(() => {
-    if (assignInstances[currentInstanceKey]) {
-      setDynamicFormData(assignInstances[currentInstanceKey]);
-    }
+    setInstanceKeyDraft(currentInstanceKey);
   }, [currentInstanceKey]);
 
-  // dynamicFormData 변경 시 현재 인스턴스에 저장
   useEffect(() => {
-    setAssignInstances(prev => ({
-      ...prev,
-      [currentInstanceKey]: dynamicFormData
-    }));
-  }, [dynamicFormData, currentInstanceKey]);
+    if (!currentInstanceKey) return;
+    const nextInstanceData = assignInstances[currentInstanceKey];
+    if (!nextInstanceData) return;
 
-  // 🔥 Enhanced Schema: dynamicFormData 변경 시 tempFormValuesForSchema 업데이트 (visibleWhen 재평가용)
-  // ⚠️ 주의: 무한 루프 방지를 위해 JSON.stringify로 실제 값 변경 확인
+    const currentSerialized = JSON.stringify(dynamicFormData ?? {});
+    const nextSerialized = JSON.stringify(nextInstanceData ?? {});
+    if (currentSerialized !== nextSerialized) {
+      setDynamicFormData(nextInstanceData);
+    }
+  }, [currentInstanceKey]);
   useEffect(() => {
-    if (isNewEnhancedSchema && Object.keys(dynamicFormData).length > 0) {
-      // Flatten dot notation to nested object for schema evaluation
-      const flatValues: Record<string, any> = {};
-      for (const [key, value] of Object.entries(dynamicFormData)) {
-        if (!key.includes('.') && !key.endsWith('._enabled') && !key.startsWith('__section_')) {
-          flatValues[key] = value;
-        }
+    if (!enableAssignInstances || !currentInstanceKey) return;
+
+    setAssignInstances(prev => {
+      const currentInstanceData = prev[currentInstanceKey] ?? {};
+      const prevSerialized = JSON.stringify(currentInstanceData ?? {});
+      const nextSerialized = JSON.stringify(dynamicFormData ?? {});
+
+      if (prevSerialized === nextSerialized) {
+        return prev;
       }
 
-      // 🔥 실제 값이 변경된 경우에만 업데이트
+      return {
+        ...prev,
+        [currentInstanceKey]: dynamicFormData
+      };
+    });
+  }, [dynamicFormData, currentInstanceKey, enableAssignInstances]);
+
+  useEffect(() => {
+    if (isNewEnhancedSchema && Object.keys(dynamicFormData).length > 0) {
+      const flatValues = buildConditionFormValues(dynamicFormData);
+
       const currentStringified = JSON.stringify(tempFormValuesForSchema);
       const newStringified = JSON.stringify(flatValues);
       if (currentStringified !== newStringified) {
@@ -419,8 +811,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       }
     }
   }, [dynamicFormData, isNewEnhancedSchema]);
-
-  // 🎯 아코디언 상태 관리
   const [expandedObjects, setExpandedObjects] = useState<Set<string>>(new Set());
 
   const toggleObject = (fieldName: string) => {
@@ -434,18 +824,13 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       return next;
     });
   };
-
-  // 🔥 NEW: YAML 정의 로드
   const [builderDefinition, setBuilderDefinition] = useState<any>(null);
 
   useEffect(() => {
-    // 🔥 Enhanced 스키마 감지: jsonSchemaEnhanced가 있거나, 마커가 있으면 Enhanced
     const hasEnhancedData = !!combinedSpecData.jsonSchemaEnhanced;
     const definitionType: DefinitionType = (hasEnhancedData || isNewEnhancedSchema) ? 'enhanced' : 'original';
 
-    console.log(`🔄 BuilderTab: Loading YAML ${definitionType} for ${psdSet} (hasEnhancedData: ${hasEnhancedData}, isNewEnhancedSchema: ${isNewEnhancedSchema})`);
-
-    // 🔥 제품의 PSD 설정 사용
+    console.log(`[BuilderTab] Loading YAML ${definitionType} for ${psdSet} (hasEnhancedData: ${hasEnhancedData}, isNewEnhancedSchema: ${isNewEnhancedSchema})`);
     loadCachedDefinition(
       definitionType,
       'builder',
@@ -454,41 +839,27 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       definitionType // schemaType (Level 2)
     )
       .then(def => {
-        console.log(`✅ BuilderTab: Loaded ${definitionType} builder definition`);
+        console.log(`[BuilderTab] Loaded ${definitionType} builder definition`);
         setBuilderDefinition(def);
       })
       .catch(err => console.error('Failed to load builder definition:', err));
   }, [isNewEnhancedSchema, psdSet]);
-
-  // 🎯 스키마 필드 목록을 안정적으로 추적하기 위한 memoized string
   const schemaFieldsKey = useMemo(() => {
     return schemaFields.map(f => f.name).join(',');
   }, [schemaFields]);
-
-  // 🎯 스키마 변경 시 동적 폼 데이터 재초기화
-  // 🔥 schemaFields가 변경되면 (조건부 필드 포함) 동적으로 업데이트
-  // ⚠️ 주의: 무한 루프 방지를 위해 schemaFieldsKey로 실제 변경만 감지
   useEffect(() => {
-    // 🔥 초기화되지 않은 상태이거나, 스키마가 비어있으면 스킵
     if (schemaFields.length === 0) return;
 
     setDynamicFormData((prev: any) => {
       const initialData: any = { ...prev };
-
-      // 🔥 새로운 필드 추가 (Trigger + Required만), 기존 필드는 값 유지
       schemaFields.forEach(field => {
         const existingValue = prev[field.name];
         if (existingValue === undefined) {
-          // ✅ Trigger 필드 (enum이 있는 필드는 VariantAxis일 가능성이 높음)
           const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0;
-
-          // ✅ Required 필드 (boolean 또는 모든 타입에서 required)
           const isAlwaysRequired =
             field.required === true ||
             (typeof field.required === 'object' &&
               (field.required as any)['*'] === 'required');
-
-          // 🎯 Trigger 또는 Always Required만 초기화
           if (isTriggerField || isAlwaysRequired) {
             if (field.type === 'array' && field.items) {
               initialData[field.name] = getDefaultValue(field);
@@ -496,27 +867,27 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               const enabledKey = `${field.name}._enabled`;
               initialData[enabledKey] = false;
               field.children.forEach(child => {
-                initialData[child.name] = getDefaultValue(child);
+                const childKey = resolveNestedFieldKey(field.name, child.name);
+                initialData[childKey] = getDefaultValue(child);
               });
             } else {
               initialData[field.name] = getDefaultValue(field);
             }
           }
-          // 🔥 Optional 필드는 key 자체를 만들지 않음 (사용자가 입력할 때 추가됨)
         }
       });
-
-      // 🔥 스키마에 없는 필드 제거 (조건부 필드가 사라진 경우)
       const validFieldNames = new Set(schemaFields.map(f => f.name));
       schemaFields.forEach(f => {
         if (f.type === 'object' && f.children) {
-          f.children.forEach(child => validFieldNames.add(child.name));
+          f.children.forEach(child => {
+            validFieldNames.add(resolveNestedFieldKey(f.name, child.name));
+          });
           validFieldNames.add(`${f.name}._enabled`);
         }
       });
 
       for (const key of Object.keys(initialData)) {
-        if (key.startsWith('__section_')) continue; // 섹션 헤더는 유지
+        if (key.startsWith('__section_')) continue;
         if (!validFieldNames.has(key) && !key.includes('.')) {
           delete initialData[key];
         }
@@ -525,9 +896,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       return initialData;
     });
   }, [schemaFieldsKey]);
-
-  // 🔥 NEW: fieldRuntimeStates 변경 시 Required+Visible 필드 자동 추가
-  // TYPE/iMETHOD 변경 시 새로운 필드가 required가 되면 dynamicFormData에 추가
   useEffect(() => {
     if (Object.keys(fieldRuntimeStates).length === 0) return;
 
@@ -541,43 +909,37 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       let addedCount = 0;
 
       requiredVisibleFields.forEach(([fieldName, _state]) => {
-        // 🔥 FIX: 키가 이미 존재하면 스킵 (null이든 뭐든 상관없이)
-        // 이렇게 해야 무한 루프가 방지됨
         if (fieldName in updated) {
-          return; // 키가 이미 있으면 스킵
+          return;
         }
-
-        // schemaFields에서 필드 정보 찾기
         const field = schemaFields.find(f => f.name === fieldName);
         if (field) {
-          // Required 필드는 null로 초기화 (enum이 있으면 첫 번째 값)
           updated[fieldName] = getDefaultValue(field, true);
           addedCount++;
-          console.log(`🔥 Auto-added Required field "${fieldName}":`, updated[fieldName]);
+          console.log(`[BuilderTab] Auto-added required field "${fieldName}":`, updated[fieldName]);
         }
       });
 
       if (addedCount > 0) {
-        console.log(`🎯 Total ${addedCount} Required fields auto-added`);
+        console.log(`[BuilderTab] Total ${addedCount} required fields auto-added`);
         return updated;
       }
 
-      return prev; // 변경 없으면 이전 상태 반환 (불필요한 리렌더링 방지)
+      return prev;
     });
   }, [fieldRuntimeStates, schemaFields]);
 
   const updateDynamicField = (key: string, value: any) => {
-    // 🔥 __selectedOption 변경 시, oneOf 필드 정리 및 초기화
     if (key.endsWith('.__selectedOption')) {
       const parentFieldName = key.replace('.__selectedOption', '');
       const parentField = schemaFields.find(f => f.name === parentFieldName);
 
-      console.log('🎯 oneOf selection changed:', { key, value, parentFieldName, parentField });
+      console.log('[BuilderTab] oneOf selection changed:', { key, value, parentFieldName, parentField });
 
       if (parentField && parentField.oneOfOptions && parentField.children) {
-        const children = parentField.children; // 타입 가드
+        const children = parentField.children;
 
-        console.log('🔍 oneOf children:', children.map((c: any) => ({
+        console.log('[BuilderTab] oneOf children:', children.map((c: any) => ({
           name: c.name,
           optionIndex: c.optionIndex,
           type: c.type,
@@ -586,40 +948,30 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
         setDynamicFormData((prev: any) => {
           const updated = { ...prev, [key]: value };
-
-          // 1. 모든 oneOf 자식 필드를 삭제
           children.forEach((child: any) => {
             if (child.optionIndex !== undefined) {
-              console.log('🗑️ Deleting:', child.name);
+              console.log('[BuilderTab] Removing child field:', child.name);
               delete updated[child.name];
             }
           });
-
-          // 2. 선택된 옵션의 필드만 초기화
           children.forEach((child: any) => {
             if (child.optionIndex === value) {
               const defaultVal = getDefaultValue(child);
-              console.log('✨ Initializing:', child.name, '=', defaultVal);
+              console.log('[BuilderTab] Initializing child field:', child.name, '=', defaultVal);
               updated[child.name] = defaultVal;
             }
           });
 
-          console.log('📦 Updated dynamicFormData:', updated);
+          console.log('[BuilderTab] Updated dynamicFormData:', updated);
           return updated;
         });
-
-        // 🔥 tempFormValuesForSchema도 업데이트 (visibleWhen 조건 재평가를 위해)
         setTempFormValuesForSchema((prev: any) => {
           const updated = { ...prev, [key]: value };
-
-          // 1. 모든 oneOf 자식 필드를 삭제
           children.forEach((child: any) => {
             if (child.optionIndex !== undefined) {
               delete updated[child.name];
             }
           });
-
-          // 2. 선택된 옵션의 필드만 초기화
           children.forEach((child: any) => {
             if (child.optionIndex === value) {
               updated[child.name] = getDefaultValue(child);
@@ -629,11 +981,9 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           return updated;
         });
 
-        if (settings.useAssignWrapper && currentInstanceKey) {
+        if (enableAssignInstances && currentInstanceKey) {
           setAssignInstances(prev => {
             const currentInstance = { ...prev[currentInstanceKey], [key]: value };
-
-            // assignInstances에서도 동일하게 처리
             children.forEach((child: any) => {
               if (child.optionIndex !== undefined) {
                 delete currentInstance[child.name];
@@ -655,15 +1005,9 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         return;
       }
     }
-
-    // 일반 필드 업데이트
     setDynamicFormData((prev: any) => ({ ...prev, [key]: value }));
-
-    // 🔥 tempFormValuesForSchema도 업데이트 (visibleWhen 조건 재평가를 위해)
     setTempFormValuesForSchema((prev: any) => ({ ...prev, [key]: value }));
-
-    // 🔥 Assign 래퍼가 활성화되어 있으면 현재 인스턴스도 업데이트
-    if (settings.useAssignWrapper && currentInstanceKey) {
+    if (enableAssignInstances && currentInstanceKey) {
       setAssignInstances(prev => ({
         ...prev,
         [currentInstanceKey]: {
@@ -673,85 +1017,58 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       }));
     }
   };
-
-  // 🎯 Test Case 저장 다이얼로그 상태
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [caseName, setCaseName] = useState('');
   const [caseDescription, setCaseDescription] = useState('');
-
-  // 🎯 선택된 Test Case 상태
   const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | null>(null);
-
-  // 🎯 인라인 편집 상태
   const [editingTestCaseId, setEditingTestCaseId] = useState<string | null>(null);
   const [editingTestCaseName, setEditingTestCaseName] = useState<string>('');
-
-  // 🎯 Resizable Panel 상태 - 초기값을 화면의 35%로 설정 (빌더 컬럼 확장)
   const [rightPanelWidth, setRightPanelWidth] = useState(() => {
     if (typeof window !== 'undefined') {
-      return Math.min(window.innerWidth * 0.30, 1200);  // 🔥 50% → 35%, max 800 → 500
+      return Math.min(window.innerWidth * 0.30, 1200);
     }
-    return 400; // fallback for SSR (600 → 400)
+    return 400; // fallback for SSR
   });
-
-  // 🎯 Modified state tracking
   const [isModified, setIsModified] = useState(false);
-
-  // 🎯 JSON Preview Mode
   const [jsonPreviewMode, setJsonPreviewMode] = useState<'monaco' | 'annotated'>('annotated');
 
   // Track initial state for comparison
   const [initialState, setInitialState] = useState<string>('');
-
-  // 🎯 JSON 에디터용 임시 상태 (편집 중인 JSON)
   const [editableJson, setEditableJson] = useState<string>(() => {
-    const rootKey = endpoint.name.toUpperCase();
-    const initialData = { [rootKey]: {} };
-    const rawJson = JSON.stringify(initialData, null, 2);
-
-    // 🔥 초기값도 Assign 래퍼 적용
-    if (settings.useAssignWrapper) {
-      try {
-        const parsed = JSON.parse(rawJson);
-        let dataToWrap = parsed;
-
-        if (parsed && typeof parsed === 'object' && rootKey in parsed) {
-          dataToWrap = parsed[rootKey];
-        }
-
-        const wrapped = {
-          Assign: {
-            "1": dataToWrap
-          }
-        };
-
-        return JSON.stringify(wrapped, null, 2);
-      } catch (error) {
-        console.warn('Failed to apply Assign wrapper to initial JSON:', error);
-      }
+    if (schemaWrapperInfo) {
+      const wrapped = schemaWrapperInfo.shape === 'map'
+        ? { [schemaWrapperInfo.key]: { "1": {} } }
+        : { [schemaWrapperInfo.key]: {} };
+      return JSON.stringify(wrapped, null, 2);
     }
 
-    return rawJson;
-  });
+    if (settings.useAssignWrapper) {
+      return JSON.stringify({ Assign: { "1": {} } }, null, 2);
+    }
 
-  // 🎨 JSON 필드 메타데이터 정의 (스키마 기반)
+    return JSON.stringify({}, null, 2);
+  });
   const getFieldMetadata = (fieldPath: string): { type: 'required' | 'optional'; color: string; label: string } => {
-    // 🔥 숫자 인스턴스 키 특별 처리 (Assign.1, Assign.2 등)
-    // patternProperties의 minProperties: 1 규칙에 따라 최소 1개 인스턴스는 Required
     const parts = fieldPath.split('.');
     if (parts.length === 2) {
-      const wrapperKeys = [...new Set(wrapperRules.map(rule => rule.wrapper).filter(Boolean))];
+      const wrapperKeys = [...new Set([
+        ...wrapperRules
+          .map(rule => normalizeWrapperKey(rule.wrapper))
+          .filter((key): key is string => Boolean(key)),
+        ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
+      ])];
       if (wrapperKeys.includes(parts[0]) && /^\d+$/.test(parts[1])) {
-        // 래퍼 키 아래의 숫자 키는 Required (Entity Instance)
         return { type: 'required', color: 'text-red-400', label: 'Required' };
       }
     }
-
-    // 🔥 중첩 경로 정규화: "Assign.1.TYPE" → "TYPE", "Assign.1.__section_Common Keys and Solid__.TYPE" → "TYPE"
     const normalizeFieldPath = (path: string): string => {
       const pathParts = path.split('.');
-      // 🔥 래퍼 키, 숫자, __section__ 제거 (wrapper keys는 builder.yaml에서 동적으로 가져옴)
-      const wrapperKeys = [...new Set(wrapperRules.map(rule => rule.wrapper).filter(Boolean))];
+      const wrapperKeys = [...new Set([
+        ...wrapperRules
+          .map(rule => normalizeWrapperKey(rule.wrapper))
+          .filter((key): key is string => Boolean(key)),
+        ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
+      ])];
       const filtered = pathParts.filter(p =>
         !wrapperKeys.includes(p) &&
         !/^\d+$/.test(p) &&
@@ -761,14 +1078,9 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     };
 
     const normalizedPath = normalizeFieldPath(fieldPath);
-
-    // 🔥 배열 아이템 내부 필드 체크 (예: REDUCTION_DATA.0.dRANGE_MAX → REDUCTION_DATA.dRANGE_MAX)
-    // 정규화된 경로가 "PARENT.CHILD" 형태이면 배열의 자식 필드일 수 있음
     const arrayChildParts = normalizedPath.split('.');
-
-    // 🔥 DEBUG: 배열 아이템 필드 경로 확인
     if (fieldPath.includes('REDUCTION_DATA')) {
-      console.log('🔍 [getFieldMetadata] Array item path check:', {
+      console.log('[BuilderTab][getFieldMetadata] Array item path check:', {
         originalPath: fieldPath,
         normalizedPath,
         arrayChildParts,
@@ -779,17 +1091,13 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     if (arrayChildParts.length === 2) {
       const [parentName, childFieldName] = arrayChildParts;
       const parentField = schemaFields.find(f => f.name === parentName);
-
-      // 배열 필드의 children에서 자식 찾기
       if (parentField && parentField.type === 'array' && parentField.children) {
         const childField = parentField.children.find((c: any) => {
-          // name이 전체 경로이거나 짧은 이름일 수 있음
           const childShortName = c.name?.includes('.') ? c.name.split('.').pop() : c.name;
           return childShortName === childFieldName || c.name === childFieldName;
         });
 
         if (childField) {
-          // 🔥 x-required-when 조건 평가
           const condition = (childField as any)['x-required-when'];
           if (condition) {
             const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
@@ -804,13 +1112,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               ? { type: 'required' as const, color: 'text-red-400', label: 'Required' }
               : { type: 'optional' as const, color: 'text-yellow-400', label: 'Conditional' };
           }
-
-          // 🔥 일반 required 속성 체크 (x-required-when이 없는 경우)
-          // required가 boolean true이거나 { '*': 'required' } 객체 형태일 수 있음
           const isRequired = childField.required === true ||
             (typeof childField.required === 'object' && (childField.required as any)?.['*'] === 'required');
 
-          console.log('🔍 [getFieldMetadata] childField required check:', {
+          console.log('[BuilderTab][getFieldMetadata] childField required check:', {
             childFieldName: childField.name,
             required: childField.required,
             isRequired
@@ -822,35 +1127,23 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         }
       }
     }
-
-    // 🎯 Runtime State 우선 확인 (Single Source of Truth)
     const runtimeState = fieldRuntimeStates[normalizedPath];
     if (runtimeState) {
-      // requiredNow: 현재 조건 하에서 required인지 (조건부 required 지원)
       return runtimeState.requiredNow
         ? { type: 'required', color: 'text-red-400', label: 'Required' }
         : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
     }
-
-    // 🔥 Enhanced Schema 우선 사용 (jsonSchemaEnhanced가 있으면 그것 기반으로 판단)
     const useEnhancedForRequired = hasEnhancedSchema;
-
-    // 🔥 Enhanced Schema 사용 시: schemaFields에서 required 정보 확인
     if (useEnhancedForRequired) {
       const field = schemaFields.find(f => f.name === normalizedPath);
       if (field && field.required !== undefined) {
-        // 🔥 field.required는 boolean이 아닐 수 있음 (Record<string, string> 또는 { '*': 'conditional' })
-        // boolean인 경우만 직접 사용
         if (typeof field.required === 'boolean') {
           return field.required
             ? { type: 'required', color: 'text-red-400', label: 'Required' }
             : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
         }
-        // 그 외는 Optional로 표시 (Runtime State에서 계산해야 함)
         return { type: 'optional', color: 'text-blue-400', label: 'Optional' };
       }
-
-      // 중첩 필드 체크 (예: UNIT.FORCE, REDUCTION_DATA.dRANGE_MAX)
       const parts = normalizedPath.split('.');
       if (parts.length > 1) {
         const parentName = parts[0];
@@ -859,13 +1152,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         if (parentField && parentField.children) {
           const childField = parentField.children.find(c => c.name === childName);
           if (childField) {
-            // 🔥 x-required-when 조건 체크 추가
             const condition = (childField as any)['x-required-when'];
             if (condition) {
-              // 조건 평가 - tempFormValuesForSchema에서 상위 폼의 값 확인
               const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
                 const actualValue = tempFormValuesForSchema[key];
-                // 숫자 비교: 둘 다 숫자로 변환
                 if (typeof expectedValue === 'number') {
                   return Number(actualValue) === expectedValue;
                 }
@@ -892,8 +1182,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       // Default for Enhanced Schema
       return { type: 'optional', color: 'text-zinc-400', label: 'Optional' };
     }
-
-    // 🔥 Original Schema: schemaFields에서 required 정보 확인 (fallback)
     const field = schemaFields.find(f => f.name === normalizedPath);
 
     if (field && field.required !== undefined) {
@@ -901,8 +1189,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         ? { type: 'required', color: 'text-red-400', label: 'Required' }
         : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
     }
-
-    // 중첩 필드 체크 (예: UNIT.FORCE)
     const normalizedParts = normalizedPath.split('.');
     if (normalizedParts.length > 1) {
       const parentName = normalizedParts[0];
@@ -921,11 +1207,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     // Default
     return { type: 'optional', color: 'text-zinc-400', label: 'Optional' };
   };
-
-  // 🎨 커스텀 JSON 렌더러 컴포넌트
   const JSONRenderer = ({ data }: { data: any }) => {
-    // 🔥 래퍼 키 목록 (builder.yaml의 wrapperRules에서 동적으로 추출)
-    const WRAPPER_KEYS = [...new Set(wrapperRules.map(rule => rule.wrapper))];
+    const WRAPPER_KEYS = [
+      ...new Set([
+        ...wrapperRules
+          .map(rule => normalizeWrapperKey(rule.wrapper))
+          .filter((key): key is string => Boolean(key)),
+        ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
+      ]),
+    ];
 
     const renderValue = (value: any, key?: string, depth: number = 0): JSX.Element => {
       if (value === null) {
@@ -953,7 +1243,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           <>
             <span className="text-zinc-500">[</span>
             {value.map((item, idx) => {
-              // 🔥 배열 아이템의 경로 생성 (예: REDUCTION_DATA.0)
               const itemPath = key ? `${key}.${idx}` : String(idx);
               return (
                 <div key={idx} className="pl-4">
@@ -981,16 +1270,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
             {entries.map(([k, v], idx) => {
               const fieldPath = key ? `${key}.${k}` : k;
               const metadata = getFieldMetadata(fieldPath);
-
-              // 🔥 래퍼 키(Argument, Assign)는 depth 0에서만 체크하고 배지 표시 안함
               const isWrapperKey = depth === 0 && WRAPPER_KEYS.includes(k);
 
               return (
                 <div key={k} className="pl-4 group hover:bg-zinc-800/30 transition-colors rounded py-0.5">
                   <span className={`${isWrapperKey ? 'text-purple-400' : metadata.color} font-semibold`}>"{k}"</span>
-                  <span className="text-zinc-500">: </span>
-                  {/* 🏷️ Inline Badge - 래퍼 키는 배지 표시 안함 */}
-                  {!isWrapperKey && (
+                  <span className="text-zinc-500">: </span>{!isWrapperKey && (
                     <span className={`text-[9px] px-1.5 py-0.5 rounded mr-2 ${metadata.type === 'required'
                       ? 'bg-red-900/50 text-red-300 border border-red-700/50'
                       : 'bg-blue-900/50 text-blue-300 border border-blue-700/50'
@@ -1015,8 +1300,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
     return <div className="font-mono text-xs leading-relaxed">{renderValue(data, undefined, 0)}</div>;
   };
-
-  // 🎯 Resize 이벤트 핸들러
   const handleResizeStart = (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -1041,139 +1324,156 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     document.body.style.cursor = 'ew-resize';
     document.body.style.userSelect = 'none';
   };
-
-  // 🔄 JSON to Form 역변환: Nested JSON을 Flat Form Data로 변환
   const convertJsonToFormData = (json: string) => {
     try {
       const parsed = JSON.parse(json);
       const rootKey = endpoint.name.toUpperCase();
-      let nestedData = parsed[rootKey] || parsed;
+      const wrapperInfo = getResolvedWrapperInfo();
 
-      // 🔥 Argument 래퍼가 있으면 벗겨내기
-      if (nestedData && typeof nestedData === 'object' && 'Argument' in nestedData && Object.keys(nestedData).length === 1) {
-        nestedData = nestedData.Argument;
-        console.log('📦 Unwrapped "Argument" wrapper');
+      let nestedData = parsed[rootKey] || parsed;
+      let loadedInstances: Record<string, any> | null = null;
+      let loadedCurrentKey: string | null = null;
+
+      if (
+        wrapperInfo &&
+        nestedData &&
+        typeof nestedData === 'object' &&
+        !Array.isArray(nestedData) &&
+        wrapperInfo.key in nestedData
+      ) {
+        const wrappedValue = (nestedData as any)[wrapperInfo.key];
+
+        if (
+          wrapperInfo.shape === 'map' &&
+          wrappedValue &&
+          typeof wrappedValue === 'object' &&
+          !Array.isArray(wrappedValue)
+        ) {
+          const mappedInstances: Record<string, any> = {};
+          Object.entries(wrappedValue as Record<string, any>).forEach(([instanceKey, instanceValue]) => {
+            if (instanceValue && typeof instanceValue === 'object' && !Array.isArray(instanceValue)) {
+              const flatData: Record<string, any> = {};
+              flattenObjectToDotNotation(instanceValue, flatData);
+              mappedInstances[instanceKey] = flatData;
+            }
+          });
+
+          const keys = Object.keys(mappedInstances);
+          if (keys.length > 0) {
+            loadedCurrentKey = keys[0];
+            loadedInstances = mappedInstances;
+            nestedData = (wrappedValue as Record<string, any>)[loadedCurrentKey];
+          } else {
+            nestedData = {};
+          }
+        } else if (wrappedValue && typeof wrappedValue === 'object' && !Array.isArray(wrappedValue)) {
+          nestedData = wrappedValue;
+        }
+
+        console.log('[BuilderTab] Unwrapped schema wrapper:', {
+          wrapperInfo,
+          loadedInstanceCount: loadedInstances ? Object.keys(loadedInstances).length : 0,
+        });
       }
 
-      console.log('🔍 Starting conversion:', { rootKey, parsed, nestedData });
+      if (!nestedData || typeof nestedData !== 'object' || Array.isArray(nestedData)) {
+        throw new Error('Invalid JSON structure for form conversion: root object expected.');
+      }
 
-      // 🔥 1단계: 스키마 기반으로 초기 formData 생성 (모든 필드 기본값으로 초기화)
+      console.log('[BuilderTab] Starting JSON-to-form conversion:', { rootKey, parsed, nestedData });
       const initialData: any = {};
       schemaFields.forEach(field => {
         if (field.type === 'array' && field.items) {
           initialData[field.name] = getDefaultValue(field);
         } else if (field.type === 'object' && field.children) {
-          // Object with children: 각 자식 필드를 dot notation으로 초기화
           initialData[`${field.name}._enabled`] = false;
           field.children.forEach(child => {
-            initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
+            initialData[resolveNestedFieldKey(field.name, child.name)] = getDefaultValue(child);
           });
         } else {
           initialData[field.name] = getDefaultValue(field);
         }
       });
 
-      console.log('📋 Initial form data:', initialData);
-
-      // 🔥 2단계: JSON 데이터를 flat structure로 변환
+      console.log('[BuilderTab] Initial form data:', initialData);
       const flatData: any = {};
 
       Object.keys(nestedData).forEach(key => {
         const value = nestedData[key];
-
-        // 🔍 각 필드가 스키마에 있는지 확인
         const schemaField = schemaFields.find(f => f.name === key);
 
         if (!schemaField) {
-          // 스키마에 없는 필드는 그대로 저장
           flatData[key] = value;
-          console.log(`⚠️ Field not in schema: ${key}`);
+          console.log(`[BuilderTab] Field not in schema: ${key}`);
           return;
         }
-
-        // Object with children인 경우
         if (schemaField.type === 'object' && schemaField.children &&
           value !== null && typeof value === 'object' && !Array.isArray(value)) {
-
-          // 부모 객체 활성화
           flatData[`${key}._enabled`] = true;
-
-          // 각 자식 필드를 dot notation으로 저장
           Object.keys(value).forEach(childKey => {
             flatData[`${key}.${childKey}`] = value[childKey];
           });
 
-          console.log(`✅ Processed object field: ${key}`, value);
+          console.log(`[BuilderTab] Processed object field: ${key}`, value);
         }
-        // 배열인 경우
         else if (Array.isArray(value)) {
           flatData[key] = value;
-          console.log(`✅ Processed array field: ${key}`, value);
+          console.log(`[BuilderTab] Processed array field: ${key}`, value);
         }
-        // 단순 값인 경우
         else {
           flatData[key] = value;
-          console.log(`✅ Processed simple field: ${key} =`, value);
+          console.log(`[BuilderTab] Processed simple field: ${key} =`, value);
         }
       });
-
-      // 🔥 3단계: 초기 데이터와 병합
       const mergedData = { ...initialData, ...flatData };
 
-      console.log('🔄 JSON to Form conversion complete:', {
+      console.log('[BuilderTab] JSON-to-form conversion complete:', {
         initialData,
         flatData,
         mergedData,
         schemaFields: schemaFields.map(f => ({ name: f.name, type: f.type, hasChildren: !!f.children }))
       });
 
+      if (loadedInstances && loadedCurrentKey) {
+        setAssignInstances(loadedInstances);
+        setCurrentInstanceKey(loadedCurrentKey);
+      }
       setDynamicFormData(mergedData);
-      toast.success('✅ JSON이 폼으로 로드되었습니다');
+      toast.success('JSON has been loaded into the form.');
     } catch (error) {
-      console.error('❌ Failed to parse JSON:', error);
-      toast.error('JSON 파싱에 실패했습니다. 올바른 형식인지 확인해주세요.');
+      console.error('[BuilderTab] Failed to parse JSON:', error);
+      toast.error('Failed to parse JSON. Please check JSON format.');
     }
   };
-
-  // 🧹 JSON Pruning: 현재 선택된 메소드에 맞는 데이터만 추출
-  // ✅ 완전 순수 함수: 모든 입력을 인자로 받음 (외부 state 참조 금지)
   const buildCleanJSON = (
     flatData: Record<string, any>,
     runtimeStates: FieldRuntimeStateMap,
     fields: UIBuilderField[]
   ): any => {
-    // 🔥 동적 스키마 필드를 중첩 구조로 변환 (_enabled 체크박스 반영)
     const convertDotNotationToNested = (data: any): any => {
       const nested: any = {};
-
-      // 🎯 Step 1: Required + Visible 필드를 data 복사본에 추가
       const enrichedData = { ...data };
       let addedRequiredCount = 0;
       fields.forEach(field => {
         const runtimeState = runtimeStates[field.name];
-        // 🔥 Rule 3: Required는 값이 없거나 빈 값이어도 key를 생성
         if (runtimeState && runtimeState.requiredNow && runtimeState.visible) {
-          // ✅ key가 없거나 빈 값('')이면 null로 초기화
           if (!(field.name in enrichedData) || enrichedData[field.name] === '') {
-            // enum 필드는 첫 번째 옵션, 그 외는 null
             if (field.enum && field.enum.length > 0) {
               enrichedData[field.name] = field.enum[0];
-              console.log(`✅ Added Required field "${field.name}": ${field.enum[0]} (enum)`);
+              console.log(`[BuilderTab] Added required field "${field.name}": ${field.enum[0]} (enum)`);
             } else {
               enrichedData[field.name] = null;
-              console.log(`✅ Added Required field "${field.name}": null`);
+              console.log(`[BuilderTab] Added required field "${field.name}": null`);
             }
             addedRequiredCount++;
           }
         } else if (runtimeState && runtimeState.requiredNow) {
-          console.log(`⚠️ Required field "${field.name}" NOT added (visible: ${runtimeState.visible})`);
+          console.log(`[BuilderTab] Required field "${field.name}" not added (visible: ${runtimeState.visible})`);
         }
       });
       if (addedRequiredCount > 0) {
-        console.log(`🎯 Total Required fields added: ${addedRequiredCount}`);
+        console.log(`[BuilderTab] Total required fields added: ${addedRequiredCount}`);
       }
-
-      // 🔥 oneOf 필드 수집: 부모 필드명 -> 선택된 옵션 인덱스
       const oneOfSelections: Map<string, number> = new Map();
       Object.keys(enrichedData).forEach(key => {
         const match = key.match(/^(.+)\.__selectedOption$/);
@@ -1183,8 +1483,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           oneOfSelections.set(parentField, selectedOption);
         }
       });
-
-      // 🔥 oneOf 필드의 옵션별 필드 매핑 (schemaFields에서 추출)
       const oneOfFieldsByOption: Map<string, Map<number, Set<string>>> = new Map();
       fields.forEach(field => {
         if (field.oneOfOptions && field.children) {
@@ -1201,60 +1499,50 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           oneOfFieldsByOption.set(field.name, fieldMap);
         }
       });
+      const orderedKeys = Object.keys(enrichedData).sort((a, b) => {
+        const depthA = a.split('.').length;
+        const depthB = b.split('.').length;
+        return depthA - depthB;
+      });
 
-      // 🎯 Step 2: enrichedData를 순회하여 중첩 구조로 변환
-      Object.keys(enrichedData).forEach(key => {
-        // 🔥 섹션 헤더 키 제외 (UI 전용)
+      orderedKeys.forEach(key => {
         if (key.startsWith('__section_') || key.includes('.__section_')) {
           return;
         }
-
-        // 🔥 oneOf 선택 상태 키 제외 (UI 전용)
         if (key.endsWith('.__selectedOption') || key.includes('.__oneOf')) {
           return;
         }
-
-        // _enabled 키는 제외
         if (key.endsWith('._enabled')) {
           return;
         }
-
-        // 🔥 Field Runtime State 기반 필터링 (Single Source of Truth)
-        const value = enrichedData[key];
+        const fieldByPath = resolveFieldByPath(key, fields);
+        const value = coerceValueForField(enrichedData[key], fieldByPath);
         const runtimeState = runtimeStates[key];
 
         const shouldInclude = shouldIncludeInJSON(key, value, runtimeState);
         if (!shouldInclude) {
-          console.log(`❌ Excluded field "${key}": value=${JSON.stringify(value)}, visible=${runtimeState?.visible}, requiredNow=${runtimeState?.requiredNow}`);
+          console.log(`[BuilderTab] Excluded field "${key}": value=${JSON.stringify(value)}, visible=${runtimeState?.visible}, requiredNow=${runtimeState?.requiredNow}`);
           return;
         } else if (runtimeState?.requiredNow) {
-          console.log(`✅ Included Required field "${key}": value=${JSON.stringify(value)}`);
+          console.log(`[BuilderTab] Included required field "${key}": value=${JSON.stringify(value)}`);
         }
 
         if (key.includes('.')) {
-          // dot notation을 중첩 객체로 변환
           const parts = key.split('.');
           const parentKey = parts[0];
           const childKey = parts[parts.length - 1];
-
-          // 🔥 부모 객체가 체크되어 있지 않으면 스킵
           if (enrichedData[`${parentKey}._enabled`] === false) {
             return;
           }
-
-          // 🔥 oneOf 필드인 경우, 선택되지 않은 옵션의 필드는 제외
           if (oneOfSelections.has(parentKey) && oneOfFieldsByOption.has(parentKey)) {
             const selectedOption = oneOfSelections.get(parentKey)!;
             const fieldMap = oneOfFieldsByOption.get(parentKey)!;
             const selectedFields = fieldMap.get(selectedOption);
-
-            // 🔥 selectedFields가 있으면 선택된 필드만 포함, 없으면 모두 포함 (oneOf가 아닌 경우)
             if (selectedFields) {
               if (!selectedFields.has(childKey)) {
-                return; // 선택되지 않은 옵션의 필드는 스킵
+                return;
               }
             }
-            // selectedFields가 없으면 oneOf가 아니므로 그대로 포함
           }
 
           let current = nested;
@@ -1268,15 +1556,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
           current[parts[parts.length - 1]] = value;
         } else {
-          // dot notation이 아닌 필드는 그대로 추가
           nested[key] = value;
         }
       });
 
       return nested;
     };
-
-    // 🔥 배열 아이템 내부의 조건부 필드 필터링
     const filterConditionalArrayFields = (obj: any): any => {
       if (obj === null || obj === undefined) return obj;
 
@@ -1288,12 +1573,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         const filtered: any = {};
 
         for (const [key, value] of Object.entries(obj)) {
-          // 배열 필드인지 확인
           const schemaField = fields.find(f => f.name === key);
 
           if (schemaField && schemaField.type === 'array' && schemaField.children && Array.isArray(value)) {
-            // 🔥 DEBUG: 배열 필드 + children 정보 출력
-            console.log('🔥 [filterConditionalArrayFields] Found array field:', key, {
+            console.log('[BuilderTab][filterConditionalArrayFields] Found array field:', key, {
               childrenCount: schemaField.children.length,
               childrenNames: schemaField.children.map((c: any) => c.name),
               childrenConditions: schemaField.children.map((c: any) => ({
@@ -1301,22 +1584,17 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 'x-required-when': (c as any)['x-required-when']
               }))
             });
-
-            // 배열 아이템에서 조건부 필드 필터링
             filtered[key] = (value as any[]).map(item => {
               if (typeof item !== 'object' || item === null) return item;
 
               const filteredItem: any = {};
               for (const [itemKey, itemValue] of Object.entries(item)) {
-                // 자식 필드의 x-required-when 조건 체크
                 const childField = schemaField.children!.find((c: any) => {
                   const shortName = c.name?.includes('.') ? c.name.split('.').pop() : c.name;
                   return shortName === itemKey || c.name === itemKey;
                 });
-
-                // 🔥 DEBUG: 매칭 결과 확인 (dRANGE_MAX/MIN 필드만)
                 if (itemKey === 'dRANGE_MAX' || itemKey === 'dRANGE_MIN') {
-                  console.log('🔍 [filterConditionalArrayFields] Child matching:', {
+                  console.log('[BuilderTab][filterConditionalArrayFields] Child matching:', {
                     itemKey,
                     childFieldFound: !!childField,
                     childFieldName: childField?.name,
@@ -1330,7 +1608,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 if (childField) {
                   const condition = (childField as any)['x-required-when'];
                   if (condition) {
-                    // 조건 평가 - flatData에서 상위 폼의 값 확인
                     const conditionMet = Object.entries(condition).every(([condKey, expectedValue]) => {
                       const actualValue = flatData[condKey];
                       if (typeof expectedValue === 'number') {
@@ -1339,7 +1616,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                       return actualValue === expectedValue;
                     });
 
-                    console.log('🔍 [filterConditionalArrayFields] Condition check:', {
+                    console.log('[BuilderTab][filterConditionalArrayFields] Condition check:', {
                       itemKey,
                       condition,
                       actualValue: flatData['iCALC_RULE'],
@@ -1347,8 +1624,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                     });
 
                     if (!conditionMet) {
-                      console.log(`🔥 Filtered out conditional field "${key}.${itemKey}" (condition not met: ${JSON.stringify(condition)})`);
-                      continue; // 조건 불충족 시 필드 제외
+                      console.log(`[BuilderTab] Filtered out conditional field "${key}.${itemKey}" (condition not met: ${JSON.stringify(condition)})`);
+                      continue;
                     }
                   }
                 }
@@ -1369,20 +1646,13 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     };
 
     const nestedDynamicData = convertDotNotationToNested(flatData);
-
-    // 🔥 조건부 배열 필드 필터링 적용
     const filteredData = filterConditionalArrayFields(nestedDynamicData);
 
     const cleaned: any = {
-      // 🔥 동적 스키마 필드 (중첩 구조로 변환됨, 체크박스 상태 반영, 조건부 필터링됨)
       ...filteredData,
     };
-
-    // 🔥 UI 전용 키 제거 (__selectedOption 등)
     return cleanUIKeys(cleaned);
   };
-
-  // 🔥 JSON에서 UI 전용 키 제거 (후처리)
   const cleanUIKeys = (obj: any): any => {
     if (obj === null || obj === undefined) return obj;
 
@@ -1394,9 +1664,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       const cleaned: any = {};
 
       for (const [key, value] of Object.entries(obj)) {
-        // UI 전용 키 필터링
         if (key.startsWith('__') || key.startsWith('_') && key !== '_id') {
-          continue; // __selectedOption, __section_0, _enabled 등 제외
+          continue;
         }
 
         cleaned[key] = cleanUIKeys(value);
@@ -1407,19 +1676,22 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
 
     return obj;
   };
-
-  // 🔥 URI 패턴에 따라 래퍼 키 결정
-  // ⚠️ 매칭 알고리즘 (shared.yaml과 일치):
-  //   1. priority DESC 정렬 (undefined는 defaultHandlers.wrapperPriorityDefault 적용)
-  //   2. 동률이면 리스트 순서 유지 (stable sort)
-  //   3. 첫 매칭 rule 반환 (short-circuit)
-  const getWrapperKey = (): string | null => {
+  const getResolvedWrapperInfo = (): { key: string; shape: WrapperShape; source: 'rule' | 'schema' } | null => {
     const path = endpoint.path || '';
 
-    console.log('🔍 getWrapperKey called:', { path, wrapperRules });
+    console.log('[BuilderTab] getResolvedWrapperInfo called:', { path, wrapperRules, schemaWrapperInfo });
 
-    // 🔥 priority 기반 정렬 (stable sort - 동률은 원래 순서 유지)
-    // priority 없으면 wrapperPriorityDefault 적용 (shared.yaml SSOT)
+    // 스키마에 명시된 wrapper가 있으면 endpoint wrapper rule보다 우선 적용한다.
+    if (schemaWrapperInfo) {
+      const resolved = {
+        key: schemaWrapperInfo.key,
+        shape: schemaWrapperInfo.shape,
+        source: 'schema' as const,
+      };
+      console.log('[BuilderTab] Using schema wrapper priority:', resolved);
+      return resolved;
+    }
+
     const sortedRules = [...wrapperRules]
       .map((rule, index) => ({ ...rule, _originalIndex: index }))
       .sort((a, b) => {
@@ -1430,145 +1702,146 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         }
         return (a as any)._originalIndex - (b as any)._originalIndex;  // stable
       });
-
-    // 첫 매칭 반환 (short-circuit)
     for (const rule of sortedRules) {
+      const normalizedWrapperKey = normalizeWrapperKey((rule as any).wrapper);
+      if (!normalizedWrapperKey) {
+        continue;
+      }
       const regex = new RegExp(rule.pattern);
       if (regex.test(path)) {
-        console.log('✅ Matched rule:', rule);
-        return rule.wrapper;
+        const resolved = {
+          key: normalizedWrapperKey,
+          shape: 'map' as const,
+          source: 'rule' as const,
+        };
+        console.log('[BuilderTab] Matched wrapper rule:', { rule, resolved });
+        return resolved;
       }
     }
 
-    console.log('❌ No matching wrapper rule for path:', path);
-    return null; // 래퍼 없음
+    console.log('[BuilderTab] No wrapper resolved for path:', path);
+    return null;
   };
+  const convertDotNotationToNestedWithRequired = (flatData: any) => {
+    const nested: any = {};
+    const enrichedData = { ...flatData };
+    schemaFields.forEach(field => {
+      const runtimeState = fieldRuntimeStates[field.name];
+      if (runtimeState && runtimeState.requiredNow && runtimeState.visible) {
+        if (!(field.name in enrichedData) || enrichedData[field.name] === '') {
+          if (field.enum && field.enum.length > 0) {
+            enrichedData[field.name] = field.enum[0];
+          } else {
+            enrichedData[field.name] = null;
+          }
+        }
+      }
+    });
 
-  // 🔥 Request Body를 래퍼로 변환하는 함수
+    const orderedKeys = Object.keys(enrichedData).sort((a, b) => {
+      const depthA = a.split('.').length;
+      const depthB = b.split('.').length;
+      return depthA - depthB;
+    });
+
+    orderedKeys.forEach(fieldKey => {
+      if (fieldKey.startsWith('__section_')) {
+        return;
+      }
+
+      if (fieldKey.endsWith('._enabled')) {
+        return;
+      }
+
+      const fieldByPath = resolveFieldByPath(fieldKey, schemaFields);
+      const value = coerceValueForField(enrichedData[fieldKey], fieldByPath);
+      const runtimeState = fieldRuntimeStates[fieldKey];
+      const isRequired = runtimeState?.requiredNow && runtimeState?.visible;
+      if (!isRequired && (value === '' || value === undefined)) {
+        return;
+      }
+      if (value === null && !isRequired) {
+        return;
+      }
+
+      if (fieldKey.includes('.')) {
+        const parts = fieldKey.split('.');
+        const parentKey = parts[0];
+
+        if (enrichedData[`${parentKey}._enabled`] === false) {
+          return;
+        }
+
+        let current = nested;
+        for (let i = 0; i < parts.length - 1; i++) {
+          if (!current[parts[i]]) {
+            current[parts[i]] = {};
+          }
+          current = current[parts[i]];
+        }
+
+        current[parts[parts.length - 1]] = value;
+      } else {
+        nested[fieldKey] = value;
+      }
+    });
+
+    return nested;
+  };
   const wrapWithAssign = (body: string): string => {
-    const wrapperKey = getWrapperKey();
+    const wrapperInfo = getResolvedWrapperInfo();
+    const shouldUseWrapper = settings.useAssignWrapper !== false || Boolean(schemaWrapperInfo);
 
-    // 🔥 useAssignWrapper가 명시적으로 false가 아닌 이상 래퍼 적용 (undefined도 true로 간주)
-    const shouldUseWrapper = settings.useAssignWrapper !== false;
-
-    console.log('🔍 wrapWithAssign called:', {
-      wrapperKey,
+    console.log('[BuilderTab] wrapWithAssign called:', {
+      wrapperInfo,
       useAssignWrapper: settings.useAssignWrapper,
       shouldUseWrapper,
       endpointPath: endpoint.path,
       bodyLength: body.length
     });
-
-    // 래퍼가 필요 없으면 원본 반환
-    if (!wrapperKey || !shouldUseWrapper) {
-      console.log('❌ No wrapper needed, wrapperKey:', wrapperKey, 'shouldUseWrapper:', shouldUseWrapper);
+    if (!wrapperInfo || !shouldUseWrapper) {
+      console.log('[BuilderTab] No wrapper needed:', { wrapperInfo, shouldUseWrapper });
       return body;
     }
 
     try {
       const parsed = JSON.parse(body);
-
-      // 이미 래퍼가 있으면 그대로 반환
+      const wrapperKey = wrapperInfo.key;
       if (parsed && typeof parsed === 'object' && (wrapperKey in parsed)) {
-        console.log('✅ Already wrapped with', wrapperKey);
+        console.log('[BuilderTab] Already wrapped with', wrapperKey);
         return body;
       }
 
-      // 🔥 모든 인스턴스를 래퍼로 감싸기
-      const allInstances: any = {};
-      Object.keys(assignInstances).forEach(key => {
-        const instanceData = assignInstances[key];
-
-        // 🔥 FIX: buildCleanJSON과 동일한 로직 적용
-        // Required+Visible 필드는 null이어도 포함되어야 함
-        const convertDotNotationToNestedWithRequired = (flatData: any) => {
-          const nested: any = {};
-
-          // 🎯 Step 1: Required + Visible 필드를 data 복사본에 추가
-          const enrichedData = { ...flatData };
-          schemaFields.forEach(field => {
-            const runtimeState = fieldRuntimeStates[field.name];
-            // 🔥 Rule: Required+Visible는 값이 없거나 빈 값이어도 key를 생성
-            if (runtimeState && runtimeState.requiredNow && runtimeState.visible) {
-              if (!(field.name in enrichedData) || enrichedData[field.name] === '') {
-                // enum 필드는 첫 번째 옵션, 그 외는 null
-                if (field.enum && field.enum.length > 0) {
-                  enrichedData[field.name] = field.enum[0];
-                } else {
-                  enrichedData[field.name] = null;
-                }
-              }
-            }
-          });
-
-          Object.keys(enrichedData).forEach(fieldKey => {
-            // 🔥 섹션 헤더 키 제외 (UI 전용)
-            if (fieldKey.startsWith('__section_')) {
-              return;
-            }
-
-            if (fieldKey.endsWith('._enabled')) {
-              return;
-            }
-
-            const value = enrichedData[fieldKey];
-
-            // 🔥 FIX: Required 필드는 null도 포함
-            const runtimeState = fieldRuntimeStates[fieldKey];
-            const isRequired = runtimeState?.requiredNow && runtimeState?.visible;
-
-            // 🔥 빈 값 제외 (단, Required 필드는 예외)
-            if (!isRequired && (value === '' || value === undefined)) {
-              return;
-            }
-            // null은 Required 필드만 허용
-            if (value === null && !isRequired) {
-              return;
-            }
-
-            if (fieldKey.includes('.')) {
-              const parts = fieldKey.split('.');
-              const parentKey = parts[0];
-
-              if (enrichedData[`${parentKey}._enabled`] === false) {
-                return;
-              }
-
-              let current = nested;
-              for (let i = 0; i < parts.length - 1; i++) {
-                if (!current[parts[i]]) {
-                  current[parts[i]] = {};
-                }
-                current = current[parts[i]];
-              }
-
-              current[parts[parts.length - 1]] = value;
-            } else {
-              nested[fieldKey] = value;
-            }
-          });
-
-          return nested;
+      if (wrapperInfo.shape === 'single') {
+        const wrapped = {
+          [wrapperKey]: cleanUIKeys(parsed),
         };
+        console.log('[BuilderTab] Wrapped with single wrapper', wrapperKey, wrapped);
+        return JSON.stringify(wrapped, null, 2);
+      }
 
-        // 🔥 UI 전용 키 제거 후 저장
-        allInstances[key] = cleanUIKeys(convertDotNotationToNestedWithRequired(instanceData));
-      });
+      const allInstances: Record<string, any> = {};
+      const instanceKeys = Object.keys(assignInstances);
+      if (instanceKeys.length === 0) {
+        allInstances['1'] = cleanUIKeys(parsed);
+      } else {
+        instanceKeys.forEach((key) => {
+          const instanceData = assignInstances[key];
+          allInstances[key] = cleanUIKeys(convertDotNotationToNestedWithRequired(instanceData));
+        });
+      }
 
       const wrapped = {
         [wrapperKey]: allInstances
       };
 
-      console.log('✅ Wrapped with', wrapperKey, wrapped);
+      console.log('[BuilderTab] Wrapped with map wrapper', wrapperKey, wrapped);
       return JSON.stringify(wrapped, null, 2);
     } catch (error) {
-      // JSON 파싱 실패 시 원본 반환
       console.warn('Failed to parse request body for Assign wrapper:', error);
       return body;
     }
   };
-
-  // 🔥 assignInstances를 안정적으로 추적하기 위한 memoized string
   const assignInstancesKey = useMemo(() => {
     return JSON.stringify(assignInstances);
   }, [assignInstances]);
@@ -1576,19 +1849,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const wrapperRulesKey = useMemo(() => {
     return JSON.stringify(wrapperRules);
   }, [wrapperRules]);
-
-  // 🔥 dynamicFormData를 안정적으로 추적하기 위한 memoized string
+  const schemaWrapperInfoKey = useMemo(() => {
+    return JSON.stringify(schemaWrapperInfo || null);
+  }, [schemaWrapperInfo]);
   const dynamicFormDataKey = useMemo(() => {
     return JSON.stringify(dynamicFormData);
   }, [dynamicFormData]);
-
-  // 🔥 fieldRuntimeStates를 안정적으로 추적하기 위한 memoized string
   const fieldRuntimeStatesKey = useMemo(() => {
     return JSON.stringify(fieldRuntimeStates);
   }, [fieldRuntimeStates]);
-
-  // 🔥 invisible 필드를 dynamicFormData에서 제거 (VariantAxis 변경 시)
-  // ✅ 이게 핵심: UI는 바뀌는데 JSON이 안 바뀌는 이유는 이전 값이 남아있기 때문
   useEffect(() => {
     if (Object.keys(fieldRuntimeStates).length === 0) return;
 
@@ -1607,9 +1876,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         });
         return updated;
       });
-
-      // Assign 인스턴스에서도 제거
-      if (settings.useAssignWrapper) {
+      if (enableAssignInstances) {
         setAssignInstances((prev: any) => {
           const updated = { ...prev };
           Object.keys(updated).forEach(instanceKey => {
@@ -1623,38 +1890,25 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         });
       }
     }
-  }, [fieldRuntimeStatesKey, settings.useAssignWrapper]); // ✅ runtimeState 변경 시에만 실행
-
-  // formData 변경 시 JSON 업데이트 (Store에 직접 저장)
-  // ✅ 순수 함수 사용: 외부 state 참조 금지, 인자로 명시적 전달
+  }, [fieldRuntimeStatesKey, enableAssignInstances]);
   useEffect(() => {
-    // 🔥 스키마가 비어있으면 스킵 (dynamicFormData가 비어도 Required 필드는 포함해야 함)
     if (schemaFields.length === 0) return;
-
-    // ✅ buildCleanJSON에 모든 입력을 명시적으로 전달
     const cleanData = buildCleanJSON(dynamicFormData, fieldRuntimeStates, schemaFields);
     const rawRequestBody = JSON.stringify(cleanData, null, 2);
-
-    // 🔥 래퍼 적용 (URI 패턴에 따라)
     const requestBody = wrapWithAssign(rawRequestBody);
-
-    // Store의 Runner 데이터 업데이트
     updateRunnerData({ requestBody });
-
-    // 🎯 편집 가능한 JSON도 업데이트
     setEditableJson(requestBody);
   }, [
     dynamicFormDataKey,
-    fieldRuntimeStatesKey, // ✅ memoized key 사용 (무한 루프 방지)
+    fieldRuntimeStatesKey,
     assignInstancesKey,
     settings.useAssignWrapper,
-    wrapperRulesKey
-    // ❌ endpoint.name, endpoint.method, endpoint.path 제거 (불필요, identity 변경 위험)
+    wrapperRulesKey,
+    schemaWrapperInfoKey
   ]);
 
   // Update modified state whenever data changes
   useEffect(() => {
-    // ✅ buildCleanJSON에 인자 명시적 전달
     const currentState = JSON.stringify(buildCleanJSON(dynamicFormData, fieldRuntimeStates, schemaFields));
     if (initialState === '') {
       setInitialState(currentState);
@@ -1664,36 +1918,26 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       setIsModified(false);
     }
   }, [dynamicFormDataKey, fieldRuntimeStatesKey]);
-
-  // 🎯 Test Case 저장 핸들러 (신규)
   const handleSaveTestCase = async () => {
     if (!caseName.trim()) {
-      toast.error('❌ Please enter a test case name');
+      toast.error('Please enter a test case name.');
       return;
     }
-
-    // ✅ 실제 API 요청에 사용될 JSON 생성 (순수 함수)
     const cleanData = buildCleanJSON(dynamicFormData, fieldRuntimeStates, schemaFields);
     const rawRequestBody = JSON.stringify(cleanData, null, 2);
     const requestBody = wrapWithAssign(rawRequestBody);
-
-    // 🎯 Test Case 저장 (실제 JSON requestBody 저장)
-    updateRunnerData({ requestBody }); // Runner에서 사용할 JSON
+    updateRunnerData({ requestBody });
     addTestCase(caseName.trim(), caseDescription.trim() || undefined);
-
-    // 🔥 글로벌 저장 (DB에 영구 저장)
     try {
       await saveCurrentVersion();
-      toast.success(`✅ Test Case "${caseName}" saved successfully!`);
-
-      // 새로 저장한 케이스를 선택 상태로 설정
-      const newTestCase = testCases[testCases.length]; // 가장 최근 추가된 케이스
+      toast.success(`Test case "${caseName}" saved successfully.`);
+      const newTestCase = useAppStore.getState().runnerData?.testCases?.at(-1);
       if (newTestCase) {
         setSelectedTestCaseId(newTestCase.id);
       }
     } catch (error) {
       console.error('Failed to save version:', error);
-      toast.error('❌ Failed to save test case');
+      toast.error('Failed to save test case.');
     }
 
     // Reset dialog
@@ -1702,44 +1946,50 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     setShowSaveDialog(false);
   };
 
-  // 🎯 Test Case 업데이트 핸들러 (기존 케이스 수정)
+  const openSaveAsNewDialog = () => {
+    if (selectedTestCaseId) {
+      const selected = testCases.find(tc => tc.id === selectedTestCaseId);
+      if (selected) {
+        setCaseName(`${selected.name} (copy)`);
+        setCaseDescription(selected.description || '');
+      } else {
+        setCaseName('');
+        setCaseDescription('');
+      }
+    } else {
+      setCaseName('');
+      setCaseDescription('');
+    }
+    setShowSaveDialog(true);
+  };
+
   const handleUpdateTestCase = async () => {
     if (!selectedTestCaseId) {
-      toast.error('❌ No test case selected');
+      toast.error('No test case selected.');
       return;
     }
 
     const selectedTestCase = testCases.find(tc => tc.id === selectedTestCaseId);
     if (!selectedTestCase) {
-      toast.error('❌ Test case not found');
+      toast.error('Test case not found.');
       return;
     }
-
-    // ✅ 실제 API 요청에 사용될 JSON 생성 (순수 함수)
     const cleanData = buildCleanJSON(dynamicFormData, fieldRuntimeStates, schemaFields);
     const rawRequestBody = JSON.stringify(cleanData, null, 2);
     const requestBody = wrapWithAssign(rawRequestBody);
-
-    // 🎯 Test Case 업데이트
     const { updateTestCase } = useAppStore.getState();
     updateTestCase(selectedTestCaseId, { requestBody });
     updateRunnerData({ requestBody });
-
-    // 🔥 글로벌 저장 (DB에 영구 저장)
     try {
       await saveCurrentVersion();
-      toast.success(`✅ Test Case "${selectedTestCase.name}" updated successfully!`);
+      toast.success(`Test case "${selectedTestCase.name}" updated successfully.`);
     } catch (error) {
       console.error('Failed to save version:', error);
-      toast.error('❌ Failed to update test case');
+      toast.error('Failed to update test case.');
     }
   };
-
-  // 🎯 현재 편집 중인 테스트케이스 초기화 (새로 시작)
   const handleClearTestCase = () => {
     setSelectedTestCaseId(null);
-
-    // 🎯 폼 기본값으로 초기화 (Trigger + Required 필드만)
     const initialData: any = {};
     schemaFields.forEach(field => {
       const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0;
@@ -1747,104 +1997,82 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         field.required === true ||
         (typeof field.required === 'object' && field.required['*'] === 'required');
 
-      if (isTriggerField || isAlwaysRequired) {
-        if (field.type === 'array' && field.items) {
-          initialData[field.name] = getDefaultValue(field);
-        } else if (field.type === 'object' && field.children) {
-          initialData[`${field.name}._enabled`] = false;
-          field.children.forEach(child => {
-            initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
-          });
-        } else {
-          initialData[field.name] = getDefaultValue(field);
+        if (isTriggerField || isAlwaysRequired) {
+          if (field.type === 'array' && field.items) {
+            initialData[field.name] = getDefaultValue(field);
+          } else if (field.type === 'object' && field.children) {
+            initialData[`${field.name}._enabled`] = false;
+            field.children.forEach(child => {
+              initialData[resolveNestedFieldKey(field.name, child.name)] = getDefaultValue(child);
+            });
+          } else {
+            initialData[field.name] = getDefaultValue(field);
         }
       }
     });
     setDynamicFormData(initialData);
-
-    // 🔥 Assign 인스턴스 기본값으로 초기화
     setAssignInstances({ '1': initialData });
     setCurrentInstanceKey('1');
 
-    toast.info('📝 Ready to create new test case');
+    toast.info('Ready to create a new test case.');
   };
-
-  // 🎯 Test Case 선택 시 폼에 로드
   const handleLoadTestCase = (testCaseId: string) => {
     const testCase = testCases.find(tc => tc.id === testCaseId);
     if (!testCase) return;
 
     try {
-      console.log('📥 Loading Test Case:', testCase.requestBody.substring(0, 200));
-
-      // requestBody는 실제 JSON 형식
+      console.log('[BuilderTab] Loading test case:', testCase.requestBody.substring(0, 200));
       const parsed = JSON.parse(testCase.requestBody);
+      const wrapperInfo = getResolvedWrapperInfo();
 
-      // 🔥 Assign 래퍼가 있으면 벗겨내고 인스턴스별로 로드
-      if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
-        const assignData = parsed.Assign;
-        const loadedInstances: any = {};
+      if (
+        parsed &&
+        typeof parsed === 'object' &&
+        wrapperInfo &&
+        wrapperInfo.key in parsed
+      ) {
+        const wrappedData = (parsed as any)[wrapperInfo.key];
+        if (
+          wrapperInfo.shape === 'map' &&
+          wrappedData &&
+          typeof wrappedData === 'object' &&
+          !Array.isArray(wrappedData)
+        ) {
+          const loadedInstances: Record<string, any> = {};
+          Object.entries(wrappedData as Record<string, any>).forEach(([instanceKey, instanceValue]) => {
+            if (instanceValue && typeof instanceValue === 'object' && !Array.isArray(instanceValue)) {
+              const flatData: Record<string, any> = {};
+              flattenObjectToDotNotation(instanceValue, flatData);
+              loadedInstances[instanceKey] = flatData;
+            }
+          });
 
-        // Assign 내부의 각 인스턴스를 assignInstances로 변환
-        Object.keys(assignData).forEach(key => {
-          const instanceData = assignData[key];
-
-          // 중첩 구조를 flat structure로 변환
-          const flatData: any = {};
-
-          const flattenObject = (obj: any, prefix = '') => {
-            Object.keys(obj).forEach(key => {
-              const value = obj[key];
-              const newKey = prefix ? `${prefix}.${key}` : key;
-
-              if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-                // Object인 경우: _enabled를 true로 설정하고 자식들을 펼침
-                flatData[`${newKey}._enabled`] = true;
-                flattenObject(value, newKey);
-              } else {
-                flatData[newKey] = value;
-              }
-            });
-          };
-
-          flattenObject(instanceData);
-          loadedInstances[key] = flatData;
-        });
-
-        console.log('✅ Loaded instances:', loadedInstances);
-        setAssignInstances(loadedInstances);
-
-        // 첫 번째 인스턴스를 현재 선택
-        const firstKey = Object.keys(loadedInstances)[0];
-        setCurrentInstanceKey(firstKey);
-        setDynamicFormData(loadedInstances[firstKey]);
-      }
-      // rootKey 형식인 경우 (이전 버전 호환)
-      else {
+          const firstKey = Object.keys(loadedInstances)[0];
+          if (firstKey) {
+            console.log('[BuilderTab] Loaded map-wrapper instances:', loadedInstances);
+            setAssignInstances(loadedInstances);
+            setCurrentInstanceKey(firstKey);
+            setDynamicFormData(loadedInstances[firstKey]);
+          }
+        } else if (wrappedData && typeof wrappedData === 'object' && !Array.isArray(wrappedData)) {
+          const flatData: Record<string, any> = {};
+          flattenObjectToDotNotation(wrappedData, flatData);
+          setAssignInstances({ "1": flatData });
+          setCurrentInstanceKey("1");
+          setDynamicFormData(flatData);
+        }
+      } else {
         const rootKey = endpoint.name.toUpperCase();
         if (parsed && typeof parsed === 'object' && rootKey in parsed) {
-          const data = parsed[rootKey];
-
-          // 중첩 구조를 flat structure로 변환
-          const flatData: any = {};
-
-          const flattenObject = (obj: any, prefix = '') => {
-            Object.keys(obj).forEach(key => {
-              const value = obj[key];
-              const newKey = prefix ? `${prefix}.${key}` : key;
-
-              if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-                flatData[`${newKey}._enabled`] = true;
-                flattenObject(value, newKey);
-              } else {
-                flatData[newKey] = value;
-              }
-            });
-          };
-
-          flattenObject(data);
-
-          // "1" 인스턴스로 로드
+          const data = (parsed as any)[rootKey];
+          const flatData: Record<string, any> = {};
+          flattenObjectToDotNotation(data, flatData);
+          setAssignInstances({ "1": flatData });
+          setCurrentInstanceKey("1");
+          setDynamicFormData(flatData);
+        } else if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          const flatData: Record<string, any> = {};
+          flattenObjectToDotNotation(parsed, flatData);
           setAssignInstances({ "1": flatData });
           setCurrentInstanceKey("1");
           setDynamicFormData(flatData);
@@ -1852,16 +2080,16 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       }
 
       setSelectedTestCaseId(testCaseId);
-      toast.success(`✅ Test Case "${testCase.name}" loaded successfully!`);
+      toast.success(`Test case "${testCase.name}" loaded successfully.`);
     } catch (error) {
       console.error('Failed to load test case:', error);
-      toast.error('❌ Failed to load test case');
+      toast.error('Failed to load test case.');
     }
   };
 
   const handleDeleteTestCase = async (caseId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm('이 Test Case를 삭제하시겠습니까?')) {
+    if (confirm('Delete this test case?')) {
       deleteTestCase(caseId);
       if (selectedTestCaseId === caseId) {
         setSelectedTestCaseId(null);
@@ -1869,70 +2097,55 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       if (editingTestCaseId === caseId) {
         setEditingTestCaseId(null);
       }
-
-      // 🔥 글로벌 저장 (DB에 영구 저장)
       try {
         await saveCurrentVersion();
-        toast.success('Test Case가 삭제되었습니다');
+        toast.success('Test case deleted.');
       } catch (error) {
         console.error('Failed to save after delete:', error);
-        toast.error('삭제 후 저장에 실패했습니다');
+        toast.error('Failed to save after delete.');
       }
     }
   };
-
-  // 🎯 테스트케이스 이름 편집 시작
   const handleStartEditName = (testCaseId: string, currentName: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setEditingTestCaseId(testCaseId);
     setEditingTestCaseName(currentName);
   };
-
-  // 🎯 테스트케이스 이름 편집 취소
   const handleCancelEditName = () => {
     setEditingTestCaseId(null);
     setEditingTestCaseName('');
   };
-
-  // 🎯 테스트케이스 이름 저장
   const handleSaveEditName = async (testCaseId: string) => {
     const trimmedName = editingTestCaseName.trim();
 
     if (!trimmedName) {
-      toast.error('❌ Test Case 이름은 비어있을 수 없습니다');
+      toast.error('Test case name cannot be empty.');
       return;
     }
 
     const testCase = testCases.find(tc => tc.id === testCaseId);
     if (testCase && trimmedName === testCase.name) {
-      // 변경사항 없음
       handleCancelEditName();
       return;
     }
-
-    // 이름 중복 체크
     const isDuplicate = testCases.some(
       tc => tc.id !== testCaseId && tc.name.toLowerCase() === trimmedName.toLowerCase()
     );
 
     if (isDuplicate) {
-      toast.error('❌ 같은 이름의 Test Case가 이미 존재합니다');
+      toast.error('A test case with the same name already exists.');
       return;
     }
-
-    // 업데이트
     const { updateTestCase } = useAppStore.getState();
     updateTestCase(testCaseId, { name: trimmedName });
-
-    // 🔥 글로벌 저장 (DB에 영구 저장)
     try {
       await saveCurrentVersion();
-      toast.success(`✅ Test Case 이름이 "${trimmedName}"로 변경되었습니다`);
+      toast.success(`Test case name changed to "${trimmedName}".`);
       setEditingTestCaseId(null);
       setEditingTestCaseName('');
     } catch (error) {
       console.error('Failed to save after rename:', error);
-      toast.error('❌ 이름 변경 후 저장에 실패했습니다');
+      toast.error('Failed to save after rename.');
     }
   };
 
@@ -1942,7 +2155,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       {/* Left Sidebar - Test Case List */}
       <div className="w-80 flex flex-col border-r border-zinc-800 bg-zinc-950 flex-shrink-0">
         <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
-          <h3 className="text-sm font-semibold mb-1">🧪 Test Cases</h3>
+          <h3 className="text-sm font-semibold mb-1">Test Cases</h3>
           <p className="text-xs text-zinc-500">Select a case to load</p>
         </div>
 
@@ -1981,7 +2194,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                       }`} />
                     <div className="flex-1 min-w-0">
                       {editingTestCaseId === testCase.id ? (
-                        // 🔥 편집 모드
                         <div className="flex items-center gap-1">
                           <Input
                             value={editingTestCaseName}
@@ -2002,11 +2214,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                           />
                         </div>
                       ) : (
-                        // 🔥 일반 모드
                         <h4
                           className="text-sm font-semibold text-zinc-100 truncate cursor-text hover:text-blue-300 transition-colors"
                           onDoubleClick={(e) => handleStartEditName(testCase.id, testCase.name, e)}
-                          title="더블클릭하여 이름 변경"
+                          title="Double-click to rename"
                         >
                           {testCase.name}
                         </h4>
@@ -2035,7 +2246,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         <div className="p-4 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm flex items-center gap-2">
-              🏗️ Context-Aware Builder
+              Context-Aware Builder
               {hasEnhancedSchema && (
                 <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
                   Enhanced Schema Active
@@ -2053,10 +2264,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 New Test Case
               </Button>
             )}
-          </div>
-
-          {/* 🔥 현재 상태 표시 배너 */}
-          {selectedTestCaseId ? (
+          </div>{selectedTestCaseId ? (
             <div className="flex items-center gap-2 px-3 py-2 bg-blue-900/20 border border-blue-700/50 rounded-lg">
               <Edit className="w-4 h-4 text-blue-400" />
               <div className="flex-1">
@@ -2064,7 +2272,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   Editing: {testCases.find(tc => tc.id === selectedTestCaseId)?.name || 'Unknown'}
                 </p>
                 <p className="text-[10px] text-blue-400/70">
-                  수정 후 "Update Test Case" 버튼을 눌러 저장하세요
+                  Click "Update Test Case" to save edits.
                 </p>
               </div>
             </div>
@@ -2076,7 +2284,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   Creating New Test Case
                 </p>
                 <p className="text-[10px] text-green-400/70">
-                  구성 완료 후 "Save as New Test Case" 버튼을 눌러 저장하세요
+                  Click "Save as New Test Case" when ready.
                 </p>
               </div>
             </div>
@@ -2084,13 +2292,11 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         </div>
 
         <ScrollArea className="flex-1 h-0">
-          <div className="p-6 space-y-6">
-            {/* 🔥 Assign Instance Selector */}
-            {settings.useAssignWrapper && (
+          <div className="p-6 space-y-6">{enableAssignInstances && (
               <section className="bg-gradient-to-br from-blue-950/50 to-zinc-900 border-2 border-blue-800/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <span className="text-xl">🔢</span>
+                    <span className="text-xl">+</span>
                     Assign Instances
                   </h3>
                   <Button
@@ -2101,8 +2307,34 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                     + Add Instance
                   </Button>
                 </div>
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <Select
+                    value={selectionSourceType}
+                    onValueChange={(value: 'NODE' | 'ELEM') => setSelectionSourceType(value)}
+                  >
+                    <SelectTrigger className="h-8 w-44 bg-zinc-900 border-zinc-700 text-zinc-100">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ELEM">Element Selection</SelectItem>
+                      <SelectItem value="NODE">Node Selection</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={loadAssignInstancesFromSelect}
+                    disabled={isLoadingSelectionInstances}
+                    className="h-8 bg-emerald-600 hover:bg-emerald-500 text-xs"
+                  >
+                    {isLoadingSelectionInstances ? 'Loading...' : 'Load from view/SELECT'}
+                  </Button>
+                  <span className="text-[11px] text-zinc-500">
+                    Uses Base URL + `/view/SELECT` with MAPI-Key/Common Headers
+                  </span>
+                </div>
                 <div className="flex flex-wrap gap-2">
-                  {Object.keys(assignInstances).sort((a, b) => parseInt(a) - parseInt(b)).map((key) => (
+                  {Object.keys(assignInstances).sort((a, b) => Number.parseInt(a, 10) - Number.parseInt(b, 10)).map((key) => (
                     <div key={key} className="flex items-center gap-1">
                       <button
                         onClick={() => setCurrentInstanceKey(key)}
@@ -2125,19 +2357,45 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                     </div>
                   ))}
                 </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <Label className="text-xs text-zinc-400">Current Key</Label>
+                  <Input
+                    value={instanceKeyDraft}
+                    onChange={(e) => setInstanceKeyDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        renameAssignInstance(instanceKeyDraft);
+                      }
+                      if (e.key === 'Escape') {
+                        e.preventDefault();
+                        setInstanceKeyDraft(currentInstanceKey);
+                      }
+                    }}
+                    onBlur={() => renameAssignInstance(instanceKeyDraft)}
+                    className="h-8 w-28 bg-zinc-900 border-zinc-700 text-zinc-100"
+                    placeholder="e.g., 1"
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => renameAssignInstance(instanceKeyDraft)}
+                    className="h-8 border-zinc-700 hover:bg-zinc-800 text-xs"
+                  >
+                    Apply
+                  </Button>
+                </div>
                 <p className="text-xs text-zinc-500 mt-2">
                   Select an instance to edit. Each instance represents a separate item in the Assign wrapper.
                 </p>
               </section>
-            )}
-
-            {/* 🎯 Dynamic Schema-Based Form */}
-            {schemaFields.length > 0 && (
+            )}{schemaFields.length > 0 && (
               <section className="bg-gradient-to-br from-purple-950/50 to-zinc-900 border-2 border-purple-800/50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <span className="text-xl">📝</span>
+                  <span className="text-xl">*</span>
                   Schema-Based Fields
-                  {settings.useAssignWrapper && (
+                  {enableAssignInstances && (
                     <span className="px-2 py-0.5 bg-blue-600/20 text-blue-400 text-[10px] rounded border border-blue-600/50">
                       Instance: {currentInstanceKey}
                     </span>
@@ -2147,9 +2405,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                       From Spec Tab
                     </span>
                   )}
-                </h3>
-                {/* 🔥 YAML 정의 기반 동적 렌더러 */}
-                {builderDefinition ? (
+                </h3>{builderDefinition ? (
                   <DynamicSchemaRenderer
                     definition={builderDefinition}
                     schemaFields={schemaFields}
@@ -2171,9 +2427,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       </div>
 
       {/* Right: Clean JSON Preview */}
-      <div className="relative flex flex-col bg-zinc-950 overflow-hidden flex-shrink-0" style={{ width: `${rightPanelWidth}px` }}>
-        {/* 🎯 Resizable Handle - 패널의 왼쪽 경계 */}
-        <div
+      <div className="relative flex flex-col bg-zinc-950 overflow-hidden flex-shrink-0" style={{ width: `${rightPanelWidth}px` }}><div
           className="absolute left-0 top-0 bottom-0 w-1 hover:w-2 bg-zinc-700 hover:bg-blue-500 cursor-ew-resize transition-all z-10"
           onMouseDown={handleResizeStart}
           title="Drag to resize"
@@ -2183,7 +2437,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm mb-1 flex items-center gap-2">
-                {jsonPreviewMode === 'monaco' ? '📝' : '✨'} JSON Preview
+                {jsonPreviewMode === 'monaco' ? 'Edit' : 'View'} JSON Preview
                 {jsonPreviewMode === 'monaco' && (
                   <span className="px-2 py-0.5 bg-green-600/20 text-green-400 text-[10px] rounded border border-green-600/50">
                     Editable
@@ -2192,8 +2446,8 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               </h3>
               <p className="text-xs text-zinc-500">
                 {jsonPreviewMode === 'monaco'
-                  ? '⚡ 코드를 수정하고 "Apply" 버튼을 클릭하세요'
-                  : '정제된 Request Body (스키마 기반)'}
+                  ? 'Edit JSON and click Apply to update the form.'
+                  : 'Generated Request Body (schema-based)'}
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -2204,7 +2458,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
                   }`}
               >
-                🏷️ View
+                View
               </button>
               <button
                 onClick={() => setJsonPreviewMode('monaco')}
@@ -2213,7 +2467,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
                   }`}
               >
-                📝 Edit
+                Edit
               </button>
             </div>
           </div>
@@ -2235,15 +2489,15 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 </div>
                 <div className="px-4 py-3 border-t border-zinc-800 bg-zinc-900/50 flex items-center justify-between gap-3">
                   <p className="text-xs text-zinc-400 flex items-center gap-2">
-                    <span className="text-yellow-400">💡</span>
-                    JSON을 수정한 후 버튼을 클릭하면 왼쪽 폼에 반영됩니다
+                    <span className="text-yellow-400">!</span>
+                    Click "Apply to Form" after editing JSON to update the form.
                   </p>
                   <Button
                     onClick={() => convertJsonToFormData(editableJson)}
                     size="sm"
                     className="bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-600/20"
                   >
-                    ✨ Apply to Form
+                    Apply to Form
                   </Button>
                 </div>
               </div>
@@ -2252,11 +2506,9 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                 <div className="p-4">
                   <div className="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800">
                     <JSONRenderer data={(() => {
-                      // 🔥 editableJson 상태를 사용 (이미 래퍼가 적용된 상태)
                       try {
                         return JSON.parse(editableJson);
                       } catch (error) {
-                        // ✅ 파싱 실패 시 빈 객체 반환 (buildCleanJSON 호출 금지)
                         return {};
                       }
                     })()} />
@@ -2265,10 +2517,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
               </ScrollArea>
             )}
           </div>
-        </div>
-
-        {/* 🎯 Footer with Save Button - Spec Tab Style */}
-        <div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-between flex-shrink-0">
+        </div><div className="border-t border-zinc-800 bg-zinc-900 p-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-xs text-zinc-500">
             {isModified ? (
               <>
@@ -2286,7 +2535,6 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           <div className="flex items-center gap-2">
             <Button
               onClick={() => {
-                // 🎯 Reset to default values (Trigger + Required 필드만)
                 const initialData: any = {};
                 schemaFields.forEach(field => {
                   const isTriggerField = field.enum && Array.isArray(field.enum) && field.enum.length > 0;
@@ -2300,7 +2548,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                     } else if (field.type === 'object' && field.children) {
                       initialData[`${field.name}._enabled`] = false;
                       field.children.forEach(child => {
-                        initialData[`${field.name}.${child.name}`] = getDefaultValue(child);
+                        initialData[resolveNestedFieldKey(field.name, child.name)] = getDefaultValue(child);
                       });
                     } else {
                       initialData[field.name] = getDefaultValue(field);
@@ -2321,23 +2569,30 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
             </Button>
 
             {selectedTestCaseId ? (
-              // 🔥 수정 모드: Update 버튼
-              <Button
-                onClick={handleUpdateTestCase}
-                size="sm"
-                disabled={!isModified}
-                className="h-8 text-xs bg-orange-600 hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <RefreshCw className="w-3 h-3 mr-2" />
-                Update Test Case
-              </Button>
+              <>
+                <Button
+                  onClick={handleUpdateTestCase}
+                  size="sm"
+                  disabled={!isModified}
+                  className="h-8 text-xs bg-orange-600 hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw className="w-3 h-3 mr-2" />
+                  Update Test Case
+                </Button>
+                <Button
+                  onClick={openSaveAsNewDialog}
+                  size="sm"
+                  className="h-8 text-xs bg-blue-600 hover:bg-blue-500"
+                >
+                  <Save className="w-3 h-3 mr-2" />
+                  Save as New
+                </Button>
+              </>
             ) : (
-              // 🔥 신규 모드: Save as New 버튼
               <Button
-                onClick={() => setShowSaveDialog(true)}
+                onClick={openSaveAsNewDialog}
                 size="sm"
-                disabled={!isModified}
-                className="h-8 text-xs bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-8 text-xs bg-blue-600 hover:bg-blue-500"
               >
                 <Save className="w-3 h-3 mr-2" />
                 Save as New Test Case
@@ -2345,15 +2600,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
             )}
           </div>
         </div>
-      </div>
-
-      {/* 🎯 Save Test Case Dialog */}
-      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+      </div><Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
         <DialogContent className="bg-zinc-900 border-zinc-700 max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl text-white">💾 Save Test Case</DialogTitle>
+            <DialogTitle className="text-xl text-white">Save Test Case</DialogTitle>
             <DialogDescription className="text-zinc-400">
-              현재 구성을 Test Case로 저장합니다. Runner 탭에서 선택하여 실행할 수 있습니다.
+              Save the current configuration as a test case. You can select and run it in Runner.
             </DialogDescription>
           </DialogHeader>
 
@@ -2387,7 +2639,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
             <div className="p-3 bg-zinc-800/50 border border-zinc-700 rounded-lg">
               <div className="text-xs text-zinc-400 mb-1">Current Configuration:</div>
               <div className="text-sm text-zinc-200">
-                🔧 Schema-based form with {schemaFields.length} field(s)
+                Schema-based form with {schemaFields.length} field(s)
               </div>
             </div>
           </div>
@@ -2413,3 +2665,5 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     </div>
   );
 }
+
+

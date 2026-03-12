@@ -20,7 +20,7 @@ import { refreshProductMappings } from '@/config/psdMapping';
 import { ChevronRight } from 'lucide-react';
 
 export default function App() {
-  const { setRunnerData, acquireEndpointLock, releaseEndpointLock } = useAppStore();
+  const { setRunnerData, releaseEndpointLock } = useAppStore();
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
   const { tasks: managerTasks } = useManagerData();  // Manager 작업 데이터
   const [activeView, setActiveView] = useState<'terminal' | 'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'>('manager');
@@ -195,12 +195,17 @@ export default function App() {
     }
   }, [settings]);
 
-  // Initialize runnerData on mount
+  // Initialize runnerData on mount (preserve existing store state)
   useEffect(() => {
+    const { runnerData } = useAppStore.getState();
+    if (runnerData) return;
+
     setRunnerData({
       requestBody: '{}',
       responseBody: '',
       testCases: [],
+      selectedTestCaseId: null,
+      selectedTestCaseDraftBody: null,
     });
   }, [setRunnerData]);
 

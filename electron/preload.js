@@ -19,12 +19,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // Zendesk API operations
   zendesk: {
+    getEnvConfig: () =>
+      ipcRenderer.invoke('zendesk:getEnvConfig'),
     getAllTranslations: (config, articleId) =>
       ipcRenderer.invoke('zendesk:getAllTranslations', config, articleId),
     getArticleTranslation: (config, articleId, locale) =>
       ipcRenderer.invoke('zendesk:getArticleTranslation', config, articleId, locale),
     updateArticleTranslation: (config, articleId, locale, body, title, draft) =>
       ipcRenderer.invoke('zendesk:updateArticleTranslation', config, articleId, locale, body, title, draft),
+    updateArticleTranslationWithEnv: (articleId, locale, body, title, draft) =>
+      ipcRenderer.invoke('zendesk:updateArticleTranslationWithEnv', articleId, locale, body, title, draft),
+    publishManualWithEnv: (targetInput, locale, body, title, draft) =>
+      ipcRenderer.invoke('zendesk:publishManualWithEnv', targetInput, locale, body, title, draft),
     getAllArticles: (config, perPage, page) =>
       ipcRenderer.invoke('zendesk:getAllArticles', config, perPage, page),
     getArticlesBySection: (config, sectionId, locale) =>

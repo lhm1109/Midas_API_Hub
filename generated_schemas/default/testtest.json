@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "required": [
+    "KFAC"
+  ],
+  "additionalProperties": false,
+  "description": "Checklist Text (view-only)",
+  "properties": {
+    "KFAC": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "Ky": {
+              "type": "number",
+              "default": 1.0,
+              "description": "Ky"
+            },
+            "Kz": {
+              "type": "number",
+              "default": 1.0,
+              "description": "Kz"
+            },
+            "Kt": {
+              "type": "number",
+              "default": 1.0,
+              "description": "Kt"
+            }
+          }
+        }
+      }
+    }
+  }
+}

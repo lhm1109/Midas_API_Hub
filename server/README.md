@@ -44,6 +44,11 @@ npm run electron:dev
 - `GET /api/data/all` - 모든 작업 데이터 조회
 - `DELETE /api/data/all` - 모든 작업 데이터 초기화
 
+### Schema Tools (Split/Merge/Roundtrip)
+- `POST /api/schema-tools/split` - 통합 스키마(`components.schemas`)를 Request/Response Enhanced 스키마로 분리
+- `POST /api/schema-tools/merge` - Enhanced Request/Response를 병합하여 Merged 스키마 생성
+- `POST /api/schema-tools/roundtrip` - `split -> merge -> source 비교`를 수행하고 불일치 시 자동 보정 스냅샷 제공
+
 ## 데이터베이스 구조
 
 ### versions

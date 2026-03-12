@@ -200,7 +200,12 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
         }
 
         // Determine bodyRoot default based on effective entity type (unless explicitly provided)
-        const resolvedBodyRoot = input.bodyRoot || (effectiveEntityType === 'single' ? 'Argument' : 'Assign');
+        let resolvedBodyRoot = input.bodyRoot || (effectiveEntityType === 'single' ? 'Argument' : 'Assign');
+        // If single entityType but bodyRoot defaults to Assign, override to Argument
+        if (effectiveEntityType === 'single' && resolvedBodyRoot === 'Assign') {
+            console.error('[WRAPPER] Overriding bodyRoot Assign -> Argument for single entityType');
+            resolvedBodyRoot = 'Argument';
+        }
 
         // If schema already has a wrapper, do NOT wrap again
         const existingWrapper =
@@ -219,6 +224,17 @@ export async function saveSchema(input: SaveSchemaInput): Promise<SaveSchemaResu
             } else {
                 console.error(`[WRAPPER] Schema already wrapped with ${existingWrapper}. Skipping wrap.`);
             }
+            effectiveEntityType = null;
+        }
+
+        // If schema is a components-only bundle (OpenAPI-style), do NOT wrap
+        const hasComponentsSchemas =
+            schema &&
+            typeof schema === 'object' &&
+            (schema as any).components &&
+            (schema as any).components.schemas;
+        if (hasComponentsSchemas) {
+            console.error('[WRAPPER] Schema contains components.schemas; skipping wrapper.');
             effectiveEntityType = null;
         }
 

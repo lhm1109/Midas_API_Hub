@@ -1,6 +1,6 @@
 /**
  * Dynamic Schema Renderer
- * YAML 정의에 따라 동적으로 UI를 렌더링합니다.
+ * YAML ?뺤쓽???곕씪 ?숈쟻?쇰줈 UI瑜??뚮뜑留곹빀?덈떎.
  */
 
 import React from 'react';
@@ -20,11 +20,19 @@ interface DynamicRendererProps {
   updateDynamicField: (key: string, value: any) => void;
   expandedObjects: Set<string>;
   toggleObject: (fieldName: string) => void;
-  fieldRuntimeStates?: FieldRuntimeStateMap; // 🎯 NEW: Runtime States
+  fieldRuntimeStates?: FieldRuntimeStateMap; // ?렞 NEW: Runtime States
+}
+
+function resolveChildFieldKey(parentFieldName: string, childFieldName: string): string {
+  if (!childFieldName) return childFieldName;
+  if (childFieldName === parentFieldName || childFieldName.startsWith(`${parentFieldName}.`)) {
+    return childFieldName;
+  }
+  return `${parentFieldName}.${childFieldName}`;
 }
 
 /**
- * YAML 정의 기반 동적 폼 렌더러
+ * YAML ?뺤쓽 湲곕컲 ?숈쟻 ???뚮뜑??
  */
 export function DynamicSchemaRenderer({
   definition,
@@ -35,58 +43,58 @@ export function DynamicSchemaRenderer({
   toggleObject,
   fieldRuntimeStates
 }: DynamicRendererProps) {
-  // 컨테이너 스타일 적용
+  // 而⑦뀒?대꼫 ?ㅽ????곸슜
   const containerClassName = definition.formLayout?.fieldContainer?.className || 'space-y-4';
 
-  // 🔥 섹션 헤더의 visibility 계산: 해당 섹션의 다음 필드들 중 visible한 것이 있는지 확인
+  // ?뵦 ?뱀뀡 ?ㅻ뜑??visibility 怨꾩궛: ?대떦 ?뱀뀡???ㅼ쓬 ?꾨뱶??以?visible??寃껋씠 ?덈뒗吏 ?뺤씤
   const isSectionVisible = (sectionIndex: number, _sectionName: string): boolean => {
-    // 섹션 이후의 필드들을 확인 (다음 섹션 헤더 전까지)
+    // ?뱀뀡 ?댄썑???꾨뱶?ㅼ쓣 ?뺤씤 (?ㅼ쓬 ?뱀뀡 ?ㅻ뜑 ?꾧퉴吏)
     for (let i = sectionIndex + 1; i < schemaFields.length; i++) {
       const field = schemaFields[i];
 
-      // 다음 섹션 헤더를 만나면 중단
+      // ?ㅼ쓬 ?뱀뀡 ?ㅻ뜑瑜?留뚮굹硫?以묐떒
       if (field.name.startsWith(definition.sectionHeaders?.detectBy || '__section_')) {
         break;
       }
 
-      // 필드가 visible인지 확인
+      // ?꾨뱶媛 visible?몄? ?뺤씤
       if (fieldRuntimeStates && fieldRuntimeStates[field.name]) {
         if (fieldRuntimeStates[field.name].visible) {
-          return true; // 하나라도 visible이면 섹션 표시
+          return true; // ?섎굹?쇰룄 visible?대㈃ ?뱀뀡 ?쒖떆
         }
       } else if (field.visible !== false) {
-        return true; // fallback: visible이 false가 아니면 표시
+        return true; // fallback: visible??false媛 ?꾨땲硫??쒖떆
       }
     }
 
-    return false; // 모든 필드가 hidden이면 섹션도 숨김
+    return false; // 紐⑤뱺 ?꾨뱶媛 hidden?대㈃ ?뱀뀡???④?
   };
 
   return (
     <div className={containerClassName}>
       {schemaFields
         .filter((field, index) => {
-          // 🔥 섹션 헤더의 경우: 해당 섹션의 필드 중 visible한 것이 있는지 확인
+          // ?뵦 ?뱀뀡 ?ㅻ뜑??寃쎌슦: ?대떦 ?뱀뀡???꾨뱶 以?visible??寃껋씠 ?덈뒗吏 ?뺤씤
           if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
             return isSectionVisible(index, field.description || field.name);
           }
 
-          // 🎯 Runtime State 기반 visible 판단 (Single Source of Truth)
+          // ?렞 Runtime State 湲곕컲 visible ?먮떒 (Single Source of Truth)
           if (fieldRuntimeStates && fieldRuntimeStates[field.name]) {
             return fieldRuntimeStates[field.name].visible;
           }
 
-          // 🔥 Fallback: visible이 false인 필드는 렌더링하지 않음
-          // visible이 undefined이면 true로 간주 (섹션 헤더 등)
+          // ?뵦 Fallback: visible??false???꾨뱶???뚮뜑留곹븯吏 ?딆쓬
+          // visible??undefined?대㈃ true濡?媛꾩＜ (?뱀뀡 ?ㅻ뜑 ??
           return field.visible !== false;
         })
         .map((field) => {
-          // 섹션 헤더 감지
+          // ?뱀뀡 ?ㅻ뜑 媛먯?
           if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
             return renderSectionHeader(field, definition);
           }
 
-          // 일반 필드 렌더링
+          // ?쇰컲 ?꾨뱶 ?뚮뜑留?
           return (
             <div key={field.name} className="space-y-2">
               {renderField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates)}
@@ -98,7 +106,7 @@ export function DynamicSchemaRenderer({
 }
 
 /**
- * 섹션 헤더 렌더링
+ * ?뱀뀡 ?ㅻ뜑 ?뚮뜑留?
  */
 function renderSectionHeader(field: UIBuilderField, definition: BuilderDefinition) {
   const sectionName = field.description || field.name.replace('__section_', '').replace(/__$/, '');
@@ -106,7 +114,7 @@ function renderSectionHeader(field: UIBuilderField, definition: BuilderDefinitio
 
   const containerClass = style.container || 'pt-4 pb-2 border-t-2 border-cyan-800/50 first:pt-0 first:border-t-0';
   const titleClass = style.title || 'text-sm font-semibold text-cyan-400 flex items-center gap-2';
-  const icon = style.icon || '📋';
+  const icon = style.icon || '?뱥';
 
   return (
     <div key={field.name} className={containerClass}>
@@ -119,7 +127,7 @@ function renderSectionHeader(field: UIBuilderField, definition: BuilderDefinitio
 }
 
 /**
- * 필드 렌더링
+ * ?꾨뱶 ?뚮뜑留?
  */
 function renderField(
   field: UIBuilderField,
@@ -130,22 +138,41 @@ function renderField(
   toggleObject: (fieldName: string) => void,
   fieldRuntimeStates?: Record<string, any>
 ): React.ReactNode {
-  // Object with children
-  if (field.type === 'object' && field.children && field.children.length > 0) {
-    return renderObjectField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject);
+  const isGeneralObjectPlaceholder = (() => {
+    if (field.type !== 'object') return false;
+    if (field.children && field.children.length > 0) return false;
+
+    const normalizedName = (field.name || '').trim().toLowerCase();
+    const normalizedDesc = (field.description || '').trim().toLowerCase();
+    const isGeneralField = normalizedName === 'general' || normalizedDesc === 'general';
+    if (!isGeneralField) return false;
+
+    const value = dynamicFormData[field.name];
+    if (value === undefined || value === null || value === '' || value === '{}') return true;
+    if (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) return true;
+    return false;
+  })();
+
+  if (isGeneralObjectPlaceholder) {
+    return null;
   }
 
-  // 🔥 Array with children (items.type = object with properties)
+  // Object with children
+  if (field.type === 'object' && field.children && field.children.length > 0) {
+    return renderObjectField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates);
+  }
+
+  // ?뵦 Array with children (items.type = object with properties)
   if (field.type === 'array' && field.children && field.children.length > 0) {
     return renderArrayField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject);
   }
 
-  // 일반 필드
+  // ?쇰컲 ?꾨뱶
   return renderStandardField(field, definition, dynamicFormData, updateDynamicField, fieldRuntimeStates);
 }
 
 /**
- * Object 필드 렌더링 (중첩 필드)
+ * Object ?꾨뱶 ?뚮뜑留?(以묒꺽 ?꾨뱶)
  */
 function renderObjectField(
   field: UIBuilderField,
@@ -153,16 +180,18 @@ function renderObjectField(
   dynamicFormData: Record<string, any>,
   updateDynamicField: (key: string, value: any) => void,
   expandedObjects: Set<string>,
-  toggleObject: (fieldName: string) => void
+  toggleObject: (fieldName: string) => void,
+  fieldRuntimeStates?: Record<string, any>
 ): React.ReactNode {
   const objectStyle = definition.fieldRendering?.object?.style || {};
+  const isEnabled = Boolean(dynamicFormData[`${field.name}._enabled`]);
 
-  // 🔥 oneOf 패턴: 여러 옵션 중 하나 선택
+  // ?뵦 oneOf ?⑦꽩: ?щ윭 ?듭뀡 以??섎굹 ?좏깮
   const isOneOf = field.oneOfOptions && field.oneOfOptions.length > 0;
 
   return (
     <div className={objectStyle.border || 'border border-zinc-700 rounded-md bg-zinc-900/50'}>
-      {/* 헤더 */}
+      {/* ?ㅻ뜑 */}
       <div className={objectStyle.header || 'flex items-center gap-2 p-3 bg-zinc-800/50'}>
         <input
           type="checkbox"
@@ -187,8 +216,8 @@ function renderObjectField(
         <span className="text-[10px] text-zinc-600 font-mono">{field.type}</span>
       </div>
 
-      {/* 🔥 oneOf 선택 라디오 버튼 */}
-      {isOneOf && expandedObjects.has(field.name) && (
+      {/* ?뵦 oneOf ?좏깮 ?쇰뵒??踰꾪듉 */}
+      {isEnabled && isOneOf && expandedObjects.has(field.name) && (
         <div className="px-4 pt-4 pb-2 bg-blue-950/20 border-b border-blue-800/30">
           <div className="text-xs text-blue-400 mb-2">Choose one method:</div>
           <div className="space-y-2">
@@ -211,35 +240,55 @@ function renderObjectField(
         </div>
       )}
 
-      {/* 자식 필드들 */}
-      {expandedObjects.has(field.name) && (
+      {/* ?먯떇 ?꾨뱶??*/}
+      {isEnabled && expandedObjects.has(field.name) && (
         <div className={objectStyle.content || 'p-4 space-y-3 bg-zinc-900/30'}>
           {field.children!.map((child: any, _idx) => {
-            // 🔥 oneOf인 경우: 선택된 옵션의 필드만 표시
+            const childKey = resolveChildFieldKey(field.name, child.name);
+            const childRuntime = fieldRuntimeStates?.[childKey] ?? fieldRuntimeStates?.[child.name];
+            if (childRuntime && childRuntime.visible === false) return null;
+            // oneOf option filter
             if (isOneOf && child.optionIndex !== undefined) {
               const selectedOption = dynamicFormData[`${field.name}.__selectedOption`] || 0;
 
               if (child.optionIndex !== selectedOption) {
-                return null; // 선택되지 않은 옵션의 필드는 숨김
+                return null;
               }
+            }
+
+            if ((child.type === 'object' || child.type === 'array') && child.children && child.children.length > 0) {
+              return (
+                <div key={child.name} className={objectStyle.childBorder || 'space-y-2 pl-4 border-l-2 border-zinc-700'}>
+                  {renderField(
+                    child,
+                    definition,
+                    dynamicFormData,
+                    updateDynamicField,
+                    expandedObjects,
+                    toggleObject,
+                    fieldRuntimeStates
+                  )}
+                </div>
+              );
             }
 
             return (
               <div key={child.name} className={objectStyle.childBorder || 'space-y-2 pl-4 border-l-2 border-zinc-700'}>
                 <Label className="text-xs flex items-center gap-2">
                   {child.description || child.name}
-                  {child.required && <span className="text-red-400">*</span>}
+                  {(childRuntime?.requiredNow ?? child.required) && <span className="text-red-400">*</span>}
                   <span className="text-[10px] text-zinc-600 font-mono ml-auto">{child.type}</span>
                 </Label>
 
-                {/* 🔥 child.name이 이미 전체 경로를 포함 (NODE_ELEMS.KEYS) */}
+                {/* ?뵦 child.name???대? ?꾩껜 寃쎈줈瑜??ы븿 (NODE_ELEMS.KEYS) */}
                 {renderFieldInput(
                   child,
-                  child.name,
-                  dynamicFormData[child.name],
-                  (value) => updateDynamicField(child.name, value),
+                  childKey,
+                  dynamicFormData[childKey] ?? dynamicFormData[child.name],
+                  (value) => updateDynamicField(childKey, value),
                   definition,
-                  !dynamicFormData[`${field.name}._enabled`]
+                  false,
+                  dynamicFormData
                 )}
               </div>
             );
@@ -251,8 +300,8 @@ function renderObjectField(
 }
 
 /**
- * 🔥 Array 필드 렌더링 (items.type = object)
- * REDUCTION_DATA처럼 배열 내부에 객체가 있는 경우 처리
+ * ?뵦 Array ?꾨뱶 ?뚮뜑留?(items.type = object)
+ * REDUCTION_DATA泥섎읆 諛곗뿴 ?대???媛앹껜媛 ?덈뒗 寃쎌슦 泥섎━
  */
 function renderArrayField(
   field: UIBuilderField,
@@ -264,21 +313,21 @@ function renderArrayField(
 ): React.ReactNode {
   const objectStyle = definition.fieldRendering?.object?.style || {};
 
-  // 현재 배열 데이터 가져오기
+  // ?꾩옱 諛곗뿴 ?곗씠??媛?몄삤湲?
   const arrayData = dynamicFormData[field.name] || [];
   const isExpanded = expandedObjects.has(field.name);
 
-  // 새 아이템 추가
+  // ???꾩씠??異붽?
   const addItem = () => {
     const newItem: Record<string, any> = {};
-    // 자식 필드들의 기본값으로 초기화
+    // ?먯떇 ?꾨뱶?ㅼ쓽 湲곕낯媛믪쑝濡?珥덇린??
     field.children!.forEach(child => {
-      if (child.type === 'section-header') return;
+      if ((child as any).type === 'section-header') return;
 
-      // 🔥 x-required-when 또는 x-optional-when 조건 체크
+      // ?뵦 x-required-when ?먮뒗 x-optional-when 議곌굔 泥댄겕
       const condition = (child as any)['x-required-when'] || (child as any)['x-optional-when'];
       if (condition) {
-        // 🔥 FIX: 타입 비교 문제 해결
+        // ?뵦 FIX: ???鍮꾧탳 臾몄젣 ?닿껐
         const shouldInclude = Object.entries(condition).every(([key, expectedValue]) => {
           const actualValue = dynamicFormData[key];
           if (typeof expectedValue === 'number') {
@@ -286,7 +335,7 @@ function renderArrayField(
           }
           return actualValue === expectedValue;
         });
-        if (!shouldInclude) return; // 조건 불충족 시 필드 추가 안함
+        if (!shouldInclude) return; // 議곌굔 遺덉땐議????꾨뱶 異붽? ?덊븿
       }
 
       const childName = child.name.split('.').pop() || child.name;
@@ -295,14 +344,14 @@ function renderArrayField(
     updateDynamicField(field.name, [...arrayData, newItem]);
   };
 
-  // 아이템 삭제
+  // ?꾩씠????젣
   const removeItem = (index: number) => {
     const newArray = [...arrayData];
     newArray.splice(index, 1);
     updateDynamicField(field.name, newArray);
   };
 
-  // 아이템 필드 업데이트
+  // ?꾩씠???꾨뱶 ?낅뜲?댄듃
   const updateItemField = (index: number, childKey: string, value: any) => {
     const newArray = [...arrayData];
     if (!newArray[index]) {
@@ -314,7 +363,7 @@ function renderArrayField(
 
   return (
     <div className={objectStyle.border || 'border border-green-700 rounded-md bg-zinc-900/50'}>
-      {/* 헤더 */}
+      {/* ?ㅻ뜑 */}
       <div className={objectStyle.header || 'flex items-center gap-2 p-3 bg-green-900/30'}>
         <button
           onClick={() => toggleObject(field.name)}
@@ -342,7 +391,7 @@ function renderArrayField(
         <span className="text-[10px] text-zinc-600 font-mono">array[object]</span>
       </div>
 
-      {/* 배열 아이템들 */}
+      {/* 諛곗뿴 ?꾩씠?쒕뱾 */}
       {isExpanded && (
         <div className="p-4 space-y-4 bg-zinc-900/30">
           {arrayData.length === 0 ? (
@@ -360,29 +409,29 @@ function renderArrayField(
                     onClick={() => removeItem(index)}
                     className="text-xs text-red-400 hover:text-red-300"
                   >
-                    ✕ Remove
+                    Remove
                   </button>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {field.children!.map((child: any) => {
-                    // section-header는 스킵
+                    // section-header???ㅽ궢
                     if (child.type === 'section-header') return null;
 
-                    // 🔥 x-required-when 또는 x-optional-when 조건 체크
+                    // ?뵦 x-required-when ?먮뒗 x-optional-when 議곌굔 泥댄겕
                     const condition = child['x-required-when'] || child['x-optional-when'];
                     if (condition) {
-                      // 조건 평가 - dynamicFormData에서 상위 폼의 값 확인
-                      // 🔥 FIX: 타입 비교 문제 해결 (문자열 "1" vs 숫자 0)
+                      // 議곌굔 ?됯? - dynamicFormData?먯꽌 ?곸쐞 ?쇱쓽 媛??뺤씤
+                      // ?뵦 FIX: ???鍮꾧탳 臾몄젣 ?닿껐 (臾몄옄??"1" vs ?レ옄 0)
                       const shouldShow = Object.entries(condition).every(([key, expectedValue]) => {
                         const actualValue = dynamicFormData[key];
-                        // 🔥 숫자 비교: 둘 다 숫자로 변환해서 비교
+                        // ?뵦 ?レ옄 鍮꾧탳: ?????レ옄濡?蹂?섑빐??鍮꾧탳
                         if (typeof expectedValue === 'number') {
                           return Number(actualValue) === expectedValue;
                         }
                         return actualValue === expectedValue;
                       });
-                      console.log('🔍 Condition check:', { condition, dynamicFormData, shouldShow });
-                      if (!shouldShow) return null; // 조건 불충족 시 숨김
+                      console.log('?뵇 Condition check:', { condition, dynamicFormData, shouldShow });
+                      if (!shouldShow) return null; // 議곌굔 遺덉땐議????④?
                     }
 
                     const childKey = child.name.split('.').pop() || child.name;
@@ -392,7 +441,7 @@ function renderArrayField(
                       <div key={child.name} className="space-y-1">
                         <Label className="text-[10px] text-zinc-400 flex items-center gap-1">
                           {child.description || childKey}
-                          {/* 🔥 x-required-when 조건 충족 시 Required 별(*) 표시 */}
+                          {/* ?뵦 x-required-when 議곌굔 異⑹” ??Required 蹂?*) ?쒖떆 */}
                           {child['x-required-when'] && <span className="text-red-400">*</span>}
                           {child.required && !child['x-required-when'] && <span className="text-red-400">*</span>}
                         </Label>
@@ -400,10 +449,30 @@ function renderArrayField(
                           <Select
                             value={childValue !== undefined ? String(childValue) : ''}
                             onValueChange={(val) => {
-                              const parsed = child.type === 'number' || child.type === 'integer'
-                                ? parseFloat(val)
-                                : val;
-                              updateItemField(index, childKey, parsed);
+                              const matchedOption = child.enum?.find((opt: any) => String(opt) === val);
+                              if (matchedOption !== undefined) {
+                                updateItemField(index, childKey, matchedOption);
+                                return;
+                              }
+
+                              if (child.type === 'integer') {
+                                const parsed = Number.parseInt(val, 10);
+                                updateItemField(index, childKey, Number.isNaN(parsed) ? val : parsed);
+                                return;
+                              }
+
+                              if (child.type === 'number') {
+                                const parsed = Number.parseFloat(val);
+                                updateItemField(index, childKey, Number.isNaN(parsed) ? val : parsed);
+                                return;
+                              }
+
+                              if (child.type === 'boolean' && (val === 'true' || val === 'false')) {
+                                updateItemField(index, childKey, val === 'true');
+                                return;
+                              }
+
+                              updateItemField(index, childKey, val);
                             }}
                           >
                             <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
@@ -450,7 +519,7 @@ function renderArrayField(
 }
 
 /**
- * 일반 필드 렌더링
+ * ?쇰컲 ?꾨뱶 ?뚮뜑留?
  */
 function renderStandardField(
   field: UIBuilderField,
@@ -461,7 +530,7 @@ function renderStandardField(
 ): React.ReactNode {
   const labelStyle = definition.fieldRendering?.standard?.label || {};
 
-  // 🎯 Runtime State에서 requiredNow 확인 (조건부 required 지원)
+  // ?렞 Runtime State?먯꽌 requiredNow ?뺤씤 (議곌굔遺 required 吏??
   const runtimeState = fieldRuntimeStates?.[field.name];
   const isRequired = runtimeState?.requiredNow ?? field.required;
 
@@ -475,37 +544,141 @@ function renderStandardField(
         )}
       </Label>
 
-      {/* Hint 표시 */}
+      {/* Hint ?쒖떆 */}
       {definition.hintsDisplay?.enabled && field.placeholder && (
         <p className="text-[10px] text-amber-400 italic">
-          💡 {field.placeholder}
+          ?뮕 {field.placeholder}
         </p>
       )}
 
-      {renderFieldInput(field, field.name, dynamicFormData[field.name], (value) => updateDynamicField(field.name, value), definition)}
+      {renderFieldInput(
+        field,
+        field.name,
+        dynamicFormData[field.name],
+        (value) => updateDynamicField(field.name, value),
+        definition,
+        false,
+        dynamicFormData
+      )}
     </>
   );
 }
 
 /**
- * 필드 입력 컴포넌트 렌더링
+ * ?꾨뱶 ?낅젰 而댄룷?뚰듃 ?뚮뜑留?
  */
+function resolveEnumLabelMap(
+  field: UIBuilderField,
+  formData?: Record<string, any>
+): Record<string, string> | undefined {
+  const enumLabelsByType = field.enumLabelsByType || (field as any)['x-enum-labels-by-type'];
+  if (!enumLabelsByType || typeof enumLabelsByType !== 'object') {
+    return undefined;
+  }
+
+  const typeKeys = Object.keys(enumLabelsByType);
+  if (typeKeys.length === 0) {
+    return undefined;
+  }
+
+  if (formData && typeof formData === 'object') {
+    const preferredTypeFields = ['TABLE_TYPE', 'TYPE', 'STYPE', 'LOAD_TYPE'];
+    for (const typeField of preferredTypeFields) {
+      const typeValue = formData[typeField];
+      if (typeValue !== undefined && typeValue !== null) {
+        const matched = enumLabelsByType[String(typeValue)];
+        if (matched) {
+          return matched;
+        }
+      }
+    }
+
+    for (const candidate of Object.values(formData)) {
+      if (candidate === undefined || candidate === null) {
+        continue;
+      }
+      const matched = enumLabelsByType[String(candidate)];
+      if (matched) {
+        return matched;
+      }
+    }
+  }
+
+  return enumLabelsByType[typeKeys[0]];
+}
+
 function renderFieldInput(
   field: UIBuilderField,
   _fieldKey: string,
   value: any,
   onChange: (value: any) => void,
   definition: BuilderDefinition,
-  disabled: boolean = false
+  disabled: boolean = false,
+  formData?: Record<string, any>
 ): React.ReactNode {
   const inputClassName = definition.fieldRendering?.standard?.input?.className || 'bg-zinc-800 border-zinc-700';
+  const itemEnumOptions = Array.isArray((field.items as any)?.enum) ? ((field.items as any).enum as any[]) : undefined;
+  const isArrayEnumField = field.type === 'array' && itemEnumOptions && itemEnumOptions.length > 0;
+  const enumLabelMap = resolveEnumLabelMap(field, formData);
+  const directEnumLabels = field.enumLabels || (field as any)['x-enum-labels'];
+  const getOptionLabel = (option: any) =>
+    enumLabelMap?.[String(option)] ||
+    directEnumLabels?.[String(option)] ||
+    String(option);
+  const parseEnumSelection = (rawValue: string): any => {
+    const matchedOption = field.enum?.find((option: any) => String(option) === rawValue);
+    if (matchedOption !== undefined) {
+      return matchedOption;
+    }
+
+    if (field.type === 'integer') {
+      const parsed = Number.parseInt(rawValue, 10);
+      return Number.isNaN(parsed) ? rawValue : parsed;
+    }
+
+    if (field.type === 'number') {
+      const parsed = Number.parseFloat(rawValue);
+      return Number.isNaN(parsed) ? rawValue : parsed;
+    }
+
+    if (field.type === 'boolean') {
+      if (rawValue === 'true') return true;
+      if (rawValue === 'false') return false;
+    }
+
+    return rawValue;
+  };
 
   // Enum
   if (field.enum) {
+    if (field.uiComponent === 'RadioGroup') {
+      const selectedValue = value !== undefined && value !== null ? String(value) : '';
+      return (
+        <div className="space-y-2">
+          <div className="grid grid-cols-1 gap-2 rounded border border-zinc-700 bg-zinc-900/40 p-3">
+            {field.enum.map((option: any) => (
+              <label key={String(option)} className="flex items-center gap-2 text-sm text-zinc-200 cursor-pointer">
+                <input
+                  type="radio"
+                  name={field.name}
+                  value={String(option)}
+                  checked={selectedValue === String(option)}
+                  onChange={() => onChange(parseEnumSelection(String(option)))}
+                  disabled={disabled}
+                  className="w-4 h-4"
+                />
+                <span>{getOptionLabel(option)}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <Select
         value={value !== undefined && value !== null ? String(value) : ''}
-        onValueChange={onChange}
+        onValueChange={(selected) => onChange(parseEnumSelection(selected))}
         disabled={disabled}
       >
         <SelectTrigger className={inputClassName}>
@@ -514,11 +687,64 @@ function renderFieldInput(
         <SelectContent>
           {field.enum.map((option: any) => (
             <SelectItem key={String(option)} value={String(option)}>
-              {String(option)}
+              {getOptionLabel(option)}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+    );
+  }
+
+  // Array of enum values (e.g., COMPONENTS, PARTS)
+  if (isArrayEnumField) {
+    const selectedValues = Array.isArray(value) ? value : [];
+
+    const toggleValue = (option: any) => {
+      const exists = selectedValues.includes(option);
+      const nextValues = exists
+        ? selectedValues.filter((item) => item !== option)
+        : [...selectedValues, option];
+      onChange(nextValues);
+    };
+
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onChange([...itemEnumOptions])}
+            disabled={disabled}
+            className="px-2 py-1 text-[10px] rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 disabled:opacity-50"
+          >
+            Select All
+          </button>
+          <button
+            type="button"
+            onClick={() => onChange([])}
+            disabled={disabled}
+            className="px-2 py-1 text-[10px] rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 disabled:opacity-50"
+          >
+            Clear
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-2 rounded border border-zinc-700 bg-zinc-900/40 p-3">
+          {itemEnumOptions.map((option) => {
+            const checked = selectedValues.includes(option);
+            return (
+              <label key={String(option)} className="flex items-center gap-2 text-sm text-zinc-200 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleValue(option)}
+                  disabled={disabled}
+                  className="w-4 h-4"
+                />
+                <span>{getOptionLabel(option)}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
     );
   }
 
@@ -528,14 +754,7 @@ function renderFieldInput(
       <Textarea
         placeholder={field.placeholder || `Enter as JSON array, e.g., [1, 2, 3]`}
         value={typeof value === 'string' ? value : JSON.stringify(value || [])}
-        onChange={(e) => {
-          try {
-            const parsed = JSON.parse(e.target.value);
-            onChange(parsed);
-          } catch {
-            onChange(e.target.value);
-          }
-        }}
+        onChange={(e) => onChange(e.target.value)}
         className={`${inputClassName} font-mono text-xs`}
         disabled={disabled}
       />
@@ -613,4 +832,6 @@ function renderFieldInput(
     />
   );
 }
+
+
 

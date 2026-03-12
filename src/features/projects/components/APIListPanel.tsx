@@ -373,7 +373,7 @@ const SortableGroupItem = memo(function SortableGroupItem({
           <FolderClosed className={`w-3 h-3 ${folderColor}`} />
           <span className="flex-1 text-left">{groupName}</span>
           {isNestTarget && (
-            <span className="text-[10px] text-blue-300">하위로 이동</span>
+            <span className="text-[10px] text-blue-300">{nestTargetLabel || '하위로 이동'}</span>
           )}
           {depth > 1 && (
             <span className="text-xs text-zinc-500">L{depth}</span>
@@ -1254,7 +1254,9 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     // === Move to subgroup container (become child) ===
     if (overParsed.type === 'groupContainer') {
       const targetProductId = overParsed.productId;
-      const targetParentId = overParsed.containerParentId === 'root' ? null : overParsed.containerParentId;
+      const targetParentId = !overParsed.containerParentId || overParsed.containerParentId === 'root'
+        ? null
+        : overParsed.containerParentId;
 
       if (!targetProductId) {
         console.error('Invalid group container target:', overId);

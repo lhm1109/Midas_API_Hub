@@ -3,7 +3,23 @@ const path = require('path');
 const fs = require('fs').promises;
 const https = require('https');
 const os = require('os');
+const dotenv = require('dotenv');
 // const db = require('./database'); // DB 기능은 나중에 활성화
+
+// Load project-level .env so Zendesk/Supabase settings are available in Electron main process.
+const projectEnvPath = path.join(__dirname, '..', '.env');
+const dotenvResult = dotenv.config({ path: projectEnvPath });
+if (dotenvResult.error) {
+  // Fallback to default resolution without overriding already-injected environment variables.
+  dotenv.config();
+  if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+    console.warn(`⚠️ Failed to load .env from ${projectEnvPath}: ${dotenvResult.error.message}`);
+  }
+}
+
+function refreshEnvFromFile() {
+  dotenv.config({ path: projectEnvPath, override: true });
+}
 
 // Terminal management
 let pty;
@@ -471,6 +487,295 @@ ipcMain.handle('db:getTestStatistics', async () => {
 // Zendesk API Handlers
 // ============================================
 
+const ZENDESK_DEFAULT_LOCALE = 'en-us';
+
+function asTrimmedString(value) {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
+function normalizeZendeskLocale(locale = ZENDESK_DEFAULT_LOCALE) {
+  const normalized = String(locale || '')
+    .trim()
+    .replace(/_/g, '-')
+    .toLowerCase();
+  return normalized || ZENDESK_DEFAULT_LOCALE;
+}
+
+function toZendeskPathSegment(value, fieldName) {
+  const rawValue = asTrimmedString(String(value ?? ''));
+  if (!rawValue) {
+    throw new Error(`${fieldName} is required`);
+  }
+  return encodeURIComponent(rawValue);
+}
+
+function parseZendeskSubdomainFromBaseUrl(baseUrl) {
+  const trimmed = asTrimmedString(baseUrl);
+  if (!trimmed) return '';
+  try {
+    const parsed = new URL(trimmed);
+    const host = parsed.hostname.toLowerCase();
+    const match = host.match(/^([a-z0-9-]+)\.zendesk\.com$/i);
+    return match ? match[1] : '';
+  } catch {
+    return '';
+  }
+}
+
+function parseZendeskTarget(targetInput, fallbackLocale = ZENDESK_DEFAULT_LOCALE) {
+  const raw = asTrimmedString(targetInput);
+  if (!raw) return null;
+
+  if (/^\d+$/.test(raw)) {
+    return { articleId: raw, locale: normalizeZendeskLocale(fallbackLocale) };
+  }
+
+  try {
+    const parsedUrl = new URL(raw);
+    const pathSegments = parsedUrl.pathname.split('/').filter(Boolean);
+    const articleIndex = pathSegments.indexOf('articles');
+    if (articleIndex === -1 || articleIndex + 1 >= pathSegments.length) {
+      return null;
+    }
+
+    const articleSegment = pathSegments[articleIndex + 1];
+    const articleIdMatch = articleSegment.match(/^(\d+)/);
+    if (!articleIdMatch) {
+      return null;
+    }
+
+    let locale =
+      parsedUrl.searchParams.get('locale') ||
+      parsedUrl.searchParams.get('lang') ||
+      '';
+
+    if (!locale && articleIndex >= 2 && pathSegments[0] === 'hc') {
+      locale = pathSegments[1];
+    }
+
+    const translationIndex = pathSegments.indexOf('translations');
+    if (!locale && translationIndex >= 0 && translationIndex + 1 < pathSegments.length) {
+      locale = pathSegments[translationIndex + 1].replace(/\.json$/i, '');
+    }
+
+    return {
+      articleId: articleIdMatch[1],
+      locale: normalizeZendeskLocale(locale || fallbackLocale),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function isEnvAllValue(value) {
+  const normalized = asTrimmedString(value).toLowerCase();
+  return normalized === 'all' || normalized === '*' || normalized === 'none' || normalized === 'null';
+}
+
+function parseOptionalInteger(value) {
+  const raw = asTrimmedString(value);
+  if (!raw || isEnvAllValue(raw)) return null;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function parseIntegerList(value, maxItems = Number.POSITIVE_INFINITY) {
+  const raw = asTrimmedString(value);
+  if (!raw || isEnvAllValue(raw)) return [];
+
+  const results = [];
+  const seen = new Set();
+  for (const token of raw.split(',')) {
+    const parsed = parseOptionalInteger(token);
+    if (parsed === null) continue;
+    if (seen.has(parsed)) continue;
+    seen.add(parsed);
+    results.push(parsed);
+    if (results.length >= maxItems) break;
+  }
+  return results;
+}
+
+function parseStringList(value, maxItems = Number.POSITIVE_INFINITY) {
+  const raw = asTrimmedString(value);
+  if (!raw || isEnvAllValue(raw)) return [];
+
+  const results = [];
+  const seen = new Set();
+  for (const token of raw.split(',')) {
+    const normalized = token.trim();
+    if (!normalized) continue;
+    const key = normalized.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    results.push(normalized);
+    if (results.length >= maxItems) break;
+  }
+  return results;
+}
+
+function parseOptionalBoolean(value) {
+  const raw = asTrimmedString(value).toLowerCase();
+  if (!raw) return null;
+
+  if (['1', 'true', 'yes', 'y', 'on'].includes(raw)) return true;
+  if (['0', 'false', 'no', 'n', 'off'].includes(raw)) return false;
+  return null;
+}
+
+function getZendeskConfigFromEnv() {
+  refreshEnvFromFile();
+
+  const baseUrl = asTrimmedString(process.env.ZENDESK_BASE_URL);
+  const subdomain = asTrimmedString(process.env.ZENDESK_SUBDOMAIN) || parseZendeskSubdomainFromBaseUrl(baseUrl);
+  const email = asTrimmedString(process.env.ZENDESK_EMAIL);
+  const password = asTrimmedString(process.env.ZENDESK_PASSWORD);
+  const apiToken = asTrimmedString(process.env.ZENDESK_API_TOKEN);
+  const defaultLocale = normalizeZendeskLocale(process.env.ZENDESK_DEFAULT_LOCALE || ZENDESK_DEFAULT_LOCALE);
+  const defaultArticleUrl = asTrimmedString(process.env.ZENDESK_DEFAULT_ARTICLE_URL);
+  const defaultArticleId = asTrimmedString(process.env.ZENDESK_DEFAULT_ARTICLE_ID);
+  const defaultSectionId = parseOptionalInteger(process.env.ZENDESK_DEFAULT_SECTION_ID);
+  const defaultPermissionGroupId = parseOptionalInteger(process.env.ZENDESK_DEFAULT_PERMISSION_GROUP_ID);
+
+  const userSegmentIdRaw = asTrimmedString(process.env.ZENDESK_DEFAULT_USER_SEGMENT_ID);
+  const userSegmentIdsRaw = asTrimmedString(process.env.ZENDESK_DEFAULT_USER_SEGMENT_IDS);
+  const defaultUserSegmentId = parseOptionalInteger(userSegmentIdRaw);
+  const defaultUserSegmentIds = parseIntegerList(userSegmentIdsRaw, 10);
+  const hasDefaultUserSegmentId = userSegmentIdRaw !== '';
+  const hasDefaultUserSegmentIds = userSegmentIdsRaw !== '';
+
+  const defaultAuthorId = parseOptionalInteger(process.env.ZENDESK_DEFAULT_AUTHOR_ID);
+  const defaultLabels = parseStringList(process.env.ZENDESK_DEFAULT_LABELS);
+  const defaultContentTagIds = parseStringList(process.env.ZENDESK_DEFAULT_CONTENT_TAG_IDS);
+  const defaultAttachmentIds = parseIntegerList(process.env.ZENDESK_DEFAULT_ATTACHMENT_IDS);
+
+  const defaultPromoted = parseOptionalBoolean(process.env.ZENDESK_DEFAULT_PROMOTED);
+  const explicitCommentsDisabled = parseOptionalBoolean(process.env.ZENDESK_DEFAULT_COMMENTS_DISABLED);
+  const explicitCommentsEnabled = parseOptionalBoolean(process.env.ZENDESK_DEFAULT_COMMENTS_ENABLED);
+  const defaultCommentsDisabled = explicitCommentsDisabled !== null
+    ? explicitCommentsDisabled
+    : (explicitCommentsEnabled !== null ? !explicitCommentsEnabled : null);
+  const defaultNotifySubscribers = parseOptionalBoolean(process.env.ZENDESK_DEFAULT_NOTIFY_SUBSCRIBERS);
+  const defaultDraft = parseOptionalBoolean(process.env.ZENDESK_DEFAULT_DRAFT);
+
+  const missingFields = [];
+  if (!subdomain) missingFields.push('ZENDESK_SUBDOMAIN or ZENDESK_BASE_URL');
+  if (!email) missingFields.push('ZENDESK_EMAIL');
+  if (!apiToken && !password) missingFields.push('ZENDESK_API_TOKEN or ZENDESK_PASSWORD');
+
+  return {
+    baseUrl,
+    subdomain,
+    email,
+    password,
+    apiToken,
+    defaultLocale,
+    defaultArticleUrl,
+    defaultArticleId,
+    defaultSectionId,
+    defaultPermissionGroupId,
+    hasDefaultUserSegmentId,
+    hasDefaultUserSegmentIds,
+    defaultUserSegmentId,
+    defaultUserSegmentIds,
+    defaultAuthorId,
+    defaultLabels,
+    defaultContentTagIds,
+    defaultAttachmentIds,
+    defaultPromoted,
+    defaultCommentsDisabled,
+    defaultNotifySubscribers,
+    defaultDraft,
+    missingFields,
+    isReady: missingFields.length === 0,
+  };
+}
+
+function buildZendeskArticleMetadataFromEnv(envConfig) {
+  const metadata = {};
+
+  if (envConfig.defaultPermissionGroupId !== null) {
+    metadata.permission_group_id = envConfig.defaultPermissionGroupId;
+  }
+
+  if (envConfig.hasDefaultUserSegmentIds) {
+    metadata.user_segment_ids = envConfig.defaultUserSegmentIds;
+  } else if (envConfig.hasDefaultUserSegmentId) {
+    metadata.user_segment_id = envConfig.defaultUserSegmentId;
+  }
+
+  if (envConfig.defaultAuthorId !== null) {
+    metadata.author_id = envConfig.defaultAuthorId;
+  }
+
+  if (envConfig.defaultLabels.length > 0) {
+    metadata.label_names = envConfig.defaultLabels;
+  }
+
+  if (envConfig.defaultContentTagIds.length > 0) {
+    metadata.content_tag_ids = envConfig.defaultContentTagIds;
+  }
+
+  if (envConfig.defaultPromoted !== null) {
+    metadata.promoted = envConfig.defaultPromoted;
+  }
+
+  if (envConfig.defaultCommentsDisabled !== null) {
+    metadata.comments_disabled = envConfig.defaultCommentsDisabled;
+  }
+
+  return metadata;
+}
+
+function buildZendeskArticleUrl(subdomain, locale, articleId) {
+  const normalizedLocale = normalizeZendeskLocale(locale);
+  return `https://${subdomain}.zendesk.com/hc/${normalizedLocale}/articles/${articleId}`;
+}
+
+function getZendeskAuthContext(config) {
+  const subdomain = asTrimmedString(config?.subdomain);
+  const email = asTrimmedString(config?.email);
+  const apiToken = asTrimmedString(config?.apiToken || config?.token);
+  const password = asTrimmedString(config?.password);
+  const secret = apiToken ? `${apiToken}/token` : password;
+
+  const missingFields = [];
+  if (!subdomain) missingFields.push('subdomain');
+  if (!email) missingFields.push('email');
+  if (!secret) missingFields.push('apiToken/password');
+
+  if (missingFields.length > 0) {
+    throw new Error(`Invalid Zendesk config: missing ${missingFields.join(', ')}`);
+  }
+
+  const auth = Buffer.from(`${email}:${secret}`).toString('base64');
+  return {
+    subdomain,
+    auth,
+    authType: apiToken ? 'token' : 'password',
+  };
+}
+
+function buildZendeskRequestOptions(config, requestPath, method = 'GET', postData = null) {
+  const { subdomain, auth } = getZendeskAuthContext(config);
+  const headers = {
+    'Authorization': `Basic ${auth}`,
+    'Content-Type': 'application/json',
+  };
+
+  if (postData !== null && postData !== undefined) {
+    headers['Content-Length'] = Buffer.byteLength(postData);
+  }
+
+  return {
+    hostname: `${subdomain}.zendesk.com`,
+    path: requestPath,
+    method,
+    headers,
+    timeout: 30000,
+  };
+}
+
 /**
  * Helper function to make HTTPS requests
  */
@@ -491,9 +796,21 @@ function makeZendeskRequest(options, postData = null) {
             resolve(data);
           }
         } else {
-          reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+          const normalizedBody = asTrimmedString(data);
+          if ((res.statusCode === 401 || res.statusCode === 403) && !normalizedBody) {
+            reject(new Error(
+              `HTTP ${res.statusCode}: Zendesk 인증/권한 오류. ` +
+              `API token 또는 agent 권한(Guide 편집 권한)을 확인하세요.`
+            ));
+          } else {
+            reject(new Error(`HTTP ${res.statusCode}: ${normalizedBody || 'No response body'}`));
+          }
         }
       });
+    });
+
+    req.setTimeout(options.timeout || 30000, () => {
+      req.destroy(new Error('Zendesk request timeout'));
     });
 
     req.on('error', (error) => {
@@ -508,26 +825,174 @@ function makeZendeskRequest(options, postData = null) {
   });
 }
 
+async function updateZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
+  const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
+  const safeLocale = toZendeskPathSegment(normalizeZendeskLocale(locale), 'locale');
+
+  const payload = {
+    translation: {
+      body: typeof body === 'string' ? body : String(body ?? ''),
+    },
+  };
+
+  if (title !== undefined && title !== null && String(title).trim() !== '') {
+    payload.translation.title = String(title);
+  }
+
+  if (draft !== undefined && draft !== null) {
+    payload.translation.draft = !!draft;
+  }
+
+  const postData = JSON.stringify(payload);
+  const options = buildZendeskRequestOptions(
+    config,
+    `/api/v2/help_center/articles/${safeArticleId}/translations/${safeLocale}.json`,
+    'PUT',
+    postData
+  );
+
+  const data = await makeZendeskRequest(options, postData);
+  return data.translation;
+}
+
+async function updateZendeskArticle(config, articleId, articlePayload, notifySubscribers = null) {
+  const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
+  const payload = {
+    article: articlePayload,
+  };
+
+  if (notifySubscribers !== null && notifySubscribers !== undefined) {
+    payload.notify_subscribers = !!notifySubscribers;
+  }
+
+  const postData = JSON.stringify(payload);
+  const options = buildZendeskRequestOptions(
+    config,
+    `/api/v2/help_center/articles/${safeArticleId}.json`,
+    'PUT',
+    postData
+  );
+
+  const data = await makeZendeskRequest(options, postData);
+  return data.article;
+}
+
+async function createZendeskArticle(config, sectionId, locale, title, body, envConfig, draftOverride) {
+  const safeSectionId = toZendeskPathSegment(sectionId, 'sectionId');
+  const normalizedLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale || ZENDESK_DEFAULT_LOCALE);
+
+  const metadata = buildZendeskArticleMetadataFromEnv(envConfig);
+  const articleDraft = draftOverride !== null && draftOverride !== undefined
+    ? !!draftOverride
+    : (envConfig.defaultDraft !== null ? envConfig.defaultDraft : false);
+
+  if (envConfig.defaultPermissionGroupId === null) {
+    throw new Error('Article 생성에는 ZENDESK_DEFAULT_PERMISSION_GROUP_ID 설정이 필요합니다.');
+  }
+
+  const articlePayload = {
+    ...metadata,
+    title: asTrimmedString(title) || 'API Manual',
+    body: typeof body === 'string' ? body : String(body ?? ''),
+    locale: normalizedLocale,
+    draft: articleDraft,
+  };
+
+  const payload = {
+    article: articlePayload,
+  };
+
+  if (envConfig.defaultNotifySubscribers !== null) {
+    payload.notify_subscribers = envConfig.defaultNotifySubscribers;
+  } else {
+    payload.notify_subscribers = false;
+  }
+
+  const postData = JSON.stringify(payload);
+  const options = buildZendeskRequestOptions(
+    config,
+    `/api/v2/help_center/sections/${safeSectionId}/articles.json`,
+    'POST',
+    postData
+  );
+
+  const data = await makeZendeskRequest(options, postData);
+  return data.article;
+}
+
+async function associateZendeskAttachments(config, articleId, attachmentIds) {
+  if (!Array.isArray(attachmentIds) || attachmentIds.length === 0) {
+    return [];
+  }
+
+  const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
+  const payload = {
+    attachment_ids: attachmentIds,
+  };
+  const postData = JSON.stringify(payload);
+
+  const options = buildZendeskRequestOptions(
+    config,
+    `/api/v2/help_center/articles/${safeArticleId}/bulk_attachments.json`,
+    'POST',
+    postData
+  );
+
+  const data = await makeZendeskRequest(options, postData);
+  return data.article_attachments || [];
+}
+
+/**
+ * Load Zendesk runtime status from .env (without exposing secrets)
+ */
+ipcMain.handle('zendesk:getEnvConfig', async () => {
+  try {
+    const envConfig = getZendeskConfigFromEnv();
+    return {
+      success: true,
+      data: {
+        baseUrl: envConfig.baseUrl,
+        subdomain: envConfig.subdomain,
+        defaultLocale: envConfig.defaultLocale,
+        defaultArticleUrl: envConfig.defaultArticleUrl,
+        defaultArticleId: envConfig.defaultArticleId,
+        defaultSectionId: envConfig.defaultSectionId,
+        defaultPermissionGroupId: envConfig.defaultPermissionGroupId,
+        defaultUserSegmentId: envConfig.defaultUserSegmentId,
+        defaultUserSegmentIds: envConfig.defaultUserSegmentIds,
+        defaultLabels: envConfig.defaultLabels,
+        defaultContentTagIds: envConfig.defaultContentTagIds,
+        defaultPromoted: envConfig.defaultPromoted,
+        defaultCommentsDisabled: envConfig.defaultCommentsDisabled,
+        defaultNotifySubscribers: envConfig.defaultNotifySubscribers,
+        defaultDraft: envConfig.defaultDraft,
+        defaultAttachmentIds: envConfig.defaultAttachmentIds,
+        hasCredentials: envConfig.isReady,
+        authType: envConfig.apiToken ? 'token' : (envConfig.password ? 'password' : null),
+        missingFields: envConfig.missingFields,
+      },
+    };
+  } catch (error) {
+    console.error('Zendesk getEnvConfig error:', error);
+    return { success: false, error: error.message };
+  }
+});
+
 /**
  * Get all translations for an article
  * GET /api/v2/help_center/articles/{article_id}/translations.json
  */
 ipcMain.handle('zendesk:getAllTranslations', async (event, config, articleId) => {
   try {
-    const auth = Buffer.from(`${config.email}:${config.password}`).toString('base64');
+    const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
 
-    const options = {
-      hostname: `${config.subdomain}.zendesk.com`,
-      path: `/api/v2/help_center/articles/${articleId}/translations.json`,
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json'
-      }
-    };
+    const options = buildZendeskRequestOptions(
+      config,
+      `/api/v2/help_center/articles/${safeArticleId}/translations.json`
+    );
 
     const data = await makeZendeskRequest(options);
-    return { success: true, data: data.translations };
+    return { success: true, data: data.translations || [] };
   } catch (error) {
     console.error('Zendesk getAllTranslations error:', error);
     return { success: false, error: error.message };
@@ -540,17 +1005,13 @@ ipcMain.handle('zendesk:getAllTranslations', async (event, config, articleId) =>
  */
 ipcMain.handle('zendesk:getArticleTranslation', async (event, config, articleId, locale = 'en-us') => {
   try {
-    const auth = Buffer.from(`${config.email}:${config.password}`).toString('base64');
+    const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
+    const safeLocale = toZendeskPathSegment(normalizeZendeskLocale(locale), 'locale');
 
-    const options = {
-      hostname: `${config.subdomain}.zendesk.com`,
-      path: `/api/v2/help_center/articles/${articleId}/translations/${locale}.json`,
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json'
-      }
-    };
+    const options = buildZendeskRequestOptions(
+      config,
+      `/api/v2/help_center/articles/${safeArticleId}/translations/${safeLocale}.json`
+    );
 
     const data = await makeZendeskRequest(options);
     return { success: true, data: data.translation };
@@ -566,39 +1027,171 @@ ipcMain.handle('zendesk:getArticleTranslation', async (event, config, articleId,
  */
 ipcMain.handle('zendesk:updateArticleTranslation', async (event, config, articleId, locale, body, title, draft) => {
   try {
-    const auth = Buffer.from(`${config.email}:${config.password}`).toString('base64');
-
-    const payload = {
-      translation: {
-        body: body
-      }
-    };
-
-    if (title !== undefined && title !== null) {
-      payload.translation.title = title;
-    }
-
-    if (draft !== undefined && draft !== null) {
-      payload.translation.draft = draft;
-    }
-
-    const postData = JSON.stringify(payload);
-
-    const options = {
-      hostname: `${config.subdomain}.zendesk.com`,
-      path: `/api/v2/help_center/articles/${articleId}/translations/${locale}.json`,
-      method: 'PUT',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(postData)
-      }
-    };
-
-    const data = await makeZendeskRequest(options, postData);
-    return { success: true, data: data.translation };
+    const translation = await updateZendeskArticleTranslation(
+      config,
+      articleId,
+      locale || ZENDESK_DEFAULT_LOCALE,
+      body,
+      title,
+      draft
+    );
+    return { success: true, data: translation };
   } catch (error) {
     console.error('Zendesk updateArticleTranslation error:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+/**
+ * Update article translation using .env credentials from Electron main process
+ * PUT /api/v2/help_center/articles/{article_id}/translations/{locale}.json
+ */
+ipcMain.handle('zendesk:updateArticleTranslationWithEnv', async (event, articleId, locale, body, title, draft) => {
+  try {
+    const envConfig = getZendeskConfigFromEnv();
+    if (!envConfig.isReady) {
+      throw new Error(`Zendesk .env settings missing: ${envConfig.missingFields.join(', ')}`);
+    }
+
+    const config = {
+      subdomain: envConfig.subdomain,
+      email: envConfig.email,
+      apiToken: envConfig.apiToken,
+      password: envConfig.password,
+    };
+
+    const translation = await updateZendeskArticleTranslation(
+      config,
+      articleId,
+      locale || envConfig.defaultLocale,
+      body,
+      title,
+      draft
+    );
+
+    return { success: true, data: translation };
+  } catch (error) {
+    console.error('Zendesk updateArticleTranslationWithEnv error:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+/**
+ * Publish Manual with .env defaults.
+ * - If target article (URL/ID) is provided: update metadata + translation
+ * - If target is omitted: create article in default section, then update translation
+ */
+ipcMain.handle('zendesk:publishManualWithEnv', async (event, targetInput, locale, body, title, draft) => {
+  try {
+    const envConfig = getZendeskConfigFromEnv();
+    if (!envConfig.isReady) {
+      throw new Error(`Zendesk .env settings missing: ${envConfig.missingFields.join(', ')}`);
+    }
+
+    const config = {
+      subdomain: envConfig.subdomain,
+      email: envConfig.email,
+      apiToken: envConfig.apiToken,
+      password: envConfig.password,
+    };
+
+    const fallbackLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale);
+    const directTarget = parseZendeskTarget(targetInput, fallbackLocale);
+    if (asTrimmedString(targetInput) && !directTarget) {
+      throw new Error('Zendesk URL 또는 Article ID 형식이 올바르지 않습니다.');
+    }
+    const envTarget =
+      parseZendeskTarget(envConfig.defaultArticleUrl, fallbackLocale) ||
+      parseZendeskTarget(envConfig.defaultArticleId, fallbackLocale);
+    const resolvedTarget = directTarget || envTarget;
+
+    const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+    const normalizedTitle = asTrimmedString(title) || 'API Manual';
+    const metadata = buildZendeskArticleMetadataFromEnv(envConfig);
+    const draftFlag = draft !== undefined && draft !== null
+      ? !!draft
+      : (envConfig.defaultDraft !== null ? envConfig.defaultDraft : undefined);
+
+    let articleId = '';
+    let effectiveLocale = fallbackLocale;
+    let articleUrl = '';
+    let mode = 'update';
+
+    if (resolvedTarget) {
+      articleId = String(resolvedTarget.articleId);
+      effectiveLocale = normalizeZendeskLocale(resolvedTarget.locale || fallbackLocale);
+
+      if (Object.keys(metadata).length > 0 || envConfig.defaultNotifySubscribers !== null) {
+        await updateZendeskArticle(config, articleId, metadata, envConfig.defaultNotifySubscribers);
+      }
+
+      await updateZendeskArticleTranslation(
+        config,
+        articleId,
+        effectiveLocale,
+        normalizedBody,
+        normalizedTitle,
+        draftFlag
+      );
+    } else {
+      if (envConfig.defaultSectionId === null) {
+        throw new Error('기본 섹션 생성 모드에는 ZENDESK_DEFAULT_SECTION_ID 설정이 필요합니다.');
+      }
+
+      mode = 'create';
+      const created = await createZendeskArticle(
+        config,
+        envConfig.defaultSectionId,
+        fallbackLocale,
+        normalizedTitle,
+        normalizedBody,
+        envConfig,
+        draftFlag
+      );
+
+      articleId = String(created?.id || '');
+      if (!articleId) {
+        throw new Error('Zendesk article 생성 결과에서 article id를 찾을 수 없습니다.');
+      }
+
+      effectiveLocale = normalizeZendeskLocale(created?.source_locale || fallbackLocale);
+      articleUrl = asTrimmedString(created?.html_url);
+
+      await updateZendeskArticleTranslation(
+        config,
+        articleId,
+        effectiveLocale,
+        normalizedBody,
+        normalizedTitle,
+        draftFlag
+      );
+    }
+
+    let associatedAttachments = [];
+    if (envConfig.defaultAttachmentIds.length > 0) {
+      associatedAttachments = await associateZendeskAttachments(
+        config,
+        articleId,
+        envConfig.defaultAttachmentIds
+      );
+    }
+
+    if (!articleUrl) {
+      articleUrl = buildZendeskArticleUrl(config.subdomain, effectiveLocale, articleId);
+    }
+
+    return {
+      success: true,
+      data: {
+        mode,
+        articleId,
+        locale: effectiveLocale,
+        articleUrl,
+        associatedAttachmentCount: associatedAttachments.length,
+      },
+    };
+  } catch (error) {
+    console.error('Zendesk publishManualWithEnv error:', error);
     return { success: false, error: error.message };
   }
 });
@@ -609,17 +1202,13 @@ ipcMain.handle('zendesk:updateArticleTranslation', async (event, config, article
  */
 ipcMain.handle('zendesk:getAllArticles', async (event, config, perPage = 100, page = 1) => {
   try {
-    const auth = Buffer.from(`${config.email}:${config.password}`).toString('base64');
+    const normalizedPerPage = Math.max(1, Math.min(100, Number.parseInt(String(perPage), 10) || 100));
+    const normalizedPage = Math.max(1, Number.parseInt(String(page), 10) || 1);
 
-    const options = {
-      hostname: `${config.subdomain}.zendesk.com`,
-      path: `/api/v2/help_center/articles.json?per_page=${perPage}&page=${page}`,
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json'
-      }
-    };
+    const options = buildZendeskRequestOptions(
+      config,
+      `/api/v2/help_center/articles.json?per_page=${normalizedPerPage}&page=${normalizedPage}`
+    );
 
     const data = await makeZendeskRequest(options);
     return { success: true, data };
@@ -635,17 +1224,13 @@ ipcMain.handle('zendesk:getAllArticles', async (event, config, perPage = 100, pa
  */
 ipcMain.handle('zendesk:getArticlesBySection', async (event, config, sectionId, locale = 'en-us') => {
   try {
-    const auth = Buffer.from(`${config.email}:${config.password}`).toString('base64');
+    const safeSectionId = toZendeskPathSegment(sectionId, 'sectionId');
+    const normalizedLocale = encodeURIComponent(normalizeZendeskLocale(locale));
 
-    const options = {
-      hostname: `${config.subdomain}.zendesk.com`,
-      path: `/api/v2/help_center/sections/${sectionId}/articles.json?locale=${locale}`,
-      method: 'GET',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json'
-      }
-    };
+    const options = buildZendeskRequestOptions(
+      config,
+      `/api/v2/help_center/sections/${safeSectionId}/articles.json?locale=${normalizedLocale}`
+    );
 
     const data = await makeZendeskRequest(options);
     return { success: true, data: data.articles };

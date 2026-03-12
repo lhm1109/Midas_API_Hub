@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Field Runtime State Engine
  * 
  * 스키마의 의미(visible, required, enabled)를 한 곳에서 계산하여
@@ -59,17 +59,84 @@ function normalizeValue(value: any, expectedValue: any): any {
   return value;
 }
 
+function splitPath(path: string): string[] {
+  return path
+    .split('.')
+    .map(part => part.replace(/\[\]/g, ''))
+    .filter(Boolean);
+}
+
+function commonPrefixLength(pathA: string, pathB: string): number {
+  const segA = splitPath(pathA);
+  const segB = splitPath(pathB);
+  const max = Math.min(segA.length, segB.length);
+
+  let count = 0;
+  for (let i = 0; i < max; i++) {
+    if (segA[i] !== segB[i]) break;
+    count++;
+  }
+  return count;
+}
+
+/**
+ * 조건 키 값을 안전하게 조회합니다.
+ * 우선순위:
+ * 1) 정확히 일치하는 키
+ * 2) ".{conditionKey}"로 끝나는 키 중 currentFieldKey와 prefix가 가장 가까운 값
+ */
+function resolveConditionValue(
+  conditionKey: string,
+  formValues: Record<string, any>,
+  currentFieldKey?: string
+): any {
+  const suffix = `.${conditionKey}`;
+  const candidates = Object.keys(formValues).filter((key) =>
+    !key.endsWith('._enabled') &&
+    (key === conditionKey || key.endsWith(suffix))
+  );
+
+  if (candidates.length === 0) {
+    return undefined;
+  }
+
+  if (!currentFieldKey) {
+    if (conditionKey in formValues) {
+      return formValues[conditionKey];
+    }
+    return formValues[candidates[0]];
+  }
+
+  let bestKey = candidates[0];
+  let bestScore = commonPrefixLength(bestKey, currentFieldKey);
+  let bestDepth = splitPath(bestKey).length;
+
+  for (let i = 1; i < candidates.length; i++) {
+    const candidate = candidates[i];
+    const score = commonPrefixLength(candidate, currentFieldKey);
+    const depth = splitPath(candidate).length;
+    if (score > bestScore || (score === bestScore && depth < bestDepth)) {
+      bestKey = candidate;
+      bestScore = score;
+      bestDepth = depth;
+    }
+  }
+
+  return formValues[bestKey];
+}
+
 /**
  * visibleWhen 조건 평가 (타입 정규화 적용)
  */
 function evaluateVisibleWhen(
   visibleWhen: Record<string, any> | undefined,
-  formValues: Record<string, any>
+  formValues: Record<string, any>,
+  currentFieldKey?: string
 ): boolean {
   if (!visibleWhen) return true;
 
   for (const [key, expectedValue] of Object.entries(visibleWhen)) {
-    const actualValue = formValues[key];
+    const actualValue = resolveConditionValue(key, formValues, currentFieldKey);
 
     // 🔥 타입 정규화: "3" vs 3 문제 해결
     const normalizedValue = normalizeValue(actualValue, expectedValue);
@@ -95,12 +162,13 @@ function evaluateVisibleWhen(
  */
 function evaluateRequiredWhen(
   requiredWhen: Record<string, any> | undefined,
-  formValues: Record<string, any>
+  formValues: Record<string, any>,
+  currentFieldKey?: string
 ): boolean {
   if (!requiredWhen) return false;
 
   for (const [key, expectedValue] of Object.entries(requiredWhen)) {
-    const actualValue = formValues[key];
+    const actualValue = resolveConditionValue(key, formValues, currentFieldKey);
 
     // 🔥 타입 정규화
     const normalizedValue = normalizeValue(actualValue, expectedValue);
@@ -155,7 +223,7 @@ function calculateFieldRequired(
     if (field.runtimeTriggers && field.runtimeTriggers.length > 0) {
       // 스키마가 명시한 트리거 필드 사용
       const triggerKey = field.runtimeTriggers[0];
-      triggerValue = formValues[triggerKey];
+      triggerValue = resolveConditionValue(triggerKey, formValues, field.key);
     } else {
       // Fallback: required 객체의 키 중 하나가 formValues에 있는지 확인
       // (예: TYPE, iMETHOD, MODE, STYPE 등)
@@ -198,7 +266,7 @@ function calculateFieldRequired(
   // 🔥 우선순위 2: x-required-when (UI 전용 규칙)
   const xRequiredWhen = (field as any)['x-required-when'];
   if (xRequiredWhen && typeof xRequiredWhen === 'object') {
-    const isCurrentlyRequired = evaluateRequiredWhen(xRequiredWhen, formValues);
+    const isCurrentlyRequired = evaluateRequiredWhen(xRequiredWhen, formValues, field.key);
     return {
       required: 'conditional',
       requiredNow: isCurrentlyRequired
@@ -225,7 +293,7 @@ function calculateFieldRequired(
         // 🎯 conditional이면 x-required-when을 다시 확인 (우선순위 2에서 놓친 경우)
         const xRequiredWhen = (field as any)['x-required-when'];
         if (xRequiredWhen && typeof xRequiredWhen === 'object') {
-          const isCurrentlyRequired = evaluateRequiredWhen(xRequiredWhen, formValues);
+          const isCurrentlyRequired = evaluateRequiredWhen(xRequiredWhen, formValues, field.key);
           return {
             required: 'conditional',
             requiredNow: isCurrentlyRequired
@@ -257,6 +325,55 @@ export function calculateFieldRuntimeStates(
   _variantAxes?: VariantAxis[]
 ): FieldRuntimeStateMap {
   const stateMap: FieldRuntimeStateMap = {};
+
+  const applyNestedFieldStates = (children: EnhancedField[], parentVisible: boolean): void => {
+    for (const child of children) {
+      const childXUiRules = (child as any)['x-uiRules'];
+      const childVisibleWhenCondition = childXUiRules?.visibleWhen ?? child.ui?.visibleWhen;
+      let childVisible = parentVisible && evaluateVisibleWhen(childVisibleWhenCondition, formValues, child.key);
+
+      const childXRequiredWhen = (child as any)['x-required-when'];
+      if (childVisible && childXRequiredWhen && typeof childXRequiredWhen === 'object') {
+        const conditionMet = evaluateRequiredWhen(childXRequiredWhen, formValues, child.key);
+        if (!conditionMet) {
+          childVisible = false;
+        }
+      }
+
+      const childXOptionalWhen = (child as any)['x-optional-when'];
+      if (childVisible && childXOptionalWhen) {
+        if (Array.isArray(childXOptionalWhen)) {
+          const anyConditionMet = childXOptionalWhen.some((item: any) => {
+            if (item.condition && typeof item.condition === 'object') {
+              return evaluateRequiredWhen(item.condition, formValues, child.key);
+            }
+            return false;
+          });
+          if (!anyConditionMet) {
+            childVisible = false;
+          }
+        } else if (typeof childXOptionalWhen === 'object') {
+          const conditionMet = evaluateRequiredWhen(childXOptionalWhen, formValues, child.key);
+          if (!conditionMet) {
+            childVisible = false;
+          }
+        }
+      }
+
+      const { required: childRequired, requiredNow: childRequiredNow } = calculateFieldRequired(child, formValues, childVisible);
+
+      stateMap[child.key] = {
+        visible: childVisible,
+        required: childRequired,
+        requiredNow: childRequiredNow,
+        enabled: childVisible,
+      };
+
+      if (child.children && Array.isArray(child.children) && child.children.length > 0) {
+        applyNestedFieldStates(child.children, childVisible);
+      }
+    }
+  };
 
   // 🔥 Step 0: 그룹별 허용 TYPE 사전 계산
   // 그룹 내 필드들의 x-required-when, x-optional-when에서 허용 TYPE 수집
@@ -303,13 +420,13 @@ export function calculateFieldRuntimeStates(
       // 레거시: x-ui.visibleWhen (하위 호환)
       const xUiRules = (field as any)['x-uiRules'];
       const visibleWhenCondition = xUiRules?.visibleWhen ?? field.ui?.visibleWhen;
-      let visible = evaluateVisibleWhen(visibleWhenCondition, formValues);
+      let visible = evaluateVisibleWhen(visibleWhenCondition, formValues, field.key);
 
       // 🔥 1.1: x-required-when이 있으면 조건이 맞지 않으면 숨김
       // 예: WALL_ID는 x-required-when: { TYPE: "WALL" } → TYPE=BEAM이면 숨김
       const xRequiredWhen = (field as any)['x-required-when'];
       if (visible && xRequiredWhen && typeof xRequiredWhen === 'object') {
-        const conditionMet = evaluateRequiredWhen(xRequiredWhen, formValues);
+        const conditionMet = evaluateRequiredWhen(xRequiredWhen, formValues, field.key);
         if (!conditionMet) {
           visible = false;
         }
@@ -324,7 +441,7 @@ export function calculateFieldRuntimeStates(
           // 배열의 모든 조건 중 하나라도 맞으면 표시
           const anyConditionMet = xOptionalWhen.some((item: any) => {
             if (item.condition && typeof item.condition === 'object') {
-              return evaluateRequiredWhen(item.condition, formValues);
+              return evaluateRequiredWhen(item.condition, formValues, field.key);
             }
             return false;
           });
@@ -334,7 +451,7 @@ export function calculateFieldRuntimeStates(
         }
         // 객체 형식 (단일 조건)
         else if (typeof xOptionalWhen === 'object') {
-          const conditionMet = evaluateRequiredWhen(xOptionalWhen, formValues);
+          const conditionMet = evaluateRequiredWhen(xOptionalWhen, formValues, field.key);
           if (!conditionMet) {
             visible = false;
           }
@@ -354,7 +471,7 @@ export function calculateFieldRuntimeStates(
         if (!groupLower.includes('common')) {
           const allowedTypes = groupAllowedTypes.get(uiGroup);
           if (allowedTypes && allowedTypes.size > 0) {
-            const currentType = formValues['TYPE'];
+            const currentType = resolveConditionValue('TYPE', formValues, field.key);
             if (currentType !== undefined && !allowedTypes.has(currentType)) {
               // 현재 TYPE이 그룹의 허용 TYPE 목록에 없음 → 숨김
               visible = false;
@@ -381,55 +498,9 @@ export function calculateFieldRuntimeStates(
 
       // 🔥 5. 자식 필드들도 처리 (중첩 필드)
       if (field.children && Array.isArray(field.children)) {
-        for (const child of field.children) {
-          // 새 철학: x-uiRules.visibleWhen 우선, x-ui.visibleWhen fallback
-          const childXUiRules = (child as any)['x-uiRules'];
-          const childVisibleWhenCondition = childXUiRules?.visibleWhen ?? child.ui?.visibleWhen;
-          let childVisible = evaluateVisibleWhen(childVisibleWhenCondition, formValues);
-
-          // 🔥 5.1: x-required-when 기반 visibility
-          const childXRequiredWhen = (child as any)['x-required-when'];
-          if (childVisible && childXRequiredWhen && typeof childXRequiredWhen === 'object') {
-            const conditionMet = evaluateRequiredWhen(childXRequiredWhen, formValues);
-            if (!conditionMet) {
-              childVisible = false;
-            }
-          }
-
-          // 🔥 5.2: x-optional-when 기반 visibility
-          const childXOptionalWhen = (child as any)['x-optional-when'];
-          if (childVisible && childXOptionalWhen) {
-            if (Array.isArray(childXOptionalWhen)) {
-              const anyConditionMet = childXOptionalWhen.some((item: any) => {
-                if (item.condition && typeof item.condition === 'object') {
-                  return evaluateRequiredWhen(item.condition, formValues);
-                }
-                return false;
-              });
-              if (!anyConditionMet) {
-                childVisible = false;
-              }
-            } else if (typeof childXOptionalWhen === 'object') {
-              const conditionMet = evaluateRequiredWhen(childXOptionalWhen, formValues);
-              if (!conditionMet) {
-                childVisible = false;
-              }
-            }
-          }
-
-          // NOTE: x-required-by-type, x-enum-by-type visibility 체크는
-          // deprecated (shared.yaml SSOT). allOf[].if.then 기반으로 동적 처리됨.
-
-          const { required: childRequired, requiredNow: childRequiredNow } = calculateFieldRequired(child, formValues, childVisible);
-
-          stateMap[child.key] = {
-            visible: childVisible,
-            required: childRequired,
-            requiredNow: childRequiredNow,
-            enabled: childVisible,
-          };
-        }
+        applyNestedFieldStates(field.children, visible);
       }
+
     }
   }
 
@@ -486,3 +557,4 @@ export function shouldIncludeInJSON(
   // ⚠️ 0, false는 정상 값이므로 제외하지 않음
   return value !== undefined && value !== '' && value !== null;
 }
+

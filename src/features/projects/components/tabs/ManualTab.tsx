@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,14 +7,50 @@ import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save, Tr
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
 import Editor from '@monaco-editor/react';
+import { toast } from 'sonner';
 
 interface ManualTabProps {
   endpoint: ApiEndpoint;
 }
 
+const DEFAULT_ZENDESK_LOCALE = 'en-us';
+const ZENDESK_SERVER_BASE_URL = 'http://localhost:9527';
+
+interface ZendeskEnvStatus {
+  baseUrl?: string;
+  subdomain: string;
+  defaultLocale: string;
+  defaultArticleUrl: string;
+  defaultArticleId?: string;
+  defaultSectionId?: number | null;
+  defaultPermissionGroupId?: number | null;
+  defaultUserSegmentId?: number | null;
+  defaultUserSegmentIds?: number[];
+  defaultLabels?: string[];
+  defaultContentTagIds?: string[];
+  defaultPromoted?: boolean | null;
+  defaultCommentsDisabled?: boolean | null;
+  defaultNotifySubscribers?: boolean | null;
+  defaultDraft?: boolean | null;
+  defaultAttachmentIds?: number[];
+  hasCredentials: boolean;
+  authType: 'token' | 'password' | null;
+  missingFields: string[];
+}
+
+function normalizeZendeskLocale(locale?: string): string {
+  const normalized = String(locale || '')
+    .trim()
+    .replace(/_/g, '-')
+    .toLowerCase();
+  return normalized || DEFAULT_ZENDESK_LOCALE;
+}
+
 export function ManualTab({ endpoint }: ManualTabProps) {
   const { manualData, setManualData } = useAppStore();
   const [zendeskUrl, setZendeskUrl] = useState('');
+  const [zendeskEnvStatus, setZendeskEnvStatus] = useState<ZendeskEnvStatus | null>(null);
+  const [isZendeskSending, setIsZendeskSending] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -24,6 +60,42 @@ export function ManualTab({ endpoint }: ManualTabProps) {
   // 🎯 Editable HTML State
   const [editableHTML, setEditableHTML] = useState('');
   const [isHTMLModified, setIsHTMLModified] = useState(false);
+
+  const loadZendeskEnvStatus = async (): Promise<ZendeskEnvStatus | null> => {
+    try {
+      const zendeskAPI = window.electronAPI?.zendesk;
+      let result: { success: boolean; data?: ZendeskEnvStatus; error?: string } | null = null;
+
+      if (zendeskAPI?.getEnvConfig) {
+        result = await zendeskAPI.getEnvConfig();
+      } else {
+        const response = await fetch(`${ZENDESK_SERVER_BASE_URL}/api/zendesk/env`);
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) {
+          const errorMessage = payload?.error || `HTTP ${response.status}`;
+          throw new Error(errorMessage);
+        }
+        result = payload;
+      }
+
+      if (!result?.success || !result.data) {
+        setZendeskEnvStatus(null);
+        return null;
+      }
+
+      setZendeskEnvStatus(result.data);
+      setZendeskUrl((current) => (current.trim() ? current : result.data?.defaultArticleUrl || ''));
+      return result.data;
+    } catch (error) {
+      console.warn('Failed to load Zendesk env config:', error);
+      setZendeskEnvStatus(null);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    void loadZendeskEnvStatus();
+  }, []);
 
   // 🎯 Zoom 리셋
   const handleResetZoom = () => {
@@ -325,7 +397,7 @@ ${specifications}`;
     reader.onload = (_event) => {
       // const htmlContent = event.target?.result as string;
       // TODO: Parse HTML and extract manualData
-      alert('Import functionality: Parse HTML to extract manual data');
+      toast.info('Import functionality: Parse HTML to extract manual data');
     };
     reader.readAsText(file);
   };
@@ -345,19 +417,87 @@ ${specifications}`;
   };
 
   // 🚀 Send to Zendesk
-  const handleSendToZendesk = () => {
-    if (!zendeskUrl.trim()) {
-      alert('Please enter a Zendesk URL');
+  const handleSendToZendesk = async () => {
+    if (!manualData) {
+      toast.error('Manual 데이터가 없습니다. Spec/Builder/Runner에서 먼저 전송하세요.');
+      return;
+    }
+
+    const zendeskAPI = window.electronAPI?.zendesk;
+    const useElectronPublisher = !!zendeskAPI?.publishManualWithEnv;
+
+    const envStatus = zendeskEnvStatus ?? await loadZendeskEnvStatus();
+    if (!envStatus?.hasCredentials) {
+      const missingMessage = envStatus?.missingFields?.length
+        ? envStatus.missingFields.join(', ')
+        : 'ZENDESK_SUBDOMAIN/ZENDESK_BASE_URL, ZENDESK_EMAIL, ZENDESK_API_TOKEN';
+      toast.error(`.env에 Zendesk 설정이 필요합니다: ${missingMessage}`);
       return;
     }
 
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
+    const title = (manualData.title || endpoint.name || '').trim();
+    const locale = normalizeZendeskLocale(envStatus.defaultLocale || DEFAULT_ZENDESK_LOCALE);
 
-    // TODO: Implement Zendesk API integration
-    console.log('Sending to Zendesk:', zendeskUrl);
-    console.log('HTML Content:', html);
+    try {
+      setIsZendeskSending(true);
+      let result: {
+        success: boolean;
+        data?: {
+          mode: 'create' | 'update';
+          articleId: string;
+          locale: string;
+          articleUrl: string;
+          associatedAttachmentCount: number;
+        };
+        error?: string;
+      };
 
-    alert(`✅ Manual would be sent to: ${zendeskUrl}\n(Zendesk API integration required)`);
+      if (useElectronPublisher) {
+        result = await zendeskAPI!.publishManualWithEnv(
+          zendeskUrl.trim(),
+          locale,
+          html,
+          title || undefined,
+          undefined
+        );
+      } else {
+        const response = await fetch(`${ZENDESK_SERVER_BASE_URL}/api/zendesk/publish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            targetInput: zendeskUrl.trim(),
+            locale,
+            body: html,
+            title: title || undefined,
+            draft: undefined,
+          }),
+        });
+
+        const payload = await response.json().catch(() => null);
+        result = payload || { success: false, error: `HTTP ${response.status}` };
+      }
+
+      if (!result.success) {
+        toast.error(`Zendesk 전송 실패: ${result.error || 'Unknown error'}`);
+        return;
+      }
+
+      const modeLabel = result.data?.mode === 'create' ? '생성' : '업데이트';
+      const articleId = result.data?.articleId || '(unknown)';
+      const articleLocale = result.data?.locale || locale;
+      const attachmentCount = result.data?.associatedAttachmentCount || 0;
+      const articleUrl = result.data?.articleUrl;
+      if (articleUrl) {
+        setZendeskUrl(articleUrl);
+      }
+
+      toast.success(`Zendesk ${modeLabel} 완료 (Article ${articleId}, ${articleLocale}, Attachments ${attachmentCount})`);
+    } catch (error) {
+      toast.error(`Zendesk 전송 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsZendeskSending(false);
+    }
   };
 
   // 🎯 Switch to HTML Code mode
@@ -415,6 +555,15 @@ ${specifications}`;
 
   // 🎯 htmlContent: editableHTML이 있으면 그것을 사용, 없으면 generateHTML()
   const htmlContent = editableHTML || generateHTML();
+  const hasElectronZendeskSender = typeof window !== 'undefined' && !!window.electronAPI?.zendesk?.publishManualWithEnv;
+  const hasZendeskSender = typeof window !== 'undefined';
+  const zendeskStatusText = zendeskEnvStatus
+    ? zendeskEnvStatus.hasCredentials
+      ? `${zendeskEnvStatus.subdomain}.zendesk.com (${zendeskEnvStatus.authType === 'token' ? 'Token' : 'Password'}) · Section ${zendeskEnvStatus.defaultSectionId ?? 'N/A'}`
+      : `Missing: ${zendeskEnvStatus.missingFields.join(', ')}`
+    : hasElectronZendeskSender
+      ? 'Loading .env...'
+      : 'Server mode (dev:all)';
 
   return (
     <div className="flex h-full w-full flex-col bg-zinc-950 relative">
@@ -487,12 +636,26 @@ ${specifications}`;
             <Input
               value={zendeskUrl}
               onChange={(e) => setZendeskUrl(e.target.value)}
-              placeholder="https://your-zendesk.com/api/v2/..."
+              placeholder="Article URL/ID (비우면 기본 Section에 신규 생성)"
               className="bg-zinc-800 border-zinc-700 h-7 text-xs flex-1 min-w-0"
             />
-            <Button size="sm" onClick={handleSendToZendesk} className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-500 whitespace-nowrap">
+            <span
+              className={`hidden xl:inline text-[10px] whitespace-nowrap ${
+                zendeskEnvStatus?.hasCredentials ? 'text-emerald-400' : 'text-amber-400'
+              }`}
+              title={zendeskStatusText}
+            >
+              {zendeskEnvStatus?.hasCredentials ? 'Env Ready' : 'Env Check'}
+            </span>
+            <Button
+              size="sm"
+              onClick={handleSendToZendesk}
+              disabled={isZendeskSending || !hasZendeskSender}
+              title={zendeskStatusText}
+              className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-500 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Send className="w-3 h-3 mr-1" />
-              Send
+              {isZendeskSending ? 'Sending...' : 'Send'}
             </Button>
           </div>
         </div>

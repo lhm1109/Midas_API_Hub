@@ -32,11 +32,77 @@ export interface ElectronTerminalAPI {
     removeListeners: () => void;
 }
 
+export interface ZendeskEnvConfig {
+    baseUrl?: string;
+    subdomain: string;
+    defaultLocale: string;
+    defaultArticleUrl: string;
+    defaultArticleId?: string;
+    defaultSectionId?: number | null;
+    defaultPermissionGroupId?: number | null;
+    defaultUserSegmentId?: number | null;
+    defaultUserSegmentIds?: number[];
+    defaultLabels?: string[];
+    defaultContentTagIds?: string[];
+    defaultPromoted?: boolean | null;
+    defaultCommentsDisabled?: boolean | null;
+    defaultNotifySubscribers?: boolean | null;
+    defaultDraft?: boolean | null;
+    defaultAttachmentIds?: number[];
+    hasCredentials: boolean;
+    authType: 'token' | 'password' | null;
+    missingFields: string[];
+}
+
+export interface ElectronZendeskAPI {
+    getEnvConfig: () => Promise<{ success: boolean; data?: ZendeskEnvConfig; error?: string }>;
+    getAllTranslations: (config: any, articleId: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+    getArticleTranslation: (config: any, articleId: string, locale: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+    updateArticleTranslation: (
+        config: any,
+        articleId: string,
+        locale: string,
+        body: string,
+        title?: string,
+        draft?: boolean
+    ) => Promise<{ success: boolean; data?: any; error?: string }>;
+    updateArticleTranslationWithEnv: (
+        articleId: string,
+        locale: string,
+        body: string,
+        title?: string,
+        draft?: boolean
+    ) => Promise<{ success: boolean; data?: any; error?: string }>;
+    publishManualWithEnv: (
+        targetInput: string,
+        locale: string,
+        body: string,
+        title?: string,
+        draft?: boolean
+    ) => Promise<{
+        success: boolean;
+        data?: {
+            mode: 'create' | 'update';
+            articleId: string;
+            locale: string;
+            articleUrl: string;
+            associatedAttachmentCount: number;
+        };
+        error?: string;
+    }>;
+    getAllArticles: (config: any, perPage?: number, page?: number) => Promise<{ success: boolean; data?: any; error?: string }>;
+    getArticlesBySection: (config: any, sectionId: string, locale?: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+}
+
 declare global {
     interface Window {
         electronAPI?: {
+            invoke?: (channel: string, ...args: any[]) => Promise<any>;
             terminal?: ElectronTerminalAPI;
-            // ... other APIs
+            zendesk?: ElectronZendeskAPI;
+            locks?: {
+                releaseAll: (userId: string) => Promise<{ success: boolean; error?: string }>;
+            };
         };
     }
 }

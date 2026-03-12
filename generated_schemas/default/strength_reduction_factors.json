@@ -1,0 +1,73 @@
+{
+  "type": "object",
+  "description": "Strength Reduction Factors settings (shared structure: T_DSTL_D). Supported methods: GET, PUT. Checklist Text (view-only).",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by ID strings (e.g., \"1\"), where each entry represents an element.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "PHI_T1": {
+              "type": "number",
+              "description": "For Yielding in Gross Section (phi_t1)",
+              "default": 0.9,
+              "x-ui": {
+                "label": "For Yielding in Gross Section (phi_t1)",
+                "order": 1
+              }
+            },
+            "PHI_T2": {
+              "type": "number",
+              "description": "For Fracture in Net Section (phi_t2) - read-only fixed value",
+              "const": 0.75,
+              "default": 0.75,
+              "readOnly": true,
+              "x-ui": {
+                "label": "For Fracture in Net Section (phi_t2)",
+                "hint": "Read-only fixed value: 0.75",
+                "order": 2
+              }
+            },
+            "PHI_C": {
+              "type": "number",
+              "description": "For Compression Members (phi_c)",
+              "default": 0.9,
+              "x-ui": {
+                "label": "For Compression Members (phi_c)",
+                "order": 3
+              }
+            },
+            "PHI_B": {
+              "type": "number",
+              "description": "For Flexural Members (phi_b)",
+              "default": 0.9,
+              "x-ui": {
+                "label": "For Flexural Members (phi_b)",
+                "order": 4
+              }
+            },
+            "PHI_V": {
+              "type": "number",
+              "description": "For Shear (phi_v)",
+              "default": 0.9,
+              "x-ui": {
+                "label": "For Shear (phi_v)",
+                "order": 5
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

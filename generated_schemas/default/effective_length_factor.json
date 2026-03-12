@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\"). Checklist Text (view-only).",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "Ky": {
+              "type": "number",
+              "description": "Ky",
+              "default": 1.0,
+              "x-ui": {
+                "label": "Ky",
+                "order": 1
+              }
+            },
+            "Kz": {
+              "type": "number",
+              "description": "Kz",
+              "default": 1.0,
+              "x-ui": {
+                "label": "Kz",
+                "order": 2
+              }
+            },
+            "Kt": {
+              "type": "number",
+              "description": "Kt",
+              "default": 1.0,
+              "x-ui": {
+                "label": "Kt",
+                "order": 3
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

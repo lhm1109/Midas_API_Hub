@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Play, Trash2, FileText, Clock, Send, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatJsonToHTML } from '@/lib/utils/htmlFormatter';
@@ -48,9 +48,12 @@ export function RunnerTab({
 
   const requestBody = runnerData?.requestBody || '{}';
   const testCases = runnerData?.testCases || [];
+  const selectedTestCaseId = runnerData?.selectedTestCaseId || null;
+  const selectedTestCaseDraftBody = runnerData?.selectedTestCaseDraftBody || null;
 
   // 🎯 메뉴얼 데이터가 있으면 그것의 inputUri를 사용, 없으면 현재 endpoint.path 사용
   const endpointPath = manualData?.inputUri || endpoint.path;
+  const defaultUrl = `${settings.baseUrl}${endpointPath}`;
 
   const [method, setMethod] = useState<string>(endpoint.method);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,9 +67,41 @@ export function RunnerTab({
   // 🎯 Send to Manual 다이얼로그 상태
   const [showSendToManualDialog, setShowSendToManualDialog] = useState(false);
   const [exampleTitle, setExampleTitle] = useState('');
+  const endpointIdRef = useRef(endpoint.id);
 
-  // 🎯 선택된 Test Case 상태
-  const [selectedTestCaseId, setSelectedTestCaseId] = useState<string | null>(null);
+  // URL 입력값 초기화/유지
+  // - 최초 진입: 기본 URL 세팅
+  // - endpoint 변경: 해당 endpoint의 기본 URL로 재설정
+  useEffect(() => {
+    const endpointChanged = endpointIdRef.current !== endpoint.id;
+    if (endpointChanged) {
+      endpointIdRef.current = endpoint.id;
+      if (runnerData?.url !== defaultUrl) {
+        updateRunnerData({ url: defaultUrl });
+      }
+      return;
+    }
+
+    if (runnerData?.url === undefined) {
+      updateRunnerData({ url: defaultUrl });
+    }
+  }, [endpoint.id, defaultUrl, runnerData?.url, updateRunnerData]);
+
+  // 탭 재진입/외부 탭 이동 후에도 선택된 Test Case body를 유지
+  useEffect(() => {
+    if (!selectedTestCaseId) return;
+    if (testCases.length === 0) return;
+
+    const testCase = testCases.find(tc => tc.id === selectedTestCaseId);
+    if (!testCase) {
+      return;
+    }
+
+    const bodyToRestore = selectedTestCaseDraftBody ?? testCase.requestBody;
+    if (requestBody !== bodyToRestore) {
+      updateRunnerData({ requestBody: bodyToRestore });
+    }
+  }, [requestBody, selectedTestCaseDraftBody, selectedTestCaseId, testCases, updateRunnerData]);
 
   // 🔥 Request Body를 Assign 래퍼로 변환하는 함수
   const wrapWithAssign = (body: string, endpointName: string): string => {
@@ -139,8 +174,15 @@ export function RunnerTab({
         ? wrapWithAssign(requestBody, endpoint.name)
         : undefined;
 
+      const targetUrl = (runnerData?.url ?? defaultUrl).trim();
+      if (!targetUrl) {
+        toast.error('Please enter a valid request URL.');
+        setIsLoading(false);
+        return;
+      }
+
       // 🔥 실제 API 호출
-      const response = await fetch(fullUrl, {
+      const response = await fetch(targetUrl, {
         method: method,
         headers: headers,
         body: finalRequestBody,
@@ -229,7 +271,7 @@ export function RunnerTab({
     if (confirm('Are you sure you want to delete this test case?')) {
       deleteTestCase(caseId);
       if (selectedTestCaseId === caseId) {
-        setSelectedTestCaseId(null);
+        updateRunnerData({ selectedTestCaseId: null, selectedTestCaseDraftBody: null });
       }
 
       // 🔥 글로벌 저장 (DB에 영구 저장)
@@ -249,8 +291,11 @@ export function RunnerTab({
     if (!testCase) return;
 
     // Request Body 로드
-    updateRunnerData({ requestBody: testCase.requestBody });
-    setSelectedTestCaseId(testCaseId);
+    updateRunnerData({
+      requestBody: testCase.requestBody,
+      selectedTestCaseId: testCaseId,
+      selectedTestCaseDraftBody: testCase.requestBody,
+    });
 
     // 🔥 Response도 함께 로드
     if (testCase.responseBody) {
@@ -288,6 +333,7 @@ export function RunnerTab({
         responseTime: response.time,
         updatedAt: new Date().toISOString(),
       });
+      updateRunnerData({ selectedTestCaseDraftBody: requestBody });
 
       // DB에 저장
       await saveCurrentVersion();
@@ -346,7 +392,7 @@ export function RunnerTab({
     toast.success(`✅ Example "${exampleTitle}" added to Manual tab!`);
   };
 
-  const fullUrl = `${settings.baseUrl}${endpointPath}`;
+  const urlInputValue = runnerData?.url ?? defaultUrl;
 
   return (
     <div className="flex h-full w-full">
@@ -445,8 +491,8 @@ export function RunnerTab({
 
             {/* URL Input */}
             <Input
-              value={fullUrl}
-              readOnly
+              value={urlInputValue}
+              onChange={(e) => updateRunnerData({ url: e.target.value })}
               className="flex-1 bg-zinc-800 border-zinc-700 text-sm font-mono"
             />
 
@@ -472,7 +518,17 @@ export function RunnerTab({
             <div className="flex-1 h-full">
               <CodeEditor
                 value={requestBody}
-                onChange={(value) => updateRunnerData({ requestBody: value || '{}' })}
+                onChange={(value) => {
+                  const nextBody = value || '{}';
+                  if (selectedTestCaseId) {
+                    updateRunnerData({
+                      requestBody: nextBody,
+                      selectedTestCaseDraftBody: nextBody,
+                    });
+                    return;
+                  }
+                  updateRunnerData({ requestBody: nextBody });
+                }}
                 language="json"
                 minimap={false}
               />

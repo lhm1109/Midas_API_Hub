@@ -28,8 +28,11 @@ export interface UIBuilderField {
   required: boolean;
   default?: any;
   enum?: any[];
+  enumLabels?: Record<string, string>;
   placeholder?: string;
-  items?: { type: string };
+  items?: { type: string; enum?: any[] };
+  uiComponent?: string;
+  enumLabelsByType?: Record<string, Record<string, string>>;
   children?: UIBuilderField[];
   oneOfOptions?: string[];
   optionIndex?: number;
@@ -281,8 +284,16 @@ function adaptFieldToBuilder(
     required,
     default: field.default,
     enum: buildEnumArray(field, currentType),
+    enumLabels: (field as any)['x-enum-labels'] || (field as any).enumLabels,
     placeholder: buildHint(field, currentType),
-    items: field.type === 'array' ? { type: field.items?.type || 'any' } : undefined,
+    items: field.type === 'array'
+      ? {
+          type: field.items?.type || 'any',
+          enum: Array.isArray((field.items as any)?.enum) ? (field.items as any).enum : undefined,
+        }
+      : undefined,
+    uiComponent: field.ui?.component,
+    enumLabelsByType: (field as any)['x-enum-labels-by-type'] || (field as any).enumLabelsByType,
     visible,
     valueConstraint: buildValueConstraint(field, currentType)
   };
@@ -673,4 +684,3 @@ export function buildCleanJSON(
   
   return result;
 }
-

@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "description": "Moment Magnifier (B1/Delta_b, B2/Delta_s) settings (name changed: MMAG -> FMAG). Checklist Text (view-only).",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "B1Y_DELTA_BY": {
+              "type": "number",
+              "description": "B1y - Delta by (First Order Moment Y)",
+              "default": 1.0,
+              "x-ui": {
+                "label": "B1y - Delta by (First Order Moment Y)",
+                "order": 1
+              }
+            },
+            "B1Z_DELTA_BZ": {
+              "type": "number",
+              "description": "B1z - Delta bz (First Order Moment Z)",
+              "default": 1.0,
+              "x-ui": {
+                "label": "B1z - Delta bz (First Order Moment Z)",
+                "order": 2
+              }
+            },
+            "B2Y_DELTA_SY": {
+              "type": "number",
+              "description": "B2y - Delta sy (Second Order Moment Y)",
+              "default": 1.0,
+              "x-ui": {
+                "label": "B2y - Delta sy (Second Order Moment Y)",
+                "order": 3
+              }
+            },
+            "B2Z_DELTA_SZ": {
+              "type": "number",
+              "description": "B2z - Delta sz (Second Order Moment Z)",
+              "default": 1.0,
+              "x-ui": {
+                "label": "B2z - Delta sz (Second Order Moment Z)",
+                "order": 4
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

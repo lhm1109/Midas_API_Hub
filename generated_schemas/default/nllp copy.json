@@ -1,0 +1,551 @@
+{
+    "title": "NLLP",
+    "type": "object",
+    "required": [
+        "Assign"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "Assign": {
+            "type": "object",
+            "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "patternProperties": {
+                "^[0-9]+$": {
+                    "title": "NLLP",
+                    "type": "object",
+                    "required": [
+                        "PROPERTY_NAME",
+                        "APPLICATION_TYPE",
+                        "APPLICATION_TYPE_D"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "PROPERTY_NAME": {
+                            "type": "string",
+                            "description": "PropertyName",
+                            "x-ui": {
+                                "groupId": "BASIC",
+                                "label": "Property Name"
+                            }
+                        },
+                        "APPLICATION_TYPE": {
+                            "type": "string",
+                            "description": "ApplicationType",
+                            "enum": [
+                                "ELEMENT",
+                                "ELEMENT2",
+                                "FORCE"
+                            ],
+                            "x-ui": {
+                                "groupId": "BASIC",
+                                "label": "Application Type"
+                            }
+                        },
+                        "APPLICATION_TYPE_D": {
+                            "type": "string",
+                            "description": "ApplicationType(Detail)",
+                            "enum": [
+                                "SPG",
+                                "DSP",
+                                "SLD",
+                                "VI",
+                                "VE",
+                                "ST",
+                                "HY",
+                                "IS",
+                                "VD"
+                            ],
+                            "x-ui": {
+                                "groupId": "BASIC",
+                                "label": "Detail Type"
+                            }
+                        },
+                        "DESC": {
+                            "type": "string",
+                            "description": "Description",
+                            "x-ui": {
+                                "groupId": "BASIC",
+                                "label": "Description"
+                            }
+                        },
+                        "TOTAL_WEIGHT": {
+                            "type": "number",
+                            "description": "TotalWeight",
+                            "x-ui": {
+                                "groupId": "MASS_WEIGHT",
+                                "label": "Total Weight"
+                            }
+                        },
+                        "L_WEIGHT_RATIO": {
+                            "type": "number",
+                            "description": "LumpedWeightRatio(I-End:J-End)",
+                            "x-ui": {
+                                "groupId": "MASS_WEIGHT",
+                                "label": "Lumped Weight Ratio"
+                            }
+                        },
+                        "OPT_USE_MASS": {
+                            "type": "boolean",
+                            "description": "UseMass",
+                            "x-ui": {
+                                "groupId": "MASS_WEIGHT",
+                                "label": "Use Mass"
+                            }
+                        },
+                        "TOTAL_MASS": {
+                            "type": "number",
+                            "description": "TotalMass",
+                            "x-optional-when": {
+                                "OPT_USE_MASS": true
+                            },
+                            "x-ui": {
+                                "groupId": "MASS_WEIGHT",
+                                "label": "Total Mass"
+                            }
+                        },
+                        "L_MASS_RATIO": {
+                            "type": "number",
+                            "description": "LumpedMassRatio(I-End:J-End)",
+                            "x-optional-when": {
+                                "OPT_USE_MASS": true
+                            },
+                            "x-ui": {
+                                "groupId": "MASS_WEIGHT",
+                                "label": "Lumped Mass Ratio"
+                            }
+                        },
+                        "OPT_SHEAR_SPR_LOC": {
+                            "type": "boolean",
+                            "description": "ShearSpringLocation",
+                            "x-ui": {
+                                "groupId": "COUPLED",
+                                "label": "Shear Spring Location"
+                            }
+                        },
+                        "COUPLED_INPUT_METHOD": {
+                            "type": "integer",
+                            "description": "CoupledInputMethod",
+                            "oneOf": [
+                                {
+                                    "const": 0,
+                                    "title": "Uncoupled"
+                                },
+                                {
+                                    "const": 1,
+                                    "title": "Coupled"
+                                }
+                            ],
+                            "x-ui": {
+                                "groupId": "COUPLED",
+                                "component": "RadioGroup",
+                                "label": "Coupled Input Method"
+                            }
+                        },
+                        "DIST_RATIO_DY": {
+                            "type": "number",
+                            "description": "DistanceRatioFromEndI(Dy)",
+                            "x-ui": {
+                                "groupId": "COUPLED",
+                                "label": "Distance Ratio (Dy)"
+                            }
+                        },
+                        "DIST_RATIO_DZ": {
+                            "type": "number",
+                            "description": "DistanceRatioFromEndI(Dz)",
+                            "x-ui": {
+                                "groupId": "COUPLED",
+                                "label": "Distance Ratio (Dz)"
+                            }
+                        },
+                        "SEIS_TYPE": {
+                            "type": "integer",
+                            "description": "SeismicControlDevicesType",
+                            "x-ui": {
+                                "groupId": "SEISMIC",
+                                "label": "Seismic Type"
+                            }
+                        },
+                        "SEIS_PROP": {
+                            "type": "string",
+                            "description": "SeismicControlDevicesProperties",
+                            "x-ui": {
+                                "groupId": "SEISMIC",
+                                "label": "Seismic Properties"
+                            }
+                        },
+                        "LDP_EFF_STIFF_COUPLED_ITEMS": {
+                            "type": "array",
+                            "description": "EffectiveStiffnessCoupled",
+                            "items": {
+                                "type": "number"
+                            },
+                            "x-ui": {
+                                "groupId": "COUPLED_MATRIX",
+                                "label": "Eff. Stiffness (Coupled)"
+                            }
+                        },
+                        "LDP_EFF_DAMPING_COUPLED_ITEMS": {
+                            "type": "array",
+                            "description": "EffectiveDampingCoupled",
+                            "items": {
+                                "type": "number"
+                            },
+                            "x-ui": {
+                                "groupId": "COUPLED_MATRIX",
+                                "label": "Eff. Damping (Coupled)"
+                            }
+                        },
+                        "ITEMS": {
+                            "type": "array",
+                            "description": "SelectedItemsDetail",
+                            "x-ui": {
+                                "groupId": "NONLINEAR_ITEMS",
+                                "label": "Direction Items"
+                            },
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "INDEX": {
+                                        "type": "integer",
+                                        "description": "Index"
+                                    },
+                                    "LINEAR_PROP": {
+                                        "type": "boolean",
+                                        "description": "LinearProperties"
+                                    },
+                                    "EFF_STIFF": {
+                                        "type": "number",
+                                        "description": "EffectiveStiffness"
+                                    },
+                                    "EFF_DAMPING": {
+                                        "type": "number",
+                                        "description": "EffectiveDamping"
+                                    },
+                                    "NONLINEAR_PROP": {
+                                        "type": "boolean",
+                                        "description": "NonlinearProperties"
+                                    },
+                                    "VD": {
+                                        "type": "object",
+                                        "description": "Visco-elasticDamper",
+                                        "properties": {
+                                            "DAMPER_STIFFNESS": {
+                                                "type": "number",
+                                                "description": "DamperStiffness(kd)"
+                                            },
+                                            "DAMPING": {
+                                                "type": "number",
+                                                "description": "ReferenceDampingForce"
+                                            },
+                                            "DAMPING_EXP": {
+                                                "type": "number",
+                                                "description": "DampingExponent(s)"
+                                            },
+                                            "BRACING_STIFFNESS": {
+                                                "type": "number",
+                                                "description": "BracingStiffness(kb)"
+                                            },
+                                            "REF_VELOCITY": {
+                                                "type": "number",
+                                                "description": "ReferenceVelocity(V0)"
+                                            },
+                                            "DAMPER_TYPE": {
+                                                "type": "integer",
+                                                "description": "DamperType"
+                                            }
+                                        }
+                                    },
+                                    "GAP": {
+                                        "type": "object",
+                                        "description": "Gap",
+                                        "properties": {
+                                            "STIFFNESS": {
+                                                "type": "number",
+                                                "description": "Stiffness(k)"
+                                            },
+                                            "OPN": {
+                                                "type": "number",
+                                                "description": "Open(o)"
+                                            }
+                                        }
+                                    },
+                                    "HOOK": {
+                                        "type": "object",
+                                        "description": "Hook",
+                                        "properties": {
+                                            "STIFFNESS": {
+                                                "type": "number",
+                                                "description": "Stiffness(k)"
+                                            },
+                                            "OPN": {
+                                                "type": "number",
+                                                "description": "Open(o)"
+                                            }
+                                        }
+                                    },
+                                    "HS": {
+                                        "type": "object",
+                                        "description": "HystereticSystem",
+                                        "properties": {
+                                            "STIFFNESS": {
+                                                "type": "number",
+                                                "description": "Stiffness(kd)"
+                                            },
+                                            "YIELD_STRENGTH": {
+                                                "type": "number",
+                                                "description": "YieldStrength(Fy)"
+                                            },
+                                            "POST_YIELD_STIFF_RATIO": {
+                                                "type": "number",
+                                                "description": "PostYieldStiffnessRatio(r)"
+                                            },
+                                            "YIELD_EXP": {
+                                                "type": "number",
+                                                "description": "YieldExponent(s)"
+                                            },
+                                            "LOOP_PARAM_A": {
+                                                "type": "number",
+                                                "description": "HysterticLoopParameter(a)"
+                                            },
+                                            "LOOP_PARAM_B": {
+                                                "type": "number",
+                                                "description": "HysterticLoopParameter(b)"
+                                            }
+                                        }
+                                    },
+                                    "LRBI": {
+                                        "type": "object",
+                                        "description": "LeadRubberBearingIsolator",
+                                        "properties": {
+                                            "STIFFNESS": {
+                                                "type": "number",
+                                                "description": "Stiffness(kd)"
+                                            },
+                                            "YIELD_STRENGTH": {
+                                                "type": "number",
+                                                "description": "YieldStrength(Fy)"
+                                            },
+                                            "POST_YIELD_STIFF_RATIO": {
+                                                "type": "number",
+                                                "description": "PostYieldStiffnessRatio(r)"
+                                            },
+                                            "LOOP_PARAM_A": {
+                                                "type": "number",
+                                                "description": "HysterticLoopParameter(a)"
+                                            },
+                                            "LOOP_PARAM_B": {
+                                                "type": "number",
+                                                "description": "HysterticLoopParameter(b)"
+                                            }
+                                        }
+                                    },
+                                    "FPSI": {
+                                        "type": "object",
+                                        "description": "FrictionPendulumSystemIsolator",
+                                        "properties": {
+                                            "STIFFNESS": {
+                                                "type": "number",
+                                                "description": "Stiffness(k)"
+                                            },
+                                            "FRIC_COEFF_SLOW": {
+                                                "type": "number",
+                                                "description": "FrictionalCoefficient,Slow(us)"
+                                            },
+                                            "FRIC_COEFF_FAST": {
+                                                "type": "number",
+                                                "description": "FrictionalCoefficient,Fast(uf)"
+                                            },
+                                            "RATE_PARAMETER": {
+                                                "type": "number",
+                                                "description": "RateParameter(r)"
+                                            },
+                                            "RADIUS_OF_SLIDING_SURFACE": {
+                                                "type": "number",
+                                                "description": "RadiusofSlidingSurface(R)"
+                                            },
+                                            "LOOP_PARAM_A": {
+                                                "type": "number",
+                                                "description": "HysterticLoopParameter(a)"
+                                            },
+                                            "LOOP_PARAM_B": {
+                                                "type": "number",
+                                                "description": "HysterticLoopParameter(b)"
+                                            }
+                                        }
+                                    },
+                                    "TFPSI": {
+                                        "type": "object",
+                                        "description": "TripleFrictionPendulumSystemIsolator",
+                                        "properties": {
+                                            "OPT_SYM_OUT": {
+                                                "type": "boolean",
+                                                "description": "SymmetricofOuterSurface"
+                                            },
+                                            "STIFFNESS_ITEMS": {
+                                                "type": "array",
+                                                "description": "Stiffness(k)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "FRIC_COEFF_SLOW_ITEMS": {
+                                                "type": "array",
+                                                "description": "FrictionalCoefficient,Slow(us)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "FRIC_COEFF_FAST_ITEMS": {
+                                                "type": "array",
+                                                "description": "FrictionalCoefficient,Fast(uf)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "RATE_PARAMETER_ITEMS": {
+                                                "type": "array",
+                                                "description": "RateParameter(r)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "RADIUS_OF_SLIDING_SURFACE_ITEMS": {
+                                                "type": "array",
+                                                "description": "RadiusofSlidingSurface(R)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "STOP_DISTANCE_ITEMS": {
+                                                "type": "array",
+                                                "description": "StopDistance(d)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "HEIGHT_IN": {
+                                                "type": "number",
+                                                "description": "HeightIn"
+                                            },
+                                            "HEIGHT_OUT": {
+                                                "type": "number",
+                                                "description": "HeightOut"
+                                            }
+                                        }
+                                    },
+                                    "DFPSI": {
+                                        "type": "object",
+                                        "description": "DoubleFrictionPendulumSystemIsolator",
+                                        "properties": {
+                                            "AREA_PRESSURE": {
+                                                "type": "number",
+                                                "description": "AreaforPressure"
+                                            },
+                                            "REF_AXIAL_PRESSURE": {
+                                                "type": "number",
+                                                "description": "Referenceaxialpressure(po)"
+                                            },
+                                            "STIFFNESS_ITEMS": {
+                                                "type": "array",
+                                                "description": "Stiffness(k)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "COEFF_UREF_ITEMS": {
+                                                "type": "array",
+                                                "description": "High-velocitycoefficientoffrictionatreferenceaxialpres.(uref)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "RATE_PARAMETER_ITEMS": {
+                                                "type": "array",
+                                                "description": "RateParam(a)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "RADIUS_ITEMS": {
+                                                "type": "array",
+                                                "description": "RadiusofSlidingSurface(R)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "STOP_DISTANCE_ITEMS": {
+                                                "type": "array",
+                                                "description": "StopDistance(d)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "RATIO_COEFF_UV_ITEMS": {
+                                                "type": "array",
+                                                "description": "Ratioofcoefficientoffrictionatsmallvelocitytouref(uv)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "RATIO_COEFF_UP_ITEMS": {
+                                                "type": "array",
+                                                "description": "Ratioofcoefficientoffrictionathighpressuretouref(up)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "PARAM_COEFF_AP_ITEMS": {
+                                                "type": "array",
+                                                "description": "Parameterforpressuredependentcoeff.(ap)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "PARAM_COEFF_HP_ITEMS": {
+                                                "type": "array",
+                                                "description": "Parameterforpressuredependentcoeff.(hp)",
+                                                "items": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "x-ui": {
+                        "groups": [
+                            {
+                                "id": "BASIC",
+                                "title": "Basic Properties"
+                            },
+                            {
+                                "id": "MASS_WEIGHT",
+                                "title": "Mass & Weight"
+                            },
+                            {
+                                "id": "COUPLED",
+                                "title": "Coupled Settings"
+                            },
+                            {
+                                "id": "SEISMIC",
+                                "title": "Seismic Control Devices"
+                            },
+                            {
+                                "id": "COUPLED_MATRIX",
+                                "title": "Coupled Stiffness/Damping Matrix"
+                            },
+                            {
+                                "id": "NONLINEAR_ITEMS",
+                                "title": "Nonlinear Properties"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

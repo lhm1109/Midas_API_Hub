@@ -10,6 +10,14 @@
 
 import type { UIBuilderField } from '@/lib/schema';
 
+function resolveNestedFieldKey(parentFieldName: string, childFieldName: string): string {
+    if (!childFieldName) return childFieldName;
+    if (childFieldName === parentFieldName || childFieldName.startsWith(`${parentFieldName}.`)) {
+        return childFieldName;
+    }
+    return `${parentFieldName}.${childFieldName}`;
+}
+
 // ============================================================================
 // getDefaultValue: 필드의 기본값 반환
 // 원본 위치: BuilderTab.tsx 라인 289-313
@@ -108,7 +116,7 @@ export function initializeFieldValue(
     } else if (field.type === 'object' && field.children) {
         data[`${field.name}._enabled`] = false;
         field.children.forEach(child => {
-            data[`${field.name}.${child.name}`] = getDefaultValueFn(child);
+            data[resolveNestedFieldKey(field.name, child.name)] = getDefaultValueFn(child);
         });
     } else {
         data[field.name] = getDefaultValueFn(field);

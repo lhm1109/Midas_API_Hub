@@ -1,0 +1,47 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "AELEM"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "AELEM": {
+              "type": "array",
+              "description": "Element Lists",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 1,
+              "x-ui": {
+                "label": "Element Lists",
+                "order": 1
+              }
+            },
+            "bREVERSE": {
+              "type": "boolean",
+              "description": "Reverse Local Direction",
+              "default": false,
+              "x-ui": {
+                "label": "Reverse Local Direction",
+                "order": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
