@@ -1,0 +1,904 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Construction Stage Analysis Control Data",
+          "type": "object",
+          "description": "Controls construction stage analysis options for /db/STCT.",
+          "additionalProperties": false,
+          "properties": {
+            "bLAST_FINAL": {
+              "type": "boolean",
+              "description": "Final Stage option. true uses Last Stage, false uses a named stage.",
+              "default": false
+            },
+            "FINAL_STAGE": {
+              "type": "string",
+              "description": "Construction stage name used when bLAST_FINAL is false.",
+              "x-required-when": {
+                "bLAST_FINAL": false
+              },
+              "x-optional-when": {
+                "bLAST_FINAL": false
+              }
+            },
+            "iINC_NLA": {
+              "type": "integer",
+              "description": "Analysis type.",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Linear Analysis",
+                  "const": 0
+                },
+                {
+                  "title": "Nonlinear Analysis",
+                  "const": 1
+                },
+                {
+                  "title": "Material Nonlinear Analysis",
+                  "const": 2
+                }
+              ]
+            },
+            "iNLA_TYPE": {
+              "type": "integer",
+              "description": "Stage option.",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Independent Stage",
+                  "const": 0
+                },
+                {
+                  "title": "Accumulative Stage",
+                  "const": 1
+                }
+              ]
+            },
+            "bINC_PDL": {
+              "type": "boolean",
+              "description": "Include P-Delta Effect.",
+              "default": false
+            },
+            "iITER": {
+              "type": "integer",
+              "description": "Number of iterations for P-Delta Analysis Control.",
+              "minimum": 1,
+              "x-required-when": {
+                "bINC_PDL": true
+              },
+              "x-optional-when": {
+                "bINC_PDL": true
+              }
+            },
+            "TOL": {
+              "type": "number",
+              "description": "Convergence tolerance for P-Delta Analysis Control.",
+              "minimum": 0,
+              "x-required-when": {
+                "bINC_PDL": true
+              },
+              "x-optional-when": {
+                "bINC_PDL": true
+              }
+            },
+            "iLSTEP": {
+              "type": "integer",
+              "description": "Number of load steps for nonlinear or material nonlinear analysis control.",
+              "minimum": 1
+            },
+            "iMAXITER": {
+              "type": "integer",
+              "description": "Maximum number of iterations per load step.",
+              "minimum": 1
+            },
+            "CF": {
+              "type": "boolean",
+              "description": "Convergence failure option."
+            },
+            "BSSTEP": {
+              "type": "integer",
+              "description": "Maximum bi-section level for a load step.",
+              "minimum": 0
+            },
+            "ADSTEP": {
+              "type": "integer",
+              "description": "Maximum allowable diverged steps.",
+              "minimum": 0
+            },
+            "bENEG": {
+              "type": "boolean",
+              "description": "Consider energy norm.",
+              "default": false
+            },
+            "EV": {
+              "type": "number",
+              "description": "Energy norm value.",
+              "minimum": 0,
+              "x-required-when": {
+                "bENEG": true
+              },
+              "x-optional-when": {
+                "bENEG": true
+              }
+            },
+            "bDISP": {
+              "type": "boolean",
+              "description": "Consider displacement norm.",
+              "default": false
+            },
+            "DV": {
+              "type": "number",
+              "description": "Displacement norm value.",
+              "minimum": 0,
+              "x-required-when": {
+                "bDISP": true
+              },
+              "x-optional-when": {
+                "bDISP": true
+              }
+            },
+            "bFORC": {
+              "type": "boolean",
+              "description": "Consider force norm.",
+              "default": false
+            },
+            "FV": {
+              "type": "number",
+              "description": "Force norm value.",
+              "minimum": 0,
+              "x-required-when": {
+                "bFORC": true
+              },
+              "x-optional-when": {
+                "bFORC": true
+              }
+            },
+            "bIEMF": {
+              "type": "boolean",
+              "description": "Include equilibrium element nodal forces.",
+              "default": false
+            },
+            "bINC_TDE": {
+              "type": "boolean",
+              "description": "Include Time Dependent Effect.",
+              "default": false
+            },
+            "bCNS": {
+              "type": "boolean",
+              "description": "Include creep and shrinkage.",
+              "default": false,
+              "x-optional-when": {
+                "bINC_TDE": true
+              }
+            },
+            "TYPE": {
+              "type": "string",
+              "description": "Creep and shrinkage type.",
+              "enum": [
+                "CREEP",
+                "SHRINK",
+                "BOTH"
+              ],
+              "x-enum-labels": [
+                "Creep",
+                "Shrinkage",
+                "Creep & Shrinkage"
+              ],
+              "x-required-when": {
+                "bINC_TDE": true
+              },
+              "x-optional-when": {
+                "bINC_TDE": true
+              }
+            },
+            "iITER_CR": {
+              "type": "integer",
+              "description": "Number of creep iterations.",
+              "minimum": 1,
+              "x-required-when": {
+                "bINC_TDE": true
+              },
+              "x-optional-when": {
+                "bINC_TDE": true
+              }
+            },
+            "TOL_CR": {
+              "type": "number",
+              "description": "Tolerance for creep iteration.",
+              "default": 0,
+              "minimum": 0,
+              "x-optional-when": {
+                "bINC_TDE": true
+              }
+            },
+            "bOUCC": {
+              "type": "boolean",
+              "description": "Only User's Creep Coefficient.",
+              "default": false,
+              "x-optional-when": {
+                "bCNS": true
+              }
+            },
+            "bITS": {
+              "type": "boolean",
+              "description": "Internal Time Step for Creep.",
+              "default": false,
+              "x-optional-when": {
+                "bCNS": true
+              }
+            },
+            "iITS": {
+              "type": "integer",
+              "description": "Internal time step value.",
+              "minimum": 1,
+              "x-required-when": {
+                "bITS": true
+              },
+              "x-optional-when": {
+                "bITS": true
+              }
+            },
+            "bATS": {
+              "type": "boolean",
+              "description": "Auto Time Step Generation for Large Time Gap.",
+              "default": false,
+              "x-optional-when": {
+                "bCNS": true
+              }
+            },
+            "iT10": {
+              "type": "integer",
+              "description": "Time step when T > 10.",
+              "minimum": 1,
+              "x-required-when": {
+                "bATS": true
+              },
+              "x-optional-when": {
+                "bATS": true
+              }
+            },
+            "iT100": {
+              "type": "integer",
+              "description": "Time step when T > 100.",
+              "minimum": 1,
+              "x-required-when": {
+                "bATS": true
+              },
+              "x-optional-when": {
+                "bATS": true
+              }
+            },
+            "iT1K": {
+              "type": "integer",
+              "description": "Time step when T > 1000.",
+              "minimum": 1,
+              "x-required-when": {
+                "bATS": true
+              },
+              "x-optional-when": {
+                "bATS": true
+              }
+            },
+            "iT5K": {
+              "type": "integer",
+              "description": "Time step when T > 5000.",
+              "minimum": 1,
+              "x-required-when": {
+                "bATS": true
+              },
+              "x-optional-when": {
+                "bATS": true
+              }
+            },
+            "iT10K": {
+              "type": "integer",
+              "description": "Time step when T > 10000.",
+              "minimum": 1,
+              "x-required-when": {
+                "bATS": true
+              },
+              "x-optional-when": {
+                "bATS": true
+              }
+            },
+            "bTTLE_CS": {
+              "type": "boolean",
+              "description": "Tendon Tension Loss Effect (Creep & Shrinkage).",
+              "default": false,
+              "x-optional-when": {
+                "bINC_TDE": true
+              }
+            },
+            "bRCE": {
+              "type": "boolean",
+              "description": "Consider Re-Bar Confinement Effect.",
+              "default": false,
+              "x-optional-when": {
+                "bTTLE_CS": true
+              }
+            },
+            "bVAR": {
+              "type": "boolean",
+              "description": "Variation of Comp. Strength.",
+              "default": false,
+              "x-optional-when": {
+                "bTTLE_CS": true
+              }
+            },
+            "bAPPLY_ELA": {
+              "type": "boolean",
+              "description": "Apply Time Dependent Effect Elastic Modulus to Post C.S.",
+              "default": false,
+              "x-optional-when": {
+                "bVAR": true
+              }
+            },
+            "bTTLE_ES": {
+              "type": "boolean",
+              "description": "Tendon Tension Loss Effect (Elastic Shortening).",
+              "default": false,
+              "x-optional-when": {
+                "bINC_TDE": true
+              }
+            },
+            "iTTLE_ES": {
+              "type": "integer",
+              "description": "Loss option for tendon tension loss effect (Elastic Shortening).",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Change with Variation of Tendon Force",
+                  "const": 0
+                },
+                {
+                  "title": "Constant",
+                  "const": 1
+                }
+              ],
+              "x-required-when": {
+                "bTTLE_ES": true
+              },
+              "x-optional-when": {
+                "bTTLE_ES": true
+              }
+            },
+            "vEREC": {
+              "type": "array",
+              "description": "Load cases to be distinguished from dead load for construction stage output.",
+              "default": [],
+              "items": {
+                "type": "object",
+                "required": [
+                  "LTYPECC",
+                  "EREC",
+                  "vLCNAME"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "LTYPECC": {
+                    "type": "string",
+                    "description": "Erection load case name."
+                  },
+                  "EREC": {
+                    "type": "string",
+                    "description": "Load type for C.S.",
+                    "enum": [
+                      "D",
+                      "DC",
+                      "DW",
+                      "EP",
+                      "L",
+                      "W",
+                      "T",
+                      "TPG",
+                      "E",
+                      "ER"
+                    ],
+                    "x-enum-labels": [
+                      "Dead Load",
+                      "Dead Load of Component and Attachments",
+                      "Dead Load of Wearing Surfaces and Utilities",
+                      "Earth Pressure",
+                      "Live Load",
+                      "Wind Load on Structure",
+                      "Temperature",
+                      "Temperature Gradient",
+                      "Earthquake",
+                      "Erection Load"
+                    ]
+                  },
+                  "vLCNAME": {
+                    "type": "array",
+                    "description": "Load case name list.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1
+                  }
+                }
+              }
+            },
+            "bSDLE": {
+              "type": "boolean",
+              "description": "Secondary Dead Load Effect for Grid Model. MIDAS CIVIL NX JP version only.",
+              "default": false
+            },
+            "vSDLE": {
+              "type": "array",
+              "description": "Grid analysis load case names for secondary dead load effect.",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "x-required-when": {
+                "bSDLE": true
+              },
+              "x-optional-when": {
+                "bSDLE": true
+              }
+            },
+            "CPFC": {
+              "type": "string",
+              "description": "Cable-Pretension Force Type.",
+              "enum": [
+                "INTERNAL",
+                "EXTERNAL"
+              ],
+              "default": "INTERNAL",
+              "x-enum-labels": [
+                "Internal Force",
+                "External Force"
+              ]
+            },
+            "bEXT_REPL": {
+              "type": "boolean",
+              "description": "External force type. false = Add, true = Replace.",
+              "default": false,
+              "x-optional-when": {
+                "CPFC": "EXTERNAL"
+              }
+            },
+            "bCONV": {
+              "type": "boolean",
+              "description": "Convert Final Stage Member Forces to Initial Forces for Post C.S.",
+              "default": false
+            },
+            "bTRUSS": {
+              "type": "boolean",
+              "description": "Apply conversion to truss.",
+              "default": false,
+              "x-optional-when": {
+                "bCONV": true
+              }
+            },
+            "bBEAM": {
+              "type": "boolean",
+              "description": "Apply conversion to beam.",
+              "default": false,
+              "x-optional-when": {
+                "bCONV": true
+              }
+            },
+            "bCHANGE_CABLE": {
+              "type": "boolean",
+              "description": "Change cable element to equivalent truss element for Post C.S.",
+              "default": false
+            },
+            "bAPPLY_IMF": {
+              "type": "boolean",
+              "description": "Apply Initial Member Force to C.S.",
+              "default": false
+            },
+            "bITD": {
+              "type": "boolean",
+              "description": "Initial Tangent Displacement for Erected Structures.",
+              "default": false
+            },
+            "ITD": {
+              "type": "string",
+              "description": "Initial tangent displacement type.",
+              "enum": [
+                "ALL",
+                "GROUP"
+              ],
+              "default": "ALL",
+              "x-enum-labels": [
+                "All",
+                "Structure Group"
+              ],
+              "x-required-when": {
+                "bITD": true
+              },
+              "x-optional-when": {
+                "bITD": true
+              }
+            },
+            "GROUP": {
+              "type": "string",
+              "description": "Structure group name for initial tangent displacement.",
+              "x-required-when": {
+                "ITD": "GROUP"
+              },
+              "x-optional-when": {
+                "ITD": "GROUP"
+              }
+            },
+            "bLFFC": {
+              "type": "boolean",
+              "description": "Lack-of-Fit Force Control.",
+              "default": false
+            },
+            "LFFGR": {
+              "type": "string",
+              "description": "Structure group name for Lack-of-Fit Force Control.",
+              "x-required-when": {
+                "bLFFC": true
+              },
+              "x-optional-when": {
+                "bLFFC": true
+              }
+            },
+            "bCAMBER": {
+              "type": "boolean",
+              "description": "Apply Camber Displacement to C.S. (if defined).",
+              "default": false
+            },
+            "bSD": {
+              "type": "boolean",
+              "description": "Stress Decrease at Transfer Length Zone by Post-Tension.",
+              "default": false
+            },
+            "iSDOPT": {
+              "type": "integer",
+              "description": "Stress decrease method.",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Linear Interpolation",
+                  "const": 0
+                },
+                {
+                  "title": "Constant Stress",
+                  "const": 1
+                }
+              ],
+              "x-optional-when": {
+                "bSD": true
+              }
+            },
+            "SDCONST": {
+              "type": "number",
+              "description": "Ratio value for constant stress decrease type.",
+              "minimum": 0,
+              "x-required-when": {
+                "iSDOPT": 1
+              },
+              "x-optional-when": {
+                "iSDOPT": 1
+              }
+            },
+            "iBSC": {
+              "type": "integer",
+              "description": "Beam Section Property option.",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Constant",
+                  "const": 0
+                },
+                {
+                  "title": "Change with Tendon",
+                  "const": 1
+                }
+              ]
+            },
+            "bCALC_CFF": {
+              "type": "boolean",
+              "description": "Calculate Concurrent Forces of Frame.",
+              "default": false
+            },
+            "bCALC_CSP": {
+              "type": "boolean",
+              "description": "Calculate Output of Each Part of Composite Section.",
+              "default": false
+            },
+            "bSELFCONS": {
+              "type": "boolean",
+              "description": "Self-Constrained Forces & Stresses.",
+              "default": false
+            },
+            "bSAVE_OCS": {
+              "type": "boolean",
+              "description": "Save Output of Current Stage (Beam/Truss).",
+              "default": false
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "bLAST_FINAL"
+                ],
+                "properties": {
+                  "bLAST_FINAL": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "FINAL_STAGE"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bINC_PDL"
+                ],
+                "properties": {
+                  "bINC_PDL": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "iITER",
+                  "TOL"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "iINC_NLA"
+                ],
+                "properties": {
+                  "iINC_NLA": {
+                    "enum": [
+                      1,
+                      2
+                    ]
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "iLSTEP",
+                  "iMAXITER"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bENEG"
+                ],
+                "properties": {
+                  "bENEG": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "EV"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bDISP"
+                ],
+                "properties": {
+                  "bDISP": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "DV"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bFORC"
+                ],
+                "properties": {
+                  "bFORC": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "FV"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bINC_TDE"
+                ],
+                "properties": {
+                  "bINC_TDE": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "TYPE",
+                  "iITER_CR"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bITS"
+                ],
+                "properties": {
+                  "bITS": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "iITS"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bATS"
+                ],
+                "properties": {
+                  "bATS": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "iT10",
+                  "iT100",
+                  "iT1K",
+                  "iT5K",
+                  "iT10K"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bTTLE_ES"
+                ],
+                "properties": {
+                  "bTTLE_ES": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "iTTLE_ES"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bSDLE"
+                ],
+                "properties": {
+                  "bSDLE": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "vSDLE"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bITD"
+                ],
+                "properties": {
+                  "bITD": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "ITD"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bITD",
+                  "ITD"
+                ],
+                "properties": {
+                  "ITD": {
+                    "const": "GROUP"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "GROUP"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bLFFC"
+                ],
+                "properties": {
+                  "bLFFC": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "LFFGR"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "bSD",
+                  "iSDOPT"
+                ],
+                "properties": {
+                  "bSD": {
+                    "const": true
+                  },
+                  "iSDOPT": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "SDCONST"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -133,11 +133,12 @@ markerRegistry:
 
   # ────────────────────────────────────────────────────────────────────────────
   # 전송 메타데이터 (API 정보)
+  # ⚠️ x-transport는 공식 지원 마커가 아닙니다. 사용 금지.
   # ────────────────────────────────────────────────────────────────────────────
-  - id: MARKER_TRANSPORT
-    key: "x-transport"
-    description: "Transport 정보 (uri, method, bodyRoot)"
-    pureUI: true
+  # - id: MARKER_TRANSPORT
+  #   key: "x-transport"
+  #   description: "Transport 정보 (uri, method, bodyRoot)"
+  #   pureUI: true
 
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -582,7 +583,7 @@ schemaLogic:
       transform:
         action: "unwrap-root-key"
         extractTitle: true
-        preserveMetadata: ["description", "x-ui", "x-transport"]
+        preserveMetadata: ["description", "x-ui"]  # x-transport 제외 (공식 미지원)
 
   platformSkeleton:
     entityCollection:

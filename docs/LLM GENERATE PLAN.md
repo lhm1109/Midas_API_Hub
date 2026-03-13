@@ -224,6 +224,223 @@ UI 구성: "사용자는 '요소 생성' 폼에서 '타입' 드롭다운을 본�
 
 단계별 조작: "Step 1에서 타입을 선택하고, Step 2에서 재료 번호를 입력한 후 제출한다."
 
+### 2.2 개선된 엔드포인트 스키마 작성 원칙
+
+LLM이 ECS(Endpoint Contract Schema)를 생성할 때 반드시 따라야 하는 규칙 집합입니다.
+모든 규칙의 근거는 `schema_definitions/civil_gen_definition/enhanced/shared.yaml` (SSOT)입니다.
+
+---
+
+#### 기본값(Default) 규칙
+
+> **false로 설정된 Optional Boolean 외에는 절대 추측하여 넣지 않는다.**
+
+- 숫자 필드에 `0` 자동 할당 **금지** → 스키마에 `default` 명시가 있을 때만 기입
+- 문자열 필드에 빈 값(`""`) 자동 할당 **금지** → 위와 동일
+- Boolean 필드만 예외적으로 `"default": false` 허용 (UI에서 미체크 상태가 기본이기 때문)
+
+```json
+// ✅ 올바른 예 — boolean에만 default 부여
+"bAUTOKF": {
+  "type": "boolean",
+  "default": false
+}
+
+// ❌ 잘못된 예 — 근거 없이 문자열 기본값 추측 삽입
+"FRAMEX": {
+  "type": "string",
+  "default": "Braced Non-sway"   // 스키마에 명시되지 않은 추측값
+}
+```
+
+---
+
+#### 필수값(Required) 규칙
+
+> **명시적으로 "필수"라고 된 것만 `required` 배열에 기입한다. optional이 기본값 원칙.**
+
+- 예제 데이터(OpenAPI example)에 값이 존재한다고 해서 자동으로 필수로 간주하지 않는다.
+- API 명세 또는 다이얼로그 사양서에서 명백히 "필수 입력"으로 표시된 항목만 기입한다.
+- 아무 조건도 없는 경우 해당 객체의 `required` 배열은 비워 두거나 생략한다.
+
+```json
+// ✅ 올바른 예 — 최상위 래퍼만 필수, 내부 필드는 조건 없이 전부 Optional
+{
+  "required": ["Assign"],
+  "properties": {
+    "Assign": {
+      "patternProperties": {
+        "^[0-9]+$": {
+          "properties": {
+            "FRAMEX": { "type": "string" },
+            "DT":     { "type": "string" }
+          }
+          // required 배열 없음 → 모두 optional
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+#### 조건부 필수(Conditional Required) 규칙
+
+> **검증 로직은 반드시 `allOf + if/then` 표준 JSON Schema 구문으로 작성한다.  
+> `x-required-when`은 UI 표시 전용이며, 검증을 대체하지 않는다.**
+
+- 단순 boolean 플래그: `if: { properties: { FLAG: { const: true } } }` → `then: { required: ["FIELD"] }`
+- enum 선택값: `if: { properties: { TYPE: { const: "XZ" } } }` → `then: { required: ["FRAMEX"] }`
+- UI에서 조건부 필수임을 표시하려면 `x-required-when`을 **함께** 추가한다.
+- UI에서 조건부로 보여줄 필드(검증은 불필요)는 `x-optional-when`만 사용한다.
+
+**실제 적용 예 — DCTL `/DB/DCTL`**
+
+DCTL 엔티티는 `DT`(Design Type) 값에 따라 방향별 Frame 설정 필드의 필수 여부가 달라진다:
+
+| DT 값 | FRAMEX 필수 | FRAMEY 필수 | 이유 |
+|-------|:-----------:|:-----------:|------|
+| `3D`  | ✅ | ✅ | 3차원 해석 → X·Y 방향 모두 필요 |
+| `XZ`  | ✅ | ❌ | X-Z 평면 → X 방향만 의미 있음 |
+| `YZ`  | ❌ | ✅ | Y-Z 평면 → Y 방향만 의미 있음 |
+| `XY`  | ❌ | ❌ | X-Y 평면 → 수평 해석, 방향 불필요 |
+
+```json
+// allOf + if/then → 검증 로직 (JSON Schema 표준)
+"allOf": [
+  {
+    "if": { "properties": { "DT": { "const": "3D" } }, "required": ["DT"] },
+    "then": { "required": ["FRAMEX", "FRAMEY"] }
+  },
+  {
+    "if": { "properties": { "DT": { "const": "XZ" } }, "required": ["DT"] },
+    "then": { "required": ["FRAMEX"] }
+  },
+  {
+    "if": { "properties": { "DT": { "const": "YZ" } }, "required": ["DT"] },
+    "then": { "required": ["FRAMEY"] }
+  }
+],
+
+// x-required-when → UI 표시 전용 (검증과 별개)
+"FRAMEX": {
+  "type": "string",
+  "x-required-when": { "DT": "3D" }
+}
+```
+
+---
+
+#### 확장 메타데이터(x-*) 지원 목록
+
+`x-*` 키는 **순수 UI 마커(pureUI: true)** 원칙을 따른다. 삭제해도 JSON Schema 검증 동작은 100% 동일하게 유지된다. 검증 로직은 반드시 표준 JSON Schema 키워드(`allOf`, `if/then`, `required`, `enum`)로 작성한다.
+
+##### 현재 지원 키 (`shared.yaml` markerRegistry 기준)
+
+| 키 | 적용 위치 | 값 형식 | 역할 |
+|----|----------|---------|------|
+| `x-ui` | 필드, 객체 | object | 아래 세부 속성 참조 |
+| `x-enum-labels` | 필드 | string[] | `enum` 배열과 인덱스 순서 일치하는 표시 라벨 배열 |
+
+**`x-ui` 세부 속성**
+
+| 속성 | 타입 | 적용 위치 | 역할 |
+|------|------|----------|------|
+| `label` | string | 필드 | Table(Spec) 탭의 Description 컬럼과 Builder 탭 입력 폼에서 표시되는 사람 읽는 필드명. 없으면 JSON 키 이름(`key`)을 그대로 사용. |
+| `hint` | string | 필드 | `label` 아래에 작은 글씨(amber 색상 💡 아이콘)로 표시되는 보조 설명. 입력 단위, 주의사항 등을 전달할 때 사용. |
+| `groupId` | string | 필드 | 이 필드가 속할 섹션의 ID. 같은 `groupId`를 가진 필드들은 Builder/Table에서 하나의 섹션 헤더 아래 묶여 표시됨. 객체 수준의 `groups` 배열에 정의된 ID를 참조해야 함. |
+| `groups` | array | 객체 | 섹션 목록 정의. `{ id, title }` 배열로 선언하며, `groupId`가 참조하는 섹션의 표시 제목을 여기서 매핑함. **필드가 아닌 객체(patternProperties의 스키마 등) 수준에 기입.** |
+| `component` | string | 필드 | Builder 탭 입력 폼에서 사용할 UI 컴포넌트 힌트. `shared.yaml`의 `componentRegistry`를 기본으로 하되, 이 값으로 오버라이드 가능. `RadioGroup`으로 지정하면 Select 대신 라디오 버튼 그룹으로 렌더됨. |
+| `order` | number | 필드 | MCP가 JSON 스키마를 저장할 때 같은 객체 내 필드의 출력 순서를 결정. 숫자가 작을수록 먼저 출력. `deterministic-json.ts`에서 `x-ui.order` 기준으로 정렬하여 결정론적 출력을 보장함. |
+
+> **`component` 허용값** (`shared.yaml` componentRegistry 기준)
+> - `Input` — 텍스트/숫자 입력 (string, number, integer 기본값)
+> - `Checkbox` — 체크박스 (boolean 기본값)
+> - `Select` — 드롭다운 (enum 기본값)
+> - `RadioGroup` — 라디오 버튼 그룹 (enum을 가로로 나열할 때)
+> - `Textarea` — 멀티라인 입력 (array, object 기본값)
+
+**`groups` 선언 구조 예시**
+
+```json
+// 객체(엔티티) 수준에 groups를 선언
+{
+  "x-ui": {
+    "groups": [
+      { "id": "FRAME_DEF",    "title": "Definition of Frame" },
+      { "id": "DESIGN_TYPE",  "title": "Design Type" },
+      { "id": "CALC_OPT",     "title": "Calculation Options" }
+    ]
+  },
+  "properties": {
+    "FRAMEX": {
+      "x-ui": { "label": "X-Direction of Frame", "groupId": "FRAME_DEF", "order": 1 }
+    },
+    "DT": {
+      "x-ui": { "label": "Design Type", "groupId": "DESIGN_TYPE", "component": "RadioGroup", "order": 3 }
+    },
+    "bAUTOKF": {
+      "x-ui": { "label": "Auto Calculate Effective Length Factors", "groupId": "CALC_OPT", "order": 4 }
+    }
+  }
+}
+```
+
+`groupId: "FRAME_DEF"`를 가진 필드들은 `groups`에서 `"Definition of Frame"` 헤더 아래 묶여 렌더링된다.
+| `x-enum-labels-by-type` | 필드 | `{TYPE: {value: label}}` | `TYPE` 필드 값에 따라 동적으로 다른 enum 라벨 표시 |
+| `x-required-when` | 필드 | object 또는 array | 조건 만족 시 UI에서 필수(Required) 표시. 검증은 `allOf`에서 처리 |
+| `x-optional-when` | 필드 | object 또는 array | 조건 만족 시 UI에서 필드 표시. 검증과 무관 |
+| `x-exclusive-keys` | 필드 | array | 상호 배타적 키 목록 (하나만 선택 가능 구조 표시) |
+
+##### Deprecated 키 (사용 금지, 마이그레이션 필요)
+
+| deprecated 키 | 대체 방법 |
+|---------------|---------|
+| `x-transport` | 공식 미지원 — 스키마에 기입하지 않는다 |
+| `x-required-by-type` | `allOf[].if.then.required` |
+| `x-enum-by-type` | `allOf[].if.then.properties.*.enum` + `x-enum-labels-by-type` |
+| `x-node-count-by-type` | `allOf[].if.then.properties.NODE.minItems/maxItems` |
+| `x-value-constraint` | `allOf[].if.then` + 필드 `description` |
+| `x-uiRules.visibleWhen` | `x-optional-when` (MCP에서 자동 변환) |
+| `x-ui.visibleWhen` | `x-optional-when` (MCP에서 자동 변환) |
+
+##### 실제 적용 예 — DCTL `/DB/DCTL`
+
+```json
+// x-ui + x-enum-labels — 필드 표시 정보
+"DT": {
+  "type": "string",
+  "enum": ["3D", "XZ", "YZ", "XY"],
+  "x-enum-labels": ["3-D", "X-Z Plane", "Y-Z Plane", "X-Y Plane"],
+  "x-ui": { "component": "RadioGroup", "groupId": "DESIGN_TYPE", "label": "Design Type", "order": 3 }
+}
+
+// x-enum-labels-by-type — TYPE별로 다른 enum 라벨이 필요한 경우
+"STYPE": {
+  "type": "integer",
+  "x-enum-labels-by-type": {
+    "TENSTR": { "1": "Truss", "2": "Hook", "3": "Cable" },
+    "COMPTR": { "1": "Truss", "2": "Gap" }
+  }
+}
+
+// x-required-when — UI 조건부 필수 표시 (검증은 allOf에서)
+"FRAMEX": {
+  "type": "string",
+  "x-ui": { "label": "X-Direction of Frame", "groupId": "FRAME_DEF", "order": 1 },
+  "x-required-when": { "DT": "3D" }
+}
+
+// x-optional-when — 조건부로만 보이는 필드 (검증 없음)
+"SMASS": {
+  "type": "integer",
+  "x-optional-when": { "bSELFWT": true }
+}
+```
+
+---
+
 Step 2: LLM 기반 스키마 자동 생성 LLM은 사전 정의된 Product Schema Definition (PSD) 규칙과 Schema Validation Rules를 참조하여 자연어 시나리오를 분석합니다.
 
 +1
@@ -234,7 +451,7 @@ Step 2: LLM 기반 스키마 자동 생성 LLM은 사전 정의된 Product Schem
 
 
 
-매핑: 추출된 정보를 x-ui, x-required-by-type, x-value-constraint 등의 확장 메타데이터에 매핑합니다.
+매핑: 추출된 정보를 `x-ui`, `x-enum-labels`, `x-required-when`, `x-optional-when`, `x-transport` 등 현재 지원하는 확장 메타데이터에 매핑합니다. (deprecated된 `x-required-by-type`, `x-value-constraint` 등은 사용하지 않음)
 
 
 

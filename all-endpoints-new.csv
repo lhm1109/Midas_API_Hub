@@ -1,0 +1,730 @@
+Tag,Path,Mode,Methods,Description
+CONFIG,/CONFIG/PROJECT,,GET,Project Configuration
+CONFIG,/CONFIG/VER,,GET,API Version Information
+DB_Analysis,/DB/ACTL,,"GET, POST, PUT, DELETE",Main Control Data
+DB_Analysis,/DB/ACTL/{id},,"GET, POST, PUT, DELETE",Main Control Data
+DB_Static Loads,/DB/ARPR,,"GET, POST, PUT, DELETE",Delete Db Arpr
+DB_Static Loads,/DB/ARPR/{id},,"GET, POST, PUT, DELETE",Delete Db Arpr Key
+DB_Analysis,/DB/BCCT,,"GET, POST, PUT, DELETE",Boundary Change Assignment
+DB_Analysis,/DB/BCCT/{id},,"GET, POST, PUT, DELETE",Boundary Change Assignment
+DB_Static Loads,/DB/BMLD,,"GET, POST, PUT, DELETE",Beam Loads
+DB_Static Loads,/DB/BMLD/{id},,"GET, POST, PUT, DELETE",Beam Loads
+DB_Project,/DB/BNGR,,"GET, POST, PUT, DELETE",Boundary Group
+DB_Project,/DB/BNGR/{id},,"GET, POST, PUT, DELETE",Boundary Group
+DB_Static Loads,/DB/BODF,,"GET, POST, PUT, DELETE",Self-Weight
+DB_Static Loads,/DB/BODF/{id},,"GET, POST, PUT, DELETE",Self-Weight
+DB_Temperature Loads,/DB/BTMP,,"GET, POST, PUT, DELETE",Beam Section Temperature
+DB_Temperature Loads,/DB/BTMP/{id},,"GET, POST, PUT, DELETE",Beam Section Temperature
+DB_Analysis,/DB/BUCK,,"GET, POST, PUT, DELETE",Buckling Analysis Control
+DB_Analysis,/DB/BUCK/{id},,"GET, POST, PUT, DELETE",Buckling Analysis Control
+DB_Bridge Specialization Results,/DB/CAMB,,"GET, POST, PUT, DELETE",FCM Camber Control
+DB_Bridge Specialization Results,/DB/CAMB/{id},,"GET, POST, PUT, DELETE",FCM Camber Control
+DB_Heat of Hydration Loads,/DB/CCFC,,"GET, POST, PUT, DELETE",Convection Coefficient Functions
+DB_Heat of Hydration Loads,/DB/CCFC/{id},,"GET, POST, PUT, DELETE",Convection Coefficient Functions
+DB_Boundary,/DB/CGLP,,"GET, POST, PUT, DELETE",Change General Link Property
+DB_Boundary,/DB/CGLP/{id},,"GET, POST, PUT, DELETE",Change General Link Property
+DB_Moving Loads,/DB/CJFG,,"GET, POST, PUT, DELETE",Concurrent Joint Force Group
+DB_Moving Loads,/DB/CJFG/{id},,"GET, POST, PUT, DELETE",Concurrent Joint Force Group
+DB_Boundary,/DB/CLDR,,"GET, POST, PUT",Define Constraints Label Direction
+DB_Boundary,/DB/CLDR/{id},,"GET, POST, PUT",Define Constraints Label Direction
+DB_Analysis Results,/DB/CLWP,,"GET, POST, PUT, DELETE",Plate Cutting Line Diagram
+DB_Analysis Results,/DB/CLWP/{id},,"GET, POST, PUT, DELETE",Plate Cutting Line Diagram
+DB_Construction Stage Loads,/DB/CMCS,,"GET, POST, PUT, DELETE",Camber for Construction Stage
+DB_Construction Stage Loads,/DB/CMCS/{id},,"GET, POST, PUT, DELETE",Camber for Construction Stage
+DB_Design,/DB/CMFT,,"GET, POST, PUT, DELETE",Delete Db Cmft
+DB_Design,/DB/CMFT/{id},,"GET, POST, PUT, DELETE",Delete Db Cmft Key
+DB_Static Loads,/DB/CNLD,,"GET, POST, PUT, DELETE",Nodal Loads
+DB_Static Loads,/DB/CNLD/{id},,"GET, POST, PUT, DELETE",Nodal Loads
+DB_Boundary,/DB/CONS,,"GET, POST, PUT, DELETE",Constraint Support
+DB_Boundary,/DB/CONS/{id},,"GET, POST, PUT, DELETE",Constraint Support
+DB_View,/DB/CO_F,,"GET, PUT",Floor Load Color
+DB_View,/DB/CO_F/{id},,"GET, PUT",Floor Load Color
+DB_View,/DB/CO_M,,"GET, PUT",Material Color
+DB_View,/DB/CO_M/{id},,"GET, PUT",Material Color
+DB_View,/DB/CO_S,,"GET, PUT",Section Color
+DB_View,/DB/CO_S/{id},,"GET, PUT",Section Color
+DB_View,/DB/CO_T,,"GET, PUT",Thickness Color
+DB_View,/DB/CO_T/{id},,"GET, PUT",Thickness Color
+DB_Moving Loads,/DB/CRGR,,"GET, POST, PUT, DELETE",Concurrent Reaction Group
+DB_Moving Loads,/DB/CRGR/{id},,"GET, POST, PUT, DELETE",Concurrent Reaction Group
+DB_Construction Stage Loads,/DB/CRPC,,"GET, POST, PUT, DELETE",Creep Coefficient for Construction Stage
+DB_Construction Stage Loads,/DB/CRPC/{id},,"GET, POST, PUT, DELETE",Creep Coefficient for Construction Stage
+DB_Construction Stage Loads,/DB/CSCS,,"GET, POST, PUT, DELETE",Composite Section for Construction Stage
+DB_Construction Stage Loads,/DB/CSCS/{id},,"GET, POST, PUT, DELETE",Composite Section for Construction Stage
+DB_Analysis Results,/DB/CUTL,,"GET, POST, PUT, DELETE",Cutting Line
+DB_Analysis Results,/DB/CUTL/{id},,"GET, POST, PUT, DELETE",Cutting Line
+DB_Design,/DB/DCON,,"GET, POST, PUT, DELETE",RC Design Code
+DB_Design,/DB/DCON/{id},,"GET, POST, PUT, DELETE",RC Design Code
+DB_Analysis,/DB/DCTL,,"GET, POST, PUT, DELETE",Definition of Frame
+DB_Analysis,/DB/DCTL/{id},,"GET, POST, PUT, DELETE",Definition of Frame
+DB_Node/Element,/DB/DOEL,,"GET, POST, PUT, DELETE",Domain-Element
+DB_Node/Element,/DB/DOEL/{id},,"GET, POST, PUT, DELETE",Domain-Element
+DB_Design,/DB/DSTL,,"GET, POST, PUT, DELETE",Design Steel Code
+DB_Design,/DB/DSTL/{id},,"GET, POST, PUT, DELETE",Design Steel Code
+DB_Moving Loads,/DB/DYFG,,"GET, POST, PUT, DELETE",Railway Dynamic Factor
+DB_Moving Loads,/DB/DYFG/{id},,"GET, POST, PUT, DELETE",Railway Dynamic Factor
+DB_Moving Loads,/DB/DYLA,,"GET, POST, PUT, DELETE",Dynamic Load Allowance
+DB_Moving Loads,/DB/DYLA/{id},,"GET, POST, PUT, DELETE",Dynamic Load Allowance
+DB_Moving Loads,/DB/DYNF,,"GET, POST, PUT, DELETE",Railway Dynamic Factor by Element
+DB_Moving Loads,/DB/DYNF/{id},,"GET, POST, PUT, DELETE",Railway Dynamic Factor by Element
+DB_Boundary,/DB/EARE,,"GET, POST, PUT, DELETE",Delete Db Eare
+DB_Boundary,/DB/EARE/{id},,"GET, POST, PUT, DELETE",Delete Db Eare Key
+DB_Properties,/DB/EDMP,,"GET, POST, PUT, DELETE",Change Property
+DB_Properties,/DB/EDMP/{id},,"GET, POST, PUT, DELETE",Change Property
+DB_Miscellaneous Loads,/DB/EFCT,,"GET, POST, PUT, DELETE",Small Displacement - Initial Force Control Data
+DB_Miscellaneous Loads,/DB/EFCT/{id},,"GET, POST, PUT, DELETE",Small Displacement - Initial Force Control Data
+DB_Analysis,/DB/EIGV,,"GET, POST, PUT, DELETE",Eigenvalue Analysis Control
+DB_Analysis,/DB/EIGV/{id},,"GET, POST, PUT, DELETE",Eigenvalue Analysis Control
+DB_Node/Element,/DB/ELEM,,"GET, POST, PUT, DELETE",Element
+DB_Node/Element,/DB/ELEM/{id},,"GET, POST, PUT, DELETE",Element
+DB_Boundary,/DB/ELNK,,"GET, POST, PUT, DELETE",Elastic Link
+DB_Boundary,/DB/ELNK/{id},,"GET, POST, PUT, DELETE",Elastic Link
+DB_Properties,/DB/EPMT,,"GET, POST, PUT, DELETE",Plastic Material
+DB_Properties,/DB/EPMT/{id},,"GET, POST, PUT, DELETE",Plastic Material
+DB_Static Loads,/DB/EPSE,,"GET, POST, PUT, DELETE",Delete Db Epse
+DB_Static Loads,/DB/EPSE/{id},,"GET, POST, PUT, DELETE",Delete Db Epse Key
+DB_Static Loads,/DB/EQMF,,"GET, POST, PUT, DELETE",Delete Db Eqmf
+DB_Static Loads,/DB/EQMF/{id},,"GET, POST, PUT, DELETE",Delete Db Eqmf Key
+DB_Properties,/DB/ESSF,,"GET, POST, PUT, DELETE",Element Stiffness Scale Factor
+DB_Properties,/DB/ESSF/{id},,"GET, POST, PUT, DELETE",Element Stiffness Scale Factor
+DB_Heat of Hydration Loads,/DB/ETFC,,"GET, POST, PUT, DELETE",Ambient Temperature Functions
+DB_Heat of Hydration Loads,/DB/ETFC/{id},,"GET, POST, PUT, DELETE",Ambient Temperature Functions
+DB_Temperature Loads,/DB/ETMP,,"GET, POST, PUT, DELETE",Element Temperature
+DB_Temperature Loads,/DB/ETMP/{id},,"GET, POST, PUT, DELETE",Element Temperature
+DB_Properties,/DB/EWSF,,"GET, POST, PUT, DELETE",Effective Width Scale Factor
+DB_Properties,/DB/EWSF/{id},,"GET, POST, PUT, DELETE",Effective Width Scale Factor
+DB_Prestress Loads,/DB/EXLD,,"GET, POST, PUT, DELETE",External Type Load Case for Pretension
+DB_Prestress Loads,/DB/EXLD/{id},,"GET, POST, PUT, DELETE",External Type Load Case for Pretension
+DB_Static Loads,/DB/FBLA,,"GET, POST, PUT, DELETE",Assign Floor Loads
+DB_Static Loads,/DB/FBLA/{id},,"GET, POST, PUT, DELETE",Assign Floor Loads
+DB_Static Loads,/DB/FBLD,,"GET, POST, PUT, DELETE",Define Floor Load Type
+DB_Static Loads,/DB/FBLD/{id},,"GET, POST, PUT, DELETE",Define Floor Load Type
+DB_Properties,/DB/FIBR,,"GET, POST, PUT, DELETE",Fiber Division of Section
+DB_Properties,/DB/FIBR/{id},,"GET, POST, PUT, DELETE",Fiber Division of Section
+DB_Properties,/DB/FIMP,,"GET, POST, PUT, DELETE",Inelastic Material Properties
+DB_Properties,/DB/FIMP/{id},,"GET, POST, PUT, DELETE",Inelastic Material Properties
+DB_Static Loads,/DB/FMLD,,"GET, POST, PUT, DELETE",Finishing Material Loads
+DB_Static Loads,/DB/FMLD/{id},,"GET, POST, PUT, DELETE",Finishing Material Loads
+DB_Boundary,/DB/FRLS,,"GET, POST, PUT, DELETE",Beam End Release
+DB_Boundary,/DB/FRLS/{id},,"GET, POST, PUT, DELETE",Beam End Release
+DB_Grid Model Analysis Loads,/DB/GALD,,"GET, POST, PUT, DELETE",Grid Analysis Load
+DB_Grid Model Analysis Loads,/DB/GALD/{id},,"GET, POST, PUT, DELETE",Grid Analysis Load
+DB_Bridge Specialization Results,/DB/GCMB,,"GET, POST, PUT, DELETE",General Camber Control
+DB_Bridge Specialization Results,/DB/GCMB/{id},,"GET, POST, PUT, DELETE",General Camber Control
+DB_Properties,/DB/GRDP,,"GET, POST, PUT, DELETE",Group Damping
+DB_Properties,/DB/GRDP/{id},,"GET, POST, PUT, DELETE",Group Damping
+DB_Project,/DB/GRUP,,"GET, POST, PUT, DELETE",Structure Group
+DB_Project,/DB/GRUP/{id},,"GET, POST, PUT, DELETE",Structure Group
+DB_Bridge Specialization Results,/DB/GSBG,,"GET, POST, PUT, DELETE",Bridge Girder Diagrams
+DB_Bridge Specialization Results,/DB/GSBG/{id},,"GET, POST, PUT, DELETE",Bridge Girder Diagrams
+DB_Boundary,/DB/GSPR,,"GET, POST, PUT, DELETE",Assign General Spring Supports
+DB_Boundary,/DB/GSPR/{id},,"GET, POST, PUT, DELETE",Assign General Spring Supports
+DB_Boundary,/DB/GSTP,,"GET, POST, PUT, DELETE",Define General Spring Type
+DB_Boundary,/DB/GSTP/{id},,"GET, POST, PUT, DELETE",Define General Spring Type
+DB_Temperature Loads,/DB/GTMP,,"GET, POST, PUT, DELETE",Temperature Gradient
+DB_Temperature Loads,/DB/GTMP/{id},,"GET, POST, PUT, DELETE",Temperature Gradient
+DB_Heat of Hydration Loads,/DB/HAHS,,"GET, POST, PUT, DELETE",Assign Heat Source
+DB_Heat of Hydration Loads,/DB/HAHS/{id},,"GET, POST, PUT, DELETE",Assign Heat Source
+DB_Heat of Hydration Loads,/DB/HECB,,"GET, POST, PUT, DELETE",Element Convection Boundary
+DB_Heat of Hydration Loads,/DB/HECB/{id},,"GET, POST, PUT, DELETE",Element Convection Boundary
+DB_Analysis,/DB/HHCT,,"GET, POST, PUT, DELETE",Heat of Hydration Analysis Control
+DB_Analysis,/DB/HHCT/{id},,"GET, POST, PUT, DELETE",Heat of Hydration Analysis Control
+DB_Heat of Hydration Results,/DB/HHND,,"GET, POST, PUT, DELETE",Heat of Hydaration Result Graph
+DB_Heat of Hydration Results,/DB/HHND/{id},,"GET, POST, PUT, DELETE",Heat of Hydaration Result Graph
+DB_Heat of Hydration Loads,/DB/HPCE,,"GET, POST, PUT, DELETE",Pipe Cooling
+DB_Heat of Hydration Loads,/DB/HPCE/{id},,"GET, POST, PUT, DELETE",Pipe Cooling
+DB_Heat of Hydration Loads,/DB/HSFC,,"GET, POST, PUT, DELETE",Heat Source Functions
+DB_Heat of Hydration Loads,/DB/HSFC/{id},,"GET, POST, PUT, DELETE",Heat Source Functions
+DB_Heat of Hydration Loads,/DB/HSPT,,"GET, POST, PUT, DELETE",Prescribed Temperature
+DB_Heat of Hydration Loads,/DB/HSPT/{id},,"GET, POST, PUT, DELETE",Prescribed Temperature
+DB_Heat of Hydration Loads,/DB/HSTG,,"GET, POST, PUT, DELETE",Define Construction Stage for Hydration
+DB_Heat of Hydration Loads,/DB/HSTG/{id},,"GET, POST, PUT, DELETE",Define Construction Stage for Hydration
+DB_Properties,/DB/IEHC,,"GET, POST, PUT, DELETE",Inelastic Hinge Control Data
+DB_Properties,/DB/IEHC/{id},,"GET, POST, PUT, DELETE",Inelastic Hinge Control Data
+DB_Properties,/DB/IEHG,,"GET, POST, PUT, DELETE",Assign Inelastic Hinge Properties
+DB_Properties,/DB/IEHG/{id},,"GET, POST, PUT, DELETE",Assign Inelastic Hinge Properties
+DB_Properties,/DB/IEHP,,"GET, POST, PUT, DELETE",Delete Db Iehp
+DB_Properties,/DB/IEHP/{id},,"GET, POST, PUT, DELETE",Delete Db Iehp Key
+DB_Miscellaneous Loads,/DB/IELC,,"GET, POST, PUT, DELETE",Ignore Elements for Load Cases
+DB_Miscellaneous Loads,/DB/IELC/{id},,"GET, POST, PUT, DELETE",Ignore Elements for Load Cases
+DB_Boundary,/DB/IEPI,,"GET, POST, PUT, DELETE",Ignore Elements for Pushover Intial Load
+DB_Boundary,/DB/IEPI/{id},,"GET, POST, PUT, DELETE",Ignore Elements for Pushover Intial Load
+DB_Miscellaneous Loads,/DB/IFGS,,"GET, POST, PUT, DELETE",Large Displacement - Initial Forces for Geometric Stiffness
+DB_Miscellaneous Loads,/DB/IFGS/{id},,"GET, POST, PUT, DELETE",Large Displacement - Initial Forces for Geometric Stiffness
+DB_Properties,/DB/IMFM,,"GET, POST, PUT, DELETE",Inelastic Material Properties for Fiber Model
+DB_Properties,/DB/IMFM/{id},,"GET, POST, PUT, DELETE",Inelastic Material Properties for Fiber Model
+DB_Moving Loads,/DB/IMPF,,"GET, POST, PUT, DELETE",Additional Impact Factor
+DB_Moving Loads,/DB/IMPF/{id},,"GET, POST, PUT, DELETE",Additional Impact Factor
+DB_Miscellaneous Loads,/DB/INMF,,"GET, POST, PUT, DELETE",Small Displacement - Initial Element Force
+DB_Miscellaneous Loads,/DB/INMF/{id},,"GET, POST, PUT, DELETE",Small Displacement - Initial Element Force
+DB_Design,/DB/KFAC,,"GET, POST, PUT, DELETE",Delete Db Kfac
+DB_Design,/DB/KFAC/{id},,"GET, POST, PUT, DELETE",Delete Db Kfac Key
+DB_Analysis Results,/DB/LCOM-ALUM,,"GET, POST, PUT, DELETE",Delete Db Lcom Alum
+DB_Analysis Results,/DB/LCOM-ALUM/{id},,"GET, POST, PUT, DELETE",Delete Db Lcom Alum Key
+DB_Analysis Results,/DB/LCOM-CFSTEEL,,"GET, POST, PUT, DELETE",Delete Db Lcom Cfsteel
+DB_Analysis Results,/DB/LCOM-CFSTEEL/{id},,"GET, POST, PUT, DELETE",Delete Db Lcom Cfsteel Key
+DB_Analysis Results,/DB/LCOM-CONC,,"GET, POST, PUT, DELETE",Load Combinations - Concrete Design
+DB_Analysis Results,/DB/LCOM-CONC/{id},,"GET, POST, PUT, DELETE",Load Combinations - Concrete Design
+DB_Analysis Results,/DB/LCOM-FDN,,"GET, POST, PUT, DELETE",Delete Db Lcom Fdn
+DB_Analysis Results,/DB/LCOM-FDN/{id},,"GET, POST, PUT, DELETE",Delete Db Lcom Fdn Key
+DB_Analysis Results,/DB/LCOM-GEN,,"GET, POST, PUT, DELETE",Load Combinations - General
+DB_Analysis Results,/DB/LCOM-GEN/{id},,"GET, POST, PUT, DELETE",Load Combinations - General
+DB_Analysis Results,/DB/LCOM-LINEAR,,"GET, POST, PUT, DELETE",Delete Db Lcom Linear
+DB_Analysis Results,/DB/LCOM-LINEAR/{id},,"GET, POST, PUT, DELETE",Delete Db Lcom Linear Key
+DB_Analysis Results,/DB/LCOM-SEISMIC,,"GET, POST, PUT, DELETE",Load Combinations - Seismic Design
+DB_Analysis Results,/DB/LCOM-SEISMIC/{id},,"GET, POST, PUT, DELETE",Load Combinations - Seismic Design
+DB_Analysis Results,/DB/LCOM-SRC,,"GET, POST, PUT, DELETE",Load Combinations - SRC Design
+DB_Analysis Results,/DB/LCOM-SRC/{id},,"GET, POST, PUT, DELETE",Load Combinations - SRC Design
+DB_Analysis Results,/DB/LCOM-STEEL,,"GET, POST, PUT, DELETE",Load Combinations - Steel Design
+DB_Analysis Results,/DB/LCOM-STEEL/{id},,"GET, POST, PUT, DELETE",Load Combinations - Steel Design
+DB_Analysis Results,/DB/LCOM-STLCOMP,,"GET, POST, PUT, DELETE",Load Combinations - Composite Steel Girder Design
+DB_Analysis Results,/DB/LCOM-STLCOMP/{id},,"GET, POST, PUT, DELETE",Load Combinations - Composite Steel Girder Design
+DB_Project,/DB/LDGR,,"GET, POST, PUT, DELETE",Load Group
+DB_Project,/DB/LDGR/{id},,"GET, POST, PUT, DELETE",Load Group
+DB_Miscellaneous Loads,/DB/LDSQ,,"GET, POST, PUT, DELETE",Load Sequence for Nonlinear
+DB_Miscellaneous Loads,/DB/LDSQ/{id},,"GET, POST, PUT, DELETE",Load Sequence for Nonlinear
+DB_Design,/DB/LENG,,"GET, POST, PUT, DELETE",Unbraced Length
+DB_Design,/DB/LENG/{id},,"GET, POST, PUT, DELETE",Unbraced Length
+DB_Moving Loads,/DB/LLAN,,"GET, POST, PUT, DELETE",Traffic Line Lanes
+DB_Moving Loads,/DB/LLAN/{id},,"GET, POST, PUT, DELETE",Traffic Line Lanes
+DB_Moving Loads,/DB/LLANCH,,"GET, POST, PUT, DELETE",Traffic Line Lanes - China
+DB_Moving Loads,/DB/LLANCH/{id},,"GET, POST, PUT, DELETE",Traffic Line Lanes - China
+DB_Moving Loads,/DB/LLANID,,"GET, POST, PUT, DELETE",Traffic Line Lanes - India
+DB_Moving Loads,/DB/LLANID/{id},,"GET, POST, PUT, DELETE",Traffic Line Lanes - India
+DB_Moving Loads,/DB/LLANJP,,"GET, POST, PUT, DELETE",Delete Db Llanjp
+DB_Moving Loads,/DB/LLANJP/{id},,"GET, POST, PUT, DELETE",Delete Db Llanjp Key
+DB_Moving Loads,/DB/LLANOP,,"GET, POST, PUT, DELETE",Traffic Line Lanes - Moving Load Optimizaion
+DB_Moving Loads,/DB/LLANOP/{id},,"GET, POST, PUT, DELETE",Traffic Line Lanes - Moving Load Optimizaion
+DB_Moving Loads,/DB/LLANTR,,"GET, POST, PUT, DELETE",Traffic Line Lanes - Transverse
+DB_Moving Loads,/DB/LLANTR/{id},,"GET, POST, PUT, DELETE",Traffic Line Lanes - Transverse
+DB_Static Loads,/DB/LTOM,,"GET, POST, PUT, DELETE",Loads to Masses
+DB_Static Loads,/DB/LTOM/{id},,"GET, POST, PUT, DELETE",Loads to Masses
+DB_Design,/DB/LTSR,,"GET, POST, PUT, DELETE",Underground Load Combination Type
+DB_Design,/DB/LTSR/{id},,"GET, POST, PUT, DELETE",Underground Load Combination Type
+DB_Node/Element,/DB/MADO,,"GET, POST, PUT, DELETE",Define Domain
+DB_Node/Element,/DB/MADO/{id},,"GET, POST, PUT, DELETE",Define Domain
+DB_Design,/DB/MATD,,"GET, PUT",Modify Concrete Materials
+DB_Design,/DB/MATD/{id},,"GET, PUT",Modify Concrete Materials
+DB_Properties,/DB/MATL,,"GET, POST, PUT, DELETE",Material Properties
+DB_Properties,/DB/MATL/{id},,"GET, POST, PUT, DELETE",Material Properties
+DB_Design,/DB/MBTP,,"GET, POST, PUT, DELETE",Modify Member Type
+DB_Design,/DB/MBTP/{id},,"GET, POST, PUT, DELETE",Modify Member Type
+DB_Boundary,/DB/MCON,,"GET, POST, PUT, DELETE",Linear Constraints
+DB_Boundary,/DB/MCON/{id},,"GET, POST, PUT, DELETE",Linear Constraints
+DB_Design,/DB/MDGN,,"GET, POST, PUT, DELETE",Delete Db Mdgn
+DB_Design,/DB/MDGN/{id},,"GET, POST, PUT, DELETE",Delete Db Mdgn Key
+DB_Design,/DB/MEMB,,"GET, POST, PUT, DELETE",Member Assignment
+DB_Design,/DB/MEMB/{id},,"GET, POST, PUT, DELETE",Member Assignment
+DB_Boundary,/DB/MLFC,,"GET, POST, PUT, DELETE",Force-Deformation Function
+DB_Boundary,/DB/MLFC/{id},,"GET, POST, PUT, DELETE",Force-Deformation Function
+DB_Moving Loads,/DB/MLSP,,"GET, POST, PUT, DELETE",Lane Support - Negative Moments at Interior Piers
+DB_Moving Loads,/DB/MLSP/{id},,"GET, POST, PUT, DELETE",Lane Support - Negative Moments at Interior Piers
+DB_Moving Loads,/DB/MLSR,,"GET, POST, PUT, DELETE",Lane Support - Reactions at Interior Piers
+DB_Moving Loads,/DB/MLSR/{id},,"GET, POST, PUT, DELETE",Lane Support - Reactions at Interior Piers
+DB_Design,/DB/MRFT,,"GET, POST, PUT, DELETE",Delete Db Mrft
+DB_Design,/DB/MRFT/{id},,"GET, POST, PUT, DELETE",Delete Db Mrft Key
+DB_Properties,/DB/MTCS,,"GET, POST, PUT, DELETE",Delete Db Mtcs
+DB_Properties,/DB/MTCS/{id},,"GET, POST, PUT, DELETE",Delete Db Mtcs Key
+DB_Moving Loads,/DB/MVCD,,"GET, POST, PUT, DELETE",Moving Load Code
+DB_Moving Loads,/DB/MVCD/{id},,"GET, POST, PUT, DELETE",Moving Load Code
+DB_Analysis,/DB/MVCT,,"GET, POST, PUT, DELETE",Moving Load Analysis Control
+DB_Analysis,/DB/MVCT/{id},,"GET, POST, PUT, DELETE",Moving Load Analysis Control
+DB_Analysis,/DB/MVCTBS,,"GET, POST, PUT, DELETE",Moving Load Analysis Control - BS
+DB_Analysis,/DB/MVCTBS/{id},,"GET, POST, PUT, DELETE",Moving Load Analysis Control - BS
+DB_Analysis,/DB/MVCTCH,,"GET, POST, PUT, DELETE",Moving Load Analysis Control - China
+DB_Analysis,/DB/MVCTCH/{id},,"GET, POST, PUT, DELETE",Moving Load Analysis Control - China
+DB_Analysis,/DB/MVCTID,,"GET, POST, PUT, DELETE",Moving Load Analysis Control - India
+DB_Analysis,/DB/MVCTID/{id},,"GET, POST, PUT, DELETE",Moving Load Analysis Control - India
+DB_Analysis,/DB/MVCTTR,,"GET, POST, PUT, DELETE",Moving Load Analysis Control - Transverse
+DB_Analysis,/DB/MVCTTR/{id},,"GET, POST, PUT, DELETE",Moving Load Analysis Control - Transverse
+DB_Moving Loads,/DB/MVHC,,"GET, POST, PUT, DELETE",Vehicle Classes
+DB_Moving Loads,/DB/MVHC/{id},,"GET, POST, PUT, DELETE",Vehicle Classes
+DB_Moving Loads,/DB/MVHL,,"GET, POST, PUT, DELETE",Vehicles - Taiwan
+DB_Moving Loads,/DB/MVHL/{id},,"GET, POST, PUT, DELETE",Vehicles - Taiwan
+DB_Moving Loads,/DB/MVHLTR,,"GET, POST, PUT, DELETE",Vehicles - Transverse
+DB_Moving Loads,/DB/MVHLTR/{id},,"GET, POST, PUT, DELETE",Vehicles - Transverse
+DB_Moving Loads,/DB/MVLD,,"GET, POST, PUT, DELETE",Moving Load Cases
+DB_Moving Loads,/DB/MVLD/{id},,"GET, POST, PUT, DELETE",Moving Load Cases
+DB_Moving Loads,/DB/MVLDBS,,"GET, POST, PUT, DELETE",Moving Load Cases - BS
+DB_Moving Loads,/DB/MVLDBS/{id},,"GET, POST, PUT, DELETE",Moving Load Cases - BS
+DB_Moving Loads,/DB/MVLDCH,,"GET, POST, PUT, DELETE",Moving Load Cases - China
+DB_Moving Loads,/DB/MVLDCH/{id},,"GET, POST, PUT, DELETE",Moving Load Cases - China
+DB_Moving Loads,/DB/MVLDEU,,"GET, POST, PUT, DELETE",Moving Load Cases - Eurocode
+DB_Moving Loads,/DB/MVLDEU/{id},,"GET, POST, PUT, DELETE",Moving Load Cases - Eurocode
+DB_Moving Loads,/DB/MVLDID,,"GET, POST, PUT, DELETE",Moving Load Cases - India
+DB_Moving Loads,/DB/MVLDID/{id},,"GET, POST, PUT, DELETE",Moving Load Cases - India
+DB_Moving Loads,/DB/MVLDJP,,"GET, POST, PUT, DELETE",Delete Db Mvldjp
+DB_Moving Loads,/DB/MVLDJP/{id},,"GET, POST, PUT, DELETE",Delete Db Mvldjp Key
+DB_Moving Loads,/DB/MVLDPL,,"GET, POST, PUT, DELETE",Moving Load Cases - Poland
+DB_Moving Loads,/DB/MVLDPL/{id},,"GET, POST, PUT, DELETE",Moving Load Cases - Poland
+DB_Moving Loads,/DB/MVLDTR,,"GET, POST, PUT, DELETE",Moving Load Cases - Transverse
+DB_Moving Loads,/DB/MVLDTR/{id},,"GET, POST, PUT, DELETE",Moving Load Cases - Transverse
+DB_Static Loads,/DB/NBOF,,"GET, POST, PUT, DELETE",Nodal Body Force
+DB_Static Loads,/DB/NBOF/{id},,"GET, POST, PUT, DELETE",Nodal Body Force
+DB_Analysis,/DB/NLCT,,"GET, POST, PUT, DELETE",Nonlinear Analysis Control Data
+DB_Analysis,/DB/NLCT/{id},,"GET, POST, PUT, DELETE",Nonlinear Analysis Control Data
+DB_Boundary,/DB/NLLP,,"GET, POST, PUT, DELETE",General Link Properties
+DB_Boundary,/DB/NLLP/{id},,"GET, POST, PUT, DELETE",General Link Properties
+DB_Boundary,/DB/NLNK,,"GET, POST, PUT, DELETE",General Link
+DB_Boundary,/DB/NLNK/{id},,"GET, POST, PUT, DELETE",General Link
+DB_Static Loads,/DB/NMAS,,"GET, POST, PUT, DELETE",Nodal Masses
+DB_Static Loads,/DB/NMAS/{id},,"GET, POST, PUT, DELETE",Nodal Masses
+DB_Node/Element,/DB/NODE,,"GET, POST, PUT, DELETE",Node
+DB_Node/Element,/DB/NODE/{id},,"GET, POST, PUT, DELETE",Node
+DB_View,/DB/NPLN,,"GET, POST, PUT, DELETE",Named Plane
+DB_View,/DB/NPLN/{id},,"GET, POST, PUT, DELETE",Named Plane
+DB_Boundary,/DB/NSPR,,"GET, POST, PUT, DELETE",Point Spring
+DB_Boundary,/DB/NSPR/{id},,"GET, POST, PUT, DELETE",Point Spring
+DB_Temperature Loads,/DB/NTMP,,"GET, POST, PUT, DELETE",Nodal Temperature
+DB_Temperature Loads,/DB/NTMP/{id},,"GET, POST, PUT, DELETE",Nodal Temperature
+DB_View,/DB/NUCS,,"GET, POST, PUT, DELETE",Delete Db Nucs
+DB_View,/DB/NUCS/{id},,"GET, POST, PUT, DELETE",Delete Db Nucs Key
+DB_Boundary,/DB/OFFS,,"GET, POST, PUT, DELETE",Beam End Offsets
+DB_Boundary,/DB/OFFS/{id},,"GET, POST, PUT, DELETE",Beam End Offsets
+DB_Analysis,/DB/PDEL,,"GET, POST, PUT, DELETE",P-Delta Analysis Control
+DB_Analysis,/DB/PDEL/{id},,"GET, POST, PUT, DELETE",P-Delta Analysis Control
+DB_Pushover,/DB/PHGE,,"GET, POST, PUT, DELETE",Assign Pushover Hinge Properties
+DB_Pushover,/DB/PHGE/{id},,"GET, POST, PUT, DELETE",Assign Pushover Hinge Properties
+DB_Properties,/DB/PHGT,,"GET, POST, PUT, DELETE",Delete Db Phgt
+DB_Properties,/DB/PHGT/{id},,"GET, POST, PUT, DELETE",Delete Db Phgt Key
+DB_Project,/DB/PJCF,,"GET, POST, PUT, DELETE",Project Information
+DB_Project,/DB/PJCF/{id},,"GET, POST, PUT, DELETE",Project Information
+DB_Miscellaneous Loads,/DB/PLCB,,"GET, POST, PUT, DELETE",Pre-composite Section
+DB_Miscellaneous Loads,/DB/PLCB/{id},,"GET, POST, PUT, DELETE",Pre-composite Section
+DB_Static Loads,/DB/PNLA,,"GET, POST, PUT, DELETE",Assign Plane Loads
+DB_Static Loads,/DB/PNLA/{id},,"GET, POST, PUT, DELETE",Assign Plane Loads
+DB_Static Loads,/DB/PNLD,,"GET, POST, PUT, DELETE",Define Plane Load Type
+DB_Static Loads,/DB/PNLD/{id},,"GET, POST, PUT, DELETE",Define Plane Load Type
+DB_Pushover,/DB/POGD,,"GET, POST, PUT, DELETE",Pushover Analysis Control Data
+DB_Pushover,/DB/POGD/{id},,"GET, POST, PUT, DELETE",Pushover Analysis Control Data
+DB_Pushover,/DB/POLC,,"GET, POST, PUT, DELETE",Pushover Load Cases
+DB_Pushover,/DB/POLC/{id},,"GET, POST, PUT, DELETE",Pushover Load Cases
+DB_Properties,/DB/POSL,,"GET, POST, PUT, DELETE",Parameter of Seismic Loads
+DB_Properties,/DB/POSL/{id},,"GET, POST, PUT, DELETE",Parameter of Seismic Loads
+DB_Static Loads,/DB/PRES,,"GET, POST, PUT, DELETE",Assign Pressure Loads
+DB_Static Loads,/DB/PRES/{id},,"GET, POST, PUT, DELETE",Assign Pressure Loads
+DB_Boundary,/DB/PRLS,,"GET, POST, PUT, DELETE",Plate End Release
+DB_Boundary,/DB/PRLS/{id},,"GET, POST, PUT, DELETE",Plate End Release
+DB_Prestress Loads,/DB/PRST,,"GET, POST, PUT, DELETE",Prestress Beam Loads
+DB_Prestress Loads,/DB/PRST/{id},,"GET, POST, PUT, DELETE",Prestress Beam Loads
+DB_Static Loads,/DB/PSLT,,"GET, POST, PUT, DELETE",Define Pressure Load Type
+DB_Static Loads,/DB/PSLT/{id},,"GET, POST, PUT, DELETE",Define Pressure Load Type
+DB_Properties,/DB/PSSF,,"GET, POST, PUT, DELETE",Section Manager - Plate Stiffness Scale Factor
+DB_Properties,/DB/PSSF/{id},,"GET, POST, PUT, DELETE",Section Manager - Plate Stiffness Scale Factor
+DB_Prestress Loads,/DB/PTNS,,"GET, POST, PUT, DELETE",Pretension Loads
+DB_Prestress Loads,/DB/PTNS/{id},,"GET, POST, PUT, DELETE",Pretension Loads
+DB_Boundary,/DB/PZEF,,"GET, POST, PUT",Panel Zone Effects
+DB_Boundary,/DB/PZEF/{id},,"GET, POST, PUT",Panel Zone Effects
+DB_Design,/DB/RCHK,,"GET, POST, PUT, DELETE",Rebar Input for Checking - Beam/Column
+DB_Design,/DB/RCHK/{id},,"GET, POST, PUT, DELETE",Rebar Input for Checking - Beam/Column
+DB_Boundary,/DB/RIGD,,"GET, POST, PUT, DELETE",Rigid Link
+DB_Boundary,/DB/RIGD/{id},,"GET, POST, PUT, DELETE",Rigid Link
+DB_Properties,/DB/RPSC,,"GET, POST, PUT, DELETE",Section Manager - Reinforcements
+DB_Properties,/DB/RPSC/{id},,"GET, POST, PUT, DELETE",Section Manager - Reinforcements
+DB_Analysis,/DB/SBCT,,"GET, POST, PUT, DELETE",Delete Db Sbct
+DB_Analysis,/DB/SBCT/{id},,"GET, POST, PUT, DELETE",Delete Db Sbct Key
+DB_Node/Element,/DB/SBDO,,"GET, POST, PUT, DELETE",Define Sub-Domain
+DB_Node/Element,/DB/SBDO/{id},,"GET, POST, PUT, DELETE",Define Sub-Domain
+DB_Static Loads,/DB/SDSP,,"GET, POST, PUT, DELETE",Specified Displacements of Support
+DB_Static Loads,/DB/SDSP/{id},,"GET, POST, PUT, DELETE",Specified Displacements of Support
+DB_Boundary,/DB/SDST,,"GET, POST, PUT, DELETE",Seismic Device - Steel Damper
+DB_Boundary,/DB/SDST/{id},,"GET, POST, PUT, DELETE",Seismic Device - Steel Damper
+DB_Boundary,/DB/SDVE,,"GET, POST, PUT, DELETE",Seismic Device - Viscoelastic Damper
+DB_Boundary,/DB/SDVE/{id},,"GET, POST, PUT, DELETE",Seismic Device - Viscoelastic Damper
+DB_Boundary,/DB/SDVI,,"GET, POST, PUT, DELETE",Seismic Device - Viscous Damper/Oil Damper
+DB_Boundary,/DB/SDVI/{id},,"GET, POST, PUT, DELETE",Seismic Device - Viscous Damper/Oil Damper
+DB_Properties,/DB/SECF,,"GET, POST, PUT, DELETE",Section Manager - Stiffness
+DB_Properties,/DB/SECF/{id},,"GET, POST, PUT, DELETE",Section Manager - Stiffness
+DB_Properties,/DB/SECP,,"GET, POST, PUT, DELETE",Delete Db Secp
+DB_Properties,/DB/SECP/{id},,"GET, POST, PUT, DELETE",Delete Db Secp Key
+DB_Properties,/DB/SECT,,"GET, POST, PUT, DELETE",Section Properties - Tapered - Steel Girder
+DB_Properties,/DB/SECT/{id},,"GET, POST, PUT, DELETE",Section Properties - Tapered - Steel Girder
+DB_Properties,/DB/SECV,,"GET, POST, PUT, DELETE",Delete Db Secv
+DB_Properties,/DB/SECV/{id},,"GET, POST, PUT, DELETE",Delete Db Secv Key
+DB_Construction Stage Loads (Test),/DB/SGLD,,GET,Get Db Sgld
+DB_Construction Stage Loads (Test),/DB/SGLD/{id},,GET,Get Db Sgld Key
+DB_View,/DB/SINF,,"GET, POST, PUT, DELETE",Plate Element for Influence Surface
+DB_View,/DB/SINF/{id},,"GET, POST, PUT, DELETE",Plate Element for Influence Surface
+DB_Node/Element,/DB/SKEW,,"GET, POST, PUT, DELETE",Node Local Axis
+DB_Node/Element,/DB/SKEW/{id},,"GET, POST, PUT, DELETE",Node Local Axis
+DB_Moving Loads,/DB/SLAN,,"GET, POST, PUT, DELETE",Traffic Surface Lanes
+DB_Moving Loads,/DB/SLAN/{id},,"GET, POST, PUT, DELETE",Traffic Surface Lanes
+DB_Moving Loads,/DB/SLANCH,,"GET, POST, PUT, DELETE",Traffic Surface Lanes - China
+DB_Moving Loads,/DB/SLANCH/{id},,"GET, POST, PUT, DELETE",Traffic Surface Lanes - China
+DB_Moving Loads,/DB/SLANOP,,"GET, POST, PUT, DELETE",Traffic Surface Lanes - Moving Load Optimization
+DB_Moving Loads,/DB/SLANOP/{id},,"GET, POST, PUT, DELETE",Traffic Surface Lanes - Moving Load Optimization
+DB_Analysis,/DB/SMCT,,"GET, POST, PUT, DELETE",Settlement Analysis Control Data
+DB_Analysis,/DB/SMCT/{id},,"GET, POST, PUT, DELETE",Settlement Analysis Control Data
+DB_Settlement Loads,/DB/SMLC,,"GET, POST, PUT, DELETE",Settlement Load Cases
+DB_Settlement Loads,/DB/SMLC/{id},,"GET, POST, PUT, DELETE",Settlement Load Cases
+DB_Settlement Loads,/DB/SMPT,,"GET, POST, PUT, DELETE",Settlement Group
+DB_Settlement Loads,/DB/SMPT/{id},,"GET, POST, PUT, DELETE",Settlement Group
+DB_Structure,/DB/SPAN,,"GET, POST, PUT, DELETE",Span Information
+DB_Structure,/DB/SPAN/{id},,"GET, POST, PUT, DELETE",Span Information
+DB_Dynamic Loads,/DB/SPFC,,"GET, POST, PUT, DELETE",Response Spectrum Functions - Other Countries
+DB_Dynamic Loads,/DB/SPFC/{id},,"GET, POST, PUT, DELETE",Response Spectrum Functions - Other Countries
+DB_Dynamic Loads,/DB/SPLC,,"GET, POST, PUT, DELETE",Response Spectrum Load Cases
+DB_Dynamic Loads,/DB/SPLC/{id},,"GET, POST, PUT, DELETE",Response Spectrum Load Cases
+DB_Boundary,/DB/SSPS,,"GET, POST, PUT, DELETE",Surface Spring
+DB_Boundary,/DB/SSPS/{id},,"GET, POST, PUT, DELETE",Surface Spring
+DB_Construction Stage Loads,/DB/STAG,,"GET, POST, PUT, DELETE",Define Construction Stage
+DB_Construction Stage Loads,/DB/STAG/{id},,"GET, POST, PUT, DELETE",Define Construction Stage
+DB_Construction Stage Loads,/DB/STBK,,"GET, POST, PUT, DELETE",Set-Back Loads for Nonlinear Construction Stage
+DB_Construction Stage Loads,/DB/STBK/{id},,"GET, POST, PUT, DELETE",Set-Back Loads for Nonlinear Construction Stage
+DB_Analysis,/DB/STCT,,"GET, POST, PUT, DELETE",Construction Stage Analysis Control Data
+DB_Analysis,/DB/STCT/{id},,"GET, POST, PUT, DELETE",Construction Stage Analysis Control Data
+DB_Static Loads,/DB/STLD,,"GET, POST, PUT, DELETE",Static Load Cases
+DB_Static Loads,/DB/STLD/{id},,"GET, POST, PUT, DELETE",Static Load Cases
+DB_Temperature Loads,/DB/STMP,,"GET, POST, PUT, DELETE",System Temperature
+DB_Temperature Loads,/DB/STMP/{id},,"GET, POST, PUT, DELETE",System Temperature
+DB_Properties,/DB/STRPSSM,,"GET, POST, PUT, DELETE",Section Manager - Stress Points
+DB_Properties,/DB/STRPSSM/{id},,"GET, POST, PUT, DELETE",Section Manager - Stress Points
+DB_Project,/DB/STYP,,"GET, POST, PUT, DELETE",Structure Type
+DB_Project,/DB/STYP/{id},,"GET, POST, PUT, DELETE",Structure Type
+DB_Prestress Loads,/DB/TDCS,,"GET, POST, PUT, DELETE",Tendon Location for Composite Section
+DB_Prestress Loads,/DB/TDCS/{id},,"GET, POST, PUT, DELETE",Tendon Location for Composite Section
+DB_Project,/DB/TDGR,,"GET, POST, PUT, DELETE",Tendon Group
+DB_Project,/DB/TDGR/{id},,"GET, POST, PUT, DELETE",Tendon Group
+DB_Properties,/DB/TDME,,"GET, POST, PUT, DELETE",Time Dependent Material Properties - Compressive Strength
+DB_Properties,/DB/TDME/{id},,"GET, POST, PUT, DELETE",Time Dependent Material Properties - Compressive Strength
+DB_Properties,/DB/TDMF,,"GET, POST, PUT, DELETE",Time Dependent Material Properties - User Defined
+DB_Properties,/DB/TDMF/{id},,"GET, POST, PUT, DELETE",Time Dependent Material Properties - User Defined
+DB_Properties,/DB/TDMT,,"GET, POST, PUT, DELETE",Time Dependent Material Properties - Creep/Shrinkage
+DB_Properties,/DB/TDMT/{id},,"GET, POST, PUT, DELETE",Time Dependent Material Properties - Creep/Shrinkage
+DB_Prestress Loads,/DB/TDNA,,"GET, POST, PUT, DELETE",Tendon Profile
+DB_Prestress Loads,/DB/TDNA/{id},,"GET, POST, PUT, DELETE",Tendon Profile
+DB_Prestress Loads,/DB/TDNT,,"GET, POST, PUT, DELETE",Tendon Property
+DB_Prestress Loads,/DB/TDNT/{id},,"GET, POST, PUT, DELETE",Tendon Property
+DB_Prestress Loads,/DB/TDPL,,"GET, POST, PUT, DELETE",Tendon Prestress
+DB_Prestress Loads,/DB/TDPL/{id},,"GET, POST, PUT, DELETE",Tendon Prestress
+DB_Dynamic Loads,/DB/THFC,,"GET, POST, PUT, DELETE",Time History Functions
+DB_Dynamic Loads,/DB/THFC/{id},,"GET, POST, PUT, DELETE",Time History Functions
+DB_Dynamic Loads,/DB/THGA,,"GET, POST, PUT, DELETE",Ground Acceleration
+DB_Dynamic Loads,/DB/THGA/{id},,"GET, POST, PUT, DELETE",Ground Acceleration
+DB_Dynamic Loads,/DB/THGC,,"GET, POST, PUT, DELETE",Time History Global Control
+DB_Dynamic Loads,/DB/THGC/{id},,"GET, POST, PUT, DELETE",Time History Global Control
+DB_Properties,/DB/THIK,,"GET, POST, PUT, DELETE",Thickness - Stiffened Value
+DB_Properties,/DB/THIK/{id},,"GET, POST, PUT, DELETE",Thickness - Stiffened Value
+DB_Dynamic Loads,/DB/THIS,,"GET, POST, PUT, DELETE",Time History Load Cases
+DB_Dynamic Loads,/DB/THIS/{id},,"GET, POST, PUT, DELETE",Time History Load Cases
+DB_Dynamic Loads,/DB/THMS,,"GET, POST, PUT, DELETE",Multiple Support Excitation
+DB_Dynamic Loads,/DB/THMS/{id},,"GET, POST, PUT, DELETE",Multiple Support Excitation
+DB_Dynamic Loads,/DB/THNL,,"GET, POST, PUT, DELETE",Dynamic Nodal Loads
+DB_Dynamic Loads,/DB/THNL/{id},,"GET, POST, PUT, DELETE",Dynamic Nodal Loads
+DB_Time History Analysis Results,/DB/THRE,,"GET, POST, PUT, DELETE",Time History Graph - Element Force Smart Graph
+DB_Time History Analysis Results,/DB/THRE/{id},,"GET, POST, PUT, DELETE",Time History Graph - Element Force Smart Graph
+DB_Time History Analysis Results,/DB/THRG,,"GET, POST, PUT, DELETE",Time History Graph - General Link Smart Graph
+DB_Time History Analysis Results,/DB/THRG/{id},,"GET, POST, PUT, DELETE",Time History Graph - General Link Smart Graph
+DB_Time History Analysis Results,/DB/THRI,,"GET, POST, PUT, DELETE",Time History Graph - Inelastic Hinge Smart Graph
+DB_Time History Analysis Results,/DB/THRI/{id},,"GET, POST, PUT, DELETE",Time History Graph - Inelastic Hinge Smart Graph
+DB_Dynamic Loads,/DB/THSL,,"GET, POST, PUT, DELETE",Time Varying Static Loads
+DB_Dynamic Loads,/DB/THSL/{id},,"GET, POST, PUT, DELETE",Time Varying Static Loads
+DB_Properties,/DB/TMAT,,"GET, POST, PUT, DELETE",Time Dependent Material Link
+DB_Properties,/DB/TMAT/{id},,"GET, POST, PUT, DELETE",Time Dependent Material Link
+DB_Construction Stage Loads,/DB/TMLD,,"GET, POST, PUT, DELETE",Time Loads for Construction Stage
+DB_Construction Stage Loads,/DB/TMLD/{id},,"GET, POST, PUT, DELETE",Time Loads for Construction Stage
+DB_Properties,/DB/TSGR,,"GET, POST, PUT, DELETE",Tapered Group
+DB_Properties,/DB/TSGR/{id},,"GET, POST, PUT, DELETE",Tapered Group
+DB_View,/DB/UFIG,,GET,Get Db Ufig
+DB_View,/DB/UFIG/{id},,GET,Get Db Ufig Key
+DB_Misc. Result,/DB/ULFC,,"GET, POST, PUT, DELETE",Cable Control - Unknown Load Factor Constraints
+DB_Misc. Result,/DB/ULFC/{id},,"GET, POST, PUT, DELETE",Cable Control - Unknown Load Factor Constraints
+DB_Project,/DB/UNIT,,"GET, PUT",Unit System
+DB_Project,/DB/UNIT/{id},,"GET, PUT",Unit System
+DB_Properties,/DB/VBEM,,"GET, POST, PUT, DELETE",Section Manager - Section for Resultant Forces - Virtual Beam
+DB_Properties,/DB/VBEM/{id},,"GET, POST, PUT, DELETE",Section Manager - Section for Resultant Forces - Virtual Beam
+DB_Properties,/DB/VSEC,,"GET, POST, PUT, DELETE",Section Manager - Section for Resultant Forces - Virtual Section
+DB_Properties,/DB/VSEC/{id},,"GET, POST, PUT, DELETE",Section Manager - Section for Resultant Forces - Virtual Section
+DB_Design,/DB/WMAK,,"GET, POST, PUT, DELETE",Modify Wall Mark Design
+DB_Design,/DB/WMAK/{id},,"GET, POST, PUT, DELETE",Modify Wall Mark Design
+DB_Properties,/DB/WSSF,,"GET, POST, PUT, DELETE",Delete Db Wssf
+DB_Properties,/DB/WSSF/{id},,"GET, POST, PUT, DELETE",Delete Db Wssf Key
+DB_Miscellaneous Loads,/DB/WVLD,,"GET, POST, PUT, DELETE",Wave Loads
+DB_Miscellaneous Loads,/DB/WVLD/{id},,"GET, POST, PUT, DELETE",Wave Loads
+DOC,/DOC/ANAL,,POST,Perform Analysis
+DOC,/DOC/CLOSE,,POST,Close Project
+DOC,/DOC/EXIT,,POST,Post Doc Exit
+DOC,/DOC/EXPORT,,POST,Export to Json
+DOC,/DOC/EXPORT/{NAME},,POST,Post Doc Export With Param
+DOC,/DOC/EXPORTMXT,,POST,Export to mct/mgt
+DOC,/DOC/IMPORT,,POST,Import to Json
+DOC,/DOC/IMPORTMXT,,POST,Import to mct/mgt
+DOC,/DOC/NEW,,POST,New Project
+DOC,/DOC/OPEN,,POST,Open Project
+DOC,/DOC/SAVE,,POST,Save
+DOC,/DOC/SAVEAS,,POST,Save As
+DOC,/DOC/STAGAS,,POST,Save Current Stage As
+Description,/INFO/DB/ACTL,,GET,Main Control Data
+Description,/INFO/DB/ARPR,,GET,Description Arpr
+Description,/INFO/DB/BCCT,,GET,Boundary Change Assignment
+Description,/INFO/DB/BMLD,,GET,Beam Loads
+Description,/INFO/DB/BNGR,,GET,Boundary Group
+Description,/INFO/DB/BODF,,GET,Self-Weight
+Description,/INFO/DB/BTMP,,GET,Beam Section Temperature
+Description,/INFO/DB/BUCK,,GET,Buckling Analysis Control
+Description,/INFO/DB/CAMB,,GET,FCM Camber Control
+Description,/INFO/DB/CCFC,,GET,Convection Coefficient Functions
+Description,/INFO/DB/CGLP,,GET,Change General Link Property
+Description,/INFO/DB/CJFG,,GET,Concurrent Joint Force Group
+Description,/INFO/DB/CLDR,,GET,Define Constraints Label Direction
+Description,/INFO/DB/CLWP,,GET,Plate Cutting Line Diagram
+Description,/INFO/DB/CMCS,,GET,Camber for Construction Stage
+Description,/INFO/DB/CMFT,,GET,Description Cmft
+Description,/INFO/DB/CNLD,,GET,Nodal Loads
+Description,/INFO/DB/CONS,,GET,Constraint Support
+Description,/INFO/DB/CO_F,,GET,Floor Load Color
+Description,/INFO/DB/CO_M,,GET,Material Color
+Description,/INFO/DB/CO_S,,GET,Section Color
+Description,/INFO/DB/CO_T,,GET,Thickness Color
+Description,/INFO/DB/CRGR,,GET,Concurrent Reaction Group
+Description,/INFO/DB/CRPC,,GET,Creep Coefficient for Construction Stage
+Description,/INFO/DB/CSCS,,GET,Composite Section for Construction Stage
+Description,/INFO/DB/CUTL,,GET,Cutting Line
+Description,/INFO/DB/DCON,,GET,RC Design Code
+Description,/INFO/DB/DCTL,,GET,Definition of Frame
+Description,/INFO/DB/DOEL,,GET,Domain-Element
+Description,/INFO/DB/DSTL,,GET,Design Steel Code
+Description,/INFO/DB/DYFG,,GET,Railway Dynamic Factor
+Description,/INFO/DB/DYLA,,GET,Dynamic Load Allowance
+Description,/INFO/DB/DYNF,,GET,Railway Dynamic Factor by Element
+Description,/INFO/DB/EARE,,GET,Description Eare
+Description,/INFO/DB/EDMP,,GET,Change Property
+Description,/INFO/DB/EFCT,,GET,Small Displacement - Initial Force Control Data
+Description,/INFO/DB/EIGV,,GET,Eigenvalue Analysis Control
+Description,/INFO/DB/ELEM,,GET,Element
+Description,/INFO/DB/ELNK,,GET,Elastic Link
+Description,/INFO/DB/EPMT,,GET,Plastic Material
+Description,/INFO/DB/EPSE,,GET,Description Epse
+Description,/INFO/DB/EQMF,,GET,Description Eqmf
+Description,/INFO/DB/ESSF,,GET,Element Stiffness Scale Factor
+Description,/INFO/DB/ETFC,,GET,Ambient Temperature Functions
+Description,/INFO/DB/ETMP,,GET,Element Temperature
+Description,/INFO/DB/EWSF,,GET,Effective Width Scale Factor
+Description,/INFO/DB/EXLD,,GET,External Type Load Case for Pretension
+Description,/INFO/DB/FBLA,,GET,Assign Floor Loads
+Description,/INFO/DB/FBLD,,GET,Define Floor Load Type
+Description,/INFO/DB/FIBR,,GET,Fiber Division of Section
+Description,/INFO/DB/FIMP,,GET,Inelastic Material Properties
+Description,/INFO/DB/FMLD,,GET,Finishing Material Loads
+Description,/INFO/DB/FRLS,,GET,Beam End Release
+Description,/INFO/DB/GALD,,GET,Grid Analysis Load
+Description,/INFO/DB/GCMB,,GET,General Camber Control
+Description,/INFO/DB/GRDP,,GET,Group Damping
+Description,/INFO/DB/GRUP,,GET,Structure Group
+Description,/INFO/DB/GSBG,,GET,Bridge Girder Diagrams
+Description,/INFO/DB/GSPR,,GET,Assign General Spring Supports
+Description,/INFO/DB/GSTP,,GET,Define General Spring Type
+Description,/INFO/DB/GTMP,,GET,Temperature Gradient
+Description,/INFO/DB/HAHS,,GET,Assign Heat Source
+Description,/INFO/DB/HECB,,GET,Element Convection Boundary
+Description,/INFO/DB/HHCT,,GET,Heat of Hydration Analysis Control
+Description,/INFO/DB/HHND,,GET,Heat of Hydaration Result Graph
+Description,/INFO/DB/HPCE,,GET,Pipe Cooling
+Description,/INFO/DB/HSFC,,GET,Heat Source Functions
+Description,/INFO/DB/HSPT,,GET,Prescribed Temperature
+Description,/INFO/DB/HSTG,,GET,Define Construction Stage for Hydration
+Description,/INFO/DB/IEHC,,GET,Inelastic Hinge Control Data
+Description,/INFO/DB/IEHG,,GET,Assign Inelastic Hinge Properties
+Description,/INFO/DB/IEHP,,GET,Description Iehp
+Description,/INFO/DB/IELC,,GET,Ignore Elements for Load Cases
+Description,/INFO/DB/IEPI,,GET,Ignore Elements for Pushover Intial Load
+Description,/INFO/DB/IFGS,,GET,Large Displacement - Initial Forces for Geometric Stiffness
+Description,/INFO/DB/IMFM,,GET,Inelastic Material Properties for Fiber Model
+Description,/INFO/DB/IMPF,,GET,Additional Impact Factor
+Description,/INFO/DB/INMF,,GET,Small Displacement - Initial Element Force
+Description,/INFO/DB/KFAC,,GET,Description Kfac
+Description,/INFO/DB/LCOM-ALUM,,GET,Description Lcom Alu
+Description,/INFO/DB/LCOM-CFSTEEL,,GET,Description Lcom Cfsteel
+Description,/INFO/DB/LCOM-CONC,,GET,Load Combinations - Concrete Design
+Description,/INFO/DB/LCOM-FDN,,GET,Description Lcom Fdn
+Description,/INFO/DB/LCOM-GEN,,GET,Load Combinations - General
+Description,/INFO/DB/LCOM-LINEAR,,GET,Description Lcom Linear
+Description,/INFO/DB/LCOM-SEISMIC,,GET,Load Combinations - Seismic Design
+Description,/INFO/DB/LCOM-SRC,,GET,Load Combinations - SRC Design
+Description,/INFO/DB/LCOM-STEEL,,GET,Load Combinations - Steel Design
+Description,/INFO/DB/LCOM-STLCOMP,,GET,Load Combinations - Composite Steel Girder Design
+Description,/INFO/DB/LDGR,,GET,Load Group
+Description,/INFO/DB/LDSQ,,GET,Load Sequence for Nonlinear
+Description,/INFO/DB/LENG,,GET,Unbraced Length
+Description,/INFO/DB/LLAN,,GET,Traffic Line Lanes
+Description,/INFO/DB/LLANCH,,GET,Traffic Line Lanes - China
+Description,/INFO/DB/LLANID,,GET,Traffic Line Lanes - India
+Description,/INFO/DB/LLANJP,,GET,Description Llanjp
+Description,/INFO/DB/LLANOP,,GET,Traffic Line Lanes - Moving Load Optimizaion
+Description,/INFO/DB/LLANTR,,GET,Traffic Line Lanes - Transverse
+Description,/INFO/DB/LTOM,,GET,Loads to Masses
+Description,/INFO/DB/LTSR,,GET,Underground Load Combination Type
+Description,/INFO/DB/MADO,,GET,Define Domain
+Description,/INFO/DB/MATD,,GET,Modify Concrete Materials
+Description,/INFO/DB/MATL,,GET,Material Properties
+Description,/INFO/DB/MBTP,,GET,Modify Member Type
+Description,/INFO/DB/MCON,,GET,Linear Constraints
+Description,/INFO/DB/MDGN,,GET,Description Mdgn
+Description,/INFO/DB/MEMB,,GET,Member Assignment
+Description,/INFO/DB/MLFC,,GET,Force-Deformation Function
+Description,/INFO/DB/MLSP,,GET,Lane Support - Negative Moments at Interior Piers
+Description,/INFO/DB/MLSR,,GET,Lane Support - Reactions at Interior Piers
+Description,/INFO/DB/MRFT,,GET,Description Mrft
+Description,/INFO/DB/MTCS,,GET,Description Mtcs
+Description,/INFO/DB/MVCD,,GET,Moving Load Code
+Description,/INFO/DB/MVCT,,GET,Moving Load Analysis Control
+Description,/INFO/DB/MVCTBS,,GET,Moving Load Analysis Control - BS
+Description,/INFO/DB/MVCTCH,,GET,Moving Load Analysis Control - China
+Description,/INFO/DB/MVCTID,,GET,Moving Load Analysis Control - India
+Description,/INFO/DB/MVCTTR,,GET,Moving Load Analysis Control - Transverse
+Description,/INFO/DB/MVHC,,GET,Vehicle Classes
+Description,/INFO/DB/MVHL,,GET,Vehicles - Taiwan
+Description,/INFO/DB/MVHLTR,,GET,Vehicles - Transverse
+Description,/INFO/DB/MVLD,,GET,Moving Load Cases
+Description,/INFO/DB/MVLDBS,,GET,Moving Load Cases - BS
+Description,/INFO/DB/MVLDCH,,GET,Moving Load Cases - China
+Description,/INFO/DB/MVLDEU,,GET,Moving Load Cases - Eurocode
+Description,/INFO/DB/MVLDID,,GET,Moving Load Cases - India
+Description,/INFO/DB/MVLDJP,,GET,Description Mvldjp
+Description,/INFO/DB/MVLDPL,,GET,Moving Load Cases - Poland
+Description,/INFO/DB/MVLDTR,,GET,Moving Load Cases - Transverse
+Description,/INFO/DB/NBOF,,GET,Nodal Body Force
+Description,/INFO/DB/NLCT,,GET,Nonlinear Analysis Control Data
+Description,/INFO/DB/NLLP,,GET,General Link Properties
+Description,/INFO/DB/NLNK,,GET,General Link
+Description,/INFO/DB/NMAS,,GET,Nodal Masses
+Description,/INFO/DB/NODE,,GET,Node
+Description,/INFO/DB/NPLN,,GET,Named Plane
+Description,/INFO/DB/NSPR,,GET,Point Spring
+Description,/INFO/DB/NTMP,,GET,Nodal Temperature
+Description,/INFO/DB/NUCS,,GET,Description Nucs
+Description,/INFO/DB/OFFS,,GET,Beam End Offsets
+Description,/INFO/DB/PDEL,,GET,P-Delta Analysis Control
+Description,/INFO/DB/PHGE,,GET,Assign Pushover Hinge Properties
+Description,/INFO/DB/PHGT,,GET,Description Phgt
+Description,/INFO/DB/PJCF,,GET,Project Information
+Description,/INFO/DB/PLCB,,GET,Pre-composite Section
+Description,/INFO/DB/PNLA,,GET,Assign Plane Loads
+Description,/INFO/DB/PNLD,,GET,Define Plane Load Type
+Description,/INFO/DB/POGD,,GET,Pushover Analysis Control Data
+Description,/INFO/DB/POLC,,GET,Pushover Load Cases
+Description,/INFO/DB/POSL,,GET,Parameter of Seismic Loads
+Description,/INFO/DB/PRES,,GET,Assign Pressure Loads
+Description,/INFO/DB/PRLS,,GET,Plate End Release
+Description,/INFO/DB/PRST,,GET,Prestress Beam Loads
+Description,/INFO/DB/PSLT,,GET,Define Pressure Load Type
+Description,/INFO/DB/PSSF,,GET,Section Manager - Plate Stiffness Scale Factor
+Description,/INFO/DB/PTNS,,GET,Pretension Loads
+Description,/INFO/DB/PZEF,,GET,Panel Zone Effects
+Description,/INFO/DB/RCHK,,GET,Rebar Input for Checking - Beam/Column
+Description,/INFO/DB/RIGD,,GET,Rigid Link
+Description,/INFO/DB/RPSC,,GET,Section Manager - Reinforcements
+Description,/INFO/DB/SBCT,,GET,Description Sbct
+Description,/INFO/DB/SBDO,,GET,Define Sub-Domain
+Description,/INFO/DB/SDSP,,GET,Specified Displacements of Support
+Description,/INFO/DB/SDST,,GET,Seismic Device - Steel Damper
+Description,/INFO/DB/SDVE,,GET,Seismic Device - Viscoelastic Damper
+Description,/INFO/DB/SDVI,,GET,Seismic Device - Viscous Damper/Oil Damper
+Description,/INFO/DB/SECF,,GET,Section Manager - Stiffness
+Description,/INFO/DB/SECP,,GET,Description Secp
+Description,/INFO/DB/SECT,,GET,Section Properties - Tapered - Steel Girder
+Description,/INFO/DB/SECV,,GET,Description Secv
+Description,/INFO/DB/SGLD,,GET,Description Sgld
+Description,/INFO/DB/SINF,,GET,Plate Element for Influence Surface
+Description,/INFO/DB/SKEW,,GET,Node Local Axis
+Description,/INFO/DB/SLAN,,GET,Traffic Surface Lanes
+Description,/INFO/DB/SLANCH,,GET,Traffic Surface Lanes - China
+Description,/INFO/DB/SLANOP,,GET,Traffic Surface Lanes - Moving Load Optimization
+Description,/INFO/DB/SMCT,,GET,Settlement Analysis Control Data
+Description,/INFO/DB/SMLC,,GET,Settlement Load Cases
+Description,/INFO/DB/SMPT,,GET,Settlement Group
+Description,/INFO/DB/SPAN,,GET,Span Information
+Description,/INFO/DB/SPFC,,GET,Response Spectrum Functions - Other Countries
+Description,/INFO/DB/SPLC,,GET,Response Spectrum Load Cases
+Description,/INFO/DB/SSPS,,GET,Surface Spring
+Description,/INFO/DB/STAG,,GET,Define Construction Stage
+Description,/INFO/DB/STBK,,GET,Set-Back Loads for Nonlinear Construction Stage
+Description,/INFO/DB/STCT,,GET,Construction Stage Analysis Control Data
+Description,/INFO/DB/STLD,,GET,Static Load Cases
+Description,/INFO/DB/STMP,,GET,System Temperature
+Description,/INFO/DB/STRPSSM,,GET,Section Manager - Stress Points
+Description,/INFO/DB/STYP,,GET,Structure Type
+Description,/INFO/DB/TDCS,,GET,Tendon Location for Composite Section
+Description,/INFO/DB/TDGR,,GET,Tendon Group
+Description,/INFO/DB/TDME,,GET,Time Dependent Material Properties - Compressive Strength
+Description,/INFO/DB/TDMF,,GET,Time Dependent Material Properties - User Defined
+Description,/INFO/DB/TDMT,,GET,Time Dependent Material Properties - Creep/Shrinkage
+Description,/INFO/DB/TDNA,,GET,Tendon Profile
+Description,/INFO/DB/TDNT,,GET,Tendon Property
+Description,/INFO/DB/TDPL,,GET,Tendon Prestress
+Description,/INFO/DB/THFC,,GET,Time History Functions
+Description,/INFO/DB/THGA,,GET,Ground Acceleration
+Description,/INFO/DB/THGC,,GET,Time History Global Control
+Description,/INFO/DB/THIK,,GET,Thickness - Stiffened Value
+Description,/INFO/DB/THIS,,GET,Time History Load Cases
+Description,/INFO/DB/THMS,,GET,Multiple Support Excitation
+Description,/INFO/DB/THNL,,GET,Dynamic Nodal Loads
+Description,/INFO/DB/THRE,,GET,Time History Graph - Element Force Smart Graph
+Description,/INFO/DB/THRG,,GET,Time History Graph - General Link Smart Graph
+Description,/INFO/DB/THRI,,GET,Time History Graph - Inelastic Hinge Smart Graph
+Description,/INFO/DB/THSL,,GET,Time Varying Static Loads
+Description,/INFO/DB/TMAT,,GET,Time Dependent Material Link
+Description,/INFO/DB/TMLD,,GET,Time Loads for Construction Stage
+Description,/INFO/DB/TSGR,,GET,Tapered Group
+Description,/INFO/DB/UFIG,,GET,Description Ufig
+Description,/INFO/DB/ULFC,,GET,Cable Control - Unknown Load Factor Constraints
+Description,/INFO/DB/UNIT,,GET,Unit System
+Description,/INFO/DB/VBEM,,GET,Section Manager - Section for Resultant Forces - Virtual Beam
+Description,/INFO/DB/VSEC,,GET,Section Manager - Section for Resultant Forces - Virtual Section
+Description,/INFO/DB/WMAK,,GET,Modify Wall Mark Design
+Description,/INFO/DB/WSSF,,GET,Description Wssf
+Description,/INFO/DB/WVLD,,GET,Wave Loads
+OPE,/OPE/ANALSTATUS,,POST,Post Ope Analstatus
+OPE,/OPE/APIEND,,GET,Get Ope Apiend
+OPE,/OPE/APISTART,,GET,Get Ope Apistart
+OPE,/OPE/AUTOMESH,,POST,Auto-Mesh Planar Area
+OPE,/OPE/BOM,,POST,Post Ope Bom
+OPE,/OPE/DIVIDEELEM,,POST,Divide Elements
+OPE,/OPE/EDMP,,POST,Change Property
+OPE,/OPE/ELEMPAR,,POST,Post Ope Elempar
+OPE,/OPE/ELEMTDNT,,POST,Post Ope Elemtdnt
+OPE,/OPE/LINEBMLD,,POST,Line Beam Load
+OPE,/OPE/MATL_DB/{TYPE or STANDARD},,GET,Get Ope Matl Db With Param
+OPE,/OPE/MATL_STANDARD/{TYPE},,GET,Get Ope Matl Standard With Param
+OPE,/OPE/MEMB,,POST,Member Assignment
+OPE,/OPE/MODALDAMPINGRATIO,,POST,Post Ope Modaldampingratio
+OPE,/OPE/MXTCMDSHELL,,POST,Post Ope Mxtcmdshell
+OPE,/OPE/MXTCMDSHELL/{CMD},,GET,Get Ope Mxtcmdshell With Param
+OPE,/OPE/MXTINFO,,GET,Get Ope Mxtinfo
+OPE,/OPE/PLATE_DECK,,POST,Post Ope Plate Deck
+OPE,/OPE/POSP,,POST,Post Ope Posp
+OPE,/OPE/PROJECTSTATUS,,GET,Project Status
+OPE,/OPE/SECTCORD,,POST,Post Ope Sectcord
+OPE,/OPE/SECTPROP,,"GET, POST",Section Properties Calculation Results
+OPE,/OPE/SECT_DBNAME/{shape},,GET,Get Ope Sect Dbname With Param
+OPE,/OPE/SECT_NAME,,POST,Post Ope Sect Name
+OPE,/OPE/SECT_SHAPE,,GET,Get Ope Sect Shape
+OPE,/OPE/SECT_SHAPE/{opt},,GET,Get Ope Sect Shape With Param
+OPE,/OPE/SMARTGRAPHVALUE,,POST,Post Ope Smartgraphvalue
+OPE,/OPE/SSPS,,POST,Surface Spring
+OPE,/OPE/SWPCGIRDER_DLG,,POST,Post Ope Swpcgirder Dlg
+OPE,/OPE/TEMP_TABLETYPE,,GET,Get Ope Temp Tabletype
+OPE,/OPE/TRANSACTION-CANCEL,,POST,Post Ope Transaction Cancel
+OPE,/OPE/TRANSACTION-CLOSE,,POST,Post Ope Transaction Close
+OPE,/OPE/TRANSACTION-OPEN,,POST,Post Ope Transaction Open
+OPE,/OPE/USLC,,POST,Using Load Combinations
+OPE,/OPE/UTBLTYPES,,GET,Get Ope Utbltypes
+POST,/POST/ANL,,POST,Post Post Anl
+POST,/POST/CHART,,POST,Post Post Chart
+POST,/POST/PM,,POST,P-M Interaction Diagram
+POST,/POST/RCBEAMCHKRATIO,,POST,Post Post Rcbeamchkratio
+POST,/POST/RCWALLDGNRATIO,,POST,Post Post Rcwalldgnratio
+POST,/POST/STEELCODECHECK,,POST,Steel Code Check
+POST,/POST/TABLE,,POST,Cold Formed Design - Cold Formed Steel Member Design Forces
+POST,/POST/TEXT,,POST,Pushover Text - Elastic Link Result
+POST,/REQUESTINFO/POST/TABLE,,GET,Get Requestinfo Post Table
+POST,/REQUESTINFO/POST/TABLE/TYPELIST,,GET,Get Requestinfo Post Table Typelist
+POST,/REQUESTINFO/POST/TABLE/{TABLE_TYPE},,GET,Get Requestinfo Post Table With Param
+POST,/REQUESTINFO/POST/TABLE_REQUEST/{TABLE_TYPE},,GET,Get Requestinfo Post Table Request With Param
+VIEW,/VIEW/ACTIVE,,POST,Active
+VIEW,/VIEW/ANGLE,,POST,Viewpoint
+VIEW,/VIEW/CAPTURE,,POST,Capture
+VIEW,/VIEW/DISPLAY,,POST,Display
+VIEW,/VIEW/PRECAPTURE,,POST,Dialog Capture
+VIEW,/VIEW/RESULTGRAPHIC,,POST,Crack Ratio - Heat of Hydration Display
+VIEW,/VIEW/SELECT,,GET,Select

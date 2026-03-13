@@ -6,6 +6,7 @@
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
+    "bat_run": "node scripts/cli/bat_run.mjs",
     "dev": "vite",
     "server": "nodemon server/server.js",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
@@ -111,6 +112,7 @@
     "electron": "^28.0.0",
     "electron-builder": "^24.9.1",
     "electron-rebuild": "^3.2.9",
+    "exceljs": "^4.4.0",
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "tailwindcss": "4.1.12",

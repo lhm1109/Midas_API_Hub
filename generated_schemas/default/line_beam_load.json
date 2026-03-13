@@ -1,0 +1,573 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "description": "Create or update line beam loads.",
+      "required": [
+        "LCNAME",
+        "TYPE",
+        "TARGET",
+        "LOAD"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load Case Name",
+          "minLength": 1,
+          "x-ui": {
+            "hint": "Required load case identifier.",
+            "label": "Load Case Name",
+            "order": 1
+          }
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Load Group Name",
+          "x-ui": {
+            "hint": "Optional load group name.",
+            "label": "Load Group Name",
+            "order": 2
+          }
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Load Type",
+          "enum": [
+            "CONLOAD",
+            "CONMOMENT",
+            "UNILOAD",
+            "UNIMOMENT",
+            "TRALOAD",
+            "TRAMOMENT",
+            "CURVED",
+            "UNIPRESSURE",
+            "TRAPRESSURE"
+          ],
+          "x-ui": {
+            "label": "Load Type",
+            "order": 3
+          }
+        },
+        "TARGET": {
+          "type": "object",
+          "description": "Method, elements and nodes information to load.",
+          "required": [
+            "METHOD"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "METHOD": {
+              "type": "integer",
+              "description": "Select Method to Load",
+              "enum": [
+                0,
+                1
+              ],
+              "x-ui": {
+                "label": "Method",
+                "order": 1
+              },
+              "x-enum-labels": [
+                "On the loading line",
+                "Selected Element"
+              ]
+            },
+            "ELEM": {
+              "type": "array",
+              "description": "Elements to load",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 1,
+              "x-ui": {
+                "hint": "Required when METHOD = 1.",
+                "label": "Elements",
+                "order": 2
+              },
+              "x-required-when": {
+                "METHOD": 1
+              }
+            },
+            "NODE": {
+              "type": "array",
+              "description": "Nodes for loading line",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "x-ui": {
+                "hint": "Required when METHOD = 0.",
+                "label": "Nodes",
+                "order": 3
+              },
+              "x-required-when": {
+                "METHOD": 0
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "METHOD"
+                ],
+                "properties": {
+                  "METHOD": {
+                    "const": 0
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "NODE"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "METHOD"
+                ],
+                "properties": {
+                  "METHOD": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "ELEM"
+                ]
+              }
+            }
+          ],
+          "x-ui": {
+            "label": "Target",
+            "order": 4
+          }
+        },
+        "ECCEN": {
+          "type": "object",
+          "description": "Option - Eccentricity.",
+          "required": [
+            "USE",
+            "TYPE",
+            "DIR",
+            "I_END",
+            "USE_J_END"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "USE": {
+              "type": "boolean",
+              "description": "Activate option",
+              "default": false,
+              "x-ui": {
+                "label": "Use Eccentricity",
+                "order": 1
+              }
+            },
+            "TYPE": {
+              "type": "integer",
+              "description": "Eccentricity Type",
+              "enum": [
+                0,
+                1
+              ],
+              "x-ui": {
+                "label": "Type",
+                "order": 2
+              },
+              "x-enum-labels": [
+                "Centroid",
+                "Offset"
+              ]
+            },
+            "DIR": {
+              "type": "string",
+              "description": "Direction",
+              "enum": [
+                "LX",
+                "LY",
+                "LZ",
+                "GX",
+                "GY",
+                "GZ"
+              ],
+              "x-ui": {
+                "label": "Direction",
+                "order": 3
+              }
+            },
+            "I_END": {
+              "type": "number",
+              "description": "Eccentricity of I-node",
+              "x-ui": {
+                "label": "I-End",
+                "order": 4
+              }
+            },
+            "J_END": {
+              "type": "number",
+              "description": "Eccentricity of J-node",
+              "x-ui": {
+                "hint": "Used when Use J-End is enabled.",
+                "label": "J-End",
+                "order": 5
+              }
+            },
+            "USE_J_END": {
+              "type": "boolean",
+              "description": "Activate option for J-node",
+              "default": false,
+              "x-ui": {
+                "label": "Use J-End",
+                "order": 6
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "USE_J_END"
+                ],
+                "properties": {
+                  "USE_J_END": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "J_END"
+                ]
+              }
+            }
+          ],
+          "x-ui": {
+            "hint": "Available for CONLOAD, UNILOAD, TRALOAD, and CURVED.",
+            "label": "Eccentricity",
+            "order": 5
+          },
+          "x-optional-when": {
+            "TYPE": [
+              "CONLOAD",
+              "UNILOAD",
+              "TRALOAD",
+              "CURVED"
+            ]
+          }
+        },
+        "ADD_H": {
+          "type": "object",
+          "description": "Option - Additional H from Top.",
+          "required": [
+            "USE",
+            "I_END",
+            "USE_J_END"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "USE": {
+              "type": "boolean",
+              "description": "Activate option",
+              "default": false,
+              "x-ui": {
+                "label": "Use Additional H",
+                "order": 1
+              }
+            },
+            "I_END": {
+              "type": "number",
+              "description": "Additional H of I-node",
+              "x-ui": {
+                "label": "I-End",
+                "order": 2
+              }
+            },
+            "J_END": {
+              "type": "number",
+              "description": "Additional H of J-node",
+              "x-ui": {
+                "hint": "Used when Use J-End is enabled.",
+                "label": "J-End",
+                "order": 3
+              }
+            },
+            "USE_J_END": {
+              "type": "boolean",
+              "description": "Activate option for J-node",
+              "default": false,
+              "x-ui": {
+                "label": "Use J-End",
+                "order": 4
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "USE_J_END"
+                ],
+                "properties": {
+                  "USE_J_END": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "J_END"
+                ]
+              }
+            }
+          ],
+          "x-ui": {
+            "hint": "Available for UNIPRESSURE and TRAPRESSURE.",
+            "label": "Additional H from Top",
+            "order": 6
+          },
+          "x-optional-when": {
+            "TYPE": [
+              "UNIPRESSURE",
+              "TRAPRESSURE"
+            ]
+          }
+        },
+        "LOAD": {
+          "type": "object",
+          "description": "Load definition.",
+          "required": [
+            "DIR",
+            "TYPE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "DIR": {
+              "type": "string",
+              "description": "Direction",
+              "enum": [
+                "LX",
+                "LY",
+                "LZ",
+                "GX",
+                "GY",
+                "GZ"
+              ],
+              "x-ui": {
+                "hint": "For UNIPRESSURE/TRAPRESSURE, use LY or LZ depending on Additional H.",
+                "label": "Direction",
+                "order": 1
+              }
+            },
+            "USE_PROJECTION": {
+              "type": "boolean",
+              "description": "Projection option",
+              "default": false,
+              "x-ui": {
+                "hint": "Defaults follow TARGET.METHOD in the official examples.",
+                "label": "Use Projection",
+                "order": 2
+              }
+            },
+            "TYPE": {
+              "type": "integer",
+              "description": "Distance Type",
+              "enum": [
+                0,
+                1
+              ],
+              "x-ui": {
+                "label": "Distance Type",
+                "order": 3
+              },
+              "x-enum-labels": [
+                "Relative (P(x) = a√x + b)",
+                "Absolute (P(x) = ax^2 + bx + c)"
+              ]
+            },
+            "D": {
+              "type": "array",
+              "description": "Distance values",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 1,
+              "maxItems": 4,
+              "x-ui": {
+                "hint": "Up to 4 distance values depending on load type.",
+                "label": "Distance",
+                "order": 4
+              }
+            },
+            "P": {
+              "type": "array",
+              "description": "Magnitude values",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 1,
+              "maxItems": 4,
+              "x-ui": {
+                "hint": "Up to 4 magnitude values depending on load type.",
+                "label": "Magnitude",
+                "order": 5
+              }
+            },
+            "A": {
+              "type": "number",
+              "description": "Value a in formula",
+              "x-ui": {
+                "hint": "Used for CURVED load type.",
+                "label": "A",
+                "order": 6
+              }
+            },
+            "B": {
+              "type": "number",
+              "description": "Value b in formula",
+              "x-ui": {
+                "hint": "Used for CURVED load type.",
+                "label": "B",
+                "order": 7
+              }
+            },
+            "C": {
+              "type": "number",
+              "description": "Value c in formula",
+              "x-ui": {
+                "hint": "Used for CURVED load type.",
+                "label": "C",
+                "order": 8
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Load",
+            "order": 7
+          }
+        },
+        "COPY": {
+          "type": "object",
+          "description": "Copy options.",
+          "required": [
+            "USE",
+            "AXIS",
+            "DIST"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "USE": {
+              "type": "boolean",
+              "description": "Activate option",
+              "default": false,
+              "x-ui": {
+                "label": "Use Copy",
+                "order": 1
+              }
+            },
+            "AXIS": {
+              "type": "string",
+              "description": "Axis",
+              "enum": [
+                "X",
+                "Y",
+                "Z"
+              ],
+              "x-ui": {
+                "label": "Axis",
+                "order": 2
+              }
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Copy distance",
+              "x-ui": {
+                "hint": "Example: 5, 3, 4.5, 3@5.0",
+                "label": "Copy Distance",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Copy",
+            "order": 8
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "TYPE"
+            ],
+            "properties": {
+              "TYPE": {
+                "const": "CURVED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "LOAD": {
+                "required": [
+                  "A",
+                  "B",
+                  "C"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "TYPE"
+            ],
+            "properties": {
+              "TYPE": {
+                "enum": [
+                  "CONLOAD",
+                  "CONMOMENT",
+                  "UNILOAD",
+                  "UNIMOMENT",
+                  "TRALOAD",
+                  "TRAMOMENT",
+                  "UNIPRESSURE",
+                  "TRAPRESSURE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "LOAD": {
+                "required": [
+                  "D",
+                  "P"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "x-ui": {
+        "label": "Argument"
+      }
+    }
+  },
+  "x-transport": {
+    "bodyRoot": "Argument",
+    "method": "POST",
+    "uri": "/ope/LINEBMLD"
+  }
+}

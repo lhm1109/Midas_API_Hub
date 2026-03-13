@@ -1,0 +1,243 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Structure Type",
+          "type": "object",
+          "description": "Structure type, mass control, gravity and temperature, and display alignment settings.",
+          "required": [
+            "STYP",
+            "MASS",
+            "SELFWEIGHT",
+            "GRAV",
+            "TEMP"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "STYP": {
+              "type": "integer",
+              "description": "Structure Type",
+              "oneOf": [
+                {
+                  "title": "3-D",
+                  "const": 0
+                },
+                {
+                  "title": "X-Z Plane",
+                  "const": 1
+                },
+                {
+                  "title": "Y-Z Plane",
+                  "const": 2
+                },
+                {
+                  "title": "X-Y Plane",
+                  "const": 3
+                },
+                {
+                  "title": "Constraint RZ",
+                  "const": 4
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "STRUCT_TYPE",
+                "label": "Structure Type",
+                "order": 1
+              }
+            },
+            "MASS": {
+              "type": "integer",
+              "description": "Mass Type",
+              "oneOf": [
+                {
+                  "title": "Lumped Mass",
+                  "const": 0
+                },
+                {
+                  "title": "Consistent Mass",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "MASS_CONTROL",
+                "label": "Mass Type",
+                "order": 2
+              }
+            },
+            "MASSOFFSET": {
+              "type": "boolean",
+              "description": "Consider Off-diagonal Masses",
+              "x-ui": {
+                "groupId": "MASS_CONTROL",
+                "label": "Consider Off-diagonal Masses",
+                "order": 3
+              },
+              "x-optional-when": {
+                "MASS": 0
+              }
+            },
+            "ROTRIGID": {
+              "type": "boolean",
+              "description": "Considering Rotational Rigid Body Mode for Modal Participation Factor",
+              "x-ui": {
+                "groupId": "MASS_CONTROL",
+                "label": "Considering Rotational Rigid Body Mode for Modal Participation Factor",
+                "order": 4
+              },
+              "x-optional-when": {
+                "MASS": 0,
+                "MASSOFFSET": false
+              }
+            },
+            "SELFWEIGHT": {
+              "type": "boolean",
+              "description": "Convert Self-weight into Masses",
+              "x-ui": {
+                "groupId": "MASS_CONTROL",
+                "label": "Convert Self-weight into Masses",
+                "order": 5
+              }
+            },
+            "SMASS": {
+              "type": "integer",
+              "description": "Self-weight Direction",
+              "oneOf": [
+                {
+                  "title": "Convert to X, Y, Z",
+                  "const": 0
+                },
+                {
+                  "title": "Convert to X, Y",
+                  "const": 1
+                },
+                {
+                  "title": "Convert to Z",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "MASS_CONTROL",
+                "label": "Self-weight Direction",
+                "order": 6
+              },
+              "x-required-when": {
+                "SELFWEIGHT": true
+              },
+              "x-optional-when": {
+                "SELFWEIGHT": true
+              }
+            },
+            "GRAV": {
+              "type": "number",
+              "description": "Gravity",
+              "x-ui": {
+                "groupId": "PARAMETERS",
+                "hint": "m/sec²",
+                "label": "Gravity Acceleration",
+                "order": 7
+              }
+            },
+            "TEMP": {
+              "type": "number",
+              "description": "Initial Temperature",
+              "x-ui": {
+                "groupId": "PARAMETERS",
+                "hint": "[C]",
+                "label": "Initial Temperature",
+                "order": 8
+              }
+            },
+            "ALIGNBEAM": {
+              "type": "boolean",
+              "description": "Align Top of Beam Section",
+              "x-ui": {
+                "groupId": "DISPLAY",
+                "label": "Align Top of Beam Section with Center Line (X-Y Plane) for Display",
+                "order": 9
+              }
+            },
+            "ALIGNSLAB": {
+              "type": "boolean",
+              "description": "Align Top of Slab(Plate) Section",
+              "x-ui": {
+                "groupId": "DISPLAY",
+                "label": "Align Top of Slab(Plate) Section with Center Line (X-Y Plane) for Display",
+                "order": 10
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "SELFWEIGHT": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "SMASS"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "MASS": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "SMASS": {
+                    "oneOf": [
+                      {
+                        "title": "Convert to X, Y, Z",
+                        "const": 0
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Structure Type",
+                "id": "STRUCT_TYPE"
+              },
+              {
+                "title": "Mass Control Parameter",
+                "id": "MASS_CONTROL"
+              },
+              {
+                "title": "Parameters",
+                "id": "PARAMETERS"
+              },
+              {
+                "title": "Display",
+                "id": "DISPLAY"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

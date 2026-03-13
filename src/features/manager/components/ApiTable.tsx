@@ -85,6 +85,7 @@ export function ApiTable({
 }: ApiTableProps) {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<FilterConfig[]>(() => {
     try {
       const saved = localStorage.getItem('manager-table-filters');
@@ -230,7 +231,21 @@ export function ApiTable({
   };
 
   const filteredTasks = useMemo(() => {
-    return sortedTasks.filter((task) => {
+    let result = sortedTasks;
+
+    // 검색 필터 적용
+    if (searchTerm.trim()) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      result = result.filter((task) => {
+        return Object.values(task).some((value) => {
+          if (value == null) return false;
+          return String(value).toLowerCase().includes(lowerSearchTerm);
+        });
+      });
+    }
+
+    // 컬럼 필터 적용
+    result = result.filter((task) => {
       return filters.every((filter) => {
         if (filter.selectedValues.length > 0) {
           return filter.selectedValues.includes(String(task[filter.columnId] ?? ''));
@@ -238,7 +253,9 @@ export function ApiTable({
         return true;
       });
     });
-  }, [sortedTasks, filters]);
+
+    return result;
+  }, [sortedTasks, searchTerm, filters]);
 
   const getFilterDisplayText = (filter: FilterConfig): string => {
     const uniqueValues = getUniqueValues(filter.columnId);
@@ -441,8 +458,20 @@ export function ApiTable({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <Input
                 placeholder="전체 검색..."
-                className="pl-9 h-9 bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 pr-9 h-9 bg-zinc-950 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
               />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-400 hover:text-zinc-200"
+                  title="검색어 지우기"
+                  aria-label="검색어 지우기"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
             {/* 필터 버튼 */}

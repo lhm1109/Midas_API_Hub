@@ -1,0 +1,36 @@
+{
+  "title": "SchemaPathTest",
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TEST_MSG"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TEST_MSG": {
+          "type": "string",
+          "description": "Test prompt text used to verify schema output path handling.",
+          "x-ui": {
+            "label": "Test Message",
+            "order": 1
+          }
+        },
+        "PATH_CHK": {
+          "type": "boolean",
+          "description": "Flag indicating this schema is intended for path verification.",
+          "default": true,
+          "x-ui": {
+            "label": "Path Check",
+            "order": 2
+          }
+        }
+      }
+    }
+  }
+}

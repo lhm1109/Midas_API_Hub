@@ -1,0 +1,286 @@
+{
+  "caption": "Definition of Frame",
+  "conditionals": [
+    {
+      "action": "enable",
+      "condition": "m_b02Q0",
+      "controlId": "IDC_EDIT_02QOUPLIMIT",
+      "triggerVariable": "m_b02Q0",
+      "variable": "m_d02Q0"
+    },
+    {
+      "action": "disable",
+      "controlId": "IDC_DGN_MTYP_CMB",
+      "triggerVariable": "__unknown__",
+      "variable": "m_cmbMtyp"
+    },
+    {
+      "action": "show",
+      "condition": "bNewCodeGB",
+      "controlId": "IDC_DGN_STYP_GROUP_STATIC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "show",
+      "condition": "bNewCodeGB",
+      "controlId": "IDC_DGN_MTYP_STATIC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "show",
+      "condition": "bNewCodeGB",
+      "controlId": "IDC_DGN_STYP_STATIC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "show",
+      "condition": "bNewCodeGB",
+      "controlId": "IDC_DGN_MTYP_CMB",
+      "triggerVariable": "__unknown__",
+      "variable": "m_cmbMtyp"
+    },
+    {
+      "action": "show",
+      "condition": "bNewCodeGB",
+      "controlId": "IDC_DGN_STYP_CMB",
+      "triggerVariable": "__unknown__",
+      "variable": "m_cmbStyp"
+    }
+  ],
+  "controls": [
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Unbraced | Sway",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_XUNBRACED",
+      "inferredType": "integer",
+      "labelText": "X-Direction of Frame",
+      "variable": "m_XBraced",
+      "w": 100,
+      "x": 93,
+      "y": 15
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Braced | Non-sway",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_XBRACED",
+      "labelText": "X-Direction of Frame",
+      "w": 100,
+      "x": 93,
+      "y": 27
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Unbraced | Sway",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_YUNBRACED",
+      "inferredType": "integer",
+      "labelText": "Y-Direction of Frame",
+      "variable": "m_YBraced",
+      "w": 100,
+      "x": 93,
+      "y": 43
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Braced | Non-sway",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_YBRACED",
+      "labelText": "Y-Direction of Frame",
+      "w": 100,
+      "x": 93,
+      "y": 55
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "3-D",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_3D",
+      "inferredType": "integer",
+      "variable": "m_DgnType",
+      "w": 28,
+      "x": 31,
+      "y": 87
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "X-Z Plane",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_XZ",
+      "w": 47,
+      "x": 93,
+      "y": 87
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Y-Z Plane",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_YZ",
+      "w": 47,
+      "x": 31,
+      "y": 99
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "X-Y Plane",
+      "h": 12,
+      "id": "IDC_DGN_CTRLDATA_XY",
+      "w": 47,
+      "x": 93,
+      "y": 99
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 101,
+      "id": "IDC_DGN_MTYP_CMB",
+      "inferredType": "object",
+      "labelText": "Structure Material Type",
+      "variable": "m_cmbMtyp",
+      "w": 100,
+      "x": 93,
+      "y": 146
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 85,
+      "id": "IDC_DGN_STYP_CMB",
+      "inferredType": "object",
+      "labelText": "Structure Type",
+      "variable": "m_cmbStyp",
+      "w": 100,
+      "x": 93,
+      "y": 162
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 147,
+      "y": 207
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 93,
+      "y": 207
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "0.2Q0 upper limit ",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_CHECK_02QOUPLIMIT",
+      "inferredType": "boolean",
+      "variable": "m_b02Q0",
+      "w": 81,
+      "x": 0,
+      "y": 185
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_EDIT_02QOUPLIMIT",
+      "inferredType": "number",
+      "variable": "m_d02Q0",
+      "w": 40,
+      "x": 93,
+      "y": 185
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Definition of Frame",
+      "h": 66,
+      "id": "IDC_WG_DGN_STATIC0",
+      "w": 199,
+      "x": 0,
+      "y": 5
+    },
+    {
+      "type": "LTEXT",
+      "caption": "X-Direction of Frame",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC1",
+      "w": 73,
+      "x": 5,
+      "y": 21
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Y-Direction of Frame",
+      "h": 12,
+      "id": "IDC_WG_DGN_STATIC2",
+      "w": 75,
+      "x": 5,
+      "y": 49
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Design Type",
+      "h": 40,
+      "id": "IDC_WG_DGN_STATIC3",
+      "w": 199,
+      "x": 0,
+      "y": 75
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Structure Material Type",
+      "h": 12,
+      "id": "IDC_DGN_MTYP_STATIC",
+      "w": 80,
+      "x": 5,
+      "y": 146
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Structure Type",
+      "h": 12,
+      "id": "IDC_DGN_STYP_STATIC",
+      "w": 80,
+      "x": 5,
+      "y": 162
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Structure Type",
+      "h": 46,
+      "id": "IDC_DGN_STYP_GROUP_STATIC",
+      "w": 199,
+      "x": 0,
+      "y": 134
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_DGN_CTRLDATA_AUTOK",
+      "inferredType": "boolean",
+      "variable": "m_bAutoK",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CDgnGenFrameDlg",
+  "dialogId": "IDD_DGN_GEN_FRAME_DLG",
+  "headerFile": "ui_src/wg_dgn/DgnGenFrameDlg.h",
+  "parsedAt": "2026-03-12T05:26:11.157Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnGenFrameDlg)\r\n\tDDX_Check(pDX, IDC_DGN_CTRLDATA_AUTOK, m_bAutoK);\r\n\tDDX_Radio(pDX, IDC_DGN_CTRLDATA_XUNBRACED, m_XBraced);\r\n\tDDX_Radio(pDX, IDC_DGN_CTRLDATA_YUNBRACED, m_YBraced);\r\n\tDDX_Radio(pDX, IDC_DGN_CTRLDATA_3D, m_DgnType);\r\n\tDDX_Control(pDX, IDC_DGN_MTYP_CMB, m_cmbMtyp);\r\n\tDDX_Control(pDX, IDC_DGN_STYP_CMB, m_cmbStyp);\r\n\tDDX_Check(pDX,   IDC_CHECK_02QOUPLIMIT, m_b02Q0);\t//add by maxiao\r\n\tDDX_Text(pDX, IDC_EDIT_02QOUPLIMIT, m_d02Q0);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nm_pDoc = CDBDoc::GetDocPoint();\r\n\tCDialogMove::OnInitDialog();\r\n\t\r\n\t// Initialize Default\r\n\tif(!m_pDoc->m_pAttrCtrl->ExistDctl()) Initial_Data();\r\n\telse                                  Initial_ExistData();\r\n\r\n\t// Add by ZINU.('02.6.13).\r\n\t// Change, Jaeoh.('08.01.10). ��Ȱ��ȭ ǰ. �蹮�� GJ�� ��û.\r\n/*\r\n#if defined(_CIVIL)\r\n\tGetDlgItem(IDC_DGN_CTRLDATA_AUTOK)->EnableWindow(FALSE);\r\n\tm_bAutoK = FALSE;\r\n#else\r\n\tGetDlgItem(IDC_DGN_CTRLDATA_AUTOK)->EnableWindow(TRUE);\r\n#endif\r\n\t*/\r\n\r\n\treturn TRUE;\n\n// Initial_Data:\nSetMtypCombo();\r\n\tSetStypCombo_GB10(0);\r\n\tSetStructTypeControl();\r\n\r\n\tT_DCTL_D cData;\r\n\tcData.Initialize();\r\n\tif(m_pDoc->m_pAttrCtrl->ExistDctl())  \r\n\t{\r\n\t\tm_pDoc->m_pAttrCtrl->GetDctl(cData);\r\n\r\n\t\tm_XBraced = cData.bBraceFrame_X;\r\n\t\tm_YBraced = cData.bBraceFrame_Y;\r\n\t\tm_DgnType = cData.nDesignType;\r\n\t\tm_bAutoK  = cData.bAutoKFactor;\r\n\t\tm_cmbMtyp.SetCurSel(cData.nStructMatlType);\r\n\t\tm_cmbStyp.SetCurSel(cData.nStructType);\r\n\t\tm_b02Q0   = cData.b02Q0UpLimit;//add by maxiao\r\n\t\tm_d02Q0\t\t= cData.d02Q0UpLimit;\r\n\t}\r\n\telse\r\n\t{\r\n\t  m_bAutoK = FALSE;\r\n#if defined(_MGEN)\r\n\t  m_XBraced = 1;\r\n\t  m_YBraced = 1;\r\n#else\r\n\t\tm_XBraced = 0;\r\n\t\tm_YBraced = 0;\r\n#endif\r\n\t\tm_DgnType = 0;    \r\n\t\tm_cmbMtyp.SetCurSel(0);\r\n\t\tm_cmbStyp.SetCurSel(1);\r\n\t\tm_b02Q0 = FALSE;\r\n\t\tm_d02Q0 = 2;\r\n\t}\r\n\tGetDlgItem(IDC_EDIT_02QOUPLIMIT)->EnableWindow(m_b02Q0);\r\n\tUpdateData(FALSE);\n\n// SetMtypCombo:\nm_cmbMtyp.ResetContent();\r\n\r\n\tint nItem = 1;\r\n\tCDlgUtil::CobxAddItem(m_cmbMtyp, _LS(IDS_DGN_GEN_STRUCTMATL_RC),           nItem++);\r\n\tCDlgUtil::CobxAddItem(m_cmbMtyp, _LS(IDS_DGN_GEN_STRUCTMATL_COMBINED),     nItem++);\r\n\tCDlgUtil::CobxAddItem(m_cmbMtyp, _LS(IDS_DGN_GEN_STRUCTMATL_STL_WALL),     nItem++);\r\n\tCDlgUtil::CobxAddItem(m_cmbMtyp, _LS(IDS_DGN_GEN_STRUCTMATL_STL_WALL_NOT), nItem++);\r\n\r\n\tm_cmbMtyp.SetCurSel(0);\r\n\t\r\n\tCDlgUtil::CobxAdjustListBoxWidth(m_cmbMtyp);\r\n\r\n\tGetDlgItem(IDC_DGN_MTYP_CMB)->EnableWindow(FALSE);\n\n// SetStructTypeControl:\nT_DCON_D DconD;\r\n\tif(!m_pDoc->m_pAttrCtrl->GetDcon(DconD)) DconD.Initialize();\r\n\t\r\n\tBOOL bNewCodeGB = FALSE;\r\n\tif (DconD.DesignCode==_T(\"GB/T50010-10\")) bNewCodeGB = TRUE;\r\n\tif (CProduct::GetMovingType()==D_PRODUCT_MOVING_CH && DconD.DesignCode==_T(\"\")) bNewCodeGB = TRUE;\r\n\t\r\n\tGetDlgItem(IDC_DGN_STYP_GROUP_STATIC)->ShowWindow(bNewCodeGB);\r\n\tGetDlgItem(IDC_DGN_MTYP_STATIC)->ShowWindow(bNewCodeGB);\r\n\tGetDlgItem(IDC_DGN_STYP_STATIC)->ShowWindow(bNewCodeGB);\r\n\tGetDlgItem(IDC_DGN_MTYP_CMB)->ShowWindow(bNewCodeGB);\r\n\tGetDlgItem(IDC_DGN_STYP_CMB)->ShowWindow(bNewCodeGB);\r\n\r\n\tCRect RectDlg, RectOk, RectCn, RectKf, RectGp, Rect02Q0;\r\n\tGetWindowRect(&RectDlg);  \r\n\tGetDlgItem(IDOK    )->GetWindowRect(&RectOk);\r\n\tGetDlgItem(IDCANCEL)->GetWindowRect(&RectCn);  \r\n\tGetDlgItem(IDC_DGN_CTRLDATA_AUTOK)->GetWindowRect(&RectKf);\r\n\tGetDlgItem(IDC_DGN_STYP_GROUP_STATIC)->GetWindowRect(&RectGp);\r\n\tGetDlgItem(IDC_EDIT_02QOUPLIMIT)->GetWindowRect(&Rect02Q0);//add by maxiao\r\n\t\r\n\tint nStypGroupHeight = bNewCodeGB? RectGp.Height() + 2*Rect02Q0.Height() : 0;\r\n\t\r\n\tCRect rDlg;\r\n\trDlg.left\t= RectDlg.left;\r\n\trDlg.top\t= RectDlg.top;\r\n\trDlg.right\t= RectDlg.right;\r\n\trDlg.bottom\t= RectKf.bottom + globalUtils.ScaleByDPI(20) + RectOk.Height() + nStypGroupHeight;\r\n\t\r\n\tCRect rOk;\r\n\trOk.left\t\t= RectOk.left;\r\n\trOk.right\t\t= RectOk.right;\r\n\trOk.top\t\t\t= rDlg.bottom - globalUtils.ScaleByDPI(8) - RectOk.Height();\r\n\trOk.bottom   \t= rOk.top + RectOk.Height();\r\n\t\r\n\tCRect rCn;\r\n\trCn.left\t\t= RectCn.left;\r\n\trCn.right\t\t= RectCn.right;\r\n\trCn.top\t\t\t= rOk.top;\r\n\trCn.bottom\t\t= rOk.bottom;\r\n\t\r\n\tScreenToClient(rDlg);\r\n\tScreenToClient(rOk);\r\n\tScreenToClient(rCn);\r\n\tSetWindowPos(NULL, rDlg.left, rDlg.top, rDlg.Width(), rDlg.Height(), SWP_NOMOVE | SWP_NOZORDER);\r\n\tGetDlgItem(IDOK    )->SetWindowPos(NULL, rOk.left, rOk.top, rOk.Width(), rOk.Height(), SWP_NOSIZE);\r\n\tGetDlgItem(IDCANCEL)->SetWindowPos(NULL, rCn.left, rCn.top, rCn.Width(), rCn.Height(), SWP_NOSIZE);\n\n// Initial_ExistData:\nSetMtypCombo();\r\n\tSetStypCombo_GB10(0);\r\n\tSetStructTypeControl();\r\n\r\n\tT_DCTL_D cData; cData.Initialize();\r\n\tm_pDoc->m_pAttrCtrl->GetDctl(cData);\r\n\r\n\tm_XBraced = cData.bBraceFrame_X;\r\n\tm_YBraced = cData.bBraceFrame_Y;\r\n\tm_bAutoK  = cData.bAutoKFactor;\r\n\tm_DgnType = cData.nDesignType;\r\n\t\r\n\tm_cmbMtyp.SetCurSel(cData.nStructMatlType);\r\n\tm_cmbStyp.SetCurSel(cData.nStructType);\r\n\tm_b02Q0 = cData.b02Q0UpLimit;\r\n\tm_d02Q0 = cData.d02Q0UpLimit;\r\n\tGetDlgItem(IDC_EDIT_02QOUPLIMIT)->EnableWindow(m_b02Q0);\r\n\tUpdateData(FALSE);",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnGenFrameDlg.cpp",
+  "warnings": []
+}
