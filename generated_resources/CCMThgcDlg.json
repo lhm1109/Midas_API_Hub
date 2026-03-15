@@ -1,0 +1,558 @@
+{
+  "caption": "Time History Global Control",
+  "conditionals": [
+    {
+      "action": "show",
+      "condition": "!m_bCivil",
+      "controlId": "IDC_GEOM_NONLINEAR_TYPE3_RDO",
+      "triggerVariable": "m_bCivil"
+    },
+    {
+      "action": "enable",
+      "condition": "nInitLoadMethod==0",
+      "controlId": "IDC_CONSIDER_IGN_ELEM_CHK",
+      "triggerVariable": "__unknown__",
+      "variable": "m_chkConsiderIgnoreElem"
+    },
+    {
+      "action": "enable",
+      "condition": "!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_ALL",
+      "controlId": "IDC_THGC_FIBER_OPT1_RDO",
+      "triggerVariable": "m_bFiberSameHinge",
+      "variable": "m_nFiberOutput"
+    },
+    {
+      "action": "enable",
+      "condition": "!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_ALL",
+      "controlId": "IDC_THGC_FIBER_OPT1_STC",
+      "triggerVariable": "m_bFiberSameHinge"
+    },
+    {
+      "action": "enable",
+      "condition": "!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_SEL",
+      "controlId": "IDC_THGC_FIBER_OPT2_RDO",
+      "triggerVariable": "m_bFiberSameHinge"
+    },
+    {
+      "action": "enable",
+      "condition": "!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_SEL",
+      "controlId": "IDC_THGC_FIBER_OPT2_STC",
+      "triggerVariable": "m_bFiberSameHinge"
+    },
+    {
+      "action": "enable",
+      "condition": "!m_bFiberSameHinge",
+      "controlId": "IDC_THGC_FIBER_OPT3_RDO",
+      "triggerVariable": "m_bFiberSameHinge"
+    },
+    {
+      "action": "enable",
+      "condition": "!m_bFiberSameHinge",
+      "controlId": "IDC_THGC_FIBER_OPT3_STC",
+      "triggerVariable": "m_bFiberSameHinge"
+    }
+  ],
+  "controlGroupArrays": {
+    "m_aCtrl_GeomNonlinearType": [
+      "IDC_GEOM_NONLINEAR_TYPE1_RDO",
+      "IDC_GEOM_NONLINEAR_TYPE2_RDO",
+      "IDC_GEOM_NONLINEAR_TYPE3_RDO"
+    ],
+    "m_aCtrl_InitLoadMethod": [
+      "IDC_INIT_LOAD_CONDITION_TYPE1_RDO",
+      "IDC_INIT_LOAD_CONDITION_TYPE2_RDO"
+    ],
+    "m_aCtrl_SeqLoadingType": [
+      "IDC_SEQ_LOADING_TYPE1_RDO",
+      "IDC_SEQ_LOADING_TYPE2_RDO"
+    ]
+  },
+  "controls": [
+    {
+      "type": "GROUPBOX",
+      "caption": "Geometric Nonlinearity Type",
+      "h": 28,
+      "id": "IDC_GEOM_NONLINEAR_TYPE_GRB",
+      "w": 220,
+      "x": 0,
+      "y": 5
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "None",
+      "h": 12,
+      "id": "IDC_GEOM_NONLINEAR_TYPE1_RDO",
+      "w": 33,
+      "x": 5,
+      "y": 17
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "P-Delta",
+      "h": 12,
+      "id": "IDC_GEOM_NONLINEAR_TYPE3_RDO",
+      "w": 40,
+      "x": 171,
+      "y": 17
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Initial Load",
+      "h": 216,
+      "id": "IDC_INIT_LOAD_GRP",
+      "w": 220,
+      "x": 0,
+      "y": 37
+    },
+    {
+      "type": "LTEXT",
+      "caption": "- When the boundary conditions are different between",
+      "h": 12,
+      "id": "IDC_INIT_LOAD_CONDITION_TYPE2_DESC1_STC",
+      "w": 197,
+      "x": 15,
+      "y": 77
+    },
+    {
+      "type": "LTEXT",
+      "caption": "   initial load and Time History load",
+      "h": 12,
+      "id": "IDC_INIT_LOAD_CONDITION_TYPE2_DESC2_STC",
+      "w": 200,
+      "x": 15,
+      "y": 89
+    },
+    {
+      "type": "LTEXT",
+      "caption": "- When the element forces in the last construction stage are",
+      "h": 12,
+      "id": "IDC_INIT_LOAD_CONDITION_TYPE2_DESC3_STC",
+      "w": 201,
+      "x": 15,
+      "y": 101
+    },
+    {
+      "type": "LTEXT",
+      "caption": "   used as an initial load",
+      "h": 12,
+      "id": "IDC_INIT_LOAD_CONDITION_TYPE2_DESC4_STC",
+      "w": 199,
+      "x": 15,
+      "y": 113
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Load Case",
+      "h": 12,
+      "id": "IDC_LOADPATTERN_TYPE_LIST_STC",
+      "w": 42,
+      "x": 5,
+      "y": 127
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 70,
+      "id": "IDC_PREVLOAD_STLD_CMB",
+      "inferredType": "object",
+      "labelText": "Load Case",
+      "variable": "m_cmbStld",
+      "w": 85,
+      "x": 47,
+      "y": 127
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Scale Factor",
+      "h": 12,
+      "id": "IDC_SCALE_FACTOR_STC",
+      "w": 65,
+      "x": 138,
+      "y": 127
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_SCALE_FACTOR_EDT",
+      "inferredType": "object",
+      "labelText": "Scale Factor",
+      "variable": "m_edtScale",
+      "w": 31,
+      "x": 184,
+      "y": 127
+    },
+    {
+      "type": "SYSLISTVIEW32",
+      "ddxFunction": "DDX_Control",
+      "h": 72,
+      "id": "IDC_PREVLOAD_LCASELIST",
+      "inferredType": "object",
+      "variable": "m_lstLCase",
+      "w": 160,
+      "x": 5,
+      "y": 143
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "&Add",
+      "h": 12,
+      "id": "IDC_PREVLOAD_ADD",
+      "w": 45,
+      "x": 170,
+      "y": 143
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "&Modify",
+      "h": 12,
+      "id": "IDC_PREVLOAD_MODIFY",
+      "w": 45,
+      "x": 170,
+      "y": 159
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "&Delete",
+      "h": 12,
+      "id": "IDC_PREVLOAD_DELETE",
+      "w": 45,
+      "x": 170,
+      "y": 175
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Increment Step",
+      "h": 12,
+      "id": "IDC_INCRE_STEP_BTN",
+      "w": 104,
+      "x": 5,
+      "y": 219
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Iteration Parameters",
+      "h": 12,
+      "id": "IDC_ITERA_PARAM_BTN",
+      "w": 104,
+      "x": 111,
+      "y": 219
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Nonlinear Analysis Result Output Option",
+      "h": 264,
+      "id": "IDC_THGC_OPT_GRP",
+      "w": 360,
+      "x": 224,
+      "y": 5
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Inelastic Hinge : All each Step Output Option",
+      "h": 100,
+      "id": "IDC_THGC_HINGE_GRP",
+      "w": 191,
+      "x": 229,
+      "y": 17
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "All Inelastic Elements",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_THGC_HINGE_OPT1_RDO",
+      "inferredType": "integer",
+      "variable": "m_nHingeOutput",
+      "w": 86,
+      "x": 234,
+      "y": 29
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "No Step-by-Step Results",
+      "h": 12,
+      "id": "IDC_THGC_HINGE_OPT3_RDO",
+      "labelText": "   initial load and Time History load",
+      "w": 100,
+      "x": 234,
+      "y": 85
+    },
+    {
+      "type": "LTEXT",
+      "caption": "(*. Very Long Time Required)",
+      "h": 12,
+      "id": "IDC_THGC_HINGE_OPT1_STC",
+      "w": 98,
+      "x": 244,
+      "y": 41
+    },
+    {
+      "type": "LTEXT",
+      "caption": "(*. Recommended)",
+      "h": 12,
+      "id": "IDC_THGC_HINGE_OPT2_STC",
+      "w": 64,
+      "x": 244,
+      "y": 69
+    },
+    {
+      "type": "LTEXT",
+      "caption": "(*. Max/Min Result Only : Hinge Result Table)",
+      "h": 12,
+      "id": "IDC_THGC_HINGE_OPT3_STC",
+      "w": 152,
+      "x": 244,
+      "y": 97
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Fiber Section : All each Step Output Option",
+      "h": 143,
+      "id": "IDC_THGC_FIBER_GRP",
+      "w": 191,
+      "x": 229,
+      "y": 121
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "All Inelastic Elements",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_THGC_FIBER_OPT1_RDO",
+      "inferredType": "integer",
+      "variable": "m_nFiberOutput",
+      "w": 86,
+      "x": 234,
+      "y": 149
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "No Step-by-Step Results",
+      "h": 12,
+      "id": "IDC_THGC_FIBER_OPT3_RDO",
+      "w": 97,
+      "x": 234,
+      "y": 205
+    },
+    {
+      "type": "LTEXT",
+      "caption": "(*. Not Recommended : Very Long Time Required)",
+      "h": 12,
+      "id": "IDC_THGC_FIBER_OPT1_STC",
+      "w": 167,
+      "x": 244,
+      "y": 161
+    },
+    {
+      "type": "LTEXT",
+      "caption": "(*. Recommended)",
+      "h": 12,
+      "id": "IDC_THGC_FIBER_OPT2_STC",
+      "w": 64,
+      "x": 244,
+      "y": 189
+    },
+    {
+      "type": "LTEXT",
+      "caption": "(*. Max/Min Result Only : Fiber Result Table)",
+      "h": 12,
+      "id": "IDC_THGC_FIBER_OPT3_STC",
+      "w": 150,
+      "x": 244,
+      "y": 217
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Time History Energy Result",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_THGC_ENRG_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bEnergyResult",
+      "w": 144,
+      "x": 425,
+      "y": 17
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Seismic Control Device Result",
+      "h": 231,
+      "id": "IDC_THGC_SDC_GRP",
+      "w": 155,
+      "x": 425,
+      "y": 33
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Viscoelastic Damper Result",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_THGC_SDVE_CHK",
+      "inferredType": "boolean",
+      "labelText": "(*. Recommended)",
+      "variable": "m_bSdve",
+      "w": 137,
+      "x": 430,
+      "y": 61
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Steel Damper Result",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_THGC_SDST_CHK",
+      "inferredType": "boolean",
+      "labelText": "(*. Recommended)",
+      "variable": "m_bSdst",
+      "w": 137,
+      "x": 430,
+      "y": 77
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Hysteretic Isolator Result",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_THGC_SDHY_CHK",
+      "inferredType": "boolean",
+      "labelText": "(*. Max/Min Result Only : Hinge Result Table)",
+      "variable": "m_bSdhy",
+      "w": 137,
+      "x": 430,
+      "y": 93
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Isolator Result",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_THGC_SDIS_CHK",
+      "inferredType": "boolean",
+      "labelText": "(*. Max/Min Result Only : Hinge Result Table)",
+      "variable": "m_bSdis",
+      "w": 137,
+      "x": 430,
+      "y": 109
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "MSS Model Yield Status",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_THGC_MSS_CHK",
+      "inferredType": "boolean",
+      "labelText": "Scale Factor",
+      "variable": "m_bMSSStatus",
+      "w": 137,
+      "x": 430,
+      "y": 125
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Apply Specified Displacement in a Sequential Loading",
+      "h": 42,
+      "id": "IDC_STATIC19",
+      "w": 220,
+      "x": 0,
+      "y": 257
+    },
+    {
+      "type": "LTEXT",
+      "caption": "with respect to",
+      "h": 12,
+      "id": "IDC_STATIC20",
+      "w": 60,
+      "x": 5,
+      "y": 271
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Undisplaced Position",
+      "h": 10,
+      "id": "IDC_SEQ_LOADING_TYPE1_RDO",
+      "labelText": "with respect to",
+      "w": 100,
+      "x": 75,
+      "y": 271
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Dispalced Position",
+      "h": 10,
+      "id": "IDC_SEQ_LOADING_TYPE2_RDO",
+      "labelText": "with respect to",
+      "w": 100,
+      "x": 75,
+      "y": 284
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Remove Time History Global Control",
+      "h": 12,
+      "id": "IDC_THGC_GLOBAL_REMOVE_BTN",
+      "w": 161,
+      "x": 0,
+      "y": 303
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Wall...",
+      "h": 12,
+      "id": "IDC_THGC_GLOBAL_WALL_NODE_BTN",
+      "w": 57,
+      "x": 163,
+      "y": 303
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "&Close",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 532,
+      "y": 325
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 478,
+      "y": 325
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_THGC_SDVI_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bSdvi",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_THGC_FIBER_SAME_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bFiberSameHinge",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CCMThgcDlg",
+  "dialogId": "IDD_ETC_THGC_DLG",
+  "headerFile": "ui_src/wg_cmd/CMThgcDlg.h",
+  "parsedAt": "2026-03-13T03:26:13.606Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CCMThgcDlg)\r\n\tDDX_Check(pDX, IDC_THGC_ENRG_CHK, m_bEnergyResult);\r\n\tDDX_Check(pDX, IDC_THGC_SDVI_CHK, m_bSdvi        );\r\n\tDDX_Check(pDX, IDC_THGC_SDVE_CHK, m_bSdve        );\r\n\tDDX_Check(pDX, IDC_THGC_SDST_CHK, m_bSdst        );\r\n\tDDX_Check(pDX, IDC_THGC_SDHY_CHK, m_bSdhy        );\r\n\tDDX_Check(pDX, IDC_THGC_SDIS_CHK, m_bSdis        );\r\n\tDDX_Check(pDX, IDC_THGC_MSS_CHK, m_bMSSStatus   );\r\n\tDDX_Control(pDX, IDC_PREVLOAD_STLD_CMB    , m_cmbStld);\r\n\tDDX_Control(pDX, IDC_PREVLOAD_LCASELIST   , m_lstLCase);\r\n\tDDX_Control(pDX, IDC_SCALE_FACTOR_EDT, m_edtScale);\r\n\tDDX_Control(pDX, IDC_CONSIDER_IGN_ELEM_CHK , m_chkConsiderIgnoreElem);\r\n\tDDX_Radio(pDX, IDC_THGC_HINGE_OPT1_RDO, m_nHingeOutput);\r\n\tDDX_Radio(pDX, IDC_THGC_FIBER_OPT1_RDO, m_nFiberOutput);\r\n\tDDX_Check(pDX, IDC_THGC_FIBER_SAME_CHK, m_bFiberSameHinge);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCDialogMove::OnInitDialog();\r\n\t\r\n\tif(!CDBDoc::GetDocPoint()->m_pAttrCtrl2->GetThgc(m_ThgcD))\r\n\t\tm_ThgcD.Initialize();\t\r\n\r\n\tm_nGeomNonlinearType = m_ThgcD.nGeomNonlinearType;\r\n\tm_nInitLoadMethod = m_ThgcD.nInitLoadMethod;\r\n\r\n\tm_edtScale.SetEditUnit(1.0);  \r\n\tSetListCtrlHeader();\r\n\tMakeItemEx();\r\n\r\n\tCDlgUtil::CtrlRadioSetCheck(this, m_aCtrl_InitLoadMethod, m_ThgcD.nInitLoadMethod);\r\n\tif(m_ThgcD.nInitLoadMethod==1 && (m_ThgcD.nGeomNonlinearType== D_THIS_GEOMNONLIN_LARGE_DISP || m_ThgcD.nGeomNonlinearType == D_THIS_GEOMNONLIN_P_DELTA))\r\n\t{\r\n\t\tASSERT(0);\r\n\t\tm_ThgcD.nGeomNonlinearType = 0;\r\n\t}\r\n\r\n\tGetDlgItem(IDC_GEOM_NONLINEAR_TYPE3_RDO)->ShowWindow(!m_bCivil);\r\n\tCDlgUtil::CtrlRadioSetCheck(this, m_aCtrl_GeomNonlinearType, m_ThgcD.nGeomNonlinearType);\r\n\r\n\tCWnd* pWnd = GetDlgItem(IDC_THGC_GLOBAL_WALL_NODE_BTN);\r\n\tif (m_bCivil)\r\n\t{\r\n\t\tpWnd->ShowWindow(FALSE); // set control as invisible\r\n\r\n\t\tCRect cRefRect;\r\n\t\tGetDlgItem(IDC_INIT_LOAD_GRP)->GetClientRect(&cRefRect);\r\n\t\tCRect cRect;\r\n\t\tGetDlgItem(IDC_THGC_GLOBAL_REMOVE_BTN)->GetClientRect(&cRect);\r\n\t\tGetDlgItem(IDC_THGC_GLOBAL_REMOVE_BTN)->SetWindowPos(NULL, 0, 0, cRefRect.Width(), cRect.Height(), SWP_NOMOVE | SWP_NOZORDER);\r\n\t}\r\n\telse\r\n\t{\r\n\t\tif (CProduct::IsMovingType(D_PRODUCT_MOVING_ORG) || CProduct::IsMovingType(D_PRODUCT_MOVING_US) || CProduct::IsMovingType(D_PRODUCT_MOVING_JP) || CProduct::IsMovingType(D_PRODUCT_MOVING_RUS))\r\n\t\t{\r\n\t\t\tpWnd->EnableWindow(TRUE); // set control as visible\r\n\t\t}\r\n\t\telse\r\n\t\t{\r\n\t\t\tpWnd->EnableWindow(FALSE); // set control as invisible\r\n\t\t}\r\n\t}\r\n\r\n\tSetLoadCaseCmb();\r\n\r\n\tData2Dlg();\r\n\tOnGeomNonlinearType();\r\n\tUpdateFiberOutputCtrl();\r\n\tEnableConsiderIgnoreElem();\r\n\r\n\tCWnd* pWnd2 = GetDlgItem(IDC_THGC_MSS_CHK);\r\n\tif (pWnd2 != NULL) pWnd2->ShowWindow(SW_HIDE);\r\n\t\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// SetListCtrlHeader:\nCString aTitle[] = {_LS(IDS_PUSHOVER_Static_Load_Case), _LS(IDS_PUSHOVER_Scale)};\r\n\tint nColWidth[] = {190, 80};\r\n\tint nColNum = 2;\r\n\tCString title;\r\n\tint i;\r\n\tLV_COLUMN lvcolumn;\r\n\r\n\t// set full row select mode\r\n\tDWORD dwStyle;\r\n\tdwStyle = ListView_GetExtendedListViewStyle(m_lstLCase.GetSafeHwnd());\r\n\tdwStyle |= LVS_EX_FULLROWSELECT; \r\n\tListView_SetExtendedListViewStyle(m_lstLCase.GetSafeHwnd(), dwStyle);\r\n\r\n\t// Set Title\r\n\tfor(i = 0; i < nColNum; i++)\r\n\t{\r\n\t\ttitle = aTitle[i];\r\n\t\tlvcolumn.mask = LVCF_FMT|LVCF_SUBITEM|LVCF_TEXT|LVCF_WIDTH;\r\n\t\tlvcolumn.fmt = LVCFMT_LEFT;\r\n\r\n\t\tlvcolumn.iSubItem = i;\r\n\t\tlvcolumn.cx = globalUtils.ScaleByDPI(nColWidth[i]);\r\n\t\tlvcolumn.pszText = title.GetBuffer(0);\r\n\t\tm_lstLCase.InsertColumn(i,&lvcolumn);\r\n\t\tm_lstLCase.SetColumn(i, &lvcolumn);\r\n\t\ttitle.ReleaseBuffer();\r\n\t}\n\n// SetLoadCaseCmb:\nBOOL bCSInitLoadWithPO = FALSE;\r\n\tUINT nLCType = NULL;\r\n\tif(m_nInitLoadMethod==0)\r\n\t{\r\n\t\tbCSInitLoadWithPO = FALSE;\r\n\t\tnLCType = D_LOADCASE_STATIC;\r\n\t}\r\n\telse if(m_nInitLoadMethod==1)\r\n\t{\r\n\t\tbCSInitLoadWithPO = TRUE;\r\n\t\tnLCType = D_SELECTLOAD_STATIC|D_SELECTLOAD_STAGE;\r\n\t}\r\n\tm_cmbStld.SetCSInitLoadWithPO(bCSInitLoadWithPO);\r\n\tm_cmbStld.SetIgnoreStldCSLoad(TRUE);\r\n\tm_cmbStld.SetLoadType(nLCType, TRUE);\n\n// EnableConsiderIgnoreElem:\nint nInitLoadMethod = 0;\r\n\tCDlgUtil::CtrlRadioGetCheck(this, m_aCtrl_InitLoadMethod, nInitLoadMethod);\r\n\tGetDlgItem(IDC_CONSIDER_IGN_ELEM_CHK)->EnableWindow(nInitLoadMethod==0);\n\n// UpdateFiberOutputCtrl:\nUpdateData();\r\n\r\n\tif(m_bFiberSameHinge || m_nFiberOutput<m_nHingeOutput)\r\n\t{\r\n\t\tm_nFiberOutput = m_nHingeOutput;\r\n\t\tUpdateData(FALSE);\r\n\t}\r\n\r\n\t// Fiber�� ��µ� ������ �� ��°� �Ұ�\r\n\tGetDlgItem(IDC_THGC_FIBER_OPT1_RDO)->EnableWindow(!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_ALL);\r\n\tGetDlgItem(IDC_THGC_FIBER_OPT1_STC)->EnableWindow(!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_ALL);\r\n\tGetDlgItem(IDC_THGC_FIBER_OPT2_RDO)->EnableWindow(!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_SEL);\r\n\tGetDlgItem(IDC_THGC_FIBER_OPT2_STC)->EnableWindow(!m_bFiberSameHinge && m_nHingeOutput<=D_THGC_OUTPUT_OPT_SEL);\r\n\tGetDlgItem(IDC_THGC_FIBER_OPT3_RDO)->EnableWindow(!m_bFiberSameHinge);\r\n\tGetDlgItem(IDC_THGC_FIBER_OPT3_STC)->EnableWindow(!m_bFiberSameHinge);",
+  "rcFile": "ui_src/wg_cmd/wgnx_cmd.rc",
+  "sourceFile": "ui_src/wg_cmd/CMThgcDlg.cpp",
+  "warnings": []
+}

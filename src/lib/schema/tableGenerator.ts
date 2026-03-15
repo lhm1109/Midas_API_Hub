@@ -347,6 +347,20 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
     }
   }
 
+  // x-enum-labels-by-type 단독 (enum/enumByType 없이) — TYPE별 레이블 직접 렌더링
+  const xEnumLabelsByType = (field as any)['x-enum-labels-by-type'] || (field as any).enumLabelsByType;
+  if (!fieldEnum && !field.enumByType && xEnumLabelsByType && Object.keys(xEnumLabelsByType).length > 0) {
+    parts.push('<strong>Enum Values by Type:</strong>');
+    for (const [type, labels] of Object.entries(xEnumLabelsByType)) {
+      parts.push(`<p><em>${escapeHtml(type)}:</em></p>`);
+      parts.push('<ul>');
+      Object.entries(labels as Record<string, string>).forEach(([val, label]) => {
+        parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(val)}"</code></li>`);
+      });
+      parts.push('</ul>');
+    }
+  }
+
   // Value constraints
   if (field.valueConstraint) {
     parts.push('<strong>Value Constraints:</strong>');
@@ -1608,6 +1622,17 @@ function generateFieldDescriptionLegacy(field: EnhancedField, references?: Field
         const enumLabelsByType = (field as any).enumLabelsByType || (field as any)['x-enum-labels-by-type'] || {};
         const label = enumLabelsByType?.[type]?.[String(val)] || val;
         parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
+      });
+    }
+  }
+
+  // x-enum-labels-by-type 단독 (enum/enumByType 없이) — TYPE별 레이블 직접 렌더링
+  const xEnumLabelsByTypeLegacy = (field as any)['x-enum-labels-by-type'] || (field as any).enumLabelsByType;
+  if (!fieldEnum && !field.enumByType && xEnumLabelsByTypeLegacy && Object.keys(xEnumLabelsByTypeLegacy).length > 0) {
+    for (const [type, labels] of Object.entries(xEnumLabelsByTypeLegacy)) {
+      parts.push(`<p><em>${escapeHtml(type)}:</em></p>`);
+      Object.entries(labels as Record<string, string>).forEach(([val, label]) => {
+        parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(val)}"</p>`);
       });
     }
   }

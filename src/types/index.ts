@@ -3,7 +3,7 @@
 export interface ApiEndpoint {
   id: string;
   name: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  method: string; // 콤마 구분 복수 메서드 가능 (예: "GET,POST,PUT,DELETE")
   path: string;
   status?: 'success' | 'error' | null;
   statusMessage?: string; // 🔥 상태 메시지 추가

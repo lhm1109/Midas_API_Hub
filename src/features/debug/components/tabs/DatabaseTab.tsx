@@ -620,17 +620,23 @@ export function DatabaseTab() {
                                   </TableCell>
                                   <TableCell className="text-white font-medium">{endpoint.name}</TableCell>
                                   <TableCell>
-                                    <Badge 
-                                      variant="outline" 
-                                      className={`
-                                        ${endpoint.method === 'GET' ? 'text-green-400 border-green-400' : ''}
-                                        ${endpoint.method === 'POST' ? 'text-blue-400 border-blue-400' : ''}
-                                        ${endpoint.method === 'PUT' ? 'text-yellow-400 border-yellow-400' : ''}
-                                        ${endpoint.method === 'DELETE' ? 'text-red-400 border-red-400' : ''}
-                                      `}
-                                    >
-                                      {endpoint.method}
-                                    </Badge>
+                                    <div className="flex flex-wrap gap-1">
+                                      {(endpoint.method || 'POST').split(',').map((m: string) => m.trim()).filter(Boolean).map((m: string) => (
+                                        <Badge
+                                          key={m}
+                                          variant="outline"
+                                          className={`
+                                            ${m === 'GET'    ? 'text-green-400  border-green-400'  : ''}
+                                            ${m === 'POST'   ? 'text-blue-400   border-blue-400'   : ''}
+                                            ${m === 'PUT'    ? 'text-yellow-400 border-yellow-400' : ''}
+                                            ${m === 'DELETE' ? 'text-red-400    border-red-400'    : ''}
+                                            ${m === 'PATCH'  ? 'text-purple-400 border-purple-400' : ''}
+                                          `}
+                                        >
+                                          {m}
+                                        </Badge>
+                                      ))}
+                                    </div>
                                   </TableCell>
                                   <TableCell>
                                     <Badge className="bg-blue-500/20 text-blue-400 border-blue-500 font-mono text-xs">
@@ -746,17 +752,23 @@ export function DatabaseTab() {
                             <TableCell className="font-mono text-xs text-amber-400">{endpoint.id}</TableCell>
                             <TableCell className="text-zinc-300">{endpoint.name}</TableCell>
                             <TableCell>
-                              <Badge 
-                                variant="outline" 
-                                className={`
-                                  ${endpoint.method === 'GET' ? 'text-green-400 border-green-400' : ''}
-                                  ${endpoint.method === 'POST' ? 'text-blue-400 border-blue-400' : ''}
-                                  ${endpoint.method === 'PUT' ? 'text-yellow-400 border-yellow-400' : ''}
-                                  ${endpoint.method === 'DELETE' ? 'text-red-400 border-red-400' : ''}
-                                `}
-                              >
-                                {endpoint.method}
-                              </Badge>
+                              <div className="flex flex-wrap gap-1">
+                                {(endpoint.method || 'POST').split(',').map((m: string) => m.trim()).filter(Boolean).map((m: string) => (
+                                  <Badge
+                                    key={m}
+                                    variant="outline"
+                                    className={`
+                                      ${m === 'GET'    ? 'text-green-400  border-green-400'  : ''}
+                                      ${m === 'POST'   ? 'text-blue-400   border-blue-400'   : ''}
+                                      ${m === 'PUT'    ? 'text-yellow-400 border-yellow-400' : ''}
+                                      ${m === 'DELETE' ? 'text-red-400    border-red-400'    : ''}
+                                      ${m === 'PATCH'  ? 'text-purple-400 border-purple-400' : ''}
+                                    `}
+                                  >
+                                    {m}
+                                  </Badge>
+                                ))}
+                              </div>
                             </TableCell>
                             <TableCell className="font-mono text-xs text-zinc-400">{endpoint.path}</TableCell>
                             <TableCell>

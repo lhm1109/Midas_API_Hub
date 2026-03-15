@@ -18,8 +18,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/components/ui/utils';
 import { apiClient } from '@/lib/api-client';
 import type { ApiEndpoint } from '@/types';
+
+const ALL_HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const;
+
+const METHOD_ACTIVE_STYLE: Record<string, string> = {
+  GET:    'bg-green-600  text-white border-green-600  hover:bg-green-700',
+  POST:   'bg-blue-600   text-white border-blue-600   hover:bg-blue-700',
+  PUT:    'bg-yellow-500 text-white border-yellow-500 hover:bg-yellow-600',
+  DELETE: 'bg-red-600    text-white border-red-600    hover:bg-red-700',
+  PATCH:  'bg-purple-600 text-white border-purple-600 hover:bg-purple-700',
+};
+
+// comma-separated string → string[]
+function parseMethods(raw: string | undefined | null): string[] {
+  if (!raw) return ['POST'];
+  const parsed = raw.split(',').map((m) => m.trim()).filter(Boolean);
+  return parsed.length > 0 ? parsed : ['POST'];
+}
 
 interface EndpointDialogProps {
   open: boolean;
@@ -39,7 +57,7 @@ export function EndpointDialog({
   onSuccess,
 }: EndpointDialogProps) {
   const [name, setName] = useState('');
-  const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'>('POST');
+  const [methods, setMethods] = useState<string[]>(['POST']);
   const [path, setPath] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<string>('');
@@ -82,7 +100,7 @@ export function EndpointDialog({
       if (endpoint) {
         // 수정 모드
         setName(endpoint.name);
-        setMethod(endpoint.method);
+        setMethods(parseMethods(endpoint.method));
         setPath(endpoint.path);
         setDescription('');
         setStatus(endpoint.status || '');
@@ -90,7 +108,7 @@ export function EndpointDialog({
       } else {
         // 추가 모드
         setName('');
-        setMethod('POST');
+        setMethods(['POST']);
         setPath('');
         setDescription('');
         setStatus('');
@@ -107,6 +125,11 @@ export function EndpointDialog({
       return;
     }
 
+    if (methods.length === 0) {
+      alert('HTTP 메서드를 1개 이상 선택해주세요.');
+      return;
+    }
+
     setLoading(true);
     try {
       const endpointId = generateEndpointId();
@@ -116,7 +139,7 @@ export function EndpointDialog({
       const endpointData = {
         id: endpointId,
         name: name.trim(),
-        method,
+        method: methods.join(','),
         path: path.trim().startsWith('/') ? path.trim() : `/${path.trim()}`,
         product: productId,
         product_id: productId,
@@ -179,19 +202,34 @@ export function EndpointDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="method">HTTP 메서드 *</Label>
-            <Select value={method} onValueChange={(value: any) => setMethod(value)}>
-              <SelectTrigger id="method">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="GET">GET</SelectItem>
-                <SelectItem value="POST">POST</SelectItem>
-                <SelectItem value="PUT">PUT</SelectItem>
-                <SelectItem value="DELETE">DELETE</SelectItem>
-                <SelectItem value="PATCH">PATCH</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label>HTTP 메서드 * <span className="text-zinc-500 font-normal text-xs">(여러 개 선택 가능)</span></Label>
+            <div className="flex flex-wrap gap-2">
+              {ALL_HTTP_METHODS.map((m) => {
+                const active = methods.includes(m);
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => {
+                      if (active) {
+                        if (methods.length > 1) setMethods(methods.filter((x) => x !== m));
+                      } else {
+                        setMethods([...methods, m]);
+                      }
+                    }}
+                    className={cn(
+                      'px-3 py-1.5 rounded-md text-xs font-semibold border transition-all select-none',
+                      active
+                        ? METHOD_ACTIVE_STYLE[m]
+                        : 'bg-transparent text-zinc-400 border-zinc-600 hover:border-zinc-400 hover:text-zinc-200',
+                    )}
+                  >
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-zinc-500">선택됨: {methods.join(', ')}</p>
           </div>
 
           <div className="space-y-2">

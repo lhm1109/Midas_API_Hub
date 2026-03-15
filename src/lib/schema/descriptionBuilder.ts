@@ -49,11 +49,9 @@ export function buildFieldDescription(
   // Support both field.enum and field.items.enum for arrays
   else {
     const fieldEnum = field.enum || fieldAny.items?.enum;
+    const enumLabelsByType = fieldAny.enumLabelsByType || fieldAny['x-enum-labels-by-type'];
 
     if (fieldEnum && fieldEnum.length > 0) {
-      // Check both x-enum-labels-by-type and enumLabels (camelCase version)
-      const enumLabelsByType = fieldAny.enumLabelsByType || fieldAny['x-enum-labels-by-type'] || fieldAny.enumLabels;
-
       // If x-enum-labels-by-type exists, show labels (without type headers)
       if (enumLabelsByType && typeof enumLabelsByType === 'object' && Object.keys(enumLabelsByType).length > 0) {
         descParts.push('**Enum Values by Type:**');
@@ -74,6 +72,15 @@ export function buildFieldDescription(
             val;
           const formattedVal = typeof val === 'string' ? `"${val}"` : val;
           descParts.push(`• ${label} : ${formattedVal}`);
+        });
+      }
+    } else if (enumLabelsByType && typeof enumLabelsByType === 'object' && Object.keys(enumLabelsByType).length > 0) {
+      // x-enum-labels-by-type 단독 (enum 배열 없이) — TYPE별 레이블 직접 렌더링
+      descParts.push('**Enum Values by Type:**');
+      for (const [type, labels] of Object.entries(enumLabelsByType)) {
+        descParts.push(`*${type}:*`);
+        Object.entries(labels as Record<string, string>).forEach(([val, label]) => {
+          descParts.push(`• ${label} : ${val}`);
         });
       }
     }

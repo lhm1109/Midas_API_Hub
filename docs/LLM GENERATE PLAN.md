@@ -233,25 +233,59 @@ LLM이 ECS(Endpoint Contract Schema)를 생성할 때 반드시 따라야 하는
 
 #### 기본값(Default) 규칙
 
-> **false로 설정된 Optional Boolean 외에는 절대 추측하여 넣지 않는다.**
+> **근거 없이 추측하여 넣지 않는다. 다이얼로그 사양서 또는 API 응답 예시에서 명시된 기본값만 기입한다.**
 
-- 숫자 필드에 `0` 자동 할당 **금지** → 스키마에 `default` 명시가 있을 때만 기입
-- 문자열 필드에 빈 값(`""`) 자동 할당 **금지** → 위와 동일
-- Boolean 필드만 예외적으로 `"default": false` 허용 (UI에서 미체크 상태가 기본이기 때문)
+| 타입 | 기본값 작성 조건 | 예시 |
+|------|-----------------|------|
+| `boolean` | 항상 `"default": false` 기입 (미체크가 기본 상태) | `"T_bLMT": { "type": "boolean", "default": false }` |
+| `number` / `integer` | 사양서에 `0`이 기본값으로 명시된 경우에만 기입 | `"ANGLE": { "type": "number", "default": 0 }` |
+| `string` | 기본값이 문서에 명확히 명시된 경우에만 기입 | 거의 없음 |
+
+- 문자열 필드에 빈 값(`""`) 자동 할당 **금지**
+- 숫자 `0` 이라도 사양서 근거 없이 넣는 것 **금지** — 아래 예시처럼 사양서에 "기본값 0" 또는 프로그램 초기값이 0임이 확인된 경우에만 허용
+
+**ELEM 스키마 실제 적용 예 (기존 스키마 대비 추가된 기본값)**
 
 ```json
-// ✅ 올바른 예 — boolean에만 default 부여
-"bAUTOKF": {
+// 기존 스키마 (기본값 없음)
+"ANGLE": { "description": "ELEMENTANGLE", "type": "number" }
+
+// 개선된 스키마 — 베타각은 입력 안 하면 0이 기본임을 사양서에서 확인
+"ANGLE": {
+  "type": "number",
+  "description": "ELEMENTANGLE",
+  "default": 0,
+  "x-ui": { "label": "Beta Angle" }
+}
+
+// boolean — 항상 false
+"T_bLMT": {
   "type": "boolean",
-  "default": false
+  "description": "USETENSLIMIT?",
+  "default": false,
+  "x-ui": { "label": "Use Force Limit" },
+  "x-optional-when": { "TYPE": "TENSTR" }
 }
 
 // ❌ 잘못된 예 — 근거 없이 문자열 기본값 추측 삽입
 "FRAMEX": {
   "type": "string",
-  "default": "Braced Non-sway"   // 스키마에 명시되지 않은 추측값
+  "default": "Braced Non-sway"   // 사양서에 없는 추측값
 }
 ```
+
+**기존 ELEM 스키마 대비 개선된 항목 요약**
+
+| 항목 | 기존 스키마 | 개선된 스키마 |
+|------|-----------|-------------|
+| TYPE 필드 | `"type": "string"` (열거 없음) | `enum: ["BEAM","TRUSS","TENSTR",...]` 명시 |
+| NODE 배열 제약 | `items.maxItems: 8` (고정) | `allOf[].if(TYPE).then.properties.NODE.minItems/maxItems` (TYPE별 분리) |
+| STYPE enum 제약 | 없음 | `allOf[].if(TYPE).then.properties.STYPE.enum` (TYPE별 허용값 분리) |
+| 기본값 | 없음 | `ANGLE=0`, `NON_LEN=0`, `TENS=0`, `T_LIMIT=0`, `T_bLMT=false`, `W_TYPE=0` 추가 |
+| 필드 표시명 | 없음 | 전 필드 `x-ui.label` 추가 |
+| 서브타입 레이블 | 없음 | `x-enum-labels-by-type` (TYPE별 STYPE 이름 매핑) 추가 |
+| 조건부 필드 표시 | 없음 | `x-optional-when` (NON_LEN, TENS, T_LIMIT, WALL 등) 추가 |
+| 추가 속성 차단 | 없음 | `additionalProperties: false` 추가 |
 
 ---
 
@@ -341,7 +375,11 @@ DCTL 엔티티는 `DT`(Design Type) 값에 따라 방향별 Frame 설정 필드�
 | 키 | 적용 위치 | 값 형식 | 역할 |
 |----|----------|---------|------|
 | `x-ui` | 필드, 객체 | object | 아래 세부 속성 참조 |
-| `x-enum-labels` | 필드 | string[] | `enum` 배열과 인덱스 순서 일치하는 표시 라벨 배열 |
+| `x-enum-labels` | 필드 | `{value: label}` 또는 string[] | `enum` 값에 대응하는 표시 라벨. `oneOf[].const + title` 방식이 우선, 보조 수단으로 사용 |
+| `x-enum-labels-by-type` | 필드 | `{TYPE: {value: label}}` | `TYPE` 필드 값에 따라 동적으로 다른 enum 라벨 표시 |
+| `x-required-when` | 필드 | object 또는 array | 조건 만족 시 UI에서 필수(Required) 표시. 검증은 `allOf`에서 처리 |
+| `x-optional-when` | 필드 | object 또는 array | 조건 만족 시 UI에서 필드 표시. 검증과 무관 |
+| `x-exclusive-keys` | 필드 | array | 상호 배타적 키 목록 (하나만 선택 가능 구조 표시) |
 
 **`x-ui` 세부 속성**
 
@@ -349,10 +387,10 @@ DCTL 엔티티는 `DT`(Design Type) 값에 따라 방향별 Frame 설정 필드�
 |------|------|----------|------|
 | `label` | string | 필드 | Table(Spec) 탭의 Description 컬럼과 Builder 탭 입력 폼에서 표시되는 사람 읽는 필드명. 없으면 JSON 키 이름(`key`)을 그대로 사용. |
 | `hint` | string | 필드 | `label` 아래에 작은 글씨(amber 색상 💡 아이콘)로 표시되는 보조 설명. 입력 단위, 주의사항 등을 전달할 때 사용. |
-| `groupId` | string | 필드 | 이 필드가 속할 섹션의 ID. 같은 `groupId`를 가진 필드들은 Builder/Table에서 하나의 섹션 헤더 아래 묶여 표시됨. 객체 수준의 `groups` 배열에 정의된 ID를 참조해야 함. |
-| `groups` | array | 객체 | 섹션 목록 정의. `{ id, title }` 배열로 선언하며, `groupId`가 참조하는 섹션의 표시 제목을 여기서 매핑함. **필드가 아닌 객체(patternProperties의 스키마 등) 수준에 기입.** |
 | `component` | string | 필드 | Builder 탭 입력 폼에서 사용할 UI 컴포넌트 힌트. `shared.yaml`의 `componentRegistry`를 기본으로 하되, 이 값으로 오버라이드 가능. `RadioGroup`으로 지정하면 Select 대신 라디오 버튼 그룹으로 렌더됨. |
 | `order` | number | 필드 | MCP가 JSON 스키마를 저장할 때 같은 객체 내 필드의 출력 순서를 결정. 숫자가 작을수록 먼저 출력. `deterministic-json.ts`에서 `x-ui.order` 기준으로 정렬하여 결정론적 출력을 보장함. |
+
+> **`groupId` / `groups` 는 스펙 탭 테이블 렌더러에서 읽히지 않으므로 신규 스키마에 작성하지 않는다.** 섹션 구분이 필요하면 `x-ui.group` (schemaLogicEngine 참조) 를 사용할 것.
 
 > **`component` 허용값** (`shared.yaml` componentRegistry 기준)
 > - `Input` — 텍스트/숫자 입력 (string, number, integer 기본값)
@@ -360,38 +398,6 @@ DCTL 엔티티는 `DT`(Design Type) 값에 따라 방향별 Frame 설정 필드�
 > - `Select` — 드롭다운 (enum 기본값)
 > - `RadioGroup` — 라디오 버튼 그룹 (enum을 가로로 나열할 때)
 > - `Textarea` — 멀티라인 입력 (array, object 기본값)
-
-**`groups` 선언 구조 예시**
-
-```json
-// 객체(엔티티) 수준에 groups를 선언
-{
-  "x-ui": {
-    "groups": [
-      { "id": "FRAME_DEF",    "title": "Definition of Frame" },
-      { "id": "DESIGN_TYPE",  "title": "Design Type" },
-      { "id": "CALC_OPT",     "title": "Calculation Options" }
-    ]
-  },
-  "properties": {
-    "FRAMEX": {
-      "x-ui": { "label": "X-Direction of Frame", "groupId": "FRAME_DEF", "order": 1 }
-    },
-    "DT": {
-      "x-ui": { "label": "Design Type", "groupId": "DESIGN_TYPE", "component": "RadioGroup", "order": 3 }
-    },
-    "bAUTOKF": {
-      "x-ui": { "label": "Auto Calculate Effective Length Factors", "groupId": "CALC_OPT", "order": 4 }
-    }
-  }
-}
-```
-
-`groupId: "FRAME_DEF"`를 가진 필드들은 `groups`에서 `"Definition of Frame"` 헤더 아래 묶여 렌더링된다.
-| `x-enum-labels-by-type` | 필드 | `{TYPE: {value: label}}` | `TYPE` 필드 값에 따라 동적으로 다른 enum 라벨 표시 |
-| `x-required-when` | 필드 | object 또는 array | 조건 만족 시 UI에서 필수(Required) 표시. 검증은 `allOf`에서 처리 |
-| `x-optional-when` | 필드 | object 또는 array | 조건 만족 시 UI에서 필드 표시. 검증과 무관 |
-| `x-exclusive-keys` | 필드 | array | 상호 배타적 키 목록 (하나만 선택 가능 구조 표시) |
 
 ##### Deprecated 키 (사용 금지, 마이그레이션 필요)
 

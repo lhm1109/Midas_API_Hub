@@ -28,7 +28,7 @@ import { toast } from 'sonner';
 interface RunnerTabProps {
   endpoint: {
     id: string;
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+    method: string; // 콤마 구분 복수 가능 (예: "GET,POST,PUT,DELETE")
     path: string;
     name: string;
   };
@@ -55,7 +55,12 @@ export function RunnerTab({
   const endpointPath = manualData?.inputUri || endpoint.path;
   const defaultUrl = `${settings.baseUrl}${endpointPath}`;
 
-  const [method, setMethod] = useState<string>(endpoint.method);
+  // 엔드포인트에 지정된 사용 가능한 메서드 목록 파싱
+  const availableMethods = endpoint.method
+    ? endpoint.method.split(',').map((m) => m.trim()).filter(Boolean)
+    : ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
+
+  const [method, setMethod] = useState<string>(availableMethods[0] || 'POST');
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<{
     status: number;
@@ -481,11 +486,9 @@ export function RunnerTab({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="GET">GET</SelectItem>
-                <SelectItem value="POST">POST</SelectItem>
-                <SelectItem value="PUT">PUT</SelectItem>
-                <SelectItem value="DELETE">DELETE</SelectItem>
-                <SelectItem value="PATCH">PATCH</SelectItem>
+                {availableMethods.map((m) => (
+                  <SelectItem key={m} value={m}>{m}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
 

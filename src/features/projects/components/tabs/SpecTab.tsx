@@ -444,6 +444,138 @@ const getPathNameHints = (path: string): { requestKey?: string; responseKey?: st
   };
 };
 
+const replaceWrapperNameInDescription = (value: unknown, fromKey: string, toKey: string) => {
+  if (typeof value !== 'string' || !fromKey || !toKey || fromKey === toKey) {
+    return value;
+  }
+  return value.split(fromKey).join(toKey);
+};
+
+const inferResponseOriginNameFromRequest = (
+  requestSchema: any,
+  options?: { requestKey?: string; responseKey?: string }
+): string | undefined => {
+  const explicitResponseKey = typeof options?.responseKey === 'string' && options.responseKey.trim().length > 0
+    ? options.responseKey.trim()
+    : undefined;
+  if (explicitResponseKey) return explicitResponseKey;
+
+  const requestOrigin = typeof requestSchema?.['x-origin-name'] === 'string'
+    ? String(requestSchema['x-origin-name']).trim()
+    : '';
+  if (requestOrigin) {
+    if (/_REQUEST(_|$)/i.test(requestOrigin)) {
+      return requestOrigin.replace(/_REQUEST(_|$)/i, '_RESPONSE$1');
+    }
+    const requestPrefix = parseMapBodyPrefix(requestOrigin);
+    if (requestPrefix) {
+      return `${requestPrefix}_RESPONSE_MAP_BODY`;
+    }
+  }
+
+  const requestKey = typeof options?.requestKey === 'string' && options.requestKey.trim().length > 0
+    ? options.requestKey.trim()
+    : inferMapBodyComponentName(requestSchema, 'request');
+  const fallbackPrefix = parseMapBodyPrefix(requestKey);
+  return fallbackPrefix ? `${fallbackPrefix}_RESPONSE_MAP_BODY` : undefined;
+};
+
+const inferResponseWrapperKeyFromRequest = (requestSchema: any, responseOriginName?: string): string => {
+  const ctx = getMapEntryContext(requestSchema);
+  if (!ctx) return 'Response';
+
+  const wrapperToken = toSchemaToken(ctx.wrapperKey);
+  if (wrapperToken && !RESERVED_WRAPPER_KEYS.has(wrapperToken)) {
+    return ctx.wrapperKey;
+  }
+
+  const prefix = parseMapBodyPrefix(responseOriginName || '');
+  const prefixTokens = prefix
+    ? prefix
+      .split('_')
+      .map((token) => toSchemaToken(token))
+      .filter((token) => token && token !== 'DTO')
+    : [];
+
+  const entryProperties = ctx.entrySchema?.properties && typeof ctx.entrySchema.properties === 'object'
+    ? Object.keys(ctx.entrySchema.properties)
+    : [];
+  const entryRequired = Array.isArray(ctx.entrySchema?.required)
+    ? ctx.entrySchema.required.filter((key: unknown): key is string => typeof key === 'string')
+    : [];
+
+  const pickMatchingKey = (candidates: string[]) => {
+    for (const candidate of candidates) {
+      const candidateToken = toSchemaToken(candidate);
+      const matched = prefixTokens.some((token) =>
+        candidateToken === token || candidateToken.startsWith(token) || token.startsWith(candidateToken)
+      );
+      if (matched) {
+        return candidate;
+      }
+    }
+    return undefined;
+  };
+
+  return (
+    pickMatchingKey(entryRequired)
+    || pickMatchingKey(entryProperties)
+    || (entryProperties.length === 1 ? entryProperties[0] : undefined)
+    || (entryRequired.length === 1 ? entryRequired[0] : undefined)
+    || ctx.wrapperKey
+    || 'Response'
+  );
+};
+
+const buildMirroredResponseSchema = (
+  requestSchema: any,
+  options?: { requestKey?: string; responseKey?: string }
+) => {
+  const nextSchema = deepClone(requestSchema ?? {});
+  if (!nextSchema || typeof nextSchema !== 'object') {
+    return nextSchema;
+  }
+
+  const ctx = getMapEntryContext(nextSchema);
+  const responseOriginName = inferResponseOriginNameFromRequest(nextSchema, options);
+  const nextWrapperKey = inferResponseWrapperKeyFromRequest(nextSchema, responseOriginName);
+
+  if (responseOriginName) {
+    nextSchema['x-origin-name'] = responseOriginName;
+  }
+
+  if (!ctx || !ctx.wrapperKey || !nextSchema.properties?.[ctx.wrapperKey]) {
+    return nextSchema;
+  }
+
+  const wrapperSchema = deepClone(nextSchema.properties[ctx.wrapperKey]);
+  if (wrapperSchema && typeof wrapperSchema === 'object' && typeof wrapperSchema.description === 'string') {
+    wrapperSchema.description = replaceWrapperNameInDescription(wrapperSchema.description, ctx.wrapperKey, nextWrapperKey);
+  }
+
+  if (ctx.wrapperKey !== nextWrapperKey) {
+    const reorderedProperties: Record<string, any> = {};
+    for (const [key, value] of Object.entries(nextSchema.properties)) {
+      if (key === ctx.wrapperKey) {
+        reorderedProperties[nextWrapperKey] = wrapperSchema;
+      } else {
+        reorderedProperties[key] = value;
+      }
+    }
+    nextSchema.properties = reorderedProperties;
+  } else {
+    nextSchema.properties[ctx.wrapperKey] = wrapperSchema;
+  }
+
+  if (Array.isArray(nextSchema.required)) {
+    nextSchema.required = nextSchema.required.map((key: string) => key === ctx.wrapperKey ? nextWrapperKey : key);
+  } else {
+    nextSchema.required = [nextWrapperKey];
+  }
+
+  return nextSchema;
+};
+
 const mergeRequestResponseSchemas = (
   requestSchema: any,
   responseSchema: any,
@@ -2356,6 +2488,68 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     }
   };
 
+  const handleGenerateResponseFromRequest = () => {
+    if (schemaView !== 'enhanced' || enhancedSubView !== 'request') {
+      toast.info('Response auto-generation is available only for Enhanced Request schema.');
+      return;
+    }
+
+    try {
+      const parsedRequestSchema = JSON.parse(editableSchema);
+      const preserveComponents = (nextSchema: any, baseSchema: any) => {
+        if (!nextSchema || typeof nextSchema !== 'object') return nextSchema;
+        const result = deepClone(nextSchema);
+        if (!result.components && baseSchema?.components) {
+          result.components = deepClone(baseSchema.components);
+        }
+        if (!result['x-origin-name'] && baseSchema?.['x-origin-name']) {
+          result['x-origin-name'] = baseSchema['x-origin-name'];
+        }
+        return result;
+      };
+
+      const requestKey = enhancedBundle.requestKey
+        || mergeNameHints.requestKey
+        || inferMapBodyComponentName(parsedRequestSchema, 'request');
+      const responseKey = enhancedBundle.responseKey
+        || mergeNameHints.responseKey
+        || inferResponseOriginNameFromRequest(parsedRequestSchema, { requestKey });
+
+      const baseRequest = enhancedBundle.request
+        || combinedSpecData.jsonSchemaOriginal
+        || combinedSpecData.jsonSchema
+        || {};
+      const baseResponse = enhancedBundle.response || {};
+
+      const nextRequest = preserveComponents(parsedRequestSchema, baseRequest);
+      const generatedResponseSchema = buildMirroredResponseSchema(nextRequest, {
+        requestKey,
+        responseKey,
+      });
+      const nextResponse = preserveComponents(generatedResponseSchema, baseResponse);
+
+      const nextEnhancedBundle: Record<string, any> = {
+        request: nextRequest,
+        response: nextResponse,
+      };
+      if (requestKey) nextEnhancedBundle.requestKey = requestKey;
+      if (responseKey) nextEnhancedBundle.responseKey = responseKey;
+
+      updateSpecData({
+        jsonSchemaEnhanced: JSON.stringify(nextEnhancedBundle),
+      });
+
+      setSavedSchema(nextResponse);
+      setEditableSchema(JSON.stringify(nextResponse, null, 2));
+      setIsSchemaModified(false);
+      setEnhancedSubView('response');
+
+      toast.success('✅ Response schema generated from Request schema.\n\nReview the Response tab and click Save when ready.');
+    } catch (error) {
+      toast.error('❌ Invalid JSON!\n\nPlease fix the Request schema syntax before generating Response.');
+    }
+  };
+
   // 🎯 Enhanced → Original 변환 (Original 탭에 저장)
   const handleConvertToOriginal = () => {
     if (schemaView !== 'enhanced' || enhancedSubView !== 'request') {
@@ -2866,6 +3060,18 @@ ${responseHtml}`.trim();
                   </Button>
 
                   {/* Enhanced → Original 변환 버튼 */}
+                  {schemaView === 'enhanced' && enhancedSubView === 'request' && (
+                    <Button
+                      onClick={handleGenerateResponseFromRequest}
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-2 text-xs border-emerald-600/50 text-emerald-400 hover:bg-emerald-600/20"
+                    >
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Generate Response
+                    </Button>
+                  )}
+
                   {schemaView === 'enhanced' && enhancedSubView === 'request' && (
                     <Button
                       onClick={handleConvertToOriginal}
