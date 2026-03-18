@@ -64,6 +64,10 @@ function parseRunnerData(data, testCases) {
   };
 }
 
+function generateTestCaseId() {
+  return `tc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+}
+
 async function saveManualData(versionId, data) {
   const { error } = await supabase
     .from('manual_data')
@@ -127,24 +131,63 @@ async function saveRunnerData(versionId, data) {
 
   if (runnerError) throw runnerError;
 
-  // Test cases 저장
-  if (data.testCases && data.testCases.length > 0) {
-    // 기존 test cases 삭제
-    await supabase
-      .from('test_cases')
-      .delete()
-      .eq('version_id', versionId);
+  const incomingTestCases = Array.isArray(data.testCases) ? data.testCases : [];
 
-    // 새 test cases 삽입 (🔥 response 필드 포함)
-    const testCasesData = data.testCases.map(tc => ({
-      id: tc.id,
+  // 기존 test cases 삭제
+  const { error: deleteTestCasesError } = await supabase
+    .from('test_cases')
+    .delete()
+    .eq('version_id', versionId);
+
+  if (deleteTestCasesError) throw deleteTestCasesError;
+
+  // Test cases 저장
+  if (incomingTestCases.length > 0) {
+    const requestedIds = incomingTestCases
+      .map(tc => (typeof tc?.id === 'string' ? tc.id.trim() : ''))
+      .filter(Boolean);
+
+    const conflictingIds = new Set();
+    if (requestedIds.length > 0) {
+      const { data: existingTestCases, error: existingTestCasesError } = await supabase
+        .from('test_cases')
+        .select('id, version_id')
+        .in('id', requestedIds);
+
+      if (existingTestCasesError) throw existingTestCasesError;
+
+      for (const existing of existingTestCases || []) {
+        if (existing?.id && existing.version_id !== versionId) {
+          conflictingIds.add(existing.id);
+        }
+      }
+    }
+
+    const usedIds = new Set();
+    const resolveTestCaseId = (preferredId) => {
+      const normalized = typeof preferredId === 'string' ? preferredId.trim() : '';
+      if (normalized && !conflictingIds.has(normalized) && !usedIds.has(normalized)) {
+        usedIds.add(normalized);
+        return normalized;
+      }
+
+      let generatedId = generateTestCaseId();
+      while (usedIds.has(generatedId) || conflictingIds.has(generatedId)) {
+        generatedId = generateTestCaseId();
+      }
+      usedIds.add(generatedId);
+      return generatedId;
+    };
+
+    const testCasesData = incomingTestCases.map(tc => ({
+      id: resolveTestCaseId(tc.id),
       version_id: versionId,
       name: tc.name,
       description: tc.description,
       request_body: tc.requestBody,
-      response_body: tc.responseBody || null,        // 🔥 Response 저장
-      response_status: tc.responseStatus || null,    // 🔥 HTTP 상태 코드
-      response_time: tc.responseTime || null,        // 🔥 응답 시간
+      response_body: tc.responseBody || null,
+      response_status: tc.responseStatus || null,
+      response_time: tc.responseTime || null,
       created_at: tc.createdAt,
       updated_at: tc.updatedAt
     }));

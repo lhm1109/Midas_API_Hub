@@ -67,6 +67,9 @@ const PROGRESS_COLOR_BY_KIND = {
   error: ANSI.red,
   detail: ANSI.gray,
 };
+const SHELL_DEFAULT_PROMPT = "bat_run> ";
+const SHELL_COMPOSE_PROMPT = "... ";
+const SHELL_PASTE_BURST_DEBOUNCE_MS = 90;
 let ACTIVE_SESSION_LOG_FILE = null;
 let OUTPUT_HOOKS_INSTALLED = false;
 const ORIGINAL_STDOUT_WRITE = process.stdout.write.bind(process.stdout);
@@ -77,6 +80,7 @@ const SHELL_COMMAND_PALETTE_ITEMS = [
   { command: "/log-file", description: "Show current session log file", action: "execute", value: "/log-file" },
   { command: "/tail-log 40", description: "Show recent session log lines", action: "execute", value: "/tail-log 40" },
   { command: "/paste", description: "Attach clipboard image", action: "execute", value: "/paste" },
+  { command: "/compose", description: "Open multiline compose mode", action: "execute", value: "/compose" },
   { command: "/images", description: "Show pending images", action: "execute", value: "/images" },
   { command: "/new", description: "Start a new conversation", action: "execute", value: "/new" },
   { command: "/clear", description: "Clear pending images", action: "execute", value: "/clear" },
@@ -1947,6 +1951,9 @@ bat_run shell commands:
   /code-search clear       Clear code-search queries
   /schema-name <name|auto> Set fixed schema name or revert to auto
   /paste                   Add clipboard image to pending attachments
+  /compose                 Open multiline compose mode
+  /submit                  Send compose buffer (only in compose mode)
+  /cancel-compose          Discard compose buffer (only in compose mode)
   /image <path>            Add image file to pending attachments
   /images                  Show pending image attachments
   /schema <text>           Force schema create with current schema settings
@@ -1968,6 +1975,8 @@ Tip:
   - Ctrl+Shift+V is the official image paste shortcut.
   - Alt+V is the fallback shortcut.
   - If the terminal steals paste shortcuts, use /paste.
+  - /compose opens multiline input. Each Enter adds a line until /submit.
+  - Multiline paste is automatically merged into one prompt before execution.
 `;
   process.stdout.write(text.trimStart() + "\n");
 }
@@ -2071,6 +2080,21 @@ async function handleShellLine(line, state, rl) {
 
   if (line === "/send") {
     process.stderr.write("[bat_run] usage: /send <text>\n");
+    return;
+  }
+
+  if (line === "/compose") {
+    process.stderr.write("[bat_run] /compose opens multiline input from the shell prompt.\n");
+    return;
+  }
+
+  if (line === "/submit") {
+    process.stderr.write("[bat_run] /submit is only available while compose mode is active.\n");
+    return;
+  }
+
+  if (line === "/cancel-compose") {
+    process.stderr.write("[bat_run] /cancel-compose is only available while compose mode is active.\n");
     return;
   }
 
@@ -2356,6 +2380,14 @@ function createCommandPaletteState() {
   };
 }
 
+function createMultilineComposerState() {
+  return {
+    active: false,
+    lines: [],
+    submitOnBlankLine: false,
+  };
+}
+
 function resetReadlineBuffer(rl) {
   rl.line = "";
   rl.cursor = 0;
@@ -2543,24 +2575,134 @@ async function startWrapperShell(initialOpts = {}) {
   });
 
   const commandPalette = createCommandPaletteState();
+  const composer = createMultilineComposerState();
+  const pendingBurst = {
+    lines: [],
+    timer: null,
+  };
   let handlingLine = false;
   let shellClosed = false;
 
+  const updatePrompt = () => {
+    rl.setPrompt(composer.active ? SHELL_COMPOSE_PROMPT : SHELL_DEFAULT_PROMPT);
+  };
+
+  const promptShell = (preserveCursor = false) => {
+    updatePrompt();
+    rl.prompt(preserveCursor);
+  };
+
+  const clearPendingBurst = () => {
+    if (pendingBurst.timer) {
+      clearTimeout(pendingBurst.timer);
+      pendingBurst.timer = null;
+    }
+    pendingBurst.lines = [];
+  };
+
+  const exitComposeMode = ({ message = null } = {}) => {
+    composer.active = false;
+    composer.lines = [];
+    composer.submitOnBlankLine = false;
+    if (message) {
+      process.stdout.write(`${message}\n`);
+    }
+  };
+
+  const enterComposeMode = ({ initialLines = [], submitOnBlankLine = false, message = null } = {}) => {
+    if (!composer.active) {
+      composer.active = true;
+      composer.lines = [];
+    }
+    composer.submitOnBlankLine = submitOnBlankLine;
+    if (initialLines.length > 0) {
+      composer.lines.push(...initialLines);
+    }
+    process.stdout.write(
+      `${message ?? "[bat_run] compose mode enabled. Enter multiple lines, then type /submit to send or /cancel-compose to discard."}\n`
+    );
+    promptShell();
+  };
+
   const runShellCommand = async (line) => {
+    const trimmedLine = String(line ?? "").trim();
+    if (!trimmedLine) {
+      if (!shellClosed) {
+        promptShell();
+      }
+      return;
+    }
+    if (trimmedLine === "/compose") {
+      enterComposeMode();
+      return;
+    }
+
     handlingLine = true;
     try {
       await handleShellLine(line, state, rl);
     } finally {
       handlingLine = false;
       if (!shellClosed) {
-        rl.prompt();
+        promptShell();
       }
     }
+  };
+
+  const flushPendingBurst = async () => {
+    if (pendingBurst.lines.length === 0) return;
+
+    const rawBurstLines = pendingBurst.lines.map((line) => String(line ?? ""));
+    const looksLikePaste = rawBurstLines.length > 1 || rawBurstLines.some((line) => /\u001b\[\?2004[hl]|\u001b\[200~|\u001b\[201~/.test(line));
+    const burstLines = rawBurstLines.map((line) =>
+      line.replace(/\u001b\[\?2004[hl]/g, "").replace(/\u001b\[200~|\u001b\[201~/g, "")
+    );
+    clearPendingBurst();
+
+    const merged = burstLines.join("\n");
+    if (!merged.trim()) {
+      if (!shellClosed) {
+        promptShell();
+      }
+      return;
+    }
+
+    if (looksLikePaste) {
+      if (composer.active) {
+        composer.lines.push(...burstLines);
+        if (!shellClosed) {
+          promptShell();
+        }
+        return;
+      }
+
+      enterComposeMode({
+        initialLines: burstLines,
+        submitOnBlankLine: true,
+        message:
+          "[bat_run] multiline paste loaded. Review or add more text, then press Enter on an empty prompt to send. Use /cancel-compose to discard.",
+      });
+      return;
+    }
+
+    await runShellCommand(merged);
+  };
+
+  const queuePendingBurst = (lineRaw) => {
+    pendingBurst.lines.push(lineRaw);
+    if (pendingBurst.timer) {
+      clearTimeout(pendingBurst.timer);
+    }
+    pendingBurst.timer = setTimeout(() => {
+      void flushPendingBurst();
+    }, SHELL_PASTE_BURST_DEBOUNCE_MS);
   };
 
   readline.emitKeypressEvents(shellIo.input, rl);
   if (shellIo.rawCapable) {
     shellIo.input.setRawMode(true);
+  }
+  if (shellIo.terminal) {
+    shellIo.output.write("\u001b[?2004h");
   }
 
   const keypressHandler = (_str, key = {}) => {
@@ -2588,41 +2730,84 @@ async function startWrapperShell(initialOpts = {}) {
     if (wantsPaste) {
       const pasted = handleShellPaste(state, { inline: true });
       if (pasted) {
-        rl.prompt(true);
+        promptShell(true);
       }
     }
   };
 
   shellIo.input.on("keypress", keypressHandler);
 
-  rl.setPrompt("bat_run> ");
-  rl.prompt();
+  promptShell();
 
   await new Promise((resolve) => {
     rl.on("line", async (lineRaw) => {
       if (commandPalette.suppressNextEmptyLine && !lineRaw.trim()) {
         commandPalette.suppressNextEmptyLine = false;
         if (!shellClosed) {
-          rl.prompt();
+          promptShell();
         }
         return;
       }
 
-      const line = lineRaw.trim();
-      if (!line) {
-        rl.prompt();
+      if (composer.active) {
+        const line = lineRaw.trim();
+        if (line === "/submit") {
+          const prompt = composer.lines.join("\n");
+          exitComposeMode();
+          if (!prompt.trim()) {
+            process.stderr.write("[bat_run] compose buffer is empty\n");
+            if (!shellClosed) {
+              promptShell();
+            }
+            return;
+          }
+          await runShellCommand(prompt);
+          return;
+        }
+        if (!lineRaw.length && composer.submitOnBlankLine) {
+          const prompt = composer.lines.join("\n");
+          exitComposeMode();
+          if (!prompt.trim()) {
+            if (!shellClosed) {
+              promptShell();
+            }
+            return;
+          }
+          await runShellCommand(prompt);
+          return;
+        }
+        if (line === "/cancel-compose") {
+          exitComposeMode({ message: "[bat_run] compose buffer discarded" });
+          if (!shellClosed) {
+            promptShell();
+          }
+          return;
+        }
+        composer.lines.push(lineRaw);
+        if (!shellClosed) {
+          promptShell();
+        }
         return;
       }
 
-      await runShellCommand(line);
+      if (lineRaw.trim() === "/compose") {
+        enterComposeMode();
+        return;
+      }
+
+      queuePendingBurst(lineRaw);
     });
 
     rl.on("close", () => {
       shellClosed = true;
+      clearPendingBurst();
       clearCommandPalette(rl, commandPalette);
       shellIo.input.off("keypress", keypressHandler);
       if (shellIo.rawCapable) {
         shellIo.input.setRawMode(false);
+      }
+      if (shellIo.terminal) {
+        shellIo.output.write("\u001b[?2004l");
       }
       shellIo.cleanup();
       setActiveSessionLogFile(null);

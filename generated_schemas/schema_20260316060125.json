@@ -1,0 +1,235 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Set Calculation Parameters",
+          "type": "object",
+          "description": "KISTEC2019 seismic evaluation calculation parameters captured from the Set Calculation Parameters dialog.",
+          "required": [
+            "METHOD",
+            "SEIS_ZON",
+            "EPA_S",
+            "SITE_CLS",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "IE",
+            "EFF_WGT",
+            "DP",
+            "LAMBDA_S"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "METHOD": {
+              "type": "string",
+              "description": "Calculation method selector shown at the top of the dialog. This screenshot variant is KISTEC2019-specific.",
+              "oneOf": [
+                {
+                  "title": "KISTEC2019",
+                  "const": "KISTEC2019"
+                }
+              ],
+              "x-ui": {
+                "component": "ComboBox",
+                "groupId": "GENERAL",
+                "label": "Method",
+                "order": 1
+              }
+            },
+            "SEIS_ZON": {
+              "type": "integer",
+              "description": "Seismic zone (T_SEPR_KISTEC_D.nSeismicZone).",
+              "oneOf": [
+                {
+                  "title": "1",
+                  "const": 0
+                },
+                {
+                  "title": "2",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "ComboBox",
+                "groupId": "SEIS_LOAD",
+                "label": "Seismic Zone",
+                "order": 2
+              }
+            },
+            "EPA_S": {
+              "type": "number",
+              "description": "EPA (S) shown in the dialog; corresponds to the KISTEC2019 zone factor (T_SEPR_KISTEC_D.dZoneFactor).",
+              "minimum": 0,
+              "x-ui": {
+                "component": "ComboBox",
+                "groupId": "SEIS_LOAD",
+                "label": "EPA (S)",
+                "order": 3
+              }
+            },
+            "SITE_CLS": {
+              "type": "integer",
+              "description": "Site class (T_SEPR_KISTEC_D.nSiteClass).",
+              "oneOf": [
+                {
+                  "title": "S1",
+                  "const": 0
+                },
+                {
+                  "title": "S2",
+                  "const": 1
+                },
+                {
+                  "title": "S3",
+                  "const": 2
+                },
+                {
+                  "title": "S4",
+                  "const": 3
+                },
+                {
+                  "title": "S5",
+                  "const": 4
+                },
+                {
+                  "title": "S6",
+                  "const": 5
+                }
+              ],
+              "x-ui": {
+                "component": "ComboBox",
+                "groupId": "SEIS_LOAD",
+                "label": "Site Class",
+                "order": 4
+              }
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa coefficient (T_SEPR_KISTEC_D.dFa).",
+              "minimum": 0,
+              "x-ui": {
+                "groupId": "SEIS_LOAD",
+                "label": "Fa",
+                "order": 5
+              }
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv coefficient (T_SEPR_KISTEC_D.dFv).",
+              "minimum": 0,
+              "x-ui": {
+                "groupId": "SEIS_LOAD",
+                "label": "Fv",
+                "order": 6
+              }
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Design spectral response acceleration at short period (T_SEPR_KISTEC_D.dSds).",
+              "minimum": 0,
+              "x-ui": {
+                "groupId": "SEIS_LOAD",
+                "hint": "g",
+                "label": "Sds",
+                "order": 7
+              }
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Design spectral response acceleration at 1 second period (T_SEPR_KISTEC_D.dSd1).",
+              "minimum": 0,
+              "x-ui": {
+                "groupId": "SEIS_LOAD",
+                "hint": "g",
+                "label": "Sd1",
+                "order": 8
+              }
+            },
+            "IE": {
+              "type": "number",
+              "description": "Importance factor Ie (T_SEPR_KISTEC_D.dImportanceFactor).",
+              "minimum": 0,
+              "x-ui": {
+                "component": "ComboBox",
+                "groupId": "SEIS_LOAD",
+                "label": "Importance (Ie)",
+                "order": 9
+              }
+            },
+            "EFF_WGT": {
+              "type": "integer",
+              "description": "Effective weight input mode (T_SEPR_KISTEC_D.nEffWeight). User mode implies separate effective-weight records are edited through the button next to the radio group.",
+              "oneOf": [
+                {
+                  "title": "Auto",
+                  "const": 0
+                },
+                {
+                  "title": "User",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "EFF_WGT",
+                "label": "Effective Weight",
+                "order": 10
+              }
+            },
+            "DP": {
+              "type": "number",
+              "description": "Capacity calculation parameter Dp (T_SEPR_KISTEC_D.dDMu; shown as Dp in the dialog).",
+              "minimum": 0,
+              "x-ui": {
+                "groupId": "CAPACITY",
+                "label": "Dp",
+                "order": 11
+              }
+            },
+            "LAMBDA_S": {
+              "type": "number",
+              "description": "Capacity calculation parameter lambda_s (T_SEPR_KISTEC_D.dLambdaS; shown as λs in the dialog).",
+              "minimum": 0,
+              "x-ui": {
+                "groupId": "CAPACITY",
+                "label": "λs",
+                "order": 12
+              }
+            }
+          },
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Method",
+                "id": "GENERAL"
+              },
+              {
+                "title": "Seismic Load Parameters",
+                "id": "SEIS_LOAD"
+              },
+              {
+                "title": "Effective Weight",
+                "id": "EFF_WGT"
+              },
+              {
+                "title": "Capacity Calculation",
+                "id": "CAPACITY"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

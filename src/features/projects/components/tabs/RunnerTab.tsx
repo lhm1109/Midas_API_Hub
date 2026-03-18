@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Play, Trash2, FileText, Clock, Send, Save } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Play, Trash2, FileText, Clock, Send, Save, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatJsonToHTML } from '@/lib/utils/htmlFormatter';
 import {
@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { parseRunnerJsonTable, parseRunnerResultTable } from './runnerResultTable.logic';
+import { RunnerResultTableDialog } from './RunnerResultTableDialog';
 
 interface RunnerTabProps {
   endpoint: {
@@ -72,7 +74,24 @@ export function RunnerTab({
   // 🎯 Send to Manual 다이얼로그 상태
   const [showSendToManualDialog, setShowSendToManualDialog] = useState(false);
   const [exampleTitle, setExampleTitle] = useState('');
+  const [showRequestTableDialog, setShowRequestTableDialog] = useState(false);
+  const [showResultTableDialog, setShowResultTableDialog] = useState(false);
   const endpointIdRef = useRef(endpoint.id);
+
+  const parsedRequestTable = useMemo(() => {
+    return parseRunnerJsonTable(requestBody, {
+      title: 'Request Body',
+      description: 'Current request body table preview',
+    });
+  }, [requestBody]);
+
+  const parsedResultTable = useMemo(() => {
+    if (!response?.body) return null;
+    return parseRunnerResultTable(response.body) || parseRunnerJsonTable(response.body, {
+      title: 'Response Body',
+      description: 'Current response body table preview',
+    });
+  }, [response?.body]);
 
   // URL 입력값 초기화/유지
   // - 최초 진입: 기본 URL 세팅
@@ -107,6 +126,20 @@ export function RunnerTab({
       updateRunnerData({ requestBody: bodyToRestore });
     }
   }, [requestBody, selectedTestCaseDraftBody, selectedTestCaseId, testCases, updateRunnerData]);
+
+  useEffect(() => {
+    if (parsedRequestTable) return;
+    if (showRequestTableDialog) {
+      setShowRequestTableDialog(false);
+    }
+  }, [parsedRequestTable, showRequestTableDialog]);
+
+  useEffect(() => {
+    if (parsedResultTable) return;
+    if (showResultTableDialog) {
+      setShowResultTableDialog(false);
+    }
+  }, [parsedResultTable, showResultTableDialog]);
 
   // 🔥 Request Body를 Assign 래퍼로 변환하는 함수
   const wrapWithAssign = (body: string, endpointName: string): string => {
@@ -515,8 +548,26 @@ export function RunnerTab({
         <div className="flex-1 flex min-h-0">
           {/* Left Side - Request Body */}
           <div className="flex-1 flex flex-col border-r border-zinc-800">
-            <div className="px-4 py-2 bg-zinc-900 border-b border-zinc-800 text-sm text-zinc-400">
-              📤 Request Body
+            <div className="px-4 py-2 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-zinc-400">📤 Request Body</span>
+                {parsedRequestTable && (
+                  <span className="text-[11px] text-zinc-500">
+                    {parsedRequestTable.rows.length} rows
+                  </span>
+                )}
+              </div>
+              {parsedRequestTable && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowRequestTableDialog(true)}
+                  className="h-7 border-zinc-700 bg-zinc-800/70 text-zinc-200 hover:bg-zinc-700"
+                >
+                  <LayoutGrid className="w-3.5 h-3.5 mr-2" />
+                  Table View
+                </Button>
+              )}
             </div>
             <div className="flex-1 h-full">
               <CodeEditor
@@ -541,12 +592,32 @@ export function RunnerTab({
           {/* Right Side - Response */}
           <div className="flex-1 flex flex-col">
             <div className="px-4 py-2 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between">
-              <span className="text-sm text-zinc-400">📥 Response (Result)</span>
-              {response && (
-                <span className="text-xs text-zinc-500">
-                  HTTP/{response.status} {response.statusText} · Time: {response.time}ms
-                </span>
-              )}
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-zinc-400">📥 Response (Result)</span>
+                {parsedResultTable && (
+                  <span className="text-[11px] text-zinc-500">
+                    {parsedResultTable.rows.length} rows · {parsedResultTable.columns.length} columns
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                {parsedResultTable && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowResultTableDialog(true)}
+                    className="h-7 border-zinc-700 bg-zinc-800/70 text-zinc-200 hover:bg-zinc-700"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5 mr-2" />
+                    Table View
+                  </Button>
+                )}
+                {response && (
+                  <span className="text-xs text-zinc-500">
+                    HTTP/{response.status} {response.statusText} · Time: {response.time}ms
+                  </span>
+                )}
+              </div>
             </div>
             <div className="flex-1 h-full">
               {response ? (
@@ -674,6 +745,18 @@ export function RunnerTab({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <RunnerResultTableDialog
+        model={parsedRequestTable}
+        open={showRequestTableDialog}
+        onOpenChange={setShowRequestTableDialog}
+      />
+
+      <RunnerResultTableDialog
+        model={parsedResultTable}
+        open={showResultTableDialog}
+        onOpenChange={setShowResultTableDialog}
+      />
     </div>
   );
 }

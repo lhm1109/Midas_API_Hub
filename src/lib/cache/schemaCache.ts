@@ -120,7 +120,7 @@ export class LRUCache<K, V> {
  * 스키마 해시 생성 (빠른 비교용)
  */
 export function generateSchemaHash(schema: any, psdSet: string, schemaType: string): string {
-  const COMPILER_CACHE_VERSION = 'schema-compiler-v2';
+  const COMPILER_CACHE_VERSION = 'schema-compiler-v3';
   // null 체크
   if (!schema) {
     return `${COMPILER_CACHE_VERSION}:${psdSet}:${schemaType}:empty`;

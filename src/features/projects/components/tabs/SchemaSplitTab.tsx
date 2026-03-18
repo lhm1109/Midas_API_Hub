@@ -6,68 +6,15 @@ import { toast } from 'sonner';
 import { useAppStore } from '@/store/useAppStore';
 import { apiClient } from '@/lib/api-client';
 import type { ApiEndpoint } from '@/types';
+import {
+  computeSplitFromParsed,
+  type SplitResult,
+  type SplitSchemaSlice,
+} from './schemaSplit.logic';
 
 interface SchemaSplitTabProps {
   endpoint: ApiEndpoint;
 }
-
-type SplitResult = {
-  requestKey: string;
-  responseKey: string;
-  requestSchema: any;
-  responseSchema: any;
-};
-
-const deepClone = <T,>(value: T): T => {
-  try {
-    return JSON.parse(JSON.stringify(value));
-  } catch {
-    return value;
-  }
-};
-
-const resolveRefName = (ref: any): string | null => {
-  if (typeof ref !== 'string') return null;
-  const match = ref.match(/^#\/components\/schemas\/(.+)$/);
-  return match ? match[1] : null;
-};
-
-const inlineRefsToSingleSchema = (root: any, components: Record<string, any>) => {
-  const dereference = (node: any, refStack = new Set<string>()): any => {
-    if (!node || typeof node !== 'object') return node;
-    if (Array.isArray(node)) {
-      return node.map((item) => dereference(item, refStack));
-    }
-
-    if (typeof node.$ref === 'string') {
-      const refName = resolveRefName(node.$ref);
-      if (refName && components[refName] && !refStack.has(refName)) {
-        const nextStack = new Set(refStack);
-        nextStack.add(refName);
-        const resolved = dereference(deepClone(components[refName]), nextStack);
-        const { $ref, ...rest } = node;
-        return dereference({ ...resolved, ...rest }, nextStack);
-      }
-      return node;
-    }
-
-    const next: Record<string, any> = {};
-    for (const [key, value] of Object.entries(node)) {
-      if (key === 'components') continue;
-      next[key] = dereference(value, refStack);
-    }
-    return next;
-  };
-
-  const inlined = dereference(deepClone(root), new Set());
-  if (inlined && typeof inlined === 'object' && 'components' in inlined) {
-    delete (inlined as any).components;
-  }
-  if (inlined && typeof inlined === 'object' && 'x-origin-name' in inlined) {
-    delete (inlined as any)['x-origin-name'];
-  }
-  return inlined;
-};
 
 export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
   const { updateSpecData } = useAppStore();
@@ -75,41 +22,10 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
   const [splitResult, setSplitResult] = useState<SplitResult | null>(null);
   const [isApiRunning, setIsApiRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeRequestSliceId, setActiveRequestSliceId] = useState('full');
+  const [activeResponseSliceId, setActiveResponseSliceId] = useState('full');
   const storageKey = useMemo(() => `schemaSplit:${endpoint.id}`, [endpoint.id]);
   const roundtripKey = useMemo(() => `schemaRoundtrip:${endpoint.id}`, [endpoint.id]);
-
-  const computeSplitFromParsed = (parsed: any): SplitResult => {
-    const schemas = parsed?.components?.schemas;
-    if (!schemas || typeof schemas !== 'object') {
-      throw new Error('components.schemas not found. Please provide a schema with components.schemas.');
-    }
-
-    const keys = Object.keys(schemas);
-    const requestRegex = /_REQUEST(_|$)/;
-    const responseRegex = /_RESPONSE(_|$)/;
-
-    const requestKeys = keys.filter((key) => requestRegex.test(key));
-    const responseKeys = keys.filter((key) => responseRegex.test(key));
-
-    if (requestKeys.length !== 1 || responseKeys.length !== 1) {
-      throw new Error(
-        `Request/Response key must be unique.\nFound REQUEST: ${requestKeys.join(', ') || 'none'}\nFound RESPONSE: ${responseKeys.join(', ') || 'none'}`
-      );
-    }
-
-    const requestKey = requestKeys[0];
-    const responseKey = responseKeys[0];
-    const requestSchema = inlineRefsToSingleSchema(schemas[requestKey], schemas);
-    const responseSchema = inlineRefsToSingleSchema(schemas[responseKey], schemas);
-    if (requestSchema && typeof requestSchema === 'object') {
-      (requestSchema as any)['x-origin-name'] = requestKey;
-    }
-    if (responseSchema && typeof responseSchema === 'object') {
-      (responseSchema as any)['x-origin-name'] = responseKey;
-    }
-
-    return { requestKey, responseKey, requestSchema, responseSchema };
-  };
 
   useEffect(() => {
     try {
@@ -149,6 +65,20 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
       // ignore cache errors
     }
   }, [storageKey, sourceSchema, splitResult]);
+
+  useEffect(() => {
+    if (!splitResult) return;
+
+    const requestSlices = splitResult.requestSlices || [];
+    const responseSlices = splitResult.responseSlices || [];
+
+    if (!requestSlices.some((slice) => slice.id === activeRequestSliceId)) {
+      setActiveRequestSliceId(requestSlices[0]?.id || 'full');
+    }
+    if (!responseSlices.some((slice) => slice.id === activeResponseSliceId)) {
+      setActiveResponseSliceId(responseSlices[0]?.id || 'full');
+    }
+  }, [splitResult, activeRequestSliceId, activeResponseSliceId]);
 
   const handleSplit = () => {
     setError(null);
@@ -231,7 +161,7 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
         return;
       }
 
-      const result = data.splitResult;
+      const result = computeSplitFromParsed(parsed);
       setSplitResult(result);
       updateSpecData({
         jsonSchemaEnhanced: JSON.stringify({
@@ -272,13 +202,66 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
 
   const previewRequest = useMemo(() => {
     if (!splitResult) return '{}';
-    return JSON.stringify(splitResult.requestSchema, null, 2);
-  }, [splitResult]);
+    const slice = (splitResult.requestSlices || []).find((item) => item.id === activeRequestSliceId);
+    return JSON.stringify(slice?.schema || splitResult.requestSchema, null, 2);
+  }, [splitResult, activeRequestSliceId]);
 
   const previewResponse = useMemo(() => {
     if (!splitResult) return '{}';
-    return JSON.stringify(splitResult.responseSchema, null, 2);
-  }, [splitResult]);
+    const slice = (splitResult.responseSlices || []).find((item) => item.id === activeResponseSliceId);
+    return JSON.stringify(slice?.schema || splitResult.responseSchema, null, 2);
+  }, [splitResult, activeResponseSliceId]);
+
+  const activeRequestSlice = useMemo(
+    () => (splitResult?.requestSlices || []).find((slice) => slice.id === activeRequestSliceId),
+    [splitResult, activeRequestSliceId]
+  );
+  const activeResponseSlice = useMemo(
+    () => (splitResult?.responseSlices || []).find((slice) => slice.id === activeResponseSliceId),
+    [splitResult, activeResponseSliceId]
+  );
+
+  const renderSliceSelector = (
+    slices: SplitSchemaSlice[] | undefined,
+    activeSliceId: string,
+    onSelect: (sliceId: string) => void
+  ) => {
+    if (!slices || slices.length <= 1) return null;
+
+    return (
+      <div className="px-4 py-2 border-b border-zinc-800 bg-zinc-950/70">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[10px] text-zinc-500">
+            Multi-ref split preview
+          </p>
+          <p className="text-[10px] text-zinc-600">
+            {slices.filter((slice) => slice.kind === 'ref').length} refs, {slices.filter((slice) => slice.kind === 'inline').length} rules
+          </p>
+        </div>
+        <div className="mt-2 flex gap-1 overflow-x-auto pb-1">
+          {slices.map((slice) => {
+            const isActive = slice.id === activeSliceId;
+            return (
+              <button
+                key={slice.id}
+                type="button"
+                onClick={() => onSelect(slice.id)}
+                title={slice.subtitle || slice.path}
+                className={[
+                  'flex-shrink-0 rounded-md border px-2.5 py-1 text-[10px] transition-colors',
+                  isActive
+                    ? 'border-blue-500 bg-blue-500/15 text-blue-200'
+                    : 'border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200',
+                ].join(' ')}
+              >
+                {slice.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="h-full w-full flex flex-col bg-zinc-950">
@@ -354,6 +337,12 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
                   <p className="text-[10px] text-zinc-500">{splitResult?.requestKey || '-'}</p>
                 </div>
               </div>
+              {renderSliceSelector(splitResult?.requestSlices, activeRequestSliceId, setActiveRequestSliceId)}
+              {activeRequestSlice && (
+                <div className="px-4 py-2 border-b border-zinc-800 bg-zinc-950/50">
+                  <p className="text-[10px] text-zinc-400">{activeRequestSlice.subtitle || activeRequestSlice.path}</p>
+                </div>
+              )}
               <div className="flex-1 min-h-0">
                 <CodeEditor
                   value={previewRequest}
@@ -372,6 +361,12 @@ export function SchemaSplitTab({ endpoint }: SchemaSplitTabProps) {
                   <p className="text-[10px] text-zinc-500">{splitResult?.responseKey || '-'}</p>
                 </div>
               </div>
+              {renderSliceSelector(splitResult?.responseSlices, activeResponseSliceId, setActiveResponseSliceId)}
+              {activeResponseSlice && (
+                <div className="px-4 py-2 border-b border-zinc-800 bg-zinc-950/50">
+                  <p className="text-[10px] text-zinc-400">{activeResponseSlice.subtitle || activeResponseSlice.path}</p>
+                </div>
+              )}
               <div className="flex-1 min-h-0">
                 <CodeEditor
                   value={previewResponse}

@@ -12,16 +12,9 @@
       "minProperties": 1,
       "patternProperties": {
         "^[0-9]+$": {
-          "title": "Structure Type",
+          "title": "STYP",
           "type": "object",
-          "description": "Structure type, mass control, gravity and temperature, and display alignment settings.",
-          "required": [
-            "STYP",
-            "MASS",
-            "SELFWEIGHT",
-            "GRAV",
-            "TEMP"
-          ],
+          "description": "Structure type, mass control, gravity/temperature, and display alignment settings.",
           "additionalProperties": false,
           "properties": {
             "STYP": {
@@ -62,90 +55,94 @@
               "oneOf": [
                 {
                   "title": "Lumped Mass",
-                  "const": 0
+                  "const": 1
                 },
                 {
                   "title": "Consistent Mass",
-                  "const": 1
+                  "const": 2
                 }
               ],
               "x-ui": {
                 "component": "RadioGroup",
-                "groupId": "MASS_CONTROL",
+                "groupId": "MASS_CTRL",
                 "label": "Mass Type",
                 "order": 2
               }
             },
-            "MASSOFFSET": {
+            "bMASSOFFSET": {
               "type": "boolean",
               "description": "Consider Off-diagonal Masses",
               "x-ui": {
-                "groupId": "MASS_CONTROL",
+                "component": "Checkbox",
+                "groupId": "MASS_CTRL",
                 "label": "Consider Off-diagonal Masses",
                 "order": 3
               },
               "x-optional-when": {
-                "MASS": 0
+                "MASS": 1
               }
             },
-            "ROTRIGID": {
+            "bROTRIGID": {
               "type": "boolean",
               "description": "Considering Rotational Rigid Body Mode for Modal Participation Factor",
               "x-ui": {
-                "groupId": "MASS_CONTROL",
+                "component": "Checkbox",
+                "groupId": "MASS_CTRL",
                 "label": "Considering Rotational Rigid Body Mode for Modal Participation Factor",
                 "order": 4
               },
               "x-optional-when": {
-                "MASS": 0,
-                "MASSOFFSET": false
+                "bMASSOFFSET": false,
+                "MASS": 1
               }
             },
-            "SELFWEIGHT": {
+            "bSELFWEIGHT": {
               "type": "boolean",
               "description": "Convert Self-weight into Masses",
               "x-ui": {
-                "groupId": "MASS_CONTROL",
+                "component": "Checkbox",
+                "groupId": "MASS_CTRL",
                 "label": "Convert Self-weight into Masses",
                 "order": 5
               }
             },
             "SMASS": {
               "type": "integer",
-              "description": "Self-weight Direction",
+              "description": "Structure Mass Type",
               "oneOf": [
                 {
                   "title": "Convert to X, Y, Z",
-                  "const": 0
-                },
-                {
-                  "title": "Convert to X, Y",
                   "const": 1
                 },
                 {
-                  "title": "Convert to Z",
+                  "title": "Convert to X, Y",
                   "const": 2
+                },
+                {
+                  "title": "Convert to Z",
+                  "const": 3
                 }
               ],
               "x-ui": {
                 "component": "RadioGroup",
-                "groupId": "MASS_CONTROL",
+                "groupId": "MASS_CTRL",
                 "label": "Self-weight Direction",
                 "order": 6
               },
               "x-required-when": {
-                "SELFWEIGHT": true
+                "bSELFWEIGHT": true
               },
               "x-optional-when": {
-                "SELFWEIGHT": true
+                "bSELFWEIGHT": true
               }
             },
             "GRAV": {
               "type": "number",
               "description": "Gravity",
               "x-ui": {
-                "groupId": "PARAMETERS",
-                "hint": "m/sec²",
+                "component": "Input",
+                "groupId": "PARAMS",
+                "hint": "Uses the current project acceleration unit.",
                 "label": "Gravity Acceleration",
                 "order": 7
               }
@@ -154,25 +151,28 @@
               "type": "number",
               "description": "Initial Temperature",
               "x-ui": {
-                "groupId": "PARAMETERS",
-                "hint": "[C]",
+                "component": "Input",
+                "groupId": "PARAMS",
+                "hint": "Uses the current project temperature unit.",
                 "label": "Initial Temperature",
                 "order": 8
               }
             },
-            "ALIGNBEAM": {
+            "bALIGNBEAM": {
               "type": "boolean",
               "description": "Align Top of Beam Section",
               "x-ui": {
+                "component": "Checkbox",
                 "groupId": "DISPLAY",
                 "label": "Align Top of Beam Section with Center Line (X-Y Plane) for Display",
                 "order": 9
               }
             },
-            "ALIGNSLAB": {
+            "bALIGNSLAB": {
               "type": "boolean",
-              "description": "Align Top of Slab(Plate) Section",
+              "description": "Align Top of Slab(Plate)",
               "x-ui": {
+                "component": "Checkbox",
                 "groupId": "DISPLAY",
                 "label": "Align Top of Slab(Plate) Section with Center Line (X-Y Plane) for Display",
                 "order": 10
@@ -182,8 +182,11 @@
           "allOf": [
             {
               "if": {
+                "required": [
+                  "bSELFWEIGHT"
+                ],
                 "properties": {
-                  "SELFWEIGHT": {
+                  "bSELFWEIGHT": {
                     "const": true
                   }
                 }
@@ -192,27 +195,6 @@
                 "required": [
                   "SMASS"
                 ]
-              }
-            },
-            {
-              "if": {
-                "properties": {
-                  "MASS": {
-                    "const": 1
-                  }
-                }
-              },
-              "then": {
-                "properties": {
-                  "SMASS": {
-                    "oneOf": [
-                      {
-                        "title": "Convert to X, Y, Z",
-                        "const": 0
-                      }
-                    ]
-                  }
-                }
               }
             }
           ],
@@ -224,14 +206,14 @@
               },
               {
                 "title": "Mass Control Parameter",
-                "id": "MASS_CONTROL"
+                "id": "MASS_CTRL"
               },
               {
                 "title": "Parameters",
-                "id": "PARAMETERS"
+                "id": "PARAMS"
               },
               {
-                "title": "Display",
+                "title": "Display Options",
                 "id": "DISPLAY"
               }
             ]

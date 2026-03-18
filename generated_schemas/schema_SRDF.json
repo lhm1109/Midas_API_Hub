@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "description": "Strength Reduction Factors settings for RC design (KDS 41 20 : 2022). Supported methods: GET, PUT, DELETE.",
+  "required": [
+    "SRDF"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "SRDF": {
+      "type": "object",
+      "description": "Object keyed by ID strings (e.g., \"1\"), where each entry represents a set of strength reduction factors.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "PHI_T": {
+              "type": "number",
+              "description": "Strength reduction factor for Tensile Control (phi_t).",
+              "default": 0.85,
+              "x-ui": {
+                "label": "For Tensile Control (phi_t)",
+                "order": 1
+              }
+            },
+            "PHI_C1": {
+              "type": "number",
+              "description": "Strength reduction factor for Compressive Control - Member with Spiral Reinforcement (phi_c1).",
+              "default": 0.7,
+              "x-ui": {
+                "label": "- Member with Spiral Reinforcement (phi_c1)",
+                "group": "For Compressive Control",
+                "order": 2
+              }
+            },
+            "PHI_C2": {
+              "type": "number",
+              "description": "Strength reduction factor for Compressive Control - Other Reinforced Member (phi_c2).",
+              "default": 0.65,
+              "x-ui": {
+                "label": "- Other Reinforced Member (phi_c2)",
+                "group": "For Compressive Control",
+                "order": 3
+              }
+            },
+            "PHI_V": {
+              "type": "number",
+              "description": "Strength reduction factor for Shear and Torsion (phi_v).",
+              "default": 0.8,
+              "x-ui": {
+                "label": "For Shear and Torsion (phi_v)",
+                "order": 4
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

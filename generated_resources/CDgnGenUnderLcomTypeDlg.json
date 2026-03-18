@@ -1,0 +1,103 @@
+{
+  "conditionals": [
+    {
+      "action": "enable",
+      "condition": "bShow",
+      "controlId": "IDC_DGN_UNDER_LCOM_AR",
+      "triggerVariable": "__unknown__",
+      "variable": "m_nOption"
+    },
+    {
+      "action": "enable",
+      "condition": "bShow",
+      "controlId": "IDC_DGN_UNDER_LCOM_DEL",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bShow",
+      "controlId": "IDC_DGN_EXECUTE",
+      "triggerVariable": "__unknown__"
+    }
+  ],
+  "controls": [
+    {
+      "type": "GROUPBOX",
+      "caption": "Option",
+      "h": 29,
+      "id": "IDC_WG_DGN_STATIC1",
+      "w": 119,
+      "x": 3,
+      "y": 4
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Add/Replace",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_UNDER_LCOM_AR",
+      "inferredType": "integer",
+      "variable": "m_nOption",
+      "w": 58,
+      "x": 8,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Delete",
+      "h": 12,
+      "id": "IDC_DGN_UNDER_LCOM_DEL",
+      "w": 36,
+      "x": 74,
+      "y": 16
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Assign Member",
+      "h": 45,
+      "id": "IDC_WG_DGN_STATIC0",
+      "w": 119,
+      "x": 3,
+      "y": 37
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Apply",
+      "h": 18,
+      "id": "IDC_DGN_EXECUTE",
+      "w": 52,
+      "x": 68,
+      "y": 95
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 18,
+      "id": "IDC_DGN_CLOSE",
+      "w": 52,
+      "x": 14,
+      "y": 95
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Radio",
+      "h": 0,
+      "id": "IDC_DGN_UNDER_LCOM_UNDER_LOAD_RDO",
+      "inferredType": "integer",
+      "variable": "m_nOptUnder",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CDgnGenUnderLcomTypeDlg",
+  "dialogId": "IDD_DGN_GEN_UNDER_LCOM_DLG",
+  "headerFile": "ui_src/wg_dgn/DgnGenUnderLcomTypeDlg.h",
+  "parsedAt": "2026-03-18T01:01:23.199Z",
+  "rawDoDataExchange": "CMenuBarChildDlg::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnGenUnderLcomTypeDlg)\r\n\tDDX_Radio(pDX, IDC_DGN_UNDER_LCOM_AR, m_nOption);\r\n\tDDX_Radio(pDX, IDC_DGN_UNDER_LCOM_UNDER_LOAD_RDO, m_nOptUnder);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCMenuBarChildDlg::OnInitDialog();\r\n\r\n\tUpdate_InitDataByCode();\r\n\tUpdateData(FALSE);\r\n\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t\t\t\t  // EXCEPTION: OCX Property Pages should return FALSE\n\n// Update_InitDataByCode:\nCString strConCode = CDBLib::GetConCodeName();\r\n\tCString strStlCode = CDBLib::GetStlCodeName();\r\n\tBOOL bShow = FALSE;\r\n\r\n\tif (CDBLib::IsCodeUnderLcomType())\r\n\t\tbShow = TRUE;\r\n\r\n\tGetDlgItem(IDC_DGN_UNDER_LCOM_AR)->EnableWindow(bShow);\r\n\tGetDlgItem(IDC_DGN_UNDER_LCOM_DEL)->EnableWindow(bShow);\r\n\tEnableCtrl(m_nOption == 0 && bShow);\r\n\tGetDlgItem(IDC_DGN_EXECUTE)->EnableWindow(bShow);",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnGenUnderLcomTypeDlg.cpp",
+  "warnings": []
+}

@@ -444,35 +444,65 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       // 복사된 버전의 새 제목 생성
       const newVersionTitle = `${version.version} (copy)`;
 
-      // 새 버전 생성
-      await createVersion(endpoint.id, newVersionTitle, version.changeLog);
+      const newVersionId = `v_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const createResponse = await fetch('http://localhost:9527/api/versions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: newVersionId,
+          version: newVersionTitle,
+          endpointId: endpoint.id,
+          changeLog: versionData.changeLog,
+          author: versionData.author,
+          manualData: versionData.manualData || {
+            title: '',
+            category: '',
+            inputUri: '',
+            activeMethods: '',
+            jsonSchema: {},
+            jsonSchemaOriginal: null,
+            jsonSchemaEnhanced: null,
+            examples: [],
+            requestExamples: [],
+            responseExamples: [],
+            specifications: '',
+            htmlContent: null,
+          },
+          specData: versionData.specData || {
+            jsonSchema: {},
+            jsonSchemaOriginal: null,
+            jsonSchemaEnhanced: null,
+            specifications: '',
+          },
+          builderData: versionData.builderData || {
+            formData: {},
+          },
+          runnerData: versionData.runnerData || {
+            requestBody: '{}',
+            responseBody: '',
+            testCases: [],
+            selectedTestCaseId: null,
+            selectedTestCaseDraftBody: null,
+          },
+        })
+      });
 
-      // 방금 생성된 버전 찾기 (가장 최근 버전)
-      await fetchVersions(endpoint.id);
-      const updatedVersions = useAppStore.getState().versions;
-      const newVersion = updatedVersions
-        .filter(v => v.endpointId === endpoint.id)
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
-
-      if (newVersion) {
-        // 새 버전에 데이터 복사
-        const updateResponse = await fetch(`http://localhost:9527/api/versions/${newVersion.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonSchema: versionData.jsonSchema,
-            jsonSchemaOriginal: versionData.jsonSchemaOriginal,
-            jsonSchemaEnhanced: versionData.jsonSchemaEnhanced,
-            requestExample: versionData.requestExample,
-            responseExample: versionData.responseExample,
-            runnerData: versionData.runnerData,
-          })
-        });
-
-        if (!updateResponse.ok) {
-          throw new Error('Failed to copy version data');
+      if (!createResponse.ok) {
+        let errorMessage = 'Failed to create copied version';
+        try {
+          const errorData = await createResponse.json();
+          if (typeof errorData?.error === 'string' && errorData.error.trim()) {
+            errorMessage = errorData.error.trim();
+          }
+        } catch {
+          // ignore non-json error bodies
         }
+        throw new Error(errorMessage);
       }
+
+      await fetchVersions(endpoint.id);
+      loadAttachments(versionId);
+      loadAttachments(newVersionId);
 
       toast.success(`✅ Version copied: ${newVersionTitle}`);
     } catch (error) {

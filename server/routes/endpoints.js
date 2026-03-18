@@ -3,6 +3,115 @@ import supabase from '../database.js';
 
 const router = express.Router();
 
+function generateDuplicatedVersionId() {
+  return `v_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+}
+
+function generateDuplicatedTestCaseId() {
+  return `tc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+}
+
+async function duplicateEndpointVersions(originalEndpointId, duplicatedEndpointId) {
+  const { data: versions, error: versionsError } = await supabase
+    .from('versions')
+    .select('*')
+    .eq('endpoint_id', originalEndpointId)
+    .order('created_at', { ascending: true });
+
+  if (versionsError) throw versionsError;
+  if (!versions || versions.length === 0) {
+    return { duplicatedVersions: 0 };
+  }
+
+  for (const version of versions) {
+    const newVersionId = generateDuplicatedVersionId();
+    const createdAt = version.created_at || new Date().toISOString();
+    const updatedAt = new Date().toISOString();
+
+    const { error: insertVersionError } = await supabase
+      .from('versions')
+      .insert({
+        ...version,
+        id: newVersionId,
+        endpoint_id: duplicatedEndpointId,
+        created_at: createdAt,
+        updated_at: updatedAt,
+      });
+
+    if (insertVersionError) throw insertVersionError;
+
+    const [manualResult, specResult, builderResult, runnerResult, testCasesResult] = await Promise.all([
+      supabase.from('manual_data').select('*').eq('version_id', version.id).maybeSingle(),
+      supabase.from('spec_data').select('*').eq('version_id', version.id).maybeSingle(),
+      supabase.from('builder_data').select('*').eq('version_id', version.id).maybeSingle(),
+      supabase.from('runner_data').select('*').eq('version_id', version.id).maybeSingle(),
+      supabase.from('test_cases').select('*').eq('version_id', version.id).order('created_at', { ascending: true }),
+    ]);
+
+    if (manualResult.error) throw manualResult.error;
+    if (specResult.error) throw specResult.error;
+    if (builderResult.error) throw builderResult.error;
+    if (runnerResult.error) throw runnerResult.error;
+    if (testCasesResult.error) throw testCasesResult.error;
+
+    if (manualResult.data) {
+      const { error } = await supabase
+        .from('manual_data')
+        .insert({
+          ...manualResult.data,
+          version_id: newVersionId,
+        });
+      if (error) throw error;
+    }
+
+    if (specResult.data) {
+      const { error } = await supabase
+        .from('spec_data')
+        .insert({
+          ...specResult.data,
+          version_id: newVersionId,
+        });
+      if (error) throw error;
+    }
+
+    if (builderResult.data) {
+      const { error } = await supabase
+        .from('builder_data')
+        .insert({
+          ...builderResult.data,
+          version_id: newVersionId,
+        });
+      if (error) throw error;
+    }
+
+    if (runnerResult.data) {
+      const { error } = await supabase
+        .from('runner_data')
+        .insert({
+          ...runnerResult.data,
+          version_id: newVersionId,
+        });
+      if (error) throw error;
+    }
+
+    if (testCasesResult.data && testCasesResult.data.length > 0) {
+      const duplicatedTestCases = testCasesResult.data.map((testCase) => ({
+        ...testCase,
+        id: generateDuplicatedTestCaseId(),
+        version_id: newVersionId,
+      }));
+
+      const { error } = await supabase
+        .from('test_cases')
+        .insert(duplicatedTestCases);
+
+      if (error) throw error;
+    }
+  }
+
+  return { duplicatedVersions: versions.length };
+}
+
 /**
  * GET /api/endpoints
  * 모든 엔드포인트 목록 조회 (계층 구조)
@@ -350,9 +459,12 @@ router.post('/:id/duplicate', async (req, res) => {
         method: originalEndpoint.method,
         path: originalEndpoint.path,
         product: originalEndpoint.product,
+        product_id: originalEndpoint.product_id || originalEndpoint.product,
         group_name: originalEndpoint.group_name,
+        group_id: originalEndpoint.group_id || null,
         description: originalEndpoint.description,
         status: originalEndpoint.status,
+        status_message: originalEndpoint.status_message || null,
         order_index: (originalEndpoint.order_index || 0) + 1,
         created_at: now,
         updated_at: now,
@@ -362,8 +474,14 @@ router.post('/:id/duplicate', async (req, res) => {
 
     if (insertError) throw insertError;
 
-    console.log('✅ Endpoint duplicated:', { originalId: id, newId, newName });
-    res.status(201).json({ endpoint: newEndpoint, message: 'Endpoint duplicated successfully' });
+    const { duplicatedVersions } = await duplicateEndpointVersions(id, newId);
+
+    console.log('✅ Endpoint duplicated:', { originalId: id, newId, newName, duplicatedVersions });
+    res.status(201).json({
+      endpoint: newEndpoint,
+      duplicatedVersions,
+      message: 'Endpoint duplicated successfully',
+    });
   } catch (error) {
     console.error('❌ Duplicate endpoint error:', error);
     res.status(500).json({ error: error.message });

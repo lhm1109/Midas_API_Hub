@@ -1123,6 +1123,47 @@ function resolveFieldDefault(key: string, prop: EnhancedProperty): any {
   return undefined;
 }
 
+function getNestedObjectSchema(schemaNode: any): { properties: Record<string, any>; required: string[] } | null {
+  if (!schemaNode || typeof schemaNode !== 'object') return null;
+
+  if (schemaNode.properties && typeof schemaNode.properties === 'object') {
+    return {
+      properties: schemaNode.properties as Record<string, any>,
+      required: Array.isArray(schemaNode.required) ? schemaNode.required : [],
+    };
+  }
+
+  const additionalProps = schemaNode.additionalProperties;
+  if (
+    additionalProps &&
+    typeof additionalProps === 'object' &&
+    !Array.isArray(additionalProps) &&
+    additionalProps.properties &&
+    typeof additionalProps.properties === 'object'
+  ) {
+    return {
+      properties: additionalProps.properties as Record<string, any>,
+      required: Array.isArray(additionalProps.required) ? additionalProps.required : [],
+    };
+  }
+
+  const patternProps = schemaNode.patternProperties;
+  if (patternProps && typeof patternProps === 'object') {
+    const candidate = Object.values(patternProps).find(
+      (value: any) => value && typeof value === 'object' && value.properties && typeof value.properties === 'object'
+    ) as any;
+
+    if (candidate) {
+      return {
+        properties: candidate.properties as Record<string, any>,
+        required: Array.isArray(candidate.required) ? candidate.required : [],
+      };
+    }
+  }
+
+  return null;
+}
+
 /**
  * 모든 필드 추출 (중첩 객체 포함)
  */
@@ -1236,12 +1277,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       console.log(`✅ Injected x-required-when for ${key}:`, field['x-required-when']);
     }
 
-    // 🔥 Object 타입 - 중첩 필드 추출 (재귀적 처리)
-    if (prop.type === 'object' && prop.properties) {
+    // 🔥 Object 타입 - 중첩 필드 추출 (properties + additionalProperties/patternProperties value-object 지원)
+    const nestedObjectSchema = prop.type === 'object' ? getNestedObjectSchema(prop) : null;
+    if (nestedObjectSchema) {
       field.children = [];
-      const objRequired = (prop.required as string[]) || [];
+      const objRequired = nestedObjectSchema.required || [];
 
-      for (const [childKey, childProp] of Object.entries(prop.properties)) {
+      for (const [childKey, childProp] of Object.entries(nestedObjectSchema.properties)) {
         const isRequiredByParent = objRequired.includes(childKey);
         const childField: EnhancedField = {
           key: `${key}.${childKey}`,
@@ -1404,12 +1446,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           }
         }
 
-        // 🔥 3-depth 이상 재귀 처리: childField도 object type이고 properties가 있으면
-        if ((childProp as any).type === 'object' && (childProp as any).properties) {
+        // 🔥 3-depth 이상 재귀 처리: childField도 object type이고 properties/additionalProperties/patternProperties가 있으면
+        const childNestedObjectSchema = (childProp as any).type === 'object'
+          ? getNestedObjectSchema(childProp as any)
+          : null;
+        if (childNestedObjectSchema) {
           childField.children = [];
-          const childObjRequired = ((childProp as any).required as string[]) || [];
+          const childObjRequired = childNestedObjectSchema.required || [];
 
-          for (const [grandchildKey, grandchildProp] of Object.entries((childProp as any).properties)) {
+          for (const [grandchildKey, grandchildProp] of Object.entries(childNestedObjectSchema.properties)) {
             const isGrandchildRequired = childObjRequired.includes(grandchildKey);
             const grandchildField: EnhancedField = {
               key: `${key}.${childKey}.${grandchildKey}`,
@@ -1514,12 +1559,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               }
             }
 
-            // 🔥 4-depth 이상 재귀 처리: grandchildField도 object type이고 properties가 있으면
-            if ((grandchildProp as any).type === 'object' && (grandchildProp as any).properties) {
+            // 🔥 4-depth 이상 재귀 처리: grandchildField도 object type이고 properties/additionalProperties/patternProperties가 있으면
+            const grandchildNestedObjectSchema = (grandchildProp as any).type === 'object'
+              ? getNestedObjectSchema(grandchildProp as any)
+              : null;
+            if (grandchildNestedObjectSchema) {
               grandchildField.children = [];
-              const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
+              const grandchildObjRequired = grandchildNestedObjectSchema.required || [];
 
-              for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
+              for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries(grandchildNestedObjectSchema.properties)) {
                 const isGreatGrandchildRequired = grandchildObjRequired.includes(greatGrandchildKey);
                 const greatGrandchildField: EnhancedField = {
                   key: `${key}.${childKey}.${grandchildKey}.${greatGrandchildKey}`,
@@ -1693,12 +1741,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           }
         }
 
-        // 🔥 3-depth 이상 재귀 처리 (array items > object > properties)
-        if ((childProp as any).type === 'object' && (childProp as any).properties) {
+        // 🔥 3-depth 이상 재귀 처리 (array items > object > properties/additionalProperties/patternProperties)
+        const arrayItemNestedObjectSchema = (childProp as any).type === 'object'
+          ? getNestedObjectSchema(childProp as any)
+          : null;
+        if (arrayItemNestedObjectSchema) {
           childField.children = [];
-          const childObjRequired = ((childProp as any).required as string[]) || [];
+          const childObjRequired = arrayItemNestedObjectSchema.required || [];
 
-          for (const [grandchildKey, grandchildProp] of Object.entries((childProp as any).properties)) {
+          for (const [grandchildKey, grandchildProp] of Object.entries(arrayItemNestedObjectSchema.properties)) {
             const grandchildField: EnhancedField = {
               key: `${key}[].${childKey}.${grandchildKey}`,
               type: (grandchildProp as any).type,

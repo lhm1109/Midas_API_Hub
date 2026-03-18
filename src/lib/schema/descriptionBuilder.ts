@@ -10,6 +10,44 @@
 import type { EnhancedField } from './schemaCompiler';
 import type { TableDefinition } from '../rendering/definitionLoader';
 
+function formatConstraintRange(label: string, min?: number, max?: number): string | null {
+  if (min === undefined && max === undefined) return null;
+  if (min !== undefined && max !== undefined) {
+    return min === max ? `${label}: exactly ${min}` : `${label}: ${min} ~ ${max}`;
+  }
+  if (min !== undefined) return `${label}: min ${min}`;
+  return `${label}: max ${max}`;
+}
+
+export function buildFieldConstraintHints(field: EnhancedField): string[] {
+  const fieldAny = field as any;
+  const hints: string[] = [];
+
+  const propertyRange = formatConstraintRange('Properties', fieldAny.minProperties, fieldAny.maxProperties);
+  if (propertyRange) hints.push(propertyRange);
+
+  const itemRange = formatConstraintRange('Items', fieldAny.minItems, fieldAny.maxItems);
+  if (itemRange) hints.push(itemRange);
+
+  const lengthRange = formatConstraintRange('Length', fieldAny.minLength, fieldAny.maxLength);
+  if (lengthRange) hints.push(lengthRange);
+
+  const numericBounds: string[] = [];
+  if (fieldAny.minimum !== undefined) numericBounds.push(`>= ${fieldAny.minimum}`);
+  if (fieldAny.exclusiveMinimum !== undefined) numericBounds.push(`> ${fieldAny.exclusiveMinimum}`);
+  if (fieldAny.maximum !== undefined) numericBounds.push(`<= ${fieldAny.maximum}`);
+  if (fieldAny.exclusiveMaximum !== undefined) numericBounds.push(`< ${fieldAny.exclusiveMaximum}`);
+  if (numericBounds.length > 0) {
+    hints.push(`Value Range: ${numericBounds.join(', ')}`);
+  }
+
+  if (fieldAny.multipleOf !== undefined) {
+    hints.push(`Multiple Of: ${fieldAny.multipleOf}`);
+  }
+
+  return hints;
+}
+
 /**
  * 필드 description 빌드
  */
@@ -65,11 +103,14 @@ export function buildFieldDescription(
         });
       } else {
         // Fallback to simple enum labels
+        // x-enum-labels may be an array (index-based) or object (value-based)
+        const rawLabels = fieldAny['x-enum-labels'] || fieldAny.enumLabels;
+        const labelsIsArray = Array.isArray(rawLabels);
         descParts.push('**Enum Values:**');
-        fieldEnum.forEach((val: any) => {
-          const label = fieldAny.enumLabels?.[String(val)] ||
-            fieldAny['x-enum-labels']?.[String(val)] ||
-            val;
+        fieldEnum.forEach((val: any, idx: number) => {
+          const label = labelsIsArray
+            ? (rawLabels[idx] ?? val)
+            : (rawLabels?.[String(val)] ?? val);
           const formattedVal = typeof val === 'string' ? `"${val}"` : val;
           descParts.push(`• ${label} : ${formattedVal}`);
         });
@@ -113,6 +154,14 @@ export function buildFieldDescription(
       for (const { condition, hint } of hintsWithCondition) {
         descParts.push(`• *${condition}:* ${hint}`);
       }
+    }
+  }
+
+  const constraintHints = buildFieldConstraintHints(field);
+  if (constraintHints.length > 0) {
+    descParts.push('**Constraints:**');
+    for (const hint of constraintHints) {
+      descParts.push(`• ${hint}`);
     }
   }
 

@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "description": "Underground Load Combination Type settings.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by ID strings (e.g., \"1\"), where each entry represents an element.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "bUNDERLOADTYPE": {
+              "type": "boolean",
+              "description": "Assign Member: true for Underground Loads, false for None-underground Loads",
+              "oneOf": [
+                {
+                  "title": "For Underground Loads",
+                  "const": true
+                },
+                {
+                  "title": "For None-underground Loads",
+                  "const": false
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "hint": "true: Underground Loads, false: None-underground Loads",
+                "label": "Assign Member",
+                "order": 1
+              }
+            }
+          }
+        }
+      },
+      "x-ui": {
+        "label": "Assign"
+      }
+    }
+  }
+}

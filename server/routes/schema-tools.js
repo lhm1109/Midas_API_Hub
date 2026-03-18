@@ -358,7 +358,12 @@ const splitCombinedSchema = (sourceSchema) => {
 
   if (!requestKey || !responseKey) {
     throw new Error(
-      `Request/Response key must be unique.\nFound REQUEST: ${keys.filter((k) => REQUEST_KEY_REGEX.test(k)).join(', ') || 'none'}\nFound RESPONSE: ${keys.filter((k) => RESPONSE_KEY_REGEX.test(k)).join(', ') || 'none'}`
+      [
+        'Could not find unique request/response MAP_BODY schema.',
+        'Split expects *_REQUEST_MAP_BODY and *_RESPONSE_MAP_BODY as the top-level wrappers.',
+        `Found REQUEST MAP_BODY: ${keys.filter((k) => REQUEST_MAP_BODY_REGEX.test(k)).join(', ') || 'none'}`,
+        `Found RESPONSE MAP_BODY: ${keys.filter((k) => RESPONSE_MAP_BODY_REGEX.test(k)).join(', ') || 'none'}`,
+      ].join('\n')
     );
   }
 

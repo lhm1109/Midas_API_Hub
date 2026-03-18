@@ -8,6 +8,8 @@
   "scripts": {
     "bat_run": "node scripts/cli/bat_run.mjs",
     "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "server": "nodemon server/server.js",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
     "build": "tsc && vite build",
@@ -118,6 +120,7 @@
     "tailwindcss": "4.1.12",
     "typescript": "^5.3.3",
     "vite": "6.3.5",
+    "vitest": "^3.2.4",
     "wait-on": "^7.2.0"
   },
   "build": {

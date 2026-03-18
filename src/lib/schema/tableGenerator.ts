@@ -15,6 +15,7 @@ import {
   type SectionGroup
 } from './schemaCompiler';
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
+import { buildFieldConstraintHints } from './descriptionBuilder';
 
 // ============================================================================
 // Type Definitions
@@ -318,10 +319,15 @@ function generateFieldDescription(field: EnhancedField, _template: HTMLTemplateD
       parts.push('</ul>');
     } else {
       // Fallback to x-enum-labels
+      // x-enum-labels may be an array (index-based) or object (value-based)
+      const rawLabels = (field as any)['x-enum-labels'] || (field as any).enumLabels;
+      const labelsIsArray = Array.isArray(rawLabels);
       parts.push('<strong>Enum Values:</strong>');
       parts.push('<ul>');
-      fieldEnum.forEach((val: any) => {
-        const label = enumLabelsSimple[String(val)] || val;
+      fieldEnum.forEach((val: any, idx: number) => {
+        const label = labelsIsArray
+          ? (rawLabels[idx] ?? val)
+          : (enumLabelsSimple[String(val)] || val);
         // Format: Label : "value" (shows what to actually use in API)
         parts.push(`<li>${escapeHtml(String(label))} : <code>"${escapeHtml(String(val))}"</code></li>`);
       });
@@ -1608,8 +1614,13 @@ function generateFieldDescriptionLegacy(field: EnhancedField, references?: Field
       });
     } else {
       // Fallback to x-enum-labels
-      fieldEnum.forEach((val: any) => {
-        const label = enumLabelsSimple[String(val)] || val;
+      // x-enum-labels may be an array (index-based) or object (value-based)
+      const rawLabels = (field as any)['x-enum-labels'] || (field as any).enumLabels;
+      const labelsIsArray = Array.isArray(rawLabels);
+      fieldEnum.forEach((val: any, idx: number) => {
+        const label = labelsIsArray
+          ? (rawLabels[idx] ?? val)
+          : (enumLabelsSimple[String(val)] || val);
         parts.push(`<p> • ${escapeHtml(String(label))}: "${escapeHtml(String(val))}"</p>`);
       });
     }
@@ -1649,6 +1660,14 @@ function generateFieldDescriptionLegacy(field: EnhancedField, references?: Field
     for (const [type, count] of Object.entries(field.nodeCountByType)) {
       const countStr = Array.isArray(count) ? count.join(' or ') : count;
       parts.push(`<p> • ${escapeHtml(type)}: ${countStr} nodes</p>`);
+    }
+  }
+
+  const constraintHints = buildFieldConstraintHints(field);
+  if (constraintHints.length > 0) {
+    parts.push(`<p><strong>Constraints:</strong></p>`);
+    for (const hint of constraintHints) {
+      parts.push(`<p> • ${escapeHtml(hint)}</p>`);
     }
   }
 

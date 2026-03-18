@@ -496,6 +496,9 @@ const inferResponseWrapperKeyFromRequest = (requestSchema: any, responseOriginNa
       .map((token) => toSchemaToken(token))
       .filter((token) => token && token !== 'DTO')
     : [];
+  const prefixWrapperKey = prefix
+    ? prefix.replace(/^DTO_/i, '').trim()
+    : '';
 
   const entryProperties = ctx.entrySchema?.properties && typeof ctx.entrySchema.properties === 'object'
     ? Object.keys(ctx.entrySchema.properties)
@@ -520,6 +523,7 @@ const inferResponseWrapperKeyFromRequest = (requestSchema: any, responseOriginNa
   return (
     pickMatchingKey(entryRequired)
     || pickMatchingKey(entryProperties)
+    || prefixWrapperKey
     || (entryProperties.length === 1 ? entryProperties[0] : undefined)
     || (entryRequired.length === 1 ? entryRequired[0] : undefined)
     || ctx.wrapperKey
@@ -1389,7 +1393,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               name: field.key,
               type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
               default: formatDefaultValue(field.default),
-              description: field.ui?.label || field.description || field.key,
+              description: buildFieldDescription(field, tableDefinition),
               required: getRequiredLabel(field),
             };
 
@@ -1437,11 +1441,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     required: itemRequired.includes(itemKey) ? { '*': 'required' } : { '*': 'optional' },
                   };
 
-                  if ((itemProp as any).items) mappedItem.items = (itemProp as any).items;
-                  if ((itemProp as any).enum) mappedItem.enum = (itemProp as any).enum;
-                  if ((itemProp as any)['x-ui']) mappedItem.ui = (itemProp as any)['x-ui'];
-                  if ((itemProp as any)['x-optional-when']) mappedItem['x-optional-when'] = (itemProp as any)['x-optional-when'];
-                  if ((itemProp as any)['x-required-when']) mappedItem['x-required-when'] = (itemProp as any)['x-required-when'];
+                  for (const [propKey, propValue] of Object.entries(itemProp as any)) {
+                    if (propKey === 'type' || propKey === 'default' || propKey === 'description') continue;
+                    if (propKey === 'x-ui') {
+                      mappedItem.ui = propValue;
+                    } else {
+                      mappedItem[propKey] = propValue;
+                    }
+                  }
 
                   return mappedItem;
                 });
@@ -1726,7 +1733,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 name: field.key,
                 type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
                 default: formatDefaultValue(field.default),
-                description: field.ui?.label || field.description || field.key,
+                description: buildFieldDescription(field, tableDefinition),
                 required: getRequiredLabel(field),
               };
 
@@ -1751,11 +1758,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       required: itemRequired.includes(itemKey) ? { '*': 'required' } : { '*': 'optional' },
                     };
 
-                    if ((itemProp as any).items) mappedItem.items = (itemProp as any).items;
-                    if ((itemProp as any).enum) mappedItem.enum = (itemProp as any).enum;
-                    if ((itemProp as any)['x-ui']) mappedItem.ui = (itemProp as any)['x-ui'];
-                    if ((itemProp as any)['x-optional-when']) mappedItem['x-optional-when'] = (itemProp as any)['x-optional-when'];
-                    if ((itemProp as any)['x-required-when']) mappedItem['x-required-when'] = (itemProp as any)['x-required-when'];
+                    for (const [propKey, propValue] of Object.entries(itemProp as any)) {
+                      if (propKey === 'type' || propKey === 'default' || propKey === 'description') continue;
+                      if (propKey === 'x-ui') {
+                        mappedItem.ui = propValue;
+                      } else {
+                        mappedItem[propKey] = propValue;
+                      }
+                    }
 
                     return mappedItem;
                   });
@@ -2054,7 +2064,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           name: field.key,
           type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
           default: formatDefaultValue(field.default),
-          description: field.ui?.label || field.description || field.key,
+          description: buildFieldDescription(field, tableDefinition),
           required: getRequiredLabel(field),
         });
       }
@@ -2488,9 +2498,52 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     }
   };
 
-  const handleGenerateResponseFromRequest = () => {
+  const getAutoResponseGenerationState = () => {
     if (schemaView !== 'enhanced' || enhancedSubView !== 'request') {
-      toast.info('Response auto-generation is available only for Enhanced Request schema.');
+      return {
+        canGenerate: false,
+        reason: 'Response auto-generation is available only for Enhanced Request schema.',
+      };
+    }
+
+    try {
+      const parsedRequestSchema = JSON.parse(editableSchema);
+      const requestKey = enhancedBundle.requestKey
+        || mergeNameHints.requestKey
+        || inferMapBodyComponentName(parsedRequestSchema, 'request');
+      const responseKey = enhancedBundle.responseKey
+        || mergeNameHints.responseKey
+        || inferResponseOriginNameFromRequest(parsedRequestSchema, { requestKey });
+      const generatedResponseSchema = buildMirroredResponseSchema(parsedRequestSchema, {
+        requestKey,
+        responseKey,
+      });
+      const baseResponse = enhancedBundle.response || {};
+      const hasExistingResponse = isNonEmptySchemaObject(baseResponse);
+      const matchesGenerated = !hasExistingResponse
+        || stableStringify(baseResponse) === stableStringify(generatedResponseSchema);
+
+      return {
+        canGenerate: true,
+        reason: !hasExistingResponse
+          ? 'Generate a Response schema by mirroring the current Request schema.'
+          : matchesGenerated
+            ? 'Current Response already matches the Request-mirrored schema.'
+            : 'Current Response differs from the Request-mirrored schema. Clicking the button will ask before overwriting it.',
+      };
+    } catch {
+      return {
+        canGenerate: false,
+        reason: 'Fix JSON syntax errors in the Request schema before generating Response.',
+      };
+    }
+  };
+
+  const autoResponseGenerationState = getAutoResponseGenerationState();
+
+  const handleGenerateResponseFromRequest = async () => {
+    if (!autoResponseGenerationState.canGenerate) {
+      toast.info(autoResponseGenerationState.reason);
       return;
     }
 
@@ -2527,6 +2580,18 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         responseKey,
       });
       const nextResponse = preserveComponents(generatedResponseSchema, baseResponse);
+      const hasExistingResponse = isNonEmptySchemaObject(baseResponse);
+      const isResponseChanged = !hasExistingResponse
+        || stableStringify(baseResponse) !== stableStringify(nextResponse);
+
+      if (hasExistingResponse && isResponseChanged) {
+        const shouldOverwrite = window.confirm(
+          `Enhanced Response schema already exists.\n\nThis action is intended only for endpoints where Request and Response bodies are the same.\n\nResponse key: ${responseKey || '(auto)'}\nExisting Response will be replaced with the Request-mirrored schema.\n\nDo you want to continue?`
+        );
+        if (!shouldOverwrite) {
+          return;
+        }
+      }
 
       const nextEnhancedBundle: Record<string, any> = {
         request: nextRequest,
@@ -2539,12 +2604,23 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
         jsonSchemaEnhanced: JSON.stringify(nextEnhancedBundle),
       });
 
+      schemaCompileCache.clear();
       setSavedSchema(nextResponse);
       setEditableSchema(JSON.stringify(nextResponse, null, 2));
       setIsSchemaModified(false);
       setEnhancedSubView('response');
 
-      toast.success('✅ Response schema generated from Request schema.\n\nReview the Response tab and click Save when ready.');
+      if (currentVersionId) {
+        try {
+          await saveCurrentVersion();
+          toast.success('✅ Response schema generated and saved to server.');
+        } catch (error) {
+          console.error('Failed to save generated response schema to server:', error);
+          toast.warning('⚠️ Response schema generated and saved locally, but failed to save to server.');
+        }
+      } else {
+        toast.success('✅ Response schema generated and saved locally.\n\nCreate a version if you want to save it to the server.');
+      }
     } catch (error) {
       toast.error('❌ Invalid JSON!\n\nPlease fix the Request schema syntax before generating Response.');
     }
@@ -3065,10 +3141,12 @@ ${responseHtml}`.trim();
                       onClick={handleGenerateResponseFromRequest}
                       variant="outline"
                       size="sm"
+                      disabled={!autoResponseGenerationState.canGenerate}
+                      title={autoResponseGenerationState.reason}
                       className="h-7 px-2 text-xs border-emerald-600/50 text-emerald-400 hover:bg-emerald-600/20"
                     >
                       <Sparkles className="w-3 h-3 mr-1" />
-                      Generate Response
+                      Generate Response + Save
                     </Button>
                   )}
 

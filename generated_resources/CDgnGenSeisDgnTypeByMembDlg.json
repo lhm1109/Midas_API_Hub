@@ -1,0 +1,122 @@
+{
+  "conditionals": [
+    {
+      "action": "enable",
+      "condition": "bShow",
+      "controlId": "IDC_DGN_SEIS_AR",
+      "triggerVariable": "__unknown__",
+      "variable": "m_nOption"
+    },
+    {
+      "action": "enable",
+      "condition": "bShow",
+      "controlId": "IDC_DGN_SEIS_DEL",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bShow",
+      "controlId": "IDC_DGN_EXECUTE",
+      "triggerVariable": "__unknown__"
+    }
+  ],
+  "controls": [
+    {
+      "type": "GROUPBOX",
+      "caption": "Option",
+      "h": 29,
+      "id": "IDC_WG_DGN_STATIC0",
+      "w": 119,
+      "x": 3,
+      "y": 4
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Add/Replace",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_SEIS_AR",
+      "inferredType": "integer",
+      "variable": "m_nOption",
+      "w": 58,
+      "x": 8,
+      "y": 16
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Delete",
+      "h": 12,
+      "id": "IDC_DGN_SEIS_DEL",
+      "w": 36,
+      "x": 74,
+      "y": 16
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Assign Member",
+      "h": 73,
+      "id": "IDC_WG_DGN_STATIC1",
+      "w": 119,
+      "x": 3,
+      "y": 37
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "for Seismic Design",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_SEIS_DGN_RDO",
+      "inferredType": "integer",
+      "variable": "m_nOptSeis",
+      "w": 77,
+      "x": 8,
+      "y": 49
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "for Non-Seismic Design",
+      "h": 12,
+      "id": "IDC_DGN_NON_SEIS_DGN_RDO",
+      "w": 94,
+      "x": 8,
+      "y": 65
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Resisting System",
+      "h": 12,
+      "id": "IDC_DGN_NON_SEIS_FORCE_STC",
+      "w": 58,
+      "x": 18,
+      "y": 93
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "Apply",
+      "h": 18,
+      "id": "IDC_DGN_EXECUTE",
+      "w": 52,
+      "x": 70,
+      "y": 120
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 18,
+      "id": "IDC_DGN_CLOSE",
+      "w": 52,
+      "x": 16,
+      "y": 120
+    }
+  ],
+  "dialogClass": "CDgnGenSeisDgnTypeByMembDlg",
+  "dialogId": "IDD_DGN_GEN_SEISDGN_TYPE_BYMEMB_DLG",
+  "headerFile": "ui_src/wg_dgn/DgnGenSeisDgnTypeByMembDlg.h",
+  "parsedAt": "2026-03-17T03:53:04.065Z",
+  "rawDoDataExchange": "CMenuBarChildDlg::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnGenSeisDgnTypeByMembDlg)\r\n\tDDX_Radio(pDX, IDC_DGN_SEIS_AR, m_nOption);\r\n\tDDX_Radio(pDX, IDC_DGN_SEIS_DGN_RDO, m_nOptSeis);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCMenuBarChildDlg::OnInitDialog();\r\n\r\n\t//  ���õ� �͵��� ������ !!!\r\n\tif(m_pDoc==NULL)\treturn TRUE;\r\n\r\n\tInitial_Data();\r\n\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// Initial_SelectItem:\n// Unselected All.\r\n\tif(m_pDoc==NULL)\treturn;\r\n\tif(m_pDoc->m_pViewCtrl->SelectedElemCount()) m_pDoc->m_pViewCtrl->UnSelectAllElem(NULL,FALSE);\r\n\t// Initialize Data.\r\n\tInitial_Data();\n\n// Initial_Data:\nm_nOption  = 0;\t// add/replace\r\n\tm_nOptSeis = 1;\r\n\r\n\tUpdate_InitDataByCode();\r\n\tUpdateData(FALSE);\n\n// Update_InitDataByCode:\nCString strTitle=_T(\"\");\r\n\tBOOL bShow = FALSE;\r\n\tm_pDoc->GetDesignTitleGen(ID_DGN_GEN_SDGN, strTitle, bShow);\r\n\r\n\tGetDlgItem(IDC_DGN_SEIS_AR)->EnableWindow(bShow);\r\n\tGetDlgItem(IDC_DGN_SEIS_DEL)->EnableWindow(bShow);\r\n\tEnableAssignMemberCtrl(bShow);\r\n\tGetDlgItem(IDC_DGN_EXECUTE)->EnableWindow(bShow);",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnGenSeisDgnTypeByMembDlg.cpp",
+  "warnings": []
+}
