@@ -12,6 +12,74 @@
       ],
       "additionalProperties": false,
       "properties": {
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "MEMB",
+            "PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type",
+            "order": 1
+          }
+        },
+        "ELEMS": {
+          "type": "object",
+          "description": "Element No. Input. Optional when TABLE_TYPE is MEMB.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 2
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Element Numbers",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "MEMB"
+          }
+        },
+        "SECTIONS": {
+          "type": "array",
+          "description": "List of section numbers to include in the table. Optional when TABLE_TYPE is PROP.",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Section Numbers",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "PROP"
+          }
+        },
         "PRI_SORT": {
           "type": "integer",
           "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
@@ -75,12 +143,12 @@
               "fy",
               "fys",
               "LCB",
-              "¥õPn.max",
+              "ï¿½ï¿½Pn.max",
               "Pu",
-              "¥õPn",
+              "ï¿½ï¿½Pn",
               "Rat-P",
               "Mc",
-              "¥õMn",
+              "ï¿½ï¿½Mn",
               "Rat-M",
               "Rat-My",
               "Rat-Mz",
@@ -125,20 +193,20 @@
               "Mcz/Mcy": "Moment Rotation (Mcz/Mcy)",
               "MEMB": "Element Number",
               "Pu": "Factored Axial Force",
-              "Rat-M": "Moment Strength Ratio (Mc/¥õMn)",
+              "Rat-M": "Moment Strength Ratio (Mc/ï¿½ï¿½Mn)",
               "Rat-My": "Y-axis Moment Strength Ratio",
               "Rat-Mz": "Z-axis Moment Strength Ratio",
-              "Rat-P": "Axial Strength Ratio (Pu/¥õPn)",
-              "Rat-V.end": "Shear Strength Ratio at End (Vu/¥õVn)",
-              "Rat-V.mid": "Shear Strength Ratio at Mid (Vu/¥õVn)",
+              "Rat-P": "Axial Strength Ratio (Pu/ï¿½ï¿½Pn)",
+              "Rat-V.end": "Shear Strength Ratio at End (Vu/ï¿½ï¿½Vn)",
+              "Rat-V.mid": "Shear Strength Ratio at Mid (Vu/ï¿½ï¿½Vn)",
               "SECT": "Section Property Number",
               "Section": "Sectional Shape",
               "V-Rebar": "Vertical Rebar",
               "Vu.end": "Maximum Factored Shear Force at End",
               "Vu.mid": "Maximum Factored Shear Force at Mid",
-              "¥õMn": "Design Moment Strength",
-              "¥õPn": "Design Axial Strength",
-              "¥õPn.max": "Maximum Design Axial Strength"
+              "ï¿½ï¿½Mn": "Design Moment Strength",
+              "ï¿½ï¿½Pn": "Design Axial Strength",
+              "ï¿½ï¿½Pn.max": "Maximum Design Axial Strength"
             },
             "PROP": {
               "As-H.end": "Reinforcing Steel Area for Shear at End (Maximum for Property)",
@@ -160,20 +228,20 @@
               "Mcz/Mcy": "Moment Rotation (Mcz/Mcy)",
               "MEMB": "Element Number (0 for Property-based)",
               "Pu": "Factored Axial Force (Maximum for Property)",
-              "Rat-M": "Moment Strength Ratio (Mc/¥õMn, Maximum for Property)",
+              "Rat-M": "Moment Strength Ratio (Mc/ï¿½ï¿½Mn, Maximum for Property)",
               "Rat-My": "Y-axis Moment Strength Ratio",
               "Rat-Mz": "Z-axis Moment Strength Ratio",
-              "Rat-P": "Axial Strength Ratio (Pu/¥õPn, Maximum for Property)",
-              "Rat-V.end": "Shear Strength Ratio at End (Vu/¥õVn, Maximum for Property)",
-              "Rat-V.mid": "Shear Strength Ratio at Mid (Vu/¥õVn, Maximum for Property)",
+              "Rat-P": "Axial Strength Ratio (Pu/ï¿½ï¿½Pn, Maximum for Property)",
+              "Rat-V.end": "Shear Strength Ratio at End (Vu/ï¿½ï¿½Vn, Maximum for Property)",
+              "Rat-V.mid": "Shear Strength Ratio at Mid (Vu/ï¿½ï¿½Vn, Maximum for Property)",
               "SECT": "Section Property Number",
               "Section": "Sectional Shape",
               "V-Rebar": "Vertical Rebar",
               "Vu.end": "Maximum Factored Shear Force at End (Maximum for Property)",
               "Vu.mid": "Maximum Factored Shear Force at Mid (Maximum for Property)",
-              "¥õMn": "Design Moment Strength",
-              "¥õPn": "Design Axial Strength",
-              "¥õPn.max": "Maximum Design Axial Strength"
+              "ï¿½ï¿½Mn": "Design Moment Strength",
+              "ï¿½ï¿½Pn": "Design Axial Strength",
+              "ï¿½ï¿½Pn.max": "Maximum Design Axial Strength"
             }
           }
         },
@@ -185,18 +253,6 @@
             "hint": "Output table title in response",
             "label": "Table Name",
             "order": 4
-          }
-        },
-        "TABLE_TYPE": {
-          "type": "string",
-          "description": "Result Table Type",
-          "enum": [
-            "MEMB",
-            "PROP"
-          ],
-          "x-ui": {
-            "label": "Table Type",
-            "order": 1
           }
         },
         "EXPORT_PATH": {

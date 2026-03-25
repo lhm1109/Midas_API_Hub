@@ -14,6 +14,11 @@ import {
   type EnhancedField,
   type SectionGroup
 } from './schemaCompiler';
+import {
+  collectFieldConditionInfo,
+  groupFieldsByCondition,
+  type FieldCondition,
+} from './conditionExtractor';
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
 import { buildFieldConstraintHints } from './descriptionBuilder';
 
@@ -767,9 +772,9 @@ export function generateHTMLDocument(
   // Zendesk 호환 테이블 (inline 스타일) - 두 개의 테이블
   return `
     <!-- 🔥 Table 1: Keyed Object Entry (Map Key Description) -->
-    <h3 id="h_keyed_object_entry">
-      <strong>Keyed Object Entry</strong>
-    </h3>
+    <h4 id="h_keyed_object_entry">
+      Keyed Object Entry
+    </h4>
     <div class="table-wrap">
       <table style="border-collapse: collapse; width: 100%;" border="1">
         <colgroup>
@@ -821,10 +826,11 @@ export function generateHTMLDocument(
       </table>
     </div>
 
+    <br></br>
     <!-- 🔥 Table 2: Item (Value Object Schema) -->
-    <h3 id="h_specifications">
-      <strong>Item (Value Object Schema)</strong>
-    </h3>
+    <h4 id="h_specifications">
+      Item (Value Object Schema)
+    </h4>
     <div class="table-wrap">
       <table style="border-collapse: collapse; width: 100%;" border="1">
         <colgroup>
@@ -882,6 +888,28 @@ function getWrapperDescription(schema: EnhancedSchema): string {
   return 'Map of keyed objects where each key is a string identifier.';
 }
 
+function groupLegacyFieldsByCondition(fields: EnhancedField[]) {
+  const fieldsToProcess = fields.filter((field) => field.type !== 'section-header');
+  const fieldInfoMap = collectFieldConditionInfo(fieldsToProcess, []);
+  return groupFieldsByCondition(fieldsToProcess, fieldInfoMap);
+}
+
+function buildLegacyConditionLabel(
+  conditionKey: string,
+  conditionInfo?: FieldCondition | null
+): string {
+  const isRequired = conditionInfo?.type === 'x-required-when';
+  const conditionText = conditionInfo?.conditionText || conditionKey;
+  return isRequired
+    ? `Required (When ${conditionText})`
+    : `Optional (When ${conditionText})`;
+}
+
+function countLegacyConditionHeaders(fields: EnhancedField[]): number {
+  const { fieldGroups } = groupLegacyFieldsByCondition(fields);
+  return fieldGroups.size;
+}
+
 function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldReferenceMap): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
@@ -889,59 +917,25 @@ function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldRef
 
   let rowNumber = 1;
   for (const section of sections) {
-
-    // 🔥 조건별로 필드 그룹화
-    const fieldsWithoutCondition: EnhancedField[] = [];
-    const fieldsByCondition: Map<string, { fields: EnhancedField[], isRequired: boolean }> = new Map();
-
-    for (const field of section.fields) {
-      // 🔥 조건 소스: x-required-when + x-optional-when (ui.visibleWhen은 사용하지 않음)
-      const fieldAny = field as any;
-      const requiredWhen = fieldAny['x-required-when'];
-      const optionalWhen = fieldAny['x-optional-when'];
-
-      // 조건 중 하나라도 있으면 조건부 필드로 처리
-      const condition = requiredWhen || optionalWhen;
-      const isRequired = !!requiredWhen;
-
-      if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
-        // 조건 키 생성 (예: "required:TYPE: BEAM,TRUSS" 또는 "optional:iMETHOD: [2,4]")
-        const conditionKey = Object.entries(condition)
-          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
-          .join(', ');
-        
-        const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionKey}`;
-
-        if (!fieldsByCondition.has(fullKey)) {
-          fieldsByCondition.set(fullKey, { fields: [], isRequired });
-        }
-        fieldsByCondition.get(fullKey)!.fields.push(field);
-      } else {
-        fieldsWithoutCondition.push(field);
-      }
-    }
+    const { fieldGroups: fieldsByCondition, noConditionFields: fieldsWithoutCondition } =
+      groupLegacyFieldsByCondition(section.fields);
 
     // 🔥 조건 없는 필드 먼저 렌더링
     if (fieldsWithoutCondition.length > 0) {
       html += generateSectionHeaderLegacy(section.name);
-      for (const field of fieldsWithoutCondition) {
+      for (const { field } of fieldsWithoutCondition) {
         html += generateFieldRowLegacy(field, rowNumber++, references);
       }
     }
 
-    // 🔥 조건별 필드 렌더링 - "Advanced" 그룹으로 표시
-    for (const [fullKey, { fields, isRequired }] of fieldsByCondition.entries()) {
-      // fullKey format: "required:CODE_CHECKING_RATIO: true" or "optional:CODE_CHECKING_RATIO: true"
-      const parts = fullKey.split(':');
-      const conditionName = parts[1].trim();
-      const conditionValue = parts.slice(2).join(':').trim();
-      
-      const conditionLabel = isRequired 
-        ? `Required (When "${conditionName}" is ${conditionValue})`
-        : `Optional (When "${conditionName}" is ${conditionValue})`;
-      
+    for (const [conditionKey, fieldsWithCondition] of fieldsByCondition.entries()) {
+      const conditionLabel = buildLegacyConditionLabel(
+        conditionKey,
+        fieldsWithCondition[0]?.conditionInfo
+      );
+
       html += generateSectionHeaderLegacy(conditionLabel);
-      for (const field of fields) {
+      for (const { field } of fieldsWithCondition) {
         html += generateFieldRowLegacy(field, rowNumber++, references);
       }
     }
@@ -949,33 +943,6 @@ function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldRef
 
   html += '</tbody>';
   return html;
-}
-
-function formatConditionLabelLegacy(condition: any): string {
-  if (!condition) return '';
-
-  if (Array.isArray(condition)) {
-    const parts = condition
-      .map((item) => {
-        if (item && typeof item === 'object' && 'condition' in item) {
-          return formatConditionLabelLegacy((item as any).condition);
-        }
-        return formatConditionLabelLegacy(item);
-      })
-      .filter((part) => part);
-
-    return parts.join(' | ');
-  }
-
-  if (typeof condition === 'object') {
-    const entries = Object.entries(condition as Record<string, any>);
-    if (entries.length === 0) return '';
-    return entries
-      .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
-      .join(', ');
-  }
-
-  return String(condition);
 }
 
 function renderGreatGrandchildrenLegacy(
@@ -988,31 +955,10 @@ function renderGreatGrandchildrenLegacy(
 ): string {
   let html = '';
   const explicitSectionHeaders = greatGrandchildren.filter((item) => item.type === 'section-header' || item.section);
-  const greatGrandchildrenWithoutCondition: EnhancedField[] = [];
-  const greatGrandchildrenByCondition: Map<string, { children: EnhancedField[]; isRequired: boolean; conditionText: string }> = new Map();
-
-  for (const greatGrandchild of greatGrandchildren) {
-    if (greatGrandchild.type === 'section-header') {
-      continue;
-    }
-
-    const greatGrandchildAny = greatGrandchild as any;
-    const requiredWhen = greatGrandchildAny['x-required-when'];
-    const optionalWhen = greatGrandchildAny['x-optional-when'];
-    const condition = requiredWhen || optionalWhen;
-    const isRequired = !!requiredWhen;
-    const conditionText = formatConditionLabelLegacy(condition);
-
-    if (conditionText) {
-      const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionText}`;
-      if (!greatGrandchildrenByCondition.has(fullKey)) {
-        greatGrandchildrenByCondition.set(fullKey, { children: [], isRequired, conditionText });
-      }
-      greatGrandchildrenByCondition.get(fullKey)!.children.push(greatGrandchild);
-    } else {
-      greatGrandchildrenWithoutCondition.push(greatGrandchild);
-    }
-  }
+  const {
+    fieldGroups: greatGrandchildrenByCondition,
+    noConditionFields: greatGrandchildrenWithoutCondition,
+  } = groupLegacyFieldsByCondition(greatGrandchildren);
 
   for (const header of explicitSectionHeaders) {
     const headerLabel = header.section || header.ui?.label || header.description || header.key;
@@ -1064,14 +1010,15 @@ function renderGreatGrandchildrenLegacy(
     `;
   };
 
-  for (const greatGrandchild of greatGrandchildrenWithoutCondition) {
+  for (const { field: greatGrandchild } of greatGrandchildrenWithoutCondition) {
     renderGreatGrandchildRow(greatGrandchild);
   }
 
-  for (const [, { children, isRequired, conditionText }] of greatGrandchildrenByCondition.entries()) {
-    const conditionLabel = isRequired
-      ? `Required (When ${conditionText})`
-      : `Optional (When ${conditionText})`;
+  for (const [conditionKey, greatGrandchildrenWithCondition] of greatGrandchildrenByCondition.entries()) {
+    const conditionLabel = buildLegacyConditionLabel(
+      conditionKey,
+      greatGrandchildrenWithCondition[0]?.conditionInfo
+    );
 
     html += `
       <tr>
@@ -1083,7 +1030,7 @@ function renderGreatGrandchildrenLegacy(
       </tr>
     `;
 
-    for (const greatGrandchild of children) {
+    for (const { field: greatGrandchild } of greatGrandchildrenWithCondition) {
       renderGreatGrandchildRow(greatGrandchild);
     }
   }
@@ -1100,31 +1047,10 @@ function renderGrandchildrenLegacy(
 ): string {
   let html = '';
   const explicitSectionHeaders = grandchildren.filter((item) => item.type === 'section-header' || item.section);
-  const grandchildrenWithoutCondition: EnhancedField[] = [];
-  const grandchildrenByCondition: Map<string, { children: EnhancedField[]; isRequired: boolean; conditionText: string }> = new Map();
-
-  for (const grandchild of grandchildren) {
-    if (grandchild.type === 'section-header') {
-      continue;
-    }
-
-    const grandchildAny = grandchild as any;
-    const requiredWhen = grandchildAny['x-required-when'];
-    const optionalWhen = grandchildAny['x-optional-when'];
-    const condition = requiredWhen || optionalWhen;
-    const isRequired = !!requiredWhen;
-    const conditionText = formatConditionLabelLegacy(condition);
-
-    if (conditionText) {
-      const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionText}`;
-      if (!grandchildrenByCondition.has(fullKey)) {
-        grandchildrenByCondition.set(fullKey, { children: [], isRequired, conditionText });
-      }
-      grandchildrenByCondition.get(fullKey)!.children.push(grandchild);
-    } else {
-      grandchildrenWithoutCondition.push(grandchild);
-    }
-  }
+  const {
+    fieldGroups: grandchildrenByCondition,
+    noConditionFields: grandchildrenWithoutCondition,
+  } = groupLegacyFieldsByCondition(grandchildren);
 
   for (const header of explicitSectionHeaders) {
     const headerLabel = header.section || header.ui?.label || header.description || header.key;
@@ -1186,14 +1112,15 @@ function renderGrandchildrenLegacy(
     }
   };
 
-  for (const grandchild of grandchildrenWithoutCondition) {
+  for (const { field: grandchild } of grandchildrenWithoutCondition) {
     renderGrandchildRow(grandchild);
   }
 
-  for (const [, { children, isRequired, conditionText }] of grandchildrenByCondition.entries()) {
-    const conditionLabel = isRequired
-      ? `Required (When ${conditionText})`
-      : `Optional (When ${conditionText})`;
+  for (const [conditionKey, grandchildrenWithCondition] of grandchildrenByCondition.entries()) {
+    const conditionLabel = buildLegacyConditionLabel(
+      conditionKey,
+      grandchildrenWithCondition[0]?.conditionInfo
+    );
 
     html += `
       <tr>
@@ -1204,7 +1131,7 @@ function renderGrandchildrenLegacy(
       </tr>
     `;
 
-    for (const grandchild of children) {
+    for (const { field: grandchild } of grandchildrenWithCondition) {
       renderGrandchildRow(grandchild);
     }
   }
@@ -1286,88 +1213,46 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
   // 🔥 rowspan 계산: children + grandchildren + 조건 헤더 모두 포함
   const calculateTotalRows = (children: EnhancedField[]): number => {
     if (!children || children.length === 0) return 1;
-    
-    // 🔥 조건별 그룹화를 동일하게 수행하여 정확한 row 수 계산
-    const childrenWithoutCondition: EnhancedField[] = [];
-    const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
-
-    for (const child of children) {
-      if (child.type === 'section-header') continue;
-
-      const childAny = child as any;
-      const requiredWhen = childAny['x-required-when'];
-      const optionalWhen = childAny['x-optional-when'];
-      const condition = requiredWhen || optionalWhen;
-      const isRequired = !!requiredWhen;
-
-      if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
-        const conditionKey = Object.entries(condition)
-          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
-          .join(', ');
-        
-        const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionKey}`;
-
-        if (!childrenByCondition.has(fullKey)) {
-          childrenByCondition.set(fullKey, { children: [], isRequired });
-        }
-        childrenByCondition.get(fullKey)!.children.push(child);
-      } else {
-        childrenWithoutCondition.push(child);
-      }
-    }
-
-    const countConditionHeaders = (fields: EnhancedField[]): number => {
-      const groups = new Set<string>();
-      for (const field of fields) {
-        if (field.type === 'section-header') continue;
-        const fieldAny = field as any;
-        const requiredWhen = fieldAny['x-required-when'];
-        const optionalWhen = fieldAny['x-optional-when'];
-        const condition = requiredWhen || optionalWhen;
-        const isRequired = !!requiredWhen;
-        const conditionText = formatConditionLabelLegacy(condition);
-        if (conditionText) {
-          groups.add(`${isRequired ? 'required' : 'optional'}:${conditionText}`);
-        }
-      }
-      return groups.size;
-    };
+    const {
+      fieldGroups: childrenByCondition,
+      noConditionFields: childrenWithoutCondition,
+    } = groupLegacyFieldsByCondition(children);
 
     let totalRows = 1; // 부모 행
 
     // 조건 없는 children
-    for (const child of childrenWithoutCondition) {
+    for (const { field: child } of childrenWithoutCondition) {
       totalRows += 1; // child 행
       const effectiveGrandchildren = child.children && child.children.length > 0
         ? child.children
         : materializeArrayItemChildren(child);
       if (effectiveGrandchildren.length > 0) {
         totalRows += effectiveGrandchildren.length; // grandchildren 행들
-        totalRows += countConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
+        totalRows += countLegacyConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
         for (const grandchild of effectiveGrandchildren) {
           if (grandchild.children && grandchild.children.length > 0) {
             totalRows += grandchild.children.length; // great-grandchildren 행들
-            totalRows += countConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
+            totalRows += countLegacyConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
           }
         }
       }
     }
 
     // 조건별 children (섹션 헤더 + 필드들)
-    for (const [, { children }] of childrenByCondition.entries()) {
+    for (const [, childrenWithCondition] of childrenByCondition.entries()) {
       totalRows += 1; // section-header 행
-      for (const child of children) {
+      for (const { field: child } of childrenWithCondition) {
         totalRows += 1; // child 행
         const effectiveGrandchildren = child.children && child.children.length > 0
           ? child.children
           : materializeArrayItemChildren(child);
         if (effectiveGrandchildren.length > 0) {
           totalRows += effectiveGrandchildren.length; // grandchildren 행들
-          totalRows += countConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
+          totalRows += countLegacyConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
           for (const grandchild of effectiveGrandchildren) {
             if (grandchild.children && grandchild.children.length > 0) {
               totalRows += grandchild.children.length; // great-grandchildren 행들
-              totalRows += countConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
+              totalRows += countLegacyConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
             }
           }
         }
@@ -1408,40 +1293,15 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
   // 🔥 Zendesk 스타일: 중첩 필드는 No. 칼럼 없이, Description이 두 칼럼으로 분리 (인덱스 + 내용)
   if (hasChildren) {
     const parentConditional = isConditionalFieldLegacy(field);
-    // 🔥 3-depth 필드 조건별 그룹화
-    const childrenWithoutCondition: EnhancedField[] = [];
-    const childrenByCondition: Map<string, { children: EnhancedField[], isRequired: boolean }> = new Map();
-
-    for (const child of effectiveChildren) {
-      // section-header는 skip (자동 생성됨)
-      if (child.type === 'section-header') continue;
-
-      const childAny = child as any;
-      const requiredWhen = childAny['x-required-when'];
-      const optionalWhen = childAny['x-optional-when'];
-      const condition = requiredWhen || optionalWhen;
-      const isRequired = !!requiredWhen;
-
-      if (condition && typeof condition === 'object' && Object.keys(condition).length > 0) {
-        const conditionKey = Object.entries(condition)
-          .map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(',') : v}`)
-          .join(', ');
-        
-        const fullKey = `${isRequired ? 'required' : 'optional'}:${conditionKey}`;
-
-        if (!childrenByCondition.has(fullKey)) {
-          childrenByCondition.set(fullKey, { children: [], isRequired });
-        }
-        childrenByCondition.get(fullKey)!.children.push(child);
-      } else {
-        childrenWithoutCondition.push(child);
-      }
-    }
+    const {
+      fieldGroups: childrenByCondition,
+      noConditionFields: childrenWithoutCondition,
+    } = groupLegacyFieldsByCondition(effectiveChildren);
 
     let childNo = 1;
 
     // 🔥 조건 없는 children 먼저 렌더링
-    for (const child of childrenWithoutCondition) {
+    for (const { field: child } of childrenWithoutCondition) {
       const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
       const childRequiredHTML = generateRequiredCellLegacy(child, parentConditional);
       const childDefaultValue = formatDefaultValue(child.default, child.type);
@@ -1493,15 +1353,11 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
     }
 
     // 🔥 조건별 children 렌더링 - 조건 헤더 추가
-    for (const [fullKey, { children, isRequired }] of childrenByCondition.entries()) {
-      // fullKey format: "required:CODE_CHECKING_RATIO: true" or "optional:CODE_CHECKING_RATIO: true"
-      const parts = fullKey.split(':');
-      const conditionName = parts[1].trim();
-      const conditionValue = parts.slice(2).join(':').trim();
-      
-      const conditionLabel = isRequired 
-        ? `Required (When "${conditionName}" is ${conditionValue})`
-        : `Optional (When "${conditionName}" is ${conditionValue})`;
+    for (const [conditionKey, childrenWithCondition] of childrenByCondition.entries()) {
+      const conditionLabel = buildLegacyConditionLabel(
+        conditionKey,
+        childrenWithCondition[0]?.conditionInfo
+      );
       
       // section-header 추가 (D0~D3 + Key~Required까지 병합)
       html += `
@@ -1512,7 +1368,7 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
         </tr>
       `;
 
-      for (const child of children) {
+      for (const { field: child } of childrenWithCondition) {
         const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
         const childRequiredHTML = generateRequiredCellLegacy(child, parentConditional);
         const childDefaultValue = formatDefaultValue(child.default, child.type);

@@ -47,6 +47,44 @@ describe('parseRunnerResultTable', () => {
     expect(table?.rows[0].values).toEqual(['1', '2', '']);
   });
 
+  it('parses nested HEAD/DATA responses (Steel Code Check style)', () => {
+    const input = {
+      'Result Table': {
+        FORCE: 'KN',
+        DIST: 'M',
+        HEAD: [
+          'CHK', 'MEMB', 'COM', 'SECT', 'SHR', 'Section',
+          'Material', 'Fy', 'LCB', 'Len', 'Lb', 'Ly', 'Lz', 'Cb',
+          'Ky', 'Kz', 'B1y', 'B1z', 'B2y', 'B2z', 'RatPc',
+          'Pu', 'pPn', 'Muy', 'pMny', 'Muz', 'pMnz',
+          'Vuy', 'pVny', 'Vuz', 'pVnz', 'Tu', 'pTn', 'Def', 'Defa',
+        ],
+        DATA: [
+          [
+            'OK', '888.000', '0.000', '1.000', '0.000', '400x600',
+            'SM355', '305000.000', '10.000', '3.250', '3.250', '3.250', '3.250', '1.000',
+            '1.000', '1.000', '1.000', '1.000', '1.000', '1.000', '0.000',
+            '0.000', '54900.000', '0.000', '4941.000', '0.000', '3294.000',
+            '0.000', '37332.000', '0.000', '37332.000', '-', '-', '-', '-',
+          ],
+        ],
+      },
+    };
+
+    const table = parseRunnerResultTable(input);
+
+    expect(table).not.toBeNull();
+    expect(table?.columns.map((c) => c.header)).toContain('CHK');
+    expect(table?.columns.map((c) => c.header)).toContain('MEMB');
+    expect(table?.rows).toHaveLength(1);
+    expect(table?.rows[0].values[0]).toBe('OK');
+    expect(table?.rows[0].values[1]).toBe('888.000');
+    expect(table?.meta).toEqual(expect.arrayContaining([
+      { key: 'FORCE', value: 'KN' },
+      { key: 'DIST', value: 'M' },
+    ]));
+  });
+
   it('returns null for non-table responses', () => {
     expect(parseRunnerResultTable('{"ok":true}')).toBeNull();
     expect(parseRunnerResultTable('not-json')).toBeNull();

@@ -9,6 +9,54 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "ELEMS": {
+          "type": "object",
+          "description": "Element No. Input. If omitted, all elements are included.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 2
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Element Numbers",
+            "order": 1
+          }
+        },
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "RC Haunched Beam Design Result",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
         "RESULT": {
           "type": "integer",
           "description": "Filter results by design status",
@@ -142,7 +190,7 @@
             "LCB_Vu": "Load Combination for Shear",
             "AsV": "Shear Reinforcing Steel Area (LengthUnit²/LengthUnit × 100)",
             "Stirrup": "Required Stirrup Spacing",
-            "CHK": "Status of Design Results (OK, N**, *P*, **V, NP*, *PV, N*V, NPV)"
+            "CHK": "Status of Design Results"
           }
         }
       }

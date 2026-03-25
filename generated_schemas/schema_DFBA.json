@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "description": "Design Parameters - Design Force for Beam Assigned as Member (DFBA). Supported methods: GET, PUT, DELETE.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by member ID strings (e.g., \"859\"), where each entry represents the design force type assigned to the beam member.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "FORCE_TYPE": {
+              "type": "string",
+              "description": "Design force type for the beam member.",
+              "oneOf": [
+                {
+                  "title": "Subdivided Forces",
+                  "const": "Subdivided Forces"
+                },
+                {
+                  "title": "Member Forces",
+                  "const": "Member Forces"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Design Force Type",
+                "order": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

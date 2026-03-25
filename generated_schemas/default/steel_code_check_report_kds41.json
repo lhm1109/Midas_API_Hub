@@ -11,7 +11,9 @@
         "REPORT_TYPE",
         "CURRENT_MODE",
         "EXPORT_PATH",
-        "OUTPUT_NAME"
+        "OUTPUT_NAME",
+        "ELEMENT_LIST",
+        "SECTION_LIST"
       ],
       "additionalProperties": false,
       "properties": {
@@ -19,8 +21,8 @@
           "type": "string",
           "description": "Report Table Type",
           "enum": [
-            "STEELCODECHK-MEMB",
-            "STEELCODECHK-PROP"
+            "MEMB",
+            "PROP"
           ],
           "x-ui": {
             "label": "Table Type",
@@ -60,8 +62,8 @@
             "label": "Element Numbers",
             "order": 3
           },
-          "x-optional-when": {
-            "REPORT_TYPE": "STEELCODECHK-MEMB"
+          "x-required-when": {
+            "REPORT_TYPE": "MEMB"
           }
         },
         "SECTION_LIST": {
@@ -74,25 +76,53 @@
             "label": "Section Numbers",
             "order": 3
           },
+          "x-required-when": {
+            "REPORT_TYPE": "PROP"
+          }
+        },
+        "DETAIL_POSITIONS": {
+          "type": "object",
+          "description": "Print positions for Detail report",
+          "properties": {
+            "END_I": {
+              "type": "boolean",
+              "description": "Include End I position",
+              "default": true
+            },
+            "MID": {
+              "type": "boolean",
+              "description": "Include Mid position",
+              "default": false
+            },
+            "END_J": {
+              "type": "boolean",
+              "description": "Include End J position",
+              "default": false
+            }
+          },
+          "x-ui": {
+            "label": "Option for Detail Print Position",
+            "order": 4
+          },
           "x-optional-when": {
-            "REPORT_TYPE": "STEELCODECHK-PROP"
+            "REPORT_TYPE": "RCBEAMDESIGN-MEMB"
           }
         },
         "EXPORT_PATH": {
           "type": "string",
-          "description": "File path to save the report (JPG for Graphic, DOC for Detail, TXT for Summary)",
+          "description": "Directory path to save the report files",
           "x-ui": {
-            "hint": "e.g. C:\\MIDAS\\Report\\output.jpg, .doc or .txt",
+            "hint": "e.g. C:\\MIDAS\\Report\\",
             "label": "Export Path",
-            "order": 4
+            "order": 5
           }
         },
         "OUTPUT_NAME": {
           "type": "string",
-          "description": "Output file base name. For multiple members, files are prefixed with index number and element number (e.g. 001_E123_filename.jpg, 002_E456_filename.jpg)",
+          "description": "Output file base name. For multiple elements, files are prefixed with index and element number (e.g. 001_E859_filename.jpg, 002_E1_filename.jpg)",
           "x-ui": {
             "label": "Output File Name",
-            "order": 5
+            "order": 6
           }
         }
       }

@@ -36,8 +36,117 @@ export interface UIBuilderField {
   children?: UIBuilderField[];
   oneOfOptions?: string[];
   optionIndex?: number;
+  implicitOneOfGroups?: string[][];
   visible?: boolean;
   valueConstraint?: string;
+}
+
+function getFieldLeafName(fieldPath?: string): string {
+  if (!fieldPath) return '';
+  return fieldPath.replace(/\[\]/g, '').split('.').filter(Boolean).pop() || fieldPath;
+}
+
+function dedupeImplicitOneOfGroups(groups: string[][]): string[][] {
+  const seen = new Set<string>();
+  const uniqueGroups: string[][] = [];
+
+  groups.forEach((group) => {
+    const normalizedGroup = Array.from(new Set(group.filter(Boolean)));
+    if (normalizedGroup.length === 0) return;
+
+    const signature = [...normalizedGroup].sort().join('|');
+    if (seen.has(signature)) return;
+
+    seen.add(signature);
+    uniqueGroups.push(normalizedGroup);
+  });
+
+  return uniqueGroups;
+}
+
+function buildImplicitOneOfOptionLabels(children: UIBuilderField[] | undefined, groups: string[][]): string[] {
+  if (!children?.length) {
+    return groups.map((group, index) => group[0] || `Option ${index + 1}`);
+  }
+
+  return groups.map((group, index) => {
+    const matchedChildren = children.filter((child) => group.includes(getFieldLeafName(child.name)));
+    if (matchedChildren.length === 0) {
+      return group[0] || `Option ${index + 1}`;
+    }
+
+    const labels = matchedChildren.map((child) => child.description || getFieldLeafName(child.name));
+    return labels.join(' + ');
+  });
+}
+
+export function extractImplicitOneOfGroups(field: {
+  type?: string;
+  oneOf?: any[];
+  children?: Array<{ key?: string; name?: string }>;
+}): string[][] | undefined {
+  if (
+    field.type !== 'object' ||
+    !Array.isArray(field.oneOf) ||
+    field.oneOf.length < 2 ||
+    !Array.isArray(field.children) ||
+    field.children.length === 0
+  ) {
+    return undefined;
+  }
+
+  const hasStructuredOneOfOptions = field.oneOf.some((option) =>
+    option &&
+    typeof option === 'object' &&
+    option.properties &&
+    Object.keys(option.properties).length > 0
+  );
+
+  if (hasStructuredOneOfOptions) {
+    return undefined;
+  }
+
+  const childLeaves = field.children
+    .map((child) => getFieldLeafName(child.key ?? child.name))
+    .filter(Boolean);
+
+  if (childLeaves.length === 0) {
+    return undefined;
+  }
+
+  const candidateGroups = field.oneOf
+    .map((option) => {
+      if (!option || typeof option !== 'object' || !Array.isArray(option.required) || option.required.length === 0) {
+        return null;
+      }
+
+      const normalizedMembers = option.required
+        .map((requiredKey: any) => {
+          if (typeof requiredKey !== 'string') return null;
+          const matchedLeaf = childLeaves.find((leaf) => leaf === requiredKey);
+          return matchedLeaf ?? null;
+        })
+        .filter((member: string | null): member is string => Boolean(member));
+
+      if (normalizedMembers.length === 0) {
+        return null;
+      }
+
+      return normalizedMembers;
+    })
+    .filter((group: string[] | null): group is string[] => Boolean(group && group.length > 0));
+
+  const implicitGroups = dedupeImplicitOneOfGroups(candidateGroups);
+  if (implicitGroups.length < 2) {
+    return undefined;
+  }
+
+  const uniqueMembers = new Set(implicitGroups.flat());
+  if (uniqueMembers.size < 2) {
+    return undefined;
+  }
+
+  return implicitGroups;
 }
 
 // Re-export for convenience
@@ -335,6 +444,18 @@ function adaptFieldToBuilder(
         adaptFieldToBuilder(child, currentType, currentValues)
       );
     }
+  }
+
+  const implicitOneOfGroups = extractImplicitOneOfGroups(field);
+  if (implicitOneOfGroups) {
+    builderField.implicitOneOfGroups = implicitOneOfGroups;
+    builderField.oneOfOptions = buildImplicitOneOfOptionLabels(builderField.children, implicitOneOfGroups);
+    builderField.children?.forEach((child) => {
+      const optionIndex = implicitOneOfGroups.findIndex((group) => group.includes(getFieldLeafName(child.name)));
+      if (optionIndex !== -1) {
+        child.optionIndex = optionIndex;
+      }
+    });
   }
   
   return builderField;

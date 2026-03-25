@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "description": "Design Parameters - Moment Calculation Method for Beam (MCMB). Supported methods: GET, PUT, DELETE.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by member ID strings (e.g., \"84\"), where each entry represents the moment calculation method assigned to the beam member.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "CALC_METHOD": {
+              "type": "string",
+              "description": "Moment calculation method for the beam member.",
+              "oneOf": [
+                {
+                  "title": "Each Span",
+                  "const": "EACH"
+                },
+                {
+                  "title": "Equivalent Frame",
+                  "const": "EQUI"
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Moment Calculation Method",
+                "order": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

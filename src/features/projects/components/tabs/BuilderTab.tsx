@@ -31,6 +31,7 @@ import {
 } from '@/lib/schema';
 import {
   extractTriggerFields,
+  extractImplicitOneOfGroups,
   type EnhancedSchema
 } from '@/lib/schema/builderAdapter';
 import { DynamicSchemaRenderer } from '@/lib/rendering/dynamicRenderer';
@@ -229,6 +230,129 @@ function resolveFieldByPath(path: string, fields: UIBuilderField[]): UIBuilderFi
   if (child) return child;
 
   return parentField.type === 'array' ? parentField : undefined;
+}
+
+function getFieldLeafName(fieldPath: string): string {
+  return fieldPath.replace(/\[\]/g, '').split('.').filter(Boolean).pop() || fieldPath;
+}
+
+function buildImplicitOneOfOptionLabels(
+  children: UIBuilderField[] | undefined,
+  groups: string[][]
+): string[] {
+  if (!children?.length) {
+    return groups.map((group, index) => group[0] || `Option ${index + 1}`);
+  }
+
+  return groups.map((group, index) => {
+    const matchedChildren = children.filter((child) => group.includes(getFieldLeafName(child.name)));
+    if (matchedChildren.length === 0) {
+      return group[0] || `Option ${index + 1}`;
+    }
+
+    const labels = matchedChildren.map((child) => child.description || getFieldLeafName(child.name));
+    return labels.join(' + ');
+  });
+}
+
+function hasMeaningfulFieldValue(value: any): boolean {
+  if (value === undefined || value === null) return false;
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return false;
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) return parsed.length > 0;
+      if (parsed && typeof parsed === 'object') return Object.keys(parsed).length > 0;
+    } catch {
+      // Plain strings stay meaningful once non-empty.
+    }
+
+    return true;
+  }
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object') return Object.keys(value).length > 0;
+  return true;
+}
+
+function getImplicitOneOfSiblingKeys(key: string, schemaFields: UIBuilderField[]): string[] {
+  const parentField = schemaFields
+    .filter((field) => field.implicitOneOfGroups && key.startsWith(`${field.name}.`))
+    .sort((a, b) => b.name.length - a.name.length)[0];
+
+  if (!parentField?.implicitOneOfGroups?.length) {
+    return [];
+  }
+
+  const childLeafName = getFieldLeafName(key);
+  const activeGroup = parentField.implicitOneOfGroups.find((group) => group.includes(childLeafName));
+  if (!activeGroup) {
+    return [];
+  }
+
+  const siblingLeafNames = new Set(
+    parentField.implicitOneOfGroups.flatMap((group) => (
+      group === activeGroup ? [] : group.filter((leafName) => !activeGroup.includes(leafName))
+    ))
+  );
+
+  if (siblingLeafNames.size === 0) {
+    return [];
+  }
+
+  return Array.from(siblingLeafNames).map((leafName) => {
+    const matchedChild = parentField.children?.find((child) => getFieldLeafName(child.name) === leafName);
+    return resolveNestedFieldKey(parentField.name, matchedChild?.name ?? leafName);
+  });
+}
+
+function inferSelectedOptionIndex(field: UIBuilderField, sourceData: Record<string, any>): number {
+  if (!field.oneOfOptions?.length || !field.children?.length) {
+    return 0;
+  }
+
+  const selectedByValue = field.children
+    .filter((child: any) => child.optionIndex !== undefined)
+    .map((child: any) => {
+      const childKey = resolveNestedFieldKey(field.name, child.name);
+      const childValue = sourceData[childKey] ?? sourceData[child.name];
+      return {
+        optionIndex: child.optionIndex as number,
+        hasValue: hasMeaningfulFieldValue(childValue),
+      };
+    })
+    .find((entry) => entry.hasValue);
+
+  return selectedByValue?.optionIndex ?? 0;
+}
+
+function applyImplicitOneOfSelection(
+  previousState: Record<string, any>,
+  key: string,
+  value: any,
+  schemaFields: UIBuilderField[]
+): Record<string, any> {
+  const updatedState = { ...previousState, [key]: value };
+
+  if (!hasMeaningfulFieldValue(value)) {
+    return updatedState;
+  }
+
+  const siblingKeys = getImplicitOneOfSiblingKeys(key, schemaFields);
+  siblingKeys.forEach((siblingKey) => {
+    delete updatedState[siblingKey];
+  });
+
+  const parentField = schemaFields
+    .filter((field) => field.implicitOneOfGroups && key.startsWith(`${field.name}.`))
+    .sort((a, b) => b.name.length - a.name.length)[0];
+
+  if (parentField?.oneOfOptions?.length) {
+    updatedState[`${parentField.name}.__selectedOption`] = inferSelectedOptionIndex(parentField, updatedState);
+  }
+
+  return updatedState;
 }
 
 function detectSchemaWrapperInfo(schema: any): SchemaWrapperInfo | null {
@@ -461,6 +585,17 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       }
       if (compiledField.optionIndex !== undefined) {
         (uiField as any).optionIndex = compiledField.optionIndex;
+      }
+      const implicitOneOfGroups = extractImplicitOneOfGroups(compiledField);
+      if (implicitOneOfGroups) {
+        uiField.implicitOneOfGroups = implicitOneOfGroups;
+        uiField.oneOfOptions = buildImplicitOneOfOptionLabels(uiField.children, implicitOneOfGroups);
+        uiField.children?.forEach((child: any) => {
+          const optionIndex = implicitOneOfGroups.findIndex((group) => group.includes(getFieldLeafName(child.name)));
+          if (optionIndex !== -1) {
+            child.optionIndex = optionIndex;
+          }
+        });
       }
 
       return uiField;
@@ -1005,15 +1140,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         return;
       }
     }
-    setDynamicFormData((prev: any) => ({ ...prev, [key]: value }));
-    setTempFormValuesForSchema((prev: any) => ({ ...prev, [key]: value }));
+    setDynamicFormData((prev: any) => applyImplicitOneOfSelection(prev, key, value, schemaFields));
+    setTempFormValuesForSchema((prev: any) => applyImplicitOneOfSelection(prev, key, value, schemaFields));
     if (enableAssignInstances && currentInstanceKey) {
       setAssignInstances(prev => ({
         ...prev,
-        [currentInstanceKey]: {
-          ...prev[currentInstanceKey],
-          [key]: value
-        }
+        [currentInstanceKey]: applyImplicitOneOfSelection(prev[currentInstanceKey] || {}, key, value, schemaFields)
       }));
     }
   };
@@ -1427,6 +1559,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       });
       const mergedData = { ...initialData, ...flatData };
 
+      schemaFields.forEach((field) => {
+        if (field.oneOfOptions?.length && field.children?.length) {
+          mergedData[`${field.name}.__selectedOption`] = inferSelectedOptionIndex(field, mergedData);
+        }
+      });
+
       console.log('[BuilderTab] JSON-to-form conversion complete:', {
         initialData,
         flatData,
@@ -1486,6 +1624,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       const oneOfFieldsByOption: Map<string, Map<number, Set<string>>> = new Map();
       fields.forEach(field => {
         if (field.oneOfOptions && field.children) {
+          if (!oneOfSelections.has(field.name)) {
+            oneOfSelections.set(field.name, inferSelectedOptionIndex(field, enrichedData));
+          }
+
           const fieldMap = new Map<number, Set<string>>();
           field.children.forEach((child: any) => {
             if (child.optionIndex !== undefined) {

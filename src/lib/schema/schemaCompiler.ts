@@ -1840,12 +1840,23 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       console.log(`✅ Extracted ${field.children.length} children from array items.properties for ${key} (${noConditionChildren.length} normal, ${conditionalChildren.size} groups)`);
     }
 
-    // 🔥 Object 타입 with oneOf - 상호 배타적 선택 (예: Method 1, 2, 3 중 선택)
-    if (prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)) {
+    // 🔥 Object 타입 with oneOf - 옵션별 properties가 있는 경우에만 특수 처리
+    // validation-only oneOf(required/not) 패턴은 기존 properties children을 유지해야 함
+    const oneOfOptionsWithProperties =
+      prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)
+        ? prop.oneOf.filter((option: any) =>
+            option &&
+            typeof option === 'object' &&
+            option.properties &&
+            Object.keys(option.properties).length > 0
+          )
+        : [];
+
+    if (prop.type === 'object' && oneOfOptionsWithProperties.length > 0) {
       field.children = [];
 
       // oneOf의 각 옵션을 섹션 헤더로 표시
-      prop.oneOf.forEach((option: any, optionIndex: number) => {
+      oneOfOptionsWithProperties.forEach((option: any, optionIndex: number) => {
         const optionTitle = option.title || `Option ${optionIndex + 1}`;
         const optionProps = option.properties || {};
         const optionRequired = option.required || [];
@@ -1890,6 +1901,10 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           field.children!.push(childField);
         }
       });
+    } else if (prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)) {
+      console.log(
+        `ℹ️ Skipped oneOf option-section rendering for ${key} because oneOf is validation-only (no option properties).`
+      );
     }
 
     fields.push(field);

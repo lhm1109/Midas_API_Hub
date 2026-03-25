@@ -12,7 +12,75 @@
       ],
       "additionalProperties": false,
       "properties": {
-        "iPRI_SORT": {
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "MEMB",
+            "PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type",
+            "order": 1
+          }
+        },
+        "ELEMS": {
+          "type": "object",
+          "description": "Element No. Input. Required when TABLE_TYPE is MEMB.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 2
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Element No.",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "MEMB"
+          }
+        },
+        "SECTIONS": {
+          "type": "array",
+          "description": "List of section numbers to include in the table. Optional when TABLE_TYPE is PROP.",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Section Numbers",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "PROP"
+          }
+        },
+        "PRI_SORT": {
           "type": "integer",
           "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
           "default": 1,
@@ -32,10 +100,10 @@
             "order": 2
           },
           "x-optional-when": {
-            "TABLE_TYPE": "STEELCODECHK-MEMB"
+            "TABLE_TYPE": "MEMB"
           }
         },
-        "iRESULT_VIEW": {
+        "RESULT": {
           "type": "integer",
           "description": "Filter results by check status",
           "default": 0,
@@ -59,7 +127,7 @@
             "order": 3
           }
         },
-        "bVIEW_RATPC": {
+        "VIEW_RATPC": {
           "type": "boolean",
           "description": "Filter to show only members with RatPc greater than 0.4",
           "default": false,
@@ -75,17 +143,6 @@
           "x-ui": {
             "hint": "Output table title in response",
             "label": "Table Name"
-          }
-        },
-        "TABLE_TYPE": {
-          "type": "string",
-          "description": "Result Table Type",
-          "enum": [
-            "STEELCODECHK-MEMB",
-            "STEELCODECHK-PROP"
-          ],
-          "x-ui": {
-            "label": "Table Type"
           }
         },
         "EXPORT_PATH": {
@@ -193,7 +250,7 @@
             "label": "Components"
           },
           "x-enum-labels-by-type": {
-            "STEELCODECHK-MEMB": {
+            "MEMB": {
               "B1y": "Moment Magnification Factor B1",
               "B1z": "Moment Magnification Factor B1",
               "B2y": "Moment Magnification Factor B2",
@@ -230,7 +287,7 @@
               "Vuy": "Required Shear Strength",
               "Vuz": "Required Shear Strength"
             },
-            "STEELCODECHK-PROP": {
+            "PROP": {
               "B1y": "Moment Magnification Factor B1",
               "B1z": "Moment Magnification Factor B1",
               "B2y": "Moment Magnification Factor B2",

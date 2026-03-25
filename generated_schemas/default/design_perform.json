@@ -9,7 +9,107 @@
       "type": "object",
       "description": "Execute design calculation",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "PERFORM_TYPE": {
+          "type": "string",
+          "description": "Select target type for design calculation. ELEMS: by element numbers, SECTIONS: by section numbers, ALL: all elements.",
+          "oneOf": [
+            {
+              "title": "All Elements",
+              "const": "ALL"
+            },
+            {
+              "title": "By Element No.",
+              "const": "ELEMS"
+            },
+            {
+              "title": "By Section No.",
+              "const": "SECTIONS"
+            }
+          ],
+          "default": "ALL",
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Perform Target",
+            "order": 1
+          }
+        },
+        "ELEMS": {
+          "type": "object",
+          "description": "Element No. Input. Required when PERFORM_TYPE is ELEMS.",
+          "additionalProperties": false,
+          "properties": {
+            "INPUT_METHOD": {
+              "type": "string",
+              "description": "Select input method",
+              "oneOf": [
+                { "title": "Specify Each ID", "const": "KEYS" },
+                { "title": "Specify ID Range", "const": "TO" }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Input Method",
+                "order": 1
+              }
+            },
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 2
+              },
+              "x-required-when": {
+                "INPUT_METHOD": "KEYS"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 3
+              },
+              "x-required-when": {
+                "INPUT_METHOD": "TO"
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 4
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Element No.",
+            "order": 2
+          },
+          "x-optional-when": {
+            "PERFORM_TYPE": "ELEMS"
+          }
+        },
+        "SECTIONS": {
+          "type": "array",
+          "description": "Section No. Input. Required when PERFORM_TYPE is SECTIONS.",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Section No.",
+            "order": 2
+          },
+          "x-optional-when": {
+            "PERFORM_TYPE": "SECTIONS"
+          }
+        }
+      }
     }
   }
 }

@@ -8,16 +8,28 @@
     "Argument": {
       "type": "object",
       "required": [
-        "CURRENT_MODE",
-        "WALL_LIST",
+        "REPORT_TYPE",
         "EXPORT_PATH",
         "OUTPUT_NAME"
       ],
       "additionalProperties": false,
       "properties": {
-        "CURRENT_MODE": {
+        "REPORT_TYPE": {
           "type": "string",
-          "description": "Report output mode",
+          "description": "Wall list identification type",
+          "enum": [
+            "WID+STORY",
+            "WID"
+          ],
+          "default": "WID+STORY",
+          "x-ui": {
+            "label": "Report Type",
+            "order": 0
+          }
+        },
+        "CURRENT_MODE_WID_STORY": {
+          "type": "string",
+          "description": "Report output mode for WID+STORY (Detail supported)",
           "oneOf": [
             {
               "title": "Graphic (JPG image)",
@@ -40,36 +52,81 @@
             "component": "RadioGroup",
             "label": "Report Mode",
             "order": 1
+          },
+          "x-required-when": {
+            "REPORT_TYPE": "WID+STORY"
           }
         },
-        "WALL_LIST": {
-          "type": "array",
-          "description": "List of walls to include in the report (WID, Story, and Wall Mark required for identification)",
-          "items": {
-            "type": "object",
-            "required": [
-              "WID",
-              "STORY",
-              "WALL_MARK"
-            ],
-            "properties": {
-              "WID": {
-                "type": "integer",
-                "description": "Wall ID number"
+        "CURRENT_MODE_WID": {
+          "type": "string",
+          "description": "Report output mode for WID (Detail not supported)",
+          "oneOf": [
+            {
+              "title": "Graphic (JPG image)",
+              "const": "Graphic"
+            },
+            {
+              "title": "Summary (TXT text)",
+              "const": "Summary"
+            },
+            {
+              "title": "PM Curve (JPG image)",
+              "const": "PMCurve"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 1
+          },
+          "x-required-when": {
+            "REPORT_TYPE": "WID"
+          }
+        },
+        "WALL_IDS": {
+          "type": "object",
+          "description": "Wall IDs to include in the report. If omitted, all walls are included.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each Wall ID",
+              "items": {
+                "type": "integer"
               },
-              "STORY": {
-                "type": "string",
-                "description": "Story name"
-              },
-              "WALL_MARK": {
-                "type": "string",
-                "description": "Wall Mark designation"
+              "x-ui": {
+                "label": "Specify Each Wall ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify Wall ID Range (e.g., '1to20')",
+              "x-ui": {
+                "label": "Specify Wall ID Range",
+                "placeholder": "e.g. 1to20",
+                "order": 2
               }
             }
           },
           "x-ui": {
-            "label": "Wall List",
+            "label": "Wall IDs",
             "order": 2
+          }
+        },
+        "STORY": {
+          "type": "array",
+          "description": "List of story names to include in the report. If omitted, all stories are included.",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "label": "Stories",
+            "placeholder": "e.g. B1F, 1F, 2F",
+            "order": 3
+          },
+          "x-optional-when": {
+            "REPORT_TYPE": "WID+STORY"
           }
         },
         "EXPORT_PATH": {

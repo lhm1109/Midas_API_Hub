@@ -18,8 +18,8 @@
           "type": "string",
           "description": "Report Table Type",
           "enum": [
-            "RCCOLUMNDESIGN-MEMB",
-            "RCCOLUMNDESIGN-PROP"
+            "MEMB",
+            "PROP"
           ],
           "x-ui": {
             "label": "Table Type",
@@ -49,7 +49,7 @@
             "order": 2
           },
           "x-optional-when": {
-            "REPORT_TYPE": "RCCOLUMNDESIGN-MEMB"
+            "REPORT_TYPE": "MEMB"
           }
         },
         "CURRENT_MODE_PROP": {
@@ -71,26 +71,54 @@
             "order": 2
           },
           "x-optional-when": {
-            "REPORT_TYPE": "RCCOLUMNDESIGN-PROP"
+            "REPORT_TYPE": "PROP"
           }
         },
-        "ELEMENT_LIST": {
-          "type": "array",
-          "description": "List of element numbers to include in the report",
-          "items": {
-            "type": "integer"
+        "ELEMS": {
+          "type": "object",
+          "description": "Element No. Input. Optional when REPORT_TYPE is MEMB.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 2
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 3
+              }
+            }
           },
           "x-ui": {
             "label": "Element Numbers",
             "order": 3
           },
           "x-optional-when": {
-            "REPORT_TYPE": "RCCOLUMNDESIGN-MEMB"
+            "REPORT_TYPE": "MEMB"
           }
         },
-        "SECTION_LIST": {
+        "SECTIONS": {
           "type": "array",
-          "description": "List of section numbers to include in the report",
+          "description": "List of section numbers to include in the report. Optional when REPORT_TYPE is PROP.",
           "items": {
             "type": "integer"
           },
@@ -99,7 +127,7 @@
             "order": 3
           },
           "x-optional-when": {
-            "REPORT_TYPE": "RCCOLUMNDESIGN-PROP"
+            "REPORT_TYPE": "PROP"
           }
         },
         "EXPORT_PATH": {

@@ -2,7 +2,6 @@ type Primitive = string | number | boolean | null;
 
 type TableLikeNode = {
   HEAD: unknown[];
-  vDATA: unknown[];
   [key: string]: unknown;
 };
 
@@ -33,7 +32,14 @@ export interface RunnerResultTableModel {
 }
 
 const TABLE_HEADER_KEY = 'HEAD';
-const TABLE_ROWS_KEY = 'vDATA';
+const TABLE_ROWS_KEYS = ['vDATA', 'DATA'] as const;
+
+const getTableRowsKey = (value: Record<string, unknown>): string | null => {
+  for (const key of TABLE_ROWS_KEYS) {
+    if (Array.isArray(value[key]) && (value[key] as unknown[]).length > 0) return key;
+  }
+  return null;
+};
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return !!value && typeof value === 'object' && !Array.isArray(value);
@@ -79,10 +85,13 @@ const inferColumnAlignment = (header: string, values: string[]): RunnerResultTab
 
 const isTableLikeNode = (value: unknown): value is TableLikeNode => {
   if (!isRecord(value)) return false;
-  if (!Array.isArray(value[TABLE_HEADER_KEY]) || !Array.isArray(value[TABLE_ROWS_KEY])) return false;
 
-  const headers = value[TABLE_HEADER_KEY];
-  const rows = value[TABLE_ROWS_KEY];
+  const rowsKey = getTableRowsKey(value);
+  if (!rowsKey) return false;
+  if (!Array.isArray(value[TABLE_HEADER_KEY])) return false;
+
+  const headers = value[TABLE_HEADER_KEY] as unknown[];
+  const rows = value[rowsKey] as unknown[];
 
   if (headers.length === 0 || rows.length === 0) return false;
   if (!headers.every((header) => typeof header === 'string' || typeof header === 'number')) return false;
@@ -139,8 +148,9 @@ const collectMeta = (located: LocatedTable): RunnerResultTableMetaItem[] => {
   const sources = [...located.ancestors, located.node];
 
   sources.forEach((source) => {
+    const rowsKey = getTableRowsKey(source);
     Object.entries(source).forEach(([key, value]) => {
-      if (key === TABLE_HEADER_KEY || key === TABLE_ROWS_KEY) return;
+      if (key === TABLE_HEADER_KEY || key === rowsKey) return;
       if (!isPrimitive(value)) return;
       ordered.set(key, toDisplayString(value));
     });
@@ -226,7 +236,8 @@ export const parseRunnerResultTable = (value: string | unknown): RunnerResultTab
   const located = findTableLikeNode(parsed);
   if (!located) return null;
 
-  const rowsSource = Array.isArray(located.node[TABLE_ROWS_KEY]) ? located.node[TABLE_ROWS_KEY] : [];
+  const activeRowsKey = getTableRowsKey(located.node) ?? TABLE_ROWS_KEYS[0];
+  const rowsSource = Array.isArray(located.node[activeRowsKey]) ? located.node[activeRowsKey] : [];
   const headersSource = Array.isArray(located.node[TABLE_HEADER_KEY]) ? located.node[TABLE_HEADER_KEY] : [];
   const maxColumnCount = Math.max(
     headersSource.length,
@@ -261,7 +272,7 @@ export const parseRunnerResultTable = (value: string | unknown): RunnerResultTab
 
   return {
     title: buildTitle(meta),
-    description: 'HEAD/vDATA response table preview',
+    description: 'HEAD/DATA response table preview',
     path: located.path,
     meta,
     columns,

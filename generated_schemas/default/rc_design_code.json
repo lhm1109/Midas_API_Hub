@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "description": "RC Design Code. Supported methods: GET, PUT.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "DGNCODE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "DGNCODE": {
+              "type": "string",
+              "description": "Design Code",
+              "enum": [
+                "KDS 41 20 : 2022"
+              ],
+              "x-ui": {
+                "label": "Design Code",
+                "order": 1
+              }
+            }
+          }
+        }
+      },
+      "x-ui": {
+        "label": "Assign"
+      }
+    }
+  }
+}

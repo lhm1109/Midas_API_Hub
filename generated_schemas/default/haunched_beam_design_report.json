@@ -9,7 +9,6 @@
       "type": "object",
       "required": [
         "CURRENT_MODE",
-        "HCBM_LIST",
         "EXPORT_PATH",
         "OUTPUT_NAME"
       ],
@@ -27,14 +26,42 @@
             "order": 1
           }
         },
-        "HCBM_LIST": {
-          "type": "array",
-          "description": "List of haunched beam numbers to include in the report",
-          "items": {
-            "type": "integer"
+        "ELEMS": {
+          "type": "object",
+          "description": "Haunched beam elements to include in the report. If omitted, all elements are included.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 2
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 3
+              }
+            }
           },
           "x-ui": {
-            "label": "Haunched Beam Numbers",
+            "label": "Element Numbers",
             "order": 2
           }
         },

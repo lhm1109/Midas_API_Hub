@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save, Trash2 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
@@ -13,8 +14,10 @@ interface ManualTabProps {
   endpoint: ApiEndpoint;
 }
 
+type ManualPublisher = 'zendesk' | 'confluence';
+
 const DEFAULT_ZENDESK_LOCALE = 'en-us';
-const ZENDESK_SERVER_BASE_URL = 'http://localhost:9527';
+const MANUAL_SERVER_BASE_URL = 'http://localhost:9527';
 
 interface ZendeskEnvStatus {
   baseUrl?: string;
@@ -38,6 +41,17 @@ interface ZendeskEnvStatus {
   missingFields: string[];
 }
 
+interface ConfluenceEnvStatus {
+  baseUrl?: string;
+  defaultPageUrl?: string;
+  defaultPageId?: string;
+  defaultSpaceId?: string;
+  defaultParentPageId?: string;
+  hasCredentials: boolean;
+  authType: 'bearer' | 'basic' | null;
+  missingFields: string[];
+}
+
 function normalizeZendeskLocale(locale?: string): string {
   const normalized = String(locale || '')
     .trim()
@@ -48,9 +62,13 @@ function normalizeZendeskLocale(locale?: string): string {
 
 export function ManualTab({ endpoint }: ManualTabProps) {
   const { manualData, setManualData } = useAppStore();
+  const [manualPublisher, setManualPublisher] = useState<ManualPublisher>('zendesk');
   const [zendeskUrl, setZendeskUrl] = useState('');
   const [zendeskEnvStatus, setZendeskEnvStatus] = useState<ZendeskEnvStatus | null>(null);
   const [isZendeskSending, setIsZendeskSending] = useState(false);
+  const [confluenceTarget, setConfluenceTarget] = useState('');
+  const [confluenceEnvStatus, setConfluenceEnvStatus] = useState<ConfluenceEnvStatus | null>(null);
+  const [isConfluenceSending, setIsConfluenceSending] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,8 +76,14 @@ export function ManualTab({ endpoint }: ManualTabProps) {
   const [zoom, setZoom] = useState(1);
 
   // 🎯 Editable HTML State
-  const [editableHTML, setEditableHTML] = useState('');
-  const [isHTMLModified, setIsHTMLModified] = useState(false);
+  const [editableHTMLByPublisher, setEditableHTMLByPublisher] = useState<Record<ManualPublisher, string>>({
+    zendesk: '',
+    confluence: '',
+  });
+  const [isHTMLModifiedByPublisher, setIsHTMLModifiedByPublisher] = useState<Record<ManualPublisher, boolean>>({
+    zendesk: false,
+    confluence: false,
+  });
 
   const loadZendeskEnvStatus = async (): Promise<ZendeskEnvStatus | null> => {
     try {
@@ -69,7 +93,7 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       if (zendeskAPI?.getEnvConfig) {
         result = await zendeskAPI.getEnvConfig();
       } else {
-        const response = await fetch(`${ZENDESK_SERVER_BASE_URL}/api/zendesk/env`);
+        const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/env`);
         const payload = await response.json().catch(() => null);
         if (!response.ok) {
           const errorMessage = payload?.error || `HTTP ${response.status}`;
@@ -93,8 +117,33 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     }
   };
 
+  const loadConfluenceEnvStatus = async (): Promise<ConfluenceEnvStatus | null> => {
+    try {
+      const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/confluence/env`);
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const errorMessage = payload?.error || `HTTP ${response.status}`;
+        throw new Error(errorMessage);
+      }
+
+      if (!payload?.success || !payload.data) {
+        setConfluenceEnvStatus(null);
+        return null;
+      }
+
+      setConfluenceEnvStatus(payload.data);
+      setConfluenceTarget((current) => (current.trim() ? current : payload.data?.defaultPageUrl || ''));
+      return payload.data;
+    } catch (error) {
+      console.warn('Failed to load Confluence env config:', error);
+      setConfluenceEnvStatus(null);
+      return null;
+    }
+  };
+
   useEffect(() => {
     void loadZendeskEnvStatus();
+    void loadConfluenceEnvStatus();
   }, []);
 
   // 🎯 Zoom 리셋
@@ -121,75 +170,158 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     }
   };
 
+  const escapeHtml = (unsafe: string | number | boolean | null | undefined): string => {
+    if (unsafe === null || unsafe === undefined) return 'null';
+    if (typeof unsafe === 'boolean') return unsafe.toString();
+    if (typeof unsafe === 'number') return unsafe.toString();
+    return String(unsafe)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  const normalizeCopyText = (text: string): string => {
+    return String(text || '')
+      .replace(/\u00A0/g, ' ')
+      .replace(/\u200B/g, '')
+      .replace(/\r\n/g, '\n');
+  };
+
+  const serializeJsonForZendesk = (jsonValue: string | object | null | undefined): string => {
+    if (jsonValue === undefined) {
+      return '{}';
+    }
+
+    if (jsonValue === null) {
+      return 'null';
+    }
+
+    if (typeof jsonValue === 'string') {
+      try {
+        return JSON.stringify(JSON.parse(jsonValue), null, 2);
+      } catch {
+        return jsonValue;
+      }
+    }
+
+    try {
+      return JSON.stringify(jsonValue, null, 2);
+    } catch {
+      return String(jsonValue);
+    }
+  };
+
+  const formatPlainTextToZendeskHTML = (rawText: string): string => {
+    return escapeHtml(rawText)
+      .replace(/ /g, '&nbsp;')
+      .replace(/\n/g, '<br>\n');
+  };
+
+  const highlightJsonTextForZendesk = (rawText: string): string => {
+    const tokenRegex = /"(?:\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"(?=\s*:)|"(?:\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g;
+
+    let result = '';
+    let lastIndex = 0;
+
+    rawText.replace(tokenRegex, (match, offset) => {
+      result += formatPlainTextToZendeskHTML(rawText.slice(lastIndex, offset));
+
+      let style = 'color: #111827;';
+      if (/^"/.test(match)) {
+        style = 'color: #055bcc;';
+      } else if (/^(true|false|null)$/.test(match)) {
+        style = 'color: #055bcc; font-weight: bold;';
+      } else {
+        style = 'color: #0ab66c;';
+      }
+
+      if (/^\s*:/.test(rawText.slice(offset + match.length))) {
+        style = 'color: #c31b1b;';
+      }
+
+      result += `<span style="${style}">${formatPlainTextToZendeskHTML(match)}</span>`;
+      lastIndex = offset + match.length;
+      return match;
+    });
+
+    result += formatPlainTextToZendeskHTML(rawText.slice(lastIndex));
+    return result;
+  };
+
+  const formatCodeTextToZendeskHTML = (rawText: string): string => {
+    try {
+      JSON.parse(rawText);
+      return highlightJsonTextForZendesk(rawText);
+    } catch {
+      return formatPlainTextToZendeskHTML(rawText);
+    }
+  };
+
+  const isPreformattedZendeskCode = (value: unknown): value is string => {
+    return typeof value === 'string' && (
+      value.includes('<span') ||
+      value.includes('<br>') ||
+      value.includes('&nbsp;')
+    );
+  };
+
+  const extractCopyTextFromPreformattedHtml = (html: string): string => {
+    const encodedCopyText = html.match(/data-copy-text="([^"]+)"/i)?.[1];
+    if (encodedCopyText) {
+      try {
+        return normalizeCopyText(decodeURIComponent(encodedCopyText));
+      } catch {
+        // Fall through to text extraction when encoded payload is malformed.
+      }
+    }
+
+    if (typeof document !== 'undefined') {
+      const container = document.createElement('div');
+      container.innerHTML = html.replace(/<br\s*\/?>/gi, '\n');
+      return normalizeCopyText(container.textContent || container.innerText || '');
+    }
+
+    return normalizeCopyText(
+      html
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#039;/gi, "'")
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&amp;/gi, '&')
+    );
+  };
+
+  const createZendeskCodePayload = (value: string | object | null | undefined): { displayHtml: string; copyText: string } => {
+    if (isPreformattedZendeskCode(value)) {
+      return {
+        displayHtml: value,
+        copyText: extractCopyTextFromPreformattedHtml(value),
+      };
+    }
+
+    const rawText = serializeJsonForZendesk(value);
+    return {
+      displayHtml: formatCodeTextToZendeskHTML(rawText),
+      copyText: rawText,
+    };
+  };
+
   // 🎨 HTML 생성 함수 (Zendesk 호환)
-  const generateHTML = (): string => {
+  const generateZendeskHTML = (): string => {
     if (!manualData) {
       return '<p>No manual data available. Please send data from Spec, Builder, or Runner tabs.</p>';
     }
 
     const { inputUri, activeMethods, jsonSchema, requestExamples, specifications } = manualData;
+    const displayedActiveMethods = activeMethods?.trim() || endpoint.method || '-';
 
-    // HTML 이스케이프 함수
-    const escapeHtml = (unsafe: string | number | boolean | null): string => {
-      if (unsafe === null || unsafe === undefined) return 'null';
-      if (typeof unsafe === 'boolean') return unsafe.toString();
-      if (typeof unsafe === 'number') return unsafe.toString();
-      return String(unsafe)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    };
-
-    // 🎯 Zendesk 호환 JSON 포맷터 (&nbsp;로 들여쓰기, <br>로 줄바꿈)
-    const formatJsonToZendeskHTML = (jsonStr: string | object | null | undefined, indentLevel = 0): string => {
-      let jsonObj: any;
-      try {
-        jsonObj = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
-      } catch (error) {
-        console.warn('Failed to parse JSON schema, using raw value:', error);
-        return escapeHtml(jsonStr as string);
-      }
-
-      // &nbsp; x 4 per indent level
-      const getIndent = (level: number): string => '&nbsp;'.repeat(level * 4);
-
-      const formatValue = (value: any, level: number): string => {
-        if (value === null) {
-          return `<span style="color: #055bcc; font-weight: bold;">null</span>`;
-        }
-        if (typeof value === 'string') {
-          return `<span style="color: #055bcc;">"${escapeHtml(value)}"</span>`;
-        }
-        if (typeof value === 'number') {
-          return `<span style="color: #0ab66c;">${escapeHtml(value)}</span>`;
-        }
-        if (typeof value === 'boolean') {
-          return `<span style="color: #055bcc; font-weight: bold;">${escapeHtml(value)}</span>`;
-        }
-        if (Array.isArray(value)) {
-          if (value.length === 0) return '[]';
-          const items = value.map(item =>
-            `${getIndent(level + 1)}${formatValue(item, level + 1)}`
-          ).join(',<br>\n');
-          return `[<br>\n${items}<br>\n${getIndent(level)}]`;
-        }
-        if (typeof value === 'object') {
-          const keys = Object.keys(value);
-          if (keys.length === 0) return '{}';
-          const props = keys.map(key =>
-            `${getIndent(level + 1)}<span style="color: #c31b1b;">"${escapeHtml(key)}"</span>: ${formatValue(value[key], level + 1)}`
-          ).join(',<br>\n');
-          return `{<br>\n${props}<br>\n${getIndent(level)}}`;
-        }
-        return escapeHtml(String(value));
-      };
-
-      return formatValue(jsonObj, indentLevel);
-    };
-
-    const currentSchema = formatJsonToZendeskHTML(jsonSchema || manualData.jsonSchemaOriginal || '{}');
+    const schemaPayload = createZendeskCodePayload(jsonSchema || manualData.jsonSchemaOriginal || '{}');
+    const currentSchema = schemaPayload.displayHtml;
 
     // 🎯 Request Examples 생성 (Zendesk 형식)
     let requestExamplesHTML = '';
@@ -199,31 +331,15 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       <strong>Request Examples</strong>
     </h3>
 ${requestExamples.map((ex, idx) => {
-        let exampleJson = ex.code;
-        const isAlreadyHTML = typeof ex.code === 'string' && (
-          ex.code.includes('<span') ||
-          ex.code.includes('<br>') ||
-          ex.code.includes('&nbsp;')
-        );
-
-        if (isAlreadyHTML) {
-          exampleJson = ex.code;
-        } else {
-          try {
-            const parsed = typeof ex.code === 'string' ? JSON.parse(ex.code) : ex.code;
-            exampleJson = formatJsonToZendeskHTML(parsed);
-          } catch {
-            exampleJson = escapeHtml(ex.code);
-          }
-        }
+        const examplePayload = createZendeskCodePayload(ex.code);
         return `    <div class="mgt32" style="margin: 10px;">
       <p class="btn_dropdown mgt4" style="font-size: 15px;">${escapeHtml(ex.title)}</p>
       <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
         <div style="background-color: #f5f7fa;" align="right">
           <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyReq${idx + 1}')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
         </div>
-        <div id="copyReq${idx + 1}" style="font-size: 15px; letter-spacing: 0.01em;">
-          ${exampleJson}
+        <div id="copyReq${idx + 1}" data-copy-text="${encodeURIComponent(normalizeCopyText(examplePayload.copyText))}" style="font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;">
+          ${examplePayload.displayHtml}
         </div>
       </div>
     </div>`;
@@ -240,31 +356,15 @@ ${requestExamples.map((ex, idx) => {
       <strong>Response Examples</strong>
     </h3>
 ${responseExamples.map((ex, idx) => {
-        let exampleJson = ex.code;
-        const isAlreadyHTML = typeof ex.code === 'string' && (
-          ex.code.includes('<span') ||
-          ex.code.includes('<br>') ||
-          ex.code.includes('&nbsp;')
-        );
-
-        if (isAlreadyHTML) {
-          exampleJson = ex.code;
-        } else {
-          try {
-            const parsed = typeof ex.code === 'string' ? JSON.parse(ex.code) : ex.code;
-            exampleJson = formatJsonToZendeskHTML(parsed);
-          } catch {
-            exampleJson = escapeHtml(ex.code);
-          }
-        }
+        const examplePayload = createZendeskCodePayload(ex.code);
         return `    <div class="mgt32" style="margin: 10px;">
       <p class="btn_dropdown mgt4" style="font-size: 15px;">${escapeHtml(ex.title)}</p>
       <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
         <div style="background-color: #f5f7fa;" align="right">
           <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyRes${idx + 1}')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
         </div>
-        <div id="copyRes${idx + 1}" style="font-size: 15px; letter-spacing: 0.01em;">
-          ${exampleJson}
+        <div id="copyRes${idx + 1}" data-copy-text="${encodeURIComponent(normalizeCopyText(examplePayload.copyText))}" style="font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;">
+          ${examplePayload.displayHtml}
         </div>
       </div>
     </div>`;
@@ -274,14 +374,73 @@ ${responseExamples.map((ex, idx) => {
     // 🎯 Examples HTML 결합
     const examplesHTML = requestExamplesHTML + responseExamplesHTML;
 
+    const isAlreadyFormattedSpecificationHTML = !!specifications && (
+      specifications.includes('<table') || specifications.includes('class="table-wrap"')
+    );
+    const hasTopLevelSpecificationsHeading = !!specifications && (
+      specifications.includes('>Specifications<') ||
+      specifications.includes('<strong>Specifications')
+    );
+    const specificationSectionHTML = (() => {
+      if (!specifications) {
+        return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
+      <strong>Specifications</strong>
+    </h3>
+    <p>No specifications available.</p>`;
+      }
+
+      if (hasTopLevelSpecificationsHeading) {
+        return specifications;
+      }
+
+      if (isAlreadyFormattedSpecificationHTML) {
+        return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
+      <strong>Specifications</strong>
+    </h3>
+${specifications}`;
+      }
+
+      return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
+      <strong>Specifications</strong>
+    </h3>
+    <p>${escapeHtml(specifications)}</p>`;
+    })();
+
     // 🎯 Zendesk 호환 HTML 반환 (zd-html-block 래퍼)
     return `<zd-html-block>
   <script>
-    function copyText(elementId) {
-        var text = document.getElementById(elementId).innerText;
-        text = text.replace(/&nbsp;/g, " ");
-        text = text.replace(/ /g, " ");
-        navigator.clipboard.writeText(text);
+    async function copyText(elementId) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+
+      var text = element.getAttribute("data-copy-text");
+      if (text) {
+        try {
+          text = decodeURIComponent(text);
+        } catch (e) {
+          text = element.innerText;
+        }
+      } else {
+        text = element.innerText;
+      }
+
+      text = text.replace(/&nbsp;/g, " ");
+      text = text.replace(/ /g, " ");
+
+      text = text.replace(/\\u00A0/g, " ");
+      text = text.replace(/\\u200B/g, "");
+      text = text.replace(/\\r\\n/g, "\\n");
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
     }
   </script>
   <div>
@@ -318,7 +477,7 @@ ${responseExamples.map((ex, idx) => {
           <tr>
             <th style="padding: 10px 5px 10px 5px;">
               <p style="text-align: center;">
-                <strong>${escapeHtml(activeMethods || 'POST, GET, PUT, DELETE')}</strong>
+                <strong>${escapeHtml(displayedActiveMethods)}</strong>
               </p>
             </th>
           </tr>
@@ -336,7 +495,7 @@ ${responseExamples.map((ex, idx) => {
         <div style="background-color: #f5f7fa;" align="right">
           <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
         </div>
-        <div id="copyTarget1" style="font-size: 15px; letter-spacing: 0.01em;">
+        <div id="copyTarget1" data-copy-text="${encodeURIComponent(normalizeCopyText(schemaPayload.copyText))}" style="font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;">
           ${currentSchema}
         </div>
       </div>
@@ -345,43 +504,82 @@ ${responseExamples.map((ex, idx) => {
     <br>
 ${examplesHTML}
     <br><br>
-${(() => {
-        // specifications가 이미 완전한 Zendesk HTML인지 확인 (table-wrap, <strong>Specifications 포함)
-        const isAlreadyFormattedHTML = specifications &&
-          (specifications.includes('<table') || specifications.includes('class="table-wrap"'));
-        const hasSpecTitle = specifications &&
-          (specifications.includes('>Specifications<') || specifications.includes('<strong>Specifications'));
-
-        if (!specifications) {
-          return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
-      <strong>Specifications</strong>
-    </h3>
-    <p>No specifications available.</p>`;
-        }
-
-        if (isAlreadyFormattedHTML && hasSpecTitle) {
-          // 이미 제목과 테이블이 포함된 완전한 HTML
-          return specifications;
-        }
-
-        if (isAlreadyFormattedHTML) {
-          // 테이블은 있지만 제목이 없는 경우
-          return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
-      <strong>Specifications</strong>
-    </h3>
-${specifications}`;
-        }
-
-        // 일반 텍스트인 경우
-        return `    <h3 id="h_01J4JJ26CHA44WRV3GCHGT1D41">
-      <strong>Specifications</strong>
-    </h3>
-    <p>${escapeHtml(specifications)}</p>`;
-      })()}
+${specificationSectionHTML}
     <br>
     <br>
   </div>
 </zd-html-block>`;
+  };
+
+  const escapeManualHtml = escapeHtml;
+
+  const formatJsonForPre = (jsonStr: string | object | null | undefined): string => {
+    try {
+      const parsed = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
+      return escapeManualHtml(JSON.stringify(parsed, null, 2));
+    } catch {
+      return escapeManualHtml(typeof jsonStr === 'string' ? jsonStr : JSON.stringify(jsonStr ?? {}, null, 2));
+    }
+  };
+
+  const sanitizeZendeskSpecificMarkup = (html: string): string => {
+    return String(html || '')
+      .replace(/<zd-html-block>/gi, '')
+      .replace(/<\/zd-html-block>/gi, '')
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .trim();
+  };
+
+  const generateConfluenceHTML = (): string => {
+    if (!manualData) {
+      return '<p>No manual data available. Please send data from Spec, Builder, or Runner tabs.</p>';
+    }
+
+    const { inputUri, activeMethods, jsonSchema, requestExamples, responseExamples, specifications } = manualData;
+    const displayedActiveMethods = activeMethods?.trim() || endpoint.method || '-';
+    const schemaCode = formatJsonForPre(jsonSchema || manualData.jsonSchemaOriginal || '{}');
+    const cleanedSpecifications = sanitizeZendeskSpecificMarkup(specifications || '');
+    const specificationSection = (() => {
+      if (!cleanedSpecifications) {
+        return '<h2>Specifications</h2><p>No specifications available.</p>';
+      }
+
+      if (cleanedSpecifications.includes('<table')) {
+        return `<h2>Specifications</h2>${cleanedSpecifications}`;
+      }
+
+      return `<h2>Specifications</h2><p>${escapeManualHtml(cleanedSpecifications)}</p>`;
+    })();
+
+    return `
+<div class="confluence-manual" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #172b4d; line-height: 1.6;">
+  <h1>${escapeManualHtml(manualData.title || endpoint.name || 'API Manual')}</h1>
+  <h2>Input URI</h2>
+  <p><code>${escapeManualHtml(inputUri || '{base url} + endpoint')}</code></p>
+  <h2>Active Methods</h2>
+  <p><strong>${escapeManualHtml(displayedActiveMethods)}</strong></p>
+  <h2>JSON Schema</h2>
+  <pre style="background: #f4f5f7; padding: 16px; border-radius: 8px; overflow-x: auto;"><code>${schemaCode}</code></pre>
+  <h2>Request Examples</h2>
+  ${requestExamples && requestExamples.length > 0
+        ? requestExamples.map((ex) => `
+    <h3>${escapeManualHtml(ex.title)}</h3>
+    <pre style="background: #f4f5f7; padding: 16px; border-radius: 8px; overflow-x: auto;"><code>${formatJsonForPre(ex.code)}</code></pre>
+  `).join('\n')
+        : '<p>No request examples available.</p>'}
+  <h2>Response Examples</h2>
+  ${responseExamples && responseExamples.length > 0
+        ? responseExamples.map((ex) => `
+    <h3>${escapeManualHtml(ex.title)}</h3>
+    <pre style="background: #f4f5f7; padding: 16px; border-radius: 8px; overflow-x: auto;"><code>${formatJsonForPre(ex.code)}</code></pre>
+  `).join('\n')
+        : '<p>No response examples available.</p>'}
+  ${specificationSection}
+</div>`.trim();
+  };
+
+  const generateHTML = (): string => {
+    return manualPublisher === 'confluence' ? generateConfluenceHTML() : generateZendeskHTML();
   };
 
   // 📥 Import HTML
@@ -402,6 +600,9 @@ ${specifications}`;
     reader.readAsText(file);
   };
 
+  const editableHTML = editableHTMLByPublisher[manualPublisher];
+  const isHTMLModified = isHTMLModifiedByPublisher[manualPublisher];
+
   // 📤 Export HTML
   const handleExport = () => {
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
@@ -409,7 +610,7 @@ ${specifications}`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${endpoint.name}_manual_${Date.now()}.html`;
+    a.download = `${endpoint.name}_${manualPublisher}_manual_${Date.now()}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -462,7 +663,7 @@ ${specifications}`;
           undefined
         );
       } else {
-        const response = await fetch(`${ZENDESK_SERVER_BASE_URL}/api/zendesk/publish`, {
+        const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/publish`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -500,33 +701,99 @@ ${specifications}`;
     }
   };
 
+  const handleSendToConfluence = async () => {
+    if (!manualData) {
+      toast.error('Manual 데이터가 없습니다. Spec/Builder/Runner에서 먼저 전송하세요.');
+      return;
+    }
+
+    const envStatus = confluenceEnvStatus ?? await loadConfluenceEnvStatus();
+    if (!envStatus?.hasCredentials) {
+      const missingMessage = envStatus?.missingFields?.length
+        ? envStatus.missingFields.join(', ')
+        : 'CONFLUENCE_API_TOKEN';
+      toast.error(`.env에 Confluence 설정이 필요합니다: ${missingMessage}`);
+      return;
+    }
+
+    const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
+    const title = (manualData.title || endpoint.name || '').trim();
+
+    try {
+      setIsConfluenceSending(true);
+      const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/confluence/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          targetInput: confluenceTarget.trim(),
+          body: html,
+          title: title || undefined,
+        }),
+      });
+
+      const result = await response.json().catch(() => null);
+      const payload = result || { success: false, error: `HTTP ${response.status}` };
+      if (!payload.success) {
+        toast.error(`Confluence 전송 실패: ${payload.error || 'Unknown error'}`);
+        return;
+      }
+
+      const modeLabel = payload.data?.mode === 'create' ? '생성' : '업데이트';
+      const pageId = payload.data?.pageId || '(unknown)';
+      const pageUrl = payload.data?.pageUrl || '';
+      if (pageUrl) {
+        setConfluenceTarget(pageUrl);
+      }
+
+      toast.success(`Confluence ${modeLabel} 완료 (Page ${pageId}, Version ${payload.data?.versionNumber || 1})`);
+    } catch (error) {
+      toast.error(`Confluence 전송 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsConfluenceSending(false);
+    }
+  };
+
   // 🎯 Switch to HTML Code mode
   const handleSwitchToCode = () => {
-    // 기존 editableHTML이 없을 때만 generateHTML()로 초기화
-    // 이미 코드가 있으면 유지 (코드가 기준)
     if (!editableHTML) {
-      setEditableHTML(generateHTML());
+      setEditableHTMLByPublisher((prev) => ({
+        ...prev,
+        [manualPublisher]: generateHTML(),
+      }));
     }
     setViewMode('code');
   };
 
   // 🎯 Handle HTML Change
   const handleHTMLChange = (newHTML: string) => {
-    setEditableHTML(newHTML);
-    setIsHTMLModified(true);
+    setEditableHTMLByPublisher((prev) => ({
+      ...prev,
+      [manualPublisher]: newHTML,
+    }));
+    setIsHTMLModifiedByPublisher((prev) => ({
+      ...prev,
+      [manualPublisher]: true,
+    }));
   };
 
   // 🎯 Save HTML Changes
   const handleSaveHTML = () => {
-    // editableHTML을 저장된 HTML로 마크 (isHTMLModified를 false로 하지만 editableHTML은 유지)
-    setIsHTMLModified(false);
-    // 알림 없이 조용히 저장 (사용자 경험 개선)
+    setIsHTMLModifiedByPublisher((prev) => ({
+      ...prev,
+      [manualPublisher]: false,
+    }));
   };
 
   // 🎯 Reset HTML
   const handleResetHTML = () => {
-    setEditableHTML(''); // 빈 문자열로 리셋하여 generateHTML() 사용하도록
-    setIsHTMLModified(false);
+    setEditableHTMLByPublisher((prev) => ({
+      ...prev,
+      [manualPublisher]: '',
+    }));
+    setIsHTMLModifiedByPublisher((prev) => ({
+      ...prev,
+      [manualPublisher]: false,
+    }));
   };
 
   // 🎯 Clear Content (기본 템플릿 유지)
@@ -549,8 +816,14 @@ ${specifications}`;
     });
 
     // HTML 에디터도 리셋
-    setEditableHTML('');
-    setIsHTMLModified(false);
+    setEditableHTMLByPublisher({
+      zendesk: '',
+      confluence: '',
+    });
+    setIsHTMLModifiedByPublisher({
+      zendesk: false,
+      confluence: false,
+    });
   };
 
   // 🎯 htmlContent: editableHTML이 있으면 그것을 사용, 없으면 generateHTML()
@@ -564,19 +837,90 @@ ${specifications}`;
     : hasElectronZendeskSender
       ? 'Loading .env...'
       : 'Server mode (dev:all)';
+  const hasConfluenceSender = typeof window !== 'undefined';
+  const confluenceStatusText = confluenceEnvStatus
+    ? confluenceEnvStatus.hasCredentials
+      ? `${confluenceEnvStatus.baseUrl || 'Base URL 없음'} (${confluenceEnvStatus.authType || 'auth'})`
+      : `Missing: ${confluenceEnvStatus.missingFields.join(', ')}`
+    : 'Loading .env...';
+  const currentTargetValue = manualPublisher === 'zendesk' ? zendeskUrl : confluenceTarget;
+  const currentTargetSetter = manualPublisher === 'zendesk' ? setZendeskUrl : setConfluenceTarget;
+  const currentStatusText = manualPublisher === 'zendesk' ? zendeskStatusText : confluenceStatusText;
+  const isSendingCurrent = manualPublisher === 'zendesk' ? isZendeskSending : isConfluenceSending;
+  const currentHasSender = manualPublisher === 'zendesk' ? hasZendeskSender : hasConfluenceSender;
+  const currentEnvReady = manualPublisher === 'zendesk'
+    ? !!zendeskEnvStatus?.hasCredentials
+    : !!confluenceEnvStatus?.hasCredentials;
+  const handleSendCurrent = () => {
+    if (manualPublisher === 'zendesk') {
+      void handleSendToZendesk();
+      return;
+    }
+
+    void handleSendToConfluence();
+  };
 
   return (
     <div className="flex h-full w-full flex-col bg-zinc-950 relative">
-      {/* Compact Header - All in One Line */}
-      <div className="absolute top-0 left-0 right-0 z-20 px-3 py-2 bg-zinc-900/95 backdrop-blur-md border-b border-zinc-700/50 shadow-lg">
-        <div className="flex items-center gap-3">
-          {/* Title */}
+      <div className="border-b border-zinc-700/50 bg-zinc-900/95 px-3 py-3 backdrop-blur-md shadow-lg">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-end">
+            <div className="min-w-[220px]">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-1">Publisher</div>
+              <Tabs value={manualPublisher} onValueChange={(value) => setManualPublisher(value as ManualPublisher)}>
+                <TabsList className="bg-zinc-800 h-9 p-1 rounded-lg">
+                  <TabsTrigger value="zendesk" className="text-xs">Zendesk</TabsTrigger>
+                  <TabsTrigger value="confluence" className="text-xs">Confluence</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <Label className="text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-1 block">
+                {manualPublisher === 'zendesk' ? 'Zendesk Target' : 'Confluence Target'}
+              </Label>
+              <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                <Input
+                  value={currentTargetValue}
+                  onChange={(e) => currentTargetSetter(e.target.value)}
+                  placeholder={
+                    manualPublisher === 'zendesk'
+                      ? 'Article URL/ID (비우면 기본 Section에 신규 생성)'
+                      : 'Page URL/ID (비우면 기본 Space에 신규 생성)'
+                  }
+                  className="bg-zinc-800 border-zinc-700 h-8 text-xs flex-1 min-w-0"
+                />
+                <span
+                  className={`text-[10px] whitespace-nowrap ${
+                    currentEnvReady ? 'text-emerald-400' : 'text-amber-400'
+                  }`}
+                  title={currentStatusText}
+                >
+                  {currentEnvReady ? 'Env Ready' : 'Env Check'}
+                </span>
+                <Button
+                  size="sm"
+                  onClick={handleSendCurrent}
+                  disabled={isSendingCurrent || !currentHasSender}
+                  title={currentStatusText}
+                  className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-500 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send className="w-3 h-3 mr-1" />
+                  {isSendingCurrent ? 'Sending...' : 'Send'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-b border-zinc-800/80 bg-zinc-900/90 px-3 py-2">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-medium text-white whitespace-nowrap">📖 Manual</h3>
             <div className="h-4 w-px bg-zinc-700" />
           </div>
 
-          {/* View Mode Toggle */}
           <div className="flex items-center gap-1">
             <Button
               size="sm"
@@ -600,7 +944,6 @@ ${specifications}`;
 
           <div className="h-4 w-px bg-zinc-700" />
 
-          {/* Import/Export */}
           <Button size="sm" variant="outline" onClick={handleImport} className="h-7 px-2 text-xs">
             <FileUp className="w-3 h-3 mr-1" />
             Import
@@ -627,47 +970,17 @@ ${specifications}`;
             <Trash2 className="w-3 h-3 mr-1" />
             Clear
           </Button>
-
-          <div className="h-4 w-px bg-zinc-700" />
-
-          {/* Zendesk - Compact */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
-            <Label className="text-xs text-zinc-400 whitespace-nowrap">Zendesk:</Label>
-            <Input
-              value={zendeskUrl}
-              onChange={(e) => setZendeskUrl(e.target.value)}
-              placeholder="Article URL/ID (비우면 기본 Section에 신규 생성)"
-              className="bg-zinc-800 border-zinc-700 h-7 text-xs flex-1 min-w-0"
-            />
-            <span
-              className={`hidden xl:inline text-[10px] whitespace-nowrap ${
-                zendeskEnvStatus?.hasCredentials ? 'text-emerald-400' : 'text-amber-400'
-              }`}
-              title={zendeskStatusText}
-            >
-              {zendeskEnvStatus?.hasCredentials ? 'Env Ready' : 'Env Check'}
-            </span>
-            <Button
-              size="sm"
-              onClick={handleSendToZendesk}
-              disabled={isZendeskSending || !hasZendeskSender}
-              title={zendeskStatusText}
-              className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-500 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Send className="w-3 h-3 mr-1" />
-              {isZendeskSending ? 'Sending...' : 'Send'}
-            </Button>
-          </div>
         </div>
       </div>
 
-      {/* Content Area - Full Height */}
       <div className="flex-1 h-full w-full overflow-hidden">
+        <div className="flex h-full flex-col overflow-hidden">
+          <div className="flex-1 overflow-hidden">
         {viewMode === 'preview' ? (
           <div className="relative h-full">
             {/* Zoom 컨트롤 바 - Floating below header */}
             {manualData && (
-              <div className="absolute top-12 left-0 right-0 z-30 flex items-center justify-center gap-3 px-6 pointer-events-none">
+              <div className="absolute top-3 left-0 right-0 z-30 flex items-center justify-center gap-3 px-6 pointer-events-none">
                 {/* Zoom Controls */}
                 <div className="bg-zinc-900/95 backdrop-blur-sm border border-zinc-700 rounded-lg px-2 py-1.5 flex items-center gap-2 shadow-lg pointer-events-auto">
                   <Button
@@ -719,7 +1032,7 @@ ${specifications}`;
             >
               <ScrollArea className="h-full w-full">
                 <div
-                  className="p-6 pt-24"
+                  className="p-6 pt-6"
                   style={{ cursor: 'default' }}
                 >
                   {!manualData ? (
@@ -760,7 +1073,7 @@ ${specifications}`;
           </div>
         ) : (
           <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
-            <div className="p-3 border-b border-zinc-800 bg-zinc-900 flex-shrink-0 mt-12">
+            <div className="p-3 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
               <h3 className="text-xs font-medium">Editable HTML Code</h3>
               <p className="text-xs text-zinc-500 mt-0.5">
                 {isHTMLModified ? '✏️ Modified - Click Save to apply changes' : '✅ Ready to edit'}
@@ -842,6 +1155,8 @@ ${specifications}`;
             </div>
           </div>
         )}
+          </div>
+        </div>
       </div>
     </div>
   );

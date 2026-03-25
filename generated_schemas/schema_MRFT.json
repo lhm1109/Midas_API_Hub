@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "description": "Design Parameters - Moment Redistribution Factor (MRFT). Supported methods: GET, PUT, DELETE.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Object keyed by member ID strings (e.g., \"859\"), where each entry represents a moment redistribution factor assigned to the member.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "FACTOR": {
+              "type": "number",
+              "description": "Moment redistribution factor assigned to the member.",
+              "default": 1.0,
+              "x-ui": {
+                "label": "Moment Redistribution Factor",
+                "order": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

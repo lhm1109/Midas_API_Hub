@@ -1,0 +1,250 @@
+{
+  "title": "ResultantForceDiagram",
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "CURRENT_MODE",
+        "LOAD_CASE_COMB",
+        "OPTIONS"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "CURRENT_MODE": {
+          "type": "string",
+          "description": "Result graphic mode token for resultant force diagram display.",
+          "x-ui": {
+            "hint": "The 017 example uses 'Resultant Force Diagram', while related docs also reference BeamDiagrams/Beam Diagrams.",
+            "label": "Result Graphic Mode",
+            "order": 1
+          }
+        },
+        "LOAD_CASE_COMB": {
+          "type": "object",
+          "description": "Load case and combination settings.",
+          "required": [
+            "TYPE",
+            "NAME"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "description": "Load case type.",
+              "enum": [
+                "ST",
+                "CS",
+                "RS",
+                "TH",
+                "MV",
+                "SM",
+                "CB"
+              ],
+              "x-ui": {
+                "label": "Load Case",
+                "order": 1
+              }
+            },
+            "MINMAX": {
+              "type": "string",
+              "description": "Load type.",
+              "enum": [
+                "Max",
+                "Min",
+                "All"
+              ],
+              "default": "Max",
+              "x-ui": {
+                "label": "Load Type",
+                "order": 2
+              }
+            },
+            "NAME": {
+              "type": "string",
+              "description": "Load name.",
+              "x-ui": {
+                "label": "Load Name",
+                "order": 3
+              }
+            },
+            "STEP_INDEX": {
+              "type": "integer",
+              "description": "Step index of load case when applicable.",
+              "x-ui": {
+                "label": "Step of Load Case",
+                "order": 4
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Load Case and Combinations",
+            "order": 2
+          }
+        },
+        "COMPONENTS": {
+          "type": "object",
+          "description": "Resultant force component selection.",
+          "required": [
+            "COMP"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "COMP": {
+              "type": "string",
+              "description": "Component name.",
+              "enum": [
+                "Fx",
+                "Fy",
+                "Fz",
+                "Mx",
+                "My",
+                "Mz"
+              ],
+              "default": "Fx",
+              "x-ui": {
+                "label": "Components Name",
+                "order": 1
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Components",
+            "order": 3
+          }
+        },
+        "OPTIONS": {
+          "type": "object",
+          "description": "Display options for the resultant force diagram.",
+          "additionalProperties": false,
+          "properties": {
+            "SCALE_FACTOR": {
+              "type": "number",
+              "description": "Scale factor.",
+              "default": 1,
+              "x-ui": {
+                "label": "Scale Factor",
+                "order": 1
+              }
+            },
+            "VALUES": {
+              "type": "object",
+              "description": "Values output details.",
+              "required": [
+                "OPT_CHECK"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "OPT_CHECK": {
+                  "type": "boolean",
+                  "description": "Enable values output.",
+                  "x-ui": {
+                    "label": "Values",
+                    "order": 1
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Values Output Details",
+                "order": 2
+              }
+            },
+            "OPT_REVERSE": {
+              "type": "boolean",
+              "description": "Reverse display direction.",
+              "default": false,
+              "x-ui": {
+                "label": "Reverse",
+                "order": 3
+              }
+            },
+            "OPT_TOP_ALIGNMENT": {
+              "type": "boolean",
+              "description": "Top alignment option.",
+              "default": false,
+              "x-ui": {
+                "label": "Top Alignment",
+                "order": 4
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Options",
+            "order": 4
+          }
+        },
+        "OUTPUT_SECT_LOCATION": {
+          "type": "object",
+          "description": "Output section location. Available when values output is enabled.",
+          "required": [
+            "OPT_I_J_ALL"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "OPT_I_J_ALL": {
+              "type": "string",
+              "description": "Output section location option.",
+              "enum": [
+                "I",
+                "J",
+                "All"
+              ],
+              "default": "I",
+              "x-ui": {
+                "label": "Available Options",
+                "order": 1
+              },
+              "x-optional-when": {
+                "OPTIONS.VALUES.OPT_CHECK": true
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Output Section Location",
+            "order": 5
+          },
+          "x-optional-when": {
+            "OPTIONS.VALUES.OPT_CHECK": true
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "OUTPUT_SECT_LOCATION"
+            ]
+          },
+          "then": {
+            "properties": {
+              "OPTIONS": {
+                "required": [
+                  "VALUES"
+                ],
+                "properties": {
+                  "VALUES": {
+                    "required": [
+                      "OPT_CHECK"
+                    ],
+                    "properties": {
+                      "OPT_CHECK": {
+                        "const": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "x-ui": {
+        "label": "Argument"
+      }
+    }
+  }
+}

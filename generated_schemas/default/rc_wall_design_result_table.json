@@ -24,6 +24,52 @@
             "order": 1
           }
         },
+        "WALL_IDS": {
+          "type": "object",
+          "description": "Wall IDs to filter. If omitted, all walls are included.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each Wall ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each Wall ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify Wall ID Range (e.g., '1to20')",
+              "x-ui": {
+                "label": "Specify Wall ID Range",
+                "placeholder": "e.g. 1to20",
+                "order": 2
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Wall IDs",
+            "order": 2
+          }
+        },
+        "STORY": {
+          "type": "array",
+          "description": "List of story names to include. If omitted, all stories are included.",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "label": "Stories",
+            "placeholder": "e.g. B1F, 1F, 2F",
+            "order": 3
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "WID+STORY"
+          }
+        },
         "PRI_SORT": {
           "type": "integer",
           "description": "Sorting criteria for WID+STORY output (by WID or Story)",

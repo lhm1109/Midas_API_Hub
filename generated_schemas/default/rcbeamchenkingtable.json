@@ -8,10 +8,78 @@
     "Argument": {
       "type": "object",
       "required": [
-        "TABLE_TYPE"
+        "TABLE_TYPE",
+        "REPORT_MODE"
       ],
       "additionalProperties": false,
       "properties": {
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "Result Table Type",
+          "enum": [
+            "MEMB",
+            "PROP"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          }
+        },
+        "ELEMS": {
+          "type": "object",
+          "description": "Element No. Input. Optional when TABLE_TYPE is MEMB.",
+          "additionalProperties": false,
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              },
+              "x-ui": {
+                "label": "Specify Each ID",
+                "order": 1
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to160')",
+              "x-ui": {
+                "label": "Specify ID Range",
+                "placeholder": "e.g. 1to160",
+                "order": 2
+              }
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name",
+              "x-ui": {
+                "label": "Structure Group Name",
+                "order": 3
+              }
+            }
+          },
+          "x-ui": {
+            "label": "Element Numbers",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "MEMB"
+          }
+        },
+        "SECTIONS": {
+          "type": "array",
+          "description": "List of section numbers to include in the table. Optional when TABLE_TYPE is PROP.",
+          "items": {
+            "type": "integer"
+          },
+          "x-ui": {
+            "label": "Section Numbers",
+            "order": 2
+          },
+          "x-optional-when": {
+            "TABLE_TYPE": "PROP"
+          }
+        },
         "PRI_SORT": {
           "type": "integer",
           "description": "Sorting criteria for member-based output (by Section No. or Member No.)",
@@ -33,6 +101,19 @@
           },
           "x-optional-when": {
             "TABLE_TYPE": "MEMB"
+          }
+        },
+        "REPORT_MODE": {
+          "type": "string",
+          "description": "Table layout mode (components differ by mode)",
+          "enum": [
+            "STRENGTH",
+            "REBAR_DETAIL"
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Report Mode",
+            "order": 1
           }
         },
         "RESULT": {
@@ -68,48 +149,7 @@
             "label": "Table Name"
           }
         },
-        "TABLE_TYPE": {
-          "type": "string",
-          "description": "Result Table Type",
-          "enum": [
-            "MEMB",
-            "PROP"
-          ],
-          "x-ui": {
-            "label": "Table Type"
-          }
-        },
-        "REPORT_MODE_MEMB": {
-          "type": "string",
-          "description": "Table layout mode (components differ by mode)",
-          "enum": [
-            "STRENGTH",
-            "REBAR_DETAIL"
-          ],
-          "x-ui": {
-            "component": "RadioGroup",
-            "label": "Report Mode",
-            "order": 1
-          },
-          "x-required-when": {
-            "TABLE_TYPE": "MEMB"
-          }
-        },
-        "REPORT_MODE_PROP": {
-          "type": "string",
-          "description": "Table layout mode (components differ by mode)",
-          "enum": [
-            "STRENGTH"
-          ],
-          "x-ui": {
-            "component": "RadioGroup",
-            "label": "Report Mode",
-            "order": 1
-          },
-          "x-required-when": {
-            "TABLE_TYPE": "PROP"
-          }
-        },
+
         "EXPORT_PATH": {
           "type": "string",
           "description": "Result Table Save Path",
@@ -210,7 +250,7 @@
             "label": "Components"
           },
           "x-enum-labels-by-type": {
-            "MEMB": {
+            "RCBEAMCHECKING:STRENGTH": {
               "MEMB": "Element number",
               "SECT": "Section property number",
               "Span": "Length of beam member",
@@ -223,7 +263,7 @@
               "fy": "Design yield strength of main rebars",
               "fys": "Design yield strength of shear rebars",
               "POS": "Section design points (I, M, J). M reflects max values at 1/4, 1/2 & 3/4 points.",
-              "CHK": "Status of strength checking results (combined symbols like K, NPV, N**, etc.)",
+              "CHK": "Status of strength checking results",
               "Neg_Rebar": "Negative Moment Strength - Rebar",
               "Neg_As_use": "Negative Moment Strength - As.use",
               "Neg_Mu": "Negative Moment Strength - N(-) Mu",
@@ -241,52 +281,11 @@
               "Sh_LCB": "Shear Strength - LCB",
               "Sh_phiVc": "Shear Strength - φVc",
               "Rat-V": "Shear Strength - Ratio (Vu/φVc), red if > 1.0"
-            },
-            "PROP": {
-              "MEMB": "Element number (0 for Property-based)",
-              "SECT": "Section property number",
-              "Span": "Length of beam member",
-              "Section": "Symbol for sectional shape (SB: Rectangular, TEE: T-shape)",
-              "Bc": "Width of beam member",
-              "Hc": "Height (depth) of beam member",
-              "bf": "Width of the flange of T-shape section",
-              "hf": "Thickness of the flange of T-shape section",
-              "fck": "Design compressive strength of concrete (f'c)",
-              "fy": "Design yield strength of main rebars",
-              "fys": "Design yield strength of shear rebars",
-              "POS": "Section design points (I, M, J). M reflects max values at 1/4, 1/2 & 3/4 points.",
-              "CHK": "Status of strength checking results (combined symbols like K, NPV, N**, etc.)",
-              "Neg_Rebar": "Negative Moment Strength - Rebar (maximum for Property)",
-              "Neg_As_use": "Negative Moment Strength - As.use (maximum for Property)",
-              "Neg_Mu": "Negative Moment Strength - N(-) Mu (maximum for Property)",
-              "Neg_LCB": "Negative Moment Strength - LCB",
-              "Neg_phiMn": "Negative Moment Strength - N(-) φMn",
-              "Rat-N": "Negative Moment Strength - Ratio (maximum for Property)",
-              "Pos_Rebar": "Positive Moment Strength - Rebar (maximum for Property)",
-              "Pos_As_use": "Positive Moment Strength - As.use (maximum for Property)",
-              "Pos_Mu": "Positive Moment Strength - P(+) Mu (maximum for Property)",
-              "Pos_LCB": "Positive Moment Strength - LCB",
-              "Pos_phiMn": "Positive Moment Strength - P(+) φMn",
-              "Rat-P": "Positive Moment Strength - Ratio (maximum for Property)",
-              "Sh_Stirrup": "Shear Strength - Stirrup",
-              "Sh_Vu": "Shear Strength - Vu (maximum for Property)",
-              "Sh_LCB": "Shear Strength - LCB",
-              "Sh_phiVc": "Shear Strength - φVc",
-              "Rat-V": "Shear Strength - Ratio (maximum for Property)"
             }
           },
-          "x-optional-when": [
-            {
-              "condition": {
-                "REPORT_MODE_MEMB": "STRENGTH"
-              }
-            },
-            {
-              "condition": {
-                "REPORT_MODE_PROP": "STRENGTH"
-              }
-            }
-          ]
+          "x-optional-when": {
+            "REPORT_MODE": "STRENGTH"
+          }
         },
         "COMPONENTS_REBAR_DETAIL": {
           "type": "array",
@@ -327,7 +326,7 @@
             "label": "Components"
           },
           "x-enum-labels-by-type": {
-            "MEMB": {
+            "RCBEAMCHECKING:REBAR_DETAIL": {
               "MEMB": "Element number",
               "SECT": "Section property number",
               "Span": "Length of beam member",
@@ -340,7 +339,7 @@
               "fy": "Design yield strength of main rebars",
               "fys": "Design yield strength of shear rebars",
               "POS": "Section design points (I, M, J). M reflects max values at 1/4, 1/2 & 3/4 points.",
-              "CHK": "Status of checking results (combined symbols like K, NPV, N**, etc.)",
+              "CHK": "Status of checking results",
               "Top_rho_max": "Main Rebar (Top) - ρ.max (%)",
               "Top_rho_use": "Main Rebar (Top) - ρ.use (%)",
               "Top_rho_min": "Main Rebar (Top) - ρ.min (%)",
@@ -355,39 +354,10 @@
               "St_Av_min": "Stirrup - Av.min",
               "St_s_max": "Stirrup - s.max",
               "St_s_use": "Stirrup - s.use"
-            },
-            "PROP": {
-              "MEMB": "Element number (0 for Property-based)",
-              "SECT": "Section property number",
-              "Span": "Length of beam member",
-              "Section": "Symbol for sectional shape (SB: Rectangular, TEE: T-shape)",
-              "Bc": "Width of beam member",
-              "Hc": "Height (depth) of beam member",
-              "bf": "Width of the flange of T-shape section",
-              "hf": "Thickness of the flange of T-shape section",
-              "fck": "Design compressive strength of concrete (f'c)",
-              "fy": "Design yield strength of main rebars",
-              "fys": "Design yield strength of shear rebars",
-              "POS": "Section design points (I, M, J). M reflects max values at 1/4, 1/2 & 3/4 points.",
-              "CHK": "Status of checking results (combined symbols like K, NPV, N**, etc.)",
-              "Top_rho_max": "Main Rebar (Top) - ρ.max (%) (maximum for Property)",
-              "Top_rho_use": "Main Rebar (Top) - ρ.use (%) (maximum for Property)",
-              "Top_rho_min": "Main Rebar (Top) - ρ.min (%)",
-              "Top_s_max": "Main Rebar (Top) - s.max",
-              "Top_s_use": "Main Rebar (Top) - s.use",
-              "Bot_rho_max": "Main Rebar (Bottom) - ρ.max (%) (maximum for Property)",
-              "Bot_rho_use": "Main Rebar (Bottom) - ρ.use (%) (maximum for Property)",
-              "Bot_rho_min": "Main Rebar (Bottom) - ρ.min (%)",
-              "Bot_s_max": "Main Rebar (Bottom) - s.max",
-              "Bot_s_use": "Main Rebar (Bottom) - s.use",
-              "St_Av_use": "Stirrup - Av.use (maximum for Property)",
-              "St_Av_min": "Stirrup - Av.min",
-              "St_s_max": "Stirrup - s.max",
-              "St_s_use": "Stirrup - s.use"
             }
           },
           "x-optional-when": {
-            "REPORT_MODE_MEMB": "REBAR_DETAIL"
+            "REPORT_MODE": "REBAR_DETAIL"
           }
         }
       }
