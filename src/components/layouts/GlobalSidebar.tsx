@@ -1,10 +1,20 @@
-import { Gem, FolderOpen, History, Bug, Settings, BookOpen, PackageOpen, Paintbrush, BarChart3, Terminal, Database } from 'lucide-react';
+import { Gem, FolderOpen, History, Bug, Settings, BookOpen, PackageOpen, Paintbrush, BarChart3, Terminal, Database, Library } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface GlobalSidebarProps {
-  activeView: 'terminal' | 'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database';
-  onViewChange: (view: 'terminal' | 'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database') => void;
+  activeView:
+    | 'terminal'
+    | 'manager'
+    | 'projects'
+    | 'manualHub'
+    | 'history'
+    | 'docs'
+    | 'debug'
+    | 'schema'
+    | 'builder'
+    | 'database';
+  onViewChange: (view: GlobalSidebarProps['activeView']) => void;
   onSettingsClick: () => void;
 }
 
@@ -82,6 +92,27 @@ export function GlobalSidebar({ activeView, onViewChange, onSettingsClick }: Glo
             </TooltipTrigger>
             <TooltipContent side="right">
               <p>Projects</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`w-10 h-10 ${activeView === 'manualHub'
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                    }`}
+                  onClick={() => onViewChange('manualHub')}
+                >
+                  <Library className="w-5 h-5" />
+                </Button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Manual Hub</p>
             </TooltipContent>
           </Tooltip>
 

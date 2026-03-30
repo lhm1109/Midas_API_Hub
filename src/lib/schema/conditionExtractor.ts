@@ -32,6 +32,67 @@ export interface FieldConditionInfo {
   group: string | undefined;
 }
 
+function getFieldLeafKey(field: EnhancedField): string {
+  const rawKey = String(field.key || '');
+  const segments = rawKey.split('.');
+  return (segments[segments.length - 1] || rawKey).replace(/\[\]/g, '');
+}
+
+function serializeConditionValue(value: unknown): string {
+  if (typeof value === 'string') return value;
+  return JSON.stringify(value);
+}
+
+function buildConditionKey(condition: Record<string, unknown>): string {
+  return Object.entries(condition)
+    .map(([key, value]) => `${key}:${value}`)
+    .join('|');
+}
+
+function extractDirectSimpleRequiredCondition(field: EnhancedField): {
+  axisField: string;
+  values: unknown[];
+} | null {
+  const fieldAny = field as any;
+  const requiredWhen = fieldAny['x-required-when'];
+
+  if (!requiredWhen || Array.isArray(requiredWhen) || typeof requiredWhen !== 'object') {
+    return null;
+  }
+
+  const entries = Object.entries(requiredWhen as Record<string, unknown>);
+  if (entries.length !== 1) {
+    return null;
+  }
+
+  const [axisField, rawValue] = entries[0];
+  const values = Array.isArray(rawValue) ? rawValue : [rawValue];
+
+  if (values.length === 0) {
+    return null;
+  }
+
+  return { axisField, values };
+}
+
+function createSyntheticConditionInfo(
+  type: 'x-required-when' | 'x-optional-when',
+  axisField: string,
+  axisValue: unknown
+): FieldCondition {
+  const marker = DEFAULT_CONDITIONAL_MARKERS[type];
+  const condition = { [axisField]: axisValue };
+
+  return {
+    type,
+    label: marker.label,
+    icon: marker.icon,
+    color: marker.color,
+    value: condition,
+    conditionText: formatConditionText(condition),
+  };
+}
+
 /**
  * 조건 마커 스타일 기본값 (YAML에서 오버라이드 가능)
  * @see schema_definitions/{psdSet}/{schemaType}/ui.yaml - legacyMarkers (deprecated)
@@ -310,8 +371,85 @@ export function groupFieldsByCondition(
 } {
   const fieldGroups = new Map<string, Array<{ field: EnhancedField; conditionInfo: FieldCondition }>>();
   const noConditionFields: Array<{ field: EnhancedField; conditionInfo: null }> = [];
+  const handledFields = new Set<EnhancedField>();
+
+  const supplementalGroups = new Map<string, Array<{ field: EnhancedField; conditionInfo: FieldCondition }>>();
+  const expandableAxes = new Map<string, Array<{ field: EnhancedField; values: unknown[] }>>();
 
   for (const field of fields) {
+    if (!(field as any)._injectedRequiredWhen) {
+      continue;
+    }
+
+    const simpleCondition = extractDirectSimpleRequiredCondition(field);
+    if (!simpleCondition) {
+      continue;
+    }
+
+    if (!expandableAxes.has(simpleCondition.axisField)) {
+      expandableAxes.set(simpleCondition.axisField, []);
+    }
+
+    expandableAxes.get(simpleCondition.axisField)!.push({
+      field,
+      values: simpleCondition.values,
+    });
+  }
+
+  for (const [axisField, members] of expandableAxes.entries()) {
+    const axisValueMap = new Map<string, unknown>();
+
+    const controllerField = fields.find((field) => {
+      const fieldAny = field as any;
+      return getFieldLeafKey(field) === axisField && Array.isArray(fieldAny.enum) && fieldAny.enum.length > 0;
+    });
+
+    const controllerValues = Array.isArray((controllerField as any)?.enum) ? (controllerField as any).enum : [];
+    controllerValues.forEach((value: unknown) => {
+      axisValueMap.set(serializeConditionValue(value), value);
+    });
+
+    members.forEach(({ values }) => {
+      values.forEach((value) => {
+        axisValueMap.set(serializeConditionValue(value), value);
+      });
+    });
+
+    const axisValues = Array.from(axisValueMap.values());
+    if (axisValues.length < 2) {
+      continue;
+    }
+
+    members.forEach(({ field }) => handledFields.add(field));
+
+    axisValues.forEach((axisValue) => {
+      const axisValueKey = serializeConditionValue(axisValue);
+      const condition = { [axisField]: axisValue };
+      const conditionGroupKey = buildConditionKey(condition);
+
+      if (!supplementalGroups.has(conditionGroupKey)) {
+        supplementalGroups.set(conditionGroupKey, []);
+      }
+
+      members.forEach(({ field, values }) => {
+        const isRequiredForValue = values.some((value) => serializeConditionValue(value) === axisValueKey);
+        supplementalGroups.get(conditionGroupKey)!.push({
+          field,
+          conditionInfo: createSyntheticConditionInfo(
+            isRequiredForValue ? 'x-required-when' : 'x-optional-when',
+            axisField,
+            axisValue
+          ),
+        });
+      });
+    });
+  }
+
+  for (const field of fields) {
+    if (handledFields.has(field)) {
+      continue;
+    }
+
     const info = fieldInfoMap.get(field)!;
 
     if (info.conditionKey && info.conditionInfo) {
@@ -325,6 +463,13 @@ export function groupFieldsByCondition(
     } else {
       noConditionFields.push({ field, conditionInfo: null });
     }
+  }
+
+  for (const [conditionKey, entries] of supplementalGroups.entries()) {
+    if (!fieldGroups.has(conditionKey)) {
+      fieldGroups.set(conditionKey, []);
+    }
+    fieldGroups.get(conditionKey)!.push(...entries);
   }
 
   return { fieldGroups, noConditionFields };

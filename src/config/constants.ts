@@ -19,6 +19,12 @@ export const DEFAULT_SETTINGS = {
   ),
 } as const;
 
+/** Manual Hub Site 인덱스 기본 로컬 경로 (Settings 기본값과 동일) */
+export const DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_KO =
+  'C:\\MIDAS\\code\\apiverification\\api_docs_zendesk\\manual_list_ko.html';
+export const DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_EN =
+  'C:\\MIDAS\\code\\apiverification\\api_docs_zendesk\\manual_list_en.html';
+
 export const ROUTES = {
   PROJECTS: 'projects',
   HISTORY: 'history',

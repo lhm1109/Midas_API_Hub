@@ -7,7 +7,7 @@ import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
 import { useAppStore } from '@/store/useAppStore';
 import { apiClient } from '@/lib/api-client';
-import type { ManualData, Settings } from '@/types';
+import type { ApiGroup, ApiProduct, ManualData, Settings } from '@/types';
 import { toast } from 'sonner';
 import {
   resolveActiveSchema,
@@ -22,7 +22,6 @@ import { generateHTMLDocument } from '@/lib/schema/tableGenerator';
 import { DynamicTableRenderer } from '@/lib/rendering/dynamicTableRenderer';
 import { loadCachedDefinition, type TableDefinition, type DefinitionType } from '@/lib/rendering/definitionLoader';
 import { generateHTMLTable, type TableParameter } from '@/lib/rendering/tableToHTML';
-import { useEndpoints } from '@/hooks/useEndpoints';
 import { getPSDForProduct } from '@/config/psdMapping';
 import {
   collectFieldConditionInfo,
@@ -39,6 +38,7 @@ interface SpecTabProps {
     method: string;
     path: string;
   };
+  products: ApiProduct[];
   settings?: Settings;
 }
 
@@ -847,7 +847,7 @@ const mergeRequestResponseSchemas = (
   };
 };
 
-export function SpecTab({ endpoint, settings }: SpecTabProps) {
+export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
   const {
     setManualData,
     manualData,
@@ -860,9 +860,17 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     saveCurrentVersion,
   } = useAppStore();
 
-  // 🔥 제품 ID로 PSD 설정 가져오기 (로컬 매핑)
-  const { endpoints: products } = useEndpoints();
-  const currentProduct = products.find(p => p.id === (endpoint as any).product);
+  const currentProduct = useMemo(() => {
+    const findProductByEndpoint = (groups: ApiGroup[]): boolean => {
+      return groups.some((group) =>
+        group.endpoints.some((candidate) => candidate.id === endpoint.id) ||
+        (group.subgroups.length > 0 && findProductByEndpoint(group.subgroups))
+      );
+    };
+
+    return products.find((product) => findProductByEndpoint(product.groups));
+  }, [endpoint.id, products]);
+
   const productId = (endpoint as any).product || currentProduct?.id;
 
   // PSD 매핑 (로컬 관리)
@@ -1253,6 +1261,59 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
     return formatRequiredStatus(field?.required);
   };
 
+  const getConditionScopedRequiredLabel = (
+    field: any,
+    conditionType?: string | null,
+    inheritedConditional: boolean = false
+  ): string => {
+    if (conditionType === 'x-required-when') {
+      return 'Required';
+    }
+
+    if (conditionType === 'x-optional-when') {
+      return 'Optional';
+    }
+
+    return getRequiredLabel(field, inheritedConditional);
+  };
+
+  const getConditionSectionLabel = (
+    conditionInfo: { type?: string; conditionText?: string } | null | undefined,
+    fallbackKey: string
+  ): string => {
+    const conditionText = conditionInfo?.conditionText || fallbackKey;
+    return `When ${conditionText}`;
+  };
+
+  const finalizeRequiredLabel = (
+    currentLabel: string,
+    field: any,
+    conditionType?: string | null
+  ): string => {
+    if (conditionType === 'x-required-when') {
+      return 'Required';
+    }
+
+    if (conditionType === 'x-optional-when') {
+      return 'Optional';
+    }
+
+    const requiredStatuses = Object.values(field?.required || {});
+    const hasRequired = requiredStatuses.some((status) => status === 'required');
+    const hasOptional = requiredStatuses.some((status) => status === 'optional');
+    const hasConditional = requiredStatuses.some((status) => status === 'conditional');
+
+    if (hasConditional || (hasRequired && hasOptional)) {
+      return 'Conditional';
+    }
+
+    if (hasRequired) {
+      return 'Required';
+    }
+
+    return currentLabel;
+  };
+
   const getWrapperKey = (schema: any) => {
     if (!schema || typeof schema !== 'object') return null;
     const props = schema?.properties;
@@ -1486,13 +1547,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                   for (const [conditionKey, greatGrandchildrenWithCondition] of greatGrandchildGroups) {
                     const { conditionInfo } = greatGrandchildrenWithCondition[0];
-                    const isRequired = conditionInfo?.type === 'x-required-when';
-                    const parts = conditionKey.split(':');
-                    const conditionName = parts[0];
-                    const conditionValue = parts.slice(1).join(':');
-                    const conditionText = isRequired
-                      ? `Required (When "${conditionName}" is ${conditionValue})`
-                      : `Optional (When "${conditionName}" is ${conditionValue})`;
+                    const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 
                     mappedGreatGrandchildren.push({
                       no: '', name: '', type: 'section-header',
@@ -1500,14 +1555,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       default: '', description: '', required: '',
                     });
 
-                    for (const { field: greatGrandchild } of greatGrandchildrenWithCondition) {
+                    for (const { field: greatGrandchild, conditionInfo: fieldConditionInfo } of greatGrandchildrenWithCondition) {
                       mappedGreatGrandchildren.push({
                         no: `${grandParentNo}.${greatGrandchildNo++}`,
                         name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
                         type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
                         default: formatDefaultValue(greatGrandchild.default),
                         description: buildFieldDescription(greatGrandchild, tableDefinition),
-                        required: getRequiredLabel(greatGrandchild, inheritedConditionalForGreat),
+                        required: getConditionScopedRequiredLabel(greatGrandchild, fieldConditionInfo?.type, inheritedConditionalForGreat),
                       });
                     }
                   }
@@ -1565,13 +1620,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                 for (const [conditionKey, grandchildrenWithCondition] of grandchildGroups) {
                   const { conditionInfo } = grandchildrenWithCondition[0];
-                  const isRequired = conditionInfo?.type === 'x-required-when';
-                  const parts = conditionKey.split(':');
-                  const conditionName = parts[0];
-                  const conditionValue = parts.slice(1).join(':');
-                  const conditionText = isRequired
-                    ? `Required (When "${conditionName}" is ${conditionValue})`
-                    : `Optional (When "${conditionName}" is ${conditionValue})`;
+                  const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 
                   mappedGrandchildren.push({
                     no: '', name: '', type: 'section-header',
@@ -1579,14 +1628,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     default: '', description: '', required: '',
                   });
 
-                  for (const { field: grandchild } of grandchildrenWithCondition) {
+                  for (const { field: grandchild, conditionInfo: fieldConditionInfo } of grandchildrenWithCondition) {
                     const mappedGrandchild: any = {
                       no: `${parentNo}.${grandchildNo++}`,
                       name: grandchild.key.split('.').pop() || grandchild.key,
                       type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
                       default: formatDefaultValue(grandchild.default),
                       description: buildFieldDescription(grandchild, tableDefinition),
-                      required: getRequiredLabel(grandchild, inheritedConditional),
+                      required: getConditionScopedRequiredLabel(grandchild, fieldConditionInfo?.type, inheritedConditional),
                     };
 
                     if (grandchild.children && grandchild.children.length > 0) {
@@ -1634,16 +1683,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
               for (const [conditionKey, childrenWithCondition] of childGroups) {
                 // 조건 정보 가져오기
                 const { conditionInfo } = childrenWithCondition[0];
-                const isRequired = conditionInfo?.type === 'x-required-when';
-                
-                // 조건 키에서 이름과 값 추출
-                const parts = conditionKey.split(':');
-                const conditionName = parts[0];
-                const conditionValue = parts.slice(1).join(':');
-                
-                const conditionText = isRequired
-                  ? `Required (When "${conditionName}" is ${conditionValue})`
-                  : `Optional (When "${conditionName}" is ${conditionValue})`;
+                const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 
                 // section-header 추가
                 param.children.push({
@@ -1653,7 +1693,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                 });
 
                 // 조건에 맞는 children 추가
-                for (const { field: child } of childrenWithCondition) {
+                for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
                   const currentNo = childNo++;
                   const mappedChild: any = {
                     no: `${rowNumber - 1}.${currentNo}`,
@@ -1661,7 +1701,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                     default: formatDefaultValue(child.default),
                     description: buildFieldDescription(child, tableDefinition),
-                    required: getRequiredLabel(child, parentConditional),
+                    required: getConditionScopedRequiredLabel(child, fieldConditionInfo?.type, parentConditional),
                   };
 
                   // 🔥 3-depth: Grandchildren mapping
@@ -1688,19 +1728,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
             // 🔥 Description 빌드 (모듈화된 함수 사용)
             param.description = buildFieldDescription(field, tableDefinition);
-
-            // 🔥 Required 상태 재계산 (TYPE별 다른 상태가 있는 경우)
-            const requiredStatuses = Object.values(field.required);
-            const hasRequired = requiredStatuses.some(s => s === 'required');
-            const hasOptional = requiredStatuses.some(s => s === 'optional');
-            const hasConditional = requiredStatuses.some(s => s === 'conditional');
-
-            // 조건부 required 또는 TYPE별로 다른 경우 Conditional로 표시
-            if (hasConditional || (hasRequired && hasOptional)) {
-              param.required = 'Conditional';
-            } else if (hasRequired) {
-              param.required = 'Required';
-            }
+            param.required = finalizeRequiredLabel(param.required, field);
 
             params.push(param);
           }
@@ -1709,12 +1737,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
           for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
             // 조건 정보 가져오기
             const conditionInfo = fieldsWithCondition[0].conditionInfo;
-            const isRequired = conditionInfo?.type === 'x-required-when';
-            
-            // 조건 헤더 추가
-            const conditionText = isRequired
-              ? `Required (When ${conditionInfo?.conditionText || conditionKey})`
-              : `Optional (When ${conditionInfo?.conditionText || conditionKey})`;
+            const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
             
             params.push({
               no: '',
@@ -1727,14 +1750,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
             });
 
             // 해당 조건의 필드들 렌더링
-            for (const { field } of fieldsWithCondition) {
+            for (const { field, conditionInfo: fieldConditionInfo } of fieldsWithCondition) {
               const param: any = {
                 no: rowNumber++,
                 name: field.key,
                 type: field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type,
                 default: formatDefaultValue(field.default),
                 description: buildFieldDescription(field, tableDefinition),
-                required: getRequiredLabel(field),
+                required: getConditionScopedRequiredLabel(field, fieldConditionInfo?.type),
               };
 
               // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
@@ -1812,13 +1835,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                     for (const [conditionKey, greatGrandchildrenWithCondition] of greatGrandchildGroups) {
                       const { conditionInfo } = greatGrandchildrenWithCondition[0];
-                      const isRequired = conditionInfo?.type === 'x-required-when';
-                      const parts = conditionKey.split(':');
-                      const conditionName = parts[0];
-                      const conditionValue = parts.slice(1).join(':');
-                      const conditionText = isRequired
-                        ? `Required (When "${conditionName}" is ${conditionValue})`
-                        : `Optional (When "${conditionName}" is ${conditionValue})`;
+                      const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 
                       mappedGreatGrandchildren.push({
                         no: '', name: '', type: 'section-header',
@@ -1826,14 +1843,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                         default: '', description: '', required: '',
                       });
 
-                      for (const { field: greatGrandchild } of greatGrandchildrenWithCondition) {
+                      for (const { field: greatGrandchild, conditionInfo: fieldConditionInfo } of greatGrandchildrenWithCondition) {
                         mappedGreatGrandchildren.push({
                           no: `${grandParentNo}.${greatGrandchildNo++}`,
                           name: greatGrandchild.key.split('.').pop() || greatGrandchild.key,
                           type: greatGrandchild.type === 'array' ? `Array[${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type,
                           default: formatDefaultValue(greatGrandchild.default),
                           description: buildFieldDescription(greatGrandchild, tableDefinition),
-                          required: getRequiredLabel(greatGrandchild, inheritedConditionalForGreat),
+                          required: getConditionScopedRequiredLabel(greatGrandchild, fieldConditionInfo?.type, inheritedConditionalForGreat),
                         });
                       }
                     }
@@ -1882,13 +1899,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                   for (const [conditionKey, grandchildrenWithCondition] of grandchildGroups) {
                     const { conditionInfo } = grandchildrenWithCondition[0];
-                    const isRequired = conditionInfo?.type === 'x-required-when';
-                    const parts = conditionKey.split(':');
-                    const conditionName = parts[0];
-                    const conditionValue = parts.slice(1).join(':');
-                    const conditionText = isRequired
-                      ? `Required (When "${conditionName}" is ${conditionValue})`
-                      : `Optional (When "${conditionName}" is ${conditionValue})`;
+                    const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 
                     mappedGrandchildren.push({
                       no: '', name: '', type: 'section-header',
@@ -1896,14 +1907,14 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       default: '', description: '', required: '',
                     });
 
-                    for (const { field: grandchild } of grandchildrenWithCondition) {
+                    for (const { field: grandchild, conditionInfo: fieldConditionInfo } of grandchildrenWithCondition) {
                       const mappedGrandchild: any = {
                         no: `${parentNo}.${grandchildNo++}`,
                         name: grandchild.key.split('.').pop() || grandchild.key,
                         type: grandchild.type === 'array' ? `Array[${grandchild.items?.type || 'any'}]` : grandchild.type,
                         default: formatDefaultValue(grandchild.default),
                         description: buildFieldDescription(grandchild, tableDefinition),
-                        required: getRequiredLabel(grandchild, inheritedConditional),
+                        required: getConditionScopedRequiredLabel(grandchild, fieldConditionInfo?.type, inheritedConditional),
                       };
 
                       if (grandchild.children && grandchild.children.length > 0) {
@@ -1960,13 +1971,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
                 for (const [conditionKey, childrenWithCondition] of childGroups) {
                   const { conditionInfo } = childrenWithCondition[0];
-                  const isRequired = conditionInfo?.type === 'x-required-when';
-                  const parts = conditionKey.split(':');
-                  const conditionName = parts[0];
-                  const conditionValue = parts.slice(1).join(':');
-                  const conditionText = isRequired
-                    ? `Required (When "${conditionName}" is ${conditionValue})`
-                    : `Optional (When "${conditionName}" is ${conditionValue})`;
+                  const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 
                   param.children.push({
                     no: '', name: '', type: 'section-header',
@@ -1974,7 +1979,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                     default: '', description: '', required: '',
                   });
 
-                  for (const { field: child } of childrenWithCondition) {
+                  for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
                     const currentNo = childNo++;
                     const mappedChild: any = {
                       no: `${rowNumber - 1}.${currentNo}`,
@@ -1982,7 +1987,7 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
                       type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                       default: formatDefaultValue(child.default),
                       description: buildFieldDescription(child, tableDefinition),
-                      required: getRequiredLabel(child, parentConditional),
+                      required: getConditionScopedRequiredLabel(child, fieldConditionInfo?.type, parentConditional),
                     };
 
                     if (child.children && child.children.length > 0) {
@@ -2008,19 +2013,11 @@ export function SpecTab({ endpoint, settings }: SpecTabProps) {
 
               // 🔥 Description 빌드 (모듈화된 함수 사용)
               param.description = buildFieldDescription(field, tableDefinition);
-
-              // 🔥 Required 상태 재계산 (TYPE별 다른 상태가 있는 경우)
-              const requiredStatuses = Object.values(field.required);
-              const hasRequired = requiredStatuses.some(s => s === 'required');
-              const hasOptional = requiredStatuses.some(s => s === 'optional');
-              const hasConditional = requiredStatuses.some(s => s === 'conditional');
-
-              // 조건부 required 또는 TYPE별로 다른 경우 Conditional로 표시
-              if (hasConditional || (hasRequired && hasOptional)) {
-                param.required = 'Conditional';
-              } else if (hasRequired) {
-                param.required = 'Required';
-              }
+              param.required = finalizeRequiredLabel(
+                param.required,
+                field,
+                fieldConditionInfo?.type
+              );
 
               params.push(param);
             }

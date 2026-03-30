@@ -16,6 +16,7 @@ import databaseRouter from './routes/database.js';
 import schemaToolsRouter from './routes/schema-tools.js';
 import zendeskRouter from './routes/zendesk.js';
 import confluenceRouter from './routes/confluence.js';
+import workspaceRouter from './routes/workspace.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -48,6 +49,7 @@ app.use('/api/database', databaseRouter);
 app.use('/api/schema-tools', schemaToolsRouter);
 app.use('/api/zendesk', zendeskRouter);
 app.use('/api/confluence', confluenceRouter);
+app.use('/api/workspace', workspaceRouter);
 
 // 실제 비즈니스 API (자동 문서화)
 app.use('/api/civil/db', apiRouter);

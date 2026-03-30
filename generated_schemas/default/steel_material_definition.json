@@ -14,10 +14,7 @@
         "^[0-9]+$": {
           "type": "object",
           "required": [
-            "CODE",
-            "ES",
-            "PS",
-            "FU"
+            "CODE"
           ],
           "additionalProperties": false,
           "properties": {
@@ -133,25 +130,25 @@
             },
             "ES": {
               "type": "number",
-              "description": "Modulus of Elasticity (kN/m²)",
+              "description": "Modulus of Elasticity (Es) in kN/mm². Required user input when CODE is None. Auto-filled and read-only when CODE is Standard.",
               "x-ui": {
-                "label": "Modulus of Elasticity (Es)",
+                "label": "Modulus of Elasticity (Es) [User input when Code=None / Auto-filled when Code=Standard]",
                 "order": 4
               }
             },
             "PS": {
               "type": "number",
-              "description": "Poisson's Ratio",
+              "description": "Poisson's Ratio (Ps). Required user input when CODE is None. Auto-filled and read-only when CODE is Standard.",
               "x-ui": {
-                "label": "Poisson's Ratio (Ps)",
+                "label": "Poisson's Ratio (Ps) [User input when Code=None / Auto-filled when Code=Standard]",
                 "order": 5
               }
             },
             "FU": {
               "type": "number",
-              "description": "Tensile Strength (kN/m²)",
+              "description": "Tensile Strength (Fu) in kN/mm². Required user input when CODE is None. Auto-filled and read-only when CODE is Standard.",
               "x-ui": {
-                "label": "Tensile Strength (Fu)",
+                "label": "Tensile Strength (Fu) [User input when Code=None / Auto-filled when Code=Standard]",
                 "order": 6
               }
             },
@@ -168,60 +165,99 @@
             },
             "FY1": {
               "type": "number",
-              "description": "Yield Strength 1 (kN/m²)",
+              "description": "Yield Strength 1 (Fy1) in kN/mm². Auto-filled when CODE is Standard.",
               "x-ui": {
-                "label": "Yield Strength (Fy1)",
+                "label": "Yield Strength (Fy1) [Auto-filled when Code=Standard]",
                 "order": 8
               },
-              "x-required-when": {
+              "x-optional-when": {
                 "CODE": "Standard"
               }
             },
             "FY2": {
               "type": "number",
-              "description": "Yield Strength 2 (kN/m²)",
+              "description": "Yield Strength 2 (Fy2) in kN/mm². Auto-filled when CODE is Standard.",
               "x-ui": {
-                "label": "Yield Strength (Fy2)",
+                "label": "Yield Strength (Fy2) [Auto-filled when Code=Standard]",
                 "order": 9
               },
-              "x-required-when": {
+              "x-optional-when": {
                 "CODE": "Standard"
               }
             },
             "FY3": {
               "type": "number",
-              "description": "Yield Strength 3 (kN/m²)",
+              "description": "Yield Strength 3 (Fy3) in kN/mm². Auto-filled when CODE is Standard.",
               "x-ui": {
-                "label": "Yield Strength (Fy3)",
+                "label": "Yield Strength (Fy3) [Auto-filled when Code=Standard]",
                 "order": 10
               },
-              "x-required-when": {
+              "x-optional-when": {
                 "CODE": "Standard"
               }
             },
             "FY4": {
               "type": "number",
-              "description": "Yield Strength 4 (kN/m²)",
+              "description": "Yield Strength 4 (Fy4) in kN/mm². Auto-filled when CODE is Standard.",
               "x-ui": {
-                "label": "Yield Strength (Fy4)",
+                "label": "Yield Strength (Fy4) [Auto-filled when Code=Standard]",
                 "order": 11
               },
-              "x-required-when": {
+              "x-optional-when": {
                 "CODE": "Standard"
               }
             },
             "FY5": {
               "type": "number",
-              "description": "Yield Strength 5 (kN/m²)",
+              "description": "Yield Strength 5 (Fy5) in kN/mm². Auto-filled when CODE is Standard.",
               "x-ui": {
-                "label": "Yield Strength (Fy5)",
+                "label": "Yield Strength (Fy5) [Auto-filled when Code=Standard]",
                 "order": 12
               },
-              "x-required-when": {
+              "x-optional-when": {
                 "CODE": "Standard"
               }
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "CODE": {
+                    "const": "None"
+                  }
+                },
+                "required": [
+                  "CODE"
+                ]
+              },
+              "then": {
+                "required": [
+                  "NAME",
+                  "ES",
+                  "PS",
+                  "FU"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "CODE": {
+                    "const": "Standard"
+                  }
+                },
+                "required": [
+                  "CODE"
+                ]
+              },
+              "then": {
+                "required": [
+                  "GRADE"
+                ]
+              }
+            }
+          ]
         }
       }
     }

@@ -111,9 +111,15 @@ class ApiClient {
     });
   }
 
-  async duplicateEndpoint(id: string) {
+  async duplicateEndpoint(id: string, data?: {
+    name?: string;
+    path?: string;
+    product_id?: string;
+    group_id?: string;
+  }) {
     return this.request<{ endpoint: any; message: string }>(`/endpoints/${encodeURIComponent(id)}/duplicate`, {
       method: 'POST',
+      body: JSON.stringify(data || {}),
     });
   }
 

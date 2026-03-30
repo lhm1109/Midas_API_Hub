@@ -433,50 +433,46 @@ router.delete('/:id', async (req, res) => {
 
     // 🔥 groups 테이블에 없는 경우 (동적 그룹/레거시 그룹)
     if (groupError && groupError.code === 'PGRST116') {
-      console.log('⚠️ Group not found in groups table, treating as legacy group:', id);
+      console.log('⚠️ Group not found in groups table, checking exact legacy group_id match:', id);
 
-      // ID에서 product와 group_name 추출 (예: civil-nx_Gen → product: civil-nx, group_name: Gen)
-      const parts = id.split('_');
-      if (parts.length < 2) {
-        return res.status(400).json({ error: 'Invalid group ID format', id });
-      }
-
-      const product = parts[0];
-      const groupName = parts.slice(1).join('_');
-
-      console.log('📦 Legacy group:', { product, groupName });
-
-      // 해당 엔드포인트들 조회
-      const { data: endpoints, error: endpointsError } = await supabase
+      // 안전한 fallback: endpoint.group_id가 정확히 일치하는 경우에만 삭제 허용
+      const { data: legacyEndpoints, error: legacyEndpointsError } = await supabase
         .from('endpoints')
         .select('id, name')
-        .eq('product', product)
-        .eq('group_name', groupName);
+        .eq('group_id', id);
 
-      if (endpointsError) throw endpointsError;
+      if (legacyEndpointsError) throw legacyEndpointsError;
 
-      console.log(`🔍 Found ${endpoints?.length || 0} legacy endpoints:`, endpoints?.map(e => e.name));
+      console.log(
+        `🔍 Found ${legacyEndpoints?.length || 0} legacy endpoints for exact group_id=${id}:`,
+        legacyEndpoints?.map(e => e.name)
+      );
 
-      // 엔드포인트들 삭제
-      if (endpoints && endpoints.length > 0) {
+      if (legacyEndpoints && legacyEndpoints.length > 0) {
         const { error: deleteError } = await supabase
           .from('endpoints')
           .delete()
-          .eq('product', product)
-          .eq('group_name', groupName);
+          .eq('group_id', id);
 
         if (deleteError) {
           console.error('❌ Delete endpoints error:', deleteError);
           throw deleteError;
         }
 
-        console.log(`✅ Deleted ${endpoints.length} legacy endpoints`);
+        console.log(`✅ Safely deleted ${legacyEndpoints.length} legacy endpoints by exact group_id`);
+
+        return res.json({
+          message: 'Legacy group deleted safely by exact group_id',
+          deletedEndpoints: legacyEndpoints.length,
+          legacy: true
+        });
       }
 
-      return res.json({
-        message: 'Legacy group deleted successfully (endpoints only)',
-        deletedEndpoints: endpoints?.length || 0,
-        legacy: true
+      console.warn('🛑 Blocked unsafe legacy group delete with no exact group_id match:', id);
+      return res.status(409).json({
+        error: 'Legacy group deletion blocked for safety. This folder is not backed by the groups table, and deleting by name could remove other folders with the same name.',
+        groupId: id,
+        safeDeleteRequired: true
       });
     }
 
@@ -486,24 +482,22 @@ router.delete('/:id', async (req, res) => {
 
     console.log('📦 Found group:', group);
 
-    // 2. 해당 그룹의 엔드포인트들 조회
+    // 2–3. 이 그룹에만 연결된 엔드포인트 삭제 (group_id 기준)
+    // 동일 product 내에서 group.name이 같은 다른 폴더의 엔드포인트가 지워지지 않도록 함
     const { data: endpoints, error: endpointsError } = await supabase
       .from('endpoints')
       .select('id, name')
-      .eq('product', group.product_id)
-      .eq('group_name', group.name);
+      .eq('group_id', id);
 
     if (endpointsError) throw endpointsError;
 
-    console.log(`🔍 Found ${endpoints?.length || 0} endpoints in this group:`, endpoints?.map(e => e.name));
+    console.log(`🔍 Found ${endpoints?.length || 0} endpoints for group_id=${id}:`, endpoints?.map(e => e.name));
 
-    // 3. 그룹의 엔드포인트들 삭제
     if (endpoints && endpoints.length > 0) {
       const { error: deleteEndpointsError } = await supabase
         .from('endpoints')
         .delete()
-        .eq('product', group.product_id)
-        .eq('group_name', group.name);
+        .eq('group_id', id);
 
       if (deleteEndpointsError) {
         console.error('❌ Delete endpoints error:', deleteEndpointsError);
@@ -513,7 +507,7 @@ router.delete('/:id', async (req, res) => {
       console.log(`✅ Deleted ${endpoints.length} endpoints`);
     }
 
-    // 4. 그룹 삭제
+    // 4. 그룹 삭제 (하위 그룹·해당 엔드포인트는 DB FK CASCADE로 정리)
     const { error } = await supabase
       .from('groups')
       .delete()

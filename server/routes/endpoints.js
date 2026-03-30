@@ -11,7 +11,115 @@ function generateDuplicatedTestCaseId() {
   return `tc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
-async function duplicateEndpointVersions(originalEndpointId, duplicatedEndpointId) {
+function normalizeEndpointPath(rawPath) {
+  const trimmed = typeof rawPath === 'string' ? rawPath.trim() : '';
+  if (!trimmed) return '';
+  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+}
+
+function buildDuplicatedEndpointName(originalName, requestedName) {
+  const trimmedRequested = typeof requestedName === 'string' ? requestedName.trim() : '';
+  if (trimmedRequested) return trimmedRequested;
+
+  const trimmedOriginal = typeof originalName === 'string' ? originalName.trim() : '';
+  return trimmedOriginal ? `${trimmedOriginal} Copy` : 'Endpoint Copy';
+}
+
+function buildDuplicatedEndpointPath(originalPath, requestedPath) {
+  const normalizedRequested = normalizeEndpointPath(requestedPath);
+  if (normalizedRequested) return normalizedRequested;
+
+  const normalizedOriginal = normalizeEndpointPath(originalPath);
+  if (!normalizedOriginal) return '/copy';
+  return normalizedOriginal.endsWith('/')
+    ? `${normalizedOriginal}copy`
+    : `${normalizedOriginal}-copy`;
+}
+
+function generateEndpointIdFromPath(path, fallbackName, fallbackGroupId) {
+  const cleanPath = normalizeEndpointPath(path).replace(/^\//, '');
+  const pathSegments = cleanPath
+    .split('/')
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .map((segment) => segment.toLowerCase());
+
+  if (pathSegments.length >= 2) {
+    return pathSegments.join('/');
+  }
+
+  const fallbackGroup = typeof fallbackGroupId === 'string' ? fallbackGroupId.split('_').pop() || fallbackGroupId : 'endpoint';
+  const fallbackSlug = String(fallbackName || 'copy')
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9/-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  return `${fallbackGroup.toLowerCase()}/${fallbackSlug || 'copy'}`;
+}
+
+async function buildUniqueEndpointId(baseId) {
+  const normalizedBaseId = (baseId || `endpoint/${Date.now()}`).trim();
+  let candidate = normalizedBaseId;
+  let counter = 2;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from('endpoints')
+      .select('id')
+      .eq('id', candidate)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return candidate;
+
+    candidate = `${normalizedBaseId}-${counter}`;
+    counter += 1;
+  }
+}
+
+async function resolveGroupMeta(groupId, fallbackProductId) {
+  if (!groupId) return null;
+
+  const { data, error } = await supabase
+    .from('groups')
+    .select('id, name, product_id')
+    .eq('id', groupId)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') return null;
+    throw error;
+  }
+
+  return {
+    group_id: data.id,
+    group_name: data.name,
+    product_id: data.product_id || fallbackProductId || null,
+  };
+}
+
+async function getNextEndpointOrderIndex(groupId) {
+  const { data, error } = await supabase
+    .from('endpoints')
+    .select('order_index')
+    .eq('group_id', groupId)
+    .order('order_index', { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+
+  const lastOrder = Array.isArray(data) && data.length > 0 ? Number(data[0].order_index || 0) : 0;
+  return lastOrder + 1;
+}
+
+async function duplicateEndpointVersions(originalEndpointId, duplicatedEndpointId, options = {}) {
+  const {
+    originalEndpointMeta = null,
+    duplicatedEndpointMeta = null,
+  } = options;
+
   const { data: versions, error: versionsError } = await supabase
     .from('versions')
     .select('*')
@@ -55,40 +163,61 @@ async function duplicateEndpointVersions(originalEndpointId, duplicatedEndpointI
     if (testCasesResult.error) throw testCasesResult.error;
 
     if (manualResult.data) {
+      const { id: _manualId, ...manualInsertBase } = manualResult.data;
+      const manualInsert = {
+        ...manualInsertBase,
+        version_id: newVersionId,
+      };
+
+      if (originalEndpointMeta && duplicatedEndpointMeta) {
+        if (manualInsert.input_uri === originalEndpointMeta.path) {
+          manualInsert.input_uri = duplicatedEndpointMeta.path;
+        }
+        if (manualInsert.title === originalEndpointMeta.name) {
+          manualInsert.title = duplicatedEndpointMeta.name;
+        }
+        if (manualInsert.active_methods === originalEndpointMeta.method) {
+          manualInsert.active_methods = duplicatedEndpointMeta.method;
+        }
+        if (manualInsert.category === originalEndpointMeta.method) {
+          manualInsert.category = duplicatedEndpointMeta.method;
+        }
+      }
+
       const { error } = await supabase
         .from('manual_data')
-        .insert({
-          ...manualResult.data,
-          version_id: newVersionId,
-        });
+        .insert(manualInsert);
       if (error) throw error;
     }
 
     if (specResult.data) {
+      const { id: _specId, ...specInsertBase } = specResult.data;
       const { error } = await supabase
         .from('spec_data')
         .insert({
-          ...specResult.data,
+          ...specInsertBase,
           version_id: newVersionId,
         });
       if (error) throw error;
     }
 
     if (builderResult.data) {
+      const { id: _builderId, ...builderInsertBase } = builderResult.data;
       const { error } = await supabase
         .from('builder_data')
         .insert({
-          ...builderResult.data,
+          ...builderInsertBase,
           version_id: newVersionId,
         });
       if (error) throw error;
     }
 
     if (runnerResult.data) {
+      const { id: _runnerId, ...runnerInsertBase } = runnerResult.data;
       const { error } = await supabase
         .from('runner_data')
         .insert({
-          ...runnerResult.data,
+          ...runnerInsertBase,
           version_id: newVersionId,
         });
       if (error) throw error;
@@ -427,8 +556,20 @@ router.put('/reorder', async (req, res) => {
 router.post('/:id/duplicate', async (req, res) => {
   try {
     const { id } = req.params;
+    const {
+      name: requestedName,
+      path: requestedPath,
+      product_id: requestedProductId,
+      group_id: requestedGroupId,
+    } = req.body || {};
 
-    console.log('🔄 Duplicate endpoint request:', { id });
+    console.log('🔄 Duplicate endpoint request:', {
+      id,
+      requestedName,
+      requestedPath,
+      requestedProductId,
+      requestedGroupId,
+    });
 
     // 원본 엔드포인트 조회
     const { data: originalEndpoint, error: fetchError } = await supabase
@@ -444,10 +585,25 @@ router.post('/:id/duplicate', async (req, res) => {
       throw fetchError;
     }
 
-    // 새로운 ID와 이름 생성
-    const timestamp = Date.now();
-    const newId = `${originalEndpoint.id}_copy_${timestamp}`;
-    const newName = `Copy of ${originalEndpoint.name}`;
+    const targetGroupId = requestedGroupId || originalEndpoint.group_id || null;
+    if (!targetGroupId) {
+      return res.status(400).json({ error: 'Target group is required for duplication' });
+    }
+
+    const targetGroupMeta = await resolveGroupMeta(
+      targetGroupId,
+      requestedProductId || originalEndpoint.product_id || originalEndpoint.product
+    );
+    if (!targetGroupMeta?.group_id || !targetGroupMeta.group_name || !targetGroupMeta.product_id) {
+      return res.status(400).json({ error: 'Target group could not be resolved' });
+    }
+
+    const newName = buildDuplicatedEndpointName(originalEndpoint.name, requestedName);
+    const newPath = buildDuplicatedEndpointPath(originalEndpoint.path, requestedPath);
+    const newId = await buildUniqueEndpointId(
+      generateEndpointIdFromPath(newPath, newName, targetGroupMeta.group_name)
+    );
+    const newOrderIndex = await getNextEndpointOrderIndex(targetGroupMeta.group_id);
     const now = new Date().toISOString();
 
     // 엔드포인트 복제
@@ -457,15 +613,14 @@ router.post('/:id/duplicate', async (req, res) => {
         id: newId,
         name: newName,
         method: originalEndpoint.method,
-        path: originalEndpoint.path,
-        product: originalEndpoint.product,
-        product_id: originalEndpoint.product_id || originalEndpoint.product,
-        group_name: originalEndpoint.group_name,
-        group_id: originalEndpoint.group_id || null,
+        path: newPath,
+        product: targetGroupMeta.product_id,
+        product_id: targetGroupMeta.product_id,
+        group_name: targetGroupMeta.group_name,
+        group_id: targetGroupMeta.group_id,
         description: originalEndpoint.description,
         status: originalEndpoint.status,
-        status_message: originalEndpoint.status_message || null,
-        order_index: (originalEndpoint.order_index || 0) + 1,
+        order_index: newOrderIndex,
         created_at: now,
         updated_at: now,
       })
@@ -474,9 +629,27 @@ router.post('/:id/duplicate', async (req, res) => {
 
     if (insertError) throw insertError;
 
-    const { duplicatedVersions } = await duplicateEndpointVersions(id, newId);
+    const { duplicatedVersions } = await duplicateEndpointVersions(id, newId, {
+      originalEndpointMeta: {
+        name: originalEndpoint.name,
+        path: originalEndpoint.path,
+        method: originalEndpoint.method,
+      },
+      duplicatedEndpointMeta: {
+        name: newName,
+        path: newPath,
+        method: originalEndpoint.method,
+      },
+    });
 
-    console.log('✅ Endpoint duplicated:', { originalId: id, newId, newName, duplicatedVersions });
+    console.log('✅ Endpoint duplicated:', {
+      originalId: id,
+      newId,
+      newName,
+      newPath,
+      duplicatedVersions,
+      targetGroupId: targetGroupMeta.group_id,
+    });
     res.status(201).json({
       endpoint: newEndpoint,
       duplicatedVersions,

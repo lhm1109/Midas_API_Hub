@@ -1,0 +1,1 @@
+export { ManualHubView } from './ManualHubView';

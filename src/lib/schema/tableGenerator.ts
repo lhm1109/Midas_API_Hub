@@ -898,11 +898,8 @@ function buildLegacyConditionLabel(
   conditionKey: string,
   conditionInfo?: FieldCondition | null
 ): string {
-  const isRequired = conditionInfo?.type === 'x-required-when';
   const conditionText = conditionInfo?.conditionText || conditionKey;
-  return isRequired
-    ? `Required (When ${conditionText})`
-    : `Optional (When ${conditionText})`;
+  return `When ${conditionText}`;
 }
 
 function countLegacyConditionHeaders(fields: EnhancedField[]): number {
@@ -935,8 +932,13 @@ function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldRef
       );
 
       html += generateSectionHeaderLegacy(conditionLabel);
-      for (const { field } of fieldsWithCondition) {
-        html += generateFieldRowLegacy(field, rowNumber++, references);
+      for (const { field, conditionInfo: fieldConditionInfo } of fieldsWithCondition) {
+        html += generateFieldRowLegacy(
+          field,
+          rowNumber++,
+          references,
+          fieldConditionInfo?.type
+        );
       }
     }
   }
@@ -977,9 +979,12 @@ function renderGreatGrandchildrenLegacy(
   }
 
   let greatGrandchildNo = 1;
-  const renderGreatGrandchildRow = (greatGrandchild: EnhancedField) => {
+  const renderGreatGrandchildRow = (
+    greatGrandchild: EnhancedField,
+    conditionType?: string | null
+  ) => {
     const greatGrandchildDescriptionHTML = generateFieldDescriptionLegacy(greatGrandchild, references);
-    const greatGrandchildRequiredHTML = generateRequiredCellLegacy(greatGrandchild, inheritedConditional);
+    const greatGrandchildRequiredHTML = generateRequiredCellLegacy(greatGrandchild, inheritedConditional, conditionType);
     const greatGrandchildDefaultValue = formatDefaultValue(greatGrandchild.default, greatGrandchild.type);
     const greatGrandchildTypeDisplay = greatGrandchild.type === 'array' ? `Array [${greatGrandchild.items?.type || 'any'}]` : greatGrandchild.type;
     const greatGrandchildKeyDisplay = greatGrandchild.key.includes('.') ? greatGrandchild.key.split('.').pop() : greatGrandchild.key;
@@ -1030,8 +1035,8 @@ function renderGreatGrandchildrenLegacy(
       </tr>
     `;
 
-    for (const { field: greatGrandchild } of greatGrandchildrenWithCondition) {
-      renderGreatGrandchildRow(greatGrandchild);
+    for (const { field: greatGrandchild, conditionInfo: fieldConditionInfo } of greatGrandchildrenWithCondition) {
+      renderGreatGrandchildRow(greatGrandchild, fieldConditionInfo?.type);
     }
   }
 
@@ -1068,10 +1073,13 @@ function renderGrandchildrenLegacy(
   }
 
   let grandchildNo = 1;
-  const renderGrandchildRow = (grandchild: EnhancedField) => {
+  const renderGrandchildRow = (
+    grandchild: EnhancedField,
+    conditionType?: string | null
+  ) => {
     const currentGrandchildNo = grandchildNo++;
     const grandchildDescriptionHTML = generateFieldDescriptionLegacy(grandchild, references);
-    const grandchildRequiredHTML = generateRequiredCellLegacy(grandchild, inheritedConditional);
+    const grandchildRequiredHTML = generateRequiredCellLegacy(grandchild, inheritedConditional, conditionType);
     const grandchildDefaultValue = formatDefaultValue(grandchild.default, grandchild.type);
     const grandchildTypeDisplay = grandchild.type === 'array' ? `Array [${grandchild.items?.type || 'any'}]` : grandchild.type;
     const grandchildKeyDisplay = grandchild.key.includes('.') ? grandchild.key.split('.').pop() : grandchild.key;
@@ -1131,8 +1139,8 @@ function renderGrandchildrenLegacy(
       </tr>
     `;
 
-    for (const { field: grandchild } of grandchildrenWithCondition) {
-      renderGrandchildRow(grandchild);
+    for (const { field: grandchild, conditionInfo: fieldConditionInfo } of grandchildrenWithCondition) {
+      renderGrandchildRow(grandchild, fieldConditionInfo?.type);
     }
   }
 
@@ -1166,9 +1174,14 @@ function generateSectionHeaderLegacy(sectionName: string): string {
   `;
 }
 
-function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, references?: FieldReferenceMap): string {
+function generateFieldRowLegacy(
+  field: EnhancedField,
+  rowNumber: number,
+  references?: FieldReferenceMap,
+  conditionType?: string | null
+): string {
   const descriptionHTML = generateFieldDescriptionLegacy(field, references);
-  const requiredHTML = generateRequiredCellLegacy(field);
+  const requiredHTML = generateRequiredCellLegacy(field, false, conditionType);
   const defaultValue = formatDefaultValue(field.default, field.type);
   const typeDisplay = field.type === 'array' ? `Array [${field.items?.type || 'any'}]` : field.type;
 
@@ -1368,9 +1381,13 @@ function generateFieldRowLegacy(field: EnhancedField, rowNumber: number, referen
         </tr>
       `;
 
-      for (const { field: child } of childrenWithCondition) {
+      for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
         const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
-        const childRequiredHTML = generateRequiredCellLegacy(child, parentConditional);
+        const childRequiredHTML = generateRequiredCellLegacy(
+          child,
+          parentConditional,
+          fieldConditionInfo?.type
+        );
         const childDefaultValue = formatDefaultValue(child.default, child.type);
         const childTypeDisplay = child.type === 'array' ? `Array [${child.items?.type || 'any'}]` : child.type;
 
@@ -1567,7 +1584,19 @@ const isConditionalFieldLegacy = (field: EnhancedField): boolean => {
   return Boolean(fieldAny['x-required-when']);
 };
 
-function generateRequiredCellLegacy(field: EnhancedField, _inheritedConditional: boolean = false): string {
+function generateRequiredCellLegacy(
+  field: EnhancedField,
+  _inheritedConditional: boolean = false,
+  conditionType?: string | null
+): string {
+  if (conditionType === 'x-required-when') {
+    return '<span class="badge badge-required">Required</span>';
+  }
+
+  if (conditionType === 'x-optional-when') {
+    return '<span class="badge badge-optional">Optional</span>';
+  }
+
   const fieldAny = field as any;
   if (fieldAny['x-required-when']) {
     return '<span class="badge badge-conditional">Conditional</span>';

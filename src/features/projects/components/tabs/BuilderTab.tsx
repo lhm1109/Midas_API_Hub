@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { CodeEditor } from '@/components/common';
 import { useAppStore } from '@/store/useAppStore';
-import type { ApiEndpoint } from '@/types';
+import type { ApiEndpoint, ApiGroup, ApiProduct } from '@/types';
 import { toast } from 'sonner';
 import {
   resolveActiveSchema,
@@ -36,7 +36,6 @@ import {
 } from '@/lib/schema/builderAdapter';
 import { DynamicSchemaRenderer } from '@/lib/rendering/dynamicRenderer';
 import { loadCachedDefinition, loadBuilderRules, type DefinitionType } from '@/lib/rendering/definitionLoader';
-import { useEndpoints } from '@/hooks/useEndpoints';
 import { getPSDForProduct } from '@/config/psdMapping';
 import {
   calculateFieldRuntimeStates,
@@ -47,10 +46,12 @@ import { compileSchemaWithContext } from '@/lib/schema/schemaCompiler';
 import {
   getDefaultValue,
   buildInitialDynamicFormData,
+  flattenObjectToDotNotationWithSchema,
 } from './builder.logic';
 
 interface BuilderTabProps {
   endpoint: ApiEndpoint;
+  products: ApiProduct[];
   settings: {
     baseUrl: string;
     mapiKey: string;
@@ -395,21 +396,24 @@ function detectSchemaWrapperInfo(schema: any): SchemaWrapperInfo | null {
   };
 }
 
-function flattenObjectToDotNotation(obj: any, target: Record<string, any>, prefix = ''): void {
-  Object.keys(obj).forEach((key) => {
-    const value = obj[key];
-    const newKey = prefix ? `${prefix}.${key}` : key;
+function unwrapSchemaForBuilder(schema: any, wrapperInfo: SchemaWrapperInfo | null): any {
+  if (!schema || typeof schema !== 'object' || !wrapperInfo || wrapperInfo.shape !== 'single') {
+    return schema;
+  }
 
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-      target[`${newKey}._enabled`] = true;
-      flattenObjectToDotNotation(value, target, newKey);
-    } else {
-      target[newKey] = value;
-    }
-  });
+  const wrapperSchema = schema?.properties?.[wrapperInfo.key];
+  if (!wrapperSchema || typeof wrapperSchema !== 'object' || Array.isArray(wrapperSchema)) {
+    return schema;
+  }
+
+  return {
+    ...wrapperSchema,
+    title: wrapperSchema.title ?? schema.title,
+    description: wrapperSchema.description ?? schema.description,
+  };
 }
 
-export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
+export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
   const {
     updateRunnerData,
     addTestCase,
@@ -418,8 +422,17 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     specData,
     saveCurrentVersion,
   } = useAppStore();
-  const { endpoints: products } = useEndpoints();
-  const currentProduct = products.find(p => p.id === (endpoint as any).product);
+  const currentProduct = useMemo(() => {
+    const findProductByEndpoint = (groups: ApiGroup[]): boolean => {
+      return groups.some((group) =>
+        group.endpoints.some((candidate) => candidate.id === endpoint.id) ||
+        (group.subgroups.length > 0 && findProductByEndpoint(group.subgroups))
+      );
+    };
+
+    return products.find((product) => findProductByEndpoint(product.groups));
+  }, [endpoint.id, products]);
+
   const productId = (endpoint as any).product || currentProduct?.id;
   const { psdSet, schemaType: defaultSchemaType } = useMemo(() => {
     return getPSDForProduct(productId);
@@ -451,6 +464,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const activeSchema = resolveActiveSchema(combinedSpecData);
   const hasEnhancedSchema = isEnhancedSchemaActive(combinedSpecData);
   const schemaWrapperInfo = useMemo(() => detectSchemaWrapperInfo(activeSchema), [activeSchema]);
+  const builderSchema = useMemo(
+    () => unwrapSchemaForBuilder(activeSchema, schemaWrapperInfo),
+    [activeSchema, schemaWrapperInfo]
+  );
   if (!specData || !activeSchema || (typeof activeSchema === 'object' && Object.keys(activeSchema).length === 0)) {
     return (
       <div className="flex-1 flex items-center justify-center bg-zinc-950 text-zinc-600">
@@ -501,16 +518,16 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
   const [dynamicFormData, setDynamicFormData] = useState<any>({});
   const [tempFormValuesForSchema, setTempFormValuesForSchema] = useState<Record<string, any>>({});
   const compiledSchemaContext = useMemo(() => {
-    if (!activeSchema || typeof activeSchema !== 'object' || Object.keys(activeSchema).length === 0) {
+    if (!builderSchema || typeof builderSchema !== 'object' || Object.keys(builderSchema).length === 0) {
       return { sections: [], variantAxes: [] };
     }
     try {
-      return compileSchemaWithContext(activeSchema, psdSet, schemaType);
+      return compileSchemaWithContext(builderSchema, psdSet, schemaType);
     } catch (error) {
       console.error('[BuilderTab] Failed to compile schema:', error);
       return { sections: [], variantAxes: [] };
     }
-  }, [activeSchema, psdSet, schemaType]);
+  }, [builderSchema, psdSet, schemaType]);
 
   const compiledSchemaSections = compiledSchemaContext.sections;
   const variantAxes = compiledSchemaContext.variantAxes;
@@ -571,6 +588,23 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         enumLabelsByType: compiledField['x-enum-labels-by-type'] || compiledField.enumLabelsByType,
       };
 
+      const isKeyedObject =
+        mappedType === 'object' &&
+        (
+          (compiledField.additionalProperties &&
+            typeof compiledField.additionalProperties === 'object' &&
+            !Array.isArray(compiledField.additionalProperties)) ||
+          (compiledField.patternProperties &&
+            typeof compiledField.patternProperties === 'object' &&
+            Object.values(compiledField.patternProperties).some(
+              (candidate: any) => candidate && typeof candidate === 'object' && !Array.isArray(candidate)
+            ))
+        );
+
+      if (isKeyedObject) {
+        uiField.isKeyedObject = true;
+      }
+
       if (compiledField.children && compiledField.children.length > 0) {
         uiField.children = compiledField.children
           .filter((child: any) => child.type !== 'section-header')
@@ -621,9 +655,9 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     if (schemaFields.length > 0 && Object.keys(tempFormValuesForSchema).length === 0) {
       const initialValues: Record<string, any> = {};
       let triggerFieldNames: string[] = [];
-      if (activeSchema && typeof activeSchema === 'object') {
+      if (builderSchema && typeof builderSchema === 'object') {
         try {
-          triggerFieldNames = extractTriggerFields(activeSchema as EnhancedSchema, psdSet, schemaType);
+          triggerFieldNames = extractTriggerFields(builderSchema as EnhancedSchema, psdSet, schemaType);
           console.log('[BuilderTab] Auto-detected trigger fields from schema:', triggerFieldNames);
         } catch (error) {
           console.warn('[BuilderTab] Failed to extract trigger fields:', error);
@@ -647,7 +681,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         setTempFormValuesForSchema(initialValues);
       }
     }
-  }, [schemaFields, activeSchema, psdSet, schemaType]);
+  }, [schemaFields, builderSchema, psdSet, schemaType]);
 
   const fieldRuntimeStates: FieldRuntimeStateMap = useMemo(() => {
     if (compiledSchemaSections.length === 0) {
@@ -998,7 +1032,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           if (isTriggerField || isAlwaysRequired) {
             if (field.type === 'array' && field.items) {
               initialData[field.name] = getDefaultValue(field);
-            } else if (field.type === 'object' && field.children) {
+            } else if (field.type === 'object' && field.children && !field.isKeyedObject) {
               const enabledKey = `${field.name}._enabled`;
               initialData[enabledKey] = false;
               field.children.forEach(child => {
@@ -1013,7 +1047,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       });
       const validFieldNames = new Set(schemaFields.map(f => f.name));
       schemaFields.forEach(f => {
-        if (f.type === 'object' && f.children) {
+        if (f.type === 'object' && f.children && !f.isKeyedObject) {
           f.children.forEach(child => {
             validFieldNames.add(resolveNestedFieldKey(f.name, child.name));
           });
@@ -1456,7 +1490,10 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     document.body.style.cursor = 'ew-resize';
     document.body.style.userSelect = 'none';
   };
-  const convertJsonToFormData = (json: string) => {
+  const convertJsonToFormData = (
+    json: string,
+    options?: { successMessage?: string; errorMessage?: string }
+  ) => {
     try {
       const parsed = JSON.parse(json);
       const rootKey = endpoint.name.toUpperCase();
@@ -1485,7 +1522,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           Object.entries(wrappedValue as Record<string, any>).forEach(([instanceKey, instanceValue]) => {
             if (instanceValue && typeof instanceValue === 'object' && !Array.isArray(instanceValue)) {
               const flatData: Record<string, any> = {};
-              flattenObjectToDotNotation(instanceValue, flatData);
+              flattenObjectToDotNotationWithSchema(instanceValue, flatData, schemaFields);
               mappedInstances[instanceKey] = flatData;
             }
           });
@@ -1517,7 +1554,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
       schemaFields.forEach(field => {
         if (field.type === 'array' && field.items) {
           initialData[field.name] = getDefaultValue(field);
-        } else if (field.type === 'object' && field.children) {
+        } else if (field.type === 'object' && field.children && !field.isKeyedObject) {
           initialData[`${field.name}._enabled`] = false;
           field.children.forEach(child => {
             initialData[resolveNestedFieldKey(field.name, child.name)] = getDefaultValue(child);
@@ -1539,7 +1576,13 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
           console.log(`[BuilderTab] Field not in schema: ${key}`);
           return;
         }
-        if (schemaField.type === 'object' && schemaField.children &&
+        if (schemaField.type === 'object' && schemaField.isKeyedObject &&
+          value !== null && typeof value === 'object' && !Array.isArray(value)) {
+          flatData[key] = value;
+
+          console.log(`[BuilderTab] Processed keyed object field: ${key}`, value);
+        }
+        else if (schemaField.type === 'object' && schemaField.children &&
           value !== null && typeof value === 'object' && !Array.isArray(value)) {
           flatData[`${key}._enabled`] = true;
           Object.keys(value).forEach(childKey => {
@@ -1577,10 +1620,12 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         setCurrentInstanceKey(loadedCurrentKey);
       }
       setDynamicFormData(mergedData);
-      toast.success('JSON has been loaded into the form.');
+      toast.success(options?.successMessage || 'JSON has been loaded into the form.');
+      return true;
     } catch (error) {
       console.error('[BuilderTab] Failed to parse JSON:', error);
-      toast.error('Failed to parse JSON. Please check JSON format.');
+      toast.error(options?.errorMessage || 'Failed to parse JSON. Please check JSON format.');
+      return false;
     }
   };
   const buildCleanJSON = (
@@ -2142,7 +2187,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
         if (isTriggerField || isAlwaysRequired) {
           if (field.type === 'array' && field.items) {
             initialData[field.name] = getDefaultValue(field);
-          } else if (field.type === 'object' && field.children) {
+          } else if (field.type === 'object' && field.children && !field.isKeyedObject) {
             initialData[`${field.name}._enabled`] = false;
             field.children.forEach(child => {
               initialData[resolveNestedFieldKey(field.name, child.name)] = getDefaultValue(child);
@@ -2162,70 +2207,14 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
     const testCase = testCases.find(tc => tc.id === testCaseId);
     if (!testCase) return;
 
-    try {
-      console.log('[BuilderTab] Loading test case:', testCase.requestBody.substring(0, 200));
-      const parsed = JSON.parse(testCase.requestBody);
-      const wrapperInfo = getResolvedWrapperInfo();
+    console.log('[BuilderTab] Loading test case:', testCase.requestBody.substring(0, 200));
+    const loaded = convertJsonToFormData(testCase.requestBody, {
+      successMessage: `Test case "${testCase.name}" loaded successfully.`,
+      errorMessage: 'Failed to load test case.',
+    });
 
-      if (
-        parsed &&
-        typeof parsed === 'object' &&
-        wrapperInfo &&
-        wrapperInfo.key in parsed
-      ) {
-        const wrappedData = (parsed as any)[wrapperInfo.key];
-        if (
-          wrapperInfo.shape === 'map' &&
-          wrappedData &&
-          typeof wrappedData === 'object' &&
-          !Array.isArray(wrappedData)
-        ) {
-          const loadedInstances: Record<string, any> = {};
-          Object.entries(wrappedData as Record<string, any>).forEach(([instanceKey, instanceValue]) => {
-            if (instanceValue && typeof instanceValue === 'object' && !Array.isArray(instanceValue)) {
-              const flatData: Record<string, any> = {};
-              flattenObjectToDotNotation(instanceValue, flatData);
-              loadedInstances[instanceKey] = flatData;
-            }
-          });
-
-          const firstKey = Object.keys(loadedInstances)[0];
-          if (firstKey) {
-            console.log('[BuilderTab] Loaded map-wrapper instances:', loadedInstances);
-            setAssignInstances(loadedInstances);
-            setCurrentInstanceKey(firstKey);
-            setDynamicFormData(loadedInstances[firstKey]);
-          }
-        } else if (wrappedData && typeof wrappedData === 'object' && !Array.isArray(wrappedData)) {
-          const flatData: Record<string, any> = {};
-          flattenObjectToDotNotation(wrappedData, flatData);
-          setAssignInstances({ "1": flatData });
-          setCurrentInstanceKey("1");
-          setDynamicFormData(flatData);
-        }
-      } else {
-        const rootKey = endpoint.name.toUpperCase();
-        if (parsed && typeof parsed === 'object' && rootKey in parsed) {
-          const data = (parsed as any)[rootKey];
-          const flatData: Record<string, any> = {};
-          flattenObjectToDotNotation(data, flatData);
-          setAssignInstances({ "1": flatData });
-          setCurrentInstanceKey("1");
-          setDynamicFormData(flatData);
-        } else if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-          const flatData: Record<string, any> = {};
-          flattenObjectToDotNotation(parsed, flatData);
-          setAssignInstances({ "1": flatData });
-          setCurrentInstanceKey("1");
-          setDynamicFormData(flatData);
-        }
-      }
-
+    if (loaded) {
       setSelectedTestCaseId(testCaseId);
-      toast.success(`Test case "${testCase.name}" loaded successfully.`);
-    } catch (error) {
-      console.error('Failed to load test case:', error);
-      toast.error('Failed to load test case.');
     }
   };
 
@@ -2687,7 +2676,7 @@ export function BuilderTab({ endpoint, settings }: BuilderTabProps) {
                   if (isTriggerField || isAlwaysRequired) {
                     if (field.type === 'array' && field.items) {
                       initialData[field.name] = getDefaultValue(field);
-                    } else if (field.type === 'object' && field.children) {
+                    } else if (field.type === 'object' && field.children && !field.isKeyedObject) {
                       initialData[`${field.name}._enabled`] = false;
                       field.children.forEach(child => {
                         initialData[resolveNestedFieldKey(field.name, child.name)] = getDefaultValue(child);

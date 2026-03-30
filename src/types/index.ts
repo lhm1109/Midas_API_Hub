@@ -128,5 +128,9 @@ export interface Settings {
   supabaseUrl?: string; // Supabase Project URL
   supabaseServiceKey?: string; // Supabase Service Role Key
   supabaseDbPassword?: string; // Supabase Database Password
+  /** Manual Hub 인덱스(KO) 기본 로컬 파일 경로 (절대 경로) */
+  manualHubIndexLocalPathKo?: string;
+  /** Manual Hub 인덱스(EN) 기본 로컬 파일 경로 (절대 경로) */
+  manualHubIndexLocalPathEn?: string;
 }
 

@@ -12,6 +12,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+import {
+  DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_EN,
+  DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_KO,
+} from '@/config/constants';
 
 interface SettingsModalProps {
   open: boolean;
@@ -26,18 +30,10 @@ interface SettingsModalProps {
     supabaseUrl?: string;
     supabaseServiceKey?: string;
     supabaseDbPassword?: string;
+    manualHubIndexLocalPathKo?: string;
+    manualHubIndexLocalPathEn?: string;
   };
-  onSettingsChange: (settings: {
-    baseUrl: string;
-    mapiKey: string;
-    commonHeaders: string;
-    useAssignWrapper?: boolean;
-    schemaMode?: 'enhanced' | 'normal';
-    userName?: string;
-    supabaseUrl?: string;
-    supabaseServiceKey?: string;
-    supabaseDbPassword?: string;
-  }) => void;
+  onSettingsChange: (settings: SettingsModalProps['settings']) => void;
 }
 
 export function SettingsModal({
@@ -193,6 +189,42 @@ export function SettingsModal({
                 <li>YAML 파일 1개만 로드 (definition.yaml)</li>
                 <li>심플한 UI로 빠른 작업</li>
               </ul>
+            </div>
+          </div>
+
+          {/* Manual Hub — Site 인덱스 기본 로컬 경로 */}
+          <div className="space-y-4 pt-4 border-t border-zinc-700">
+            <h3 className="text-sm font-semibold text-amber-400">Manual Hub (Index)</h3>
+            <p className="text-xs text-zinc-400">
+              Manual Hub의 Site 인덱스(KO/EN)에서 로컬 파일 경로가 비어 있을 때 사용할 기본 절대 경로입니다.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="manualHubIndexLocalPathKo" className="text-zinc-200">
+                Index KO — 기본 로컬 경로
+              </Label>
+              <Input
+                id="manualHubIndexLocalPathKo"
+                placeholder={DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_KO}
+                value={localSettings.manualHubIndexLocalPathKo ?? ''}
+                onChange={(e) =>
+                  setLocalSettings({ ...localSettings, manualHubIndexLocalPathKo: e.target.value })
+                }
+                className="bg-zinc-800 border-zinc-700 text-white font-mono text-xs"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="manualHubIndexLocalPathEn" className="text-zinc-200">
+                Index EN — 기본 로컬 경로
+              </Label>
+              <Input
+                id="manualHubIndexLocalPathEn"
+                placeholder={DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_EN}
+                value={localSettings.manualHubIndexLocalPathEn ?? ''}
+                onChange={(e) =>
+                  setLocalSettings({ ...localSettings, manualHubIndexLocalPathEn: e.target.value })
+                }
+                className="bg-zinc-800 border-zinc-700 text-white font-mono text-xs"
+              />
             </div>
           </div>
 

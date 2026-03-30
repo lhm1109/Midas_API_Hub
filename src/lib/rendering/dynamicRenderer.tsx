@@ -31,6 +31,42 @@ function resolveChildFieldKey(parentFieldName: string, childFieldName: string): 
   return `${parentFieldName}.${childFieldName}`;
 }
 
+function getFieldLeafName(fieldName: string): string {
+  return fieldName.split('.').filter(Boolean).pop() || fieldName;
+}
+
+function getKeyedObjectChildDefault(field: UIBuilderField): any {
+  if (field.default !== undefined && field.default !== null) {
+    return field.default;
+  }
+
+  if (field.enum && field.enum.length > 0) {
+    return field.enum[0];
+  }
+
+  if (field.type === 'array') return [];
+  if (field.type === 'boolean') return false;
+  if (field.type === 'object') return {};
+
+  return '';
+}
+
+function shouldRenderConditionalChild(
+  field: UIBuilderField,
+  dynamicFormData: Record<string, any>
+): boolean {
+  const condition = (field as any)['x-required-when'] || (field as any)['x-optional-when'];
+  if (!condition) return true;
+
+  return Object.entries(condition).every(([key, expectedValue]) => {
+    const actualValue = dynamicFormData[key];
+    if (typeof expectedValue === 'number') {
+      return Number(actualValue) === expectedValue;
+    }
+    return actualValue === expectedValue;
+  });
+}
+
 /**
  * YAML ?뺤쓽 湲곕컲 ?숈쟻 ???뚮뜑??
  */
@@ -157,6 +193,10 @@ function renderField(
     return null;
   }
 
+  if (field.type === 'object' && field.isKeyedObject) {
+    return renderKeyedObjectField(field, definition, dynamicFormData, updateDynamicField, fieldRuntimeStates);
+  }
+
   // Object with children
   if (field.type === 'object' && field.children && field.children.length > 0) {
     return renderObjectField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates);
@@ -169,6 +209,170 @@ function renderField(
 
   // ?쇰컲 ?꾨뱶
   return renderStandardField(field, definition, dynamicFormData, updateDynamicField, fieldRuntimeStates);
+}
+
+function renderKeyedObjectField(
+  field: UIBuilderField,
+  definition: BuilderDefinition,
+  dynamicFormData: Record<string, any>,
+  updateDynamicField: (key: string, value: any) => void,
+  fieldRuntimeStates?: Record<string, any>
+): React.ReactNode {
+  const objectStyle = definition.fieldRendering?.object?.style || {};
+  const labelStyle = definition.fieldRendering?.standard?.label || {};
+  const runtimeState = fieldRuntimeStates?.[field.name];
+  const isRequired = runtimeState?.requiredNow ?? field.required;
+  const keyedValue =
+    dynamicFormData[field.name] && typeof dynamicFormData[field.name] === 'object' && !Array.isArray(dynamicFormData[field.name])
+      ? dynamicFormData[field.name]
+      : {};
+
+  const entryKeys = Object.keys(keyedValue).sort((a, b) => {
+    const aNum = Number.parseInt(a, 10);
+    const bNum = Number.parseInt(b, 10);
+    const aIsNum = Number.isFinite(aNum);
+    const bIsNum = Number.isFinite(bNum);
+    if (aIsNum && bIsNum) return aNum - bNum;
+    return a.localeCompare(b);
+  });
+
+  const createDefaultEntry = () => {
+    const nextEntry: Record<string, any> = {};
+    field.children?.forEach((child) => {
+      if (!shouldRenderConditionalChild(child, dynamicFormData)) {
+        return;
+      }
+      nextEntry[getFieldLeafName(child.name)] = getKeyedObjectChildDefault(child);
+    });
+    return nextEntry;
+  };
+
+  const addEntry = () => {
+    let nextKey = '1';
+    while (Object.prototype.hasOwnProperty.call(keyedValue, nextKey)) {
+      nextKey = String(Number.parseInt(nextKey, 10) + 1);
+    }
+
+    updateDynamicField(field.name, {
+      ...keyedValue,
+      [nextKey]: createDefaultEntry(),
+    });
+  };
+
+  const removeEntry = (entryKey: string) => {
+    const nextValue = { ...keyedValue };
+    delete nextValue[entryKey];
+    updateDynamicField(field.name, nextValue);
+  };
+
+  const renameEntry = (previousKey: string, nextKeyRaw: string) => {
+    const nextKey = nextKeyRaw.trim();
+    if (!nextKey || nextKey === previousKey || Object.prototype.hasOwnProperty.call(keyedValue, nextKey)) {
+      return;
+    }
+
+    const reordered: Record<string, any> = {};
+    Object.entries(keyedValue).forEach(([entryKey, entryValue]) => {
+      reordered[entryKey === previousKey ? nextKey : entryKey] = entryValue;
+    });
+    updateDynamicField(field.name, reordered);
+  };
+
+  const updateEntryField = (entryKey: string, childName: string, value: any) => {
+    updateDynamicField(field.name, {
+      ...keyedValue,
+      [entryKey]: {
+        ...(keyedValue[entryKey] || {}),
+        [childName]: value,
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <Label className={labelStyle.className || 'text-sm flex items-center gap-2'}>
+          {field.description || field.name}
+          {isRequired && labelStyle.showRequired && <span className="text-red-400">*</span>}
+          {labelStyle.showType && (
+            <span className="text-[10px] text-zinc-600 font-mono ml-auto">{field.type}</span>
+          )}
+        </Label>
+        <button
+          type="button"
+          onClick={addEntry}
+          className="px-2 py-1 text-xs rounded bg-blue-600 hover:bg-blue-500 text-white"
+        >
+          + Add Entry
+        </button>
+      </div>
+
+      {definition.hintsDisplay?.enabled && field.placeholder && (
+        <p className="text-[10px] text-amber-400 italic">
+          Hint {field.placeholder}
+        </p>
+      )}
+
+      <div className={objectStyle.border || 'border border-zinc-700 rounded-md bg-zinc-900/50'}>
+        <div className={objectStyle.content || 'p-4 space-y-3 bg-zinc-900/30'}>
+          {entryKeys.length === 0 ? (
+            <div className="rounded border border-dashed border-zinc-700 px-3 py-4 text-sm text-zinc-500">
+              No entries yet. Add a node key, then fill in its fields.
+            </div>
+          ) : (
+            entryKeys.map((entryKey) => {
+              const entryValue =
+                keyedValue[entryKey] && typeof keyedValue[entryKey] === 'object' && !Array.isArray(keyedValue[entryKey])
+                  ? keyedValue[entryKey]
+                  : {};
+
+              return (
+                <div key={entryKey} className="rounded border border-zinc-700 bg-zinc-800/40 p-3 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Label className="text-xs text-zinc-400 min-w-12">Key</Label>
+                    <Input
+                      value={entryKey}
+                      onChange={(e) => renameEntry(entryKey, e.target.value)}
+                      className="h-8 bg-zinc-800 border-zinc-700"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeEntry(entryKey)}
+                      className="px-2 py-1 text-xs rounded bg-zinc-800 hover:bg-zinc-700 text-red-300"
+                    >
+                      Remove
+                    </button>
+                  </div>
+
+                  {field.children?.filter((child) => shouldRenderConditionalChild(child, dynamicFormData)).map((child) => {
+                    const childLeafName = getFieldLeafName(child.name);
+                    return (
+                      <div key={`${entryKey}-${child.name}`} className="space-y-2 pl-4 border-l-2 border-zinc-700">
+                        <Label className="text-xs flex items-center gap-2">
+                          {child.description || childLeafName}
+                          {child.required && <span className="text-red-400">*</span>}
+                          <span className="text-[10px] text-zinc-600 font-mono ml-auto">{child.type}</span>
+                        </Label>
+                        {renderFieldInput(
+                          child,
+                          `${field.name}.${entryKey}.${childLeafName}`,
+                          entryValue[childLeafName],
+                          (value) => updateEntryField(entryKey, childLeafName, value),
+                          definition,
+                          false,
+                          dynamicFormData
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /**

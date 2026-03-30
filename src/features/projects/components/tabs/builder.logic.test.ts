@@ -15,6 +15,7 @@ import {
     shouldInitializeField,
     initializeFieldValue,
     buildInitialDynamicFormData,
+    flattenObjectToDotNotationWithSchema,
 } from './builder.logic';
 import type { UIBuilderField } from '@/lib/schema';
 
@@ -54,6 +55,15 @@ describe('getDefaultValue', () => {
             type: 'boolean',
         };
         expect(getDefaultValue(field)).toBe(false);
+    });
+
+    it('should return empty object for keyed object field', () => {
+        const field: UIBuilderField = {
+            name: 'SELECTED_MEMBERS',
+            type: 'object',
+            isKeyedObject: true,
+        };
+        expect(getDefaultValue(field)).toEqual({});
     });
 
     it('should return null for required field (forceValue=true)', () => {
@@ -199,6 +209,21 @@ describe('initializeFieldValue', () => {
         expect(data['PARENT.CHILD_B']).toBe(10);
     });
 
+    it('should keep keyed object field as direct object value', () => {
+        const field: UIBuilderField = {
+            name: 'SELECTED_MEMBERS',
+            type: 'object',
+            isKeyedObject: true,
+            children: [
+                { name: 'ELEM_LIST', type: 'array', items: { type: 'integer' } },
+            ],
+        };
+        const data: Record<string, any> = {};
+        initializeFieldValue(field, data);
+        expect(data['SELECTED_MEMBERS']).toEqual({});
+        expect(data['SELECTED_MEMBERS._enabled']).toBeUndefined();
+    });
+
     it('should set array field to empty array', () => {
         const field: UIBuilderField = {
             name: 'ITEMS',
@@ -254,5 +279,35 @@ describe('buildInitialDynamicFormData', () => {
         const result = buildInitialDynamicFormData(schemaFields, {});
 
         expect('CONDITIONAL' in result).toBe(false);
+    });
+});
+
+describe('flattenObjectToDotNotationWithSchema', () => {
+    it('preserves nested keyed object values instead of flattening entry keys', () => {
+        const schemaFields: UIBuilderField[] = [
+            { name: 'SELECT_ALL', type: 'boolean' },
+            { name: 'SELECTED_MEMBERS', type: 'object', isKeyedObject: true },
+        ];
+
+        const target: Record<string, any> = {};
+        flattenObjectToDotNotationWithSchema(
+            {
+                SELECT_ALL: false,
+                SELECTED_MEMBERS: {
+                    '250': { ELEM_LIST: [484, 485] },
+                    '131': { ELEM_LIST: [196, 201] },
+                },
+            },
+            target,
+            schemaFields
+        );
+
+        expect(target).toEqual({
+            SELECT_ALL: false,
+            SELECTED_MEMBERS: {
+                '250': { ELEM_LIST: [484, 485] },
+                '131': { ELEM_LIST: [196, 201] },
+            },
+        });
     });
 });

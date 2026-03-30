@@ -39,6 +39,7 @@ export interface UIBuilderField {
   implicitOneOfGroups?: string[][];
   visible?: boolean;
   valueConstraint?: string;
+  isKeyedObject?: boolean;
 }
 
 function getFieldLeafName(fieldPath?: string): string {

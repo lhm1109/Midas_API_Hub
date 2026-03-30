@@ -3,23 +3,25 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X, Copy, Edit2, Check, ChevronRight } from 'lucide-react';
+import { GitBranch, GitCompare, Plus, Clock, Trash2, FileText, Calendar, FileCode, PlayCircle, Paperclip, Download, Upload, X, Copy, Edit2, Check, ChevronRight, Loader2 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { CompareVersionsDialog } from './CompareVersionsDialog';
-import { useEndpoints } from '@/hooks/useEndpoints';
-import type { ApiEndpoint, Version as _Version, Attachment, ApiGroup } from '@/types';
+import type { ApiEndpoint, ApiProduct, Version as _Version, Attachment, ApiGroup } from '@/types';
 import { toast } from 'sonner';
 
 interface VersionTabProps {
   endpoint: ApiEndpoint | null;
+  products: ApiProduct[];
 }
 
-export function VersionTab({ endpoint }: VersionTabProps) {
+export function VersionTab({ endpoint, products }: VersionTabProps) {
   const {
     versions,
     currentVersionId,
+    isFetchingVersions,
+    versionsLoadingEndpointId,
     createVersion,
     loadVersion,
     deleteVersion,
@@ -29,9 +31,6 @@ export function VersionTab({ endpoint }: VersionTabProps) {
     acquireEndpointLock,
     releaseEndpointLock,
   } = useAppStore();
-
-  // 🔥 products 트리에서 경로 계산
-  const { endpoints: products } = useEndpoints();
 
   // 🔥 endpoint의 전체 경로를 계산하는 함수
   const endpointBreadcrumb = useMemo(() => {
@@ -84,6 +83,10 @@ export function VersionTab({ endpoint }: VersionTabProps) {
   const [editingVersionTitleValue, setEditingVersionTitleValue] = useState('');
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const importFileInputRef = useRef<HTMLInputElement | null>(null);
+  const isVersionsLoading =
+    !!endpoint?.id &&
+    isFetchingVersions &&
+    versionsLoadingEndpointId === endpoint.id;
 
   // 엔드포인트가 변경될 때마다 해당 엔드포인트의 버전 목록을 가져옴
   useEffect(() => {
@@ -315,7 +318,9 @@ export function VersionTab({ endpoint }: VersionTabProps) {
       toast.success(`✅ Version ${version?.version || versionId} loaded successfully`);
       toast.info('🔒 Lock acquired - will be released on refresh or endpoint change');
       // 🔄 리스트 패널 락 상태 갱신 이벤트
-      window.dispatchEvent(new CustomEvent('lock-status-changed'));
+      window.dispatchEvent(new CustomEvent('lock-status-changed', {
+        detail: { endpointId: endpoint.id },
+      }));
     } catch (error) {
       toast.error(`❌ Failed to load version: ${error instanceof Error ? error.message : 'Unknown error'}`);
       // 로드 실패 시에만 락 해제
@@ -622,6 +627,12 @@ export function VersionTab({ endpoint }: VersionTabProps) {
           </div>
           <p className="text-sm text-zinc-500 mt-1">
             Manage versions for <span className="text-white font-mono">{endpoint.name}</span>
+            {isVersionsLoading && (
+              <span className="inline-flex items-center gap-2 ml-3 text-blue-400">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Loading versions...
+              </span>
+            )}
           </p>
         </div>
         <div className="flex gap-2">
@@ -654,7 +665,15 @@ export function VersionTab({ endpoint }: VersionTabProps) {
 
       {/* Version List */}
       <div className="flex-1 overflow-hidden p-6">
-        {endpointVersions.length === 0 ? (
+        {isVersionsLoading ? (
+          <div className="h-full flex items-center justify-center text-center">
+            <div className="text-blue-400">
+              <Loader2 className="w-10 h-10 mx-auto mb-4 animate-spin" />
+              <h3 className="text-lg font-semibold mb-2">Loading Version Control</h3>
+              <p className="text-sm text-zinc-500">Fetching versions for {endpoint.name}</p>
+            </div>
+          </div>
+        ) : endpointVersions.length === 0 ? (
           <div className="h-full flex items-center justify-center text-center">
             <div className="text-zinc-600">
               <GitBranch className="w-16 h-16 mx-auto mb-4 opacity-50" />

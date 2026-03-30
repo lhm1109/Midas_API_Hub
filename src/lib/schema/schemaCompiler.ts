@@ -1123,6 +1123,44 @@ function resolveFieldDefault(key: string, prop: EnhancedProperty): any {
   return undefined;
 }
 
+export function applyConditionalRequiredToField(
+  field: EnhancedField,
+  conditionalRequiredMap: Record<string, Record<string, any>>,
+  localFieldName: string,
+  fullFieldPath: string
+) {
+  const conditionalRequired = conditionalRequiredMap[localFieldName];
+  if (!conditionalRequired) {
+    return;
+  }
+
+  const existingRequiredWhen =
+    field['x-required-when'] &&
+    typeof field['x-required-when'] === 'object' &&
+    !Array.isArray(field['x-required-when'])
+      ? (field['x-required-when'] as Record<string, any>)
+      : undefined;
+
+  const hasNewInjectedCondition = Object.entries(conditionalRequired).some(([conditionKey, conditionValue]) => {
+    if (!existingRequiredWhen || !(conditionKey in existingRequiredWhen)) {
+      return true;
+    }
+
+    return JSON.stringify(existingRequiredWhen[conditionKey]) !== JSON.stringify(conditionValue);
+  });
+
+  field['x-required-when'] = {
+    ...(existingRequiredWhen ?? {}),
+    ...conditionalRequired,
+  };
+
+  if (hasNewInjectedCondition) {
+    field._injectedRequiredWhen = true;
+  }
+
+  console.log(`✅ Injected x-required-when for ${fullFieldPath}:`, field['x-required-when']);
+}
+
 function getNestedObjectSchema(schemaNode: any): { properties: Record<string, any>; required: string[] } | null {
   if (!schemaNode || typeof schemaNode !== 'object') return null;
 
@@ -1269,19 +1307,14 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
     }
 
     // 🎯 allOf에서 추출한 조건부 required 주입
-    if (conditionalRequiredMap[key]) {
-      field['x-required-when'] = {
-        ...(field['x-required-when'] ?? {}),
-        ...conditionalRequiredMap[key],
-      };
-      console.log(`✅ Injected x-required-when for ${key}:`, field['x-required-when']);
-    }
+    applyConditionalRequiredToField(field, conditionalRequiredMap, key, key);
 
     // 🔥 Object 타입 - 중첩 필드 추출 (properties + additionalProperties/patternProperties value-object 지원)
     const nestedObjectSchema = prop.type === 'object' ? getNestedObjectSchema(prop) : null;
     if (nestedObjectSchema) {
       field.children = [];
       const objRequired = nestedObjectSchema.required || [];
+      const childConditionalRequiredMap = normalizeConditionalRequired(prop as EnhancedSchema);
 
       for (const [childKey, childProp] of Object.entries(nestedObjectSchema.properties)) {
         const isRequiredByParent = objRequired.includes(childKey);
@@ -1307,6 +1340,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             childField[cpKey] = cpValue;
           }
         }
+
+        applyConditionalRequiredToField(
+          childField,
+          childConditionalRequiredMap,
+          childKey,
+          `${key}.${childKey}`
+        );
 
         // 🔥 oneOf → enum 변환 (object children)
         if ((childProp as any).oneOf && Array.isArray((childProp as any).oneOf) && !childField.enum) {
@@ -1335,6 +1375,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
         if ((childProp as any).type === 'array' && (childProp as any).items && (childProp as any).items.type === 'object' && (childProp as any).items.properties) {
           const itemSchema = (childProp as any).items;
           const itemRequired = itemSchema.required || [];
+          const itemConditionalRequiredMap = normalizeConditionalRequired(itemSchema as EnhancedSchema);
           childField.children = [];
 
           for (const [grandchildKey, grandchildProp] of Object.entries(itemSchema.properties)) {
@@ -1363,6 +1404,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               }
             }
 
+            applyConditionalRequiredToField(
+              grandchildField,
+              itemConditionalRequiredMap,
+              grandchildKey,
+              `${key}.${childKey}[].${grandchildKey}`
+            );
+
             // 🔥 oneOf → enum 변환 (array item grandchildren)
             if ((grandchildProp as any).oneOf && Array.isArray((grandchildProp as any).oneOf) && !grandchildField.enum) {
               const enumValues: any[] = [];
@@ -1390,6 +1438,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             if ((grandchildProp as any).type === 'object' && (grandchildProp as any).properties) {
               grandchildField.children = [];
               const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
+              const greatGrandchildConditionalRequiredMap = normalizeConditionalRequired(grandchildProp as EnhancedSchema);
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
                 const isGreatGrandchildRequired = grandchildObjRequired.includes(greatGrandchildKey);
@@ -1415,6 +1464,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                     greatGrandchildField[ggKey] = ggValue;
                   }
                 }
+
+                applyConditionalRequiredToField(
+                  greatGrandchildField,
+                  greatGrandchildConditionalRequiredMap,
+                  greatGrandchildKey,
+                  `${key}.${childKey}[].${grandchildKey}.${greatGrandchildKey}`
+                );
 
                 if ((greatGrandchildProp as any).oneOf && Array.isArray((greatGrandchildProp as any).oneOf) && !greatGrandchildField.enum) {
                   const enumValues: any[] = [];
@@ -1453,6 +1509,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
         if (childNestedObjectSchema) {
           childField.children = [];
           const childObjRequired = childNestedObjectSchema.required || [];
+          const grandchildConditionalRequiredMap = normalizeConditionalRequired(childProp as EnhancedSchema);
 
           for (const [grandchildKey, grandchildProp] of Object.entries(childNestedObjectSchema.properties)) {
             const isGrandchildRequired = childObjRequired.includes(grandchildKey);
@@ -1478,6 +1535,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                 grandchildField[gcKey] = gcValue;
               }
             }
+
+            applyConditionalRequiredToField(
+              grandchildField,
+              grandchildConditionalRequiredMap,
+              grandchildKey,
+              `${key}.${childKey}.${grandchildKey}`
+            );
 
             // 🔥 oneOf → enum 변환 (grandchildren)
             if ((grandchildProp as any).oneOf && Array.isArray((grandchildProp as any).oneOf) && !grandchildField.enum) {
@@ -1506,6 +1570,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             if ((grandchildProp as any).type === 'array' && (grandchildProp as any).items && (grandchildProp as any).items.type === 'object' && (grandchildProp as any).items.properties) {
               const itemSchema = (grandchildProp as any).items;
               const itemRequired = itemSchema.required || [];
+              const greatGrandchildConditionalRequiredMap = normalizeConditionalRequired(itemSchema as EnhancedSchema);
               grandchildField.children = [];
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries(itemSchema.properties)) {
@@ -1532,6 +1597,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                     greatGrandchildField[ggKey] = ggValue;
                   }
                 }
+
+                applyConditionalRequiredToField(
+                  greatGrandchildField,
+                  greatGrandchildConditionalRequiredMap,
+                  greatGrandchildKey,
+                  `${key}.${childKey}.${grandchildKey}[].${greatGrandchildKey}`
+                );
 
                 if ((greatGrandchildProp as any).oneOf && Array.isArray((greatGrandchildProp as any).oneOf) && !greatGrandchildField.enum) {
                   const enumValues: any[] = [];
@@ -1566,6 +1638,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             if (grandchildNestedObjectSchema) {
               grandchildField.children = [];
               const grandchildObjRequired = grandchildNestedObjectSchema.required || [];
+              const greatGrandchildConditionalRequiredMap = normalizeConditionalRequired(grandchildProp as EnhancedSchema);
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries(grandchildNestedObjectSchema.properties)) {
                 const isGreatGrandchildRequired = grandchildObjRequired.includes(greatGrandchildKey);
@@ -1591,6 +1664,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                     greatGrandchildField[ggKey] = ggValue;
                   }
                 }
+
+                applyConditionalRequiredToField(
+                  greatGrandchildField,
+                  greatGrandchildConditionalRequiredMap,
+                  greatGrandchildKey,
+                  `${key}.${childKey}.${grandchildKey}.${greatGrandchildKey}`
+                );
 
                 // 🔥 oneOf → enum 변환 (great-grandchildren)
                 if ((greatGrandchildProp as any).oneOf && Array.isArray((greatGrandchildProp as any).oneOf) && !greatGrandchildField.enum) {
@@ -1623,6 +1703,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             if ((grandchildProp as any).type === 'object' && (grandchildProp as any).properties) {
               grandchildField.children = [];
               const grandchildObjRequired = ((grandchildProp as any).required as string[]) || [];
+              const greatGrandchildConditionalRequiredMap = normalizeConditionalRequired(grandchildProp as EnhancedSchema);
 
               for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries((grandchildProp as any).properties)) {
                 const greatGrandchildField: EnhancedField = {
@@ -1647,6 +1728,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                     greatGrandchildField[ggKey] = ggValue;
                   }
                 }
+
+                applyConditionalRequiredToField(
+                  greatGrandchildField,
+                  greatGrandchildConditionalRequiredMap,
+                  greatGrandchildKey,
+                  `${key}[].${childKey}.${grandchildKey}.${greatGrandchildKey}`
+                );
 
                 // 🔥 oneOf → enum 변환 (array great-grandchildren)
                 if ((greatGrandchildProp as any).oneOf && Array.isArray((greatGrandchildProp as any).oneOf) && !greatGrandchildField.enum) {
@@ -1689,6 +1777,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       const itemSchema = prop.items as any;
       field.children = [];
       const itemRequired = itemSchema.required || [];
+      const itemConditionalRequiredMap = normalizeConditionalRequired(itemSchema as EnhancedSchema);
 
       // 🔥 조건 없는 필드와 조건 있는 필드 분리
       const noConditionChildren: EnhancedField[] = [];
@@ -1717,6 +1806,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
             childField[cpKey] = cpValue;
           }
         }
+
+        applyConditionalRequiredToField(
+          childField,
+          itemConditionalRequiredMap,
+          childKey,
+          `${key}[].${childKey}`
+        );
 
         // 🔥 oneOf → enum 변환 (array items 내부 필드)
         if ((childProp as any).oneOf && Array.isArray((childProp as any).oneOf) && !childField.enum) {
@@ -1748,6 +1844,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
         if (arrayItemNestedObjectSchema) {
           childField.children = [];
           const childObjRequired = arrayItemNestedObjectSchema.required || [];
+          const grandchildConditionalRequiredMap = normalizeConditionalRequired(childProp as EnhancedSchema);
 
           for (const [grandchildKey, grandchildProp] of Object.entries(arrayItemNestedObjectSchema.properties)) {
             const grandchildField: EnhancedField = {
@@ -1772,6 +1869,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                 grandchildField[gcKey] = gcValue;
               }
             }
+
+            applyConditionalRequiredToField(
+              grandchildField,
+              grandchildConditionalRequiredMap,
+              grandchildKey,
+              `${key}[].${childKey}.${grandchildKey}`
+            );
 
             // 🔥 oneOf → enum 변환 (grandchildren)
             if ((grandchildProp as any).oneOf && Array.isArray((grandchildProp as any).oneOf) && !grandchildField.enum) {

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save, Trash2 } from 'lucide-react';
+import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save, Trash2, GitCompare, RefreshCw, ArrowUpToLine } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import type { ApiEndpoint } from '@/types';
 import Editor from '@monaco-editor/react';
@@ -61,7 +61,7 @@ function normalizeZendeskLocale(locale?: string): string {
 }
 
 export function ManualTab({ endpoint }: ManualTabProps) {
-  const { manualData, setManualData } = useAppStore();
+  const { manualData, setManualData, updateManualData } = useAppStore();
   const [manualPublisher, setManualPublisher] = useState<ManualPublisher>('zendesk');
   const [zendeskUrl, setZendeskUrl] = useState('');
   const [zendeskEnvStatus, setZendeskEnvStatus] = useState<ZendeskEnvStatus | null>(null);
@@ -69,11 +69,17 @@ export function ManualTab({ endpoint }: ManualTabProps) {
   const [confluenceTarget, setConfluenceTarget] = useState('');
   const [confluenceEnvStatus, setConfluenceEnvStatus] = useState<ConfluenceEnvStatus | null>(null);
   const [isConfluenceSending, setIsConfluenceSending] = useState(false);
-  const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
+  const [viewMode, setViewMode] = useState<'preview' | 'code' | 'diff'>('preview');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 🔍 Zoom 상태 관리
   const [zoom, setZoom] = useState(1);
+
+  // 🔄 Zendesk Diff 상태
+  const [isFetchingZendesk, setIsFetchingZendesk] = useState(false);
+  const [zendeskFetchedBody, setZendeskFetchedBody] = useState<string | null>(null);
+  const [zendeskFetchedTitle, setZendeskFetchedTitle] = useState<string | null>(null);
+  const [zendeskFetchedUpdatedAt, setZendeskFetchedUpdatedAt] = useState<string | null>(null);
 
   // 🎯 Editable HTML State
   const [editableHTMLByPublisher, setEditableHTMLByPublisher] = useState<Record<ManualPublisher, string>>({
@@ -145,6 +151,49 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     void loadZendeskEnvStatus();
     void loadConfluenceEnvStatus();
   }, []);
+
+  // manualData.url이 있으면 zendeskUrl 초기 설정
+  useEffect(() => {
+    if (manualData?.url && !zendeskUrl.trim()) {
+      setZendeskUrl(manualData.url);
+    }
+  }, [manualData?.url]);
+
+  const handleFetchFromZendesk = async () => {
+    const targetUrl = zendeskUrl.trim();
+    if (!targetUrl) {
+      toast.error('Zendesk URL 또는 Article ID를 입력하세요.');
+      return;
+    }
+
+    const envStatus = zendeskEnvStatus ?? await loadZendeskEnvStatus();
+    if (!envStatus?.hasCredentials) {
+      toast.error('.env에 Zendesk 설정이 필요합니다.');
+      return;
+    }
+
+    try {
+      setIsFetchingZendesk(true);
+      const locale = normalizeZendeskLocale(envStatus.defaultLocale);
+      const params = new URLSearchParams({ targetInput: targetUrl, locale });
+      const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/article?${params}`);
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !payload?.success) {
+        toast.error(`Zendesk 불러오기 실패: ${payload?.error || `HTTP ${response.status}`}`);
+        return;
+      }
+
+      setZendeskFetchedBody(payload.data.body || '');
+      setZendeskFetchedTitle(payload.data.title || '');
+      setZendeskFetchedUpdatedAt(payload.data.updatedAt || null);
+      setViewMode('diff');
+      toast.success(`Zendesk 아티클 불러오기 완료 (${payload.data.articleId})`);
+    } catch (error) {
+      toast.error(`Zendesk 불러오기 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsFetchingZendesk(false);
+    }
+  };
 
   // 🎯 Zoom 리셋
   const handleResetZoom = () => {
@@ -691,6 +740,10 @@ ${specificationSectionHTML}
       const articleUrl = result.data?.articleUrl;
       if (articleUrl) {
         setZendeskUrl(articleUrl);
+        // 자동 저장: manualData.url에 생성된 Zendesk URL 기록
+        if (result.data?.mode === 'create' || !manualData?.url) {
+          updateManualData({ url: articleUrl, articleId: result.data?.articleId });
+        }
       }
 
       toast.success(`Zendesk ${modeLabel} 완료 (Article ${articleId}, ${articleLocale}, Attachments ${attachmentCount})`);
@@ -898,6 +951,23 @@ ${specificationSectionHTML}
                 >
                   {currentEnvReady ? 'Env Ready' : 'Env Check'}
                 </span>
+                {manualPublisher === 'zendesk' && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => void handleFetchFromZendesk()}
+                    disabled={isFetchingZendesk || !zendeskUrl.trim()}
+                    title="Zendesk에서 현재 아티클을 불러와 로컬 문서와 비교합니다"
+                    className="h-8 px-3 text-xs whitespace-nowrap border-violet-600/60 text-violet-400 hover:bg-violet-900/20 disabled:opacity-50"
+                  >
+                    {isFetchingZendesk ? (
+                      <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
+                    ) : (
+                      <GitCompare className="w-3 h-3 mr-1" />
+                    )}
+                    {isFetchingZendesk ? 'Fetching...' : 'Diff'}
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   onClick={handleSendCurrent}
@@ -906,7 +976,7 @@ ${specificationSectionHTML}
                   className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-500 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-3 h-3 mr-1" />
-                  {isSendingCurrent ? 'Sending...' : 'Send'}
+                  {isSendingCurrent ? 'Sending...' : (zendeskUrl.trim() ? 'Update' : 'Create')}
                 </Button>
               </div>
             </div>
@@ -940,6 +1010,17 @@ ${specificationSectionHTML}
               <Code className="w-3 h-3 mr-1" />
               Code
             </Button>
+            {manualPublisher === 'zendesk' && zendeskFetchedBody !== null && (
+              <Button
+                size="sm"
+                variant={viewMode === 'diff' ? 'default' : 'outline'}
+                onClick={() => setViewMode('diff')}
+                className="h-7 px-2 text-xs text-violet-400 border-violet-600/50 data-[state=active]:bg-violet-600"
+              >
+                <GitCompare className="w-3 h-3 mr-1" />
+                Diff
+              </Button>
+            )}
           </div>
 
           <div className="h-4 w-px bg-zinc-700" />
@@ -1071,6 +1152,24 @@ ${specificationSectionHTML}
               </ScrollArea>
             </div>
           </div>
+        ) : viewMode === 'diff' ? (
+          <ZendeskDiffView
+            localHtml={editableHTML || htmlContent}
+            remoteHtml={zendeskFetchedBody || ''}
+            remoteTitle={zendeskFetchedTitle}
+            remoteUpdatedAt={zendeskFetchedUpdatedAt}
+            onUseLocal={() => {
+              void handleSendToZendesk();
+            }}
+            onUseRemote={() => {
+              setEditableHTMLByPublisher((prev) => ({
+                ...prev,
+                [manualPublisher]: zendeskFetchedBody || '',
+              }));
+              setIsHTMLModifiedByPublisher((prev) => ({ ...prev, [manualPublisher]: true }));
+              setViewMode('code');
+            }}
+          />
         ) : (
           <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
             <div className="p-3 border-b border-zinc-800 bg-zinc-900 flex-shrink-0">
@@ -1157,6 +1256,200 @@ ${specificationSectionHTML}
         )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── ZendeskDiffView ──────────────────────────────────────────────────────────
+interface ZendeskDiffViewProps {
+  localHtml: string;
+  remoteHtml: string;
+  remoteTitle: string | null;
+  remoteUpdatedAt: string | null;
+  onUseLocal: () => void;
+  onUseRemote: () => void;
+}
+
+function stripHtmlTags(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#039;/gi, "'")
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function computeDiffLines(
+  oldText: string,
+  newText: string,
+): Array<{ type: 'same' | 'removed' | 'added'; text: string }> {
+  const oldLines = oldText.split('\n');
+  const newLines = newText.split('\n');
+
+  const m = oldLines.length;
+  const n = newLines.length;
+
+  const LIMIT = 1000;
+  const oldTrunc = oldLines.slice(0, LIMIT);
+  const newTrunc = newLines.slice(0, LIMIT);
+
+  const dp: number[][] = Array.from({ length: oldTrunc.length + 1 }, () =>
+    new Array(newTrunc.length + 1).fill(0)
+  );
+
+  for (let i = oldTrunc.length - 1; i >= 0; i--) {
+    for (let j = newTrunc.length - 1; j >= 0; j--) {
+      if (oldTrunc[i] === newTrunc[j]) {
+        dp[i][j] = dp[i + 1][j + 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
+      }
+    }
+  }
+
+  const result: Array<{ type: 'same' | 'removed' | 'added'; text: string }> = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < oldTrunc.length || j < newTrunc.length) {
+    if (i < oldTrunc.length && j < newTrunc.length && oldTrunc[i] === newTrunc[j]) {
+      result.push({ type: 'same', text: oldTrunc[i] });
+      i++;
+      j++;
+    } else if (
+      j < newTrunc.length &&
+      (i >= oldTrunc.length || dp[i + 1]?.[j] <= dp[i]?.[j + 1])
+    ) {
+      result.push({ type: 'added', text: newTrunc[j] });
+      j++;
+    } else {
+      result.push({ type: 'removed', text: oldTrunc[i] });
+      i++;
+    }
+  }
+
+  if (m > LIMIT || n > LIMIT) {
+    result.push({ type: 'added', text: `... (truncated, ${m} vs ${n} total lines)` });
+  }
+
+  return result;
+}
+
+function ZendeskDiffView({ localHtml, remoteHtml, remoteTitle, remoteUpdatedAt, onUseLocal, onUseRemote }: ZendeskDiffViewProps) {
+  const localText = stripHtmlTags(localHtml);
+  const remoteText = stripHtmlTags(remoteHtml);
+  const diffLines = computeDiffLines(remoteText, localText);
+
+  const addedCount = diffLines.filter(l => l.type === 'added').length;
+  const removedCount = diffLines.filter(l => l.type === 'removed').length;
+  const isIdentical = addedCount === 0 && removedCount === 0;
+
+  return (
+    <div className="h-full flex flex-col bg-zinc-950 overflow-hidden">
+      {/* Diff header */}
+      <div className="flex-shrink-0 px-4 py-3 border-b border-zinc-800 bg-zinc-900 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <GitCompare className="w-4 h-4 text-violet-400" />
+          <span className="text-sm font-medium text-white">Zendesk Diff</span>
+          {remoteTitle && (
+            <span className="text-xs text-zinc-400 truncate max-w-[200px]" title={remoteTitle}>{remoteTitle}</span>
+          )}
+          {remoteUpdatedAt && (
+            <span className="text-xs text-zinc-500">
+              Zendesk 최종 수정: {new Date(remoteUpdatedAt).toLocaleString()}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {isIdentical ? (
+            <span className="text-xs text-emerald-400 bg-emerald-900/30 border border-emerald-600/40 px-2 py-1 rounded">✓ 변경 없음 (동일)</span>
+          ) : (
+            <span className="text-xs text-zinc-300 bg-zinc-800 border border-zinc-700 px-2 py-1 rounded">
+              <span className="text-emerald-400">+{addedCount}</span>
+              {' '}
+              <span className="text-red-400">-{removedCount}</span>
+              {' '}줄
+            </span>
+          )}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onUseRemote}
+            className="h-7 px-2 text-xs border-amber-600/50 text-amber-400 hover:bg-amber-900/20"
+            title="Zendesk 버전을 로컬로 가져오기"
+          >
+            <ArrowUpToLine className="w-3 h-3 mr-1 rotate-180" />
+            Zendesk → Local
+          </Button>
+          <Button
+            size="sm"
+            onClick={onUseLocal}
+            className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-500"
+            title="로컬 버전을 Zendesk로 업데이트"
+          >
+            <ArrowUpToLine className="w-3 h-3 mr-1" />
+            Local → Zendesk
+          </Button>
+        </div>
+      </div>
+
+      {/* Side-by-side label bar */}
+      <div className="flex-shrink-0 grid grid-cols-2 border-b border-zinc-800 bg-zinc-900/60 text-xs">
+        <div className="px-4 py-1.5 text-zinc-400 border-r border-zinc-800">
+          <span className="text-red-400 font-medium">Zendesk (현재)</span>
+        </div>
+        <div className="px-4 py-1.5 text-zinc-400">
+          <span className="text-emerald-400 font-medium">Local (새로운)</span>
+        </div>
+      </div>
+
+      {/* Side-by-side diff */}
+      <div className="flex-1 overflow-hidden grid grid-cols-2 divide-x divide-zinc-800">
+        <ScrollArea className="h-full">
+          <div className="font-mono text-xs leading-relaxed p-2 min-w-0">
+            {diffLines.map((line, idx) => (
+              <div
+                key={idx}
+                className={
+                  line.type === 'removed'
+                    ? 'bg-red-900/30 text-red-300 px-2 py-px whitespace-pre-wrap break-all'
+                    : line.type === 'added'
+                    ? 'text-zinc-700 px-2 py-px select-none'
+                    : 'text-zinc-400 px-2 py-px whitespace-pre-wrap break-all'
+                }
+              >
+                {line.type === 'removed' ? `- ${line.text}` : line.type === 'added' ? '\u00a0' : `  ${line.text}`}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+        <ScrollArea className="h-full">
+          <div className="font-mono text-xs leading-relaxed p-2 min-w-0">
+            {diffLines.map((line, idx) => (
+              <div
+                key={idx}
+                className={
+                  line.type === 'added'
+                    ? 'bg-emerald-900/30 text-emerald-300 px-2 py-px whitespace-pre-wrap break-all'
+                    : line.type === 'removed'
+                    ? 'text-zinc-700 px-2 py-px select-none'
+                    : 'text-zinc-400 px-2 py-px whitespace-pre-wrap break-all'
+                }
+              >
+                {line.type === 'added' ? `+ ${line.text}` : line.type === 'removed' ? '\u00a0' : `  ${line.text}`}
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

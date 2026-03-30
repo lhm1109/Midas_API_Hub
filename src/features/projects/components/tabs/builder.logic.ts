@@ -18,6 +18,18 @@ function resolveNestedFieldKey(parentFieldName: string, childFieldName: string):
     return `${parentFieldName}.${childFieldName}`;
 }
 
+function findFieldByPath(fieldPath: string, schemaFields: UIBuilderField[]): UIBuilderField | undefined {
+    return schemaFields.find((field) => field.name === fieldPath);
+}
+
+export function shouldPreserveObjectValue(field?: UIBuilderField): boolean {
+    if (!field || field.type !== 'object') {
+        return false;
+    }
+
+    return field.isKeyedObject === true || !field.children || field.children.length === 0;
+}
+
 // ============================================================================
 // getDefaultValue: 필드의 기본값 반환
 // 원본 위치: BuilderTab.tsx 라인 289-313
@@ -42,6 +54,7 @@ export function getDefaultValue(field: UIBuilderField, forceValue: boolean = fal
     // 3. 타입별 초기값
     if (field.type === 'array') return [];  // 배열은 빈 배열
     if (field.type === 'boolean') return false;  // boolean은 false
+    if (field.type === 'object' && field.isKeyedObject) return {};  // keyed object는 빈 object
 
     // 4. 🔥 FIX: Required 필드는 null 반환 (forceValue=true일 때)
     // forceValue=true: Required 필드로 간주, JSON에 key가 포함되어야 함
@@ -113,6 +126,8 @@ export function initializeFieldValue(
 ): void {
     if (field.type === 'array' && field.items) {
         data[field.name] = getDefaultValueFn(field);
+    } else if (field.type === 'object' && field.isKeyedObject) {
+        data[field.name] = getDefaultValueFn(field);
     } else if (field.type === 'object' && field.children) {
         data[`${field.name}._enabled`] = false;
         field.children.forEach(child => {
@@ -164,6 +179,32 @@ export function buildAssignInstanceInitialData(
     schemaFields: UIBuilderField[]
 ): Record<string, any> {
     return buildInitialDynamicFormData(schemaFields, {});
+}
+
+export function flattenObjectToDotNotationWithSchema(
+    obj: any,
+    target: Record<string, any>,
+    schemaFields: UIBuilderField[],
+    prefix = ''
+): void {
+    Object.keys(obj).forEach((key) => {
+        const value = obj[key];
+        const newKey = prefix ? `${prefix}.${key}` : key;
+        const matchedField = findFieldByPath(newKey, schemaFields);
+
+        if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+            if (shouldPreserveObjectValue(matchedField)) {
+                target[newKey] = value;
+                return;
+            }
+
+            target[`${newKey}._enabled`] = true;
+            flattenObjectToDotNotationWithSchema(value, target, schemaFields, newKey);
+            return;
+        }
+
+        target[newKey] = value;
+    });
 }
 
 // ============================================================================

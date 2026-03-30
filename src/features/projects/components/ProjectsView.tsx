@@ -1,7 +1,7 @@
 import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2, SplitSquareHorizontal } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab, SchemaSplitTab } from './tabs';
-import type { ApiEndpoint } from '@/types';
+import type { ApiEndpoint, ApiProduct } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -9,6 +9,7 @@ import { useEffect, useState, useRef } from 'react';
 
 interface MainWorkspaceProps {
   endpoint: ApiEndpoint | null;
+  products: ApiProduct[];
   settings: {
     baseUrl: string;
     mapiKey: string;
@@ -17,9 +18,11 @@ interface MainWorkspaceProps {
   };
 }
 
-export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
+export function ProjectsView({ endpoint, products, settings }: MainWorkspaceProps) {
   const { 
     currentVersionId, 
+    isFetchingVersions,
+    versionsLoadingEndpointId,
     getCurrentVersion, 
     saveCurrentVersion, 
     hasUnsavedChanges,
@@ -98,6 +101,8 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
   }
 
   const currentVersion = getCurrentVersion();
+  const isVersionsLoading =
+    isFetchingVersions && versionsLoadingEndpointId === endpoint.id;
   
   // 다른 사용자가 잠금한 경우 읽기 전용 모드
   const isReadOnly = endpointLock?.locked && endpointLock?.lockedBy !== useAppStore.getState().currentUserId;
@@ -151,6 +156,11 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
                 </div>
               )}
             </>
+          ) : isVersionsLoading ? (
+            <div className="flex items-center gap-2 text-sm text-blue-400">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Loading version control...</span>
+            </div>
           ) : (
             <div className="flex items-center gap-2 text-sm text-zinc-500">
               <AlertCircle className="w-4 h-4" />
@@ -194,7 +204,11 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               value="version"
               className="px-4 py-2 rounded-md text-sm font-medium transition-colors data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 hover:text-zinc-200"
             >
-              <GitBranch className="w-4 h-4 mr-2" />
+              {isVersionsLoading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <GitBranch className="w-4 h-4 mr-2" />
+              )}
               Version
             </TabsTrigger>
             <TabsTrigger
@@ -242,7 +256,7 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
 
         {/* Tab Content */}
         <TabsContent value="version" className="flex-1 m-0 overflow-hidden data-[state=active]:flex">
-          <VersionTab key={`version-${endpoint.id}`} endpoint={endpoint} />
+          <VersionTab key={`version-${endpoint.id}`} endpoint={endpoint} products={products} />
         </TabsContent>
 
         <TabsContent value="manual" className="flex-1 m-0 overflow-hidden data-[state=active]:flex">
@@ -267,7 +281,12 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
               </div>
             </div>
           ) : (
-            <SpecTab key={`spec-${endpoint.id}-${currentVersionId || 'none'}`} endpoint={endpoint} settings={settings} />
+            <SpecTab
+              key={`spec-${endpoint.id}-${currentVersionId || 'none'}`}
+              endpoint={endpoint}
+              products={products}
+              settings={settings}
+            />
           )}
         </TabsContent>
 
@@ -283,6 +302,7 @@ export function ProjectsView({ endpoint, settings }: MainWorkspaceProps) {
             <BuilderTab 
               key={`builder-${endpoint.id}-${currentVersionId || 'none'}`} 
               endpoint={endpoint}
+              products={products}
               settings={settings}
             />
           )}

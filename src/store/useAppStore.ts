@@ -2,12 +2,16 @@ import { create } from 'zustand';
 import apiClient from '@/lib/api-client';
 import type { Version, ManualData, SpecData, BuilderData, RunnerData, ApiEndpoint } from '@/types';
 
+let latestVersionsRequestId = 0;
+
 export interface AppState {
   currentTab: 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split';
 
   // 🎯 **Version 관리** (최상위)
   versions: Version[];
   currentVersionId: string | null; // 현재 편집 중인 버전
+  isFetchingVersions: boolean;
+  versionsLoadingEndpointId: string | null;
 
   // 🎯 **편집 중인 데이터** (버전과 독립적으로 관리)
   manualData: ManualData | null;
@@ -74,6 +78,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   // 🎯 Version 초기 상태
   versions: [],
   currentVersionId: null,
+  isFetchingVersions: false,
+  versionsLoadingEndpointId: null,
 
   // 🎯 편집 중인 데이터 초기 상태
   manualData: null,
@@ -108,9 +114,35 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   // 🎯 **버전 목록 조회** (서버에서)
   fetchVersions: async (endpointId) => {
-    const response = await apiClient.getVersions(endpointId);
-    if (response.data) {
-      set({ versions: response.data });
+    const requestId = ++latestVersionsRequestId;
+
+    set({
+      isFetchingVersions: true,
+      versionsLoadingEndpointId: endpointId ?? null,
+    });
+
+    try {
+      const response = await apiClient.getVersions(endpointId);
+      const stillCurrentRequest = requestId === latestVersionsRequestId;
+
+      if (!stillCurrentRequest) {
+        return;
+      }
+
+      if (response.data) {
+        set({ versions: response.data });
+      } else if (endpointId) {
+        set({ versions: [] });
+      }
+    } finally {
+      const isSameRequest = requestId === latestVersionsRequestId;
+
+      if (isSameRequest) {
+        set({
+          isFetchingVersions: false,
+          versionsLoadingEndpointId: null,
+        });
+      }
     }
   },
 

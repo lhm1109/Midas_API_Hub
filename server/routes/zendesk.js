@@ -455,6 +455,61 @@ router.get('/env', async (req, res) => {
   }
 });
 
+router.get('/article', async (req, res) => {
+  try {
+    const envConfig = getZendeskConfigFromEnv();
+    if (!envConfig.isReady) {
+      return res.status(400).json({
+        success: false,
+        error: `Zendesk .env settings missing: ${envConfig.missingFields.join(', ')}`,
+      });
+    }
+
+    const config = {
+      subdomain: envConfig.subdomain,
+      email: envConfig.email,
+      apiToken: envConfig.apiToken,
+      password: envConfig.password,
+    };
+
+    const { targetInput = '', locale = '' } = req.query || {};
+    const fallbackLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale);
+    const directTarget = parseZendeskTarget(targetInput, fallbackLocale);
+
+    if (!directTarget) {
+      return res.status(400).json({
+        success: false,
+        error: 'Zendesk URL 또는 Article ID 형식이 올바르지 않습니다.',
+      });
+    }
+
+    const safeArticleId = toZendeskPathSegment(directTarget.articleId, 'articleId');
+    const safeLocale = toZendeskPathSegment(directTarget.locale, 'locale');
+
+    // 번역본(body HTML) 가져오기
+    const translationData = await makeZendeskRequest(
+      config,
+      `/api/v2/help_center/articles/${safeArticleId}/translations/${safeLocale}.json`
+    );
+    const translation = translationData?.translation || {};
+
+    res.json({
+      success: true,
+      data: {
+        articleId: directTarget.articleId,
+        locale: directTarget.locale,
+        title: asTrimmedString(translation.title),
+        body: asTrimmedString(translation.body),
+        articleUrl: buildZendeskArticleUrl(config.subdomain, directTarget.locale, directTarget.articleId),
+        updatedAt: translation.updated_at || null,
+      },
+    });
+  } catch (error) {
+    console.error('Zendesk fetch article error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.post('/publish', async (req, res) => {
   try {
     const envConfig = getZendeskConfigFromEnv();

@@ -46,6 +46,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { EndpointDialog } from './EndpointDialog';
+import { DuplicateEndpointDialog } from './DuplicateEndpointDialog';
 import { ProductGroupDialog } from './ProductGroupDialog';
 import { apiClient } from '@/lib/api-client';
 import { useAppStore } from '@/store/useAppStore';
@@ -662,6 +663,10 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const [editingEndpoint, setEditingEndpoint] = useState<ApiEndpoint | null>(null);
   const [dialogProductId, setDialogProductId] = useState<string>('');
   const [dialogGroupId, setDialogGroupId] = useState<string>('');
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [duplicatingEndpoint, setDuplicatingEndpoint] = useState<ApiEndpoint | null>(null);
+  const [duplicateProductId, setDuplicateProductId] = useState<string>('');
+  const [duplicateGroupId, setDuplicateGroupId] = useState<string>('');
   const [productGroupDialogOpen, setProductGroupDialogOpen] = useState(false);
   const [productGroupDialogType, setProductGroupDialogType] = useState<'product' | 'group'>('product');
   const [productGroupDialogProductId, setProductGroupDialogProductId] = useState<string>('');
@@ -670,6 +675,9 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const [dropIndicator, setDropIndicator] = useState<{ type: 'group' | 'endpoint'; itemId: string; position: 'before' | 'after' } | null>(null);
   const [nestTargetGroupId, setNestTargetGroupId] = useState<string | null>(null);
   const [nestTargetKind, setNestTargetKind] = useState<'group' | 'endpoint' | 'outdent' | null>(null);
+  const nestTargetGroupIdRef = useRef<string | null>(null);
+  const nestTargetKindRef = useRef<'group' | 'endpoint' | 'outdent' | null>(null);
+  const dropIndicatorRef = useRef<{ type: 'group' | 'endpoint'; itemId: string; position: 'before' | 'after' } | null>(null);
   const pointerYRef = useRef<number | null>(null);
   const pointerXRef = useRef<number | null>(null);
   const pointerListenerRef = useRef<((e: PointerEvent) => void) | null>(null);
@@ -723,64 +731,86 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
   }, [currentUserId]); // selectedEndpoint 제거 - 함수 파라미터로만 사용
 
-  // 🔥 모든 엔드포인트의 초기 상태 확인 (한 번만, products가 실제로 변경될 때만)
-  // ⚡ 최적화: JSON.stringify 대신 ID 배열 비교
-  const productsRef = useRef<string>('');
-  const productsIdsHash = useMemo(() => {
-    const ids: string[] = [];
-    products.forEach(p => {
-      ids.push(p.id);
-      p.groups.forEach(g => {
-        ids.push(g.id);
-        g.endpoints.forEach(e => ids.push(e.id));
+  const allEndpointIds = useMemo(() => {
+    const endpointIds = new Set<string>();
+
+    const collectEndpoints = (groups: ApiGroup[]) => {
+      groups.forEach((group) => {
+        group.endpoints.forEach((endpoint) => {
+          endpointIds.add(endpoint.id);
+        });
+        if (group.subgroups.length > 0) {
+          collectEndpoints(group.subgroups);
+        }
       });
+    };
+
+    products.forEach((product) => {
+      collectEndpoints(product.groups);
     });
-    return ids.join('|');
+
+    return Array.from(endpointIds).sort();
   }, [products]);
 
-  useEffect(() => {
-    // products가 실제로 변경되었을 때만 실행
-    if (productsRef.current === productsIdsHash) {
+  const endpointIdsRef = useRef<string>('');
+  const endpointIdsHash = useMemo(() => allEndpointIds.join('|'), [allEndpointIds]);
+
+  const refreshEndpointLocks = useCallback(async (endpointIds: string[]) => {
+    if (endpointIds.length === 0) {
+      setEndpointLocks({});
       return;
     }
-    productsRef.current = productsIdsHash;
 
-    const checkAllLocks = async () => {
-      const allEndpoints: string[] = [];
+    try {
+      const response = await fetch('http://localhost:9527/api/locks/all');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch locks: ${response.status}`);
+      }
 
-      // 재귀적으로 모든 그룹의 엔드포인트 수집
-      const collectEndpoints = (groups: typeof products[0]['groups']) => {
-        groups.forEach(group => {
-          group.endpoints.forEach(endpoint => {
-            allEndpoints.push(endpoint.id);
-          });
-          // 하위 그룹도 재귀적으로 순회
-          if (group.subgroups && group.subgroups.length > 0) {
-            collectEndpoints(group.subgroups);
-          }
-        });
-      };
+      const data = await response.json();
+      const lockedEndpoints = new Map<string, { locked_by?: string }>(
+        (data.endpointLocks || []).map((lock: any) => [lock.endpoint_id, lock])
+      );
 
-      products.forEach(product => {
-        collectEndpoints(product.groups);
+      const nextLocks: Record<string, { locked: boolean; lockedBy?: string }> = {};
+      endpointIds.forEach((endpointId) => {
+        const lock = lockedEndpoints.get(endpointId);
+        nextLocks[endpointId] = {
+          locked: !!lock && lock.locked_by !== currentUserId,
+          lockedBy: lock?.locked_by,
+        };
       });
 
-      // 병렬로 모든 엔드포인트 상태 확인
-      await Promise.all(allEndpoints.map(endpointId => checkLockStatus(endpointId)));
+      setEndpointLocks(nextLocks);
+    } catch (error) {
+      console.error('Failed to refresh endpoint locks:', error);
+    }
+  }, [currentUserId]);
+
+  useEffect(() => {
+    if (endpointIdsRef.current === endpointIdsHash) {
+      return;
+    }
+    endpointIdsRef.current = endpointIdsHash;
+    refreshEndpointLocks(allEndpointIds);
+  }, [allEndpointIds, endpointIdsHash, refreshEndpointLocks]);
+
+  useEffect(() => {
+    const handleLockStatusChanged: EventListener = (event) => {
+      const endpointId = (event as CustomEvent<{ endpointId?: string }>).detail?.endpointId;
+      if (endpointId) {
+        checkLockStatus(endpointId);
+        return;
+      }
+
+      refreshEndpointLocks(allEndpointIds);
     };
 
-    // 초기 로드 시 한 번만 체크 (주기적 체크는 제거 - 버전 로드 시에만 체크)
-    checkAllLocks();
-
-    // 🔄 lock-status-changed 이벤트 구독 (VersionTab에서 Load 시 발생)
-    const handleLockStatusChanged = () => {
-      checkAllLocks();
-    };
     window.addEventListener('lock-status-changed', handleLockStatusChanged);
     return () => {
       window.removeEventListener('lock-status-changed', handleLockStatusChanged);
     };
-  }, [products, checkLockStatus]);
+  }, [allEndpointIds, checkLockStatus, refreshEndpointLocks]);
 
   // 🔥 선택된 엔드포인트는 즉시 확인
   const selectedEndpointRef = useRef<string | null>(null);
@@ -831,6 +861,9 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
   const resetDragState = () => {
     setActiveDroppableId(null);
+    nestTargetGroupIdRef.current = null;
+    nestTargetKindRef.current = null;
+    dropIndicatorRef.current = null;
     setNestTargetGroupId(null);
     setNestTargetKind(null);
     setDropIndicator(null);
@@ -844,11 +877,22 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
   };
 
+  const updateNestTarget = (groupId: string | null, kind: 'group' | 'endpoint' | 'outdent' | null) => {
+    nestTargetGroupIdRef.current = groupId;
+    nestTargetKindRef.current = kind;
+    setNestTargetGroupId(groupId);
+    setNestTargetKind(kind);
+  };
+
+  const updateDropIndicator = (indicator: { type: 'group' | 'endpoint'; itemId: string; position: 'before' | 'after' } | null) => {
+    dropIndicatorRef.current = indicator;
+    setDropIndicator(indicator);
+  };
+
   const handleDragStart = (_event: DragStartEvent) => {
     dragOffsetXRef.current = 0;
-    setNestTargetGroupId(null);
-    setNestTargetKind(null);
-    setDropIndicator(null);
+    updateNestTarget(null, null);
+    updateDropIndicator(null);
 
     if (!pointerListenerRef.current) {
       pointerListenerRef.current = (e: PointerEvent) => {
@@ -873,11 +917,10 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
     if (!over) {
       if (nestTargetGroupId !== null) {
-        setNestTargetGroupId(null);
-        setNestTargetKind(null);
+        updateNestTarget(null, null);
       }
       if (dropIndicator !== null) {
-        setDropIndicator(null);
+        updateDropIndicator(null);
       }
       return;
     }
@@ -889,15 +932,15 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     const pointerY = pointerYRef.current;
     const pointerX = pointerXRef.current;
 
-    const leftZone = overRect && pointerX !== null ? overRect.left + overRect.width * 0.35 : null;
-    const rightZone = overRect && pointerX !== null ? overRect.left + overRect.width * 0.65 : null;
+    const leftZone = overRect && pointerX !== null ? overRect.left + overRect.width * 0.25 : null;
+    const rightZone = overRect && pointerX !== null ? overRect.left + overRect.width * 0.55 : null;
 
     const shouldNest = rightZone !== null && pointerX !== null
-      ? pointerX > rightZone
+      ? pointerX > rightZone && dragOffsetXRef.current > NEST_THRESHOLD
       : dragOffsetXRef.current > NEST_THRESHOLD;
 
     const shouldOutdent = leftZone !== null && pointerX !== null
-      ? pointerX < leftZone
+      ? pointerX < leftZone && dragOffsetXRef.current < -NEST_THRESHOLD
       : dragOffsetXRef.current < -NEST_THRESHOLD;
 
     const getPosition = () => {
@@ -938,13 +981,12 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
     if (activeParsed.type === 'group' && overParsed.type === 'group' && isHoveringParent) {
       if (nestTargetGroupId !== overParsed.itemId) {
-        setNestTargetGroupId(overParsed.itemId);
-      }
-      if (nestTargetKind !== 'outdent') {
-        setNestTargetKind('outdent');
+        updateNestTarget(overParsed.itemId, 'outdent');
+      } else if (nestTargetKind !== 'outdent') {
+        updateNestTarget(overParsed.itemId, 'outdent');
       }
       if (dropIndicator !== null) {
-        setDropIndicator(null);
+        updateDropIndicator(null);
       }
       return;
     }
@@ -952,13 +994,12 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     // ??? ?? ???? ???? ?? ?? ?? ??
     if (activeParsed.type === 'group' && overParsed.type === 'groupContainer' && activeGroupInfo && overParsed.containerParentId === activeGroupInfo.parentId) {
       if (nestTargetGroupId !== overParsed.containerParentId) {
-        setNestTargetGroupId(overParsed.containerParentId);
-      }
-      if (nestTargetKind !== 'outdent') {
-        setNestTargetKind('outdent');
+        updateNestTarget(overParsed.containerParentId, 'outdent');
+      } else if (nestTargetKind !== 'outdent') {
+        updateNestTarget(overParsed.containerParentId, 'outdent');
       }
       if (dropIndicator !== null) {
-        setDropIndicator(null);
+        updateDropIndicator(null);
       }
       return;
     }
@@ -966,13 +1007,12 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     // ?? ? ??, ??? ???? ??? ??
     if (activeParsed.type === 'group' && overParsed.type === 'group' && shouldNest) {
       if (nestTargetGroupId !== overParsed.itemId) {
-        setNestTargetGroupId(overParsed.itemId);
-      }
-      if (nestTargetKind !== 'group') {
-        setNestTargetKind('group');
+        updateNestTarget(overParsed.itemId, 'group');
+      } else if (nestTargetKind !== 'group') {
+        updateNestTarget(overParsed.itemId, 'group');
       }
       if (dropIndicator !== null) {
-        setDropIndicator(null);
+        updateDropIndicator(null);
       }
       return;
     }
@@ -981,17 +1021,16 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     if (activeParsed.type === 'group' && overParsed.type === 'group' && shouldOutdent) {
       const canOutdent = !!activeGroupInfo && !!overGroupInfo
         && activeGroupInfo.productId === overGroupInfo.productId
-        && activeGroupInfo.parentId !== overGroupInfo.parentId;
+        && !!activeGroupInfo.parentId;
 
       if (canOutdent) {
         if (nestTargetGroupId !== overParsed.itemId) {
-          setNestTargetGroupId(overParsed.itemId);
-        }
-        if (nestTargetKind !== 'outdent') {
-          setNestTargetKind('outdent');
+          updateNestTarget(overParsed.itemId, 'outdent');
+        } else if (nestTargetKind !== 'outdent') {
+          updateNestTarget(overParsed.itemId, 'outdent');
         }
         if (dropIndicator !== null) {
-          setDropIndicator(null);
+          updateDropIndicator(null);
         }
         return;
       }
@@ -1002,14 +1041,13 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       const position = getPosition();
       if (!position) {
         if (dropIndicator !== null) {
-          setDropIndicator(null);
+          updateDropIndicator(null);
         }
       } else if (!dropIndicator || dropIndicator.type !== 'group' || dropIndicator.itemId !== overParsed.itemId || dropIndicator.position !== position) {
-        setDropIndicator({ type: 'group', itemId: overParsed.itemId, position });
+        updateDropIndicator({ type: 'group', itemId: overParsed.itemId, position });
       }
       if (nestTargetGroupId !== null) {
-        setNestTargetGroupId(null);
-        setNestTargetKind(null);
+        updateNestTarget(null, null);
       }
       return;
     }
@@ -1019,10 +1057,10 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       const position = getPosition();
       if (!position) {
         if (dropIndicator !== null) {
-          setDropIndicator(null);
+          updateDropIndicator(null);
         }
       } else if (!dropIndicator || dropIndicator.type !== 'endpoint' || dropIndicator.itemId !== overParsed.itemId || dropIndicator.position !== position) {
-        setDropIndicator({ type: 'endpoint', itemId: overParsed.itemId, position });
+        updateDropIndicator({ type: 'endpoint', itemId: overParsed.itemId, position });
       }
       return;
     }
@@ -1030,24 +1068,22 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     // ????? ? ?? ?? ? ?? ?????? ??
     if (activeParsed.type === 'endpoint' && overParsed.type === 'group') {
       if (nestTargetGroupId !== overParsed.itemId) {
-        setNestTargetGroupId(overParsed.itemId);
-      }
-      if (nestTargetKind !== 'endpoint') {
-        setNestTargetKind('endpoint');
+        updateNestTarget(overParsed.itemId, 'endpoint');
+      } else if (nestTargetKind !== 'endpoint') {
+        updateNestTarget(overParsed.itemId, 'endpoint');
       }
       if (dropIndicator !== null) {
-        setDropIndicator(null);
+        updateDropIndicator(null);
       }
       return;
     }
 
     if (nestTargetGroupId !== null) {
-      setNestTargetGroupId(null);
-      setNestTargetKind(null);
+      updateNestTarget(null, null);
     }
 
     if (dropIndicator !== null) {
-      setDropIndicator(null);
+      updateDropIndicator(null);
     }
   };
 
@@ -1106,6 +1142,19 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       if (group.subgroups && group.subgroups.length > 0) {
         const result = findEndpointInGroups(group.subgroups, endpointId);
         if (result) return result;
+      }
+    }
+    return null;
+  };
+
+  const findEndpointLocation = (endpointId: string): { endpoint: ApiEndpoint; group: ApiGroup; productId: string } | null => {
+    for (const product of products) {
+      const result = findEndpointInGroups(product.groups, endpointId);
+      if (result) {
+        return {
+          ...result,
+          productId: product.id,
+        };
       }
     }
     return null;
@@ -1172,6 +1221,8 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
   const handleGroupDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
+    const currentNestTargetKind = nestTargetKindRef.current;
+    const currentDropIndicator = dropIndicatorRef.current;
 
     if (!over || active.id === over.id) {
       return;
@@ -1214,7 +1265,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
     }
 
     // === Outdent via parent container ===
-    if (overParsed.type === 'groupContainer' && nestTargetKind === 'outdent') {
+    if (overParsed.type === 'groupContainer' && currentNestTargetKind === 'outdent') {
       const targetParentId = overParsed.containerParentId
         ? findGroupWithParent(activeInfo.product.groups, overParsed.containerParentId, null)?.parentId ?? null
         : null;
@@ -1312,8 +1363,8 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
         return;
       }
 
-      const shouldNest = nestTargetKind === 'group';
-      const shouldOutdent = nestTargetKind === 'outdent';
+      const shouldNest = currentNestTargetKind === 'group';
+      const shouldOutdent = currentNestTargetKind === 'outdent';
 
       // ?? ?? ?? ???? ?? ??? ??
       if (activeInfo.parentId === overInfo.group.id) {
@@ -1378,7 +1429,13 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       }
 
       if (shouldOutdent) {
-        const targetParentId = overInfo.parentId ?? null;
+        const currentParentInfo = activeInfo.parentId
+          ? findGroupWithParent(activeInfo.product.groups, activeInfo.parentId, null)
+          : null;
+
+        const targetParentId = activeInfo.parentId === overInfo.parentId
+          ? currentParentInfo?.parentId ?? null
+          : overInfo.parentId ?? null;
 
         if (targetParentId === activeInfo.group.id) {
           alert('??Group cannot be moved into itself.');
@@ -1429,8 +1486,8 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
         return;
       }
 
-      const indicator = dropIndicator && dropIndicator.type === 'group' && dropIndicator.itemId === overInfo.group.id
-        ? dropIndicator.position
+      const indicator = currentDropIndicator && currentDropIndicator.type === 'group' && currentDropIndicator.itemId === overInfo.group.id
+        ? currentDropIndicator.position
         : null;
 
       const reorderedGroups = indicator
@@ -1571,19 +1628,16 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   };
 
   const handleDuplicateEndpoint = async (endpoint: ApiEndpoint) => {
-    try {
-      const result = await apiClient.duplicateEndpoint(endpoint.id);
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      alert(`✅ Endpoint duplicated: ${result.data?.endpoint?.name}`);
-      if (onEndpointsChange) {
-        onEndpointsChange();
-      }
-    } catch (error) {
-      console.error('Failed to duplicate endpoint:', error);
-      alert(`❌ Duplicate failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    const location = findEndpointLocation(endpoint.id);
+    if (!location) {
+      alert('❌ Duplicate failed: original endpoint location not found.');
+      return;
     }
+
+    setDuplicatingEndpoint(endpoint);
+    setDuplicateProductId(location.productId);
+    setDuplicateGroupId(location.group.id);
+    setDuplicateDialogOpen(true);
   };
 
   // 그룹 이름 변경 다이얼로그 열기
@@ -1624,6 +1678,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
   const handleDragEnd = async (event: DragEndEvent) => {
     try {
       const { active, over } = event;
+      const currentDropIndicator = dropIndicatorRef.current;
 
       if (!over) {
         return;
@@ -1831,8 +1886,8 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
 
           console.log('??Reorder:', { from: oldIndex, to: newIndex });
 
-          const indicator = dropIndicator && dropIndicator.type === 'endpoint' && dropIndicator.itemId === targetEndpointId
-            ? dropIndicator.position
+          const indicator = currentDropIndicator && currentDropIndicator.type === 'endpoint' && currentDropIndicator.itemId === targetEndpointId
+            ? currentDropIndicator.position
             : null;
 
           const reorderedEndpoints = indicator
@@ -1994,7 +2049,18 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
       }
     } catch (error) {
       console.error('❌ Failed to delete group:', error);
-      alert(`❌ Delete failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+      if (errorMessage.includes('Legacy group deletion blocked for safety')) {
+        alert(
+          `⚠️ 안전을 위해 그룹 "${groupName}" 삭제를 차단했습니다.\n\n` +
+          `이 폴더는 groups 테이블에 연결되어 있지 않아 이름 기준 삭제 시 같은 이름 폴더가 함께 삭제될 수 있습니다.\n` +
+          `먼저 해당 폴더를 정상 그룹으로 정리한 뒤 다시 삭제해주세요.`
+        );
+        return;
+      }
+
+      alert(`❌ Delete failed: ${errorMessage}`);
     }
   };
 
@@ -2149,6 +2215,16 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
         endpoint={editingEndpoint}
         productId={dialogProductId}
         groupId={dialogGroupId}
+        onSuccess={handleDialogSuccess}
+      />
+
+      <DuplicateEndpointDialog
+        open={duplicateDialogOpen}
+        onOpenChange={setDuplicateDialogOpen}
+        endpoint={duplicatingEndpoint}
+        products={products}
+        sourceProductId={duplicateProductId}
+        sourceGroupId={duplicateGroupId}
         onSuccess={handleDialogSuccess}
       />
 

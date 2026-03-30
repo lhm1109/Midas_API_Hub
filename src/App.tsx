@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { GlobalSidebar } from '@/components/layouts';
 import { SettingsModal } from '@/components/common';
 import { ProjectsView, APIListPanel } from '@/features/projects/components';
+import { ManualHubView } from '@/features/manual-hub';
 import { HistoryView } from '@/features/history/components';
 import { DocsView } from '@/features/docs/components';
 import { DebugView } from '@/features/debug/components';
@@ -13,17 +14,23 @@ import { TerminalTab } from '@/components/terminal';
 import { DatabaseTab } from '@/features/database/DatabaseTab';
 import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
-import type { ApiEndpoint } from '@/types';
+import type { ApiEndpoint, Settings } from '@/types';
 import { Toaster } from '@/components/ui/sonner';
 import { initSchemaLogicRules } from '@/lib/schema/schemaLogicEngine';
 import { refreshProductMappings } from '@/config/psdMapping';
+import {
+  DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_EN,
+  DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_KO,
+} from '@/config/constants';
 import { ChevronRight } from 'lucide-react';
 
 export default function App() {
   const { setRunnerData, releaseEndpointLock } = useAppStore();
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
   const { tasks: managerTasks } = useManagerData();  // Manager 작업 데이터
-  const [activeView, setActiveView] = useState<'terminal' | 'manager' | 'projects' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'>('manager');
+  const [activeView, setActiveView] = useState<
+    'terminal' | 'manager' | 'projects' | 'manualHub' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'
+  >('manager');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
   const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
@@ -150,18 +157,8 @@ export default function App() {
   }, [endpointsLoading, apiData, selectedEndpoint]);
 
   // 🎯 Settings 초기값 (localStorage에서 로드)
-  const [settings, setSettings] = useState(() => {
-    try {
-      const savedSettings = localStorage.getItem('api-settings');
-      if (savedSettings) {
-        return JSON.parse(savedSettings);
-      }
-    } catch (error) {
-      console.error('Failed to load settings from localStorage:', error);
-    }
-
-    // 기본값
-    return {
+  const [settings, setSettings] = useState<Settings>(() => {
+    const defaults: Settings = {
       baseUrl: 'https://api-beta.midasit.com/civil',
       mapiKey: '',
       commonHeaders: JSON.stringify(
@@ -172,13 +169,40 @@ export default function App() {
         null,
         2
       ),
-      useAssignWrapper: true, // 기본값: Assign 래퍼 사용
-      schemaMode: 'enhanced', // 기본값: 개선 모드 (Original/Enhanced 2탭)
-      userName: localStorage.getItem('userName') || '', // 🔥 사용자 이름 로드
+      useAssignWrapper: true,
+      schemaMode: 'enhanced' as const,
+      userName: localStorage.getItem('userName') || '',
       supabaseUrl: '',
       supabaseServiceKey: '',
       supabaseDbPassword: '',
+      manualHubIndexLocalPathKo: DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_KO,
+      manualHubIndexLocalPathEn: DEFAULT_MANUAL_HUB_INDEX_LOCAL_PATH_EN,
     };
+    try {
+      const savedSettings = localStorage.getItem('api-settings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings) as Record<string, unknown>;
+        return {
+          ...defaults,
+          ...parsed,
+          manualHubIndexLocalPathKo: Object.prototype.hasOwnProperty.call(
+            parsed,
+            'manualHubIndexLocalPathKo'
+          )
+            ? String(parsed.manualHubIndexLocalPathKo ?? '')
+            : defaults.manualHubIndexLocalPathKo,
+          manualHubIndexLocalPathEn: Object.prototype.hasOwnProperty.call(
+            parsed,
+            'manualHubIndexLocalPathEn'
+          )
+            ? String(parsed.manualHubIndexLocalPathEn ?? '')
+            : defaults.manualHubIndexLocalPathEn,
+        };
+      }
+    } catch (error) {
+      console.error('Failed to load settings from localStorage:', error);
+    }
+    return defaults;
   });
 
   // 🎯 Settings가 변경될 때마다 localStorage에 저장
@@ -235,9 +259,7 @@ export default function App() {
   const handleEndpointSelect = async (endpoint: ApiEndpoint) => {
     const {
       resetCurrentVersion,
-      fetchVersions,
       releaseEndpointLock,
-      acquireEndpointLock,
       endpoint: currentEndpoint
     } = useAppStore.getState();
 
@@ -251,22 +273,8 @@ export default function App() {
     // 🔥 Store에 엔드포인트 저장
     useAppStore.setState({ endpoint });
 
-    // 🔥 엔드포인트 변경 시 현재 버전과 모든 탭 데이터 리셋
-    // 🔥 1. 현재 버전 및 모든 데이터 리셋
+    // 🔥 엔드포인트 변경 시 현재 버전과 편집 상태 리셋
     resetCurrentVersion();
-
-    // 🔥 2. 새 엔드포인트의 잠금 획득 시도
-    const lockAcquired = await acquireEndpointLock(endpoint.id);
-    if (!lockAcquired) {
-      console.warn('⚠️ Failed to acquire lock - endpoint may be locked by another user');
-    }
-
-    // 🔥 3. 새 엔드포인트의 버전 목록 불러오기
-    try {
-      await fetchVersions(endpoint.id);
-    } catch (error) {
-      console.error('Failed to fetch versions:', error);
-    }
   };
 
   return (
@@ -376,9 +384,21 @@ export default function App() {
             console.warn('Endpoint not found:', endpointId);
           }}
         />
+      ) : activeView === 'manualHub' ? (
+        <ManualHubView
+          products={apiData}
+          settings={settings}
+          onNavigateToProjectEndpoint={(ep) => {
+            setSelectedEndpoint(ep);
+            useAppStore.setState({ endpoint: ep });
+            useAppStore.getState().setCurrentTab('manual');
+            setActiveView('projects');
+          }}
+        />
       ) : activeView === 'projects' ? (
         <ProjectsView
           endpoint={selectedEndpoint}
+          products={apiData}
           settings={settings}
         />
       ) : activeView === 'history' ? (
