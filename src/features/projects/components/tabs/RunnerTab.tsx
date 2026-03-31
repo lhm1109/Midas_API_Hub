@@ -74,6 +74,8 @@ export function RunnerTab({
   // 🎯 Send to Manual 다이얼로그 상태
   const [showSendToManualDialog, setShowSendToManualDialog] = useState(false);
   const [exampleTitle, setExampleTitle] = useState('');
+  const [sendToManualRequestBody, setSendToManualRequestBody] = useState('');
+  const [sendToManualResponseBody, setSendToManualResponseBody] = useState('');
   const [showRequestTableDialog, setShowRequestTableDialog] = useState(false);
   const [showResultTableDialog, setShowResultTableDialog] = useState(false);
   const endpointIdRef = useRef(endpoint.id);
@@ -382,6 +384,19 @@ export function RunnerTab({
     }
   };
 
+  const resetSendToManualDialog = () => {
+    setShowSendToManualDialog(false);
+    setExampleTitle('');
+    setSendToManualRequestBody('');
+    setSendToManualResponseBody('');
+  };
+
+  const openSendToManualDialog = () => {
+    setSendToManualRequestBody(requestBody || '{}');
+    setSendToManualResponseBody(response?.body || runnerData?.responseBody || '');
+    setShowSendToManualDialog(true);
+  };
+
   // 🎯 Send to Manual 함수
   const handleSendToManual = () => {
     if (!exampleTitle.trim()) {
@@ -389,44 +404,47 @@ export function RunnerTab({
       return;
     }
 
-    if (!response) {
-      toast.error('No response available. Please run the request first.');
+    const requestInput = sendToManualRequestBody.trim();
+    const responseInput = sendToManualResponseBody.trim();
+
+    if (!requestInput && !responseInput) {
+      toast.error('Please enter a request body or a response body to send.');
       return;
     }
 
-    // Request와 Response를 HTML로 변환
-    const requestHTML = formatJsonToHTML(requestBody);
-    const responseHTML = formatJsonToHTML(response.body);
+    const requestExamples = [...(manualData?.requestExamples || [])];
+    const responseExamples = [...(manualData?.responseExamples || [])];
 
-    // 🎯 Request Example 생성
-    const newRequestExample = {
-      title: exampleTitle.trim(),
-      code: requestHTML
-    };
+    if (requestInput) {
+      requestExamples.push({
+        title: exampleTitle.trim(),
+        code: formatJsonToHTML(requestInput),
+      });
+    }
 
-    // 🎯 Response Example 생성
-    const newResponseExample = {
-      title: exampleTitle.trim(),
-      code: responseHTML
-    };
+    if (responseInput) {
+      responseExamples.push({
+        title: exampleTitle.trim(),
+        code: formatJsonToHTML(responseInput),
+      });
+    }
 
     // Manual Data 업데이트 - Request/Response 분리
     const updatedManualData = {
-      ...manualData,
+      ...(manualData || {}),
       title: manualData?.title || `${endpoint.name} Manual`,
       category: manualData?.category || endpoint.method,
       inputUri: manualData?.inputUri || endpoint.path,
       activeMethods: manualData?.activeMethods || endpoint.method,
       jsonSchema: manualData?.jsonSchema || '',
       examples: manualData?.examples || [],  // deprecated
-      requestExamples: [...(manualData?.requestExamples || []), newRequestExample],
-      responseExamples: [...(manualData?.responseExamples || []), newResponseExample],
+      requestExamples,
+      responseExamples,
       specifications: manualData?.specifications || '',
     };
 
     setManualData(updatedManualData);
-    setShowSendToManualDialog(false);
-    setExampleTitle('');
+    resetSendToManualDialog();
     toast.success(`✅ Example "${exampleTitle}" added to Manual tab!`);
   };
 
@@ -662,8 +680,7 @@ export function RunnerTab({
               Save Test Case
             </Button>
             <Button
-              onClick={() => setShowSendToManualDialog(true)}
-              disabled={!response}
+              onClick={openSendToManualDialog}
               size="sm"
               className="h-8 text-xs bg-blue-600 hover:bg-blue-500"
             >
@@ -675,12 +692,21 @@ export function RunnerTab({
       </div>
 
       {/* 🎯 Send to Manual Dialog */}
-      <Dialog open={showSendToManualDialog} onOpenChange={setShowSendToManualDialog}>
-        <DialogContent className="bg-zinc-900 border-zinc-700 max-w-md">
+      <Dialog
+        open={showSendToManualDialog}
+        onOpenChange={(open) => {
+          if (open) {
+            setShowSendToManualDialog(true);
+            return;
+          }
+          resetSendToManualDialog();
+        }}
+      >
+        <DialogContent className="bg-zinc-900 border-zinc-700 max-w-6xl">
           <DialogHeader>
             <DialogTitle className="text-white">Send to Manual Tab</DialogTitle>
             <DialogDescription className="text-zinc-400">
-              Add this test case as an example in the Manual tab
+              Add request and response examples to the Manual tab. You can edit both before sending.
             </DialogDescription>
           </DialogHeader>
 
@@ -698,45 +724,82 @@ export function RunnerTab({
                 autoFocus
               />
               <p className="text-xs text-zinc-400">
-                This title will be used in the Manual tab's Examples section
+                This title will be used for the request/response examples in the Manual tab
               </p>
             </div>
 
-            {response && (
-              <div className="p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
-                <p className="text-xs text-zinc-400 mb-2">Preview:</p>
-                <div className="space-y-1 text-xs">
-                  <p className="text-zinc-300">
-                    <span className="text-zinc-500">Status:</span> {response.status} {response.statusText}
-                  </p>
-                  <p className="text-zinc-300">
-                    <span className="text-zinc-500">Time:</span> {response.time}ms
-                  </p>
-                  <p className="text-zinc-300">
-                    <span className="text-zinc-500">Request Body:</span> {requestBody.length} characters
-                  </p>
-                  <p className="text-zinc-300">
-                    <span className="text-zinc-500">Response Body:</span> {response.body.length} characters
-                  </p>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-zinc-200">Request Example</Label>
+                  <span className="text-xs text-zinc-500">{sendToManualRequestBody.length} chars</span>
                 </div>
+                <div className="h-72 overflow-hidden rounded-md border border-zinc-700">
+                  <CodeEditor
+                    value={sendToManualRequestBody}
+                    onChange={(value) => setSendToManualRequestBody(value || '')}
+                    language="json"
+                    minimap={false}
+                  />
+                </div>
+                <p className="text-xs text-zinc-400">
+                  Leave empty if you do not want to add a request example.
+                </p>
               </div>
-            )}
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-zinc-200">Response Example</Label>
+                  <span className="text-xs text-zinc-500">{sendToManualResponseBody.length} chars</span>
+                </div>
+                <div className="h-72 overflow-hidden rounded-md border border-zinc-700">
+                  <CodeEditor
+                    value={sendToManualResponseBody}
+                    onChange={(value) => setSendToManualResponseBody(value || '')}
+                    language="json"
+                    minimap={false}
+                  />
+                </div>
+                <p className="text-xs text-zinc-400">
+                  You can paste or edit a response manually even if the runner has not executed yet.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
+              <p className="text-xs text-zinc-400 mb-2">Preview:</p>
+              <div className="space-y-1 text-xs">
+                {response && (
+                  <>
+                    <p className="text-zinc-300">
+                      <span className="text-zinc-500">Last Status:</span> {response.status} {response.statusText}
+                    </p>
+                    <p className="text-zinc-300">
+                      <span className="text-zinc-500">Last Time:</span> {response.time}ms
+                    </p>
+                  </>
+                )}
+                <p className="text-zinc-300">
+                  <span className="text-zinc-500">Request Example:</span> {sendToManualRequestBody.trim() ? 'Will be added' : 'Skipped'}
+                </p>
+                <p className="text-zinc-300">
+                  <span className="text-zinc-500">Response Example:</span> {sendToManualResponseBody.trim() ? 'Will be added' : 'Skipped'}
+                </p>
+              </div>
+            </div>
           </div>
 
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => {
-                setShowSendToManualDialog(false);
-                setExampleTitle('');
-              }}
+              onClick={resetSendToManualDialog}
               className="border-zinc-700 text-zinc-200"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSendToManual}
-              disabled={!exampleTitle.trim()}
+              disabled={!exampleTitle.trim() || (!sendToManualRequestBody.trim() && !sendToManualResponseBody.trim())}
               className="bg-blue-600 hover:bg-blue-500"
             >
               <Send className="w-3 h-3 mr-2" />

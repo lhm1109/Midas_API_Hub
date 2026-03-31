@@ -150,6 +150,48 @@ const inlineRefsToSingleSchema = (root: any, components: Record<string, any>) =>
   return inlined;
 };
 
+const pushRefSlice = (
+  slices: SplitSchemaSlice[],
+  path: string,
+  refName: string,
+  components: Record<string, any>,
+  description?: string
+) => {
+  if (!components[refName]) return;
+
+  slices.push({
+    id: `ref:${path}:${refName}`,
+    kind: 'ref',
+    label: formatRefLabel(refName),
+    subtitle: refName,
+    description,
+    path,
+    refName,
+    schema: inlineRefsToSingleSchema(components[refName], components),
+  });
+};
+
+const pushInlineSlice = (
+  slices: SplitSchemaSlice[],
+  ownerName: string,
+  compositionKey: typeof COMPOSITION_KEYS[number],
+  index: number,
+  path: string,
+  node: any,
+  components: Record<string, any>
+) => {
+  const description = typeof node?.description === 'string' ? node.description.trim() : undefined;
+  slices.push({
+    id: `inline:${path}`,
+    kind: 'inline',
+    label: formatInlineLabel(compositionKey, index, description),
+    subtitle: `${ownerName} ${compositionKey}[${index}]`,
+    description,
+    path,
+    schema: inlineRefsToSingleSchema(node, components),
+  });
+};
+
 const pickMapBodyKey = (keys: string[], kind: 'request' | 'response') => {
   if (!Array.isArray(keys) || keys.length === 0) return undefined;
   const tokenRegex = kind === 'request' ? REQUEST_KEY_REGEX : RESPONSE_KEY_REGEX;
@@ -166,48 +208,64 @@ const pickMapBodyKey = (keys: string[], kind: 'request' | 'response') => {
   )[0];
 };
 
-const appendCompositionSlices = (
+const appendNestedSlices = (
   slices: SplitSchemaSlice[],
   ownerName: string,
   ownerSchema: any,
-  components: Record<string, any>
+  components: Record<string, any>,
+  basePath = ownerName,
+  traversedRefs = new Set<string>()
 ) => {
   if (!ownerSchema || typeof ownerSchema !== 'object') return;
 
-  COMPOSITION_KEYS.forEach((compositionKey) => {
-    const nodes = ownerSchema?.[compositionKey];
-    if (!Array.isArray(nodes)) return;
+  const visit = (node: any, path: string) => {
+    if (!node || typeof node !== 'object') return;
 
-    nodes.forEach((node, index) => {
-      const path = `${ownerName}.${compositionKey}[${index}]`;
+    if (Array.isArray(node)) {
+      node.forEach((item, index) => {
+        visit(item, `${path}[${index}]`);
+      });
+      return;
+    }
+
+    const refName = resolveRefName(node?.$ref);
+    if (refName && components[refName]) {
       const description = typeof node?.description === 'string' ? node.description.trim() : undefined;
-      const refName = resolveRefName(node?.$ref);
+      pushRefSlice(slices, path, refName, components, description);
 
-      if (refName && components[refName]) {
-        slices.push({
-          id: `ref:${ownerName}:${compositionKey}:${index}:${refName}`,
-          kind: 'ref',
-          label: formatRefLabel(refName),
-          subtitle: refName,
-          description,
-          path,
-          refName,
-          schema: inlineRefsToSingleSchema(components[refName], components),
-        });
-        return;
+      if (!traversedRefs.has(refName)) {
+        traversedRefs.add(refName);
+        visit(components[refName], refName);
       }
 
-      slices.push({
-        id: `inline:${ownerName}:${compositionKey}:${index}`,
-        kind: 'inline',
-        label: formatInlineLabel(compositionKey, index, description),
-        subtitle: `${ownerName} ${compositionKey}[${index}]`,
-        description,
-        path,
-        schema: inlineRefsToSingleSchema(node, components),
+      Object.entries(node).forEach(([key, value]) => {
+        if (key === '$ref') return;
+        visit(value, `${path}.${key}`);
+      });
+      return;
+    }
+
+    COMPOSITION_KEYS.forEach((compositionKey) => {
+      const nodes = node?.[compositionKey];
+      if (!Array.isArray(nodes)) return;
+
+      nodes.forEach((child, index) => {
+        const childPath = `${path}.${compositionKey}[${index}]`;
+        if (!resolveRefName(child?.$ref)) {
+          pushInlineSlice(slices, ownerName, compositionKey, index, childPath, child, components);
+        }
+        visit(child, childPath);
       });
     });
-  });
+
+    Object.entries(node).forEach(([key, value]) => {
+      if (key === 'components') return;
+      if ((COMPOSITION_KEYS as readonly string[]).includes(key)) return;
+      visit(value, `${path}.${key}`);
+    });
+  };
+
+  visit(ownerSchema, basePath);
 };
 
 const dedupeSlices = (slices: SplitSchemaSlice[]): SplitSchemaSlice[] => {
@@ -235,7 +293,7 @@ const buildSlicesForMapBody = (rootKey: string, schemas: Record<string, any>): S
 
   const ctx = getMapEntryContext(rootSchema);
   if (!ctx) {
-    appendCompositionSlices(slices, rootKey, rootSchema, schemas);
+    appendNestedSlices(slices, rootKey, rootSchema, schemas, rootKey);
     return dedupeSlices(slices);
   }
 
@@ -257,7 +315,13 @@ const buildSlicesForMapBody = (rootKey: string, schemas: Record<string, any>): S
     schema: inlineRefsToSingleSchema(entrySource, schemas),
   });
 
-  appendCompositionSlices(slices, entryRefName || ctx.wrapperKey, entrySource, schemas);
+  appendNestedSlices(
+    slices,
+    entryRefName || ctx.wrapperKey,
+    entrySource,
+    schemas,
+    entryRefName || entryPath
+  );
 
   return dedupeSlices(slices);
 };

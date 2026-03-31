@@ -902,11 +902,6 @@ function buildLegacyConditionLabel(
   return `When ${conditionText}`;
 }
 
-function countLegacyConditionHeaders(fields: EnhancedField[]): number {
-  const { fieldGroups } = groupLegacyFieldsByCondition(fields);
-  return fieldGroups.size;
-}
-
 function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldReferenceMap): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
@@ -1223,85 +1218,8 @@ function generateFieldRowLegacy(
     ? field.children
     : materializeArrayItemChildren(field);
 
-  // 🔥 rowspan 계산: children + grandchildren + 조건 헤더 모두 포함
-  const calculateTotalRows = (children: EnhancedField[]): number => {
-    if (!children || children.length === 0) return 1;
-    const {
-      fieldGroups: childrenByCondition,
-      noConditionFields: childrenWithoutCondition,
-    } = groupLegacyFieldsByCondition(children);
-
-    let totalRows = 1; // 부모 행
-
-    // 조건 없는 children
-    for (const { field: child } of childrenWithoutCondition) {
-      totalRows += 1; // child 행
-      const effectiveGrandchildren = child.children && child.children.length > 0
-        ? child.children
-        : materializeArrayItemChildren(child);
-      if (effectiveGrandchildren.length > 0) {
-        totalRows += effectiveGrandchildren.length; // grandchildren 행들
-        totalRows += countLegacyConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
-        for (const grandchild of effectiveGrandchildren) {
-          if (grandchild.children && grandchild.children.length > 0) {
-            totalRows += grandchild.children.length; // great-grandchildren 행들
-            totalRows += countLegacyConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
-          }
-        }
-      }
-    }
-
-    // 조건별 children (섹션 헤더 + 필드들)
-    for (const [, childrenWithCondition] of childrenByCondition.entries()) {
-      totalRows += 1; // section-header 행
-      for (const { field: child } of childrenWithCondition) {
-        totalRows += 1; // child 행
-        const effectiveGrandchildren = child.children && child.children.length > 0
-          ? child.children
-          : materializeArrayItemChildren(child);
-        if (effectiveGrandchildren.length > 0) {
-          totalRows += effectiveGrandchildren.length; // grandchildren 행들
-          totalRows += countLegacyConditionHeaders(effectiveGrandchildren); // grandchildren 조건 헤더
-          for (const grandchild of effectiveGrandchildren) {
-            if (grandchild.children && grandchild.children.length > 0) {
-              totalRows += grandchild.children.length; // great-grandchildren 행들
-              totalRows += countLegacyConditionHeaders(grandchild.children); // great-grandchildren 조건 헤더
-            }
-          }
-        }
-      }
-    }
-
-    return totalRows;
-  };
-
   const hasChildren = effectiveChildren.length > 0;
-  const rowspanValue = hasChildren ? calculateTotalRows(effectiveChildren) : 1;
-  const rowspanAttr = hasChildren ? ` rowspan="${rowspanValue}"` : '';
-
-  // Zendesk 스타일: inline 패딩 + <p> 태그 + text-align: center
-  let html = `
-    <tr>
-      <td style="${ZENDESK_CELL_STYLE}"${rowspanAttr}>
-        <p style="text-align: center;">${rowNumber}</p>
-      </td>
-      <td style="${ZENDESK_CELL_STYLE}" colspan="4">
-        ${descriptionHTML}
-      </td>
-      <td style="${ZENDESK_CELL_STYLE}">
-        <p style="text-align: center;">"${escapeHtml(field.key)}"</p>
-      </td>
-      <td style="${ZENDESK_CELL_STYLE}">
-        <p style="text-align: center;">${typeDisplay}</p>
-      </td>
-      <td style="${ZENDESK_CELL_STYLE}">
-        <p style="text-align: center;">${defaultValue}</p>
-      </td>
-      <td style="${ZENDESK_CELL_STYLE}">
-        <p style="text-align: center;">${requiredHTML}</p>
-      </td>
-    </tr>
-  `;
+  let childrenHTML = '';
 
   // 🔥 Zendesk 스타일: 중첩 필드는 No. 칼럼 없이, Description이 두 칼럼으로 분리 (인덱스 + 내용)
   if (hasChildren) {
@@ -1327,7 +1245,7 @@ function generateFieldRowLegacy(
       // D0에 인덱스, D1~D3에 설명 병합
       // 🔥 번호 형식: parent.child (예: 4.1, 4.2, 4.3) - Spec Tab과 동일
       const currentChildNo = childNo++;
-      html += `
+      childrenHTML += `
         <tr>
           <td style="${ZENDESK_CELL_STYLE}">
             <p style="text-align: center;">${rowNumber}.${currentChildNo}</p>
@@ -1355,7 +1273,7 @@ function generateFieldRowLegacy(
         ? child.children
         : materializeArrayItemChildren(child);
       if (effectiveGrandchildren.length > 0) {
-        html += renderGrandchildrenLegacy(
+        childrenHTML += renderGrandchildrenLegacy(
           effectiveGrandchildren,
           rowNumber,
           currentChildNo,
@@ -1373,7 +1291,7 @@ function generateFieldRowLegacy(
       );
       
       // section-header 추가 (D0~D3 + Key~Required까지 병합)
-      html += `
+      childrenHTML += `
         <tr>
           <td style="background-color: #e6fcff; ${ZENDESK_CELL_STYLE}" colspan="8">
             <p><span style="color: #4c9aff;">${escapeHtml(conditionLabel)}</span></p>
@@ -1394,7 +1312,7 @@ function generateFieldRowLegacy(
         const childKeyDisplay = child.key.includes('.') ? child.key.split('.').pop() : child.key;
 
         const currentChildNo = childNo++;
-        html += `
+        childrenHTML += `
           <tr>
             <td style="${ZENDESK_CELL_STYLE}">
               <p style="text-align: center;">${rowNumber}.${currentChildNo}</p>
@@ -1422,7 +1340,7 @@ function generateFieldRowLegacy(
           ? child.children
           : materializeArrayItemChildren(child);
         if (effectiveGrandchildren.length > 0) {
-          html += renderGrandchildrenLegacy(
+          childrenHTML += renderGrandchildrenLegacy(
             effectiveGrandchildren,
             rowNumber,
             currentChildNo,
@@ -1434,7 +1352,35 @@ function generateFieldRowLegacy(
     }
   }
 
-  return html;
+  // 실제로 렌더된 하위 <tr> 수를 기준으로 rowspan을 계산하면
+  // 조건 헤더/깊은 중첩과 항상 일치해 번호 밀림이 생기지 않는다.
+  const descendantRowCount = (childrenHTML.match(/<tr\b/g) || []).length;
+  const rowspanAttr = hasChildren ? ` rowspan="${1 + descendantRowCount}"` : '';
+
+  const html = `
+    <tr>
+      <td style="${ZENDESK_CELL_STYLE}"${rowspanAttr}>
+        <p style="text-align: center;">${rowNumber}</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}" colspan="4">
+        ${descriptionHTML}
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">"${escapeHtml(field.key)}"</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${typeDisplay}</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${defaultValue}</p>
+      </td>
+      <td style="${ZENDESK_CELL_STYLE}">
+        <p style="text-align: center;">${requiredHTML}</p>
+      </td>
+    </tr>
+  `;
+
+  return html + childrenHTML;
 }
 
 function generateFieldDescriptionLegacy(field: EnhancedField, references?: FieldReferenceMap): string {

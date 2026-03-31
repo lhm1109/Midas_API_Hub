@@ -147,6 +147,155 @@ export interface SectionGroup {
   order: number;
 }
 
+const cloneSchemaValue = <T,>(value: T): T => {
+  try {
+    return JSON.parse(JSON.stringify(value));
+  } catch {
+    return value;
+  }
+};
+
+const isPlainObject = (value: any): value is Record<string, any> =>
+  !!value && typeof value === 'object' && !Array.isArray(value);
+
+const getComposableObjectFragment = (
+  node: any
+): { properties: Record<string, any>; required: string[] } | null => {
+  if (!isPlainObject(node)) return null;
+
+  if (isPlainObject(node.properties)) {
+    return {
+      properties: node.properties,
+      required: Array.isArray(node.required) ? node.required : [],
+    };
+  }
+
+  const additionalProps = node.additionalProperties;
+  if (
+    isPlainObject(additionalProps) &&
+    isPlainObject(additionalProps.properties)
+  ) {
+    return {
+      properties: additionalProps.properties,
+      required: Array.isArray(additionalProps.required) ? additionalProps.required : [],
+    };
+  }
+
+  const patternProps = node.patternProperties;
+  if (isPlainObject(patternProps)) {
+    const candidate = Object.values(patternProps).find(
+      (value: any) => isPlainObject(value) && isPlainObject(value.properties)
+    ) as any;
+
+    if (candidate) {
+      return {
+        properties: candidate.properties,
+        required: Array.isArray(candidate.required) ? candidate.required : [],
+      };
+    }
+  }
+
+  return null;
+};
+
+const isMergeableAllOfObjectFragment = (node: any): boolean => {
+  if (!isPlainObject(node)) return false;
+  if (typeof node.$ref === 'string') return false;
+  if ('if' in node || 'then' in node || 'else' in node) return false;
+
+  return !!getComposableObjectFragment(node);
+};
+
+export function flattenComposedObjectSchema<T = any>(schema: T): T {
+  const normalizeNode = (node: any): any => {
+    if (Array.isArray(node)) {
+      return node.map((item) => normalizeNode(item));
+    }
+    if (!isPlainObject(node)) {
+      return node;
+    }
+
+    const normalized: Record<string, any> = {};
+    for (const [key, value] of Object.entries(node)) {
+      normalized[key] = normalizeNode(value);
+    }
+
+    if (!Array.isArray(normalized.allOf)) {
+      return normalized;
+    }
+
+    let mergedSomething = false;
+    const mergedProperties = isPlainObject(normalized.properties)
+      ? { ...normalized.properties }
+      : {};
+    const mergedRequired = new Set<string>(
+      Array.isArray(normalized.required) ? normalized.required : []
+    );
+    const nextAllOf: any[] = [];
+
+    for (const rule of normalized.allOf) {
+      if (!isMergeableAllOfObjectFragment(rule)) {
+        nextAllOf.push(rule);
+        continue;
+      }
+
+      const fragment = getComposableObjectFragment(rule);
+      if (!fragment) {
+        nextAllOf.push(rule);
+        continue;
+      }
+
+      mergedSomething = true;
+
+      for (const [propKey, propValue] of Object.entries(fragment.properties)) {
+        mergedProperties[propKey] = propValue;
+      }
+
+      fragment.required.forEach((requiredKey) => mergedRequired.add(requiredKey));
+
+      if (Array.isArray(rule.allOf)) {
+        nextAllOf.push(...rule.allOf);
+      }
+
+      const remainder = { ...rule };
+      delete remainder.type;
+      delete remainder.title;
+      delete remainder.description;
+      delete remainder.properties;
+      delete remainder.required;
+      delete remainder.allOf;
+      delete remainder.additionalProperties;
+      delete remainder.patternProperties;
+
+      if (Object.keys(remainder).length > 0) {
+        nextAllOf.push(remainder);
+      }
+    }
+
+    if (!mergedSomething) {
+      return normalized;
+    }
+
+    if (Object.keys(mergedProperties).length > 0) {
+      normalized.properties = mergedProperties;
+    }
+
+    if (mergedRequired.size > 0) {
+      normalized.required = Array.from(mergedRequired);
+    }
+
+    if (nextAllOf.length > 0) {
+      normalized.allOf = nextAllOf;
+    } else {
+      delete normalized.allOf;
+    }
+
+    return normalized;
+  };
+
+  return normalizeNode(cloneSchemaValue(schema));
+}
+
 // ============================================================================
 // Main Compiler Function
 // ============================================================================
@@ -179,7 +328,9 @@ export function compileSchema(
 
   console.log('🔄 Compiling schema (cache miss)');
   // 🔥 YAML 기반 스키마 구조 패턴 감지 및 변환
-  const transformedSchema = applySchemaStructurePatterns(schema, psdSet, schemaType);
+  const transformedSchema = flattenComposedObjectSchema(
+    applySchemaStructurePatterns(schema, psdSet, schemaType)
+  );
 
   // 🔥 스키마 유효성 검사
   if (!transformedSchema || !transformedSchema.properties) {
