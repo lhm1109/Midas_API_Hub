@@ -1194,24 +1194,6 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
       });
   }, [effectiveDefinitionType, psdSet, schemaType, schemaView, settings?.schemaMode]);
 
-  // 🔥 NEW: Schema Compiler로 정규화된 AST 생성
-  const canonicalFields = useMemo(() => {
-    // 🔥 현재 schemaView에 맞는 YAML 규칙이 초기화되었는지 확인
-    const currentSchemaType = schemaView === 'original' ? 'original' : schemaType;
-    const key = `${psdSet}/${currentSchemaType}`;
-
-    if (!initializedSchemaTypes.has(key)) {
-      console.log(`⏳ Waiting for ${key} to be initialized...`);
-      return [];
-    }
-
-    if (isNewEnhancedSchema) {
-      // New Enhanced Schema: 무시하고 빈 배열 반환 (새 컴파일러 사용)
-      return [];
-    }
-    return compileSchema(activeSchema, psdSet, schemaType);
-  }, [activeSchema, isNewEnhancedSchema, initializedSchemaTypes, psdSet, schemaType, schemaView]);
-
   // 🎯 Helper: Convert required status to display string
   const formatRequiredStatus = (requiredStatus: Record<string, string> | undefined): string => {
     if (!requiredStatus || !requiredStatus['*']) {
@@ -1383,15 +1365,41 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     const wrapperInfo = schema?.properties?.[wrapperKey];
     if (!wrapperInfo || typeof wrapperInfo !== 'object') return schema;
 
+    const isMapValueOneOfSchema = (node: any) =>
+      !!node &&
+      typeof node === 'object' &&
+      !Array.isArray(node) &&
+      Array.isArray(node.oneOf) &&
+      !node.properties &&
+      !node.patternProperties &&
+      !node.additionalProperties;
+
     const patternProps = wrapperInfo.patternProperties;
     if (patternProps && typeof patternProps === 'object') {
       const first = Object.values(patternProps)[0];
+      if (isMapValueOneOfSchema(first)) {
+        // Keep the wrapper intact so compileSchema can apply its map-wrapper oneOf fallback.
+        return schema;
+      }
       if (first && typeof first === 'object') return first;
     }
 
     const additionalProps = wrapperInfo.additionalProperties;
     if (additionalProps && typeof additionalProps === 'object') {
+      if (isMapValueOneOfSchema(additionalProps)) {
+        // Keep the wrapper intact so compileSchema can synthesize a table-friendly root object.
+        return schema;
+      }
       return additionalProps;
+    }
+
+    if (
+      wrapperInfo.type === 'object' &&
+      wrapperInfo.properties &&
+      typeof wrapperInfo.properties === 'object' &&
+      !wrapperInfo.patternProperties
+    ) {
+      return wrapperInfo;
     }
 
     return schema;
@@ -1412,7 +1420,219 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     }
 
     const effectiveSchema = unwrapSchemaForTable(inlineSchemaRefsForTable(schemaToUse));
+    const conditionalRules = tableDefinition?.schemaExtensions?.conditional || [];
 
+    const getFieldTypeLabel = (field: any) =>
+      field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type;
+
+    const getLeafFieldName = (field: any) => field.key.split('.').pop() || field.key;
+
+    const buildArrayItemChildren = (arrayField: any) => {
+      const items = arrayField?.items;
+      if (!items || items.type !== 'object' || !items.properties) {
+        return [];
+      }
+
+      const itemRequired = items.required || [];
+      return Object.entries(items.properties).map(([itemKey, itemProp]) => {
+        const mappedItem: any = {
+          key: `${arrayField.key}[].${itemKey}`,
+          type: (itemProp as any).type,
+          default: (itemProp as any).default,
+          description: (itemProp as any).description,
+          required: itemRequired.includes(itemKey) ? { '*': 'required' } : { '*': 'optional' },
+        };
+
+        for (const [propKey, propValue] of Object.entries(itemProp as any)) {
+          if (propKey === 'type' || propKey === 'default' || propKey === 'description') continue;
+          if (propKey === 'x-ui') {
+            mappedItem.ui = propValue;
+          } else {
+            mappedItem[propKey] = propValue;
+          }
+        }
+
+        return mappedItem;
+      });
+    };
+
+    const mapNestedParameters = (
+      fields: any[],
+      parentNo: string,
+      parentField?: any,
+      inheritedConditional: boolean = false
+    ): any[] => {
+      const resolvedFields = fields.length > 0 ? fields : buildArrayItemChildren(parentField);
+      if (resolvedFields.length === 0) {
+        return [];
+      }
+
+      const hasExplicitHeaders = resolvedFields.some((field: any) => field.type === 'section-header');
+      const fieldsToProcess = resolvedFields.filter((field: any) => field.type !== 'section-header');
+      const fieldInfoMap = collectFieldConditionInfo(fieldsToProcess, conditionalRules);
+      const { fieldGroups, noConditionFields } = groupFieldsByCondition(fieldsToProcess, fieldInfoMap);
+
+      const results: any[] = [];
+      let childNo = 1;
+
+      const pushSectionHeader = (label: string) => {
+        results.push({
+          no: '',
+          name: '',
+          type: 'section-header',
+          section: label,
+          default: '',
+          description: '',
+          required: '',
+        });
+      };
+
+      const buildMappedField = (field: any, conditionType?: string | null) => {
+        const currentNo = `${parentNo}.${childNo++}`;
+        const mappedField: any = {
+          no: currentNo,
+          name: getLeafFieldName(field),
+          type: getFieldTypeLabel(field),
+          default: formatDefaultValue(field.default),
+          description: buildFieldDescription(field, tableDefinition),
+          required: conditionType
+            ? getConditionScopedRequiredLabel(field, conditionType, inheritedConditional)
+            : getRequiredLabel(field, inheritedConditional),
+        };
+
+        const nestedChildren = mapNestedParameters(
+          field.children || [],
+          currentNo,
+          field,
+          inheritedConditional || isConditionalField(field)
+        );
+
+        if (nestedChildren.length > 0) {
+          mappedField.children = nestedChildren;
+        }
+
+        return mappedField;
+      };
+
+      if (hasExplicitHeaders) {
+        for (const field of resolvedFields) {
+          if (field.type === 'section-header') {
+            const headerLabel = field.section || field.ui?.label || field.description || field.key;
+            if (headerLabel) {
+              pushSectionHeader(String(headerLabel));
+            }
+            continue;
+          }
+
+          results.push(buildMappedField(field));
+        }
+      } else {
+        for (const { field } of noConditionFields) {
+          results.push(buildMappedField(field));
+        }
+
+        for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
+          const { conditionInfo } = fieldsWithCondition[0];
+          pushSectionHeader(getConditionSectionLabel(conditionInfo, conditionKey));
+
+          for (const { field, conditionInfo: fieldConditionInfo } of fieldsWithCondition) {
+            results.push(buildMappedField(field, fieldConditionInfo?.type));
+          }
+        }
+      }
+
+      return results;
+    };
+
+    const buildParamsFromSections = (sections: any[]) => {
+      const params: any[] = [];
+      let rowNumber = 1;
+
+      for (const section of sections) {
+        const fieldInfoMap = collectFieldConditionInfo(section.fields, conditionalRules);
+        const { fieldGroups, noConditionFields } = groupFieldsByCondition(section.fields, fieldInfoMap);
+
+        if (noConditionFields.length > 0) {
+          params.push({
+            no: '',
+            section: section.name,
+            name: '',
+            type: '',
+            default: '',
+            required: '',
+            description: '',
+          });
+        }
+
+        const buildTopLevelParam = (field: any, conditionType?: string | null) => {
+          const currentNo = rowNumber++;
+          const param: any = {
+            no: currentNo,
+            name: field.key,
+            type: getFieldTypeLabel(field),
+            default: formatDefaultValue(field.default),
+            description: buildFieldDescription(field, tableDefinition),
+            required: conditionType
+              ? getConditionScopedRequiredLabel(field, conditionType)
+              : getRequiredLabel(field),
+          };
+
+          const nestedChildren = mapNestedParameters(
+            field.children || [],
+            String(currentNo),
+            field,
+            isConditionalField(field)
+          );
+
+          if (nestedChildren.length > 0) {
+            param.children = nestedChildren;
+          }
+
+          param.required = finalizeRequiredLabel(param.required, field, conditionType);
+          return param;
+        };
+
+        for (const { field } of noConditionFields) {
+          params.push(buildTopLevelParam(field));
+        }
+
+        for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
+          const conditionInfo = fieldsWithCondition[0].conditionInfo;
+          const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
+
+          params.push({
+            no: '',
+            section: conditionText,
+            name: '',
+            type: '',
+            default: '',
+            required: '',
+            description: '',
+          });
+
+          for (const { field, conditionInfo: fieldConditionInfo } of fieldsWithCondition) {
+            params.push(buildTopLevelParam(field, fieldConditionInfo?.type));
+          }
+        }
+      }
+
+      return params;
+    };
+
+    if (isEnhancedStructure) {
+      try {
+        const sections = compileEnhancedSchema(effectiveSchema as EnhancedSchema, psdSet, currentSchemaType);
+        return buildParamsFromSections(sections);
+      } catch (error) {
+        console.error('❌ Failed to compile enhanced schema for table:', error);
+        return [];
+      }
+    }
+
+    const compiledSections = compileSchema(effectiveSchema, psdSet, currentSchemaType);
+    return buildParamsFromSections(compiledSections);
+
+    /*
     if (isEnhancedStructure) {
       // New Enhanced Schema: 새 컴파일러로 섹션 생성
       try {
@@ -1461,8 +1681,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
             // 중첩 필드 처리 - 조건별 그룹화 지원
             if (field.children && field.children.length > 0) {
               const parentConditional = isConditionalField(field);
-              // 🔥 3-depth 필드들을 조건별로 그룹화
-              const childSectionHeaders = field.children.filter((c: any) => c.type === 'section-header');
+              const hasExplicitChildHeaders = field.children.some((c: any) => c.type === 'section-header');
               const childrenToProcess = field.children.filter((c: any) => c.type !== 'section-header');
               
               const childFieldInfoMap = collectFieldConditionInfo(
@@ -1475,15 +1694,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
                 childFieldInfoMap
               );
 
-              param.children = childSectionHeaders.map((header: any) => ({
-                no: '',
-                name: '',
-                type: 'section-header',
-                section: header.section || header.ui?.label || header.description || header.key,
-                default: '',
-                description: '',
-                required: '',
-              }));
+              param.children = [];
               let childNo = 1;
 
               const buildArrayItemChildren = (arrayField: any) => {
@@ -1654,46 +1865,21 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
                 return mappedGrandchildren;
               };
 
-              // 🔥 조건 없는 children 먼저 렌더링
-              for (const { field: child } of childrenWithoutCondition) {
-                const currentNo = childNo++;
-                const mappedChild: any = {
-                  no: `${rowNumber - 1}.${currentNo}`,
-                  name: child.key.split('.').pop() || child.key,
-                  type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
-                  default: formatDefaultValue(child.default),
-                  description: buildFieldDescription(child, tableDefinition),
-                  required: getRequiredLabel(child, parentConditional),
-                };
+              if (hasExplicitChildHeaders) {
+                for (const child of field.children) {
+                  if (child.type === 'section-header') {
+                    param.children.push({
+                      no: '',
+                      name: '',
+                      type: 'section-header',
+                      section: child.section || child.ui?.label || child.description || child.key,
+                      default: '',
+                      description: '',
+                      required: '',
+                    });
+                    continue;
+                  }
 
-                // 🔥 3-depth: Grandchildren mapping
-                if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
-                  mappedChild.children = mapGrandchildren(
-                    child.children || [],
-                    `${rowNumber - 1}.${currentNo}`,
-                    child,
-                    parentConditional || isConditionalField(child)
-                  );
-                }
-
-                param.children.push(mappedChild);
-              }
-
-              // 🔥 조건별 children 렌더링 - section-header 추가
-              for (const [conditionKey, childrenWithCondition] of childGroups) {
-                // 조건 정보 가져오기
-                const { conditionInfo } = childrenWithCondition[0];
-                const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
-
-                // section-header 추가
-                param.children.push({
-                  no: '', name: '', type: 'section-header',
-                  section: conditionText,
-                  default: '', description: '', required: '',
-                });
-
-                // 조건에 맞는 children 추가
-                for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
                   const currentNo = childNo++;
                   const mappedChild: any = {
                     no: `${rowNumber - 1}.${currentNo}`,
@@ -1701,20 +1887,12 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
                     type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                     default: formatDefaultValue(child.default),
                     description: buildFieldDescription(child, tableDefinition),
-                    required: getConditionScopedRequiredLabel(child, fieldConditionInfo?.type, parentConditional),
+                    required: getRequiredLabel(child, parentConditional),
                   };
 
-                  // 🔥 3-depth: Grandchildren mapping
-                  if (child.children && child.children.length > 0) {
+                  if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
                     mappedChild.children = mapGrandchildren(
-                      child.children,
-                      `${rowNumber - 1}.${currentNo}`,
-                      child,
-                      parentConditional || isConditionalField(child)
-                    );
-                  } else if (child.type === 'array' && child.items?.properties) {
-                    mappedChild.children = mapGrandchildren(
-                      [],
+                      child.children || [],
                       `${rowNumber - 1}.${currentNo}`,
                       child,
                       parentConditional || isConditionalField(child)
@@ -1722,6 +1900,77 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
                   }
 
                   param.children.push(mappedChild);
+                }
+              } else {
+                // 🔥 조건 없는 children 먼저 렌더링
+                for (const { field: child } of childrenWithoutCondition) {
+                  const currentNo = childNo++;
+                  const mappedChild: any = {
+                    no: `${rowNumber - 1}.${currentNo}`,
+                    name: child.key.split('.').pop() || child.key,
+                    type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                    default: formatDefaultValue(child.default),
+                    description: buildFieldDescription(child, tableDefinition),
+                    required: getRequiredLabel(child, parentConditional),
+                  };
+
+                  // 🔥 3-depth: Grandchildren mapping
+                  if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
+                    mappedChild.children = mapGrandchildren(
+                      child.children || [],
+                      `${rowNumber - 1}.${currentNo}`,
+                      child,
+                      parentConditional || isConditionalField(child)
+                    );
+                  }
+
+                  param.children.push(mappedChild);
+                }
+
+                // 🔥 조건별 children 렌더링 - section-header 추가
+                for (const [conditionKey, childrenWithCondition] of childGroups) {
+                  // 조건 정보 가져오기
+                  const { conditionInfo } = childrenWithCondition[0];
+                  const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
+
+                  // section-header 추가
+                  param.children.push({
+                    no: '', name: '', type: 'section-header',
+                    section: conditionText,
+                    default: '', description: '', required: '',
+                  });
+
+                  // 조건에 맞는 children 추가
+                  for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
+                    const currentNo = childNo++;
+                    const mappedChild: any = {
+                      no: `${rowNumber - 1}.${currentNo}`,
+                      name: child.key.split('.').pop() || child.key,
+                      type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                      default: formatDefaultValue(child.default),
+                      description: buildFieldDescription(child, tableDefinition),
+                      required: getConditionScopedRequiredLabel(child, fieldConditionInfo?.type, parentConditional),
+                    };
+
+                    // 🔥 3-depth: Grandchildren mapping
+                    if (child.children && child.children.length > 0) {
+                      mappedChild.children = mapGrandchildren(
+                        child.children,
+                        `${rowNumber - 1}.${currentNo}`,
+                        child,
+                        parentConditional || isConditionalField(child)
+                      );
+                    } else if (child.type === 'array' && child.items?.properties) {
+                      mappedChild.children = mapGrandchildren(
+                        [],
+                        `${rowNumber - 1}.${currentNo}`,
+                        child,
+                        parentConditional || isConditionalField(child)
+                      );
+                    }
+
+                    param.children.push(mappedChild);
+                  }
                 }
               }
             }
@@ -1763,6 +2012,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
               // 중첩 필드 처리 - section-header를 건너뛰는 번호 계산
               if (field.children && field.children.length > 0) {
                 const parentConditional = isConditionalField(field);
+                const hasExplicitChildHeaders = field.children.some((c: any) => c.type === 'section-header');
                 let childNo = 1;
 
                 const buildArrayItemChildren = (arrayField: any) => {
@@ -1946,40 +2196,21 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
 
                 param.children = [];
 
-                for (const { field: child } of childrenWithoutCondition) {
-                  const currentNo = childNo++;
-                  const mappedChild: any = {
-                    no: `${rowNumber - 1}.${currentNo}`,
-                    name: child.key.split('.').pop() || child.key,
-                    type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
-                    default: formatDefaultValue(child.default),
-                    description: buildFieldDescription(child, tableDefinition),
-                    required: getRequiredLabel(child, parentConditional),
-                  };
+                if (hasExplicitChildHeaders) {
+                  for (const child of field.children) {
+                    if (child.type === 'section-header') {
+                      param.children.push({
+                        no: '',
+                        name: '',
+                        type: 'section-header',
+                        section: child.section || child.ui?.label || child.description || child.key,
+                        default: '',
+                        description: '',
+                        required: '',
+                      });
+                      continue;
+                    }
 
-                  if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
-                    mappedChild.children = mapGrandchildren(
-                      child.children || [],
-                      `${rowNumber - 1}.${currentNo}`,
-                      child,
-                      parentConditional || isConditionalField(child)
-                    );
-                  }
-
-                  param.children.push(mappedChild);
-                }
-
-                for (const [conditionKey, childrenWithCondition] of childGroups) {
-                  const { conditionInfo } = childrenWithCondition[0];
-                  const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
-
-                  param.children.push({
-                    no: '', name: '', type: 'section-header',
-                    section: conditionText,
-                    default: '', description: '', required: '',
-                  });
-
-                  for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
                     const currentNo = childNo++;
                     const mappedChild: any = {
                       no: `${rowNumber - 1}.${currentNo}`,
@@ -1987,19 +2218,12 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
                       type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
                       default: formatDefaultValue(child.default),
                       description: buildFieldDescription(child, tableDefinition),
-                      required: getConditionScopedRequiredLabel(child, fieldConditionInfo?.type, parentConditional),
+                      required: getRequiredLabel(child, parentConditional),
                     };
 
-                    if (child.children && child.children.length > 0) {
+                    if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
                       mappedChild.children = mapGrandchildren(
-                        child.children,
-                        `${rowNumber - 1}.${currentNo}`,
-                        child,
-                        parentConditional || isConditionalField(child)
-                      );
-                    } else if (child.type === 'array' && child.items?.properties) {
-                      mappedChild.children = mapGrandchildren(
-                        [],
+                        child.children || [],
                         `${rowNumber - 1}.${currentNo}`,
                         child,
                         parentConditional || isConditionalField(child)
@@ -2007,6 +2231,70 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
                     }
 
                     param.children.push(mappedChild);
+                  }
+                } else {
+                  for (const { field: child } of childrenWithoutCondition) {
+                    const currentNo = childNo++;
+                    const mappedChild: any = {
+                      no: `${rowNumber - 1}.${currentNo}`,
+                      name: child.key.split('.').pop() || child.key,
+                      type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                      default: formatDefaultValue(child.default),
+                      description: buildFieldDescription(child, tableDefinition),
+                      required: getRequiredLabel(child, parentConditional),
+                    };
+
+                    if ((child.children && child.children.length > 0) || (child.type === 'array' && child.items?.properties)) {
+                      mappedChild.children = mapGrandchildren(
+                        child.children || [],
+                        `${rowNumber - 1}.${currentNo}`,
+                        child,
+                        parentConditional || isConditionalField(child)
+                      );
+                    }
+
+                    param.children.push(mappedChild);
+                  }
+
+                  for (const [conditionKey, childrenWithCondition] of childGroups) {
+                    const { conditionInfo } = childrenWithCondition[0];
+                    const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
+
+                    param.children.push({
+                      no: '', name: '', type: 'section-header',
+                      section: conditionText,
+                      default: '', description: '', required: '',
+                    });
+
+                    for (const { field: child, conditionInfo: fieldConditionInfo } of childrenWithCondition) {
+                      const currentNo = childNo++;
+                      const mappedChild: any = {
+                        no: `${rowNumber - 1}.${currentNo}`,
+                        name: child.key.split('.').pop() || child.key,
+                        type: child.type === 'array' ? `Array[${child.items?.type || 'any'}]` : child.type,
+                        default: formatDefaultValue(child.default),
+                        description: buildFieldDescription(child, tableDefinition),
+                        required: getConditionScopedRequiredLabel(child, fieldConditionInfo?.type, parentConditional),
+                      };
+
+                      if (child.children && child.children.length > 0) {
+                        mappedChild.children = mapGrandchildren(
+                          child.children,
+                          `${rowNumber - 1}.${currentNo}`,
+                          child,
+                          parentConditional || isConditionalField(child)
+                        );
+                      } else if (child.type === 'array' && child.items?.properties) {
+                        mappedChild.children = mapGrandchildren(
+                          [],
+                          `${rowNumber - 1}.${currentNo}`,
+                          child,
+                          parentConditional || isConditionalField(child)
+                        );
+                      }
+
+                      param.children.push(mappedChild);
+                    }
                   }
                 }
               }
@@ -2068,6 +2356,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     }
 
     return params;
+    */
   };
 
   const requestTableParameters = useMemo(
@@ -2825,6 +3114,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     // 🔥 기존 ManualData를 유지하면서 업데이트 (누적 방식)
     // 🎯 JSON으로 저장 (HTML이 아닌 실제 JSON 문자열)
     const newManualData: ManualData = {
+      ...(manualData || {}),
       title: spec.title || endpoint.name,
       category: endpoint.method,
       inputUri: endpoint.path,
@@ -2892,6 +3182,7 @@ ${responseHtml}`.trim();
 
     // ?? ?? ??? ????? ????
     const newManualData: ManualData = {
+      ...(manualData || {}),
       title: spec.title || endpoint.name,
       category: endpoint.method,
       inputUri: endpoint.path,

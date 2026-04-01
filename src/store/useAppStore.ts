@@ -173,6 +173,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         requestExamples: [],
         responseExamples: [],
         specifications: '',
+        zendeskLabelNames: [],
+        zendeskCommentsDisabled: true,
       },
       specData: state.specData || {
         jsonSchema: '{}',

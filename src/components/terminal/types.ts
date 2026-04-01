@@ -78,7 +78,11 @@ export interface ElectronZendeskAPI {
         locale: string,
         body: string,
         title?: string,
-        draft?: boolean
+        draft?: boolean,
+        options?: {
+            labelNames?: string[];
+            commentsDisabled?: boolean;
+        }
     ) => Promise<{
         success: boolean;
         data?: {

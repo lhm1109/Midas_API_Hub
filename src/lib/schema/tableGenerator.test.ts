@@ -158,4 +158,156 @@ describe('generateHTMLDocument legacy rowspan', () => {
     expect(html).toContain('1.4');
     expect(html.indexOf('1.4')).toBeLessThan(html.indexOf('>2</p>'));
   });
+
+  it('renders map-wrapper oneOf entities from additionalProperties into specification rows', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      additionalProperties: false,
+      properties: {
+        Assign: {
+          type: 'object',
+          description: 'Plastic material keyed map',
+          minProperties: 1,
+          additionalProperties: {
+            oneOf: [
+              {
+                type: 'object',
+                required: ['NAME', 'MODEL_TYPE', 'TRESCA'],
+                properties: {
+                  NAME: {
+                    type: 'string',
+                    description: 'Name',
+                  },
+                  MODEL_TYPE: {
+                    allOf: [
+                      {
+                        type: 'integer',
+                        enum: [0, 1],
+                      },
+                      {
+                        const: 0,
+                      },
+                    ],
+                    description: 'Model Type (Tresca:0)',
+                  },
+                  TRESCA: {
+                    type: 'object',
+                    description: 'TRESCA Model',
+                    properties: {
+                      INIT_YIELD_STRESS: {
+                        type: 'number',
+                        description: 'Initial yield stress',
+                      },
+                    },
+                    required: ['INIT_YIELD_STRESS'],
+                  },
+                },
+              },
+              {
+                type: 'object',
+                required: ['NAME', 'MODEL_TYPE', 'VMISES'],
+                properties: {
+                  NAME: {
+                    type: 'string',
+                    description: 'Name',
+                  },
+                  MODEL_TYPE: {
+                    allOf: [
+                      {
+                        type: 'integer',
+                        enum: [0, 1],
+                      },
+                      {
+                        const: 1,
+                      },
+                    ],
+                    description: 'Model Type (Von Mises:1)',
+                  },
+                  VMISES: {
+                    type: 'object',
+                    description: 'Von Mises Model',
+                    properties: {
+                      INIT_YIELD_STRESS: {
+                        type: 'number',
+                        description: 'Initial yield stress',
+                      },
+                    },
+                    required: ['INIT_YIELD_STRESS'],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+    const trescaHeaderCount = (html.match(/<span style="color: #4c9aff;">TRESCA Model<\/span>/g) || []).length;
+    const vmisesHeaderCount = (html.match(/<span style="color: #4c9aff;">Von Mises Model<\/span>/g) || []).length;
+
+    expect(html).toContain('TRESCA Model');
+    expect(html).toContain('Von Mises Model');
+    expect(html).toContain('INIT_YIELD_STRESS');
+    expect(html).toContain('"MODEL_TYPE"');
+    expect(trescaHeaderCount).toBe(1);
+    expect(vmisesHeaderCount).toBe(1);
+    expect(html.indexOf('<span style="color: #4c9aff;">TRESCA Model</span>')).toBeLessThan(html.indexOf('>1.1<'));
+    expect(html.indexOf('<span style="color: #4c9aff;">Von Mises Model</span>')).toBeLessThan(html.indexOf('>1.4<'));
+  });
+
+  it('unwraps Argument body wrappers for item rows and keeps deep nested members in HTML', () => {
+    const schema = {
+      type: 'object',
+      required: ['Argument'],
+      properties: {
+        Argument: {
+          type: 'object',
+          required: ['EXPORT_PATH', 'RESULT_GRAPHIC'],
+          properties: {
+            EXPORT_PATH: {
+              type: 'string',
+              description: 'path',
+            },
+            RESULT_GRAPHIC: {
+              type: 'object',
+              properties: {
+                TYPE_OF_DISPLAY: {
+                  type: 'object',
+                  properties: {
+                    REINFORCEMENT: {
+                      type: 'object',
+                      properties: {
+                        DISPLAY_MEMBERS: {
+                          type: 'object',
+                          properties: {
+                            BEAM: { type: 'boolean', default: true },
+                            COLUMN: { type: 'boolean', default: true },
+                            BRACE: { type: 'boolean', default: true },
+                            WALL: { type: 'boolean', default: true },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+    const itemTableIndex = html.indexOf('Item (Value Object Schema)');
+    const exportIndex = html.indexOf('"EXPORT_PATH"', itemTableIndex);
+    const argumentIndex = html.indexOf('"Argument"', itemTableIndex);
+
+    expect(exportIndex).toBeGreaterThan(itemTableIndex);
+    expect(argumentIndex === -1 || argumentIndex > exportIndex).toBe(true);
+    expect(html).toContain('2.1.1.1.1');
+    expect(html).toContain('"BEAM"');
+    expect(html).toContain('"WALL"');
+  });
 });

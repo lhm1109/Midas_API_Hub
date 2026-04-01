@@ -34,7 +34,27 @@ function parseManualData(data) {
     sectionId: data.section_id,
     authorId: data.author_id,
     url: data.url,
+    zendeskLabelNames: safeParseJSON(data.zendesk_label_names, []),
+    zendeskCommentsDisabled: typeof data.zendesk_comments_disabled === 'boolean'
+      ? data.zendesk_comments_disabled
+      : true,
   };
+}
+
+function isMissingManualDataZendeskColumnError(error) {
+  const rawMessage = [
+    error?.message,
+    error?.details,
+    error?.hint,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  if (!rawMessage) return false;
+
+  return rawMessage.includes('zendesk_label_names')
+    || rawMessage.includes('zendesk_comments_disabled');
 }
 
 function parseSpecData(data) {
@@ -69,27 +89,45 @@ function generateTestCaseId() {
 }
 
 async function saveManualData(versionId, data) {
-  const { error } = await supabase
+  const manualRow = {
+    version_id: versionId,
+    title: data.title,
+    category: data.category,
+    input_uri: data.inputUri,
+    active_methods: data.activeMethods,
+    json_schema: typeof data.jsonSchema === 'string' ? data.jsonSchema : JSON.stringify(data.jsonSchema || {}),
+    json_schema_original: typeof data.jsonSchemaOriginal === 'string' ? data.jsonSchemaOriginal : (data.jsonSchemaOriginal ? JSON.stringify(data.jsonSchemaOriginal) : null),
+    json_schema_enhanced: typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
+    examples: JSON.stringify(data.examples || []),
+    request_examples: JSON.stringify(data.requestExamples || []),
+    response_examples: JSON.stringify(data.responseExamples || []),
+    specifications: data.specifications,
+    html_content: data.htmlContent,
+    article_id: data.articleId,
+    section_id: data.sectionId,
+    author_id: data.authorId,
+    url: data.url,
+    zendesk_label_names: JSON.stringify(data.zendeskLabelNames || []),
+    zendesk_comments_disabled: typeof data.zendeskCommentsDisabled === 'boolean'
+      ? data.zendeskCommentsDisabled
+      : true,
+  };
+
+  let { error } = await supabase
     .from('manual_data')
-    .upsert({
-      version_id: versionId,
-      title: data.title,
-      category: data.category,
-      input_uri: data.inputUri,
-      active_methods: data.activeMethods,
-      json_schema: typeof data.jsonSchema === 'string' ? data.jsonSchema : JSON.stringify(data.jsonSchema || {}),
-      json_schema_original: typeof data.jsonSchemaOriginal === 'string' ? data.jsonSchemaOriginal : (data.jsonSchemaOriginal ? JSON.stringify(data.jsonSchemaOriginal) : null),
-      json_schema_enhanced: typeof data.jsonSchemaEnhanced === 'string' ? data.jsonSchemaEnhanced : (data.jsonSchemaEnhanced ? JSON.stringify(data.jsonSchemaEnhanced) : null),
-      examples: JSON.stringify(data.examples || []),
-      request_examples: JSON.stringify(data.requestExamples || []),
-      response_examples: JSON.stringify(data.responseExamples || []),
-      specifications: data.specifications,
-      html_content: data.htmlContent,
-      article_id: data.articleId,
-      section_id: data.sectionId,
-      author_id: data.authorId,
-      url: data.url
-    }, { onConflict: 'version_id' });
+    .upsert(manualRow, { onConflict: 'version_id' });
+
+  if (error && isMissingManualDataZendeskColumnError(error)) {
+    const {
+      zendesk_label_names,
+      zendesk_comments_disabled,
+      ...legacyManualRow
+    } = manualRow;
+
+    ({ error } = await supabase
+      .from('manual_data')
+      .upsert(legacyManualRow, { onConflict: 'version_id' }));
+  }
 
   if (error) throw error;
 }
@@ -254,6 +292,8 @@ router.get('/', async (req, res) => {
           responseExamples: [],
           specifications: '',
           htmlContent: null,
+          zendeskLabelNames: [],
+          zendeskCommentsDisabled: true,
         },
         specData: specData ? parseSpecData(specData) : {
           jsonSchema: {},
@@ -326,6 +366,8 @@ router.get('/:id', async (req, res) => {
         responseExamples: [],
         specifications: '',
         htmlContent: null,
+        zendeskLabelNames: [],
+        zendeskCommentsDisabled: true,
       },
       specData: specData ? parseSpecData(specData) : {
         jsonSchema: {},
@@ -532,6 +574,10 @@ router.get('/:id/export', async (req, res) => {
         category: manualData?.category || '',
         specifications: manualData?.specifications || '',
         htmlContent: manualData?.html_content || null,
+        zendeskLabelNames: safeParseJSON(manualData?.zendesk_label_names, []),
+        zendeskCommentsDisabled: typeof manualData?.zendesk_comments_disabled === 'boolean'
+          ? manualData.zendesk_comments_disabled
+          : true,
       },
 
       // Builder 데이터 (선택적)
@@ -600,11 +646,27 @@ router.post('/import', async (req, res) => {
         request_examples: JSON.stringify(importData.examples?.request || []),
         response_examples: JSON.stringify(importData.examples?.response || []),
         examples: JSON.stringify(importData.examples?.legacy || []),
+        zendesk_label_names: JSON.stringify(importData.manual?.zendeskLabelNames || []),
+        zendesk_comments_disabled: typeof importData.manual?.zendeskCommentsDisabled === 'boolean'
+          ? importData.manual.zendeskCommentsDisabled
+          : true,
       };
 
-      const { error: manualError } = await supabase
+      let { error: manualError } = await supabase
         .from('manual_data')
         .insert([manualInsert]);
+
+      if (manualError && isMissingManualDataZendeskColumnError(manualError)) {
+        const {
+          zendesk_label_names,
+          zendesk_comments_disabled,
+          ...legacyManualInsert
+        } = manualInsert;
+
+        ({ error: manualError } = await supabase
+          .from('manual_data')
+          .insert([legacyManualInsert]));
+      }
 
       if (manualError) console.error('Manual data import error:', manualError);
     }

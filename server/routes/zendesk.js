@@ -12,7 +12,17 @@ function refreshEnvFromFile() {
 }
 
 function asTrimmedString(value) {
-  return typeof value === 'string' ? value.trim() : '';
+  if (typeof value !== 'string') return '';
+
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+
+  return trimmed;
 }
 
 function normalizeZendeskLocale(locale = ZENDESK_DEFAULT_LOCALE) {
@@ -136,6 +146,21 @@ function parseStringList(value, maxItems = Number.POSITIVE_INFINITY) {
   return results;
 }
 
+function normalizeZendeskLabelNames(values, fallbackValues = undefined) {
+  if (Array.isArray(values)) {
+    const normalized = values
+      .map((value) => asTrimmedString(value))
+      .filter(Boolean);
+    return Array.from(new Set(normalized));
+  }
+
+  if (typeof values === 'string') {
+    return parseStringList(values);
+  }
+
+  return fallbackValues;
+}
+
 function parseOptionalBoolean(value) {
   const raw = asTrimmedString(value).toLowerCase();
   if (!raw) return null;
@@ -213,7 +238,7 @@ function getZendeskConfigFromEnv() {
   };
 }
 
-function buildZendeskArticleMetadataFromEnv(envConfig) {
+function buildZendeskArticleMetadataFromEnv(envConfig, overrides = {}) {
   const metadata = {};
 
   if (envConfig.defaultPermissionGroupId !== null) {
@@ -230,7 +255,10 @@ function buildZendeskArticleMetadataFromEnv(envConfig) {
     metadata.author_id = envConfig.defaultAuthorId;
   }
 
-  if (envConfig.defaultLabels.length > 0) {
+  const overrideLabelNames = normalizeZendeskLabelNames(overrides.labelNames);
+  if (overrideLabelNames !== undefined) {
+    metadata.label_names = overrideLabelNames;
+  } else if (envConfig.defaultLabels.length > 0) {
     metadata.label_names = envConfig.defaultLabels;
   }
 
@@ -242,7 +270,9 @@ function buildZendeskArticleMetadataFromEnv(envConfig) {
     metadata.promoted = envConfig.defaultPromoted;
   }
 
-  if (envConfig.defaultCommentsDisabled !== null) {
+  if (typeof overrides.commentsDisabled === 'boolean') {
+    metadata.comments_disabled = overrides.commentsDisabled;
+  } else if (envConfig.defaultCommentsDisabled !== null) {
     metadata.comments_disabled = envConfig.defaultCommentsDisabled;
   }
 
@@ -259,7 +289,8 @@ function getZendeskAuthContext(config) {
   const email = asTrimmedString(config?.email);
   const apiToken = asTrimmedString(config?.apiToken || config?.token);
   const password = asTrimmedString(config?.password);
-  const secret = apiToken ? `${apiToken}/token` : password;
+  const username = apiToken ? `${email}/token` : email;
+  const secret = apiToken ? apiToken : password;
 
   const missingFields = [];
   if (!subdomain) missingFields.push('subdomain');
@@ -269,7 +300,7 @@ function getZendeskAuthContext(config) {
     throw new Error(`Invalid Zendesk config: missing ${missingFields.join(', ')}`);
   }
 
-  const auth = Buffer.from(`${email}:${secret}`).toString('base64');
+  const auth = Buffer.from(`${username}:${secret}`).toString('base64');
   return { subdomain, auth };
 }
 
@@ -371,10 +402,10 @@ async function updateZendeskArticle(config, articleId, articlePayload, notifySub
   return data.article;
 }
 
-async function createZendeskArticle(config, sectionId, locale, title, body, envConfig, draftOverride) {
+async function createZendeskArticle(config, sectionId, locale, title, body, envConfig, draftOverride, metadataOverrides = {}) {
   const safeSectionId = toZendeskPathSegment(sectionId, 'sectionId');
   const normalizedLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale || ZENDESK_DEFAULT_LOCALE);
-  const metadata = buildZendeskArticleMetadataFromEnv(envConfig);
+  const metadata = buildZendeskArticleMetadataFromEnv(envConfig, metadataOverrides);
   const articleDraft = draftOverride !== null && draftOverride !== undefined
     ? !!draftOverride
     : (envConfig.defaultDraft !== null ? envConfig.defaultDraft : false);
@@ -527,7 +558,7 @@ router.post('/publish', async (req, res) => {
       password: envConfig.password,
     };
 
-    const { targetInput = '', locale = '', body = '', title, draft } = req.body || {};
+    const { targetInput = '', locale = '', body = '', title, draft, labelNames, commentsDisabled } = req.body || {};
 
     const fallbackLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale);
     const directTarget = parseZendeskTarget(targetInput, fallbackLocale);
@@ -545,7 +576,11 @@ router.post('/publish', async (req, res) => {
 
     const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
     const normalizedTitle = asTrimmedString(title) || 'API Manual';
-    const metadata = buildZendeskArticleMetadataFromEnv(envConfig);
+    const metadataOverrides = {
+      labelNames: normalizeZendeskLabelNames(labelNames),
+      commentsDisabled: typeof commentsDisabled === 'boolean' ? commentsDisabled : undefined,
+    };
+    const metadata = buildZendeskArticleMetadataFromEnv(envConfig, metadataOverrides);
     const draftFlag = draft !== undefined && draft !== null
       ? !!draft
       : (envConfig.defaultDraft !== null ? envConfig.defaultDraft : undefined);
@@ -587,7 +622,8 @@ router.post('/publish', async (req, res) => {
         normalizedTitle,
         normalizedBody,
         envConfig,
-        draftFlag
+        draftFlag,
+        metadataOverrides
       );
 
       articleId = String(created?.id || '');

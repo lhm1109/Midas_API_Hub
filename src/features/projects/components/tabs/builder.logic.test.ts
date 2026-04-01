@@ -310,4 +310,122 @@ describe('flattenObjectToDotNotationWithSchema', () => {
             },
         });
     });
+
+    it('restores nested object branches with _enabled flags and leaf values', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'RESULT_GRAPHIC',
+                type: 'object',
+                children: [
+                    { name: 'RESULT_GRAPHIC.CURRENT_MODE', type: 'string' },
+                    {
+                        name: 'RESULT_GRAPHIC.LOAD_CASE_COMB',
+                        type: 'object',
+                        children: [
+                            { name: 'RESULT_GRAPHIC.LOAD_CASE_COMB.TYPE', type: 'string' },
+                            { name: 'RESULT_GRAPHIC.LOAD_CASE_COMB.NAME', type: 'string' },
+                        ],
+                    },
+                    {
+                        name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY',
+                        type: 'object',
+                        children: [
+                            {
+                                name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT',
+                                type: 'object',
+                                children: [
+                                    {
+                                        name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS',
+                                        type: 'object',
+                                        children: [
+                                            { name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.BEAM', type: 'boolean' },
+                                            { name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.COLUMN', type: 'boolean' },
+                                            { name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.BRACE', type: 'boolean' },
+                                            { name: 'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.WALL', type: 'boolean' },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const target: Record<string, any> = {};
+        flattenObjectToDotNotationWithSchema(
+            {
+                RESULT_GRAPHIC: {
+                    CURRENT_MODE: 'INFLL_DESIGN_RC',
+                    LOAD_CASE_COMB: {
+                        TYPE: 'CBS',
+                        NAME: 'gLCB183',
+                    },
+                    TYPE_OF_DISPLAY: {
+                        REINFORCEMENT: {
+                            DISPLAY_MEMBERS: {
+                                BEAM: true,
+                                COLUMN: true,
+                                BRACE: true,
+                                WALL: true,
+                            },
+                        },
+                    },
+                },
+            },
+            target,
+            schemaFields
+        );
+
+        expect(target).toEqual({
+            'RESULT_GRAPHIC._enabled': true,
+            'RESULT_GRAPHIC.CURRENT_MODE': 'INFLL_DESIGN_RC',
+            'RESULT_GRAPHIC.LOAD_CASE_COMB._enabled': true,
+            'RESULT_GRAPHIC.LOAD_CASE_COMB.TYPE': 'CBS',
+            'RESULT_GRAPHIC.LOAD_CASE_COMB.NAME': 'gLCB183',
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY._enabled': true,
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT._enabled': true,
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS._enabled': true,
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.BEAM': true,
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.COLUMN': true,
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.BRACE': true,
+            'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.WALL': true,
+        });
+    });
+
+    it('preserves nested keyed objects when the keyed schema exists below the top level', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'RESULT_GRAPHIC',
+                type: 'object',
+                children: [
+                    {
+                        name: 'RESULT_GRAPHIC.ACTIVE',
+                        type: 'object',
+                        isKeyedObject: true,
+                    },
+                ],
+            },
+        ];
+
+        const target: Record<string, any> = {};
+        flattenObjectToDotNotationWithSchema(
+            {
+                RESULT_GRAPHIC: {
+                    ACTIVE: {
+                        NODE: { VISIBLE: true },
+                    },
+                },
+            },
+            target,
+            schemaFields
+        );
+
+        expect(target).toEqual({
+            'RESULT_GRAPHIC._enabled': true,
+            'RESULT_GRAPHIC.ACTIVE': {
+                NODE: { VISIBLE: true },
+            },
+        });
+    });
 });

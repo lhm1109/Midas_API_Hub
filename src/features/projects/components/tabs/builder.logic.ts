@@ -19,7 +19,20 @@ function resolveNestedFieldKey(parentFieldName: string, childFieldName: string):
 }
 
 function findFieldByPath(fieldPath: string, schemaFields: UIBuilderField[]): UIBuilderField | undefined {
-    return schemaFields.find((field) => field.name === fieldPath);
+    for (const field of schemaFields) {
+        if (field.name === fieldPath) {
+            return field;
+        }
+
+        if (field.children && field.children.length > 0) {
+            const matchedChild = findFieldByPath(fieldPath, field.children);
+            if (matchedChild) {
+                return matchedChild;
+            }
+        }
+    }
+
+    return undefined;
 }
 
 export function shouldPreserveObjectValue(field?: UIBuilderField): boolean {

@@ -103,16 +103,7 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
 
             // 🔥 자식 행들 - expandedParams 확인 후 표시 (아코디언)
             if (param.children && param.children.length > 0 && expandedParams.has(param.no)) {
-              param.children.forEach((child: any, childIdx: number) => {
-                // 🔥 oneOf 섹션 헤더 (type === 'section-header')
-                if (child.type === 'section-header' || child.section) {
-                  rows.push(renderNestedSectionHeader(child, definition, param.no, childIdx));
-                  return;
-                }
-
-                // 자식 행 (🔥 3-depth grandchildren 지원: 배열 spread)
-                rows.push(...renderChildRow(child, definition, param.no, childIdx));
-              });
+              rows.push(...renderNestedRows(param.children, definition, [String(param.no)], 1));
             }
 
             return rows;
@@ -137,10 +128,95 @@ function renderSectionHeader(param: any, definition: TableDefinition) {
   );
 }
 
+function getNestedIndent(level: number) {
+  return 32 + Math.max(0, level - 1) * 16;
+}
+
+function getNestedRowClass(level: number) {
+  const rowClasses = ['bg-zinc-900/50', 'bg-zinc-800/30', 'bg-zinc-900/30'];
+  return rowClasses[Math.min(level - 1, rowClasses.length - 1)];
+}
+
+function getNestedKeyClass(level: number) {
+  const keyClasses = ['text-amber-400', 'text-yellow-400', 'text-yellow-300'];
+  return keyClasses[Math.min(level - 1, keyClasses.length - 1)];
+}
+
+function renderNestedRows(
+  items: any[],
+  definition: TableDefinition,
+  keyPath: string[],
+  level: number
+): JSX.Element[] {
+  const rows: JSX.Element[] = [];
+  const nestedStyle = definition.nestedFields?.style || {};
+  const nestedSectionStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
+
+  items.forEach((item: any, index: number) => {
+    const currentKeyPath = [...keyPath, String(index)];
+    const currentKey = currentKeyPath.join('-');
+
+    if (item.type === 'section-header' || item.section) {
+      rows.push(
+        <tr
+          key={`nested-section-${currentKey}`}
+          className={nestedSectionStyle.background || 'bg-blue-950/30 border-b border-zinc-800'}
+        >
+          <td
+            colSpan={6}
+            className={`p-2 ${nestedSectionStyle.textColor || 'text-blue-400'} font-semibold text-xs`}
+            style={{ paddingLeft: `${getNestedIndent(level)}px` }}
+          >
+            {item.section}
+          </td>
+        </tr>
+      );
+      return;
+    }
+
+    rows.push(
+      <tr key={`nested-row-${currentKey}`} className={`border-b border-zinc-800 ${getNestedRowClass(level)}`}>
+        <td className="p-3 text-zinc-500 text-center">{item.no}</td>
+        <td className="p-3" style={{ paddingLeft: `${getNestedIndent(level)}px` }}>
+          {item.description && renderDescription(item.description)}
+          {item.options && item.options.length > 0 && (
+            <div className="mt-1 space-y-0.5">
+              {item.options.map((opt: string, optIdx: number) => (
+                <div
+                  key={`${currentKey}-opt-${optIdx}`}
+                  className="text-zinc-300"
+                  dangerouslySetInnerHTML={{ __html: opt.replace(/• /g, '<span class="text-zinc-400">• </span>') }}
+                />
+              ))}
+            </div>
+          )}
+        </td>
+        <td className="p-3">
+          <code className={`font-mono ${getNestedKeyClass(level)} ${nestedStyle.keyColor || ''}`}>"{item.name}"</code>
+        </td>
+        <td className="p-3 text-zinc-400">{item.type}</td>
+        <td className="p-3 text-zinc-500 font-mono text-xs">
+          {item.default !== undefined && item.default !== null ? String(item.default) : '-'}
+        </td>
+        <td className="p-3">
+          {renderRequired(item.required, definition)}
+        </td>
+      </tr>
+    );
+
+    if (item.children && item.children.length > 0) {
+      rows.push(...renderNestedRows(item.children, definition, currentKeyPath, level + 1));
+    }
+  });
+
+  return rows;
+}
+
 /**
- * 중첩 섹션 헤더 렌더링
+ * Legacy fixed-depth nested renderers kept for reference.
+ * The recursive renderNestedRows helper above now handles arbitrary depth.
  */
-function renderNestedSectionHeader(child: any, definition: TableDefinition, parentNo: number, childIdx: number) {
+export function renderNestedSectionHeader(child: any, definition: TableDefinition, parentNo: number, childIdx: number) {
   const nestedStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
 
   // 고유한 key 생성: 부모 no + 자식 인덱스 + 섹션명
@@ -155,7 +231,7 @@ function renderNestedSectionHeader(child: any, definition: TableDefinition, pare
   );
 }
 
-function renderGrandchildSectionHeader(
+export function renderGrandchildSectionHeader(
   grandchild: any,
   definition: TableDefinition,
   parentNo: number,
@@ -174,7 +250,7 @@ function renderGrandchildSectionHeader(
   );
 }
 
-function renderGreatGrandchildSectionHeader(
+export function renderGreatGrandchildSectionHeader(
   greatGrandchild: any,
   definition: TableDefinition,
   parentNo: number,
@@ -265,7 +341,7 @@ function renderParameterRow(
 /**
  * 자식 행 렌더링 (3-depth grandchildren 지원)
  */
-function renderChildRow(child: any, definition: TableDefinition, parentNo: number, childIdx: number): JSX.Element[] {
+export function renderChildRow(child: any, definition: TableDefinition, parentNo: number, childIdx: number): JSX.Element[] {
   const rows: JSX.Element[] = [];
   const nestedStyle = definition.nestedFields?.style || {};
 

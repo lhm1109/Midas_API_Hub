@@ -581,6 +581,18 @@ function applySchemaStructurePatterns(
   return schema; // No matching pattern
 }
 
+function isEntitySchemaCandidate(node: any): boolean {
+  if (!node || typeof node !== 'object' || Array.isArray(node)) return false;
+
+  return Boolean(
+    node.type === 'object' ||
+    (node.properties && typeof node.properties === 'object') ||
+    (node.patternProperties && typeof node.patternProperties === 'object') ||
+    (node.additionalProperties && typeof node.additionalProperties === 'object') ||
+    (node.oneOf && Array.isArray(node.oneOf))
+  );
+}
+
 function isSingleMapWrapperSchema(schema: any): boolean {
   if (!schema || typeof schema !== 'object') return false;
   if (schema.type !== 'object') return false;
@@ -594,9 +606,7 @@ function isSingleMapWrapperSchema(schema: any): boolean {
   if (wrapper.type !== 'object') return false;
 
   const hasObjectAdditional =
-    wrapper.additionalProperties &&
-    typeof wrapper.additionalProperties === 'object' &&
-    wrapper.additionalProperties.type === 'object';
+    isEntitySchemaCandidate(wrapper.additionalProperties);
 
   const hasPatternPropertiesObject =
     wrapper.patternProperties &&
@@ -763,9 +773,7 @@ function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): En
 
   // 먼저 additionalProperties 패턴 확인
   for (const key of wrapperKeys) {
-    if (schema.properties[key]?.additionalProperties &&
-      typeof schema.properties[key].additionalProperties === 'object' &&
-      schema.properties[key].additionalProperties.type === 'object') {
+    if (isEntitySchemaCandidate(schema.properties[key]?.additionalProperties)) {
       wrapperKey = key;
       entitySchema = schema.properties[key].additionalProperties;
       break;
@@ -858,6 +866,31 @@ function unwrapWrapperWithAdditionalProperties(schema: any, _transform: any): En
     ...entitySchema,
     title: wrapperKey,
   };
+
+  if (
+    !result.properties &&
+    Array.isArray(result.oneOf) &&
+    result.oneOf.length > 0
+  ) {
+    const wrapperDescription =
+      schema.properties?.[wrapperKey]?.description ||
+      result.description ||
+      `${wrapperKey} value object`;
+
+    return {
+      type: 'object',
+      title: wrapperKey,
+      required: [],
+      description: wrapperDescription,
+      properties: {
+        [wrapperKey]: {
+          type: 'object',
+          description: wrapperDescription,
+          oneOf: result.oneOf,
+        },
+      },
+    };
+  }
 
   console.log(`🔍 Result schema required array:`, result.required);
 
@@ -1353,6 +1386,288 @@ function getNestedObjectSchema(schemaNode: any): { properties: Record<string, an
   return null;
 }
 
+function resolveCompiledFieldType(prop: any): string {
+  if (typeof prop?.type === 'string') {
+    return prop.type;
+  }
+
+  if (Array.isArray(prop?.type)) {
+    const typedEntry = prop.type.find((entry: any) => typeof entry === 'string');
+    if (typeof typedEntry === 'string') {
+      return typedEntry;
+    }
+  }
+
+  for (const candidate of [prop?.allOf, prop?.oneOf, prop?.anyOf]) {
+    if (!Array.isArray(candidate)) continue;
+    const typedEntry = candidate.find(
+      (entry: any) => entry && typeof entry === 'object' && typeof entry.type === 'string'
+    );
+    if (typedEntry?.type) {
+      return typedEntry.type;
+    }
+  }
+
+  return prop?.type;
+}
+
+function copyCompiledFieldMetadata(field: EnhancedField, prop: any) {
+  for (const [propKey, propValue] of Object.entries(prop || {})) {
+    if (propKey === 'type' || propKey === 'description' || propKey === 'default' || propKey === 'required') {
+      continue;
+    }
+
+    if (propKey === 'x-ui') {
+      field.ui = propValue as any;
+    } else if (propKey.startsWith('x-')) {
+      field[propKey] = propValue;
+    } else {
+      field[propKey] = propValue;
+    }
+  }
+}
+
+function applyCompiledOneOfEnum(field: EnhancedField, prop: any, fullKey: string) {
+  if (!Array.isArray(prop?.oneOf) || field.enum) {
+    return;
+  }
+
+  const enumValues: any[] = [];
+  const enumLabels: Record<string, string> = {};
+
+  for (const option of prop.oneOf) {
+    if (option?.const === undefined) {
+      continue;
+    }
+
+    enumValues.push(option.const);
+    if (option.title) {
+      enumLabels[String(option.const)] = option.title;
+    }
+  }
+
+  if (enumValues.length === 0) {
+    return;
+  }
+
+  field.enum = enumValues;
+  if (Object.keys(enumLabels).length > 0) {
+    field['x-enum-labels'] = enumLabels;
+  }
+
+  console.log(`✅ Converted oneOf → enum for ${fullKey}:`, enumValues);
+}
+
+function applyCompiledVisibleWhenAlias(field: EnhancedField, prop: any, fullKey: string) {
+  const xUiRules = prop?.['x-uiRules'];
+  if (xUiRules?.visibleWhen && !field['x-optional-when'] && !field['x-required-when']) {
+    field['x-optional-when'] = xUiRules.visibleWhen;
+    console.log(`✅ Converted x-uiRules.visibleWhen → x-optional-when for ${fullKey}:`, xUiRules.visibleWhen);
+  }
+}
+
+function buildCompiledFieldTree(
+  fullKey: string,
+  prop: any,
+  requiredKeys: string[] = [],
+  conditionalRequiredMap: Record<string, Record<string, any>> = {}
+): EnhancedField {
+  const localKey = fullKey.split('.').pop() || fullKey;
+  const normalizedLocalKey = localKey.replace(/\[\]/g, '');
+  const fieldType = resolveCompiledFieldType(prop);
+
+  const field: EnhancedField = {
+    key: fullKey,
+    type: fieldType,
+    description: prop?.description,
+    default: resolveFieldDefault(
+      normalizedLocalKey,
+      { ...(prop || {}), type: fieldType } as EnhancedProperty
+    ),
+    required: requiredKeys.includes(normalizedLocalKey) ? { '*': 'required' } : { '*': 'optional' },
+    section: '',
+    validationLayers: [],
+    runtimeTriggers: extractRuntimeTriggers(prop),
+  };
+
+  copyCompiledFieldMetadata(field, prop);
+  applyCompiledOneOfEnum(field, prop, fullKey);
+  applyCompiledVisibleWhenAlias(field, prop, fullKey);
+  applyConditionalRequiredToField(field, conditionalRequiredMap, normalizedLocalKey, fullKey);
+
+  const oneOfOptionsWithProperties =
+    fieldType === 'object' && Array.isArray(prop?.oneOf)
+      ? prop.oneOf.filter(
+          (option: any) =>
+            option &&
+            typeof option === 'object' &&
+            option.properties &&
+            Object.keys(option.properties).length > 0
+        )
+      : [];
+
+  if (fieldType === 'object' && oneOfOptionsWithProperties.length > 0) {
+    field.children = [];
+
+    oneOfOptionsWithProperties.forEach((option: any, optionIndex: number) => {
+      const optionTitle = inferOneOfOptionTitle(option, optionIndex);
+      const optionProps = option.properties || {};
+      const optionRequired = Array.isArray(option.required) ? option.required : [];
+      const optionConditionalRequiredMap = normalizeConditionalRequired(option as EnhancedSchema);
+
+      field.children!.push({
+        key: `${fullKey}.__section_${optionIndex}`,
+        type: 'section-header' as any,
+        required: {},
+        section: optionTitle,
+        validationLayers: [],
+        ui: { label: optionTitle, group: fullKey },
+      });
+
+      for (const [childKey, childProp] of Object.entries(optionProps)) {
+        field.children!.push(
+          buildCompiledFieldTree(
+            `${fullKey}.${childKey}`,
+            childProp,
+            optionRequired,
+            optionConditionalRequiredMap
+          )
+        );
+      }
+    });
+
+    return field;
+  }
+
+  const nestedObjectSchema = fieldType === 'object' ? getNestedObjectSchema(prop) : null;
+  if (nestedObjectSchema) {
+    const childConditionalRequiredMap = normalizeConditionalRequired(prop as EnhancedSchema);
+    field.children = Object.entries(nestedObjectSchema.properties).map(([childKey, childProp]) =>
+      buildCompiledFieldTree(
+        `${fullKey}.${childKey}`,
+        childProp,
+        nestedObjectSchema.required,
+        childConditionalRequiredMap
+      )
+    );
+    return field;
+  }
+
+  if (fieldType === 'array' && prop?.items && typeof prop.items === 'object') {
+    const itemSchema = prop.items as any;
+    const arrayItemSchema = getNestedObjectSchema(itemSchema);
+
+    if (arrayItemSchema) {
+      const itemConditionalRequiredMap = normalizeConditionalRequired(itemSchema as EnhancedSchema);
+      field.children = Object.entries(arrayItemSchema.properties).map(([childKey, childProp]) =>
+        buildCompiledFieldTree(
+          `${fullKey}[].${childKey}`,
+          childProp,
+          arrayItemSchema.required,
+          itemConditionalRequiredMap
+        )
+      );
+      return field;
+    }
+
+    const itemOneOfOptionsWithProperties = Array.isArray(itemSchema.oneOf)
+      ? itemSchema.oneOf.filter(
+          (option: any) =>
+            option &&
+            typeof option === 'object' &&
+            option.properties &&
+            Object.keys(option.properties).length > 0
+        )
+      : [];
+
+    if (itemOneOfOptionsWithProperties.length > 0) {
+      field.children = [];
+
+      itemOneOfOptionsWithProperties.forEach((option: any, optionIndex: number) => {
+        const optionTitle = inferOneOfOptionTitle(option, optionIndex);
+        const optionProps = option.properties || {};
+        const optionRequired = Array.isArray(option.required) ? option.required : [];
+        const optionConditionalRequiredMap = normalizeConditionalRequired(option as EnhancedSchema);
+
+        field.children!.push({
+          key: `${fullKey}[].__section_${optionIndex}`,
+          type: 'section-header' as any,
+          required: {},
+          section: optionTitle,
+          validationLayers: [],
+          ui: { label: optionTitle, group: fullKey },
+        });
+
+        for (const [childKey, childProp] of Object.entries(optionProps)) {
+          field.children!.push(
+            buildCompiledFieldTree(
+              `${fullKey}[].${childKey}`,
+              childProp,
+              optionRequired,
+              optionConditionalRequiredMap
+            )
+          );
+        }
+      });
+    }
+  }
+
+  return field;
+}
+
+function buildNestedFieldTree(
+  fullKey: string,
+  prop: any,
+  requiredKeys: string[] = [],
+  _section: string = ''
+): EnhancedField {
+  const localKey = fullKey.split('.').pop() || fullKey;
+  const field: EnhancedField = {
+    key: fullKey,
+    type: prop?.type,
+    description: prop?.description,
+    default: resolveFieldDefault(localKey, prop),
+    required: requiredKeys.includes(localKey) ? { '*': 'required' } : { '*': 'optional' },
+    section: '',
+    validationLayers: [],
+    runtimeTriggers: extractRuntimeTriggers(prop),
+  };
+
+  for (const [propKey, propValue] of Object.entries(prop || {})) {
+    if (propKey === 'type' || propKey === 'description' || propKey === 'default' || propKey === 'required') {
+      continue;
+    }
+
+    if (propKey === 'x-ui') {
+      field.ui = propValue as any;
+    } else if (propKey.startsWith('x-')) {
+      field[propKey] = propValue;
+    } else {
+      field[propKey] = propValue;
+    }
+  }
+
+  const nestedObjectSchema = getNestedObjectSchema(prop);
+  if (prop?.type === 'object' && nestedObjectSchema) {
+    field.children = Object.entries(nestedObjectSchema.properties).map(([childKey, childProp]) =>
+      buildNestedFieldTree(`${fullKey}.${childKey}`, childProp, nestedObjectSchema.required)
+    );
+  } else if (
+    prop?.type === 'array' &&
+    prop?.items &&
+    typeof prop.items === 'object' &&
+    prop.items.properties &&
+    typeof prop.items.properties === 'object'
+  ) {
+    const itemRequired = Array.isArray(prop.items.required) ? prop.items.required : [];
+    field.children = Object.entries(prop.items.properties).map(([childKey, childProp]) =>
+      buildNestedFieldTree(`${fullKey}.${childKey}`, childProp, itemRequired)
+    );
+  }
+
+  return field;
+}
+
 /**
  * 모든 필드 추출 (중첩 객체 포함)
  */
@@ -1371,6 +1686,12 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
   if (!propsSource) {
     return [];
   }
+
+  const rootRequired = Array.isArray(schema.required) ? schema.required : [];
+  const rootConditionalRequiredMap = normalizeConditionalRequired(schema);
+  return Object.entries(propsSource).map(([key, prop]) =>
+    buildCompiledFieldTree(key, prop, rootRequired, rootConditionalRequiredMap)
+  );
 
   // 🎯 allOf → x-required-when 정규화 맵 생성
   const conditionalRequiredMap = normalizeConditionalRequired(schema);
@@ -1430,7 +1751,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       const enumValues: any[] = [];
       const enumLabels: Record<string, string> = {};
 
-      for (const option of prop.oneOf) {
+      for (const option of prop.oneOf!) {
         if (option.const !== undefined) {
           enumValues.push(option.const);
           if (option.title) {
@@ -1464,10 +1785,10 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
     const nestedObjectSchema = prop.type === 'object' ? getNestedObjectSchema(prop) : null;
     if (nestedObjectSchema) {
       field.children = [];
-      const objRequired = nestedObjectSchema.required || [];
+      const objRequired = nestedObjectSchema!.required || [];
       const childConditionalRequiredMap = normalizeConditionalRequired(prop as EnhancedSchema);
 
-      for (const [childKey, childProp] of Object.entries(nestedObjectSchema.properties)) {
+      for (const [childKey, childProp] of Object.entries(nestedObjectSchema!.properties)) {
         const isRequiredByParent = objRequired.includes(childKey);
         const childField: EnhancedField = {
           key: `${key}.${childKey}`,
@@ -1645,11 +1966,11 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                   }
                 }
 
-                grandchildField.children.push(greatGrandchildField);
+                grandchildField.children!.push(greatGrandchildField);
               }
             }
 
-            childField.children.push(grandchildField);
+            childField.children!.push(grandchildField);
           }
         }
 
@@ -1659,10 +1980,10 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           : null;
         if (childNestedObjectSchema) {
           childField.children = [];
-          const childObjRequired = childNestedObjectSchema.required || [];
+          const childObjRequired = childNestedObjectSchema!.required || [];
           const grandchildConditionalRequiredMap = normalizeConditionalRequired(childProp as EnhancedSchema);
 
-          for (const [grandchildKey, grandchildProp] of Object.entries(childNestedObjectSchema.properties)) {
+          for (const [grandchildKey, grandchildProp] of Object.entries(childNestedObjectSchema!.properties)) {
             const isGrandchildRequired = childObjRequired.includes(grandchildKey);
             const grandchildField: EnhancedField = {
               key: `${key}.${childKey}.${grandchildKey}`,
@@ -1778,7 +2099,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                   }
                 }
 
-                grandchildField.children.push(greatGrandchildField);
+                grandchildField.children!.push(greatGrandchildField);
               }
             }
 
@@ -1788,10 +2109,10 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               : null;
             if (grandchildNestedObjectSchema) {
               grandchildField.children = [];
-              const grandchildObjRequired = grandchildNestedObjectSchema.required || [];
+              const grandchildObjRequired = grandchildNestedObjectSchema!.required || [];
               const greatGrandchildConditionalRequiredMap = normalizeConditionalRequired(grandchildProp as EnhancedSchema);
 
-              for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries(grandchildNestedObjectSchema.properties)) {
+              for (const [greatGrandchildKey, greatGrandchildProp] of Object.entries(grandchildNestedObjectSchema!.properties)) {
                 const isGreatGrandchildRequired = grandchildObjRequired.includes(greatGrandchildKey);
                 const greatGrandchildField: EnhancedField = {
                   key: `${key}.${childKey}.${grandchildKey}.${greatGrandchildKey}`,
@@ -1846,7 +2167,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                   }
                 }
 
-                grandchildField.children.push(greatGrandchildField);
+                grandchildField.children!.push(greatGrandchildField);
               }
             }
 
@@ -1910,15 +2231,15 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
                   }
                 }
 
-                grandchildField.children.push(greatGrandchildField);
+                grandchildField.children!.push(greatGrandchildField);
               }
             }
 
-            childField.children.push(grandchildField);
+            childField.children!.push(grandchildField);
           }
         }
 
-        field.children.push(childField);
+        field.children!.push(childField);
       }
     }
 
@@ -1994,10 +2315,10 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           : null;
         if (arrayItemNestedObjectSchema) {
           childField.children = [];
-          const childObjRequired = arrayItemNestedObjectSchema.required || [];
+          const childObjRequired = arrayItemNestedObjectSchema!.required || [];
           const grandchildConditionalRequiredMap = normalizeConditionalRequired(childProp as EnhancedSchema);
 
-          for (const [grandchildKey, grandchildProp] of Object.entries(arrayItemNestedObjectSchema.properties)) {
+          for (const [grandchildKey, grandchildProp] of Object.entries(arrayItemNestedObjectSchema!.properties)) {
             const grandchildField: EnhancedField = {
               key: `${key}[].${childKey}.${grandchildKey}`,
               type: (grandchildProp as any).type,
@@ -2051,7 +2372,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
               }
             }
 
-            childField.children.push(grandchildField);
+            childField.children!.push(grandchildField);
           }
         }
 
@@ -2069,7 +2390,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
       }
 
       // 🔥 조건 없는 필드들 먼저 추가
-      field.children.push(...noConditionChildren);
+      field.children!.push(...noConditionChildren);
 
       // 🔥 조건부 필드들 - 섹션 헤더와 함께 추가
       for (const [conditionKey, condChildren] of conditionalChildren) {
@@ -2079,7 +2400,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
           .join(' and ');
 
         // 섹션 헤더 추가
-        field.children.push({
+        field.children!.push({
           key: `${key}.__condition_${conditionKey}`,
           type: 'section-header' as any,
           required: {},
@@ -2089,17 +2410,17 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
         });
 
         // 해당 조건의 자식 필드들 추가
-        field.children.push(...condChildren);
+        field.children!.push(...condChildren);
       }
 
-      console.log(`✅ Extracted ${field.children.length} children from array items.properties for ${key} (${noConditionChildren.length} normal, ${conditionalChildren.size} groups)`);
+      console.log(`✅ Extracted ${field.children!.length} children from array items.properties for ${key} (${noConditionChildren.length} normal, ${conditionalChildren.size} groups)`);
     }
 
     // 🔥 Object 타입 with oneOf - 옵션별 properties가 있는 경우에만 특수 처리
     // validation-only oneOf(required/not) 패턴은 기존 properties children을 유지해야 함
     const oneOfOptionsWithProperties =
       prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)
-        ? prop.oneOf.filter((option: any) =>
+        ? prop.oneOf!.filter((option: any) =>
             option &&
             typeof option === 'object' &&
             option.properties &&
@@ -2112,7 +2433,7 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
 
       // oneOf의 각 옵션을 섹션 헤더로 표시
       oneOfOptionsWithProperties.forEach((option: any, optionIndex: number) => {
-        const optionTitle = option.title || `Option ${optionIndex + 1}`;
+        const optionTitle = inferOneOfOptionTitle(option, optionIndex);
         const optionProps = option.properties || {};
         const optionRequired = option.required || [];
 
@@ -2131,29 +2452,9 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
 
         // 옵션의 각 필드 추가
         for (const [childKey, childProp] of Object.entries(optionProps)) {
-          const childField: EnhancedField = {
-            key: `${key}.${childKey}`,
-            type: (childProp as any).type,
-            default: (childProp as any).default,
-            required: optionRequired.includes(childKey) ? { '*': 'required' } : { '*': 'optional' },
-            section: optionTitle,
-            validationLayers: [],
-          };
-
-          // 🔥 동적으로 모든 속성 복사
-          for (const [cpKey, cpValue] of Object.entries(childProp as any)) {
-            if (cpKey === 'type' || cpKey === 'default' || cpKey === 'required') continue;
-
-            if (cpKey === 'x-ui') {
-              childField.ui = cpValue;
-            } else if (cpKey.startsWith('x-')) {
-              childField[cpKey] = cpValue;
-            } else {
-              childField[cpKey] = cpValue;
-            }
-          }
-
-          field.children!.push(childField);
+          field.children!.push(
+            buildNestedFieldTree(`${key}.${childKey}`, childProp, optionRequired, optionTitle)
+          );
         }
       });
     } else if (prop.type === 'object' && prop.oneOf && Array.isArray(prop.oneOf)) {
@@ -2166,6 +2467,47 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
   }
 
   return fields;
+}
+
+function inferOneOfOptionTitle(option: any, optionIndex: number): string {
+  const explicitTitle = typeof option?.title === 'string' ? option.title.trim() : '';
+  if (explicitTitle) return explicitTitle;
+
+  const optionProps = option?.properties && typeof option.properties === 'object'
+    ? option.properties
+    : {};
+
+  const primaryVariantKey = Object.keys(optionProps).find((key) =>
+    !['NAME', 'TYPE', 'MODEL_TYPE'].includes(key)
+  );
+  if (primaryVariantKey) {
+    const variantProp = optionProps[primaryVariantKey];
+    const variantLabel = typeof variantProp?.description === 'string'
+      ? variantProp.description.trim()
+      : '';
+    return variantLabel || primaryVariantKey;
+  }
+
+  const discriminatorEntry = Object.entries(optionProps).find(([, value]: [string, any]) => {
+    if (!value || typeof value !== 'object') return false;
+    if (value.const !== undefined) return true;
+    return Array.isArray(value.allOf) && value.allOf.some((item: any) => item?.const !== undefined);
+  });
+
+  if (discriminatorEntry) {
+    const [fieldKey, fieldSchema] = discriminatorEntry as [string, any];
+    const directConst = fieldSchema?.const;
+    const nestedConst = Array.isArray(fieldSchema?.allOf)
+      ? fieldSchema.allOf.find((item: any) => item?.const !== undefined)?.const
+      : undefined;
+    const constValue = directConst ?? nestedConst;
+
+    if (constValue !== undefined) {
+      return `${fieldKey} = ${String(constValue)}`;
+    }
+  }
+
+  return `Option ${optionIndex + 1}`;
 }
 
 /**

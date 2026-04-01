@@ -152,8 +152,12 @@ export function RunnerTab({
     try {
       const parsed = JSON.parse(body);
 
-      // 이미 Assign 래퍼가 있으면 그대로 반환
-      if (parsed && typeof parsed === 'object' && 'Assign' in parsed) {
+      // 이미 canonical wrapper가 있으면 그대로 반환
+      if (
+        parsed &&
+        typeof parsed === 'object' &&
+        ['Assign', 'Argument', 'MCD'].some((key) => key in parsed)
+      ) {
         return body;
       }
 

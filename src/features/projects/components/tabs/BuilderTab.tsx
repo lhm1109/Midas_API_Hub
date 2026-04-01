@@ -1565,41 +1565,10 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       });
 
       console.log('[BuilderTab] Initial form data:', initialData);
-      const flatData: any = {};
+      const flatData: Record<string, any> = {};
+      flattenObjectToDotNotationWithSchema(nestedData, flatData, schemaFields);
+      console.log('[BuilderTab] Flattened JSON-to-form data:', flatData);
 
-      Object.keys(nestedData).forEach(key => {
-        const value = nestedData[key];
-        const schemaField = schemaFields.find(f => f.name === key);
-
-        if (!schemaField) {
-          flatData[key] = value;
-          console.log(`[BuilderTab] Field not in schema: ${key}`);
-          return;
-        }
-        if (schemaField.type === 'object' && schemaField.isKeyedObject &&
-          value !== null && typeof value === 'object' && !Array.isArray(value)) {
-          flatData[key] = value;
-
-          console.log(`[BuilderTab] Processed keyed object field: ${key}`, value);
-        }
-        else if (schemaField.type === 'object' && schemaField.children &&
-          value !== null && typeof value === 'object' && !Array.isArray(value)) {
-          flatData[`${key}._enabled`] = true;
-          Object.keys(value).forEach(childKey => {
-            flatData[`${key}.${childKey}`] = value[childKey];
-          });
-
-          console.log(`[BuilderTab] Processed object field: ${key}`, value);
-        }
-        else if (Array.isArray(value)) {
-          flatData[key] = value;
-          console.log(`[BuilderTab] Processed array field: ${key}`, value);
-        }
-        else {
-          flatData[key] = value;
-          console.log(`[BuilderTab] Processed simple field: ${key} =`, value);
-        }
-      });
       const mergedData = { ...initialData, ...flatData };
 
       schemaFields.forEach((field) => {

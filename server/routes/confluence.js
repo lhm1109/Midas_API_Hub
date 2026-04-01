@@ -11,7 +11,17 @@ function refreshEnvFromFile() {
 }
 
 function asTrimmedString(value) {
-  return typeof value === 'string' ? value.trim() : '';
+  if (typeof value !== 'string') return '';
+
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+
+  return trimmed;
 }
 
 function normalizeConfluenceBaseUrl(value) {

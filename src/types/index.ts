@@ -83,6 +83,8 @@ export interface ManualData {
   sectionId?: string;
   authorId?: string;
   url?: string;
+  zendeskLabelNames?: string[];
+  zendeskCommentsDisabled?: boolean;
 }
 
 export interface Example {
@@ -133,4 +135,3 @@ export interface Settings {
   /** Manual Hub 인덱스(EN) 기본 로컬 파일 경로 (절대 경로) */
   manualHubIndexLocalPathEn?: string;
 }
-

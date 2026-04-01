@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileDown, FileUp, Send, Eye, Code, ZoomIn, ZoomOut, RotateCcw, Save, Trash2, GitCompare, RefreshCw, ArrowUpToLine } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
@@ -60,6 +61,19 @@ function normalizeZendeskLocale(locale?: string): string {
   return normalized || DEFAULT_ZENDESK_LOCALE;
 }
 
+function parseZendeskLabelInput(value: string): string[] {
+  const normalized = String(value || '')
+    .split(',')
+    .map((token) => token.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set(normalized));
+}
+
+function formatZendeskLabelInput(labels?: string[] | null): string {
+  return Array.isArray(labels) ? labels.join(', ') : '';
+}
+
 export function ManualTab({ endpoint }: ManualTabProps) {
   const { manualData, setManualData, updateManualData } = useAppStore();
   const [manualPublisher, setManualPublisher] = useState<ManualPublisher>('zendesk');
@@ -70,6 +84,7 @@ export function ManualTab({ endpoint }: ManualTabProps) {
   const [confluenceEnvStatus, setConfluenceEnvStatus] = useState<ConfluenceEnvStatus | null>(null);
   const [isConfluenceSending, setIsConfluenceSending] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code' | 'diff'>('preview');
+  const [zendeskLabelInput, setZendeskLabelInput] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 🔍 Zoom 상태 관리
@@ -158,6 +173,14 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       setZendeskUrl(manualData.url);
     }
   }, [manualData?.url]);
+
+  useEffect(() => {
+    const nextLabelInput = manualData?.zendeskLabelNames !== undefined
+      ? formatZendeskLabelInput(manualData.zendeskLabelNames)
+      : formatZendeskLabelInput(zendeskEnvStatus?.defaultLabels);
+
+    setZendeskLabelInput(nextLabelInput);
+  }, [manualData?.zendeskLabelNames, zendeskEnvStatus?.defaultLabels]);
 
   const handleFetchFromZendesk = async () => {
     const targetUrl = zendeskUrl.trim();
@@ -688,6 +711,10 @@ ${specificationSectionHTML}
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
     const title = (manualData.title || endpoint.name || '').trim();
     const locale = normalizeZendeskLocale(envStatus.defaultLocale || DEFAULT_ZENDESK_LOCALE);
+    const labelNames = parseZendeskLabelInput(zendeskLabelInput);
+    const commentsDisabled = manualData.zendeskCommentsDisabled ?? true;
+
+    updateManualData({ zendeskLabelNames: labelNames });
 
     try {
       setIsZendeskSending(true);
@@ -709,7 +736,11 @@ ${specificationSectionHTML}
           locale,
           html,
           title || undefined,
-          undefined
+          undefined,
+          {
+            labelNames,
+            commentsDisabled,
+          }
         );
       } else {
         const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/publish`, {
@@ -721,6 +752,8 @@ ${specificationSectionHTML}
             body: html,
             title: title || undefined,
             draft: undefined,
+            labelNames,
+            commentsDisabled,
           }),
         });
 
@@ -866,7 +899,10 @@ ${specificationSectionHTML}
       requestExamples: [],
       responseExamples: [],
       specifications: '',
+      zendeskLabelNames: [],
+      zendeskCommentsDisabled: true,
     });
+    setZendeskLabelInput('');
 
     // HTML 에디터도 리셋
     setEditableHTMLByPublisher({
@@ -912,6 +948,9 @@ ${specificationSectionHTML}
 
     void handleSendToConfluence();
   };
+  const zendeskCommentsEnabled = manualData?.zendeskCommentsDisabled !== undefined
+    ? !manualData.zendeskCommentsDisabled
+    : false;
 
   return (
     <div className="flex h-full w-full flex-col bg-zinc-950 relative">
@@ -979,6 +1018,42 @@ ${specificationSectionHTML}
                   {isSendingCurrent ? 'Sending...' : (zendeskUrl.trim() ? 'Update' : 'Create')}
                 </Button>
               </div>
+
+              {manualPublisher === 'zendesk' && manualData && (
+                <div className="mt-2 grid gap-2 lg:grid-cols-[minmax(0,1fr)_220px]">
+                  <div className="min-w-0">
+                    <Label className="text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-1 block">
+                      Zendesk Labels
+                    </Label>
+                    <Input
+                      value={zendeskLabelInput}
+                      onChange={(e) => setZendeskLabelInput(e.target.value)}
+                      onBlur={() => {
+                        const parsedLabels = parseZendeskLabelInput(zendeskLabelInput);
+                        updateManualData({ zendeskLabelNames: parsedLabels });
+                        setZendeskLabelInput(formatZendeskLabelInput(parsedLabels));
+                      }}
+                      placeholder="e.g. Civil NX, Steel Design"
+                      className="bg-zinc-800 border-zinc-700 h-8 text-xs"
+                    />
+                  </div>
+
+                  <div className="min-w-0">
+                    <Label className="text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-1 block">
+                      Comments
+                    </Label>
+                    <div className="flex h-8 items-center justify-between rounded-md border border-zinc-700 bg-zinc-800 px-3">
+                      <span className="text-xs text-zinc-300">
+                        {zendeskCommentsEnabled ? 'Enabled' : 'Disabled'}
+                      </span>
+                      <Switch
+                        checked={zendeskCommentsEnabled}
+                        onCheckedChange={(checked) => updateManualData({ zendeskCommentsDisabled: !checked })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

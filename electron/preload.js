@@ -29,8 +29,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.invoke('zendesk:updateArticleTranslation', config, articleId, locale, body, title, draft),
     updateArticleTranslationWithEnv: (articleId, locale, body, title, draft) =>
       ipcRenderer.invoke('zendesk:updateArticleTranslationWithEnv', articleId, locale, body, title, draft),
-    publishManualWithEnv: (targetInput, locale, body, title, draft) =>
-      ipcRenderer.invoke('zendesk:publishManualWithEnv', targetInput, locale, body, title, draft),
+    publishManualWithEnv: (targetInput, locale, body, title, draft, options) =>
+      ipcRenderer.invoke('zendesk:publishManualWithEnv', targetInput, locale, body, title, draft, options),
     getAllArticles: (config, perPage, page) =>
       ipcRenderer.invoke('zendesk:getAllArticles', config, perPage, page),
     getArticlesBySection: (config, sectionId, locale) =>

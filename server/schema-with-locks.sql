@@ -83,6 +83,8 @@ CREATE TABLE IF NOT EXISTS manual_data (
   section_id TEXT,
   author_id TEXT,
   url TEXT,
+  zendesk_label_names TEXT,
+  zendesk_comments_disabled BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (version_id) REFERENCES versions(id) ON DELETE CASCADE
 );
 
