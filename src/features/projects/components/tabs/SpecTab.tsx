@@ -27,6 +27,10 @@ import {
   collectFieldConditionInfo,
   groupFieldsByCondition
 } from '@/lib/schema/conditionExtractor';
+import {
+  extractValidationOneOfInfo,
+  isValidationOneOfParticipant,
+} from '@/lib/schema/validationOneOf';
 import { buildFieldDescription } from '@/lib/schema/descriptionBuilder';
 import { schemaCompileCache } from '@/lib/cache/schemaCache';
 import { SchemaDesigner } from '@/features/schema-designer/components/SchemaDesigner';
@@ -1267,6 +1271,16 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     return `When ${conditionText}`;
   };
 
+  const buildOneOfHeaderRow = (description: string) => ({
+    no: '',
+    name: '',
+    type: 'one-of-header',
+    title: 'oneOf',
+    default: '',
+    description,
+    required: '',
+  });
+
   const finalizeRequiredLabel = (
     currentLabel: string,
     field: any,
@@ -1467,6 +1481,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
         return [];
       }
 
+      const validationOneOfInfo = extractValidationOneOfInfo(parentField);
       const hasExplicitHeaders = resolvedFields.some((field: any) => field.type === 'section-header');
       const fieldsToProcess = resolvedFields.filter((field: any) => field.type !== 'section-header');
       const fieldInfoMap = collectFieldConditionInfo(fieldsToProcess, conditionalRules);
@@ -1524,14 +1539,28 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
             continue;
           }
 
+          if (isValidationOneOfParticipant(field, validationOneOfInfo) && !results.some((row) => row.type === 'one-of-header')) {
+            results.push(buildOneOfHeaderRow(validationOneOfInfo!.description));
+          }
+
           results.push(buildMappedField(field));
         }
       } else {
         for (const { field } of noConditionFields) {
+          if (isValidationOneOfParticipant(field, validationOneOfInfo) && !results.some((row) => row.type === 'one-of-header')) {
+            results.push(buildOneOfHeaderRow(validationOneOfInfo!.description));
+          }
           results.push(buildMappedField(field));
         }
 
         for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
+          if (
+            fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, validationOneOfInfo)) &&
+            !results.some((row) => row.type === 'one-of-header')
+          ) {
+            results.push(buildOneOfHeaderRow(validationOneOfInfo!.description));
+          }
+
           const { conditionInfo } = fieldsWithCondition[0];
           pushSectionHeader(getConditionSectionLabel(conditionInfo, conditionKey));
 
@@ -1547,6 +1576,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     const buildParamsFromSections = (sections: any[]) => {
       const params: any[] = [];
       let rowNumber = 1;
+      const rootValidationOneOfInfo = extractValidationOneOfInfo(effectiveSchema);
 
       for (const section of sections) {
         const fieldInfoMap = collectFieldConditionInfo(section.fields, conditionalRules);
@@ -1593,10 +1623,20 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
         };
 
         for (const { field } of noConditionFields) {
+          if (isValidationOneOfParticipant(field, rootValidationOneOfInfo) && !params.some((row) => row.type === 'one-of-header')) {
+            params.push(buildOneOfHeaderRow(rootValidationOneOfInfo!.description));
+          }
           params.push(buildTopLevelParam(field));
         }
 
         for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
+          if (
+            fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, rootValidationOneOfInfo)) &&
+            !params.some((row) => row.type === 'one-of-header')
+          ) {
+            params.push(buildOneOfHeaderRow(rootValidationOneOfInfo!.description));
+          }
+
           const conditionInfo = fieldsWithCondition[0].conditionInfo;
           const conditionText = getConditionSectionLabel(conditionInfo, conditionKey);
 

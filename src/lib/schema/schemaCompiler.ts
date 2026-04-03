@@ -1466,6 +1466,129 @@ function applyCompiledVisibleWhenAlias(field: EnhancedField, prop: any, fullKey:
   }
 }
 
+function extractEnumLikeValues(prop: any): Array<string | number> {
+  const values: Array<string | number> = [];
+
+  if (Array.isArray(prop?.enum)) {
+    prop.enum.forEach((value: any) => {
+      if (typeof value === 'string' || typeof value === 'number') {
+        values.push(value);
+      }
+    });
+  }
+
+  if (Array.isArray(prop?.oneOf)) {
+    prop.oneOf.forEach((option: any) => {
+      if (option?.const !== undefined && (typeof option.const === 'string' || typeof option.const === 'number')) {
+        values.push(option.const);
+      }
+
+      if (Array.isArray(option?.enum)) {
+        option.enum.forEach((value: any) => {
+          if (typeof value === 'string' || typeof value === 'number') {
+            values.push(value);
+          }
+        });
+      }
+    });
+  }
+
+  if (Array.isArray(prop?.allOf)) {
+    prop.allOf.forEach((entry: any) => {
+      if (entry?.const !== undefined && (typeof entry.const === 'string' || typeof entry.const === 'number')) {
+        values.push(entry.const);
+      }
+
+      if (Array.isArray(entry?.enum)) {
+        entry.enum.forEach((value: any) => {
+          if (typeof value === 'string' || typeof value === 'number') {
+            values.push(value);
+          }
+        });
+      }
+    });
+  }
+
+  return Array.from(new Set(values));
+}
+
+function getCompiledFieldLeafName(fieldKey: string): string {
+  return fieldKey.replace(/\[\]/g, '').split('.').filter(Boolean).pop() || fieldKey;
+}
+
+function mergeObjectCondition(field: EnhancedField, markerKey: 'x-required-when' | 'x-optional-when', condition: Record<string, any>) {
+  const existingCondition = field[markerKey];
+
+  if (!existingCondition) {
+    field[markerKey] = condition;
+    return;
+  }
+
+  if (typeof existingCondition === 'object' && !Array.isArray(existingCondition)) {
+    field[markerKey] = {
+      ...(existingCondition as Record<string, any>),
+      ...condition,
+    };
+  }
+}
+
+function applyEnumSiblingBranchConditions(
+  field: EnhancedField,
+  nestedObjectSchema: { properties: Record<string, any>; required: string[] },
+  fullKey: string
+) {
+  if (!Array.isArray(field.children) || field.children.length === 0) {
+    return;
+  }
+
+  const childFieldsByLeaf = new Map<string, EnhancedField>();
+  field.children.forEach((child) => {
+    if (child.type === 'section-header') {
+      return;
+    }
+    childFieldsByLeaf.set(getCompiledFieldLeafName(child.key), child);
+  });
+
+  if (childFieldsByLeaf.size === 0) {
+    return;
+  }
+
+  for (const [candidateKey, candidateProp] of Object.entries(nestedObjectSchema.properties)) {
+    const matchingSiblingKeys = extractEnumLikeValues(candidateProp)
+      .filter((value): value is string => typeof value === 'string')
+      .filter((value) => value !== candidateKey && childFieldsByLeaf.has(value));
+
+    const uniqueSiblingKeys = Array.from(new Set(matchingSiblingKeys));
+    if (uniqueSiblingKeys.length < 2) {
+      continue;
+    }
+
+    uniqueSiblingKeys.forEach((siblingKey) => {
+      const childField = childFieldsByLeaf.get(siblingKey);
+      if (!childField) {
+        return;
+      }
+
+      const markerKey: 'x-required-when' | 'x-optional-when' =
+        nestedObjectSchema.required.includes(siblingKey) ? 'x-required-when' : 'x-optional-when';
+
+      mergeObjectCondition(childField, markerKey, { [candidateKey]: siblingKey });
+
+      if (!Array.isArray(childField.runtimeTriggers)) {
+        childField.runtimeTriggers = [];
+      }
+      if (!childField.runtimeTriggers.includes(candidateKey)) {
+        childField.runtimeTriggers.push(candidateKey);
+      }
+    });
+
+    console.log(
+      `✅ Injected sibling-discriminator conditions for ${fullKey} using ${candidateKey}:`,
+      uniqueSiblingKeys
+    );
+  }
+}
+
 function buildCompiledFieldTree(
   fullKey: string,
   prop: any,
@@ -1550,6 +1673,7 @@ function buildCompiledFieldTree(
         childConditionalRequiredMap
       )
     );
+    applyEnumSiblingBranchConditions(field, nestedObjectSchema, fullKey);
     return field;
   }
 
@@ -1567,6 +1691,7 @@ function buildCompiledFieldTree(
           itemConditionalRequiredMap
         )
       );
+      applyEnumSiblingBranchConditions(field, arrayItemSchema, fullKey);
       return field;
     }
 

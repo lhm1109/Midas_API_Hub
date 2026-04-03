@@ -13,6 +13,7 @@ export interface TableParameter {
   default: string;
   required: string;
   description: string;
+  title?: string;
   options?: string[];
   children?: TableParameter[];
 }
@@ -82,6 +83,16 @@ export function generateHTMLTable(
 
   // Table rows
   parameters.forEach((param: TableParameter) => {
+    if (param.type === 'one-of-header') {
+      tableHTML += `
+<tr>
+<td style="background-color: #fff7db; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
+<p><strong style="color: #b7791f;">${param.title || 'oneOf'}</strong> ${markdownToHtml(param.description || '')}</p>
+</td>
+</tr>`;
+      return;
+    }
+
     // Section header
     if (param.section) {
       const bgColor = sectionStyle.background === 'bg-cyan-950/30' ? '#e6fcff' : '#f0f0f0';
@@ -126,6 +137,16 @@ ${param.options ? param.options.map((opt: string) => `<p>${markdownToHtml(opt)}<
     // Child rows
     if (param.children) {
       param.children.forEach((child: TableParameter) => {
+        if (child.type === 'one-of-header') {
+          tableHTML += `
+<tr>
+<td style="background-color: #fff7db; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
+<p><strong style="color: #b7791f;">${child.title || 'oneOf'}</strong> ${markdownToHtml(child.description || '')}</p>
+</td>
+</tr>`;
+          return;
+        }
+
         // Child section header
         if (child.section) {
           const bgColor = nestedSectionStyle.background === 'bg-blue-950/30' ? '#e3f2fd' : '#f5f5f5';

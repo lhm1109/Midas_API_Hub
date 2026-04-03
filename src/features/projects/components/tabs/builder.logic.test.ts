@@ -16,8 +16,15 @@ import {
     initializeFieldValue,
     buildInitialDynamicFormData,
     flattenObjectToDotNotationWithSchema,
+    buildRootValidationOneOfOptionLabels,
+    inferRootValidationOneOfSelection,
+    getRootValidationOneOfOptionIndexForFieldKey,
+    applyRootValidationOneOfSelection,
+    isRootValidationOneOfFieldVisible,
+    shouldIncludeFieldForRootValidationOneOf,
 } from './builder.logic';
 import type { UIBuilderField } from '@/lib/schema';
+import type { ValidationOneOfInfo } from '@/lib/schema/validationOneOf';
 
 // ============================================================================
 // Test: getDefaultValue
@@ -427,5 +434,87 @@ describe('flattenObjectToDotNotationWithSchema', () => {
                 NODE: { VISIBLE: true },
             },
         });
+    });
+});
+
+describe('root validation-only oneOf helpers', () => {
+    const rootOneOfInfo: ValidationOneOfInfo = {
+        optionKeyGroups: [['ELEMS'], ['SECTIONS']],
+        participantKeys: ['ELEMS', 'SECTIONS'],
+        description: 'Choose exactly one of the following keys: "ELEMS" or "SECTIONS".',
+    };
+
+    const schemaFields: UIBuilderField[] = [
+        {
+            name: 'PERFORM_TYPE',
+            type: 'enum',
+            description: 'Perform Target',
+            enum: ['ALL', 'ELEMS', 'SECTIONS'],
+        },
+        {
+            name: 'ELEMS',
+            type: 'object',
+            description: 'Element No.',
+            children: [
+                { name: 'ELEMS.KEYS', type: 'array', items: { type: 'integer' } },
+            ],
+        },
+        {
+            name: 'SECTIONS',
+            type: 'array',
+            description: 'Section No.',
+            items: { type: 'integer' },
+        },
+    ];
+
+    it('builds user-facing option labels from top-level fields', () => {
+        expect(buildRootValidationOneOfOptionLabels(rootOneOfInfo, schemaFields)).toEqual([
+            'Element No.',
+            'Section No.',
+        ]);
+    });
+
+    it('infers the selected root option from existing form data', () => {
+        expect(inferRootValidationOneOfSelection(rootOneOfInfo, schemaFields, {
+            'SECTIONS': [10, 20],
+        })).toBe(1);
+
+        expect(inferRootValidationOneOfSelection(rootOneOfInfo, schemaFields, {
+            'ELEMS._enabled': true,
+            'ELEMS.KEYS': [1, 2, 3],
+        })).toBe(0);
+    });
+
+    it('matches nested field keys back to the correct root option', () => {
+        expect(getRootValidationOneOfOptionIndexForFieldKey('ELEMS.KEYS', rootOneOfInfo, schemaFields)).toBe(0);
+        expect(getRootValidationOneOfOptionIndexForFieldKey('SECTIONS', rootOneOfInfo, schemaFields)).toBe(1);
+        expect(getRootValidationOneOfOptionIndexForFieldKey('PERFORM_TYPE', rootOneOfInfo, schemaFields)).toBe(-1);
+    });
+
+    it('clears unselected branches and enables the selected object branch', () => {
+        const nextState = applyRootValidationOneOfSelection(
+            {
+                PERFORM_TYPE: 'ELEMS',
+                'ELEMS._enabled': true,
+                'ELEMS.KEYS': [1, 2, 3],
+                SECTIONS: [4, 5],
+            },
+            1,
+            schemaFields,
+            rootOneOfInfo
+        );
+
+        expect(nextState['__root__.__selectedOption']).toBe(1);
+        expect(nextState['SECTIONS']).toEqual([4, 5]);
+        expect(nextState['ELEMS._enabled']).toBeUndefined();
+        expect(nextState['ELEMS.KEYS']).toBeUndefined();
+    });
+
+    it('filters UI visibility and JSON inclusion by the selected root branch', () => {
+        expect(isRootValidationOneOfFieldVisible(schemaFields[1], rootOneOfInfo, 0)).toBe(true);
+        expect(isRootValidationOneOfFieldVisible(schemaFields[2], rootOneOfInfo, 0)).toBe(false);
+        expect(shouldIncludeFieldForRootValidationOneOf('ELEMS.KEYS', rootOneOfInfo, schemaFields, 1)).toBe(false);
+        expect(shouldIncludeFieldForRootValidationOneOf('SECTIONS', rootOneOfInfo, schemaFields, 1)).toBe(true);
+        expect(shouldIncludeFieldForRootValidationOneOf('PERFORM_TYPE', rootOneOfInfo, schemaFields, 1)).toBe(true);
     });
 });

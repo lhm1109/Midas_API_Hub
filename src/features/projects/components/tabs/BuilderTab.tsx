@@ -47,7 +47,15 @@ import {
   getDefaultValue,
   buildInitialDynamicFormData,
   flattenObjectToDotNotationWithSchema,
+  hasMeaningfulFieldValue,
+  buildRootValidationOneOfOptionLabels,
+  inferRootValidationOneOfSelection,
+  getRootValidationOneOfOptionIndexForFieldKey,
+  applyRootValidationOneOfSelection,
+  isRootValidationOneOfFieldVisible,
+  shouldIncludeFieldForRootValidationOneOf,
 } from './builder.logic';
+import { extractValidationOneOfInfo } from '@/lib/schema/validationOneOf';
 
 interface BuilderTabProps {
   endpoint: ApiEndpoint;
@@ -256,27 +264,6 @@ function buildImplicitOneOfOptionLabels(
   });
 }
 
-function hasMeaningfulFieldValue(value: any): boolean {
-  if (value === undefined || value === null) return false;
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    if (!trimmed) return false;
-
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (Array.isArray(parsed)) return parsed.length > 0;
-      if (parsed && typeof parsed === 'object') return Object.keys(parsed).length > 0;
-    } catch {
-      // Plain strings stay meaningful once non-empty.
-    }
-
-    return true;
-  }
-  if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === 'object') return Object.keys(value).length > 0;
-  return true;
-}
-
 function getImplicitOneOfSiblingKeys(key: string, schemaFields: UIBuilderField[]): string[] {
   const parentField = schemaFields
     .filter((field) => field.implicitOneOfGroups && key.startsWith(`${field.name}.`))
@@ -468,6 +455,10 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
     () => unwrapSchemaForBuilder(activeSchema, schemaWrapperInfo),
     [activeSchema, schemaWrapperInfo]
   );
+  const rootValidationOneOfInfo = useMemo(
+    () => extractValidationOneOfInfo(builderSchema),
+    [builderSchema]
+  );
   if (!specData || !activeSchema || (typeof activeSchema === 'object' && Object.keys(activeSchema).length === 0)) {
     return (
       <div className="flex-1 flex items-center justify-center bg-zinc-950 text-zinc-600">
@@ -651,6 +642,10 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
 
     return fields;
   }, [compiledSchemaSections]);
+  const rootValidationOneOfOptionLabels = useMemo(
+    () => buildRootValidationOneOfOptionLabels(rootValidationOneOfInfo, schemaFields),
+    [rootValidationOneOfInfo, schemaFields]
+  );
   useEffect(() => {
     if (schemaFields.length > 0 && Object.keys(tempFormValuesForSchema).length === 0) {
       const initialValues: Record<string, any> = {};
@@ -707,6 +702,27 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       return {};
     }
   }, [compiledSchemaSections, tempFormValuesForSchema, dynamicFormData, variantAxes]);
+  const selectedRootValidationOneOfOption = useMemo(() => {
+    if (!rootValidationOneOfInfo) {
+      return 0;
+    }
+
+    const storedSelection = dynamicFormData['__root__.__selectedOption'];
+    if (typeof storedSelection === 'number') {
+      return storedSelection;
+    }
+
+    return inferRootValidationOneOfSelection(rootValidationOneOfInfo, schemaFields, dynamicFormData);
+  }, [rootValidationOneOfInfo, schemaFields, dynamicFormData]);
+  const visibleSchemaFields = useMemo(() => {
+    if (!rootValidationOneOfInfo) {
+      return schemaFields;
+    }
+
+    return schemaFields.filter((field) =>
+      isRootValidationOneOfFieldVisible(field, rootValidationOneOfInfo, selectedRootValidationOneOfOption)
+    );
+  }, [schemaFields, rootValidationOneOfInfo, selectedRootValidationOneOfOption]);
   useEffect(() => {
     if (schemaFields.length > 0 && Object.keys(dynamicFormData).length === 0) {
       const initialData = buildInitialDynamicFormData(schemaFields, {});
@@ -714,6 +730,22 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       console.log('[BuilderTab] Initialized dynamicFormData (trigger + required only):', initialData);
     }
   }, [schemaFields]);
+  useEffect(() => {
+    if (!rootValidationOneOfInfo || schemaFields.length === 0) {
+      return;
+    }
+
+    setDynamicFormData((prev: any) => {
+      if (typeof prev['__root__.__selectedOption'] === 'number') {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        '__root__.__selectedOption': inferRootValidationOneOfSelection(rootValidationOneOfInfo, schemaFields, prev),
+      };
+    });
+  }, [rootValidationOneOfInfo, schemaFields]);
   const [assignInstances, setAssignInstances] = useState<{ [key: string]: any }>(() => {
     const initialData = buildInitialDynamicFormData(schemaFields, {});
     return { "1": initialData };
@@ -1097,11 +1129,56 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       return prev;
     });
   }, [fieldRuntimeStates, schemaFields]);
+  const applyAllOneOfSelections = (previousState: Record<string, any>, key: string, value: any) => {
+    let updatedState = applyImplicitOneOfSelection(previousState, key, value, schemaFields);
+
+    const rootOptionIndex = getRootValidationOneOfOptionIndexForFieldKey(
+      key,
+      rootValidationOneOfInfo,
+      schemaFields
+    );
+
+    if (rootOptionIndex !== -1 && hasMeaningfulFieldValue(value)) {
+      updatedState = applyRootValidationOneOfSelection(
+        updatedState,
+        rootOptionIndex,
+        schemaFields,
+        rootValidationOneOfInfo
+      );
+    }
+
+    return updatedState;
+  };
+  const updateRootValidationOneOfSelection = (selectedOptionIndex: number) => {
+    setDynamicFormData((prev: any) =>
+      applyRootValidationOneOfSelection(prev, selectedOptionIndex, schemaFields, rootValidationOneOfInfo)
+    );
+    setTempFormValuesForSchema((prev: any) =>
+      applyRootValidationOneOfSelection(prev, selectedOptionIndex, schemaFields, rootValidationOneOfInfo)
+    );
+
+    if (enableAssignInstances && currentInstanceKey) {
+      setAssignInstances((prev) => ({
+        ...prev,
+        [currentInstanceKey]: applyRootValidationOneOfSelection(
+          prev[currentInstanceKey] || {},
+          selectedOptionIndex,
+          schemaFields,
+          rootValidationOneOfInfo
+        ),
+      }));
+    }
+  };
 
   const updateDynamicField = (key: string, value: any) => {
+    if (key === '__root__.__selectedOption') {
+      updateRootValidationOneOfSelection(value);
+      return;
+    }
+
     if (key.endsWith('.__selectedOption')) {
       const parentFieldName = key.replace('.__selectedOption', '');
-      const parentField = schemaFields.find(f => f.name === parentFieldName);
+      const parentField = resolveFieldByPath(parentFieldName, schemaFields);
 
       console.log('[BuilderTab] oneOf selection changed:', { key, value, parentFieldName, parentField });
 
@@ -1131,8 +1208,17 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
             }
           });
 
-          console.log('[BuilderTab] Updated dynamicFormData:', updated);
-          return updated;
+          const rootOptionIndex = getRootValidationOneOfOptionIndexForFieldKey(
+            parentFieldName,
+            rootValidationOneOfInfo,
+            schemaFields
+          );
+          const nextState = rootOptionIndex !== -1
+            ? applyRootValidationOneOfSelection(updated, rootOptionIndex, schemaFields, rootValidationOneOfInfo)
+            : updated;
+
+          console.log('[BuilderTab] Updated dynamicFormData:', nextState);
+          return nextState;
         });
         setTempFormValuesForSchema((prev: any) => {
           const updated = { ...prev, [key]: value };
@@ -1147,7 +1233,14 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
             }
           });
 
-          return updated;
+          const rootOptionIndex = getRootValidationOneOfOptionIndexForFieldKey(
+            parentFieldName,
+            rootValidationOneOfInfo,
+            schemaFields
+          );
+          return rootOptionIndex !== -1
+            ? applyRootValidationOneOfSelection(updated, rootOptionIndex, schemaFields, rootValidationOneOfInfo)
+            : updated;
         });
 
         if (enableAssignInstances && currentInstanceKey) {
@@ -1165,21 +1258,30 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
               }
             });
 
+            const rootOptionIndex = getRootValidationOneOfOptionIndexForFieldKey(
+              parentFieldName,
+              rootValidationOneOfInfo,
+              schemaFields
+            );
+            const nextInstance = rootOptionIndex !== -1
+              ? applyRootValidationOneOfSelection(currentInstance, rootOptionIndex, schemaFields, rootValidationOneOfInfo)
+              : currentInstance;
+
             return {
               ...prev,
-              [currentInstanceKey]: currentInstance
+              [currentInstanceKey]: nextInstance
             };
           });
         }
         return;
       }
     }
-    setDynamicFormData((prev: any) => applyImplicitOneOfSelection(prev, key, value, schemaFields));
-    setTempFormValuesForSchema((prev: any) => applyImplicitOneOfSelection(prev, key, value, schemaFields));
+    setDynamicFormData((prev: any) => applyAllOneOfSelections(prev, key, value));
+    setTempFormValuesForSchema((prev: any) => applyAllOneOfSelections(prev, key, value));
     if (enableAssignInstances && currentInstanceKey) {
       setAssignInstances(prev => ({
         ...prev,
-        [currentInstanceKey]: applyImplicitOneOfSelection(prev[currentInstanceKey] || {}, key, value, schemaFields)
+        [currentInstanceKey]: applyAllOneOfSelections(prev[currentInstanceKey] || {}, key, value)
       }));
     }
   };
@@ -1576,6 +1678,13 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
           mergedData[`${field.name}.__selectedOption`] = inferSelectedOptionIndex(field, mergedData);
         }
       });
+      if (rootValidationOneOfInfo) {
+        mergedData['__root__.__selectedOption'] = inferRootValidationOneOfSelection(
+          rootValidationOneOfInfo,
+          schemaFields,
+          mergedData
+        );
+      }
 
       console.log('[BuilderTab] JSON-to-form conversion complete:', {
         initialData,
@@ -1655,6 +1764,12 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
           oneOfFieldsByOption.set(field.name, fieldMap);
         }
       });
+      const storedRootSelection = enrichedData['__root__.__selectedOption'];
+      const selectedRootOneOfOption = rootValidationOneOfInfo
+        ? (typeof storedRootSelection === 'number'
+          ? storedRootSelection
+          : inferRootValidationOneOfSelection(rootValidationOneOfInfo, fields, enrichedData))
+        : 0;
       const orderedKeys = Object.keys(enrichedData).sort((a, b) => {
         const depthA = a.split('.').length;
         const depthB = b.split('.').length;
@@ -1669,6 +1784,9 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
           return;
         }
         if (key.endsWith('._enabled')) {
+          return;
+        }
+        if (!shouldIncludeFieldForRootValidationOneOf(key, rootValidationOneOfInfo, fields, selectedRootOneOfOption)) {
           return;
         }
         const fieldByPath = resolveFieldByPath(key, fields);
@@ -1899,6 +2017,12 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       const depthB = b.split('.').length;
       return depthA - depthB;
     });
+    const storedRootSelection = enrichedData['__root__.__selectedOption'];
+    const selectedRootOneOfOption = rootValidationOneOfInfo
+      ? (typeof storedRootSelection === 'number'
+        ? storedRootSelection
+        : inferRootValidationOneOfSelection(rootValidationOneOfInfo, schemaFields, enrichedData))
+      : 0;
 
     orderedKeys.forEach(fieldKey => {
       if (fieldKey.startsWith('__section_')) {
@@ -1906,6 +2030,9 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       }
 
       if (fieldKey.endsWith('._enabled')) {
+        return;
+      }
+      if (!shouldIncludeFieldForRootValidationOneOf(fieldKey, rootValidationOneOfInfo, schemaFields, selectedRootOneOfOption)) {
         return;
       }
 
@@ -2505,10 +2632,38 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
                       From Spec Tab
                     </span>
                   )}
-                </h3>{builderDefinition ? (
+                </h3>
+                {rootValidationOneOfInfo && rootValidationOneOfOptionLabels.length > 1 && (
+                  <div className="mb-4 rounded-lg border border-amber-700/40 bg-amber-950/20 p-4">
+                    <div className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
+                      oneOf Branch
+                    </div>
+                    <p className="mt-2 text-sm text-amber-100/90">
+                      {rootValidationOneOfInfo.description}
+                    </p>
+                    <div className="mt-3 space-y-2">
+                      {rootValidationOneOfOptionLabels.map((optionLabel, index) => (
+                        <label
+                          key={`${optionLabel}-${index}`}
+                          className="flex cursor-pointer items-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 hover:border-amber-600/40"
+                        >
+                          <input
+                            type="radio"
+                            name="__root__.__oneOf"
+                            checked={selectedRootValidationOneOfOption === index}
+                            onChange={() => updateRootValidationOneOfSelection(index)}
+                            className="h-4 w-4"
+                          />
+                          <span className="text-sm text-zinc-100">{optionLabel}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {builderDefinition ? (
                   <DynamicSchemaRenderer
                     definition={builderDefinition}
-                    schemaFields={schemaFields}
+                    schemaFields={visibleSchemaFields}
                     dynamicFormData={dynamicFormData}
                     updateDynamicField={updateDynamicField}
                     expandedObjects={expandedObjects}

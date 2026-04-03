@@ -62,6 +62,18 @@ export const DynamicTableRenderer = memo(function DynamicTableRenderer({
           {parameters.map((param: any) => {
             const rows = [];
 
+            if (param.type === 'one-of-header') {
+              rows.push(
+                <tr key={`one-of-${param.title || 'oneOf'}-${param.description || ''}`} className="border-b border-zinc-800 bg-amber-950/30">
+                  <td colSpan={definition.sectionHeaders?.colspan || 6} className="p-2 text-xs">
+                    <span className="font-semibold text-amber-300">{param.title || 'oneOf'}</span>
+                    <span className="ml-2 text-zinc-300">{param.description}</span>
+                  </td>
+                </tr>
+              );
+              return rows;
+            }
+
             // 🔥 조건 행 처리 (YAML 스타일 적용)
             if (param.type === 'condition-row') {
               const conditionStyle = definition.conditionRows?.style || {};
@@ -155,6 +167,22 @@ function renderNestedRows(
   items.forEach((item: any, index: number) => {
     const currentKeyPath = [...keyPath, String(index)];
     const currentKey = currentKeyPath.join('-');
+
+    if (item.type === 'one-of-header') {
+      rows.push(
+        <tr key={`nested-one-of-${currentKey}`} className="border-b border-zinc-800 bg-amber-950/30">
+          <td
+            colSpan={6}
+            className="p-2 text-xs"
+            style={{ paddingLeft: `${getNestedIndent(level)}px` }}
+          >
+            <span className="font-semibold text-amber-300">{item.title || 'oneOf'}</span>
+            <span className="ml-2 text-zinc-300">{item.description}</span>
+          </td>
+        </tr>
+      );
+      return;
+    }
 
     if (item.type === 'section-header' || item.section) {
       rows.push(

@@ -9,6 +9,7 @@
  */
 
 import type { UIBuilderField } from '@/lib/schema';
+import type { ValidationOneOfInfo } from '@/lib/schema/validationOneOf';
 
 function resolveNestedFieldKey(parentFieldName: string, childFieldName: string): string {
     if (!childFieldName) return childFieldName;
@@ -33,6 +34,88 @@ function findFieldByPath(fieldPath: string, schemaFields: UIBuilderField[]): UIB
     }
 
     return undefined;
+}
+
+function getFieldLeafName(fieldPath: string): string {
+    return fieldPath.replace(/\[\]/g, '').split('.').filter(Boolean).pop() || fieldPath;
+}
+
+function isMatchingFieldPath(key: string, fieldPath: string): boolean {
+    return (
+        key === fieldPath ||
+        key.startsWith(`${fieldPath}.`) ||
+        key.startsWith(`${fieldPath}[`) ||
+        key.startsWith(`${fieldPath}._`)
+    );
+}
+
+function findTopLevelFieldByParticipantKey(
+    schemaFields: UIBuilderField[],
+    participantKey: string
+): UIBuilderField | undefined {
+    return schemaFields.find((field) => {
+        if (field.name.startsWith('__section_')) {
+            return false;
+        }
+
+        return getFieldLeafName(field.name) === participantKey;
+    });
+}
+
+function clearFieldState(target: Record<string, any>, field: UIBuilderField): void {
+    delete target[field.name];
+    delete target[`${field.name}._enabled`];
+    delete target[`${field.name}.__selectedOption`];
+
+    field.children?.forEach((child) => {
+        clearFieldState(target, child);
+    });
+}
+
+export function hasMeaningfulFieldValue(value: any): boolean {
+    if (value === undefined || value === null) return false;
+
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (!trimmed) return false;
+
+        try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) return parsed.length > 0;
+            if (parsed && typeof parsed === 'object') return Object.keys(parsed).length > 0;
+        } catch {
+            return true;
+        }
+
+        return true;
+    }
+
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'object') return Object.keys(value).length > 0;
+
+    return true;
+}
+
+function hasDataForField(sourceData: Record<string, any>, field: UIBuilderField): boolean {
+    if (hasMeaningfulFieldValue(sourceData[field.name])) {
+        return true;
+    }
+
+    if (sourceData[`${field.name}._enabled`] === true) {
+        return true;
+    }
+
+    return Object.entries(sourceData).some(([key, value]) => {
+        if (!isMatchingFieldPath(key, field.name) || key === field.name) {
+            return false;
+        }
+
+        if (key.endsWith('._enabled')) {
+            return value === true;
+        }
+
+        return hasMeaningfulFieldValue(value);
+    });
 }
 
 export function shouldPreserveObjectValue(field?: UIBuilderField): boolean {
@@ -218,6 +301,143 @@ export function flattenObjectToDotNotationWithSchema(
 
         target[newKey] = value;
     });
+}
+
+export function buildRootValidationOneOfOptionLabels(
+    info: ValidationOneOfInfo | null | undefined,
+    schemaFields: UIBuilderField[]
+): string[] {
+    if (!info) {
+        return [];
+    }
+
+    return info.optionKeyGroups.map((group, index) => {
+        const labels = group
+            .map((participantKey) => {
+                const field = findTopLevelFieldByParticipantKey(schemaFields, participantKey);
+                return field?.description || participantKey;
+            })
+            .filter(Boolean);
+
+        if (labels.length === 0) {
+            return `Option ${index + 1}`;
+        }
+
+        return labels.join(' + ');
+    });
+}
+
+export function inferRootValidationOneOfSelection(
+    info: ValidationOneOfInfo | null | undefined,
+    schemaFields: UIBuilderField[],
+    sourceData: Record<string, any>
+): number {
+    if (!info || info.optionKeyGroups.length === 0) {
+        return 0;
+    }
+
+    const matchedIndex = info.optionKeyGroups.findIndex((group) =>
+        group.some((participantKey) => {
+            const field = findTopLevelFieldByParticipantKey(schemaFields, participantKey);
+            return field ? hasDataForField(sourceData, field) : false;
+        })
+    );
+
+    return matchedIndex >= 0 ? matchedIndex : 0;
+}
+
+export function getRootValidationOneOfOptionIndexForFieldKey(
+    key: string,
+    info: ValidationOneOfInfo | null | undefined,
+    schemaFields: UIBuilderField[]
+): number {
+    if (!info) {
+        return -1;
+    }
+
+    return info.optionKeyGroups.findIndex((group) =>
+        group.some((participantKey) => {
+            const field = findTopLevelFieldByParticipantKey(schemaFields, participantKey);
+            return field ? isMatchingFieldPath(key, field.name) : false;
+        })
+    );
+}
+
+export function isRootValidationOneOfFieldVisible(
+    field: UIBuilderField,
+    info: ValidationOneOfInfo | null | undefined,
+    selectedOptionIndex: number
+): boolean {
+    if (!info) {
+        return true;
+    }
+
+    const fieldLeaf = getFieldLeafName(field.name);
+    if (!info.participantKeys.includes(fieldLeaf)) {
+        return true;
+    }
+
+    const selectedGroup = info.optionKeyGroups[selectedOptionIndex] || info.optionKeyGroups[0] || [];
+    return selectedGroup.includes(fieldLeaf);
+}
+
+export function applyRootValidationOneOfSelection(
+    previousState: Record<string, any>,
+    selectedOptionIndex: number,
+    schemaFields: UIBuilderField[],
+    info: ValidationOneOfInfo | null | undefined
+): Record<string, any> {
+    if (!info || info.optionKeyGroups.length === 0) {
+        return previousState;
+    }
+
+    const selectedGroup = info.optionKeyGroups[selectedOptionIndex] || info.optionKeyGroups[0];
+    const updatedState: Record<string, any> = {
+        ...previousState,
+        '__root__.__selectedOption': selectedOptionIndex,
+    };
+
+    info.participantKeys.forEach((participantKey) => {
+        const field = findTopLevelFieldByParticipantKey(schemaFields, participantKey);
+        if (!field) {
+            return;
+        }
+
+        if (selectedGroup.includes(participantKey)) {
+            if (field.type === 'object' && field.children && !field.isKeyedObject) {
+                updatedState[`${field.name}._enabled`] = true;
+            }
+            return;
+        }
+
+        clearFieldState(updatedState, field);
+    });
+
+    return updatedState;
+}
+
+export function shouldIncludeFieldForRootValidationOneOf(
+    key: string,
+    info: ValidationOneOfInfo | null | undefined,
+    schemaFields: UIBuilderField[],
+    selectedOptionIndex: number
+): boolean {
+    if (!info) {
+        return true;
+    }
+
+    const selectedGroup = info.optionKeyGroups[selectedOptionIndex] || info.optionKeyGroups[0] || [];
+
+    for (const participantKey of info.participantKeys) {
+        const field = findTopLevelFieldByParticipantKey(schemaFields, participantKey);
+        if (!field || !isMatchingFieldPath(key, field.name)) {
+            continue;
+        }
+
+        return selectedGroup.includes(participantKey);
+    }
+
+    return true;
 }
 
 // ============================================================================

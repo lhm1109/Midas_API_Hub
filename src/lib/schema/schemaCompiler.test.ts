@@ -1,7 +1,8 @@
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import type { EnhancedField } from './schemaCompiler';
-import { applyConditionalRequiredToField, compileSchema, flattenComposedObjectSchema } from './schemaCompiler';
+import { applyConditionalRequiredToField, compileSchema, compileSchemaWithContext, flattenComposedObjectSchema } from './schemaCompiler';
+import { calculateFieldRuntimeStates, shouldIncludeInJSON } from './fieldRuntimeState';
 import { initSchemaLogicRules } from './schemaLogicEngine';
 
 describe('applyConditionalRequiredToField', () => {
@@ -288,5 +289,78 @@ describe('compileSchema map-wrapper oneOf', () => {
       'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.BRACE',
       'RESULT_GRAPHIC.TYPE_OF_DISPLAY.REINFORCEMENT.DISPLAY_MEMBERS.WALL',
     ]);
+  });
+});
+
+describe('compileSchemaWithContext discriminator sibling visibility', () => {
+  it('injects INPUT_METHOD-based visibility for sibling branch fields and hides inactive values in JSON', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      additionalProperties: false,
+      properties: {
+        Assign: {
+          type: 'object',
+          additionalProperties: false,
+          patternProperties: {
+            '^[0-9]+$': {
+              type: 'object',
+              required: ['PART_B'],
+              additionalProperties: false,
+              properties: {
+                PART_B: {
+                  type: 'object',
+                  additionalProperties: false,
+                  required: ['INPUT_METHOD'],
+                  properties: {
+                    INPUT_METHOD: {
+                      type: 'string',
+                      oneOf: [
+                        { title: 'Specify each Element ID', const: 'KEYS' },
+                        { title: 'Specify ID range', const: 'TO' },
+                      ],
+                    },
+                    KEYS: {
+                      type: 'array',
+                      items: { type: 'integer' },
+                    },
+                    TO: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const { sections } = compileSchemaWithContext(schema as any, 'civil_gen_definition', 'enhanced');
+    const partBField = sections
+      .flatMap((section) => section.fields)
+      .find((field) => field.key === 'PART_B');
+
+    expect(partBField?.children).toBeDefined();
+
+    const keysField = partBField?.children?.find((child) => child.key === 'PART_B.KEYS');
+    const toField = partBField?.children?.find((child) => child.key === 'PART_B.TO');
+
+    expect((keysField as any)?.['x-optional-when']).toEqual({ INPUT_METHOD: 'KEYS' });
+    expect((toField as any)?.['x-optional-when']).toEqual({ INPUT_METHOD: 'TO' });
+
+    const runtimeStates = calculateFieldRuntimeStates(
+      sections,
+      {
+        'PART_B.INPUT_METHOD': 'TO',
+        'PART_B.KEYS': [],
+        'PART_B.TO': '1066to1071',
+      }
+    );
+
+    expect(runtimeStates['PART_B.KEYS']?.visible).toBe(false);
+    expect(runtimeStates['PART_B.TO']?.visible).toBe(true);
+    expect(shouldIncludeInJSON('PART_B.KEYS', [], runtimeStates['PART_B.KEYS'])).toBe(false);
+    expect(shouldIncludeInJSON('PART_B.TO', '1066to1071', runtimeStates['PART_B.TO'])).toBe(true);
   });
 });

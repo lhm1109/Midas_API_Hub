@@ -19,6 +19,10 @@ import {
   groupFieldsByCondition,
   type FieldCondition,
 } from './conditionExtractor';
+import {
+  extractValidationOneOfInfo,
+  isValidationOneOfParticipant,
+} from './validationOneOf';
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
 import { buildFieldConstraintHints } from './descriptionBuilder';
 
@@ -814,11 +818,13 @@ export function generateHTMLDocument(
   psdSet: string = 'civil_gen_definition',
   schemaType: string = 'enhanced'
 ): string {
-  const sections = compileEnhancedSchema(unwrapSchemaForTableBody(schema), psdSet, schemaType);
+  const tableBodySchema = unwrapSchemaForTableBody(schema);
+  const sections = compileEnhancedSchema(tableBodySchema, psdSet, schemaType);
   
   // 🔥 Collect x-reference fields for footnote generation
   const references = collectReferences(sections);
-  const tableHTML = generateTableHTMLLegacy(sections, references);
+  const rootValidationOneOfInfo = extractValidationOneOfInfo(tableBodySchema);
+  const tableHTML = generateTableHTMLLegacy(sections, references, rootValidationOneOfInfo);
 
   // 🔥 Wrapper key (Assign/Argument) 정보 추출 - properties에서 실제 wrapper key 찾기
   const wrapperKey = getWrapperKey(schema);
@@ -1151,12 +1157,17 @@ function renderNestedFieldsLegacy(
   return html;
 }
 
-function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldReferenceMap): string {
+function generateTableHTMLLegacy(
+  sections: SectionGroup[],
+  references?: FieldReferenceMap,
+  rootValidationOneOfInfo?: ReturnType<typeof extractValidationOneOfInfo>
+): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
   html += generateTableHeaderLegacy();
 
   let rowNumber = 1;
+  let hasRenderedRootOneOfHeader = false;
   for (const section of sections) {
     const { fieldGroups: fieldsByCondition, noConditionFields: fieldsWithoutCondition } =
       groupLegacyFieldsByCondition(section.fields);
@@ -1165,11 +1176,31 @@ function generateTableHTMLLegacy(sections: SectionGroup[], references?: FieldRef
     if (fieldsWithoutCondition.length > 0) {
       html += generateSectionHeaderLegacy(section.name);
       for (const { field } of fieldsWithoutCondition) {
+        if (
+          rootValidationOneOfInfo &&
+          !hasRenderedRootOneOfHeader &&
+          isValidationOneOfParticipant(field, rootValidationOneOfInfo)
+        ) {
+          html += generateOneOfHeaderLegacy(rootValidationOneOfInfo.description);
+          hasRenderedRootOneOfHeader = true;
+        }
         html += generateFieldRowLegacy(field, rowNumber++, references);
       }
     }
 
     for (const [conditionKey, fieldsWithCondition] of fieldsByCondition.entries()) {
+      if (
+        rootValidationOneOfInfo &&
+        !hasRenderedRootOneOfHeader &&
+        fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, rootValidationOneOfInfo))
+      ) {
+        if (fieldsWithoutCondition.length === 0) {
+          html += generateSectionHeaderLegacy(section.name);
+        }
+        html += generateOneOfHeaderLegacy(rootValidationOneOfInfo.description);
+        hasRenderedRootOneOfHeader = true;
+      }
+
       const conditionLabel = buildLegacyConditionLabel(
         conditionKey,
         fieldsWithCondition[0]?.conditionInfo
@@ -1251,6 +1282,16 @@ function generateSectionHeaderLegacy(sectionName: string): string {
   `;
 }
 
+function generateOneOfHeaderLegacy(description: string, colspan: number = 9): string {
+  return `
+    <tr>
+      <td style="background-color: #fff7db; ${ZENDESK_CELL_STYLE}" colspan="${colspan}">
+        <p><strong style="color: #b7791f;">oneOf</strong> ${escapeHtml(description)}</p>
+      </td>
+    </tr>
+  `;
+}
+
 function generateFieldRowLegacy(
   field: EnhancedField,
   rowNumber: number,
@@ -1275,8 +1316,10 @@ function generateFieldRowLegacy(
       fieldGroups: childrenByCondition,
       noConditionFields: childrenWithoutCondition,
     } = groupLegacyFieldsByCondition(effectiveChildren);
+    const validationOneOfInfo = extractValidationOneOfInfo(field);
 
     let childNo = 1;
+    let hasRenderedNestedOneOfHeader = false;
 
     const renderChildRow = (child: EnhancedField, conditionType?: string | null) => {
       const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
@@ -1339,16 +1382,42 @@ function generateFieldRowLegacy(
           continue;
         }
 
+        if (
+          validationOneOfInfo &&
+          !hasRenderedNestedOneOfHeader &&
+          isValidationOneOfParticipant(child, validationOneOfInfo)
+        ) {
+          childrenHTML += generateOneOfHeaderLegacy(validationOneOfInfo.description, 8);
+          hasRenderedNestedOneOfHeader = true;
+        }
+
         renderChildRow(child);
       }
     } else {
       // 🔥 조건 없는 children 먼저 렌더링
       for (const { field: child } of childrenWithoutCondition) {
+        if (
+          validationOneOfInfo &&
+          !hasRenderedNestedOneOfHeader &&
+          isValidationOneOfParticipant(child, validationOneOfInfo)
+        ) {
+          childrenHTML += generateOneOfHeaderLegacy(validationOneOfInfo.description, 8);
+          hasRenderedNestedOneOfHeader = true;
+        }
         renderChildRow(child);
       }
 
       // 🔥 조건별 children 렌더링 - 조건 헤더 추가
       for (const [conditionKey, childrenWithCondition] of childrenByCondition.entries()) {
+        if (
+          validationOneOfInfo &&
+          !hasRenderedNestedOneOfHeader &&
+          childrenWithCondition.some(({ field: child }) => isValidationOneOfParticipant(child, validationOneOfInfo))
+        ) {
+          childrenHTML += generateOneOfHeaderLegacy(validationOneOfInfo.description, 8);
+          hasRenderedNestedOneOfHeader = true;
+        }
+
         const conditionLabel = buildLegacyConditionLabel(
           conditionKey,
           childrenWithCondition[0]?.conditionInfo

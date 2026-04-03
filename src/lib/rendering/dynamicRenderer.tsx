@@ -1,6 +1,6 @@
 /**
  * Dynamic Schema Renderer
- * YAML ?뺤쓽???곕씪 ?숈쟻?쇰줈 UI瑜??뚮뜑留곹빀?덈떎.
+ * YAML ?뺤쓽???곕씪 ??�쟻??�줈 UI?????��留곹빀??�떎.
  */
 
 import React from 'react';
@@ -20,7 +20,7 @@ interface DynamicRendererProps {
   updateDynamicField: (key: string, value: any) => void;
   expandedObjects: Set<string>;
   toggleObject: (fieldName: string) => void;
-  fieldRuntimeStates?: FieldRuntimeStateMap; // ?렞 NEW: Runtime States
+  fieldRuntimeStates?: FieldRuntimeStateMap; // ???NEW: Runtime States
 }
 
 function resolveChildFieldKey(parentFieldName: string, childFieldName: string): string {
@@ -67,8 +67,369 @@ function shouldRenderConditionalChild(
   });
 }
 
+function getValueByPath(source: Record<string, any> | undefined, path: string): any {
+  if (!source || typeof source !== 'object' || !path) return undefined;
+
+  if (Object.prototype.hasOwnProperty.call(source, path)) {
+    return source[path];
+  }
+
+  const normalizedPath = path
+    .replace(/\[\]/g, '')
+    .replace(/\[(\d+)\]/g, '.$1');
+  const parts = normalizedPath.split('.').filter(Boolean);
+
+  let current: any = source;
+  for (const part of parts) {
+    if (!current || typeof current !== 'object') {
+      return undefined;
+    }
+    if (!(part in current)) {
+      return undefined;
+    }
+    current = current[part];
+  }
+
+  return current;
+}
+
+function matchesConditionalValue(actualValue: any, expectedValue: any): boolean {
+  if (Array.isArray(expectedValue)) {
+    return expectedValue.some((candidate) => matchesConditionalValue(actualValue, candidate));
+  }
+
+  if (typeof expectedValue === 'number') {
+    return Number(actualValue) === expectedValue;
+  }
+
+  if (typeof expectedValue === 'boolean') {
+    if (typeof actualValue === 'string') {
+      return actualValue.toLowerCase() === String(expectedValue);
+    }
+    return actualValue === expectedValue;
+  }
+
+  return actualValue === expectedValue || String(actualValue) === String(expectedValue);
+}
+
+function resolveScopedConditionValue(
+  conditionKey: string,
+  scopeStack: Array<Record<string, any> | undefined>,
+  rootFormData: Record<string, any>
+): any {
+  const leafKey = getFieldLeafName(conditionKey);
+
+  for (const scope of scopeStack) {
+    if (!scope || typeof scope !== 'object' || Array.isArray(scope)) continue;
+
+    const directValue = getValueByPath(scope, conditionKey);
+    if (directValue !== undefined) return directValue;
+
+    const leafValue = getValueByPath(scope, leafKey);
+    if (leafValue !== undefined) return leafValue;
+
+    if (Object.prototype.hasOwnProperty.call(scope, conditionKey)) {
+      return scope[conditionKey];
+    }
+    if (Object.prototype.hasOwnProperty.call(scope, leafKey)) {
+      return scope[leafKey];
+    }
+  }
+
+  const rootDirectValue = getValueByPath(rootFormData, conditionKey);
+  if (rootDirectValue !== undefined) return rootDirectValue;
+
+  const rootLeafValue = getValueByPath(rootFormData, leafKey);
+  if (rootLeafValue !== undefined) return rootLeafValue;
+
+  return rootFormData[conditionKey] ?? rootFormData[leafKey];
+}
+
+function evaluateConditionalRule(
+  condition: Record<string, any> | undefined,
+  scopeStack: Array<Record<string, any> | undefined>,
+  rootFormData: Record<string, any>
+): boolean {
+  if (!condition) return true;
+
+  return Object.entries(condition).every(([key, expectedValue]) => {
+    const actualValue = resolveScopedConditionValue(key, scopeStack, rootFormData);
+    return matchesConditionalValue(actualValue, expectedValue);
+  });
+}
+
+function shouldRenderScopedConditionalChild(
+  field: UIBuilderField,
+  scopeStack: Array<Record<string, any> | undefined>,
+  rootFormData: Record<string, any>
+): boolean {
+  const condition = (field as any)['x-required-when'] || (field as any)['x-optional-when'];
+  return evaluateConditionalRule(condition, scopeStack, rootFormData);
+}
+
+function isFieldRequiredInScope(
+  field: UIBuilderField,
+  scopeStack: Array<Record<string, any> | undefined>,
+  rootFormData: Record<string, any>
+): boolean {
+  const requiredWhen = (field as any)['x-required-when'];
+  if (requiredWhen) {
+    return evaluateConditionalRule(requiredWhen, scopeStack, rootFormData);
+  }
+
+  return field.required;
+}
+
+function getNestedFieldDefaultValue(field: UIBuilderField): any {
+  if (field.default !== undefined && field.default !== null) {
+    return field.default;
+  }
+
+  if (field.enum && field.enum.length > 0) {
+    return field.enum[0];
+  }
+
+  if (field.type === 'array') return [];
+  if (field.type === 'boolean') return false;
+  if (field.type === 'object') return {};
+  if (field.type === 'number' || field.type === 'integer') return 0;
+
+  return '';
+}
+
+function buildScopedFormData(
+  rootFormData: Record<string, any>,
+  scopeStack: Array<Record<string, any> | undefined>
+): Record<string, any> {
+  const merged = { ...rootFormData };
+
+  for (let index = scopeStack.length - 1; index >= 0; index -= 1) {
+    const scope = scopeStack[index];
+    if (!scope || typeof scope !== 'object' || Array.isArray(scope)) continue;
+    Object.assign(merged, scope);
+  }
+
+  return merged;
+}
+
+function createArrayItemDefaultValue(field: UIBuilderField): Record<string, any> {
+  const nextItem: Record<string, any> = {};
+
+  field.children?.forEach((child) => {
+    if ((child as any).type === 'section-header') return;
+    const condition = (child as any)['x-required-when'] || (child as any)['x-optional-when'];
+    if (condition) return;
+
+    nextItem[getFieldLeafName(child.name)] = getNestedFieldDefaultValue(child);
+  });
+
+  return nextItem;
+}
+
+interface NestedArrayFieldRenderContext {
+  definition: BuilderDefinition;
+  expandedObjects: Set<string>;
+  toggleObject: (fieldName: string) => void;
+  rootFormData: Record<string, any>;
+  scopeStack: Array<Record<string, any> | undefined>;
+}
+
+function renderArrayItemField(
+  field: UIBuilderField,
+  value: any,
+  onChange: (value: any) => void,
+  fieldPath: string,
+  context: NestedArrayFieldRenderContext
+): React.ReactNode {
+  if ((field as any).type === 'section-header') {
+    return null;
+  }
+
+  if (!shouldRenderScopedConditionalChild(field, context.scopeStack, context.rootFormData)) {
+    return null;
+  }
+
+  const fieldLabel = field.description || getFieldLeafName(field.name);
+  const isRequired = isFieldRequiredInScope(field, context.scopeStack, context.rootFormData);
+  const scopedFormData = buildScopedFormData(context.rootFormData, context.scopeStack);
+
+  if (field.type === 'object' && field.children && field.children.length > 0) {
+    const objectValue =
+      value && typeof value === 'object' && !Array.isArray(value)
+        ? value
+        : {};
+    const nextScopeStack = [objectValue, ...context.scopeStack];
+
+    return (
+      <div className="space-y-2 rounded-md border border-zinc-700 bg-zinc-900/40 p-3">
+        <div className="flex items-center gap-2">
+          <Label className="text-[10px] text-zinc-300 flex items-center gap-1">
+            {fieldLabel}
+            {isRequired && <span className="text-red-400">*</span>}
+          </Label>
+          <span className="text-[10px] text-zinc-600 font-mono ml-auto">{field.type}</span>
+        </div>
+        <div className="space-y-3">
+          {field.children!.map((child) => {
+            const childLeafName = getFieldLeafName(child.name);
+            return (
+              <div key={`${fieldPath}.${childLeafName}`} className="space-y-2 pl-4 border-l-2 border-zinc-700">
+                {renderArrayItemField(
+                  child,
+                  objectValue[childLeafName],
+                  (nextValue) => onChange({
+                    ...objectValue,
+                    [childLeafName]: nextValue,
+                  }),
+                  `${fieldPath}.${childLeafName}`,
+                  {
+                    ...context,
+                    scopeStack: nextScopeStack,
+                  }
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  if (field.type === 'array' && field.children && field.children.length > 0) {
+    const arrayValue = Array.isArray(value) ? value : [];
+
+    const addItem = () => {
+      onChange([...arrayValue, createArrayItemDefaultValue(field)]);
+    };
+
+    const removeItem = (index: number) => {
+      const nextArrayValue = [...arrayValue];
+      nextArrayValue.splice(index, 1);
+      onChange(nextArrayValue);
+    };
+
+    const updateItemField = (index: number, childKey: string, nextValue: any) => {
+      const nextArrayValue = [...arrayValue];
+      const currentItem =
+        nextArrayValue[index] && typeof nextArrayValue[index] === 'object' && !Array.isArray(nextArrayValue[index])
+          ? nextArrayValue[index]
+          : {};
+
+      nextArrayValue[index] = {
+        ...currentItem,
+        [childKey]: nextValue,
+      };
+
+      onChange(nextArrayValue);
+    };
+
+    return (
+      <div className="space-y-3 rounded-md border border-green-800/60 bg-zinc-900/40 p-3">
+        <div className="flex items-center justify-between gap-2">
+          <Label className="text-[10px] text-zinc-300 flex items-center gap-1">
+            {fieldLabel}
+            {isRequired && <span className="text-red-400">*</span>}
+            <span className="text-[10px] text-green-400 font-mono ml-2">
+              [{arrayValue.length} items]
+            </span>
+          </Label>
+          <button
+            type="button"
+            onClick={addItem}
+            className="px-2 py-1 text-xs bg-green-600 hover:bg-green-500 text-white rounded"
+          >
+            + Add
+          </button>
+        </div>
+
+        {arrayValue.length === 0 ? (
+          <div className="rounded border border-dashed border-zinc-700 px-3 py-4 text-xs text-zinc-500">
+            No items yet. Click "+ Add" to add an item.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {arrayValue.map((item: any, index: number) => {
+              const itemValue =
+                item && typeof item === 'object' && !Array.isArray(item)
+                  ? item
+                  : {};
+              const itemScopeStack = [itemValue, ...context.scopeStack];
+
+              return (
+                <div key={`${fieldPath}[${index}]`} className="border border-zinc-700 rounded-md bg-zinc-800/50 p-3">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-semibold text-zinc-400">
+                      Item #{index + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeItem(index)}
+                      className="text-xs text-red-400 hover:text-red-300"
+                    >
+                      Remove
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {field.children!.map((child) => {
+                      const childLeafName = getFieldLeafName(child.name);
+                      const childNode = renderArrayItemField(
+                        child,
+                        itemValue[childLeafName],
+                        (nextValue) => updateItemField(index, childLeafName, nextValue),
+                        `${fieldPath}[${index}].${childLeafName}`,
+                        {
+                          ...context,
+                          scopeStack: itemScopeStack,
+                        }
+                      );
+
+                      if (!childNode) {
+                        return null;
+                      }
+
+                      const isStructuredChild = child.type === 'object' || child.type === 'array';
+
+                      return (
+                        <div
+                          key={`${fieldPath}[${index}].${childLeafName}`}
+                          className={isStructuredChild ? 'space-y-1 col-span-2' : 'space-y-1'}
+                        >
+                          {childNode}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-1">
+      <Label className="text-[10px] text-zinc-400 flex items-center gap-1">
+        {fieldLabel}
+        {isRequired && <span className="text-red-400">*</span>}
+      </Label>
+      {renderFieldInput(
+        field,
+        fieldPath,
+        value,
+        onChange,
+        context.definition,
+        false,
+        scopedFormData
+      )}
+    </div>
+  );
+}
+
 /**
- * YAML ?뺤쓽 湲곕컲 ?숈쟻 ???뚮뜑??
+ * Dynamic schema renderer
  */
 export function DynamicSchemaRenderer({
   definition,
@@ -79,58 +440,58 @@ export function DynamicSchemaRenderer({
   toggleObject,
   fieldRuntimeStates
 }: DynamicRendererProps) {
-  // 而⑦뀒?대꼫 ?ㅽ????곸슜
+  // ?�⑦???��???????곸슜
   const containerClassName = definition.formLayout?.fieldContainer?.className || 'space-y-4';
 
-  // ?뵦 ?뱀뀡 ?ㅻ뜑??visibility 怨꾩궛: ?대떦 ?뱀뀡???ㅼ쓬 ?꾨뱶??以?visible??寃껋씠 ?덈뒗吏 ?뺤씤
+  // ?�??뱀????�뜑??visibility ?�꾩�? ??�???뱀?????�쓬 ?꾨뱶??�?visible??寃껋????�뒗吏 ?뺤씤
   const isSectionVisible = (sectionIndex: number, _sectionName: string): boolean => {
-    // ?뱀뀡 ?댄썑???꾨뱶?ㅼ쓣 ?뺤씤 (?ㅼ쓬 ?뱀뀡 ?ㅻ뜑 ?꾧퉴吏)
+    // ?뱀????�썑???꾨뱶??�쓣 ?뺤씤 (??�쓬 ?뱀????�뜑 ?꾧퉴吏)
     for (let i = sectionIndex + 1; i < schemaFields.length; i++) {
       const field = schemaFields[i];
 
-      // ?ㅼ쓬 ?뱀뀡 ?ㅻ뜑瑜?留뚮굹硫?以묐떒
+      // Stop when the next section header starts
       if (field.name.startsWith(definition.sectionHeaders?.detectBy || '__section_')) {
         break;
       }
 
-      // ?꾨뱶媛 visible?몄? ?뺤씤
+      // ?꾨뱶媛 visible?�? ?뺤씤
       if (fieldRuntimeStates && fieldRuntimeStates[field.name]) {
         if (fieldRuntimeStates[field.name].visible) {
-          return true; // ?섎굹?쇰룄 visible?대㈃ ?뱀뀡 ?쒖떆
+          return true; // ??�굹??�룄 visible??�???뱀????�떆
         }
       } else if (field.visible !== false) {
-        return true; // fallback: visible??false媛 ?꾨땲硫??쒖떆
+        return true; // fallback: visible??false媛 ?꾨땲�???�떆
       }
     }
 
-    return false; // 紐⑤뱺 ?꾨뱶媛 hidden?대㈃ ?뱀뀡???④?
+    return false; // 紐⑤�??꾨뱶媛 hidden??�???뱀??????
   };
 
   return (
     <div className={containerClassName}>
       {schemaFields
         .filter((field, index) => {
-          // ?뵦 ?뱀뀡 ?ㅻ뜑??寃쎌슦: ?대떦 ?뱀뀡???꾨뱶 以?visible??寃껋씠 ?덈뒗吏 ?뺤씤
+          // ?�??뱀????�뜑??寃쎌?? ??�???뱀????꾨뱶 �?visible??寃껋????�뒗吏 ?뺤씤
           if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
             return isSectionVisible(index, field.description || field.name);
           }
 
-          // ?렞 Runtime State 湲곕컲 visible ?먮떒 (Single Source of Truth)
+          // ???Runtime State 湲곕�?visible ?�?�� (Single Source of Truth)
           if (fieldRuntimeStates && fieldRuntimeStates[field.name]) {
             return fieldRuntimeStates[field.name].visible;
           }
 
-          // ?뵦 Fallback: visible??false???꾨뱶???뚮뜑留곹븯吏 ?딆쓬
-          // visible??undefined?대㈃ true濡?媛꾩＜ (?뱀뀡 ?ㅻ뜑 ??
+          // ?�?Fallback: visible??false???꾨뱶?????��留곹�?��? ??�쓬
+          // visible??undefined??�??true�?媛꾩�?(?뱀????�뜑 ??
           return field.visible !== false;
         })
         .map((field) => {
-          // ?뱀뀡 ?ㅻ뜑 媛먯?
+          // ?뱀????�뜑 媛먯?
           if (definition.sectionHeaders?.enabled && field.name.startsWith(definition.sectionHeaders.detectBy || '__section_')) {
             return renderSectionHeader(field, definition);
           }
 
-          // ?쇰컲 ?꾨뱶 ?뚮뜑留?
+          // ??�컲 ?꾨뱶 ???���?
           return (
             <div key={field.name} className="space-y-2">
               {renderField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates)}
@@ -142,7 +503,7 @@ export function DynamicSchemaRenderer({
 }
 
 /**
- * ?뱀뀡 ?ㅻ뜑 ?뚮뜑留?
+ * ?뱀????�뜑 ???���?
  */
 function renderSectionHeader(field: UIBuilderField, definition: BuilderDefinition) {
   const sectionName = field.description || field.name.replace('__section_', '').replace(/__$/, '');
@@ -150,7 +511,7 @@ function renderSectionHeader(field: UIBuilderField, definition: BuilderDefinitio
 
   const containerClass = style.container || 'pt-4 pb-2 border-t-2 border-cyan-800/50 first:pt-0 first:border-t-0';
   const titleClass = style.title || 'text-sm font-semibold text-cyan-400 flex items-center gap-2';
-  const icon = style.icon || '?뱥';
+  const icon = style.icon || '*';
 
   return (
     <div key={field.name} className={containerClass}>
@@ -163,7 +524,7 @@ function renderSectionHeader(field: UIBuilderField, definition: BuilderDefinitio
 }
 
 /**
- * ?꾨뱶 ?뚮뜑留?
+ * ?꾨뱶 ???���?
  */
 function renderField(
   field: UIBuilderField,
@@ -202,12 +563,12 @@ function renderField(
     return renderObjectField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject, fieldRuntimeStates);
   }
 
-  // ?뵦 Array with children (items.type = object with properties)
+  // ?�?Array with children (items.type = object with properties)
   if (field.type === 'array' && field.children && field.children.length > 0) {
     return renderArrayField(field, definition, dynamicFormData, updateDynamicField, expandedObjects, toggleObject);
   }
 
-  // ?쇰컲 ?꾨뱶
+  // ??�컲 ?꾨뱶
   return renderStandardField(field, definition, dynamicFormData, updateDynamicField, fieldRuntimeStates);
 }
 
@@ -376,7 +737,7 @@ function renderKeyedObjectField(
 }
 
 /**
- * Object ?꾨뱶 ?뚮뜑留?(以묒꺽 ?꾨뱶)
+ * Object ?꾨뱶 ???���?(以묒�??꾨뱶)
  */
 function renderObjectField(
   field: UIBuilderField,
@@ -390,12 +751,12 @@ function renderObjectField(
   const objectStyle = definition.fieldRendering?.object?.style || {};
   const isEnabled = Boolean(dynamicFormData[`${field.name}._enabled`]);
 
-  // ?뵦 oneOf ?⑦꽩: ?щ윭 ?듭뀡 以??섎굹 ?좏깮
+  // ?�?oneOf ???��: ???????�?�???�굹 ?좏깮
   const isOneOf = field.oneOfOptions && field.oneOfOptions.length > 0;
 
   return (
     <div className={objectStyle.border || 'border border-zinc-700 rounded-md bg-zinc-900/50'}>
-      {/* ?ㅻ뜑 */}
+      {/* ??�뜑 */}
       <div className={objectStyle.header || 'flex items-center gap-2 p-3 bg-zinc-800/50'}>
         <input
           type="checkbox"
@@ -420,7 +781,7 @@ function renderObjectField(
         <span className="text-[10px] text-zinc-600 font-mono">{field.type}</span>
       </div>
 
-      {/* ?뵦 oneOf ?좏깮 ?쇰뵒??踰꾪듉 */}
+      {/* ?�?oneOf ?좏깮 ??�뵒??踰꾪??*/}
       {isEnabled && isOneOf && expandedObjects.has(field.name) && (
         <div className="px-4 pt-4 pb-2 bg-blue-950/20 border-b border-blue-800/30">
           <div className="text-xs text-blue-400 mb-2">Choose one method:</div>
@@ -444,7 +805,7 @@ function renderObjectField(
         </div>
       )}
 
-      {/* ?먯떇 ?꾨뱶??*/}
+      {/* ?�?�� ?꾨뱶??*/}
       {isEnabled && expandedObjects.has(field.name) && (
         <div className={objectStyle.content || 'p-4 space-y-3 bg-zinc-900/30'}>
           {field.children!.map((child: any, _idx) => {
@@ -484,7 +845,7 @@ function renderObjectField(
                   <span className="text-[10px] text-zinc-600 font-mono ml-auto">{child.type}</span>
                 </Label>
 
-                {/* ?뵦 child.name???대? ?꾩껜 寃쎈줈瑜??ы븿 (NODE_ELEMS.KEYS) */}
+                {/* ?�?child.name????�? ?꾩껜 寃쎈줈瑜???�?(NODE_ELEMS.KEYS) */}
                 {renderFieldInput(
                   child,
                   childKey,
@@ -504,9 +865,8 @@ function renderObjectField(
 }
 
 /**
- * ?뵦 Array ?꾨뱶 ?뚮뜑留?(items.type = object)
- * REDUCTION_DATA泥섎읆 諛곗뿴 ?대???媛앹껜媛 ?덈뒗 寃쎌슦 泥섎━
- */
+ * ?�?Array ?꾨뱶 ???���?(items.type = object)
+ * REDUCTION_DATA泥섎??諛곗�???�???媛앹껜媛? ??�뒗 寃쎌??泥섎?? */
 function renderArrayField(
   field: UIBuilderField,
   definition: BuilderDefinition,
@@ -516,46 +876,16 @@ function renderArrayField(
   toggleObject: (fieldName: string) => void
 ): React.ReactNode {
   const objectStyle = definition.fieldRendering?.object?.style || {};
-
-  // ?꾩옱 諛곗뿴 ?곗씠??媛?몄삤湲?
   const arrayData = dynamicFormData[field.name] || [];
   const isExpanded = expandedObjects.has(field.name);
-
-  // ???꾩씠??異붽?
   const addItem = () => {
-    const newItem: Record<string, any> = {};
-    // ?먯떇 ?꾨뱶?ㅼ쓽 湲곕낯媛믪쑝濡?珥덇린??
-    field.children!.forEach(child => {
-      if ((child as any).type === 'section-header') return;
-
-      // ?뵦 x-required-when ?먮뒗 x-optional-when 議곌굔 泥댄겕
-      const condition = (child as any)['x-required-when'] || (child as any)['x-optional-when'];
-      if (condition) {
-        // ?뵦 FIX: ???鍮꾧탳 臾몄젣 ?닿껐
-        const shouldInclude = Object.entries(condition).every(([key, expectedValue]) => {
-          const actualValue = dynamicFormData[key];
-          if (typeof expectedValue === 'number') {
-            return Number(actualValue) === expectedValue;
-          }
-          return actualValue === expectedValue;
-        });
-        if (!shouldInclude) return; // 議곌굔 遺덉땐議????꾨뱶 異붽? ?덊븿
-      }
-
-      const childName = child.name.split('.').pop() || child.name;
-      newItem[childName] = child.default ?? (child.type === 'number' || child.type === 'integer' ? 0 : '');
-    });
-    updateDynamicField(field.name, [...arrayData, newItem]);
+    updateDynamicField(field.name, [...arrayData, createArrayItemDefaultValue(field)]);
   };
-
-  // ?꾩씠????젣
   const removeItem = (index: number) => {
     const newArray = [...arrayData];
     newArray.splice(index, 1);
     updateDynamicField(field.name, newArray);
   };
-
-  // ?꾩씠???꾨뱶 ?낅뜲?댄듃
   const updateItemField = (index: number, childKey: string, value: any) => {
     const newArray = [...arrayData];
     if (!newArray[index]) {
@@ -564,10 +894,8 @@ function renderArrayField(
     newArray[index][childKey] = value;
     updateDynamicField(field.name, newArray);
   };
-
   return (
     <div className={objectStyle.border || 'border border-green-700 rounded-md bg-zinc-900/50'}>
-      {/* ?ㅻ뜑 */}
       <div className={objectStyle.header || 'flex items-center gap-2 p-3 bg-green-900/30'}>
         <button
           onClick={() => toggleObject(field.name)}
@@ -594,8 +922,6 @@ function renderArrayField(
         </button>
         <span className="text-[10px] text-zinc-600 font-mono">array[object]</span>
       </div>
-
-      {/* 諛곗뿴 ?꾩씠?쒕뱾 */}
       {isExpanded && (
         <div className="p-4 space-y-4 bg-zinc-900/30">
           {arrayData.length === 0 ? (
@@ -618,97 +944,30 @@ function renderArrayField(
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {field.children!.map((child: any) => {
-                    // section-header???ㅽ궢
-                    if (child.type === 'section-header') return null;
-
-                    // ?뵦 x-required-when ?먮뒗 x-optional-when 議곌굔 泥댄겕
-                    const condition = child['x-required-when'] || child['x-optional-when'];
-                    if (condition) {
-                      // 議곌굔 ?됯? - dynamicFormData?먯꽌 ?곸쐞 ?쇱쓽 媛??뺤씤
-                      // ?뵦 FIX: ???鍮꾧탳 臾몄젣 ?닿껐 (臾몄옄??"1" vs ?レ옄 0)
-                      const shouldShow = Object.entries(condition).every(([key, expectedValue]) => {
-                        const actualValue = dynamicFormData[key];
-                        // ?뵦 ?レ옄 鍮꾧탳: ?????レ옄濡?蹂?섑빐??鍮꾧탳
-                        if (typeof expectedValue === 'number') {
-                          return Number(actualValue) === expectedValue;
-                        }
-                        return actualValue === expectedValue;
-                      });
-                      console.log('?뵇 Condition check:', { condition, dynamicFormData, shouldShow });
-                      if (!shouldShow) return null; // 議곌굔 遺덉땐議????④?
+                    const childKey = getFieldLeafName(child.name);
+                    const childNode = renderArrayItemField(
+                      child,
+                      item?.[childKey],
+                      (value) => updateItemField(index, childKey, value),
+                      `${field.name}[${index}].${childKey}`,
+                      {
+                        definition,
+                        expandedObjects,
+                        toggleObject,
+                        rootFormData: dynamicFormData,
+                        scopeStack: [item],
+                      }
+                    );
+                    if (!childNode) {
+                      return null;
                     }
-
-                    const childKey = child.name.split('.').pop() || child.name;
-                    const childValue = item[childKey];
-
+                    const isStructuredChild = child.type === 'object' || child.type === 'array';
                     return (
-                      <div key={child.name} className="space-y-1">
-                        <Label className="text-[10px] text-zinc-400 flex items-center gap-1">
-                          {child.description || childKey}
-                          {/* ?뵦 x-required-when 議곌굔 異⑹” ??Required 蹂?*) ?쒖떆 */}
-                          {child['x-required-when'] && <span className="text-red-400">*</span>}
-                          {child.required && !child['x-required-when'] && <span className="text-red-400">*</span>}
-                        </Label>
-                        {child.enum ? (
-                          <Select
-                            value={childValue !== undefined ? String(childValue) : ''}
-                            onValueChange={(val) => {
-                              const matchedOption = child.enum?.find((opt: any) => String(opt) === val);
-                              if (matchedOption !== undefined) {
-                                updateItemField(index, childKey, matchedOption);
-                                return;
-                              }
-
-                              if (child.type === 'integer') {
-                                const parsed = Number.parseInt(val, 10);
-                                updateItemField(index, childKey, Number.isNaN(parsed) ? val : parsed);
-                                return;
-                              }
-
-                              if (child.type === 'number') {
-                                const parsed = Number.parseFloat(val);
-                                updateItemField(index, childKey, Number.isNaN(parsed) ? val : parsed);
-                                return;
-                              }
-
-                              if (child.type === 'boolean' && (val === 'true' || val === 'false')) {
-                                updateItemField(index, childKey, val === 'true');
-                                return;
-                              }
-
-                              updateItemField(index, childKey, val);
-                            }}
-                          >
-                            <SelectTrigger className="h-8 text-xs bg-zinc-800 border-zinc-700">
-                              <SelectValue placeholder="Select..." />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {child.enum.map((opt: any) => (
-                                <SelectItem key={String(opt)} value={String(opt)}>
-                                  {String(opt)}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        ) : child.type === 'number' || child.type === 'integer' ? (
-                          <Input
-                            type="number"
-                            value={childValue ?? ''}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              const parsed = val === '' ? null :
-                                child.type === 'integer' ? parseInt(val, 10) : parseFloat(val);
-                              updateItemField(index, childKey, parsed);
-                            }}
-                            className="h-8 text-xs bg-zinc-800 border-zinc-700"
-                          />
-                        ) : (
-                          <Input
-                            value={childValue || ''}
-                            onChange={(e) => updateItemField(index, childKey, e.target.value)}
-                            className="h-8 text-xs bg-zinc-800 border-zinc-700"
-                          />
-                        )}
+                      <div
+                        key={`${field.name}[${index}].${childKey}`}
+                        className={isStructuredChild ? 'space-y-1 col-span-2' : 'space-y-1'}
+                      >
+                        {childNode}
                       </div>
                     );
                   })}
@@ -721,9 +980,8 @@ function renderArrayField(
     </div>
   );
 }
-
 /**
- * ?쇰컲 ?꾨뱶 ?뚮뜑留?
+ * Standard field renderer
  */
 function renderStandardField(
   field: UIBuilderField,
@@ -734,7 +992,7 @@ function renderStandardField(
 ): React.ReactNode {
   const labelStyle = definition.fieldRendering?.standard?.label || {};
 
-  // ?렞 Runtime State?먯꽌 requiredNow ?뺤씤 (議곌굔遺 required 吏??
+  // ???Runtime State?�?�� requiredNow ?뺤씤 (議곌굔遺? required 吏??
   const runtimeState = fieldRuntimeStates?.[field.name];
   const isRequired = runtimeState?.requiredNow ?? field.required;
 
@@ -748,10 +1006,10 @@ function renderStandardField(
         )}
       </Label>
 
-      {/* Hint ?쒖떆 */}
+      {/* Hint ??�떆 */}
       {definition.hintsDisplay?.enabled && field.placeholder && (
         <p className="text-[10px] text-amber-400 italic">
-          ?뮕 {field.placeholder}
+          ?�?{field.placeholder}
         </p>
       )}
 
@@ -769,7 +1027,7 @@ function renderStandardField(
 }
 
 /**
- * ?꾨뱶 ?낅젰 而댄룷?뚰듃 ?뚮뜑留?
+ * ?꾨뱶 ??�젰 ?�댄�??�듃 ???���?
  */
 function resolveEnumLabelMap(
   field: UIBuilderField,
@@ -813,7 +1071,7 @@ function resolveEnumLabelMap(
 
 function renderFieldInput(
   field: UIBuilderField,
-  _fieldKey: string,
+  fieldKey: string,
   value: any,
   onChange: (value: any) => void,
   definition: BuilderDefinition,
@@ -864,7 +1122,7 @@ function renderFieldInput(
               <label key={String(option)} className="flex items-center gap-2 text-sm text-zinc-200 cursor-pointer">
                 <input
                   type="radio"
-                  name={field.name}
+                  name={fieldKey}
                   value={String(option)}
                   checked={selectedValue === String(option)}
                   onChange={() => onChange(parseEnumSelection(String(option)))}

@@ -310,4 +310,65 @@ describe('generateHTMLDocument legacy rowspan', () => {
     expect(html).toContain('"BEAM"');
     expect(html).toContain('"WALL"');
   });
+
+  it('renders validation-only oneOf guidance for mutually exclusive object keys', () => {
+    const schema = {
+      type: 'object',
+      required: ['Argument'],
+      properties: {
+        Argument: {
+          type: 'object',
+          required: ['PERFORM_TYPE'],
+          oneOf: [
+            { required: ['ELEMS'] },
+            { required: ['SECTIONS'] },
+          ],
+          properties: {
+            PERFORM_TYPE: {
+              type: 'string',
+              description: 'Perform target',
+              oneOf: [
+                { title: 'All Elements', const: 'ALL' },
+                { title: 'By Element No.', const: 'ELEMS' },
+                { title: 'By Section No.', const: 'SECTIONS' },
+              ],
+            },
+            ELEMS: {
+              type: 'object',
+              description: 'Element numbers',
+              oneOf: [
+                { required: ['KEYS'] },
+                { required: ['TO'] },
+                { required: ['STRUCTURE_GROUP_NAME'] },
+              ],
+              properties: {
+                KEYS: {
+                  type: 'array',
+                  items: { type: 'integer' },
+                },
+                TO: {
+                  type: 'string',
+                },
+                STRUCTURE_GROUP_NAME: {
+                  type: 'string',
+                },
+              },
+            },
+            SECTIONS: {
+              type: 'array',
+              items: { type: 'integer' },
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+
+    expect(html).toContain('Choose exactly one of the following keys: &quot;ELEMS&quot; or &quot;SECTIONS&quot;.');
+    expect(html).toContain('Choose exactly one of the following keys: &quot;KEYS&quot;, &quot;TO&quot;, or &quot;STRUCTURE_GROUP_NAME&quot;.');
+    expect(html.indexOf('Choose exactly one of the following keys: &quot;ELEMS&quot; or &quot;SECTIONS&quot;.')).toBeLessThan(
+      html.indexOf('<p style="text-align: center;">"ELEMS"</p>')
+    );
+  });
 });
