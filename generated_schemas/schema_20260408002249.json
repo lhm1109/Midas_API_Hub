@@ -1,0 +1,291 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Structure Type",
+          "type": "object",
+          "description": "Structure type, mass control parameters, gravity acceleration, initial temperature, and display alignment options for DB STYP.",
+          "additionalProperties": false,
+          "properties": {
+            "STYP": {
+              "type": "integer",
+              "description": "Structure Type",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "3-D",
+                  "const": 0
+                },
+                {
+                  "title": "X-Z Plane",
+                  "const": 1
+                },
+                {
+                  "title": "Y-Z Plane",
+                  "const": 2
+                },
+                {
+                  "title": "X-Y Plane",
+                  "const": 3
+                },
+                {
+                  "title": "Constraint RZ",
+                  "const": 4
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "STRUCT_TYPE",
+                "label": "Structure Type",
+                "order": 1
+              }
+            },
+            "MASS": {
+              "type": "integer",
+              "description": "Mass Type",
+              "default": 1,
+              "oneOf": [
+                {
+                  "title": "Lumped Mass",
+                  "const": 1
+                },
+                {
+                  "title": "Consistent Mass",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "MASS_CTRL",
+                "label": "Mass Type",
+                "order": 2
+              }
+            },
+            "bMASSOFFSET": {
+              "type": "boolean",
+              "description": "Consider Off-diagonal Masses",
+              "default": true,
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "MASS_CTRL",
+                "hint": "The dialog disables this option when Consistent Mass is selected.",
+                "label": "Consider Off-diagonal Masses",
+                "order": 3
+              }
+            },
+            "bROTRIGID": {
+              "type": "boolean",
+              "description": "Considering Rotational Rigid Body Mode for Modal Participation Factor",
+              "default": false,
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "MASS_CTRL",
+                "hint": "The dialog enables this only for Lumped Mass when off-diagonal masses are not considered.",
+                "label": "Considering Rotational Rigid Body Mode for Modal Participation Factor",
+                "order": 4
+              }
+            },
+            "bSELFWEIGHT": {
+              "type": "boolean",
+              "description": "Convert Self-weight into Masses",
+              "default": false,
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "MASS_CTRL",
+                "label": "Convert Self-weight into Masses",
+                "order": 5
+              }
+            },
+            "SMASS": {
+              "type": "integer",
+              "description": "Structure Mass Type",
+              "default": 1,
+              "oneOf": [
+                {
+                  "title": "Convert to X, Y, Z",
+                  "const": 1
+                },
+                {
+                  "title": "Convert to X, Y",
+                  "const": 2
+                },
+                {
+                  "title": "Convert to Z",
+                  "const": 3
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "MASS_CTRL",
+                "hint": "The dialog keeps these radios disabled until self-weight conversion is enabled.",
+                "label": "Structure Mass Type",
+                "order": 6
+              },
+              "x-required-when": {
+                "bSELFWEIGHT": true
+              }
+            },
+            "GRAV": {
+              "type": "number",
+              "description": "Gravity",
+              "x-ui": {
+                "component": "Input",
+                "groupId": "PARAMS",
+                "hint": "Uses the current project acceleration unit.",
+                "label": "Gravity Acceleration",
+                "order": 7
+              }
+            },
+            "TEMP": {
+              "type": "number",
+              "description": "Initial Temperature",
+              "default": 0,
+              "x-ui": {
+                "component": "Input",
+                "groupId": "PARAMS",
+                "hint": "Uses the current project temperature unit.",
+                "label": "Initial Temperature",
+                "order": 8
+              }
+            },
+            "bALIGNBEAM": {
+              "type": "boolean",
+              "description": "Align Top of Beam Section",
+              "default": false,
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "DISPLAY",
+                "label": "Align Top of Beam Section with Center Line (X-Y Plane) for Display",
+                "order": 9
+              }
+            },
+            "bALIGNSLAB": {
+              "type": "boolean",
+              "description": "Align Top of Slab(Plate)",
+              "default": false,
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "DISPLAY",
+                "label": "Align Top of Slab(Plate) Section with Center Line (X-Y Plane) for Display",
+                "order": 10
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "bSELFWEIGHT"
+                ],
+                "properties": {
+                  "bSELFWEIGHT": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "SMASS"
+                ],
+                "properties": {
+                  "SMASS": {
+                    "readOnly": false
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "SMASS": {
+                    "readOnly": true
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "MASS"
+                ],
+                "properties": {
+                  "MASS": {
+                    "const": 2
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "bMASSOFFSET": {
+                    "readOnly": true
+                  },
+                  "bROTRIGID": {
+                    "readOnly": true
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "MASS",
+                  "bMASSOFFSET"
+                ],
+                "properties": {
+                  "MASS": {
+                    "const": 1
+                  },
+                    "bMASSOFFSET": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "bROTRIGID": {
+                    "readOnly": false
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "bROTRIGID": {
+                    "readOnly": true
+                  }
+                }
+              }
+            }
+          ],
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Structure Type",
+                "id": "STRUCT_TYPE"
+              },
+              {
+                "title": "Mass Control Parameter",
+                "id": "MASS_CTRL"
+              },
+              {
+                "title": "Parameters",
+                "id": "PARAMS"
+              },
+              {
+                "title": "Display Options",
+                "id": "DISPLAY"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

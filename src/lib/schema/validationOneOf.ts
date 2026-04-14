@@ -1,8 +1,11 @@
-export interface ValidationOneOfInfo {
+export interface ValidationChoiceInfo {
+  keyword: 'oneOf' | 'anyOf';
   optionKeyGroups: string[][];
   participantKeys: string[];
   description: string;
 }
+
+export type ValidationOneOfInfo = ValidationChoiceInfo;
 
 function uniqueStrings(values: unknown[]): string[] {
   const result: string[] = [];
@@ -33,28 +36,41 @@ function formatQuotedList(values: string[]): string {
   return `${quoted.slice(0, -1).join(', ')}, or ${quoted[quoted.length - 1]}`;
 }
 
-function buildDescription(optionKeyGroups: string[][]): string {
+function buildDescription(
+  keyword: 'oneOf' | 'anyOf',
+  optionKeyGroups: string[][]
+): string {
   const allSingleKey = optionKeyGroups.every((group) => group.length === 1);
 
   if (allSingleKey) {
     const keys = optionKeyGroups.map((group) => group[0]).filter(Boolean);
+    if (keyword === 'anyOf') {
+      return `At least one of the following keys must be provided: ${formatQuotedList(keys)}.`;
+    }
     return `Choose exactly one of the following keys: ${formatQuotedList(keys)}.`;
   }
 
   const groupTexts = optionKeyGroups.map((group) => `(${formatQuotedList(group)})`);
+  if (keyword === 'anyOf') {
+    return `At least one of the following key sets must be provided: ${groupTexts.join(' or ')}.`;
+  }
   return `Choose exactly one of the following key sets: ${groupTexts.join(' or ')}.`;
 }
 
-export function extractValidationOneOfInfo(node: any): ValidationOneOfInfo | null {
+function extractValidationGroups(
+  node: any,
+  keyword: 'oneOf' | 'anyOf'
+): ValidationChoiceInfo | null {
   if (!node || typeof node !== 'object' || Array.isArray(node)) {
     return null;
   }
 
-  if (node.type !== 'object' || !Array.isArray(node.oneOf) || node.oneOf.length < 2) {
+  const options = node[keyword];
+  if (node.type !== 'object' || !Array.isArray(options) || options.length < 2) {
     return null;
   }
 
-  const hasStructuredOption = node.oneOf.some((option: any) =>
+  const hasStructuredOption = options.some((option: any) =>
     option &&
     typeof option === 'object' &&
     option.properties &&
@@ -66,7 +82,7 @@ export function extractValidationOneOfInfo(node: any): ValidationOneOfInfo | nul
     return null;
   }
 
-  const optionKeyGroups = node.oneOf
+  const optionKeyGroups = options
     .map((option: any) => uniqueStrings(Array.isArray(option?.required) ? option.required : []))
     .filter((group: string[]) => group.length > 0);
 
@@ -91,10 +107,20 @@ export function extractValidationOneOfInfo(node: any): ValidationOneOfInfo | nul
   }
 
   return {
+    keyword,
     optionKeyGroups: dedupedGroups,
     participantKeys: uniqueStrings(dedupedGroups.flat()),
-    description: buildDescription(dedupedGroups),
+    description: buildDescription(keyword, dedupedGroups),
   };
+}
+
+export function extractValidationChoiceInfo(node: any): ValidationChoiceInfo | null {
+  return extractValidationGroups(node, 'oneOf') || extractValidationGroups(node, 'anyOf');
+}
+
+export function extractValidationOneOfInfo(node: any): ValidationOneOfInfo | null {
+  const info = extractValidationGroups(node, 'oneOf');
+  return info?.keyword === 'oneOf' ? info : null;
 }
 
 export function getFieldLeafKeyForValidationOneOf(field: any): string {
@@ -103,10 +129,14 @@ export function getFieldLeafKeyForValidationOneOf(field: any): string {
   return (segments[segments.length - 1] || rawKey).replace(/\[\]/g, '');
 }
 
-export function isValidationOneOfParticipant(field: any, info: ValidationOneOfInfo | null | undefined): boolean {
+export function isValidationChoiceParticipant(field: any, info: ValidationChoiceInfo | null | undefined): boolean {
   if (!info) {
     return false;
   }
 
   return info.participantKeys.includes(getFieldLeafKeyForValidationOneOf(field));
+}
+
+export function isValidationOneOfParticipant(field: any, info: ValidationOneOfInfo | null | undefined): boolean {
+  return isValidationChoiceParticipant(field, info);
 }

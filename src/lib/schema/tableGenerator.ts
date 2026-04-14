@@ -20,8 +20,8 @@ import {
   type FieldCondition,
 } from './conditionExtractor';
 import {
-  extractValidationOneOfInfo,
-  isValidationOneOfParticipant,
+  extractValidationChoiceInfo,
+  isValidationChoiceParticipant,
 } from './validationOneOf';
 import { loadCachedDefinition, type HTMLTemplateDefinition } from '../rendering/definitionLoader';
 import { buildFieldConstraintHints } from './descriptionBuilder';
@@ -823,8 +823,8 @@ export function generateHTMLDocument(
   
   // 🔥 Collect x-reference fields for footnote generation
   const references = collectReferences(sections);
-  const rootValidationOneOfInfo = extractValidationOneOfInfo(tableBodySchema);
-  const tableHTML = generateTableHTMLLegacy(sections, references, rootValidationOneOfInfo);
+  const rootValidationChoiceInfo = extractValidationChoiceInfo(tableBodySchema);
+  const tableHTML = generateTableHTMLLegacy(sections, references, rootValidationChoiceInfo);
 
   // 🔥 Wrapper key (Assign/Argument) 정보 추출 - properties에서 실제 wrapper key 찾기
   const wrapperKey = getWrapperKey(schema);
@@ -1029,12 +1029,16 @@ ${renderLegacyBlankCells(layout.leadingBlankCount)}        <td style="background
     `;
 }
 
-function renderLegacyOneOfHeaderAtDepth(description: string, depth: number): string {
+function renderLegacyValidationHeaderAtDepth(
+  title: string,
+  description: string,
+  depth: number
+): string {
   const layout = getLegacyNestedLayout(depth);
   return `
       <tr>
 ${renderLegacyBlankCells(layout.leadingBlankCount)}        <td style="background-color: #fff7db; ${ZENDESK_CELL_STYLE}" colspan="${layout.headerColspan}">
-          <p><strong style="color: #b7791f;">oneOf</strong> ${escapeHtml(description)}</p>
+          <p><strong style="color: #b7791f;">${escapeHtml(title)}</strong> ${escapeHtml(description)}</p>
         </td>
       </tr>
     `;
@@ -1109,8 +1113,8 @@ function renderNestedFieldsLegacy(
   let html = '';
   const currentDepth = parentPathNos.length + 1;
   const hasExplicitHeaders = fields.some((field) => field.type === 'section-header');
-  const validationOneOfInfo = extractValidationOneOfInfo(parentField);
-  let hasRenderedNestedOneOfHeader = false;
+  const validationChoiceInfo = extractValidationChoiceInfo(parentField);
+  let hasRenderedNestedChoiceHeader = false;
 
   if (hasExplicitHeaders) {
     let childNo = 1;
@@ -1125,12 +1129,16 @@ function renderNestedFieldsLegacy(
       }
 
       if (
-        validationOneOfInfo &&
-        !hasRenderedNestedOneOfHeader &&
-        isValidationOneOfParticipant(field, validationOneOfInfo)
+        validationChoiceInfo &&
+        !hasRenderedNestedChoiceHeader &&
+        isValidationChoiceParticipant(field, validationChoiceInfo)
       ) {
-        html += renderLegacyOneOfHeaderAtDepth(validationOneOfInfo.description, currentDepth);
-        hasRenderedNestedOneOfHeader = true;
+        html += renderLegacyValidationHeaderAtDepth(
+          validationChoiceInfo.keyword,
+          validationChoiceInfo.description,
+          currentDepth
+        );
+        hasRenderedNestedChoiceHeader = true;
       }
 
       html += renderNestedFieldRowLegacy(
@@ -1150,12 +1158,16 @@ function renderNestedFieldsLegacy(
 
   for (const { field } of noConditionFields) {
     if (
-      validationOneOfInfo &&
-      !hasRenderedNestedOneOfHeader &&
-      isValidationOneOfParticipant(field, validationOneOfInfo)
+      validationChoiceInfo &&
+      !hasRenderedNestedChoiceHeader &&
+      isValidationChoiceParticipant(field, validationChoiceInfo)
     ) {
-      html += renderLegacyOneOfHeaderAtDepth(validationOneOfInfo.description, currentDepth);
-      hasRenderedNestedOneOfHeader = true;
+      html += renderLegacyValidationHeaderAtDepth(
+        validationChoiceInfo.keyword,
+        validationChoiceInfo.description,
+        currentDepth
+      );
+      hasRenderedNestedChoiceHeader = true;
     }
 
     html += renderNestedFieldRowLegacy(
@@ -1169,12 +1181,16 @@ function renderNestedFieldsLegacy(
 
   for (const [conditionKey, fieldsWithCondition] of fieldGroups.entries()) {
     if (
-      validationOneOfInfo &&
-      !hasRenderedNestedOneOfHeader &&
-      fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, validationOneOfInfo))
+      validationChoiceInfo &&
+      !hasRenderedNestedChoiceHeader &&
+      fieldsWithCondition.some(({ field }) => isValidationChoiceParticipant(field, validationChoiceInfo))
     ) {
-      html += renderLegacyOneOfHeaderAtDepth(validationOneOfInfo.description, currentDepth);
-      hasRenderedNestedOneOfHeader = true;
+      html += renderLegacyValidationHeaderAtDepth(
+        validationChoiceInfo.keyword,
+        validationChoiceInfo.description,
+        currentDepth
+      );
+      hasRenderedNestedChoiceHeader = true;
     }
 
     const conditionLabel = buildLegacyConditionLabel(
@@ -1202,14 +1218,14 @@ function renderNestedFieldsLegacy(
 function generateTableHTMLLegacy(
   sections: SectionGroup[],
   references?: FieldReferenceMap,
-  rootValidationOneOfInfo?: ReturnType<typeof extractValidationOneOfInfo>
+  rootValidationChoiceInfo?: ReturnType<typeof extractValidationChoiceInfo>
 ): string {
   // Zendesk 스타일: <tbody> 안에 헤더 행 포함
   let html = '<tbody>\n';
   html += generateTableHeaderLegacy();
 
   let rowNumber = 1;
-  let hasRenderedRootOneOfHeader = false;
+  let hasRenderedRootChoiceHeader = false;
   for (const section of sections) {
     const { fieldGroups: fieldsByCondition, noConditionFields: fieldsWithoutCondition } =
       groupLegacyFieldsByCondition(section.fields);
@@ -1219,12 +1235,15 @@ function generateTableHTMLLegacy(
       html += generateSectionHeaderLegacy(section.name);
       for (const { field } of fieldsWithoutCondition) {
         if (
-          rootValidationOneOfInfo &&
-          !hasRenderedRootOneOfHeader &&
-          isValidationOneOfParticipant(field, rootValidationOneOfInfo)
+          rootValidationChoiceInfo &&
+          !hasRenderedRootChoiceHeader &&
+          isValidationChoiceParticipant(field, rootValidationChoiceInfo)
         ) {
-          html += generateOneOfHeaderLegacy(rootValidationOneOfInfo.description);
-          hasRenderedRootOneOfHeader = true;
+          html += generateValidationHeaderLegacy(
+            rootValidationChoiceInfo.keyword,
+            rootValidationChoiceInfo.description
+          );
+          hasRenderedRootChoiceHeader = true;
         }
         html += generateFieldRowLegacy(field, rowNumber++, references);
       }
@@ -1232,15 +1251,18 @@ function generateTableHTMLLegacy(
 
     for (const [conditionKey, fieldsWithCondition] of fieldsByCondition.entries()) {
       if (
-        rootValidationOneOfInfo &&
-        !hasRenderedRootOneOfHeader &&
-        fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, rootValidationOneOfInfo))
+        rootValidationChoiceInfo &&
+        !hasRenderedRootChoiceHeader &&
+        fieldsWithCondition.some(({ field }) => isValidationChoiceParticipant(field, rootValidationChoiceInfo))
       ) {
         if (fieldsWithoutCondition.length === 0) {
           html += generateSectionHeaderLegacy(section.name);
         }
-        html += generateOneOfHeaderLegacy(rootValidationOneOfInfo.description);
-        hasRenderedRootOneOfHeader = true;
+        html += generateValidationHeaderLegacy(
+          rootValidationChoiceInfo.keyword,
+          rootValidationChoiceInfo.description
+        );
+        hasRenderedRootChoiceHeader = true;
       }
 
       const conditionLabel = buildLegacyConditionLabel(
@@ -1328,11 +1350,15 @@ function generateSectionHeaderLegacy(sectionName: string): string {
   `;
 }
 
-function generateOneOfHeaderLegacy(description: string, colspan: number = 9): string {
+function generateValidationHeaderLegacy(
+  title: string,
+  description: string,
+  colspan: number = 9
+): string {
   return `
     <tr>
       <td style="background-color: #fff7db; ${ZENDESK_CELL_STYLE}" colspan="${colspan}">
-        <p><strong style="color: #b7791f;">oneOf</strong> ${escapeHtml(description)}</p>
+        <p><strong style="color: #b7791f;">${escapeHtml(title)}</strong> ${escapeHtml(description)}</p>
       </td>
     </tr>
   `;
@@ -1362,10 +1388,10 @@ function generateFieldRowLegacy(
       fieldGroups: childrenByCondition,
       noConditionFields: childrenWithoutCondition,
     } = groupLegacyFieldsByCondition(effectiveChildren);
-    const validationOneOfInfo = extractValidationOneOfInfo(field);
+    const validationChoiceInfo = extractValidationChoiceInfo(field);
 
     let childNo = 1;
-    let hasRenderedNestedOneOfHeader = false;
+    let hasRenderedNestedChoiceHeader = false;
 
     const renderChildRow = (child: EnhancedField, conditionType?: string | null) => {
       const childDescriptionHTML = generateFieldDescriptionLegacy(child, references);
@@ -1430,12 +1456,16 @@ function generateFieldRowLegacy(
         }
 
         if (
-          validationOneOfInfo &&
-          !hasRenderedNestedOneOfHeader &&
-          isValidationOneOfParticipant(child, validationOneOfInfo)
+          validationChoiceInfo &&
+          !hasRenderedNestedChoiceHeader &&
+          isValidationChoiceParticipant(child, validationChoiceInfo)
         ) {
-          childrenHTML += generateOneOfHeaderLegacy(validationOneOfInfo.description, 8);
-          hasRenderedNestedOneOfHeader = true;
+          childrenHTML += generateValidationHeaderLegacy(
+            validationChoiceInfo.keyword,
+            validationChoiceInfo.description,
+            8
+          );
+          hasRenderedNestedChoiceHeader = true;
         }
 
         renderChildRow(child);
@@ -1444,12 +1474,16 @@ function generateFieldRowLegacy(
       // 🔥 조건 없는 children 먼저 렌더링
       for (const { field: child } of childrenWithoutCondition) {
         if (
-          validationOneOfInfo &&
-          !hasRenderedNestedOneOfHeader &&
-          isValidationOneOfParticipant(child, validationOneOfInfo)
+          validationChoiceInfo &&
+          !hasRenderedNestedChoiceHeader &&
+          isValidationChoiceParticipant(child, validationChoiceInfo)
         ) {
-          childrenHTML += generateOneOfHeaderLegacy(validationOneOfInfo.description, 8);
-          hasRenderedNestedOneOfHeader = true;
+          childrenHTML += generateValidationHeaderLegacy(
+            validationChoiceInfo.keyword,
+            validationChoiceInfo.description,
+            8
+          );
+          hasRenderedNestedChoiceHeader = true;
         }
         renderChildRow(child);
       }
@@ -1457,12 +1491,16 @@ function generateFieldRowLegacy(
       // 🔥 조건별 children 렌더링 - 조건 헤더 추가
       for (const [conditionKey, childrenWithCondition] of childrenByCondition.entries()) {
         if (
-          validationOneOfInfo &&
-          !hasRenderedNestedOneOfHeader &&
-          childrenWithCondition.some(({ field: child }) => isValidationOneOfParticipant(child, validationOneOfInfo))
+          validationChoiceInfo &&
+          !hasRenderedNestedChoiceHeader &&
+          childrenWithCondition.some(({ field: child }) => isValidationChoiceParticipant(child, validationChoiceInfo))
         ) {
-          childrenHTML += generateOneOfHeaderLegacy(validationOneOfInfo.description, 8);
-          hasRenderedNestedOneOfHeader = true;
+          childrenHTML += generateValidationHeaderLegacy(
+            validationChoiceInfo.keyword,
+            validationChoiceInfo.description,
+            8
+          );
+          hasRenderedNestedChoiceHeader = true;
         }
 
         const conditionLabel = buildLegacyConditionLabel(

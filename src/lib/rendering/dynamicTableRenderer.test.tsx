@@ -120,4 +120,81 @@ describe('DynamicTableRenderer nested rows', () => {
     expect(html).toContain('&quot;COLUMN&quot;');
     expect(html).toContain('&quot;BRACE&quot;');
   });
+
+  it('renders anyOf validation headers in the visual table', () => {
+    const definition: any = {
+      styling: {
+        table: {},
+        header: {},
+        body: {},
+      },
+      tableStructure: {
+        columns: [
+          { id: 'no', header: 'No.', width: '10%' },
+          { id: 'description', header: 'Description', width: '40%' },
+          { id: 'key', header: 'Key', width: '20%' },
+          { id: 'type', header: 'Type', width: '10%' },
+          { id: 'default', header: 'Default', width: '10%' },
+          { id: 'required', header: 'Required', width: '10%' },
+        ],
+      },
+      sectionHeaders: {
+        colspan: 6,
+      },
+      rowRendering: {
+        required: {
+          simpleFormat: true,
+        },
+      },
+      nestedFields: {
+        style: {},
+        nestedSectionHeader: {
+          style: {},
+        },
+      },
+    };
+
+    const parameters = [
+      {
+        no: 1,
+        name: 'SECTION',
+        type: 'object',
+        description: 'Section',
+        default: '-',
+        required: 'Required',
+        children: [
+          {
+            no: '',
+            name: '',
+            type: 'one-of-header',
+            title: 'anyOf',
+            default: '',
+            required: '',
+            description: 'At least one of the following keys must be provided: "BAR_SECTOR_I", "BAR_SECTOR_M", or "BAR_SECTOR_J".',
+          },
+          {
+            no: '1.1',
+            name: 'BAR_SECTOR_I',
+            type: 'object',
+            description: 'I-section rebar configuration',
+            default: '-',
+            required: 'Optional',
+          },
+        ],
+      },
+    ];
+
+    const html = renderToStaticMarkup(
+      <DynamicTableRenderer
+        definition={definition}
+        parameters={parameters}
+        expandedParams={new Set([1])}
+        toggleParam={() => {}}
+      />
+    );
+
+    expect(html).toContain('anyOf');
+    expect(html).toContain('At least one of the following keys must be provided');
+    expect(html).toContain('&quot;BAR_SECTOR_I&quot;');
+  });
 });

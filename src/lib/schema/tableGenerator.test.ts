@@ -456,4 +456,64 @@ describe('generateHTMLDocument legacy rowspan', () => {
     expect(oneOfIndex).toBeGreaterThan(elemsIndex);
     expect(keysIndex).toBeGreaterThan(oneOfIndex);
   });
+
+  it('renders validation-only anyOf guidance for at-least-one object keys', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      properties: {
+        Assign: {
+          type: 'object',
+          patternProperties: {
+            '^[0-9]+$': {
+              type: 'object',
+              required: ['DT', 'DB', 'SHEAR_BAR'],
+              anyOf: [
+                { required: ['BAR_SECTOR_I'] },
+                { required: ['BAR_SECTOR_M'] },
+                { required: ['BAR_SECTOR_J'] },
+              ],
+              properties: {
+                BAR_SECTOR_I: {
+                  type: 'object',
+                  properties: {
+                    TOP: { type: 'string' },
+                  },
+                },
+                BAR_SECTOR_M: {
+                  type: 'object',
+                  properties: {
+                    TOP: { type: 'string' },
+                  },
+                },
+                BAR_SECTOR_J: {
+                  type: 'object',
+                  properties: {
+                    TOP: { type: 'string' },
+                  },
+                },
+                DT: {
+                  type: 'number',
+                },
+                DB: {
+                  type: 'number',
+                },
+                SHEAR_BAR: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+    const anyOfIndex = html.indexOf('At least one of the following keys must be provided: &quot;BAR_SECTOR_I&quot;, &quot;BAR_SECTOR_M&quot;, or &quot;BAR_SECTOR_J&quot;.');
+    const sectorIndex = html.indexOf('<p style="text-align: center;">"BAR_SECTOR_I"</p>');
+
+    expect(html).toContain('<strong style="color: #b7791f;">anyOf</strong>');
+    expect(anyOfIndex).toBeGreaterThan(-1);
+    expect(sectorIndex).toBeGreaterThan(anyOfIndex);
+  });
 });

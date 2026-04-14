@@ -28,8 +28,8 @@ import {
   groupFieldsByCondition
 } from '@/lib/schema/conditionExtractor';
 import {
-  extractValidationOneOfInfo,
-  isValidationOneOfParticipant,
+  extractValidationChoiceInfo,
+  isValidationChoiceParticipant,
 } from '@/lib/schema/validationOneOf';
 import { buildFieldDescription } from '@/lib/schema/descriptionBuilder';
 import { schemaCompileCache } from '@/lib/cache/schemaCache';
@@ -1271,11 +1271,11 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     return `When ${conditionText}`;
   };
 
-  const buildOneOfHeaderRow = (description: string) => ({
+  const buildValidationHeaderRow = (title: string, description: string) => ({
     no: '',
     name: '',
     type: 'one-of-header',
-    title: 'oneOf',
+    title,
     default: '',
     description,
     required: '',
@@ -1481,7 +1481,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
         return [];
       }
 
-      const validationOneOfInfo = extractValidationOneOfInfo(parentField);
+      const validationChoiceInfo = extractValidationChoiceInfo(parentField);
       const hasExplicitHeaders = resolvedFields.some((field: any) => field.type === 'section-header');
       const fieldsToProcess = resolvedFields.filter((field: any) => field.type !== 'section-header');
       const fieldInfoMap = collectFieldConditionInfo(fieldsToProcess, conditionalRules);
@@ -1539,26 +1539,26 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
             continue;
           }
 
-          if (isValidationOneOfParticipant(field, validationOneOfInfo) && !results.some((row) => row.type === 'one-of-header')) {
-            results.push(buildOneOfHeaderRow(validationOneOfInfo!.description));
+          if (isValidationChoiceParticipant(field, validationChoiceInfo) && !results.some((row) => row.type === 'one-of-header')) {
+            results.push(buildValidationHeaderRow(validationChoiceInfo!.keyword, validationChoiceInfo!.description));
           }
 
           results.push(buildMappedField(field));
         }
       } else {
         for (const { field } of noConditionFields) {
-          if (isValidationOneOfParticipant(field, validationOneOfInfo) && !results.some((row) => row.type === 'one-of-header')) {
-            results.push(buildOneOfHeaderRow(validationOneOfInfo!.description));
+          if (isValidationChoiceParticipant(field, validationChoiceInfo) && !results.some((row) => row.type === 'one-of-header')) {
+            results.push(buildValidationHeaderRow(validationChoiceInfo!.keyword, validationChoiceInfo!.description));
           }
           results.push(buildMappedField(field));
         }
 
         for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
           if (
-            fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, validationOneOfInfo)) &&
+            fieldsWithCondition.some(({ field }) => isValidationChoiceParticipant(field, validationChoiceInfo)) &&
             !results.some((row) => row.type === 'one-of-header')
           ) {
-            results.push(buildOneOfHeaderRow(validationOneOfInfo!.description));
+            results.push(buildValidationHeaderRow(validationChoiceInfo!.keyword, validationChoiceInfo!.description));
           }
 
           const { conditionInfo } = fieldsWithCondition[0];
@@ -1576,7 +1576,7 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     const buildParamsFromSections = (sections: any[]) => {
       const params: any[] = [];
       let rowNumber = 1;
-      const rootValidationOneOfInfo = extractValidationOneOfInfo(effectiveSchema);
+      const rootValidationChoiceInfo = extractValidationChoiceInfo(effectiveSchema);
 
       for (const section of sections) {
         const fieldInfoMap = collectFieldConditionInfo(section.fields, conditionalRules);
@@ -1623,18 +1623,18 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
         };
 
         for (const { field } of noConditionFields) {
-          if (isValidationOneOfParticipant(field, rootValidationOneOfInfo) && !params.some((row) => row.type === 'one-of-header')) {
-            params.push(buildOneOfHeaderRow(rootValidationOneOfInfo!.description));
+          if (isValidationChoiceParticipant(field, rootValidationChoiceInfo) && !params.some((row) => row.type === 'one-of-header')) {
+            params.push(buildValidationHeaderRow(rootValidationChoiceInfo!.keyword, rootValidationChoiceInfo!.description));
           }
           params.push(buildTopLevelParam(field));
         }
 
         for (const [conditionKey, fieldsWithCondition] of fieldGroups) {
           if (
-            fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, rootValidationOneOfInfo)) &&
+            fieldsWithCondition.some(({ field }) => isValidationChoiceParticipant(field, rootValidationChoiceInfo)) &&
             !params.some((row) => row.type === 'one-of-header')
           ) {
-            params.push(buildOneOfHeaderRow(rootValidationOneOfInfo!.description));
+            params.push(buildValidationHeaderRow(rootValidationChoiceInfo!.keyword, rootValidationChoiceInfo!.description));
           }
 
           const conditionInfo = fieldsWithCondition[0].conditionInfo;
