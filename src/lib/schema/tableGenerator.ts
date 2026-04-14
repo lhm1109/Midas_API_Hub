@@ -1029,6 +1029,17 @@ ${renderLegacyBlankCells(layout.leadingBlankCount)}        <td style="background
     `;
 }
 
+function renderLegacyOneOfHeaderAtDepth(description: string, depth: number): string {
+  const layout = getLegacyNestedLayout(depth);
+  return `
+      <tr>
+${renderLegacyBlankCells(layout.leadingBlankCount)}        <td style="background-color: #fff7db; ${ZENDESK_CELL_STYLE}" colspan="${layout.headerColspan}">
+          <p><strong style="color: #b7791f;">oneOf</strong> ${escapeHtml(description)}</p>
+        </td>
+      </tr>
+    `;
+}
+
 function renderNestedFieldRowLegacy(
   field: EnhancedField,
   rowNumber: number,
@@ -1075,7 +1086,8 @@ ${renderLegacyBlankCells(layout.leadingBlankCount)}        <td style="${ZENDESK_
       rowNumber,
       pathNos,
       references,
-      inheritedConditional || isConditionalFieldLegacy(field)
+      inheritedConditional || isConditionalFieldLegacy(field),
+      field
     );
   }
 
@@ -1087,7 +1099,8 @@ function renderNestedFieldsLegacy(
   rowNumber: number,
   parentPathNos: number[] = [],
   references?: FieldReferenceMap,
-  inheritedConditional: boolean = false
+  inheritedConditional: boolean = false,
+  parentField?: EnhancedField
 ): string {
   if (!fields || fields.length === 0) {
     return '';
@@ -1096,6 +1109,8 @@ function renderNestedFieldsLegacy(
   let html = '';
   const currentDepth = parentPathNos.length + 1;
   const hasExplicitHeaders = fields.some((field) => field.type === 'section-header');
+  const validationOneOfInfo = extractValidationOneOfInfo(parentField);
+  let hasRenderedNestedOneOfHeader = false;
 
   if (hasExplicitHeaders) {
     let childNo = 1;
@@ -1107,6 +1122,15 @@ function renderNestedFieldsLegacy(
           html += renderLegacySectionHeaderAtDepth(String(headerLabel), currentDepth);
         }
         continue;
+      }
+
+      if (
+        validationOneOfInfo &&
+        !hasRenderedNestedOneOfHeader &&
+        isValidationOneOfParticipant(field, validationOneOfInfo)
+      ) {
+        html += renderLegacyOneOfHeaderAtDepth(validationOneOfInfo.description, currentDepth);
+        hasRenderedNestedOneOfHeader = true;
       }
 
       html += renderNestedFieldRowLegacy(
@@ -1125,6 +1149,15 @@ function renderNestedFieldsLegacy(
   let childNo = 1;
 
   for (const { field } of noConditionFields) {
+    if (
+      validationOneOfInfo &&
+      !hasRenderedNestedOneOfHeader &&
+      isValidationOneOfParticipant(field, validationOneOfInfo)
+    ) {
+      html += renderLegacyOneOfHeaderAtDepth(validationOneOfInfo.description, currentDepth);
+      hasRenderedNestedOneOfHeader = true;
+    }
+
     html += renderNestedFieldRowLegacy(
       field,
       rowNumber,
@@ -1135,6 +1168,15 @@ function renderNestedFieldsLegacy(
   }
 
   for (const [conditionKey, fieldsWithCondition] of fieldGroups.entries()) {
+    if (
+      validationOneOfInfo &&
+      !hasRenderedNestedOneOfHeader &&
+      fieldsWithCondition.some(({ field }) => isValidationOneOfParticipant(field, validationOneOfInfo))
+    ) {
+      html += renderLegacyOneOfHeaderAtDepth(validationOneOfInfo.description, currentDepth);
+      hasRenderedNestedOneOfHeader = true;
+    }
+
     const conditionLabel = buildLegacyConditionLabel(
       conditionKey,
       fieldsWithCondition[0]?.conditionInfo
@@ -1228,14 +1270,16 @@ export function renderGreatGrandchildrenLegacy(
   currentChildNo: number,
   currentGrandchildNo: number,
   references?: FieldReferenceMap,
-  inheritedConditional: boolean = false
+  inheritedConditional: boolean = false,
+  parentField?: EnhancedField
 ): string {
   return renderNestedFieldsLegacy(
     greatGrandchildren,
     rowNumber,
     [currentChildNo, currentGrandchildNo],
     references,
-    inheritedConditional
+    inheritedConditional,
+    parentField
   );
 }
 
@@ -1244,14 +1288,16 @@ export function renderGrandchildrenLegacy(
   rowNumber: number,
   currentChildNo: number,
   references?: FieldReferenceMap,
-  inheritedConditional: boolean = false
+  inheritedConditional: boolean = false,
+  parentField?: EnhancedField
 ): string {
   return renderNestedFieldsLegacy(
     grandchildren,
     rowNumber,
     [currentChildNo],
     references,
-    inheritedConditional
+    inheritedConditional,
+    parentField
   );
 }
 
@@ -1359,7 +1405,8 @@ function generateFieldRowLegacy(
           rowNumber,
           currentChildNo,
           references,
-          parentConditional || isConditionalFieldLegacy(child)
+          parentConditional || isConditionalFieldLegacy(child),
+          child
         );
       }
     };

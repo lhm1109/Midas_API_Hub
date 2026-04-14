@@ -13,6 +13,7 @@ export interface TableParameter {
   default: string;
   required: string;
   description: string;
+  conditionText?: string;
   title?: string;
   options?: string[];
   children?: TableParameter[];
@@ -48,6 +49,101 @@ export function generateHTMLTable(
 
   const sectionStyle = definition.sectionHeaders?.style || {};
   const nestedSectionStyle = definition.nestedFields?.nestedSectionHeader?.style || {};
+  const totalColspan = columns.reduce((count: number, col: any) => {
+    return count + (col.id === 'description' ? 2 : 1);
+  }, 0);
+
+  const getIndentedCellStyle = (level: number, extraStyle: string = '') => {
+    const paddingLeft = 5 + Math.max(0, level) * 16;
+    return `padding: 10px 5px 10px 5px; padding-left: ${paddingLeft}px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;${extraStyle ? ` ${extraStyle}` : ''}`;
+  };
+
+  const renderOneOfHeaderRow = (param: TableParameter, level: number) => `
+<tr>
+<td style="${getIndentedCellStyle(level, 'background-color: #fff7db;')}" colspan="${totalColspan}">
+<p><strong style="color: #b7791f;">${param.title || 'oneOf'}</strong> ${markdownToHtml(param.description || '')}</p>
+</td>
+</tr>`;
+
+  const renderSectionHeaderRow = (param: TableParameter, level: number, isNested: boolean) => {
+    const bgColor = isNested
+      ? (nestedSectionStyle.background === 'bg-blue-950/30' ? '#e3f2fd' : '#f5f5f5')
+      : (sectionStyle.background === 'bg-cyan-950/30' ? '#e6fcff' : '#f0f0f0');
+    const textColor = isNested
+      ? (nestedSectionStyle.textColor === 'text-blue-400' ? '#1976d2' : '#666')
+      : (sectionStyle.textColor === 'text-cyan-400' ? '#4c9aff' : '#333');
+
+    return `
+<tr>
+<td style="${getIndentedCellStyle(level, `background-color: ${bgColor};`)}" colspan="${totalColspan}">
+<p><span style="color: ${textColor};">${param.section}</span></p>
+</td>
+</tr>`;
+  };
+
+  const renderConditionRow = (param: TableParameter, level: number) => `
+<tr>
+<td style="${getIndentedCellStyle(level, 'background-color: #e6fcff;')}" colspan="${totalColspan}">
+<p><span style="color: #4c9aff; font-weight: 600;">${markdownToHtml(param.conditionText || '')}</span></p>
+</td>
+</tr>`;
+
+  const renderDataRow = (param: TableParameter, level: number) => `
+<tr>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">${param.no}</p>
+</td>
+<td style="${getIndentedCellStyle(level)}" colspan="2">
+<p>${markdownToHtml(param.description || param.name)}</p>
+${param.options ? param.options.map((opt: string) => `<p>${markdownToHtml(opt)}</p>`).join('') : ''}
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">"${param.name}"</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">${param.type}</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">${param.default || '-'}</p>
+</td>
+<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
+<p style="text-align: center;">${param.required}</p>
+</td>
+</tr>`;
+
+  const renderRows = (items: TableParameter[], level: number = 0): string => {
+    return items.map((param) => {
+      if (param.type === 'one-of-header') {
+        return renderOneOfHeaderRow(param, level);
+      }
+
+      if (param.type === 'condition-row') {
+        return renderConditionRow(param, level);
+      }
+
+      let html = '';
+
+      if (param.section) {
+        html += renderSectionHeaderRow(param, level, level > 0);
+
+        if (!param.name || !param.type) {
+          return html;
+        }
+      }
+
+      if (!param.name || !param.type || param.name === '""') {
+        return html;
+      }
+
+      html += renderDataRow(param, level);
+
+      if (param.children && param.children.length > 0) {
+        html += renderRows(param.children, level + 1);
+      }
+
+      return html;
+    }).join('');
+  };
 
   let tableHTML = `
 <div class="table-wrap">
@@ -82,114 +178,7 @@ export function generateHTMLTable(
 </tr>`;
 
   // Table rows
-  parameters.forEach((param: TableParameter) => {
-    if (param.type === 'one-of-header') {
-      tableHTML += `
-<tr>
-<td style="background-color: #fff7db; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
-<p><strong style="color: #b7791f;">${param.title || 'oneOf'}</strong> ${markdownToHtml(param.description || '')}</p>
-</td>
-</tr>`;
-      return;
-    }
-
-    // Section header
-    if (param.section) {
-      const bgColor = sectionStyle.background === 'bg-cyan-950/30' ? '#e6fcff' : '#f0f0f0';
-      const textColor = sectionStyle.textColor === 'text-cyan-400' ? '#4c9aff' : '#333';
-
-      tableHTML += `
-<tr>
-<td style="background-color: ${bgColor}; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
-<p><span style="color: ${textColor};">${param.section}</span></p>
-</td>
-</tr>`;
-
-      if (!param.name || !param.type) {
-        return;
-      }
-    }
-
-    // Main row
-    tableHTML += `
-<tr>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.no}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="2">
-<p>${markdownToHtml(param.description || param.name)}</p>
-${param.options ? param.options.map((opt: string) => `<p>${markdownToHtml(opt)}</p>`).join('') : ''}
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">"${param.name}"</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.type}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.default || '-'}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${param.required}</p>
-</td>
-</tr>`;
-
-    // Child rows
-    if (param.children) {
-      param.children.forEach((child: TableParameter) => {
-        if (child.type === 'one-of-header') {
-          tableHTML += `
-<tr>
-<td style="background-color: #fff7db; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
-<p><strong style="color: #b7791f;">${child.title || 'oneOf'}</strong> ${markdownToHtml(child.description || '')}</p>
-</td>
-</tr>`;
-          return;
-        }
-
-        // Child section header
-        if (child.section) {
-          const bgColor = nestedSectionStyle.background === 'bg-blue-950/30' ? '#e3f2fd' : '#f5f5f5';
-          const textColor = nestedSectionStyle.textColor === 'text-blue-400' ? '#1976d2' : '#666';
-
-          tableHTML += `
-<tr>
-<td style="background-color: ${bgColor}; padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;" colspan="${columns.length}">
-<p><span style="color: ${textColor};">${child.section}</span></p>
-</td>
-</tr>`;
-          return;
-        }
-
-        if (!child.name || !child.type || child.name === '""') {
-          return;
-        }
-
-        tableHTML += `
-<tr>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.no}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p>${markdownToHtml(child.description || child.name)}</p>
-${child.options ? child.options.map((opt: string) => `<p>${markdownToHtml(opt)}</p>`).join('') : ''}
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">"${child.name}"</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.type}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.default || '-'}</p>
-</td>
-<td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">${child.required}</p>
-</td>
-</tr>`;
-      });
-    }
-  });
+  tableHTML += renderRows(parameters);
 
   tableHTML += `
 </tbody>

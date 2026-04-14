@@ -371,4 +371,89 @@ describe('generateHTMLDocument legacy rowspan', () => {
       html.indexOf('<p style="text-align: center;">"ELEMS"</p>')
     );
   });
+
+  it('renders nested validation-only oneOf guidance inside map-wrapper array item objects', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      properties: {
+        Assign: {
+          type: 'object',
+          patternProperties: {
+            '^[0-9]+$': {
+              type: 'object',
+              required: ['ITEMS'],
+              properties: {
+                ITEMS: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    required: ['CREATE_SUB_SECTION', 'MAIN_BAR'],
+                    properties: {
+                      CREATE_SUB_SECTION: {
+                        type: 'boolean',
+                        default: false,
+                      },
+                      ELEMS: {
+                        type: 'object',
+                        description: 'Element List',
+                        properties: {
+                          KEYS: {
+                            type: 'array',
+                            items: { type: 'integer' },
+                          },
+                          TO: {
+                            type: 'string',
+                          },
+                          STRUCTURE_GROUP_NAME: {
+                            type: 'string',
+                          },
+                        },
+                        oneOf: [
+                          { required: ['KEYS'] },
+                          { required: ['TO'] },
+                          { required: ['STRUCTURE_GROUP_NAME'] },
+                        ],
+                      },
+                      MAIN_BAR: {
+                        type: 'object',
+                        required: ['NAME'],
+                        properties: {
+                          NAME: {
+                            type: 'string',
+                          },
+                        },
+                      },
+                    },
+                    allOf: [
+                      {
+                        if: {
+                          properties: {
+                            CREATE_SUB_SECTION: { const: true },
+                          },
+                          required: ['CREATE_SUB_SECTION'],
+                        },
+                        then: {
+                          required: ['ELEMS'],
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+    const elemsIndex = html.indexOf('<p style="text-align: center;">"ELEMS"</p>');
+    const oneOfIndex = html.indexOf('Choose exactly one of the following keys: &quot;KEYS&quot;, &quot;TO&quot;, or &quot;STRUCTURE_GROUP_NAME&quot;.');
+    const keysIndex = html.indexOf('<p style="text-align: center;">"KEYS"</p>');
+
+    expect(elemsIndex).toBeGreaterThan(-1);
+    expect(oneOfIndex).toBeGreaterThan(elemsIndex);
+    expect(keysIndex).toBeGreaterThan(oneOfIndex);
+  });
 });

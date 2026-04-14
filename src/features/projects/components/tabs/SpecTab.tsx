@@ -3212,7 +3212,6 @@ ${responseHtml}`.trim();
         return;
       }
     } else {
-      // ?? YAML ??: ??? ??? ???? HTML ??
       if (!tableDefinition) {
         toast.error('? Table definition not loaded!');
         return;

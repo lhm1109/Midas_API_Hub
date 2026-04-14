@@ -15,7 +15,10 @@ import {
     shouldInitializeField,
     initializeFieldValue,
     buildInitialDynamicFormData,
+    buildNormalizedFieldLookup,
+    buildNormalizedRuntimeStateLookup,
     flattenObjectToDotNotationWithSchema,
+    normalizeJsonPreviewFieldPath,
     buildRootValidationOneOfOptionLabels,
     inferRootValidationOneOfSelection,
     getRootValidationOneOfOptionIndexForFieldKey,
@@ -24,6 +27,7 @@ import {
     shouldIncludeFieldForRootValidationOneOf,
 } from './builder.logic';
 import type { UIBuilderField } from '@/lib/schema';
+import type { FieldRuntimeStateMap } from '@/lib/schema/fieldRuntimeState';
 import type { ValidationOneOfInfo } from '@/lib/schema/validationOneOf';
 
 // ============================================================================
@@ -286,6 +290,55 @@ describe('buildInitialDynamicFormData', () => {
         const result = buildInitialDynamicFormData(schemaFields, {});
 
         expect('CONDITIONAL' in result).toBe(false);
+    });
+});
+
+describe('JSON preview path helpers', () => {
+    it('normalizes wrapper and array index segments to schema-style paths', () => {
+        expect(
+            normalizeJsonPreviewFieldPath('Assign.1.ITEMS.0.MAIN_BAR.NAME', ['Assign'])
+        ).toBe('ITEMS.MAIN_BAR.NAME');
+    });
+
+    it('matches nested array object fields and runtime states by normalized path', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'ITEMS',
+                type: 'array',
+                children: [
+                    {
+                        name: 'ITEMS[].MAIN_BAR',
+                        type: 'object',
+                        children: [
+                            {
+                                name: 'ITEMS[].MAIN_BAR.NAME',
+                                type: 'string',
+                                required: true,
+                            },
+                            {
+                                name: 'ITEMS[].MAIN_BAR.NUM',
+                                type: 'integer',
+                                required: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+        const runtimeStates: FieldRuntimeStateMap = {
+            'ITEMS[].MAIN_BAR.NAME': {
+                visible: true,
+                required: 'required',
+                requiredNow: true,
+                enabled: true,
+            },
+        };
+
+        const fieldLookup = buildNormalizedFieldLookup(schemaFields);
+        const runtimeLookup = buildNormalizedRuntimeStateLookup(runtimeStates);
+
+        expect(fieldLookup.get('ITEMS.MAIN_BAR.NAME')?.name).toBe('ITEMS[].MAIN_BAR.NAME');
+        expect(runtimeLookup.get('ITEMS.MAIN_BAR.NAME')?.requiredNow).toBe(true);
     });
 });
 

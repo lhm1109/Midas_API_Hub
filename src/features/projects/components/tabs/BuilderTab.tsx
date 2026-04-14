@@ -45,9 +45,12 @@ import {
 import { compileSchemaWithContext } from '@/lib/schema/schemaCompiler';
 import {
   getDefaultValue,
+  buildNormalizedFieldLookup,
+  buildNormalizedRuntimeStateLookup,
   buildInitialDynamicFormData,
   flattenObjectToDotNotationWithSchema,
   hasMeaningfulFieldValue,
+  normalizeJsonPreviewFieldPath,
   buildRootValidationOneOfOptionLabels,
   inferRootValidationOneOfSelection,
   getRootValidationOneOfOptionIndexForFieldKey,
@@ -1316,175 +1319,71 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
 
     return JSON.stringify({}, null, 2);
   });
+  const previewWrapperKeys = useMemo(() => ([
+    ...new Set([
+      ...wrapperRules
+        .map(rule => normalizeWrapperKey(rule.wrapper))
+        .filter((key): key is string => Boolean(key)),
+      ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
+    ]),
+  ]), [wrapperRules, schemaWrapperInfo]);
+  const normalizedSchemaFieldLookup = useMemo(
+    () => buildNormalizedFieldLookup(schemaFields),
+    [schemaFields]
+  );
+  const normalizedRuntimeStateLookup = useMemo(
+    () => buildNormalizedRuntimeStateLookup(fieldRuntimeStates),
+    [fieldRuntimeStates]
+  );
   const getFieldMetadata = (fieldPath: string): { type: 'required' | 'optional'; color: string; label: string } => {
     const parts = fieldPath.split('.');
     if (parts.length === 2) {
-      const wrapperKeys = [...new Set([
-        ...wrapperRules
-          .map(rule => normalizeWrapperKey(rule.wrapper))
-          .filter((key): key is string => Boolean(key)),
-        ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
-      ])];
-      if (wrapperKeys.includes(parts[0]) && /^\d+$/.test(parts[1])) {
+      if (previewWrapperKeys.includes(parts[0]) && /^\d+$/.test(parts[1])) {
         return { type: 'required', color: 'text-red-400', label: 'Required' };
       }
     }
-    const normalizeFieldPath = (path: string): string => {
-      const pathParts = path.split('.');
-      const wrapperKeys = [...new Set([
-        ...wrapperRules
-          .map(rule => normalizeWrapperKey(rule.wrapper))
-          .filter((key): key is string => Boolean(key)),
-        ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
-      ])];
-      const filtered = pathParts.filter(p =>
-        !wrapperKeys.includes(p) &&
-        !/^\d+$/.test(p) &&
-        !p.startsWith('__section_')
-      );
-      return filtered.join('.');
-    };
 
-    const normalizedPath = normalizeFieldPath(fieldPath);
-    const arrayChildParts = normalizedPath.split('.');
-    if (fieldPath.includes('REDUCTION_DATA')) {
-      console.log('[BuilderTab][getFieldMetadata] Array item path check:', {
-        originalPath: fieldPath,
-        normalizedPath,
-        arrayChildParts,
-        partsLength: arrayChildParts.length
-      });
-    }
-
-    if (arrayChildParts.length === 2) {
-      const [parentName, childFieldName] = arrayChildParts;
-      const parentField = schemaFields.find(f => f.name === parentName);
-      if (parentField && parentField.type === 'array' && parentField.children) {
-        const childField = parentField.children.find((c: any) => {
-          const childShortName = c.name?.includes('.') ? c.name.split('.').pop() : c.name;
-          return childShortName === childFieldName || c.name === childFieldName;
-        });
-
-        if (childField) {
-          const condition = (childField as any)['x-required-when'];
-          if (condition) {
-            const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
-              const actualValue = tempFormValuesForSchema[key];
-              if (typeof expectedValue === 'number') {
-                return Number(actualValue) === expectedValue;
-              }
-              return actualValue === expectedValue;
-            });
-
-            return conditionMet
-              ? { type: 'required' as const, color: 'text-red-400', label: 'Required' }
-              : { type: 'optional' as const, color: 'text-yellow-400', label: 'Conditional' };
-          }
-          const isRequired = childField.required === true ||
-            (typeof childField.required === 'object' && (childField.required as any)?.['*'] === 'required');
-
-          console.log('[BuilderTab][getFieldMetadata] childField required check:', {
-            childFieldName: childField.name,
-            required: childField.required,
-            isRequired
-          });
-
-          if (isRequired) {
-            return { type: 'required' as const, color: 'text-red-400', label: 'Required' };
-          }
-        }
-      }
-    }
-    const runtimeState = fieldRuntimeStates[normalizedPath];
+    const normalizedPath = normalizeJsonPreviewFieldPath(fieldPath, previewWrapperKeys);
+    const runtimeState = normalizedRuntimeStateLookup.get(normalizedPath);
     if (runtimeState) {
+      if (runtimeState.required === 'conditional' && !runtimeState.requiredNow) {
+        return { type: 'optional', color: 'text-yellow-400', label: 'Conditional' };
+      }
+
       return runtimeState.requiredNow
         ? { type: 'required', color: 'text-red-400', label: 'Required' }
         : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
     }
-    const useEnhancedForRequired = hasEnhancedSchema;
-    if (useEnhancedForRequired) {
-      const field = schemaFields.find(f => f.name === normalizedPath);
-      if (field && field.required !== undefined) {
-        if (typeof field.required === 'boolean') {
-          return field.required
-            ? { type: 'required', color: 'text-red-400', label: 'Required' }
-            : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
-        }
-        return { type: 'optional', color: 'text-blue-400', label: 'Optional' };
-      }
-      const parts = normalizedPath.split('.');
-      if (parts.length > 1) {
-        const parentName = parts[0];
-        const childName = parts[parts.length - 1];
-        const parentField = schemaFields.find(f => f.name === parentName);
-        if (parentField && parentField.children) {
-          const childField = parentField.children.find(c => c.name === childName);
-          if (childField) {
-            const condition = (childField as any)['x-required-when'];
-            if (condition) {
-              const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
-                const actualValue = tempFormValuesForSchema[key];
-                if (typeof expectedValue === 'number') {
-                  return Number(actualValue) === expectedValue;
-                }
-                return actualValue === expectedValue;
-              });
 
-              return conditionMet
-                ? { type: 'required' as const, color: 'text-red-400', label: 'Required' }
-                : { type: 'optional' as const, color: 'text-yellow-400', label: 'Conditional' };
-            }
-
-            if (childField.required !== undefined) {
-              if (typeof childField.required === 'boolean') {
-                return childField.required
-                  ? { type: 'required', color: 'text-red-400', label: 'Required' }
-                  : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
-              }
-              return { type: 'optional', color: 'text-blue-400', label: 'Optional' };
-            }
+    const field = normalizedSchemaFieldLookup.get(normalizedPath);
+    if (field) {
+      const condition = (field as any)['x-required-when'];
+      if (condition) {
+        const conditionMet = Object.entries(condition).every(([key, expectedValue]) => {
+          const actualValue = tempFormValuesForSchema[key];
+          if (typeof expectedValue === 'number') {
+            return Number(actualValue) === expectedValue;
           }
-        }
+          return actualValue === expectedValue;
+        });
+
+        return conditionMet
+          ? { type: 'required', color: 'text-red-400', label: 'Required' }
+          : { type: 'optional', color: 'text-yellow-400', label: 'Conditional' };
       }
 
-      // Default for Enhanced Schema
-      return { type: 'optional', color: 'text-zinc-400', label: 'Optional' };
-    }
-    const field = schemaFields.find(f => f.name === normalizedPath);
+      const isRequired = field.required === true ||
+        (typeof field.required === 'object' && (field.required as any)?.['*'] === 'required');
 
-    if (field && field.required !== undefined) {
-      return field.required
+      return isRequired
         ? { type: 'required', color: 'text-red-400', label: 'Required' }
         : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
-    }
-    const normalizedParts = normalizedPath.split('.');
-    if (normalizedParts.length > 1) {
-      const parentName = normalizedParts[0];
-      const childName = normalizedParts[normalizedParts.length - 1];
-      const parentField = schemaFields.find(f => f.name === parentName);
-      if (parentField && parentField.children) {
-        const childField = parentField.children.find((c: any) => c.name === childName);
-        if (childField && childField.required !== undefined) {
-          return childField.required
-            ? { type: 'required', color: 'text-red-400', label: 'Required' }
-            : { type: 'optional', color: 'text-blue-400', label: 'Optional' };
-        }
-      }
     }
 
     // Default
     return { type: 'optional', color: 'text-zinc-400', label: 'Optional' };
   };
   const JSONRenderer = ({ data }: { data: any }) => {
-    const WRAPPER_KEYS = [
-      ...new Set([
-        ...wrapperRules
-          .map(rule => normalizeWrapperKey(rule.wrapper))
-          .filter((key): key is string => Boolean(key)),
-        ...(schemaWrapperInfo ? [schemaWrapperInfo.key] : []),
-      ]),
-    ];
-
     const renderValue = (value: any, key?: string, depth: number = 0): JSX.Element => {
       if (value === null) {
         return <span className="text-purple-400">null</span>;
@@ -1538,7 +1437,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
             {entries.map(([k, v], idx) => {
               const fieldPath = key ? `${key}.${k}` : k;
               const metadata = getFieldMetadata(fieldPath);
-              const isWrapperKey = depth === 0 && WRAPPER_KEYS.includes(k);
+              const isWrapperKey = depth === 0 && previewWrapperKeys.includes(k);
 
               return (
                 <div key={k} className="pl-4 group hover:bg-zinc-800/30 transition-colors rounded py-0.5">

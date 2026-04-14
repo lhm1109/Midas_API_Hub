@@ -9,6 +9,7 @@
  */
 
 import type { UIBuilderField } from '@/lib/schema';
+import type { FieldRuntimeState, FieldRuntimeStateMap } from '@/lib/schema/fieldRuntimeState';
 import type { ValidationOneOfInfo } from '@/lib/schema/validationOneOf';
 
 function resolveNestedFieldKey(parentFieldName: string, childFieldName: string): string {
@@ -124,6 +125,58 @@ export function shouldPreserveObjectValue(field?: UIBuilderField): boolean {
     }
 
     return field.isKeyedObject === true || !field.children || field.children.length === 0;
+}
+
+export function normalizeBuilderFieldPath(path: string): string {
+    return path
+        .replace(/\[\]/g, '')
+        .split('.')
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .join('.');
+}
+
+export function normalizeJsonPreviewFieldPath(fieldPath: string, wrapperKeys: string[]): string {
+    const wrapperKeySet = new Set(wrapperKeys.filter(Boolean));
+
+    return fieldPath
+        .replace(/\[\]/g, '')
+        .split('.')
+        .map((part) => part.trim())
+        .filter((part) =>
+            Boolean(part) &&
+            !wrapperKeySet.has(part) &&
+            !/^\d+$/.test(part) &&
+            !part.startsWith('__section_')
+        )
+        .join('.');
+}
+
+export function buildNormalizedFieldLookup(schemaFields: UIBuilderField[]): Map<string, UIBuilderField> {
+    const lookup = new Map<string, UIBuilderField>();
+
+    const visit = (fields: UIBuilderField[]) => {
+        fields.forEach((field) => {
+            lookup.set(normalizeBuilderFieldPath(field.name), field);
+
+            if (field.children && field.children.length > 0) {
+                visit(field.children);
+            }
+        });
+    };
+
+    visit(schemaFields);
+    return lookup;
+}
+
+export function buildNormalizedRuntimeStateLookup(runtimeStates: FieldRuntimeStateMap): Map<string, FieldRuntimeState> {
+    const lookup = new Map<string, FieldRuntimeState>();
+
+    Object.entries(runtimeStates).forEach(([fieldKey, runtimeState]) => {
+        lookup.set(normalizeBuilderFieldPath(fieldKey), runtimeState);
+    });
+
+    return lookup;
 }
 
 // ============================================================================
