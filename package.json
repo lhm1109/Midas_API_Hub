@@ -17,6 +17,7 @@
     "electron": "electron .",
     "electron:dev": "concurrently \"npm run server\" \"npm run dev\" \"wait-on http://localhost:5178 && electron .\"",
     "electron:build": "npm run build && electron-builder",
+    "backup:supabase": "node scripts/backup-supabase.mjs",
     "migrate": "node server/migrate-to-supabase.js",
     "restore:endpoints": "node server/scripts/merge-missing-endpoints-from-backup.mjs",
     "validate:shared": "node scripts/validate-shared-yaml.cjs",

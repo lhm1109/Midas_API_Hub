@@ -3,7 +3,7 @@ import type { EnhancedField } from './schemaCompiler';
 import { collectFieldConditionInfo, groupFieldsByCondition } from './conditionExtractor';
 
 describe('groupFieldsByCondition', () => {
-  it('groups simple x-required-when fields by condition value and keeps per-row required status', () => {
+  it('groups injected required fields only for matching controller values unless visibility markers exist', () => {
     const fields: EnhancedField[] = [
       {
         key: 'CONCRETE.CODE',
@@ -74,7 +74,69 @@ describe('groupFieldsByCondition', () => {
     expect(standardGroup?.fields).toEqual([
       { key: 'CONCRETE.STANDARD_CODE', type: 'x-required-when' },
       { key: 'CONCRETE.GRADE', type: 'x-required-when' },
-      { key: 'CONCRETE.FC', type: 'x-optional-when' },
     ]);
+  });
+
+  it('skips synthetic optional groups for controller values excluded by visibility rules', () => {
+    const fields: EnhancedField[] = [
+      {
+        key: 'TYPE',
+        type: 'string',
+        enum: ['INTERIOR', 'EDGE', 'CORNER'],
+        required: { '*': 'required' },
+        section: '',
+        validationLayers: [],
+      },
+      {
+        key: 'CRITICAL_SECTION',
+        type: 'array',
+        required: { '*': 'conditional' },
+        section: '',
+        validationLayers: [],
+        'x-required-when': { TYPE: ['EDGE', 'CORNER'] },
+        'x-optional-when': { TYPE: ['EDGE', 'CORNER'] },
+        _injectedRequiredWhen: true,
+      },
+    ];
+
+    const fieldInfoMap = collectFieldConditionInfo(fields, []);
+    const { fieldGroups } = groupFieldsByCondition(fields, fieldInfoMap);
+
+    const groupTexts = Array.from(fieldGroups.values()).map(
+      (entries) => entries[0]?.conditionInfo.conditionText
+    );
+
+    expect(groupTexts).toEqual(['"TYPE" is EDGE', '"TYPE" is CORNER']);
+  });
+
+  it('does not synthesize optional groups for nested allOf-required fields like XI', () => {
+    const fields: EnhancedField[] = [
+      {
+        key: 'RESULT_COMMON.LONG_TERM.TYPE',
+        type: 'string',
+        enum: ['5Y_MORE', '12M', '6M', '3M', 'USER'],
+        required: { '*': 'required' },
+        section: '',
+        validationLayers: [],
+      },
+      {
+        key: 'RESULT_COMMON.LONG_TERM.XI',
+        type: 'number',
+        required: { '*': 'conditional' },
+        section: '',
+        validationLayers: [],
+        'x-required-when': { TYPE: 'USER' },
+        _injectedRequiredWhen: true,
+      },
+    ];
+
+    const fieldInfoMap = collectFieldConditionInfo(fields, []);
+    const { fieldGroups } = groupFieldsByCondition(fields, fieldInfoMap);
+
+    const groupTexts = Array.from(fieldGroups.values()).map(
+      (entries) => entries[0]?.conditionInfo.conditionText
+    );
+
+    expect(groupTexts).toEqual(['"TYPE" is USER']);
   });
 });

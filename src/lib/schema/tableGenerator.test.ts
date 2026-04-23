@@ -516,4 +516,152 @@ describe('generateHTMLDocument legacy rowspan', () => {
     expect(anyOfIndex).toBeGreaterThan(-1);
     expect(sectorIndex).toBeGreaterThan(anyOfIndex);
   });
+
+  it('omits hidden conditional sections from legacy HTML tables when visibility excludes a controller value', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      additionalProperties: false,
+      properties: {
+        Assign: {
+          type: 'object',
+          description: 'Object keyed by ID strings, where each entry represents an element.',
+          patternProperties: {
+            '^[0-9]+$': {
+              type: 'object',
+              required: ['TYPE'],
+              additionalProperties: false,
+              properties: {
+                TYPE: {
+                  type: 'string',
+                  enum: ['INTERIOR', 'EDGE', 'CORNER'],
+                  'x-ui': {
+                    label: 'Column Location Type',
+                  },
+                },
+                CRITICAL_SECTION: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    required: ['DIR', 'DIST'],
+                    properties: {
+                      DIR: { type: 'integer' },
+                      DIST: { type: 'number' },
+                    },
+                  },
+                  'x-ui': {
+                    label: 'Critical Section',
+                    visibleWhen: {
+                      TYPE: ['EDGE', 'CORNER'],
+                    },
+                  },
+                },
+              },
+              allOf: [
+                {
+                  if: {
+                    properties: {
+                      TYPE: {
+                        const: 'EDGE',
+                      },
+                    },
+                    required: ['TYPE'],
+                  },
+                  then: {
+                    required: ['CRITICAL_SECTION'],
+                  },
+                },
+                {
+                  if: {
+                    properties: {
+                      TYPE: {
+                        const: 'CORNER',
+                      },
+                    },
+                    required: ['TYPE'],
+                  },
+                  then: {
+                    required: ['CRITICAL_SECTION'],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+
+    expect(html).toContain('When &quot;TYPE&quot; is EDGE');
+    expect(html).toContain('When &quot;TYPE&quot; is CORNER');
+    expect(html).not.toContain('When &quot;TYPE&quot; is INTERIOR');
+  });
+
+  it('documents XI only for TYPE USER when allOf injects a nested required condition', () => {
+    const schema = {
+      title: 'Long Term XI',
+      type: 'object',
+      required: ['Argument'],
+      additionalProperties: false,
+      properties: {
+        Argument: {
+          type: 'object',
+          required: ['RESULT_COMMON'],
+          additionalProperties: false,
+          properties: {
+            RESULT_COMMON: {
+              type: 'object',
+              required: ['LONG_TERM'],
+              additionalProperties: false,
+              properties: {
+                LONG_TERM: {
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                    TYPE: {
+                      type: 'string',
+                      enum: ['5Y_MORE', '12M', '6M', '3M', 'USER'],
+                    },
+                    XI: {
+                      type: 'number',
+                      exclusiveMinimum: 0,
+                    },
+                  },
+                  allOf: [
+                    {
+                      if: {
+                        properties: {
+                          TYPE: {
+                            const: 'USER',
+                          },
+                        },
+                        required: ['TYPE'],
+                      },
+                      then: {
+                        required: ['XI'],
+                      },
+                      else: {
+                        not: {
+                          required: ['XI'],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+
+    expect(html).toContain('When &quot;TYPE&quot; is USER');
+    expect(html).not.toContain('When &quot;TYPE&quot; is 5Y_MORE');
+    expect(html).not.toContain('When &quot;TYPE&quot; is 12M');
+    expect(html).not.toContain('When &quot;TYPE&quot; is 6M');
+    expect(html).not.toContain('When &quot;TYPE&quot; is 3M');
+  });
 });

@@ -49,6 +49,64 @@ function buildConditionKey(condition: Record<string, unknown>): string {
     .join('|');
 }
 
+function normalizeConditionValues(value: unknown): unknown[] {
+  if (value === undefined) {
+    return [];
+  }
+
+  return Array.isArray(value) ? value : [value];
+}
+
+function extractAxisValuesFromCondition(condition: unknown, axisField: string): unknown[] {
+  if (!condition) {
+    return [];
+  }
+
+  if (Array.isArray(condition)) {
+    const collected = new Map<string, unknown>();
+
+    condition.forEach((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        return;
+      }
+
+      const normalizedEntry =
+        'condition' in entry && entry.condition && typeof entry.condition === 'object'
+          ? entry.condition
+          : entry;
+
+      normalizeConditionValues((normalizedEntry as Record<string, unknown>)[axisField]).forEach((value) => {
+        collected.set(serializeConditionValue(value), value);
+      });
+    });
+
+    return Array.from(collected.values());
+  }
+
+  if (typeof condition === 'object') {
+    return normalizeConditionValues((condition as Record<string, unknown>)[axisField]);
+  }
+
+  return [];
+}
+
+function getExplicitVisibleAxisValues(field: EnhancedField, axisField: string): unknown[] {
+  const fieldAny = field as any;
+  const collected = new Map<string, unknown>();
+
+  [
+    fieldAny['x-optional-when'],
+    fieldAny.ui?.visibleWhen,
+    fieldAny['x-ui']?.visibleWhen,
+  ].forEach((condition) => {
+    extractAxisValuesFromCondition(condition, axisField).forEach((value) => {
+      collected.set(serializeConditionValue(value), value);
+    });
+  });
+
+  return Array.from(collected.values());
+}
+
 function extractDirectSimpleRequiredCondition(field: EnhancedField): {
   axisField: string;
   values: unknown[];
@@ -426,14 +484,26 @@ export function groupFieldsByCondition(
       const axisValueKey = serializeConditionValue(axisValue);
       const condition = { [axisField]: axisValue };
       const conditionGroupKey = buildConditionKey(condition);
-
-      if (!supplementalGroups.has(conditionGroupKey)) {
-        supplementalGroups.set(conditionGroupKey, []);
-      }
+      const entriesForAxisValue: Array<{ field: EnhancedField; conditionInfo: FieldCondition }> = [];
 
       members.forEach(({ field, values }) => {
+        const explicitVisibleValues = getExplicitVisibleAxisValues(field, axisField);
+        if (
+          explicitVisibleValues.length > 0 &&
+          !explicitVisibleValues.some((value) => serializeConditionValue(value) === axisValueKey)
+        ) {
+          return;
+        }
+
         const isRequiredForValue = values.some((value) => serializeConditionValue(value) === axisValueKey);
-        supplementalGroups.get(conditionGroupKey)!.push({
+        // Only synthesize non-matching optional rows when the schema explicitly
+        // declares visibility/optional markers for that axis. Pure allOf-injected
+        // required conditions should document only the matching cases.
+        if (!isRequiredForValue && explicitVisibleValues.length === 0) {
+          return;
+        }
+
+        entriesForAxisValue.push({
           field,
           conditionInfo: createSyntheticConditionInfo(
             isRequiredForValue ? 'x-required-when' : 'x-optional-when',
@@ -442,6 +512,16 @@ export function groupFieldsByCondition(
           ),
         });
       });
+
+      if (entriesForAxisValue.length === 0) {
+        return;
+      }
+
+      if (!supplementalGroups.has(conditionGroupKey)) {
+        supplementalGroups.set(conditionGroupKey, []);
+      }
+
+      supplementalGroups.get(conditionGroupKey)!.push(...entriesForAxisValue);
     });
   }
 

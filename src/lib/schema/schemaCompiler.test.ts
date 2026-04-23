@@ -363,4 +363,87 @@ describe('compileSchemaWithContext discriminator sibling visibility', () => {
     expect(shouldIncludeInJSON('PART_B.KEYS', [], runtimeStates['PART_B.KEYS'])).toBe(false);
     expect(shouldIncludeInJSON('PART_B.TO', '1066to1071', runtimeStates['PART_B.TO'])).toBe(true);
   });
+
+  it('merges repeated allOf required conditions and aliases x-ui.visibleWhen for conditional fields', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      additionalProperties: false,
+      properties: {
+        Assign: {
+          type: 'object',
+          additionalProperties: false,
+          patternProperties: {
+            '^[0-9]+$': {
+              type: 'object',
+              required: ['TYPE'],
+              additionalProperties: false,
+              properties: {
+                TYPE: {
+                  type: 'string',
+                  enum: ['INTERIOR', 'EDGE', 'CORNER'],
+                },
+                CRITICAL_SECTION: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    required: ['DIR', 'DIST'],
+                    properties: {
+                      DIR: { type: 'integer' },
+                      DIST: { type: 'number' },
+                    },
+                  },
+                  'x-ui': {
+                    visibleWhen: {
+                      TYPE: ['EDGE', 'CORNER'],
+                    },
+                  },
+                },
+              },
+              allOf: [
+                {
+                  if: {
+                    properties: {
+                      TYPE: {
+                        const: 'EDGE',
+                      },
+                    },
+                    required: ['TYPE'],
+                  },
+                  then: {
+                    required: ['CRITICAL_SECTION'],
+                  },
+                },
+                {
+                  if: {
+                    properties: {
+                      TYPE: {
+                        const: 'CORNER',
+                      },
+                    },
+                    required: ['TYPE'],
+                  },
+                  then: {
+                    required: ['CRITICAL_SECTION'],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    const { sections } = compileSchemaWithContext(schema as any, 'civil_gen_definition', 'enhanced');
+    const criticalSectionField = sections
+      .flatMap((section) => section.fields)
+      .find((field) => field.key === 'CRITICAL_SECTION');
+
+    expect((criticalSectionField as any)?.['x-required-when']).toEqual({
+      TYPE: ['EDGE', 'CORNER'],
+    });
+    expect((criticalSectionField as any)?.['x-optional-when']).toEqual({
+      TYPE: ['EDGE', 'CORNER'],
+    });
+  });
 });

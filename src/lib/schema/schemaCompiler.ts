@@ -1616,6 +1616,9 @@ function buildCompiledFieldTree(
   copyCompiledFieldMetadata(field, prop);
   applyCompiledOneOfEnum(field, prop, fullKey);
   applyCompiledVisibleWhenAlias(field, prop, fullKey);
+  if (!field['x-optional-when'] && !field['x-required-when'] && prop?.['x-ui']?.visibleWhen) {
+    field['x-optional-when'] = prop['x-ui'].visibleWhen;
+  }
   applyConditionalRequiredToField(field, conditionalRequiredMap, normalizedLocalKey, fullKey);
 
   const oneOfOptionsWithProperties =
@@ -2684,6 +2687,27 @@ function extractConditionalRequired(schema: EnhancedSchema): ConditionalRule[] {
  * @param schema - JSON Schema
  * @returns 필드명 → 조건 맵
  */
+function mergeConditionalAxisValues(existingValue: any, incomingValue: any): any {
+  const existingValues = existingValue === undefined
+    ? []
+    : (Array.isArray(existingValue) ? existingValue : [existingValue]);
+  const incomingValues = incomingValue === undefined
+    ? []
+    : (Array.isArray(incomingValue) ? incomingValue : [incomingValue]);
+
+  const merged = new Map<string, any>();
+  [...existingValues, ...incomingValues].forEach((value) => {
+    merged.set(JSON.stringify(value), value);
+  });
+
+  const mergedValues = Array.from(merged.values());
+  if (mergedValues.length === 0) {
+    return undefined;
+  }
+
+  return mergedValues.length === 1 ? mergedValues[0] : mergedValues;
+}
+
 function normalizeConditionalRequired(
   schema: EnhancedSchema
 ): Record<string, Record<string, any>> {
@@ -2708,13 +2732,19 @@ function normalizeConditionalRequired(
 
     const [axisField, axisCond] = entries[0];
     const axisValue = (axisCond as any).const ?? (axisCond as any).enum;
+    if (axisValue === undefined) {
+      continue;
+    }
 
     // 🔥 각 required 필드에 x-required-when 주입
     for (const fieldName of requiredFields) {
       if (!map[fieldName]) {
         map[fieldName] = {};
       }
-      map[fieldName][axisField] = axisValue;
+      map[fieldName][axisField] = mergeConditionalAxisValues(
+        map[fieldName][axisField],
+        axisValue
+      );
     }
   }
 

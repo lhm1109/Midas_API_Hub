@@ -1,5 +1,6 @@
 import express from 'express';
 import supabase from '../database.js';
+import { generateEndpointIdFromPath, normalizeEndpointPath } from '../lib/endpointId.js';
 
 const router = express.Router();
 
@@ -9,12 +10,6 @@ function generateDuplicatedVersionId() {
 
 function generateDuplicatedTestCaseId() {
   return `tc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
-}
-
-function normalizeEndpointPath(rawPath) {
-  const trimmed = typeof rawPath === 'string' ? rawPath.trim() : '';
-  if (!trimmed) return '';
-  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
 }
 
 function buildDuplicatedEndpointName(originalName, requestedName) {
@@ -34,29 +29,6 @@ function buildDuplicatedEndpointPath(originalPath, requestedPath) {
   return normalizedOriginal.endsWith('/')
     ? `${normalizedOriginal}copy`
     : `${normalizedOriginal}-copy`;
-}
-
-function generateEndpointIdFromPath(path, fallbackName, fallbackGroupId) {
-  const cleanPath = normalizeEndpointPath(path).replace(/^\//, '');
-  const pathSegments = cleanPath
-    .split('/')
-    .map((segment) => segment.trim())
-    .filter(Boolean)
-    .map((segment) => segment.toLowerCase());
-
-  if (pathSegments.length >= 2) {
-    return pathSegments.join('/');
-  }
-
-  const fallbackGroup = typeof fallbackGroupId === 'string' ? fallbackGroupId.split('_').pop() || fallbackGroupId : 'endpoint';
-  const fallbackSlug = String(fallbackName || 'copy')
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9/-]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-
-  return `${fallbackGroup.toLowerCase()}/${fallbackSlug || 'copy'}`;
 }
 
 async function buildUniqueEndpointId(baseId) {
@@ -459,10 +431,15 @@ router.post('/', async (req, res) => {
       }
     }
 
+    const requestedId = typeof id === 'string' ? id.trim() : '';
+    const endpointId = requestedId || await buildUniqueEndpointId(
+      generateEndpointIdFromPath(path, name, finalGroupName || group_id, method)
+    );
+
     const { data, error } = await supabase
       .from('endpoints')
       .insert({
-        id,
+        id: endpointId,
         name,
         method,
         path,
@@ -480,7 +457,7 @@ router.post('/', async (req, res) => {
 
     if (error) throw error;
 
-    res.status(201).json({ id, message: 'Endpoint created' });
+    res.status(201).json({ id: endpointId, message: 'Endpoint created' });
   } catch (error) {
     console.error('Create endpoint error:', error);
     res.status(500).json({ error: error.message });
@@ -601,7 +578,7 @@ router.post('/:id/duplicate', async (req, res) => {
     const newName = buildDuplicatedEndpointName(originalEndpoint.name, requestedName);
     const newPath = buildDuplicatedEndpointPath(originalEndpoint.path, requestedPath);
     const newId = await buildUniqueEndpointId(
-      generateEndpointIdFromPath(newPath, newName, targetGroupMeta.group_name)
+      generateEndpointIdFromPath(newPath, newName, targetGroupMeta.group_name, originalEndpoint.method)
     );
     const newOrderIndex = await getNextEndpointOrderIndex(targetGroupMeta.group_id);
     const now = new Date().toISOString();
