@@ -664,4 +664,81 @@ describe('generateHTMLDocument legacy rowspan', () => {
     expect(html).not.toContain('When &quot;TYPE&quot; is 6M');
     expect(html).not.toContain('When &quot;TYPE&quot; is 3M');
   });
+
+  it('renders condition-specific enum metadata from allOf.then.properties in conditional sections', () => {
+    const schema = {
+      type: 'object',
+      required: ['Assign'],
+      properties: {
+        Assign: {
+          type: 'object',
+          patternProperties: {
+            '^[0-9]+$': {
+              type: 'object',
+              required: ['GIRDER_MATL_PROP'],
+              properties: {
+                GIRDER_MATL_PROP: {
+                  type: 'object',
+                  required: ['CODE'],
+                  properties: {
+                    CODE: {
+                      type: 'string',
+                      enum: ['ASTM19(RC)', 'CNS(RC)'],
+                    },
+                    GRADE: {
+                      type: 'string',
+                    },
+                  },
+                  allOf: [
+                    {
+                      if: {
+                        properties: {
+                          CODE: { const: 'ASTM19(RC)' },
+                        },
+                        required: ['CODE'],
+                      },
+                      then: {
+                        required: ['GRADE'],
+                        properties: {
+                          GRADE: {
+                            type: 'string',
+                            enum: ['Grade C2500', 'Grade C3000'],
+                          },
+                        },
+                      },
+                    },
+                    {
+                      if: {
+                        properties: {
+                          CODE: { const: 'CNS(RC)' },
+                        },
+                        required: ['CODE'],
+                      },
+                      then: {
+                        required: ['GRADE'],
+                        properties: {
+                          GRADE: {
+                            type: 'string',
+                            enum: ['C210', 'C245', 'C280', 'C315', 'C350', 'C420'],
+                          },
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const html = generateHTMLDocument(schema as any, 'civil_gen_definition', 'enhanced');
+
+    expect(html).toContain('When &quot;CODE&quot; is CNS(RC)');
+    expect(html).toContain('• C210: "C210"');
+    expect(html).toContain('• C420: "C420"');
+    expect(html).toContain('When &quot;CODE&quot; is ASTM19(RC)');
+    expect(html).toContain('• Grade C2500: "Grade C2500"');
+  });
 });

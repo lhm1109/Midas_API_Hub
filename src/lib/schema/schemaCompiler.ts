@@ -147,12 +147,22 @@ export interface SectionGroup {
   order: number;
 }
 
+type ConditionalPropertyOverrides = Record<
+  string,
+  Record<string, Record<string, any>>
+>;
+
 const cloneSchemaValue = <T,>(value: T): T => {
   try {
     return JSON.parse(JSON.stringify(value));
   } catch {
     return value;
   }
+};
+
+const serializeConditionValue = (value: unknown): string => {
+  if (typeof value === 'string') return value;
+  return JSON.stringify(value);
 };
 
 const isPlainObject = (value: any): value is Record<string, any> =>
@@ -340,7 +350,8 @@ export function compileSchema(
 
   // Phase 1: Extract basic info
   const types = extractTypes(transformedSchema);
-  const rawFields = extractFields(transformedSchema);
+  const conditionalPropertyOverrides = normalizeConditionalPropertyOverrides(transformedSchema);
+  const rawFields = extractFields(transformedSchema, conditionalPropertyOverrides);
   const conditionalRules = extractConditionalRequired(transformedSchema);
 
   // 🔥 Phase 1.5: Expand fields with array groupId
@@ -1593,7 +1604,8 @@ function buildCompiledFieldTree(
   fullKey: string,
   prop: any,
   requiredKeys: string[] = [],
-  conditionalRequiredMap: Record<string, Record<string, any>> = {}
+  conditionalRequiredMap: Record<string, Record<string, any>> = {},
+  conditionalPropertyOverrides: ConditionalPropertyOverrides = {}
 ): EnhancedField {
   const localKey = fullKey.split('.').pop() || fullKey;
   const normalizedLocalKey = localKey.replace(/\[\]/g, '');
@@ -1614,6 +1626,9 @@ function buildCompiledFieldTree(
   };
 
   copyCompiledFieldMetadata(field, prop);
+  if (conditionalPropertyOverrides[normalizedLocalKey]) {
+    (field as any)._conditionalPropertyOverrides = cloneSchemaValue(conditionalPropertyOverrides[normalizedLocalKey]);
+  }
   applyCompiledOneOfEnum(field, prop, fullKey);
   applyCompiledVisibleWhenAlias(field, prop, fullKey);
   if (!field['x-optional-when'] && !field['x-required-when'] && prop?.['x-ui']?.visibleWhen) {
@@ -1640,6 +1655,7 @@ function buildCompiledFieldTree(
       const optionProps = option.properties || {};
       const optionRequired = Array.isArray(option.required) ? option.required : [];
       const optionConditionalRequiredMap = normalizeConditionalRequired(option as EnhancedSchema);
+      const optionConditionalPropertyOverrides = normalizeConditionalPropertyOverrides(option as EnhancedSchema);
 
       field.children!.push({
         key: `${fullKey}.__section_${optionIndex}`,
@@ -1656,7 +1672,8 @@ function buildCompiledFieldTree(
             `${fullKey}.${childKey}`,
             childProp,
             optionRequired,
-            optionConditionalRequiredMap
+            optionConditionalRequiredMap,
+            optionConditionalPropertyOverrides
           )
         );
       }
@@ -1668,12 +1685,14 @@ function buildCompiledFieldTree(
   const nestedObjectSchema = fieldType === 'object' ? getNestedObjectSchema(prop) : null;
   if (nestedObjectSchema) {
     const childConditionalRequiredMap = normalizeConditionalRequired(prop as EnhancedSchema);
+    const childConditionalPropertyOverrides = normalizeConditionalPropertyOverrides(prop as EnhancedSchema);
     field.children = Object.entries(nestedObjectSchema.properties).map(([childKey, childProp]) =>
       buildCompiledFieldTree(
         `${fullKey}.${childKey}`,
         childProp,
         nestedObjectSchema.required,
-        childConditionalRequiredMap
+        childConditionalRequiredMap,
+        childConditionalPropertyOverrides
       )
     );
     applyEnumSiblingBranchConditions(field, nestedObjectSchema, fullKey);
@@ -1686,12 +1705,14 @@ function buildCompiledFieldTree(
 
     if (arrayItemSchema) {
       const itemConditionalRequiredMap = normalizeConditionalRequired(itemSchema as EnhancedSchema);
+      const itemConditionalPropertyOverrides = normalizeConditionalPropertyOverrides(itemSchema as EnhancedSchema);
       field.children = Object.entries(arrayItemSchema.properties).map(([childKey, childProp]) =>
         buildCompiledFieldTree(
           `${fullKey}[].${childKey}`,
           childProp,
           arrayItemSchema.required,
-          itemConditionalRequiredMap
+          itemConditionalRequiredMap,
+          itemConditionalPropertyOverrides
         )
       );
       applyEnumSiblingBranchConditions(field, arrayItemSchema, fullKey);
@@ -1716,6 +1737,7 @@ function buildCompiledFieldTree(
         const optionProps = option.properties || {};
         const optionRequired = Array.isArray(option.required) ? option.required : [];
         const optionConditionalRequiredMap = normalizeConditionalRequired(option as EnhancedSchema);
+        const optionConditionalPropertyOverrides = normalizeConditionalPropertyOverrides(option as EnhancedSchema);
 
         field.children!.push({
           key: `${fullKey}[].__section_${optionIndex}`,
@@ -1732,7 +1754,8 @@ function buildCompiledFieldTree(
               `${fullKey}[].${childKey}`,
               childProp,
               optionRequired,
-              optionConditionalRequiredMap
+            optionConditionalRequiredMap,
+              optionConditionalPropertyOverrides
             )
           );
         }
@@ -1799,7 +1822,10 @@ function buildNestedFieldTree(
 /**
  * 모든 필드 추출 (중첩 객체 포함)
  */
-function extractFields(schema: EnhancedSchema): EnhancedField[] {
+function extractFields(
+  schema: EnhancedSchema,
+  conditionalPropertyOverrides: ConditionalPropertyOverrides = {}
+): EnhancedField[] {
   const fields: EnhancedField[] = [];
 
   // 🔥 $defs/entity가 있으면 entity의 properties를 사용 (inject-entity-collection 변환 후)
@@ -1818,7 +1844,13 @@ function extractFields(schema: EnhancedSchema): EnhancedField[] {
   const rootRequired = Array.isArray(schema.required) ? schema.required : [];
   const rootConditionalRequiredMap = normalizeConditionalRequired(schema);
   return Object.entries(propsSource).map(([key, prop]) =>
-    buildCompiledFieldTree(key, prop, rootRequired, rootConditionalRequiredMap)
+    buildCompiledFieldTree(
+      key,
+      prop,
+      rootRequired,
+      rootConditionalRequiredMap,
+      conditionalPropertyOverrides
+    )
   );
 
   // 🎯 allOf → x-required-when 정규화 맵 생성
@@ -2751,6 +2783,57 @@ function normalizeConditionalRequired(
   console.log('🎯 normalizeConditionalRequired:', map);
 
   return map;
+}
+
+function normalizeConditionalPropertyOverrides(
+  schema: EnhancedSchema
+): ConditionalPropertyOverrides {
+  const overrides: ConditionalPropertyOverrides = {};
+
+  if (!schema.allOf || !Array.isArray(schema.allOf)) {
+    return overrides;
+  }
+
+  for (const rule of schema.allOf) {
+    const condProps = rule.if?.properties;
+    const thenProps = rule.then?.properties;
+
+    if (!condProps || !thenProps || typeof thenProps !== 'object') {
+      continue;
+    }
+
+    const entries = Object.entries(condProps);
+    if (entries.length === 0) {
+      continue;
+    }
+
+    const [axisField, axisCond] = entries[0];
+    const axisRawValues = (axisCond as any).const ?? (axisCond as any).enum;
+    if (axisRawValues === undefined) {
+      continue;
+    }
+
+    const axisValues = Array.isArray(axisRawValues) ? axisRawValues : [axisRawValues];
+
+    for (const [fieldName, overrideSchema] of Object.entries(thenProps)) {
+      if (!overrideSchema || typeof overrideSchema !== 'object') {
+        continue;
+      }
+
+      if (!overrides[fieldName]) {
+        overrides[fieldName] = {};
+      }
+      if (!overrides[fieldName][axisField]) {
+        overrides[fieldName][axisField] = {};
+      }
+
+      axisValues.forEach((axisValue) => {
+        overrides[fieldName][axisField][serializeConditionValue(axisValue)] = cloneSchemaValue(overrideSchema);
+      });
+    }
+  }
+
+  return overrides;
 }
 
 // ============================================================================

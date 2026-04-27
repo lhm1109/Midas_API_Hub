@@ -43,6 +43,61 @@ function serializeConditionValue(value: unknown): string {
   return JSON.stringify(value);
 }
 
+function resolveConditionalPropertyOverride(
+  field: EnhancedField,
+  axisField: string,
+  axisValue: unknown
+): Record<string, any> | null {
+  const overrides = (field as any)._conditionalPropertyOverrides;
+  if (!overrides || typeof overrides !== 'object') {
+    return null;
+  }
+
+  const axisOverrides = overrides[axisField];
+  if (!axisOverrides || typeof axisOverrides !== 'object') {
+    return null;
+  }
+
+  const override = axisOverrides[serializeConditionValue(axisValue)];
+  if (!override || typeof override !== 'object') {
+    return null;
+  }
+
+  return override as Record<string, any>;
+}
+
+function cloneFieldWithConditionalOverride(
+  field: EnhancedField,
+  override: Record<string, any>
+): EnhancedField {
+  const clonedField: EnhancedField = {
+    ...field,
+  };
+
+  for (const [overrideKey, overrideValue] of Object.entries(override)) {
+    if (overrideKey === 'required') {
+      continue;
+    }
+
+    if (overrideKey === 'x-ui') {
+      clonedField.ui = {
+        ...(field.ui || {}),
+        ...(overrideValue as Record<string, any>),
+      };
+      continue;
+    }
+
+    if (overrideKey.startsWith('x-')) {
+      (clonedField as any)[overrideKey] = overrideValue;
+      continue;
+    }
+
+    (clonedField as any)[overrideKey] = overrideValue;
+  }
+
+  return clonedField;
+}
+
 function buildConditionKey(condition: Record<string, unknown>): string {
   return Object.entries(condition)
     .map(([key, value]) => `${key}:${value}`)
@@ -503,8 +558,13 @@ export function groupFieldsByCondition(
           return;
         }
 
+        const conditionalOverride = resolveConditionalPropertyOverride(field, axisField, axisValue);
+        const fieldForAxis = conditionalOverride
+          ? cloneFieldWithConditionalOverride(field, conditionalOverride)
+          : field;
+
         entriesForAxisValue.push({
-          field,
+          field: fieldForAxis,
           conditionInfo: createSyntheticConditionInfo(
             isRequiredForValue ? 'x-required-when' : 'x-optional-when',
             axisField,
