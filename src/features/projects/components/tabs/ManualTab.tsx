@@ -74,6 +74,18 @@ function formatZendeskLabelInput(labels?: string[] | null): string {
   return Array.isArray(labels) ? labels.join(', ') : '';
 }
 
+function buildZendeskArticleTitle(endpoint: ApiEndpoint, rawTitle?: string | null): string {
+  const endpointPath = String(endpoint.path || endpoint.id || '').replace(/^\/+/, '').trim();
+  const baseTitle = String(rawTitle || endpoint.name || endpoint.path || endpoint.id || 'Untitled').trim();
+
+  // 이미 "endpoint : title" 형태로 저장된 경우 중복 prefix를 방지
+  if (!endpointPath || baseTitle.startsWith(`${endpointPath} : `)) {
+    return baseTitle;
+  }
+
+  return `${endpointPath} : ${baseTitle}`;
+}
+
 export function ManualTab({ endpoint }: ManualTabProps) {
   const { manualData, setManualData, updateManualData } = useAppStore();
   const [manualPublisher, setManualPublisher] = useState<ManualPublisher>('zendesk');
@@ -709,7 +721,7 @@ ${specificationSectionHTML}
     }
 
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
-    const title = (manualData.title || endpoint.name || '').trim();
+    const title = buildZendeskArticleTitle(endpoint, manualData.title);
     const locale = normalizeZendeskLocale(envStatus.defaultLocale || DEFAULT_ZENDESK_LOCALE);
     const labelNames = parseZendeskLabelInput(zendeskLabelInput);
     const commentsDisabled = manualData.zendeskCommentsDisabled ?? true;
