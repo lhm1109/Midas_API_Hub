@@ -1,0 +1,101 @@
+{
+  "type": "object",
+  "description": "[OPE] Member Assignment request schema (POST /ope/MEMB)",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "ASSIGN_TYPE",
+        "SELECTION_TYPE",
+        "ALLOW_SINGLE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ASSIGN_TYPE": {
+          "type": "string",
+          "description": "Assign type",
+          "oneOf": [
+            {
+              "title": "MANUAL",
+              "const": "MANUAL"
+            },
+            {
+              "title": "AUTO",
+              "const": "AUTO"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Assign Type",
+            "order": 1
+          }
+        },
+        "SELECTION_TYPE": {
+          "type": "string",
+          "description": "Selection type (spec table has a typo: SELETION_TYPE)",
+          "oneOf": [
+            {
+              "title": "ALL",
+              "const": "ALL"
+            },
+            {
+              "title": "SELECTION",
+              "const": "SELECTION"
+            }
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Selection Type",
+            "order": 2
+          }
+        },
+        "ELEM_LIST": {
+          "type": "array",
+          "description": "Element list. Ignored when SELECTION_TYPE is ALL.",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "x-ui": {
+            "label": "Element List",
+            "order": 3
+          }
+        },
+        "ALLOW_SINGLE": {
+          "type": "boolean",
+          "description": "Allow single-element member",
+          "x-ui": {
+            "label": "Allow Single Element Member",
+            "order": 4
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "SELECTION_TYPE"
+            ],
+            "properties": {
+              "SELECTION_TYPE": {
+                "const": "SELECTION"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "ELEM_LIST"
+            ]
+          }
+        }
+      ],
+      "x-ui": {
+        "label": "Argument"
+      }
+    }
+  }
+}

@@ -51,6 +51,8 @@ import {
   flattenObjectToDotNotationWithSchema,
   hasMeaningfulFieldValue,
   normalizeJsonPreviewFieldPath,
+  resolveBuilderFieldByPath,
+  applyEnabledObjectDefaults,
   buildRootValidationOneOfOptionLabels,
   inferRootValidationOneOfSelection,
   getRootValidationOneOfOptionIndexForFieldKey,
@@ -217,31 +219,6 @@ function coerceValueForField(value: any, field?: UIBuilderField): any {
   }
 
   return value;
-}
-
-function findChildFieldByPath(children: UIBuilderField[] | undefined, childPath: string): UIBuilderField | undefined {
-  if (!children || children.length === 0) return undefined;
-  const shortKey = childPath.split('.').pop() || childPath;
-  return children.find((child) => {
-    if (child.name === childPath) return true;
-    if (child.name === shortKey) return true;
-    return child.name.endsWith(`.${shortKey}`);
-  });
-}
-
-function resolveFieldByPath(path: string, fields: UIBuilderField[]): UIBuilderField | undefined {
-  const direct = fields.find((field) => field.name === path);
-  if (direct) return direct;
-
-  if (!path.includes('.')) return undefined;
-  const parentPath = path.split('.')[0];
-  const parentField = fields.find((field) => field.name === parentPath);
-  if (!parentField) return undefined;
-
-  const child = findChildFieldByPath(parentField.children, path);
-  if (child) return child;
-
-  return parentField.type === 'array' ? parentField : undefined;
 }
 
 function getFieldLeafName(fieldPath: string): string {
@@ -1134,6 +1111,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
   }, [fieldRuntimeStates, schemaFields]);
   const applyAllOneOfSelections = (previousState: Record<string, any>, key: string, value: any) => {
     let updatedState = applyImplicitOneOfSelection(previousState, key, value, schemaFields);
+    updatedState = applyEnabledObjectDefaults(updatedState, key, value, schemaFields);
 
     const rootOptionIndex = getRootValidationOneOfOptionIndexForFieldKey(
       key,
@@ -1181,7 +1159,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
 
     if (key.endsWith('.__selectedOption')) {
       const parentFieldName = key.replace('.__selectedOption', '');
-      const parentField = resolveFieldByPath(parentFieldName, schemaFields);
+      const parentField = resolveBuilderFieldByPath(parentFieldName, schemaFields);
 
       console.log('[BuilderTab] oneOf selection changed:', { key, value, parentFieldName, parentField });
 
@@ -1688,7 +1666,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
         if (!shouldIncludeFieldForRootValidationOneOf(key, rootValidationOneOfInfo, fields, selectedRootOneOfOption)) {
           return;
         }
-        const fieldByPath = resolveFieldByPath(key, fields);
+        const fieldByPath = resolveBuilderFieldByPath(key, fields);
         const value = coerceValueForField(enrichedData[key], fieldByPath);
         const runtimeState = runtimeStates[key];
 
@@ -1935,7 +1913,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
         return;
       }
 
-      const fieldByPath = resolveFieldByPath(fieldKey, schemaFields);
+      const fieldByPath = resolveBuilderFieldByPath(fieldKey, schemaFields);
       const value = coerceValueForField(enrichedData[fieldKey], fieldByPath);
       const runtimeState = fieldRuntimeStates[fieldKey];
       const isRequired = runtimeState?.requiredNow && runtimeState?.visible;

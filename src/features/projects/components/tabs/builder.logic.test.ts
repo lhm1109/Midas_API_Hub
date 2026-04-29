@@ -17,6 +17,8 @@ import {
     buildInitialDynamicFormData,
     buildNormalizedFieldLookup,
     buildNormalizedRuntimeStateLookup,
+    resolveBuilderFieldByPath,
+    applyEnabledObjectDefaults,
     flattenObjectToDotNotationWithSchema,
     normalizeJsonPreviewFieldPath,
     buildRootValidationOneOfOptionLabels,
@@ -339,6 +341,169 @@ describe('JSON preview path helpers', () => {
 
         expect(fieldLookup.get('ITEMS.MAIN_BAR.NAME')?.name).toBe('ITEMS[].MAIN_BAR.NAME');
         expect(runtimeLookup.get('ITEMS.MAIN_BAR.NAME')?.requiredNow).toBe(true);
+    });
+
+    it('resolves deeply nested fields by full schema path', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'WALL',
+                type: 'object',
+                required: false,
+                children: [
+                    {
+                        name: 'WALL.ADDITIONAL_WALL_DATA',
+                        type: 'object',
+                        required: false,
+                        children: [
+                            {
+                                name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING',
+                                type: 'object',
+                                required: false,
+                                children: [
+                                    {
+                                        name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.LIST_FOR_DESIGN',
+                                        type: 'array',
+                                        required: false,
+                                        items: { type: 'number' },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        expect(
+            resolveBuilderFieldByPath(
+                'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.LIST_FOR_DESIGN',
+                schemaFields
+            )?.type
+        ).toBe('array');
+    });
+
+    it('expands enabled object defaults into nested preview field paths', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'WALL',
+                type: 'object',
+                required: false,
+                children: [
+                    {
+                        name: 'WALL.ADDITIONAL_WALL_DATA',
+                        type: 'object',
+                        required: false,
+                        children: [
+                            {
+                                name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING',
+                                type: 'object',
+                                required: false,
+                                default: {
+                                    UNIT: 'mm',
+                                    LIST_FOR_DESIGN: [100, 150],
+                                },
+                                children: [
+                                    {
+                                        name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.UNIT',
+                                        type: 'string',
+                                        required: false,
+                                        default: 'mm',
+                                    },
+                                    {
+                                        name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.LIST_FOR_DESIGN',
+                                        type: 'array',
+                                        required: false,
+                                        default: [100, 150],
+                                        items: { type: 'number' },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const result = applyEnabledObjectDefaults(
+            {
+                'WALL._enabled': true,
+                'WALL.ADDITIONAL_WALL_DATA._enabled': true,
+            },
+            'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING._enabled',
+            true,
+            schemaFields
+        );
+
+        expect(result).toEqual({
+            'WALL._enabled': true,
+            'WALL.ADDITIONAL_WALL_DATA._enabled': true,
+            'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING._enabled': true,
+            'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.UNIT': 'mm',
+            'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.LIST_FOR_DESIGN': [100, 150],
+        });
+    });
+
+    it('does not expand child defaults when the enabled object has no object default', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'WALL',
+                type: 'object',
+                required: false,
+                children: [
+                    {
+                        name: 'WALL.VERTICAL_REBAR',
+                        type: 'array',
+                        required: false,
+                        default: ['D13'],
+                        items: { type: 'string' },
+                    },
+                ],
+            },
+        ];
+
+        const result = applyEnabledObjectDefaults({}, 'WALL._enabled', true, schemaFields);
+
+        expect(result).toEqual({
+            'WALL._enabled': true,
+        });
+    });
+
+    it('clears nested values when an object branch is disabled', () => {
+        const schemaFields: UIBuilderField[] = [
+            {
+                name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING',
+                type: 'object',
+                required: false,
+                children: [
+                    {
+                        name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.UNIT',
+                        type: 'string',
+                        required: false,
+                    },
+                    {
+                        name: 'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.LIST_FOR_DESIGN',
+                        type: 'array',
+                        required: false,
+                        items: { type: 'number' },
+                    },
+                ],
+            },
+        ];
+
+        const result = applyEnabledObjectDefaults(
+            {
+                'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING._enabled': true,
+                'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.UNIT': 'mm',
+                'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING.LIST_FOR_DESIGN': [100, 150],
+            },
+            'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING._enabled',
+            false,
+            schemaFields
+        );
+
+        expect(result).toEqual({
+            'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING._enabled': false,
+        });
     });
 });
 

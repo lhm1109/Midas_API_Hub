@@ -41,6 +41,22 @@ function getFieldLeafName(fieldPath: string): string {
     return fieldPath.replace(/\[\]/g, '').split('.').filter(Boolean).pop() || fieldPath;
 }
 
+function cloneValue<T>(value: T): T {
+    if (value === undefined || value === null) {
+        return value;
+    }
+
+    try {
+        return JSON.parse(JSON.stringify(value));
+    } catch {
+        return value;
+    }
+}
+
+function isPlainObject(value: any): value is Record<string, any> {
+    return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
 function isMatchingFieldPath(key: string, fieldPath: string): boolean {
     return (
         key === fieldPath ||
@@ -177,6 +193,112 @@ export function buildNormalizedRuntimeStateLookup(runtimeStates: FieldRuntimeSta
     });
 
     return lookup;
+}
+
+export function resolveBuilderFieldByPath(path: string, schemaFields: UIBuilderField[]): UIBuilderField | undefined {
+    const normalizedPath = normalizeBuilderFieldPath(path);
+
+    const visit = (fields: UIBuilderField[]): UIBuilderField | undefined => {
+        for (const field of fields) {
+            if (normalizeBuilderFieldPath(field.name) === normalizedPath) {
+                return field;
+            }
+
+            if (field.children && field.children.length > 0) {
+                const matchedChild = visit(field.children);
+                if (matchedChild) {
+                    return matchedChild;
+                }
+            }
+        }
+
+        return undefined;
+    };
+
+    return visit(schemaFields);
+}
+
+function collectObjectDefaultValues(
+    field: UIBuilderField,
+    target: Record<string, any>,
+    sourceDefault: any = field.default
+): void {
+    if (!field.children || field.children.length === 0) {
+        return;
+    }
+
+    if (!isPlainObject(sourceDefault)) {
+        return;
+    }
+
+    field.children.forEach((child) => {
+        if (child.name.startsWith('__section_')) {
+            return;
+        }
+
+        const childPath = resolveNestedFieldKey(field.name, child.name);
+        const childLeafName = getFieldLeafName(child.name);
+        if (!Object.prototype.hasOwnProperty.call(sourceDefault, childLeafName)) {
+            return;
+        }
+
+        const childDefault = sourceDefault[childLeafName];
+
+        if (child.type === 'object' && child.children && child.children.length > 0) {
+            if (isPlainObject(childDefault)) {
+                target[`${childPath}._enabled`] = true;
+                collectObjectDefaultValues(child, target, childDefault);
+            }
+            return;
+        }
+
+        if (childDefault !== undefined) {
+            target[childPath] = cloneValue(childDefault);
+        }
+    });
+}
+
+export function applyEnabledObjectDefaults(
+    previousState: Record<string, any>,
+    key: string,
+    value: any,
+    schemaFields: UIBuilderField[]
+): Record<string, any> {
+    const updatedState = { ...previousState, [key]: value };
+
+    if (!key.endsWith('._enabled')) {
+        return updatedState;
+    }
+
+    const fieldPath = key.slice(0, -'._enabled'.length);
+    const field = resolveBuilderFieldByPath(fieldPath, schemaFields);
+    if (!field || field.type !== 'object' || !field.children || field.children.length === 0) {
+        return updatedState;
+    }
+
+    if (value === false) {
+        field.children.forEach((child) => clearFieldState(updatedState, child));
+        return updatedState;
+    }
+
+    if (value !== true) {
+        return updatedState;
+    }
+
+    const defaults: Record<string, any> = {};
+    collectObjectDefaultValues(field, defaults);
+
+    Object.entries(defaults).forEach(([defaultKey, defaultValue]) => {
+        if (
+            updatedState[defaultKey] === undefined ||
+            updatedState[defaultKey] === null ||
+            updatedState[defaultKey] === ''
+        ) {
+            updatedState[defaultKey] = defaultValue;
+        }
+    });
+
+    return updatedState;
 }
 
 // ============================================================================
