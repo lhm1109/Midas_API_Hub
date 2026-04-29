@@ -51,6 +51,9 @@ import {
   flattenObjectToDotNotationWithSchema,
   hasMeaningfulFieldValue,
   normalizeJsonPreviewFieldPath,
+  resolveBuilderFieldByPath,
+  applyEnabledObjectDefaults,
+  coerceValueForBuilderField,
   buildRootValidationOneOfOptionLabels,
   inferRootValidationOneOfSelection,
   getRootValidationOneOfOptionIndexForFieldKey,
@@ -211,140 +214,6 @@ function normalizeWrapperKey(value: unknown): string | null {
   const lowered = trimmed.toLowerCase();
   if (lowered === 'null' || lowered === 'undefined') return null;
   return trimmed;
-}
-
-function normalizeArrayToken(token: string): string {
-  return token.trim().replace(/^["']|["']$/g, '');
-}
-
-function parseLooseArrayString(raw: string): string[] | null {
-  const trimmed = raw.trim();
-  if (!trimmed.startsWith('[') || !trimmed.endsWith(']')) {
-    return null;
-  }
-
-  const inner = trimmed.slice(1, -1).trim();
-  if (!inner) return [];
-
-  return inner
-    .split(',')
-    .map(normalizeArrayToken)
-    .filter(Boolean);
-}
-
-function castScalarByType(value: any, type?: string): any {
-  if (typeof value !== 'string') return value;
-  const trimmed = value.trim();
-
-  if (type === 'integer') {
-    const parsed = Number.parseInt(trimmed, 10);
-    return Number.isNaN(parsed) ? value : parsed;
-  }
-
-  if (type === 'number') {
-    const parsed = Number.parseFloat(trimmed);
-    return Number.isNaN(parsed) ? value : parsed;
-  }
-
-  if (type === 'boolean') {
-    if (trimmed.toLowerCase() === 'true') return true;
-    if (trimmed.toLowerCase() === 'false') return false;
-  }
-
-  return value;
-}
-
-function normalizeStringValue(value: any): any {
-  if (typeof value !== 'string') return value;
-
-  const trimmed = value.trim();
-  if (trimmed.length < 2) return value;
-
-  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (typeof parsed === 'string') {
-        return parsed;
-      }
-    } catch {
-      return value;
-    }
-  }
-
-  if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
-    return trimmed.slice(1, -1);
-  }
-
-  return value;
-}
-
-function coerceArrayValue(value: any, itemType?: string): any {
-  if (Array.isArray(value)) {
-    return value.map((item) => castScalarByType(item, itemType));
-  }
-
-  if (typeof value !== 'string') return value;
-  const trimmed = value.trim();
-  if (!trimmed) return [];
-
-  try {
-    const parsed = JSON.parse(trimmed);
-    if (Array.isArray(parsed)) {
-      return parsed.map((item) => castScalarByType(item, itemType));
-    }
-  } catch {
-    // no-op: fallback below
-  }
-
-  const looseParsed = parseLooseArrayString(trimmed);
-  if (looseParsed) {
-    return looseParsed.map((item) => castScalarByType(item, itemType));
-  }
-
-  return [castScalarByType(normalizeArrayToken(trimmed), itemType)];
-}
-
-function coerceValueForField(value: any, field?: UIBuilderField): any {
-  if (!field) return value;
-
-  if (field.type === 'array') {
-    return coerceArrayValue(value, field.items?.type);
-  }
-
-  if (field.type === 'number' || field.type === 'integer' || field.type === 'boolean') {
-    return castScalarByType(value, field.type);
-  }
-
-  if (field.type === 'string') {
-    return normalizeStringValue(value);
-  }
-
-  return value;
-}
-
-function findChildFieldByPath(children: UIBuilderField[] | undefined, childPath: string): UIBuilderField | undefined {
-  if (!children || children.length === 0) return undefined;
-  const shortKey = childPath.split('.').pop() || childPath;
-  return children.find((child) => {
-    if (child.name === childPath) return true;
-    if (child.name === shortKey) return true;
-    return child.name.endsWith(`.${shortKey}`);
-  });
-}
-
-function resolveFieldByPath(path: string, fields: UIBuilderField[]): UIBuilderField | undefined {
-  const direct = fields.find((field) => field.name === path);
-  if (direct) return direct;
-
-  if (!path.includes('.')) return undefined;
-  const parentPath = path.split('.')[0];
-  const parentField = fields.find((field) => field.name === parentPath);
-  if (!parentField) return undefined;
-
-  const child = findChildFieldByPath(parentField.children, path);
-  if (child) return child;
-
-  return parentField.type === 'array' ? parentField : undefined;
 }
 
 function getFieldLeafName(fieldPath: string): string {
@@ -1247,6 +1116,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
   }, [fieldRuntimeStates, schemaFields]);
   const applyAllOneOfSelections = (previousState: Record<string, any>, key: string, value: any) => {
     let updatedState = applyImplicitOneOfSelection(previousState, key, value, schemaFields);
+    updatedState = applyEnabledObjectDefaults(updatedState, key, value, schemaFields);
 
     const rootOptionIndex = getRootValidationOneOfOptionIndexForFieldKey(
       key,
@@ -1294,7 +1164,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
 
     if (key.endsWith('.__selectedOption')) {
       const parentFieldName = key.replace('.__selectedOption', '');
-      const parentField = resolveFieldByPath(parentFieldName, schemaFields);
+      const parentField = resolveBuilderFieldByPath(parentFieldName, schemaFields);
 
       console.log('[BuilderTab] oneOf selection changed:', { key, value, parentFieldName, parentField });
 
@@ -1801,8 +1671,8 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
         if (!shouldIncludeFieldForRootValidationOneOf(key, rootValidationOneOfInfo, fields, selectedRootOneOfOption)) {
           return;
         }
-        const fieldByPath = resolveFieldByPath(key, fields);
-        const value = coerceValueForField(enrichedData[key], fieldByPath);
+        const fieldByPath = resolveBuilderFieldByPath(key, fields);
+        const value = coerceValueForBuilderField(enrichedData[key], fieldByPath);
         const runtimeState = runtimeStates[key];
 
         const shouldInclude = shouldIncludeInJSON(key, value, runtimeState);
@@ -2048,8 +1918,8 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
         return;
       }
 
-      const fieldByPath = resolveFieldByPath(fieldKey, schemaFields);
-      const value = coerceValueForField(enrichedData[fieldKey], fieldByPath);
+      const fieldByPath = resolveBuilderFieldByPath(fieldKey, schemaFields);
+      const value = coerceValueForBuilderField(enrichedData[fieldKey], fieldByPath);
       const runtimeState = fieldRuntimeStates[fieldKey];
       const isRequired = runtimeState?.requiredNow && runtimeState?.visible;
       if (!isRequired && (value === '' || value === undefined)) {

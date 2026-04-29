@@ -266,6 +266,19 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       .replace(/'/g, '&#039;');
   };
 
+  const formatManualInputUri = (inputUri?: string): string => {
+    const rawInputUri = String(inputUri || endpoint.path || '').trim();
+    if (!rawInputUri) {
+      return '{base url} + endpoint';
+    }
+
+    if (rawInputUri.includes('{base url}')) {
+      return rawInputUri;
+    }
+
+    return `{base url} + ${rawInputUri.replace(/^\/+/, '')}`;
+  };
+
   const normalizeCopyText = (text: string): string => {
     return String(text || '')
       .replace(/\u00A0/g, ' ')
@@ -403,6 +416,7 @@ export function ManualTab({ endpoint }: ManualTabProps) {
 
     const { inputUri, activeMethods, jsonSchema, requestExamples, specifications } = manualData;
     const displayedActiveMethods = activeMethods?.trim() || endpoint.method || '-';
+    const displayedInputUri = formatManualInputUri(inputUri);
 
     const schemaPayload = createZendeskCodePayload(jsonSchema || manualData.jsonSchemaOriginal || '{}');
     const currentSchema = schemaPayload.displayHtml;
@@ -540,7 +554,7 @@ ${specifications}`;
           <tr>
             <th style="padding: 10px 5px 10px 5px;">
               <p style="text-align: center;">
-                <strong>${escapeHtml(inputUri || '{base url} + endpoint')}</strong>
+                <strong>${escapeHtml(displayedInputUri)}</strong>
               </p>
             </th>
           </tr>
@@ -621,6 +635,7 @@ ${specificationSectionHTML}
 
     const { inputUri, activeMethods, jsonSchema, requestExamples, responseExamples, specifications } = manualData;
     const displayedActiveMethods = activeMethods?.trim() || endpoint.method || '-';
+    const displayedInputUri = formatManualInputUri(inputUri);
     const schemaCode = formatJsonForPre(jsonSchema || manualData.jsonSchemaOriginal || '{}');
     const cleanedSpecifications = sanitizeZendeskSpecificMarkup(specifications || '');
     const specificationSection = (() => {
@@ -639,7 +654,7 @@ ${specificationSectionHTML}
 <div class="confluence-manual" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #172b4d; line-height: 1.6;">
   <h1>${escapeManualHtml(manualData.title || endpoint.name || 'API Manual')}</h1>
   <h2>Input URI</h2>
-  <p><code>${escapeManualHtml(inputUri || '{base url} + endpoint')}</code></p>
+  <p><code>${escapeManualHtml(displayedInputUri)}</code></p>
   <h2>Active Methods</h2>
   <p><strong>${escapeManualHtml(displayedActiveMethods)}</strong></p>
   <h2>JSON Schema</h2>
