@@ -53,6 +53,7 @@ import {
   normalizeJsonPreviewFieldPath,
   resolveBuilderFieldByPath,
   applyEnabledObjectDefaults,
+  coerceValueForBuilderField,
   buildRootValidationOneOfOptionLabels,
   inferRootValidationOneOfSelection,
   getRootValidationOneOfOptionIndexForFieldKey,
@@ -110,115 +111,6 @@ function normalizeWrapperKey(value: unknown): string | null {
   const lowered = trimmed.toLowerCase();
   if (lowered === 'null' || lowered === 'undefined') return null;
   return trimmed;
-}
-
-function normalizeArrayToken(token: string): string {
-  return token.trim().replace(/^["']|["']$/g, '');
-}
-
-function parseLooseArrayString(raw: string): string[] | null {
-  const trimmed = raw.trim();
-  if (!trimmed.startsWith('[') || !trimmed.endsWith(']')) {
-    return null;
-  }
-
-  const inner = trimmed.slice(1, -1).trim();
-  if (!inner) return [];
-
-  return inner
-    .split(',')
-    .map(normalizeArrayToken)
-    .filter(Boolean);
-}
-
-function castScalarByType(value: any, type?: string): any {
-  if (typeof value !== 'string') return value;
-  const trimmed = value.trim();
-
-  if (type === 'integer') {
-    const parsed = Number.parseInt(trimmed, 10);
-    return Number.isNaN(parsed) ? value : parsed;
-  }
-
-  if (type === 'number') {
-    const parsed = Number.parseFloat(trimmed);
-    return Number.isNaN(parsed) ? value : parsed;
-  }
-
-  if (type === 'boolean') {
-    if (trimmed.toLowerCase() === 'true') return true;
-    if (trimmed.toLowerCase() === 'false') return false;
-  }
-
-  return value;
-}
-
-function normalizeStringValue(value: any): any {
-  if (typeof value !== 'string') return value;
-
-  const trimmed = value.trim();
-  if (trimmed.length < 2) return value;
-
-  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (typeof parsed === 'string') {
-        return parsed;
-      }
-    } catch {
-      return value;
-    }
-  }
-
-  if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
-    return trimmed.slice(1, -1);
-  }
-
-  return value;
-}
-
-function coerceArrayValue(value: any, itemType?: string): any {
-  if (Array.isArray(value)) {
-    return value.map((item) => castScalarByType(item, itemType));
-  }
-
-  if (typeof value !== 'string') return value;
-  const trimmed = value.trim();
-  if (!trimmed) return [];
-
-  try {
-    const parsed = JSON.parse(trimmed);
-    if (Array.isArray(parsed)) {
-      return parsed.map((item) => castScalarByType(item, itemType));
-    }
-  } catch {
-    // no-op: fallback below
-  }
-
-  const looseParsed = parseLooseArrayString(trimmed);
-  if (looseParsed) {
-    return looseParsed.map((item) => castScalarByType(item, itemType));
-  }
-
-  return [castScalarByType(normalizeArrayToken(trimmed), itemType)];
-}
-
-function coerceValueForField(value: any, field?: UIBuilderField): any {
-  if (!field) return value;
-
-  if (field.type === 'array') {
-    return coerceArrayValue(value, field.items?.type);
-  }
-
-  if (field.type === 'number' || field.type === 'integer' || field.type === 'boolean') {
-    return castScalarByType(value, field.type);
-  }
-
-  if (field.type === 'string') {
-    return normalizeStringValue(value);
-  }
-
-  return value;
 }
 
 function getFieldLeafName(fieldPath: string): string {
@@ -1667,7 +1559,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
           return;
         }
         const fieldByPath = resolveBuilderFieldByPath(key, fields);
-        const value = coerceValueForField(enrichedData[key], fieldByPath);
+        const value = coerceValueForBuilderField(enrichedData[key], fieldByPath);
         const runtimeState = runtimeStates[key];
 
         const shouldInclude = shouldIncludeInJSON(key, value, runtimeState);
@@ -1914,7 +1806,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       }
 
       const fieldByPath = resolveBuilderFieldByPath(fieldKey, schemaFields);
-      const value = coerceValueForField(enrichedData[fieldKey], fieldByPath);
+      const value = coerceValueForBuilderField(enrichedData[fieldKey], fieldByPath);
       const runtimeState = fieldRuntimeStates[fieldKey];
       const isRequired = runtimeState?.requiredNow && runtimeState?.visible;
       if (!isRequired && (value === '' || value === undefined)) {

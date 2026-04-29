@@ -19,6 +19,7 @@ import {
     buildNormalizedRuntimeStateLookup,
     resolveBuilderFieldByPath,
     applyEnabledObjectDefaults,
+    coerceValueForBuilderField,
     flattenObjectToDotNotationWithSchema,
     normalizeJsonPreviewFieldPath,
     buildRootValidationOneOfOptionLabels,
@@ -503,6 +504,40 @@ describe('JSON preview path helpers', () => {
 
         expect(result).toEqual({
             'WALL.ADDITIONAL_WALL_DATA.VERTICAL_REBAR_SPACING._enabled': false,
+        });
+    });
+});
+
+describe('coerceValueForBuilderField', () => {
+    it('coerces keyed object array children from textarea strings', () => {
+        const field: UIBuilderField = {
+            name: 'SELECTED_MEMBERS',
+            type: 'object',
+            required: false,
+            isKeyedObject: true,
+            children: [
+                {
+                    name: 'SELECTED_MEMBERS.ELEM_LIST',
+                    type: 'array',
+                    required: true,
+                    items: { type: 'integer' },
+                },
+            ],
+        };
+
+        expect(
+            coerceValueForBuilderField(
+                {
+                    '1': {
+                        ELEM_LIST: '[925, 926] ',
+                    },
+                },
+                field
+            )
+        ).toEqual({
+            '1': {
+                ELEM_LIST: [925, 926],
+            },
         });
     });
 });
