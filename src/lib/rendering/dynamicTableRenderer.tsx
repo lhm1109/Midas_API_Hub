@@ -347,7 +347,9 @@ function renderParameterRow(
 
       {/* Key */}
       <td className="p-3">
-        <code className="font-mono text-blue-400">"{param.name}"</code>
+        <code className="font-mono text-blue-400">
+          {param.keyDisplay !== undefined ? param.keyDisplay : `"${param.name}"`}
+        </code>
       </td>
 
       {/* Type */}

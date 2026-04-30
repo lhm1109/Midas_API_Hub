@@ -9,6 +9,7 @@ export interface TableParameter {
   no: string | number;
   section?: string;
   name: string;
+  keyDisplay?: string;
   type: string;
   default: string;
   required: string;
@@ -88,6 +89,13 @@ export function generateHTMLTable(
 </td>
 </tr>`;
 
+  const getKeyDisplay = (param: TableParameter) => {
+    if (param.keyDisplay !== undefined) {
+      return param.keyDisplay ? `"${param.keyDisplay}"` : '';
+    }
+    return `"${param.name}"`;
+  };
+
   const renderDataRow = (param: TableParameter, level: number) => `
 <tr>
 <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
@@ -98,7 +106,7 @@ export function generateHTMLTable(
 ${param.options ? param.options.map((opt: string) => `<p>${markdownToHtml(opt)}</p>`).join('') : ''}
 </td>
 <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
-<p style="text-align: center;">"${param.name}"</p>
+<p style="text-align: center;">${getKeyDisplay(param)}</p>
 </td>
 <td style="padding: 10px 5px 10px 5px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">
 <p style="text-align: center;">${param.type}</p>

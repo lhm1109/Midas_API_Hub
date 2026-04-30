@@ -54,7 +54,7 @@ export function RunnerTab({
   const selectedTestCaseDraftBody = runnerData?.selectedTestCaseDraftBody || null;
 
   // 🎯 메뉴얼 데이터가 있으면 그것의 inputUri를 사용, 없으면 현재 endpoint.path 사용
-  const endpointPath = manualData?.inputUri || endpoint.path;
+  const endpointPath = endpoint.path || manualData?.inputUri || '';
   const defaultUrl = `${settings.baseUrl}${endpointPath}`;
 
   // 엔드포인트에 지정된 사용 가능한 메서드 목록 파싱
@@ -79,6 +79,7 @@ export function RunnerTab({
   const [showRequestTableDialog, setShowRequestTableDialog] = useState(false);
   const [showResultTableDialog, setShowResultTableDialog] = useState(false);
   const endpointIdRef = useRef(endpoint.id);
+  const defaultUrlRef = useRef(defaultUrl);
 
   const parsedRequestTable = useMemo(() => {
     return parseRunnerJsonTable(requestBody, {
@@ -100,15 +101,26 @@ export function RunnerTab({
   // - endpoint 변경: 해당 endpoint의 기본 URL로 재설정
   useEffect(() => {
     const endpointChanged = endpointIdRef.current !== endpoint.id;
+    const previousDefaultUrl = defaultUrlRef.current;
+    const currentUrl = runnerData?.url;
+
     if (endpointChanged) {
       endpointIdRef.current = endpoint.id;
-      if (runnerData?.url !== defaultUrl) {
+      defaultUrlRef.current = defaultUrl;
+      if (currentUrl !== defaultUrl) {
         updateRunnerData({ url: defaultUrl });
       }
       return;
     }
 
-    if (runnerData?.url === undefined) {
+    const shouldUseDefaultUrl =
+      currentUrl === undefined ||
+      currentUrl.trim() === '' ||
+      currentUrl === previousDefaultUrl;
+
+    defaultUrlRef.current = defaultUrl;
+
+    if (shouldUseDefaultUrl && currentUrl !== defaultUrl) {
       updateRunnerData({ url: defaultUrl });
     }
   }, [endpoint.id, defaultUrl, runnerData?.url, updateRunnerData]);

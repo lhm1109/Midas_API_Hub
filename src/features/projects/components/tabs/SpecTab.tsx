@@ -1420,6 +1420,156 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
   };
 
   // 🔥 NEW: UI Schema Adapter로 테이블 스키마 생성
+  const getMapEntryDisplayKey = (wrapperInfo: any, entryKey: string) => {
+    const description = String(wrapperInfo?.description || '');
+    const exampleMatch =
+      description.match(/e\.g\.,?\s*"([^"]+)"/i) ||
+      description.match(/example[^"]*"([^"]+)"/i);
+    if (exampleMatch?.[1]) {
+      return exampleMatch[1];
+    }
+
+    const normalizedKey = String(entryKey || '').replace(/\\\\/g, '\\');
+    if (
+      normalizedKey === '^[0-9]+$' ||
+      normalizedKey === '^\\d+$' ||
+      normalizedKey === '^[1-9][0-9]*$'
+    ) {
+      return '1';
+    }
+
+    return entryKey || '*';
+  };
+
+  const getMapEntrySchemaContext = (schema: any) => {
+    const inlined = inlineSchemaRefsForTable(schema);
+    const wrapperKey = getWrapperKey(inlined);
+    const wrapperInfo = wrapperKey ? inlined?.properties?.[wrapperKey] : null;
+    if (!wrapperInfo || typeof wrapperInfo !== 'object') {
+      return null;
+    }
+
+    const patternProps = wrapperInfo.patternProperties;
+    if (patternProps && typeof patternProps === 'object') {
+      const firstEntry = Object.entries(patternProps).find(([, value]) =>
+        value && typeof value === 'object' && !Array.isArray(value)
+      );
+      if (firstEntry) {
+        return {
+          wrapperKey,
+          wrapperInfo,
+          entryKey: firstEntry[0],
+          entrySchema: firstEntry[1],
+        };
+      }
+    }
+
+    if (wrapperInfo.additionalProperties && typeof wrapperInfo.additionalProperties === 'object') {
+      return {
+        wrapperKey,
+        wrapperInfo,
+        entryKey: '*',
+        entrySchema: wrapperInfo.additionalProperties,
+      };
+    }
+
+    return null;
+  };
+
+  const hasKnownMapEntryChildren = (entrySchema: any) =>
+    Boolean(
+      entrySchema &&
+      typeof entrySchema === 'object' &&
+      !Array.isArray(entrySchema) &&
+      (
+        (entrySchema.properties && typeof entrySchema.properties === 'object' && Object.keys(entrySchema.properties).length > 0) ||
+        (Array.isArray(entrySchema.oneOf) && entrySchema.oneOf.length > 0) ||
+        (entrySchema.additionalProperties && typeof entrySchema.additionalProperties === 'object') ||
+        (entrySchema.patternProperties && typeof entrySchema.patternProperties === 'object' && Object.keys(entrySchema.patternProperties).length > 0)
+      )
+    );
+
+  const isMapValueFallbackSchema = (schema: any) => {
+    const ctx = getMapEntrySchemaContext(schema);
+    return Boolean(ctx?.entrySchema && !hasKnownMapEntryChildren(ctx.entrySchema));
+  };
+
+  const escapeManualHtml = (value: unknown) =>
+    String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+  const collectManualReferences = (schema: any) => {
+    const references: Array<{ title: string; url: string; article?: string }> = [];
+    const seen = new Set<string>();
+
+    const addReference = (raw: any) => {
+      if (!raw || typeof raw !== 'object' || !raw.url) {
+        return;
+      }
+      const title = String(raw.title || raw.url);
+      const url = String(raw.url);
+      const article = raw.article === undefined || raw.article === null ? undefined : String(raw.article);
+      const key = `${title}\n${url}\n${article || ''}`;
+      if (seen.has(key)) {
+        return;
+      }
+      seen.add(key);
+      references.push({ title, url, article });
+    };
+
+    const visit = (node: any) => {
+      if (!node || typeof node !== 'object') {
+        return;
+      }
+      if (Array.isArray(node)) {
+        node.forEach(visit);
+        return;
+      }
+
+      addReference(node['x-reference']);
+      if (Array.isArray(node['x-references'])) {
+        node['x-references'].forEach(addReference);
+      }
+
+      for (const [key, value] of Object.entries(node)) {
+        if (key === 'x-reference' || key === 'x-references') {
+          continue;
+        }
+        visit(value);
+      }
+    };
+
+    visit(schema);
+    return references;
+  };
+
+  const generateManualReferenceNotes = (schema: any) => {
+    const references = collectManualReferences(schema);
+    if (references.length === 0) {
+      return '';
+    }
+
+    const rows = references.map((ref) =>
+      `<p>- <a href="${escapeManualHtml(ref.url)}" target="_blank" rel="noopener noreferrer"><em>${escapeManualHtml(ref.title)} ↗</em></a></p>`
+    ).join('\n');
+
+    return `
+<br><br>
+${rows}`;
+  };
+
+  const appendManualReferenceMarker = (description: string, schema: any) => {
+    if (collectManualReferences(schema).length === 0) {
+      return description;
+    }
+
+    return `${description} <sup style="font-size: 14px; color: #bf2600;">*)</sup>`;
+  };
+
   const buildTableParametersForSchema = (schemaToUse: any, isEnhancedStructure: boolean, currentSchemaType: string) => {
     const key = `${psdSet}/${currentSchemaType}`;
 
@@ -1433,13 +1583,88 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
       return [];
     }
 
-    const effectiveSchema = unwrapSchemaForTable(inlineSchemaRefsForTable(schemaToUse));
+    const inlinedSchema = inlineSchemaRefsForTable(schemaToUse);
+    const effectiveSchema = unwrapSchemaForTable(inlinedSchema);
     const conditionalRules = tableDefinition?.schemaExtensions?.conditional || [];
 
     const getFieldTypeLabel = (field: any) =>
       field.type === 'array' ? `Array[${field.items?.type || 'any'}]` : field.type;
 
     const getLeafFieldName = (field: any) => field.key.split('.').pop() || field.key;
+
+    const buildMapValueFallbackParameters = () => {
+      const wrapperKey = getWrapperKey(inlinedSchema);
+      const wrapperInfo = wrapperKey ? inlinedSchema?.properties?.[wrapperKey] : null;
+      if (!wrapperInfo || typeof wrapperInfo !== 'object') {
+        return [];
+      }
+
+      let entryKey = '';
+      let entrySchema: any;
+      const patternProps = wrapperInfo.patternProperties;
+      if (patternProps && typeof patternProps === 'object') {
+        const firstEntry = Object.entries(patternProps).find(([, value]) =>
+          value && typeof value === 'object' && !Array.isArray(value)
+        );
+        if (firstEntry) {
+          entryKey = firstEntry[0];
+          entrySchema = firstEntry[1];
+        }
+      }
+
+      if (!entrySchema && wrapperInfo.additionalProperties && typeof wrapperInfo.additionalProperties === 'object') {
+        entryKey = '*';
+        entrySchema = wrapperInfo.additionalProperties;
+      }
+
+      if (!entrySchema || typeof entrySchema !== 'object' || Array.isArray(entrySchema)) {
+        return [];
+      }
+
+      const hasKnownChildren =
+        (entrySchema.properties && typeof entrySchema.properties === 'object' && Object.keys(entrySchema.properties).length > 0) ||
+        (Array.isArray(entrySchema.oneOf) && entrySchema.oneOf.length > 0) ||
+        (entrySchema.additionalProperties && typeof entrySchema.additionalProperties === 'object') ||
+        (entrySchema.patternProperties && typeof entrySchema.patternProperties === 'object' && Object.keys(entrySchema.patternProperties).length > 0);
+
+      if (hasKnownChildren) {
+        return [];
+      }
+
+      const entryUi = entrySchema['x-ui'];
+      const entryField = {
+        ...entrySchema,
+        key: getMapEntryDisplayKey(wrapperInfo, entryKey),
+        type: entrySchema.type || 'object',
+        ui: entryUi,
+        required: (
+          (Array.isArray(inlinedSchema?.required) && wrapperKey && inlinedSchema.required.includes(wrapperKey)) ||
+          Number(wrapperInfo.minProperties || 0) > 0
+        ) ? { '*': 'required' } : { '*': 'optional' },
+      };
+      const sectionLabel = entrySchema.title || entryUi?.group || entryUi?.label || `${wrapperKey} Entry`;
+
+      return [
+        {
+          no: '',
+          section: sectionLabel,
+          name: '',
+          type: '',
+          default: '',
+          required: '',
+          description: '',
+        },
+        {
+          no: 1,
+          name: entryField.key,
+          keyDisplay: '',
+          type: getFieldTypeLabel(entryField),
+          default: formatDefaultValue(entryField.default),
+          description: appendManualReferenceMarker(buildFieldDescription(entryField, tableDefinition), entrySchema),
+          required: getRequiredLabel(entryField),
+        },
+      ];
+    };
 
     const buildArrayItemChildren = (arrayField: any) => {
       const items = arrayField?.items;
@@ -1662,15 +1887,17 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
     if (isEnhancedStructure) {
       try {
         const sections = compileEnhancedSchema(effectiveSchema as EnhancedSchema, psdSet, currentSchemaType);
-        return buildParamsFromSections(sections);
+        const params = buildParamsFromSections(sections);
+        return params.length > 0 ? params : buildMapValueFallbackParameters();
       } catch (error) {
         console.error('❌ Failed to compile enhanced schema for table:', error);
-        return [];
+        return buildMapValueFallbackParameters();
       }
     }
 
     const compiledSections = compileSchema(effectiveSchema, psdSet, currentSchemaType);
-    return buildParamsFromSections(compiledSections);
+    const params = buildParamsFromSections(compiledSections);
+    return params.length > 0 ? params : buildMapValueFallbackParameters();
 
     /*
     if (isEnhancedStructure) {
@@ -3183,10 +3410,10 @@ export function SpecTab({ endpoint, products, settings }: SpecTabProps) {
       }
 
       const requestHtml = requestTableParameters.length > 0
-        ? generateHTMLTable(requestTableParameters as TableParameter[], tableDefinition)
+        ? `${generateHTMLTable(requestTableParameters as TableParameter[], tableDefinition)}${isMapValueFallbackSchema(enhancedRequestSchema) ? generateManualReferenceNotes(enhancedRequestSchema) : ''}`
         : '<p>No request schema available.</p>';
       const responseHtml = responseTableParameters.length > 0
-        ? generateHTMLTable(responseTableParameters as TableParameter[], tableDefinition)
+        ? `${generateHTMLTable(responseTableParameters as TableParameter[], tableDefinition)}${isMapValueFallbackSchema(enhancedResponseSchema) ? generateManualReferenceNotes(enhancedResponseSchema) : ''}`
         : '<p>No response schema available.</p>';
 
       specificationsHTML = `
@@ -3195,6 +3422,12 @@ ${requestHtml}
 <br/>
 <h3>Response</h3>
 ${responseHtml}`.trim();
+    } else if (activeTableParameters.length > 0 && isMapValueFallbackSchema(activeSchema)) {
+      if (!tableDefinition) {
+        toast.error('? Table definition not loaded!');
+        return;
+      }
+      specificationsHTML = `${generateHTMLTable(activeTableParameters as TableParameter[], tableDefinition)}${generateManualReferenceNotes(activeSchema)}`;
     } else if ((isNewEnhancedSchema || (schemaView === 'enhanced' && activeSchema)) && tableView !== 'response') {
       try {
         const htmlDocument = generateHTMLDocument(activeSchema as EnhancedSchema, psdSet, schemaType);

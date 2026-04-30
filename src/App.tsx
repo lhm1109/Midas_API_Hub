@@ -156,6 +156,31 @@ export default function App() {
     }
   }, [endpointsLoading, apiData, selectedEndpoint]);
 
+  useEffect(() => {
+    if (endpointsLoading || !selectedEndpoint?.id) return;
+
+    const findInGroups = (groups: any[]): ApiEndpoint | null => {
+      for (const group of groups || []) {
+        const found = group.endpoints?.find((ep: ApiEndpoint) => ep.id === selectedEndpoint.id);
+        if (found) return found;
+
+        const foundInSubgroup = findInGroups(group.subgroups || []);
+        if (foundInSubgroup) return foundInSubgroup;
+      }
+
+      return null;
+    };
+
+    for (const product of apiData) {
+      const refreshedEndpoint = findInGroups(product.groups || []);
+      if (refreshedEndpoint && refreshedEndpoint !== selectedEndpoint) {
+        setSelectedEndpoint(refreshedEndpoint);
+        useAppStore.setState({ endpoint: refreshedEndpoint });
+        return;
+      }
+    }
+  }, [endpointsLoading, apiData, selectedEndpoint]);
+
   // 🎯 Settings 초기값 (localStorage에서 로드)
   const [settings, setSettings] = useState<Settings>(() => {
     const defaults: Settings = {
@@ -428,4 +453,3 @@ export default function App() {
     </div>
   );
 }
-
