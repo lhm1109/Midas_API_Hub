@@ -97,6 +97,109 @@ function buildConditionFormValues(source: Record<string, any>): Record<string, a
   return nextValues;
 }
 
+function splitFieldPath(path: string): string[] {
+  return path
+    .split('.')
+    .map((part) => part.replace(/\[\]/g, ''))
+    .filter(Boolean);
+}
+
+function getCommonPrefixLength(pathA: string, pathB: string): number {
+  const segA = splitFieldPath(pathA);
+  const segB = splitFieldPath(pathB);
+  const max = Math.min(segA.length, segB.length);
+
+  let count = 0;
+  for (let i = 0; i < max; i++) {
+    if (segA[i] !== segB[i]) break;
+    count++;
+  }
+  return count;
+}
+
+function serializeConditionValue(value: unknown): string {
+  if (typeof value === 'string') return value;
+  return JSON.stringify(value);
+}
+
+function resolveConditionValueForField(
+  conditionKey: string,
+  formValues: Record<string, any>,
+  currentFieldKey?: string
+): any {
+  const suffix = `.${conditionKey}`;
+  const candidates = Object.keys(formValues).filter((key) =>
+    !key.endsWith('._enabled') &&
+    (key === conditionKey || key.endsWith(suffix))
+  );
+
+  if (candidates.length === 0) return undefined;
+  if (!currentFieldKey) return formValues[candidates[0]];
+
+  let bestKey = candidates[0];
+  let bestScore = getCommonPrefixLength(bestKey, currentFieldKey);
+  let bestDepth = splitFieldPath(bestKey).length;
+
+  for (let i = 1; i < candidates.length; i++) {
+    const candidate = candidates[i];
+    const score = getCommonPrefixLength(candidate, currentFieldKey);
+    const depth = splitFieldPath(candidate).length;
+    if (score > bestScore || (score === bestScore && depth < bestDepth)) {
+      bestKey = candidate;
+      bestScore = score;
+      bestDepth = depth;
+    }
+  }
+
+  return formValues[bestKey];
+}
+
+function applyConditionalEnumOverride(
+  field: UIBuilderField,
+  formValues: Record<string, any>
+): UIBuilderField {
+  const overrides = (field as any)._conditionalPropertyOverrides as
+    | Record<string, Record<string, any>>
+    | undefined;
+
+  let nextField: UIBuilderField = { ...field };
+  let enumApplied = false;
+
+  if (overrides && typeof overrides === 'object') {
+    for (const [axisField, axisValueMap] of Object.entries(overrides)) {
+      if (!axisValueMap || typeof axisValueMap !== 'object') continue;
+
+      const axisValue = resolveConditionValueForField(axisField, formValues, field.name);
+      const override = axisValueMap[serializeConditionValue(axisValue)];
+      if (!override || typeof override !== 'object') continue;
+
+      if (Array.isArray((override as any).enum)) {
+        nextField.enum = (override as any).enum;
+        enumApplied = true;
+      }
+      if ((override as any)['x-enum-labels']) {
+        nextField.enumLabels = (override as any)['x-enum-labels'];
+      }
+      if ((override as any).enumLabels) {
+        nextField.enumLabels = (override as any).enumLabels;
+      }
+      if ((override as any)['x-ui']?.component && !nextField.uiComponent) {
+        nextField.uiComponent = (override as any)['x-ui'].component;
+      }
+    }
+  }
+
+  if (enumApplied && nextField.type !== 'enum') {
+    nextField.type = 'enum';
+  }
+
+  if (field.children && field.children.length > 0) {
+    nextField.children = field.children.map((child) => applyConditionalEnumOverride(child, formValues));
+  }
+
+  return nextField;
+}
+
 type WrapperShape = 'map' | 'single';
 
 interface SchemaWrapperInfo {
@@ -450,6 +553,9 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
         uiComponent: compiledField.ui?.component,
         enumLabelsByType: compiledField['x-enum-labels-by-type'] || compiledField.enumLabelsByType,
       };
+      if (compiledField._conditionalPropertyOverrides) {
+        (uiField as any)._conditionalPropertyOverrides = compiledField._conditionalPropertyOverrides;
+      }
 
       const isKeyedObject =
         mappedType === 'object' &&
@@ -595,6 +701,13 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
       isRootValidationOneOfFieldVisible(field, rootValidationOneOfInfo, selectedRootValidationOneOfOption)
     );
   }, [schemaFields, rootValidationOneOfInfo, selectedRootValidationOneOfOption]);
+  const runtimeSchemaFields = useMemo(() => {
+    const combinedFormValues = buildConditionFormValues({
+      ...tempFormValuesForSchema,
+      ...dynamicFormData,
+    });
+    return visibleSchemaFields.map((field) => applyConditionalEnumOverride(field, combinedFormValues));
+  }, [visibleSchemaFields, tempFormValuesForSchema, dynamicFormData]);
   useEffect(() => {
     if (schemaFields.length > 0 && Object.keys(dynamicFormData).length === 0) {
       const initialData = buildInitialDynamicFormData(schemaFields, {});
@@ -2432,7 +2545,7 @@ export function BuilderTab({ endpoint, products, settings }: BuilderTabProps) {
                 {builderDefinition ? (
                   <DynamicSchemaRenderer
                     definition={builderDefinition}
-                    schemaFields={visibleSchemaFields}
+                    schemaFields={runtimeSchemaFields}
                     dynamicFormData={dynamicFormData}
                     updateDynamicField={updateDynamicField}
                     expandedObjects={expandedObjects}

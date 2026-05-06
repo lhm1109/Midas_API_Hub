@@ -73,7 +73,7 @@ export function RunnerTab({
 
   // 🎯 Send to Manual 다이얼로그 상태
   const [showSendToManualDialog, setShowSendToManualDialog] = useState(false);
-  const [exampleTitle, setExampleTitle] = useState('');
+  const [exampleTitle, setExampleTitle] = useState('Example');
   const [sendToManualRequestBody, setSendToManualRequestBody] = useState('');
   const [sendToManualResponseBody, setSendToManualResponseBody] = useState('');
   const [showRequestTableDialog, setShowRequestTableDialog] = useState(false);
@@ -402,12 +402,13 @@ export function RunnerTab({
 
   const resetSendToManualDialog = () => {
     setShowSendToManualDialog(false);
-    setExampleTitle('');
+    setExampleTitle('Example');
     setSendToManualRequestBody('');
     setSendToManualResponseBody('');
   };
 
   const openSendToManualDialog = () => {
+    setExampleTitle('Example');
     setSendToManualRequestBody(requestBody || '{}');
     setSendToManualResponseBody(response?.body || runnerData?.responseBody || '');
     setShowSendToManualDialog(true);
@@ -712,7 +713,7 @@ export function RunnerTab({
         open={showSendToManualDialog}
         onOpenChange={(open) => {
           if (open) {
-            setShowSendToManualDialog(true);
+            openSendToManualDialog();
             return;
           }
           resetSendToManualDialog();

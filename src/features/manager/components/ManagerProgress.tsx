@@ -97,6 +97,7 @@ export function ManagerProgress({
         status: '',
         charge: '',
         remark: '',
+        zendeskUrl: '',
       };
       const addedTask = await onAddTask(newTask);
       setEditingTask(addedTask);
@@ -124,7 +125,7 @@ export function ManagerProgress({
   const handleExportCSV = () => {
     try {
       // 데이터 시트 준비
-      const headers = ['Order', 'Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'seg3', 'seg4', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark'];
+      const headers = ['Order', 'Product', 'Tab', 'Group', 'sub1', 'sub2', 'sub3', 'seg1', 'seg2', 'seg3', 'seg4', 'End Point', 'mode', 'Plan', 'Dev', 'V&V', 'doc', 'Deploy', 'Issue', 'status', 'charge', 'remark', 'URL'];
 
       // 데이터베이스 순서대로 정렬 (order_index 기준)
       const sortedTasks = [...tasks].sort((a, b) => {
@@ -157,6 +158,7 @@ export function ManagerProgress({
         task.status,
         task.charge,
         task.remark,
+        task.zendeskUrl || '',
       ]);
 
       // 시트 1: 데이터

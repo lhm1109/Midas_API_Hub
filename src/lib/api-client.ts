@@ -92,7 +92,7 @@ class ApiClient {
   }
 
   async updateEndpoint(id: string, data: any) {
-    return this.request<{ message: string }>(`/endpoints/${encodeURIComponent(id)}`, {
+    return this.request<{ message: string; newId?: string }>(`/endpoints/${encodeURIComponent(id)}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });

@@ -123,7 +123,12 @@ export function EndpointDialog({
           throw new Error(result.error);
         }
 
-        alert('Endpoint updated successfully.');
+        const newId = result.data?.newId;
+        alert(
+          newId
+            ? `Endpoint updated successfully.\nID updated to: ${newId}`
+            : 'Endpoint updated successfully.',
+        );
       } else {
         const result = await apiClient.createEndpoint(endpointData);
 

@@ -28,6 +28,7 @@ export interface ApiTask {
   status: string;  // cancel, done, progress, working, none 등
   charge: string;
   remark: string;
+  zendeskUrl?: string;
   linkedEndpointId?: string; // 프로젝트 탭 엔드포인트 연결
   order_index?: number; // 정렬 순서
   created_at?: string; // 생성 시간
@@ -65,4 +66,5 @@ export const defaultColumns: Column[] = [
   { id: "status", label: "status", visible: true },
   { id: "charge", label: "charge", visible: true },
   { id: "remark", label: "remark", visible: true },
+  { id: "zendeskUrl", label: "URL", visible: true },
 ];
