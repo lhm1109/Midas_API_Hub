@@ -762,7 +762,7 @@ router.put('/:id', async (req, res) => {
     // 기존 엔드포인트 조회
     const { data: existing, error: fetchError } = await supabase
       .from('endpoints')
-      .select('product, group_name, group_id')
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -780,6 +780,9 @@ router.put('/:id', async (req, res) => {
       status,
       updated_at: now
     };
+
+    const finalGroupName = group_name || existing.group_name;
+    const finalProduct = product || existing.product;
 
     // 그룹이 변경된 경우에만 product/group 관련 필드 업데이트
     if (isGroupChanged && product && group_name) {
@@ -802,6 +805,44 @@ router.put('/:id', async (req, res) => {
         console.warn(`Group ${new_group_id} does not exist, keeping original group`);
         // 그룹이 없으면 기존 값 유지 (product/group 필드 업데이트 안 함)
       }
+    }
+
+    // 이름 또는 경로 변경 시 endpoint ID 재생성
+    const newId = generateEndpointIdFromPath(
+      path || existing.path,
+      name,
+      finalGroupName,
+      method || existing.method
+    );
+
+    if (newId !== id) {
+      // ID가 변경되는 경우: 새 ID로 삽입 → versions 참조 업데이트 → 기존 삭제
+      const newEndpointData = {
+        ...existing,
+        ...updateData,
+        id: newId,
+        ...(updateData.product && { product: updateData.product, product_id: updateData.product_id }),
+        ...(updateData.group_name && { group_name: updateData.group_name, group_id: updateData.group_id }),
+      };
+
+      const { error: insertError } = await supabase
+        .from('endpoints')
+        .insert(newEndpointData);
+      if (insertError) throw insertError;
+
+      const { error: versionsError } = await supabase
+        .from('versions')
+        .update({ endpoint_id: newId })
+        .eq('endpoint_id', id);
+      if (versionsError) throw versionsError;
+
+      const { error: deleteError } = await supabase
+        .from('endpoints')
+        .delete()
+        .eq('id', id);
+      if (deleteError) throw deleteError;
+
+      return res.json({ message: 'Endpoint updated', changes: 1, newId });
     }
 
     const { data, error } = await supabase

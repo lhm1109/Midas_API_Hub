@@ -29,6 +29,7 @@ import {
   X,
   Search,
   Link2,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
 import { ApiTask, Column } from '../types/manager';
@@ -69,7 +70,7 @@ const COLUMN_GROUPS = {
   },
   pipeline: {
     label: 'Pipeline',
-    columns: ['plan', 'dev', 'vv', 'doc', 'deploy', 'issue', 'status', 'charge', 'remark'],  // deploy 추가
+    columns: ['plan', 'dev', 'vv', 'doc', 'deploy', 'issue', 'status', 'charge', 'remark', 'zendeskUrl'],  // deploy 추가
   },
 };
 
@@ -109,8 +110,9 @@ export function ApiTable({
     const isStatusCol = ['dev', 'vv', 'doc', 'deploy', 'issue', 'status', 'seg1'].includes(columnId);
     const isProductRibbonCol = ['product', 'tab', 'group', 'sub1', 'sub2', 'sub3'].includes(columnId);
     const isEndpointCol = columnId === 'endPoint';
+    const isZendeskUrlCol = columnId === 'zendeskUrl';
     const isOrderCol = columnId === 'order_index';
-    return isOrderCol ? 50 : isStatusCol ? 64 : isProductRibbonCol ? 100 : isEndpointCol ? 150 : 80;
+    return isOrderCol ? 50 : isStatusCol ? 64 : isProductRibbonCol ? 100 : isEndpointCol ? 150 : isZendeskUrlCol ? 220 : 80;
   }, []);
 
   // 현재 컬럼 너비 (사용자 조절값 또는 기본값)
@@ -339,6 +341,24 @@ export function ApiTable({
             </TooltipContent>
           )}
         </Tooltip>
+      );
+    }
+
+    if (columnId === 'zendeskUrl') {
+      if (!value) return '';
+
+      return (
+        <a
+          href={String(value)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 hover:underline"
+          onClick={(e) => e.stopPropagation()}
+          title={String(value)}
+        >
+          <span className="truncate max-w-[180px]">{String(value)}</span>
+          <ExternalLink className="w-3 h-3 flex-shrink-0" />
+        </a>
       );
     }
 
