@@ -627,6 +627,16 @@ export function VersionTab({ endpoint, products }: VersionTabProps) {
           </div>
           <p className="text-sm text-zinc-500 mt-1">
             Manage versions for <span className="text-white font-mono">{endpoint.name}</span>
+            {endpoint.path && (
+              <>
+                <span className="mx-2 text-zinc-700">|</span>
+                <span className="text-zinc-500">Endpoint </span>
+                <span className="text-blue-300 font-mono">
+                  {endpoint.method ? `${endpoint.method} ` : ''}
+                  {endpoint.path}
+                </span>
+              </>
+            )}
             {isVersionsLoading && (
               <span className="inline-flex items-center gap-2 ml-3 text-blue-400">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />

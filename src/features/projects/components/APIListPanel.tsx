@@ -496,11 +496,77 @@ interface RenderGroupDeps {
   handleDuplicateEndpoint: (e: ApiEndpoint) => void;
   getStatusIndicator: (id: string) => JSX.Element | null;
   searchTerm: string;
+  searchCategory: SearchCategory;
   activeDroppableId: string | null;
   linkedEndpointIds?: Set<string>;  // Manager 탭과 연결된 엔드포인트 ID
   nestTargetGroupId?: string | null;
   nestTargetKind?: 'group' | 'endpoint' | 'outdent' | null;
   dropIndicator?: { type: 'group' | 'endpoint'; itemId: string; position: 'before' | 'after' } | null;
+}
+
+type SearchCategory = 'all' | 'title' | 'endpoint' | 'method';
+
+const SEARCH_CATEGORY_OPTIONS: Array<{ value: SearchCategory; label: string }> = [
+  { value: 'all', label: 'All' },
+  { value: 'title', label: 'Title' },
+  { value: 'endpoint', label: 'Endpoint' },
+  { value: 'method', label: 'Method' },
+];
+
+function safeStringify(value: unknown): string {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return '';
+  }
+}
+
+function endpointMatchesSearch(
+  endpoint: ApiEndpoint,
+  rawTerm: string | undefined,
+  category: SearchCategory
+): boolean {
+  const term = (rawTerm || '').trim().toLowerCase();
+  if (!term) return true;
+
+  const includesTerm = (value: unknown) => safeStringify(value).toLowerCase().includes(term);
+
+  switch (category) {
+    case 'title':
+      return includesTerm(endpoint.name);
+    case 'endpoint':
+      return [endpoint.path, endpoint.id].some(includesTerm);
+    case 'method':
+      return includesTerm(endpoint.method);
+    case 'all':
+      default:
+        return [
+          endpoint.name,
+          endpoint.path,
+          endpoint.id,
+          endpoint.method,
+          (endpoint as any).status,
+          (endpoint as any).statusMessage,
+          (endpoint as any).status_message,
+        ].some(includesTerm);
+    }
+  }
+
+function groupHasMatchingEndpoint(
+  group: ApiGroup,
+  searchTerm: string,
+  searchCategory: SearchCategory
+): boolean {
+  return (group.endpoints ?? []).some((endpoint) =>
+    endpointMatchesSearch(endpoint, searchTerm, searchCategory)
+  ) ||
+    (group.subgroups ?? []).some((subgroup) =>
+      groupHasMatchingEndpoint(subgroup, searchTerm, searchCategory)
+    );
 }
 
 function renderGroupTree(
@@ -512,15 +578,22 @@ function renderGroupTree(
 
   // ✅ 검색 중이면 자동 확장 (검색 결과 보여주기)
   const hasMatchingEndpoints = (group.endpoints ?? []).some(ep =>
-    ep.name.toLowerCase().includes(deps.searchTerm.toLowerCase())
+    endpointMatchesSearch(ep, deps.searchTerm, deps.searchCategory)
   );
-  const shouldExpand = isExpanded || !!(deps.searchTerm && hasMatchingEndpoints);
+  const hasMatchingDescendants = (group.subgroups ?? []).some(subgroup =>
+    groupHasMatchingEndpoint(subgroup, deps.searchTerm, deps.searchCategory)
+  );
+  const shouldExpand = isExpanded || !!(deps.searchTerm && (hasMatchingEndpoints || hasMatchingDescendants));
   const isNestTarget = deps.nestTargetGroupId === group.id;
 
   // ✅ 필터 결과 단일화 - 한 번만 계산
-  const filteredSubgroups = group.subgroups ?? [];
+  const filteredSubgroups = deps.searchTerm
+    ? (group.subgroups ?? []).filter(subgroup =>
+      groupHasMatchingEndpoint(subgroup, deps.searchTerm, deps.searchCategory)
+    )
+    : group.subgroups ?? [];
   const filteredEndpoints = (group.endpoints ?? []).filter(ep =>
-    ep.name.toLowerCase().includes(deps.searchTerm.toLowerCase())
+    endpointMatchesSearch(ep, deps.searchTerm, deps.searchCategory)
   );
 
   // ✅ items는 필터된 결과로부터 생성
@@ -624,6 +697,7 @@ interface APIListPanelProps {
 
 export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onEndpointsChange, onToggleCollapse, linkedEndpointIds }: APIListPanelProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchCategory, setSearchCategory] = useState<SearchCategory>('all');
 
   // 🔥 엔드포인트별 잠금 상태 관리
   const [endpointLocks, setEndpointLocks] = useState<Record<string, { locked: boolean; lockedBy?: string }>>({});
@@ -2079,6 +2153,18 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
               className="pl-8 bg-zinc-800 border-zinc-700 text-sm h-8"
             />
           </div>
+          <select
+            value={searchCategory}
+            onChange={(event) => setSearchCategory(event.target.value as SearchCategory)}
+            className="h-8 w-28 rounded-md border border-zinc-700 bg-zinc-800 px-2 text-xs text-zinc-200 outline-none focus:border-zinc-500"
+            title="Search category"
+          >
+            {SEARCH_CATEGORY_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
           {/* 🔄 전체 목록 새로고침 버튼 */}
           <button
             onClick={() => {
@@ -2190,6 +2276,7 @@ export function APIListPanel({ products, selectedEndpoint, onEndpointSelect, onE
                               handleDuplicateEndpoint,
                               getStatusIndicator,
                               searchTerm,
+                              searchCategory,
                               activeDroppableId,
                               linkedEndpointIds,
                               nestTargetGroupId,
