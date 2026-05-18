@@ -540,6 +540,7 @@ Manual은 schema를 설명하는 문서가 아니라 사용자가 API를 호출�
 | Enum 검증 | enum value 전체가 있는가 | dropdown 현재값 하나만 enum으로 작성 |
 | 확장데이터 검증 | `x-ui`는 UI 정보만 포함하는가 | `x-ui.required`, `x-ui.minimum` |
 | Table 검증 | `TABLE_TYPE`, `COMPONENTS`, column header가 완전한가 | `COMPONENTS` enum 누락 |
+| Table component 검증 | `COMPONENTS` value가 사용자가 입력하기 쉬운 영어/ASCII key인가 | `COMPONENTS: ["θ", "φ"]` |
 | Builder 검증 | label, order, group, condition이 화면에서 맞는가 | 알파벳 순서로 field 표시 |
 | Manual 검증 | Manual 예제가 schema와 일치하는가 | Manual에는 `SHORTTERM`, schema에는 `dSHORTTERM` |
 | API 호출 검증 | 최소/일반 payload가 실제 API에서 의미가 있는가 | schema는 통과하지만 제품이 거부 |
