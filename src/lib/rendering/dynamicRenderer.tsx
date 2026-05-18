@@ -53,17 +53,30 @@ function getKeyedObjectChildDefault(field: UIBuilderField): any {
 
 function shouldRenderConditionalChild(
   field: UIBuilderField,
-  dynamicFormData: Record<string, any>
+  dynamicFormData: Record<string, any>,
+  scopedFormData?: Record<string, any>
 ): boolean {
   const condition = (field as any)['x-required-when'] || (field as any)['x-optional-when'];
   if (!condition) return true;
 
+  const sources = scopedFormData ? [scopedFormData, dynamicFormData] : [dynamicFormData];
+
   return Object.entries(condition).every(([key, expectedValue]) => {
-    const actualValue = dynamicFormData[key];
-    if (typeof expectedValue === 'number') {
-      return Number(actualValue) === expectedValue;
+    const leafKey = getFieldLeafName(key);
+
+    for (const source of sources) {
+      const directValue = getValueByPath(source, key);
+      if (directValue !== undefined) {
+        return matchesConditionalValue(directValue, expectedValue);
+      }
+
+      const leafValue = getValueByPath(source, leafKey);
+      if (leafValue !== undefined) {
+        return matchesConditionalValue(leafValue, expectedValue);
+      }
     }
-    return actualValue === expectedValue;
+
+    return false;
   });
 }
 
@@ -705,7 +718,7 @@ function renderKeyedObjectField(
                     </button>
                   </div>
 
-                  {field.children?.filter((child) => shouldRenderConditionalChild(child, dynamicFormData)).map((child) => {
+                  {field.children?.filter((child) => shouldRenderConditionalChild(child, dynamicFormData, entryValue)).map((child) => {
                     const childLeafName = getFieldLeafName(child.name);
                     return (
                       <div key={`${entryKey}-${child.name}`} className="space-y-2 pl-4 border-l-2 border-zinc-700">

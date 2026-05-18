@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 const router = express.Router();
 const ZENDESK_DEFAULT_LOCALE = 'en-us';
 const ZENDESK_TIMEOUT_MS = 30000;
+const ZENDESK_TRANSLATION_BODY_LIMIT_BYTES = 1_000_000;
 const ENV_PATH = path.join(process.cwd(), '.env');
 
 function refreshEnvFromFile() {
@@ -31,6 +32,35 @@ function normalizeZendeskLocale(locale = ZENDESK_DEFAULT_LOCALE) {
     .replace(/_/g, '-')
     .toLowerCase();
   return normalized || ZENDESK_DEFAULT_LOCALE;
+}
+
+function getUtf8ByteSize(value) {
+  return Buffer.byteLength(String(value ?? ''), 'utf8');
+}
+
+function formatByteSize(bytes) {
+  if (bytes >= 1_000_000) {
+    return `${(bytes / 1_000_000).toFixed(2)} MB`;
+  }
+  if (bytes >= 1_000) {
+    return `${(bytes / 1_000).toFixed(1)} KB`;
+  }
+  return `${bytes} bytes`;
+}
+
+function assertZendeskTranslationBodySize(body, locale) {
+  const byteSize = getUtf8ByteSize(body);
+  if (byteSize <= ZENDESK_TRANSLATION_BODY_LIMIT_BYTES) {
+    return;
+  }
+
+  const error = new Error(
+    `Zendesk translation body for ${normalizeZendeskLocale(locale)} is ${formatByteSize(byteSize)}. ` +
+    `The per-locale limit is ${formatByteSize(ZENDESK_TRANSLATION_BODY_LIMIT_BYTES)}. ` +
+    'Zendesk cannot accept this as a single article body unless the schema/example HTML is reduced.'
+  );
+  error.code = 'ZENDESK_TRANSLATION_BODY_TOO_LARGE';
+  throw error;
 }
 
 function toZendeskPathSegment(value, fieldName) {
@@ -357,10 +387,13 @@ async function makeZendeskRequest(config, requestPath, method = 'GET', payload =
 
 async function updateZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
   const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
-  const safeLocale = toZendeskPathSegment(normalizeZendeskLocale(locale), 'locale');
+  const normalizedLocale = normalizeZendeskLocale(locale);
+  const safeLocale = toZendeskPathSegment(normalizedLocale, 'locale');
+  const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+  assertZendeskTranslationBodySize(normalizedBody, normalizedLocale);
   const payload = {
     translation: {
-      body: typeof body === 'string' ? body : String(body ?? ''),
+      body: normalizedBody,
     },
   };
 
@@ -405,6 +438,8 @@ async function updateZendeskArticle(config, articleId, articlePayload, notifySub
 async function createZendeskArticle(config, sectionId, locale, title, body, envConfig, draftOverride, metadataOverrides = {}) {
   const safeSectionId = toZendeskPathSegment(sectionId, 'sectionId');
   const normalizedLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale || ZENDESK_DEFAULT_LOCALE);
+  const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+  assertZendeskTranslationBodySize(normalizedBody, normalizedLocale);
   const metadata = buildZendeskArticleMetadataFromEnv(envConfig, metadataOverrides);
   const articleDraft = draftOverride !== null && draftOverride !== undefined
     ? !!draftOverride
@@ -418,7 +453,7 @@ async function createZendeskArticle(config, sectionId, locale, title, body, envC
     article: {
       ...metadata,
       title: asTrimmedString(title) || 'API Manual',
-      body: typeof body === 'string' ? body : String(body ?? ''),
+      body: normalizedBody,
       locale: normalizedLocale,
       draft: articleDraft,
     },
@@ -504,7 +539,8 @@ router.get('/article', async (req, res) => {
     };
 
     const { targetInput = '', locale = '' } = req.query || {};
-    const fallbackLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale);
+    const requestedLocale = asTrimmedString(locale);
+    const fallbackLocale = normalizeZendeskLocale(requestedLocale || envConfig.defaultLocale);
     const directTarget = parseZendeskTarget(targetInput, fallbackLocale);
 
     if (!directTarget) {
@@ -514,8 +550,11 @@ router.get('/article', async (req, res) => {
       });
     }
 
+    const effectiveLocale = requestedLocale
+      ? fallbackLocale
+      : normalizeZendeskLocale(directTarget.locale || fallbackLocale);
     const safeArticleId = toZendeskPathSegment(directTarget.articleId, 'articleId');
-    const safeLocale = toZendeskPathSegment(directTarget.locale, 'locale');
+    const safeLocale = toZendeskPathSegment(effectiveLocale, 'locale');
 
     // 번역본(body HTML) 가져오기
     const translationData = await makeZendeskRequest(
@@ -528,10 +567,10 @@ router.get('/article', async (req, res) => {
       success: true,
       data: {
         articleId: directTarget.articleId,
-        locale: directTarget.locale,
+        locale: effectiveLocale,
         title: asTrimmedString(translation.title),
         body: asTrimmedString(translation.body),
-        articleUrl: buildZendeskArticleUrl(config.subdomain, directTarget.locale, directTarget.articleId),
+        articleUrl: buildZendeskArticleUrl(config.subdomain, effectiveLocale, directTarget.articleId),
         updatedAt: translation.updated_at || null,
       },
     });
@@ -560,7 +599,8 @@ router.post('/publish', async (req, res) => {
 
     const { targetInput = '', locale = '', body = '', title, draft, labelNames, commentsDisabled } = req.body || {};
 
-    const fallbackLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale);
+    const requestedLocale = asTrimmedString(locale);
+    const fallbackLocale = normalizeZendeskLocale(requestedLocale || envConfig.defaultLocale);
     const directTarget = parseZendeskTarget(targetInput, fallbackLocale);
     if (asTrimmedString(targetInput) && !directTarget) {
       return res.status(400).json({
@@ -592,7 +632,9 @@ router.post('/publish', async (req, res) => {
 
     if (resolvedTarget) {
       articleId = String(resolvedTarget.articleId);
-      effectiveLocale = normalizeZendeskLocale(resolvedTarget.locale || fallbackLocale);
+      effectiveLocale = requestedLocale
+        ? fallbackLocale
+        : normalizeZendeskLocale(resolvedTarget.locale || fallbackLocale);
 
       if (Object.keys(metadata).length > 0 || envConfig.defaultNotifySubscribers !== null) {
         await updateZendeskArticle(config, articleId, metadata, envConfig.defaultNotifySubscribers);
@@ -669,7 +711,8 @@ router.post('/publish', async (req, res) => {
     });
   } catch (error) {
     console.error('Zendesk publish error:', error);
-    res.status(500).json({ success: false, error: error.message });
+    const statusCode = error?.code === 'ZENDESK_TRANSLATION_BODY_TOO_LARGE' ? 413 : 500;
+    res.status(statusCode).json({ success: false, error: error.message });
   }
 });
 

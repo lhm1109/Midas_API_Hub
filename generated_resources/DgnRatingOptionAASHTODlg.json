@@ -1,0 +1,828 @@
+{
+  "conditionals": [
+    {
+      "action": "hide",
+      "controlId": "IDC_DGN_CLOSE",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "hide",
+      "controlId": "IDC_DGN_EXECUTE",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DROOP_I_STATIC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DROOP_I_EDIT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editDroopI"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DROOP_I_UNIT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_unitDroopI"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_STRAIN_I_ST",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_STRAIN_I_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editStrainI"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_STRAIN_I_UNT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_unitStrainI"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DROOP_J_STATIC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DROOP_J_EDIT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editDroopJ"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DROOP_J_UNIT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_unitDroopJ"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_STRAIN_J_ST",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_STRAIN_J_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editStrainJ"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_STRAIN_J_UNT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_unitStrainJ"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_OPTION_GROUP",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DEFINE_GROUP",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_POSITION_GROUP",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_FACTOR_GROUP",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_AUTO_RDO",
+      "triggerVariable": "__unknown__",
+      "variable": "m_nCalcType"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_USER_RDO",
+      "triggerVariable": "__unknown__",
+      "variable": "m_bUser"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DYNAMIC_FACTOR_STATIC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_DYNAMIC_FACTOR_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editDynamic"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_K_FACTOR_STC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "disable",
+      "condition": "bStateAddMod==FALSE",
+      "controlId": "IDC_DGN_K_FACTOR_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editKFactor"
+    },
+    {
+      "action": "enable",
+      "condition": "bAUTOType==FALSE",
+      "controlId": "IDC_DGN_K_FACTOR_STC",
+      "triggerVariable": "__unknown__"
+    },
+    {
+      "action": "enable",
+      "condition": "bAUTOType==FALSE",
+      "controlId": "IDC_DGN_K_FACTOR_EDT",
+      "triggerVariable": "__unknown__",
+      "variable": "m_editKFactor"
+    },
+    {
+      "action": "enable",
+      "condition": "bAUTOType==FALSE",
+      "controlId": "IDC_DGN_AUTO_RDO",
+      "triggerVariable": "__unknown__",
+      "variable": "m_nCalcType"
+    },
+    {
+      "action": "enable",
+      "condition": "bAUTOType==FALSE",
+      "controlId": "IDC_DGN_USER_RDO",
+      "triggerVariable": "__unknown__",
+      "variable": "m_bUser"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DROOP_I_STATIC",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DROOP_I_EDIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editDroopI"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DROOP_I_UNIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitDroopI"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_STRAIN_I_ST",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_STRAIN_I_EDT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editStrainI"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_STRAIN_I_UNT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitStrainI"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DROOP_J_STATIC",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DROOP_J_EDIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editDroopJ"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DROOP_J_UNIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitDroopJ"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_STRAIN_J_ST",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_STRAIN_J_EDT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editStrainJ"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_STRAIN_J_UNT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitStrainJ"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_AUTO_RDO",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_nCalcType"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_USER_RDO",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_bUser"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DYNAMIC_FACTOR_STATIC",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_DYNAMIC_FACTOR_EDT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editDynamic"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_K_FACTOR_STC",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==0",
+      "controlId": "IDC_DGN_K_FACTOR_EDT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editKFactor"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_DROOP_I_STATIC",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_DROOP_I_EDIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editDroopI"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_DROOP_I_UNIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitDroopI"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_STRAIN_I_ST",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_STRAIN_I_EDT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editStrainI"
+    },
+    {
+      "action": "disable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_STRAIN_I_UNT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitStrainI"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_DROOP_J_STATIC",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_DROOP_J_EDIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editDroopJ"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_DROOP_J_UNIT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitDroopJ"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_STRAIN_J_ST",
+      "triggerVariable": "m_nPosition"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_STRAIN_J_EDT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_editStrainJ"
+    },
+    {
+      "action": "enable",
+      "condition": "m_nPosition==1",
+      "controlId": "IDC_DGN_STRAIN_J_UNT",
+      "triggerVariable": "m_nPosition",
+      "variable": "m_unitStrainJ"
+    }
+  ],
+  "controlGroupArrays": {
+    "m_aAutoUser": [
+      "IDC_DGN_AUTO_RDO",
+      "IDC_DGN_USER_RDO"
+    ],
+    "m_aCtrl_I": [
+      "IDC_DGN_DROOP_I_STATIC",
+      "IDC_DGN_DROOP_I_EDIT",
+      "IDC_DGN_DROOP_I_UNIT",
+      "IDC_DGN_STRAIN_I_ST",
+      "IDC_DGN_STRAIN_I_EDT",
+      "IDC_DGN_STRAIN_I_UNT"
+    ],
+    "m_aCtrl_J": [
+      "IDC_DGN_DROOP_J_STATIC",
+      "IDC_DGN_DROOP_J_EDIT",
+      "IDC_DGN_DROOP_J_UNIT",
+      "IDC_DGN_STRAIN_J_ST",
+      "IDC_DGN_STRAIN_J_EDT",
+      "IDC_DGN_STRAIN_J_UNT"
+    ],
+    "m_aDispl_I": [
+      "IDC_DGN_DROOP_I_STATIC",
+      "IDC_DGN_DROOP_I_EDIT",
+      "IDC_DGN_DROOP_I_UNIT"
+    ],
+    "m_aDispl_J": [
+      "IDC_DGN_DROOP_J_STATIC",
+      "IDC_DGN_DROOP_J_EDIT",
+      "IDC_DGN_DROOP_J_UNIT"
+    ],
+    "m_aDynamic": [
+      "IDC_DGN_DYNAMIC_FACTOR_STATIC",
+      "IDC_DGN_DYNAMIC_FACTOR_EDT"
+    ],
+    "m_aElemTypeCtrl": [
+      "IDC_DGN_PSC_ELEM_TYPE_GRP",
+      "IDC_DGN_PSC_ELEM_RDO",
+      "IDC_DGN_PSC_VELEM_RDO"
+    ],
+    "m_aEtc": [
+      "IDC_DGN_EXECUTE",
+      "IDC_DGN_CLOSE"
+    ],
+    "m_aGroupBox": [
+      "IDC_DGN_OPTION_GROUP",
+      "IDC_DEFINE_GROUP",
+      "IDC_POSITION_GROUP",
+      "IDC_FACTOR_GROUP"
+    ],
+    "m_aK": [
+      "IDC_DGN_K_FACTOR_STC",
+      "IDC_DGN_K_FACTOR_EDT"
+    ],
+    "m_aMoveCtrl": [
+      "IDC_DEFINE_GROUP",
+      "IDC_POSITION_GROUP",
+      "IDC_DGN_I_RADIO",
+      "IDC_DGN_J_RADIO",
+      "IDC_DGN_IJ_RADIO",
+      "IDC_FACTOR_GROUP",
+      "IDC_DGN_AUTO_RDO",
+      "IDC_DGN_USER_RDO",
+      "IDC_DGN_DROOP_I_STATIC",
+      "IDC_DGN_DROOP_I_EDIT",
+      "IDC_DGN_DROOP_I_UNIT",
+      "IDC_DGN_DROOP_J_STATIC",
+      "IDC_DGN_DROOP_J_EDIT",
+      "IDC_DGN_DROOP_J_UNIT",
+      "IDC_DGN_DYNAMIC_FACTOR_STATIC",
+      "IDC_DGN_DYNAMIC_FACTOR_EDT",
+      "IDC_DGN_K_FACTOR_STC",
+      "IDC_DGN_K_FACTOR_EDT"
+    ],
+    "m_aRadioBtn": [
+      "IDC_DGN_AR",
+      "IDC_DGN_DEL",
+      "IDC_DGN_I_RADIO",
+      "IDC_DGN_J_RADIO",
+      "IDC_DGN_IJ_RADIO"
+    ],
+    "m_aStrain_I": [
+      "IDC_DGN_STRAIN_I_ST",
+      "IDC_DGN_STRAIN_I_EDT",
+      "IDC_DGN_STRAIN_I_UNT"
+    ],
+    "m_aStrain_J": [
+      "IDC_DGN_STRAIN_J_ST",
+      "IDC_DGN_STRAIN_J_EDT",
+      "IDC_DGN_STRAIN_J_UNT"
+    ]
+  },
+  "controls": [
+    {
+      "type": "GROUPBOX",
+      "caption": "Option ",
+      "h": 28,
+      "id": "IDC_DGN_OPTION_GROUP",
+      "w": 119,
+      "x": 3,
+      "y": 7
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Add/Replace",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_AR",
+      "inferredType": "integer",
+      "variable": "m_nOption",
+      "w": 58,
+      "x": 8,
+      "y": 19
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Delete",
+      "h": 12,
+      "id": "IDC_DGN_DEL",
+      "w": 36,
+      "x": 72,
+      "y": 19
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Define Rating",
+      "h": 154,
+      "id": "IDC_DEFINE_GROUP",
+      "w": 119,
+      "x": 3,
+      "y": 70
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Position",
+      "h": 28,
+      "id": "IDC_POSITION_GROUP",
+      "w": 109,
+      "x": 8,
+      "y": 82
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "I",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_I_RADIO",
+      "inferredType": "integer",
+      "variable": "m_nPosition",
+      "w": 18,
+      "x": 13,
+      "y": 94
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "J",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_J_RADIO",
+      "inferredType": "object",
+      "variable": "m_ratioJ",
+      "w": 19,
+      "x": 48,
+      "y": 94
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "I && J",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_IJ_RADIO",
+      "inferredType": "object",
+      "variable": "m_ratioIJ",
+      "w": 28,
+      "x": 80,
+      "y": 94
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Load Test Measurements",
+      "h": 106,
+      "id": "IDC_FACTOR_GROUP",
+      "w": 109,
+      "x": 8,
+      "y": 114
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Auto Calculation",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_AUTO_RDO",
+      "inferredType": "integer",
+      "variable": "m_nCalcType",
+      "w": 67,
+      "x": 13,
+      "y": 126
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "User Input",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_USER_RDO",
+      "inferredType": "object",
+      "variable": "m_bUser",
+      "w": 51,
+      "x": 13,
+      "y": 140
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Displacement(I)",
+      "h": 12,
+      "id": "IDC_DGN_DROOP_I_STATIC",
+      "w": 51,
+      "x": 13,
+      "y": 156
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_DROOP_I_EDIT",
+      "inferredType": "object",
+      "labelText": "Displacement(I)",
+      "variable": "m_editDroopI",
+      "w": 27,
+      "x": 65,
+      "y": 156
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_DROOP_I_UNIT",
+      "inferredType": "object",
+      "variable": "m_unitDroopI",
+      "w": 15,
+      "x": 96,
+      "y": 156
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Displacement(J)",
+      "h": 12,
+      "id": "IDC_DGN_DROOP_J_STATIC",
+      "w": 51,
+      "x": 13,
+      "y": 172
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_DROOP_J_EDIT",
+      "inferredType": "object",
+      "labelText": "Displacement(J)",
+      "variable": "m_editDroopJ",
+      "w": 27,
+      "x": 65,
+      "y": 172
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_DROOP_J_UNIT",
+      "inferredType": "object",
+      "variable": "m_unitDroopJ",
+      "w": 15,
+      "x": 96,
+      "y": 172
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_DYNAMIC_FACTOR_EDT",
+      "inferredType": "object",
+      "labelText": "Kb",
+      "variable": "m_editDynamic",
+      "w": 27,
+      "x": 65,
+      "y": 188
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Adjustment Factor, K",
+      "h": 12,
+      "id": "IDC_DGN_K_FACTOR_STC",
+      "w": 70,
+      "x": 13,
+      "y": 204
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_K_FACTOR_EDT",
+      "inferredType": "object",
+      "labelText": "Adjustment Factor, K",
+      "variable": "m_editKFactor",
+      "w": 27,
+      "x": 85,
+      "y": 204
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Apply",
+      "h": 14,
+      "id": "IDC_DGN_EXECUTE",
+      "w": 33,
+      "x": 136,
+      "y": 178
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 14,
+      "id": "IDC_DGN_CLOSE",
+      "w": 33,
+      "x": 173,
+      "y": 178
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Kb",
+      "h": 12,
+      "id": "IDC_DGN_DYNAMIC_FACTOR_STATIC",
+      "w": 50,
+      "x": 13,
+      "y": 188
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Strain(I)",
+      "h": 12,
+      "id": "IDC_DGN_STRAIN_I_ST",
+      "w": 48,
+      "x": 13,
+      "y": 228
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_STRAIN_I_EDT",
+      "inferredType": "object",
+      "labelText": "Strain(I)",
+      "variable": "m_editStrainI",
+      "w": 27,
+      "x": 65,
+      "y": 228
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_STRAIN_I_UNT",
+      "inferredType": "object",
+      "variable": "m_unitStrainI",
+      "w": 15,
+      "x": 96,
+      "y": 228
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Strain(J)",
+      "h": 12,
+      "id": "IDC_DGN_STRAIN_J_ST",
+      "w": 48,
+      "x": 13,
+      "y": 244
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_STRAIN_J_EDT",
+      "inferredType": "object",
+      "labelText": "Strain(J)",
+      "variable": "m_editStrainJ",
+      "w": 27,
+      "x": 65,
+      "y": 244
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_DGN_STRAIN_J_UNT",
+      "inferredType": "object",
+      "variable": "m_unitStrainJ",
+      "w": 15,
+      "x": 96,
+      "y": 244
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Element Type",
+      "h": 28,
+      "id": "IDC_DGN_PSC_ELEM_TYPE_GRP",
+      "w": 119,
+      "x": 3,
+      "y": 38
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Element",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_DGN_PSC_ELEM_RDO",
+      "inferredType": "integer",
+      "variable": "m_nElemType",
+      "w": 44,
+      "x": 8,
+      "y": 50
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Virtual Beam",
+      "h": 12,
+      "id": "IDC_DGN_PSC_VELEM_RDO",
+      "w": 60,
+      "x": 59,
+      "y": 50
+    }
+  ],
+  "dialogClass": "DgnRatingOptionAASHTODlg",
+  "dialogId": "IDD_DGN_RATING_OPTION_AASHTO_DLG",
+  "headerFile": "ui_src/wg_dgn/DgnRatingOptionAASHTODlg.h",
+  "parsedAt": "2026-05-13T06:55:26.605Z",
+  "rawDoDataExchange": "CDialog::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CDgnRatingOptionAASHTODlg)\r\n\tDDX_Radio(pDX, IDC_DGN_AR, m_nOption);\r\n\tDDX_Radio(pDX, IDC_DGN_I_RADIO, m_nPosition);\r\n // DDX_Control(pDX, IDC_DGN_I_RADIO, m_ratioI);\r\n\t//DDX_Control(pDX, IDC_DGN_J_RADIO, m_ratioJ);\r\n\t//DDX_Control(pDX, IDC_DGN_IJ_RADIO, m_ratioIJ);\r\n\tDDX_Radio(pDX, IDC_DGN_AUTO_RDO, m_nCalcType);\r\n\t//DDX_Control(pDX, IDC_DGN_USER_RDO, m_bUser);\r\n\tDDX_Control(pDX, IDC_DGN_DROOP_I_EDIT, m_editDroopI);\r\n\tDDX_Control(pDX, IDC_DGN_DROOP_J_EDIT, m_editDroopJ);\r\n\tDDX_Control(pDX, IDC_DGN_STRAIN_I_EDT, m_editStrainI);\r\n\tDDX_Control(pDX, IDC_DGN_STRAIN_J_EDT, m_editStrainJ);\r\n\tDDX_Control(pDX, IDC_DGN_DYNAMIC_FACTOR_EDT, m_editDynamic);\r\n\tDDX_Control(pDX, IDC_DGN_K_FACTOR_EDT, m_editKFactor);\r\n\tDDX_Control(pDX, IDC_DGN_DROOP_I_UNIT, m_unitDroopI);\t\r\n\tDDX_Control(pDX, IDC_DGN_DROOP_J_UNIT, m_unitDroopJ);\r\n\t//DDX_Control(pDX, IDC_DGN_STRAIN_I_UNT, m_unitStrainI);\t\r\n\t//DDX_Control(pDX, IDC_DGN_STRAIN_J_UNT, m_unitStrainJ);\t\r\n\tDDX_Radio(pDX, IDC_DGN_PSC_ELEM_RDO, m_nElemType);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCMenuBarChildDlg::OnInitDialog();\r\n\r\n\tSetControl();\r\n\tSetControlText();\r\n\t/*if(SetControlEnableByDB())\r\n\t{\r\n\tInitial_Data();\r\n\tSetEnableByCtrl();\r\n\t}\t*/\r\n\tInitial_Data();\r\n\tSetEnableByCtrl();\r\n\tHideAndMoveControlByDB();\r\n\t\r\n\tGetDlgItem(IDC_DGN_CLOSE)->ShowWindow(SW_HIDE);\r\n\tGetDlgItem(IDC_DGN_EXECUTE)->ShowWindow(SW_HIDE);\r\n\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// Initial_SelectItem:\n// Unselected All.\r\n\tif(m_pDoc==NULL)\treturn;\r\n\tif(m_pDoc->m_pViewCtrl->SelectedElemCount()) m_pDoc->m_pViewCtrl->UnSelectAllElem(NULL,FALSE);\r\n\t// Initialize Data.\r\n\tInitial_Data();\r\n\tSetEnableByCtrl();\n\n// Initial_Data:\nconst double dDefVal = 0.001;\r\n\r\n\tT_RKCE_D RkceD; RkceD.Initialize();\t\r\n\r\n\tm_nOption\t= 0;      // add/replace\r\n\tm_nPosition = 0;\r\n\tm_nCalcType = 0;\r\n\r\n\t//m_ratioI.SetCheck(RkceD.nChkPosition == 0);\r\n\t//m_ratioJ.SetCheck(RkceD.nChkPosition == 1);\r\n\t//m_ratioIJ.SetCheck(RkceD.nChkPosition == 2);\r\n\r\n\tm_editDroopI.SetEditUnit(m_pDoc->m_pUnitCtrl->ConvertUnitDataOut(D_UNITSYS_BASE_LENGTH, dDefVal));\r\n\tm_editDroopJ.SetEditUnit(m_pDoc->m_pUnitCtrl->ConvertUnitDataOut(D_UNITSYS_BASE_LENGTH, dDefVal));\r\n\tm_editStrainI.SetEditUnit(RkceD.dStrainI);\t\r\n\tm_editStrainJ.SetEditUnit(RkceD.dStrainJ);\t\r\n\tm_editDynamic.SetEditUnit(RkceD.dImpactFactor);\r\n\tm_editKFactor.SetEditUnit(RkceD.dAdjustmentFactor);\r\n\r\n\r\n\tUpdateData(FALSE);\n\n// SetEnableByCtrl:\nUpdateData(TRUE);\r\n\r\n\tBOOL bStateAddMod = m_nOption == 0;\r\n\tBOOL bAUTOType = m_nCalcType ==0;\r\n\tif(bStateAddMod==FALSE)\r\n\t{\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_I,FALSE);\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_J,FALSE);\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aGroupBox,FALSE);\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aAutoUser,FALSE);\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aDynamic,FALSE);\r\n\t\tCDlgUtil::CtrlEnableDisable(this, m_aK,FALSE);\r\n\t}\r\n\telse\r\n\t{\r\n\t\tif (bAUTOType==FALSE)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aK,TRUE);\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aAutoUser,TRUE);\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_I,FALSE);\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_J,FALSE);\r\n\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aDynamic,FALSE);\r\n\t\t}\r\n\t\telse if (bAUTOType==TRUE)\r\n\t\t{\r\n\t\t\tif(m_nPosition==0)\r\n\t\t\t{\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_I,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_J,FALSE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aAutoUser,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aDynamic,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aK,FALSE);\r\n\t\t\t}\r\n\t\t\telse if(m_nPosition==1)\r\n\t\t\t{\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_I,FALSE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_J,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aAutoUser,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aDynamic,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aK,FALSE);\r\n\t\t\t}\r\n\t\t\telse if(m_nPosition==2)\r\n\t\t\t{\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_I,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aCtrl_J,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aAutoUser,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aDynamic,TRUE);\r\n\t\t\t\tCDlgUtil::CtrlEnableDisable(this, m_aK,FALSE);\r\n\t\t\t}\r\n\t\t\telse{ASSERT(0);}\r\n\t\t}\r\n\t\telse ASSERT(0);\r\n\r\n\t}\n\n// SetControl:\nm_editDroopI.SetUnitType(D_UNITSYS_BASE_LENGTH);\t\r\n\tm_editDroopJ.SetUnitType(D_UNITSYS_BASE_LENGTH);\t\r\n\tm_unitDroopI.SetUnitType(D_UNITSYS_BASE_LENGTH);\t\r\n\tm_unitDroopJ.SetUnitType(D_UNITSYS_BASE_LENGTH);\t\r\n\tm_editStrainI.SetUnitType(D_UNITSYS_NONE);\t\r\n\tm_editStrainJ.SetUnitType(D_UNITSYS_NONE);\r\n\tm_editDynamic.SetUnitType(D_UNITSYS_NONE);\t\r\n\tm_editKFactor.SetUnitType(D_UNITSYS_NONE);\t\r\n\r\n\r\n\tCString szTemp;\r\n\tszTemp.Format(_T(\"%s%s\"), _LS(IDS_DGN_CHAR_MU), _LS(IDS_DGN_CHAR_EPSILON));\r\n\tGetDlgItem(IDC_DGN_STRAIN_I_UNT)->SetWindowText(szTemp);\r\n\tGetDlgItem(IDC_DGN_STRAIN_J_UNT)->SetWindowText(szTemp);\r\n\t\r\n\tGetDlgItem(IDC_DEFINE_GROUP)->GetWindowRect(m_rcGrpDefineBig);\r\n\tGetDlgItem(IDC_FACTOR_GROUP)->GetWindowRect(m_rcGrpFactorBig);\r\n\t\r\n\tScreenToClient(m_rcGrpDefineBig);\r\n\tScreenToClient(m_rcGrpFactorBig);\r\n\t\r\n\tm_rcGrpDefineSmall = m_rcGrpDefineBig;\r\n\tm_rcGrpDefineSmall.bottom -= 100;\r\n\r\n\tm_rcGrpFactorSmall = m_rcGrpFactorBig;\r\n\tm_rcGrpFactorSmall.bottom -= 100;\n\n// SetControlText:\nGetDlgItem(IDC_DEFINE_GROUP       )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_DEFINE_GROUP));  //Define Rating\r\n\tGetDlgItem(IDC_DGN_DROOP_I_STATIC )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_DISPL_I));       //Displacement(I)\r\n\tGetDlgItem(IDC_DGN_DROOP_J_STATIC )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_DISPL_J));       //Displacement(J)\r\n\tGetDlgItem(IDC_DGN_STRAIN_I_ST    )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_STRAIN_I));      //Strain(I)\r\n\tGetDlgItem(IDC_DGN_STRAIN_J_ST    )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_STRAIN_J));      //Strain(J)\r\n\r\n\tGetDlgItem(IDC_POSITION_GROUP     )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_POSITION));      //Position\r\n\tGetDlgItem(IDC_FACTOR_GROUP       )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_FACTOR_GROUP));  //Load Test Measurements\r\n\tGetDlgItem(IDC_DGN_AUTO_RDO       )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_AUTO_RDO));      //Auto Calculation\r\n\tGetDlgItem(IDC_DGN_USER_RDO       )->SetWindowText(_LS(IDS_DGN_AASHTO_PSC_RATING_OPTION_USER_RDO));      //User Input\n\n// SetControlEnableByDB:\nInitial_Data();\r\n\tSetEnableByCtrl();\n\n// UpdateBuffer:\nCViewBuff* pViewBuff = m_pDoc->m_pViewBuff;\r\n\tint nCount = pViewBuff->GetCount();\r\n\tif (nCount == 0) return; \r\n\tASSERT(nCount == 1);\r\n\r\n\tT_UDRD_BUFFER buffer_ur;\r\n\tPOSITION pos = pViewBuff->GetStartBuffer();\r\n\r\n\tBOOL bSpfcChanged = FALSE;\r\n\tBOOL bStorChanged = FALSE;\r\n\twhile(pos != NULL)\r\n\t{\r\n\t\tbuffer_ur = pViewBuff->GetNextBuffer(pos);\r\n\t\tint nCmd = buffer_ur.nCmd;\r\n\t\tswitch(nCmd)\r\n\t\t{\r\n\t\tcase(UR_RACD_ADD)://�ڵ� �����\r\n\t\tcase(UR_RACD_DEL): \r\n\t\t\t{\t\t\t\t\r\n\t\t\t\tHideAndMoveControlByDB();\r\n\t\t\t\t//if(!SetControlEnableByDB())\r\n\t\t\t\t//\treturn;\r\n\t\t\t\tSetEnableByCtrl();\r\n\t\t\t\treturn;\r\n\t\t\t}\t\t\r\n\r\n\t\tcase (UR_BLRS_ADD):\r\n\t\tcase (UR_BLRS_DEL):\r\n\t\t\t{\r\n\t\t\t\tSetControl();\r\n\t\t\t\tSetControlText();\r\n\t\t\t\tInitial_Data();\r\n\t\t\t\tSetEnableByCtrl();\r\n\t\t\t\tHideAndMoveControlByDB();\r\n\t\t\t\treturn;\r\n\t\t\t}\r\n\t\tdefault:\r\n\t\t  break;\r\n\t\t}\r\n\t}",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/DgnRatingOptionAASHTODlg.cpp",
+  "warnings": []
+}

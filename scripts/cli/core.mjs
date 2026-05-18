@@ -6,6 +6,7 @@ import path from "node:path";
 import readline from "node:readline";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
+  buildCodexMcpConfigArgs,
   normalizeProvider,
   resolveToolBinary,
   runAiCommand,
@@ -688,6 +689,8 @@ Notes:
   - --output-dir is relative to generated_schemas (use "." for the root).
   - shell plain text uses the current mode; default is schema (developer mode).
   - schema create builds a prompt that asks AI to use MCP parse_dialog/save_schema.
+  - Codex runs with the apiverification MCP server auto-configured from mcp-server.
+  - Schema mode auto-approves Codex MCP/write tool calls so parse_dialog/save_schema can complete.
   - mcp/api commands are direct-mode utilities and do not require the AI wrapper turn.
 `;
   process.stdout.write(text.trimStart() + "\n");
@@ -1718,7 +1721,7 @@ function runInteractiveSession(opts) {
 
   if (provider === "codex") {
     const codexBin = resolveToolBinary("codex");
-    const args = [];
+    const args = [...buildCodexMcpConfigArgs()];
     if (opts.model) {
       args.push("--model", String(opts.model));
     }
@@ -1801,9 +1804,16 @@ async function runShellCodexTurn(state, prompt, schemaSaveTracker = null, progre
   const isResume = Boolean(state.sessionId);
 
   if (isResume) {
-    args.push("exec", "resume", "--json", state.sessionId);
+    args.push("exec", "resume", "--json", ...buildCodexMcpConfigArgs());
+    if (schemaSaveTracker) {
+      args.push("--dangerously-bypass-approvals-and-sandbox");
+    }
+    args.push(state.sessionId);
   } else {
-    args.push("exec", "--json", "-C", process.cwd(), "--skip-git-repo-check");
+    args.push("exec", "--json", "-C", process.cwd(), "--skip-git-repo-check", ...buildCodexMcpConfigArgs());
+    if (schemaSaveTracker) {
+      args.push("--dangerously-bypass-approvals-and-sandbox");
+    }
   }
 
   if (state.model) {
@@ -2370,6 +2380,19 @@ function printStartupBanner(state) {
   process.stdout.write(`[bat_run] ui: verbose=${state.verbose ? "on" : "off"}, command-output=${state.commandOutput}\n`);
 }
 
+async function printMcpStartupStatus() {
+  try {
+    const result = await withMcpClient((client) => client.listTools(), { log: () => {} });
+    const toolNames = Array.isArray(result?.tools)
+      ? result.tools.map((tool) => tool?.name).filter(Boolean)
+      : [];
+    const detail = toolNames.length > 0 ? ` (${toolNames.join(", ")})` : "";
+    process.stdout.write(`[bat_run] mcp: apiverification ready${detail}\n`);
+  } catch (err) {
+    process.stdout.write(`[bat_run] mcp: apiverification unavailable - ${String(err?.message ?? err)}\n`);
+  }
+}
+
 function createCommandPaletteState() {
   return {
     open: false,
@@ -2550,6 +2573,7 @@ async function startWrapperShell(initialOpts = {}) {
   }
 
   printStartupBanner(state);
+  await printMcpStartupStatus();
   process.stdout.write(
     `[bat_run] shell started (provider=${state.provider}, mode=${state.mode}). Press / for command palette or type /help.\n`
   );

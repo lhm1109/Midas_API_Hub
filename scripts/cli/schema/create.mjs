@@ -88,7 +88,10 @@ export function commandSchemaCreate(rawArgs) {
   const schemaSaveTracker = createSchemaSaveTracker(paths);
   process.stdout.write(`[bat_run] schema target: ${schemaPathRelative}\n`);
   progress.log(`running ${provider} CLI`);
-  const result = runAiCommand(provider, prompt, images, opts.model, { exitOnComplete: false });
+  const result = runAiCommand(provider, prompt, images, opts.model, {
+    exitOnComplete: false,
+    autoApprove: provider === "codex",
+  });
   progress.log("checking generated_schemas for saved schema");
   printSchemaSaveResult(schemaSaveTracker);
   progress.log(result?.status === 0 ? "schema command complete" : `provider exited with code ${result?.status ?? 1}`);

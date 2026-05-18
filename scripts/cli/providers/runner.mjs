@@ -2,6 +2,20 @@ import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, "..", "..", "..");
+const MCP_SERVER_ROOT = path.join(PROJECT_ROOT, "mcp-server");
+const MCP_SERVER_DIST_ENTRY = path.join(MCP_SERVER_ROOT, "dist", "index.js");
+const MCP_SERVER_SRC_ENTRY = path.join(MCP_SERVER_ROOT, "src", "index.ts");
+const MCP_SERVER_TSX_BIN = path.join(
+  MCP_SERVER_ROOT,
+  "node_modules",
+  ".bin",
+  process.platform === "win32" ? "tsx.cmd" : "tsx"
+);
 
 function fail(message, code = 1) {
   process.stderr.write(`[bat_run] ${message}\n`);
@@ -57,6 +71,47 @@ function quoteCmdArg(arg) {
   if (value.length === 0) return '""';
   const escaped = value.replace(/(["%])/g, '"$1"');
   return /[\s&|<>()^%!"]/u.test(value) ? `"${escaped}"` : escaped;
+}
+
+function toTomlLiteral(value) {
+  return `'${String(value).replace(/\\/g, "/").replace(/'/g, "''")}'`;
+}
+
+function resolveCodexMcpServerConfig() {
+  if (fs.existsSync(MCP_SERVER_DIST_ENTRY)) {
+    return {
+      command: "node",
+      args: [MCP_SERVER_DIST_ENTRY],
+      cwd: MCP_SERVER_ROOT,
+    };
+  }
+
+  if (fs.existsSync(MCP_SERVER_SRC_ENTRY) && fs.existsSync(MCP_SERVER_TSX_BIN)) {
+    return {
+      command: MCP_SERVER_TSX_BIN,
+      args: [MCP_SERVER_SRC_ENTRY],
+      cwd: MCP_SERVER_ROOT,
+    };
+  }
+
+  fail("MCP server entry not found. Run `cd mcp-server && npm install && npm run build` first.");
+}
+
+export function buildCodexMcpConfigArgs() {
+  const config = resolveCodexMcpServerConfig();
+  const argsToml = `[${config.args.map(toTomlLiteral).join(", ")}]`;
+  const envToml = `{ APIVERIFICATION_ROOT = ${toTomlLiteral(PROJECT_ROOT)} }`;
+
+  return [
+    "-c",
+    `mcp_servers.apiverification.command=${toTomlLiteral(config.command)}`,
+    "-c",
+    `mcp_servers.apiverification.args=${argsToml}`,
+    "-c",
+    `mcp_servers.apiverification.cwd=${toTomlLiteral(config.cwd)}`,
+    "-c",
+    `mcp_servers.apiverification.env=${envToml}`,
+  ];
 }
 
 export function prepareSpawn(command, args) {
@@ -288,6 +343,10 @@ export function runAiCommand(provider, prompt, images, model, opts = {}) {
   if (provider === "codex") {
     const codexBin = resolveToolBinary("codex");
     const args = ["exec", "-C", process.cwd(), "--skip-git-repo-check"];
+    args.push(...buildCodexMcpConfigArgs());
+    if (opts.autoApprove) {
+      args.push("--dangerously-bypass-approvals-and-sandbox");
+    }
     if (model) {
       args.push("--model", model);
     }

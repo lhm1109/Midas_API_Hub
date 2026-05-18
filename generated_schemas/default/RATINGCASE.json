@@ -1,0 +1,334 @@
+{
+  "type": "object",
+  "description": "Define Rating Case data. Supported methods: GET, PUT.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is a rating case ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "RATINGCASE",
+          "type": "object",
+          "description": "Rating Case definition mapped from T_BLRC_D.",
+          "required": [
+            "NAME",
+            "LIMIT_STATE",
+            "PRIMARY_VEH",
+            "ADJACENT_VEH"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Rating Case Name",
+              "x-ui": {
+                "label": "Name of Rating Case",
+                "order": 1
+              }
+            },
+            "DESC": {
+              "type": "string",
+              "description": "Description",
+              "default": "",
+              "x-ui": {
+                "label": "Description",
+                "order": 2
+              }
+            },
+            "LIMIT_STATE": {
+              "type": "integer",
+              "description": "Rating limit state",
+              "enum": [
+                0,
+                1
+              ],
+              "default": 0,
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Limit State",
+                "order": 3
+              },
+              "x-enum-labels": [
+                "Service Limit State",
+                "Strength Limit State"
+              ]
+            },
+            "PRIMARY_VEH": {
+              "type": "object",
+              "description": "Primary vehicle live load case and rating factor.",
+              "required": [
+                "LOAD_CASE_NAME"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "LOAD_CASE_NAME": {
+                  "type": "string",
+                  "description": "Primary moving load case name, including suffix such as (MV).",
+                  "minLength": 1,
+                  "x-ui": {
+                    "label": "Primary Vehicle",
+                    "order": 1
+                  }
+                },
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Primary vehicle factor.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "Primary Vehicle Factor",
+                    "order": 2
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Primary Vehicle",
+                "order": 4
+              }
+            },
+            "ADJACENT_VEH": {
+              "type": "object",
+              "description": "Adjacent vehicle live load case and rating factor.",
+              "required": [
+                "LOAD_CASE_NAME",
+                "FACTOR"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "LOAD_CASE_NAME": {
+                  "type": "string",
+                  "description": "Adjacent moving load case name, including suffix such as (MV).",
+                  "minLength": 1,
+                  "x-ui": {
+                    "label": "Adjacent Vehicle",
+                    "order": 1
+                  }
+                },
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Adjacent vehicle factor.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "Adjacent Vehicle Factor",
+                    "order": 2
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Adjacent Vehicle",
+                "order": 5
+              }
+            },
+            "EVAL_TYPE": {
+              "type": "integer",
+              "description": "Evaluation live load model. Permit Load is used by LRFR19 rating code.",
+              "enum": [
+                0,
+                1,
+                2
+              ],
+              "default": 0,
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Evaluation Live Load Model",
+                "order": 6
+              },
+              "x-enum-labels": [
+                "Design Live Load",
+                "Legal Load",
+                "Permit Load"
+              ]
+            },
+            "LOAD_FACTOR": {
+              "type": "object",
+              "description": "Optional static load factors keyed by fixed rating load type. Omitted factors use default value 1. DC and DW use max/min factors; temperature and temperature gradient use a single positive factor and the opposite sign is generated by the rating logic.",
+              "additionalProperties": false,
+              "properties": {
+                "DC": {
+                  "type": "object",
+                  "description": "Dead load component factor. Optional; omitted values default to 1.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "MAX": {
+                      "type": "number",
+                      "description": "Maximum DC rating factor.",
+                      "default": 1,
+                      "minimum": 0,
+                      "x-ui": {
+                        "label": "max",
+                        "order": 1
+                      }
+                    },
+                    "MIN": {
+                      "type": "number",
+                      "description": "Minimum DC rating factor.",
+                      "default": 1,
+                      "minimum": 0,
+                      "x-ui": {
+                        "label": "min",
+                        "order": 2
+                      }
+                    }
+                  },
+                  "x-ui": {
+                    "label": "DC",
+                    "order": 1
+                  }
+                },
+                "DW": {
+                  "type": "object",
+                  "description": "Wearing surface and utility load component factor. Optional; omitted values default to 1.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "MAX": {
+                      "type": "number",
+                      "description": "Maximum DW rating factor.",
+                      "default": 1,
+                      "minimum": 0,
+                      "x-ui": {
+                        "label": "max",
+                        "order": 1
+                      }
+                    },
+                    "MIN": {
+                      "type": "number",
+                      "description": "Minimum DW rating factor.",
+                      "default": 1,
+                      "minimum": 0,
+                      "x-ui": {
+                        "label": "min",
+                        "order": 2
+                      }
+                    }
+                  },
+                  "x-ui": {
+                    "label": "DW",
+                    "order": 2
+                  }
+                },
+                "TEMP": {
+                  "type": "number",
+                  "description": "Temperature rating factor. Optional; omitted value defaults to 1.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "Temperature",
+                    "order": 3
+                  }
+                },
+                "TGRADIENT": {
+                  "type": "number",
+                  "description": "Temperature gradient rating factor. Optional; omitted value defaults to 1.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "T. Gradient",
+                    "order": 4
+                  }
+                },
+                "SECONDARY": {
+                  "type": "number",
+                  "description": "Secondary load rating factor. Optional; omitted value defaults to 1.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "Secondary",
+                    "order": 5
+                  }
+                },
+                "PERMANENT": {
+                  "type": "number",
+                  "description": "Permanent load rating factor. Optional; omitted value defaults to 1.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "Permanent",
+                    "order": 6
+                  }
+                },
+                "USER_DEFINED": {
+                  "type": "number",
+                  "description": "User defined load rating factor. Optional; omitted value defaults to 1.",
+                  "default": 1,
+                  "minimum": 0,
+                  "x-ui": {
+                    "label": "User Defined",
+                    "order": 7
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "LOAD-FACTOR",
+                "order": 7
+              }
+            },
+            "LOAD_CASES": {
+              "type": "array",
+              "description": "Optional load cases assigned to rating case. Load case names are model-dependent and must be entered directly, not selected from a schema enum.",
+              "items": {
+                "type": "object",
+                "description": "Model-specific load case reference.",
+                "required": [
+                  "TYPE",
+                  "NAME"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "TYPE": {
+                    "type": "string",
+                    "description": "Load case type code.",
+                    "enum": [
+                      "ST",
+                      "CS",
+                      "RS",
+                      "TH",
+                      "MV",
+                      "SM",
+                      "CB"
+                    ],
+                    "x-ui": {
+                      "label": "Load Case Type",
+                      "order": 1
+                    },
+                    "x-enum-labels": [
+                      "Static Load",
+                      "Construction Stage",
+                      "Response Spectrum",
+                      "Time History",
+                      "Moving Load",
+                      "Settlement",
+                      "Load Combination"
+                    ]
+                  },
+                  "NAME": {
+                    "type": "string",
+                    "description": "Model-specific load case name entered directly.",
+                    "minLength": 1,
+                    "x-ui": {
+                      "label": "Load Name",
+                      "order": 2
+                    }
+                  }
+                }
+              },
+              "x-ui": {
+                "label": "Load Cases",
+                "order": 8
+              }
+            }
+          }
+        }
+      },
+      "x-ui": {
+        "label": "Assign"
+      }
+    }
+  }
+}

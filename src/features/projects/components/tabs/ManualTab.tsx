@@ -16,9 +16,17 @@ interface ManualTabProps {
 }
 
 type ManualPublisher = 'zendesk' | 'confluence';
+type ZendeskLocaleOption = 'ko' | 'en-us' | 'jp';
 
 const DEFAULT_ZENDESK_LOCALE = 'en-us';
 const MANUAL_SERVER_BASE_URL = 'http://localhost:9527';
+const ZENDESK_TRANSLATION_BODY_LIMIT_BYTES = 1_000_000;
+const ZENDESK_LOCALE_OPTIONS: ZendeskLocaleOption[] = ['ko', 'en-us', 'jp'];
+const DEFAULT_ZENDESK_LOCALES: Record<ZendeskLocaleOption, boolean> = {
+  ko: true,
+  'en-us': true,
+  jp: false,
+};
 
 interface ZendeskEnvStatus {
   baseUrl?: string;
@@ -51,6 +59,24 @@ interface ConfluenceEnvStatus {
   hasCredentials: boolean;
   authType: 'bearer' | 'basic' | null;
   missingFields: string[];
+}
+
+interface ZendeskHtmlOptions {
+  compactCode?: boolean;
+}
+
+function getUtf8ByteSize(value: string): number {
+  return new TextEncoder().encode(value).length;
+}
+
+function formatByteSize(bytes: number): string {
+  if (bytes >= 1_000_000) {
+    return `${(bytes / 1_000_000).toFixed(2)} MB`;
+  }
+  if (bytes >= 1_000) {
+    return `${(bytes / 1_000).toFixed(1)} KB`;
+  }
+  return `${bytes} bytes`;
 }
 
 function normalizeZendeskLocale(locale?: string): string {
@@ -98,6 +124,7 @@ export function ManualTab({ endpoint }: ManualTabProps) {
   const [isConfluenceSending, setIsConfluenceSending] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code' | 'diff'>('preview');
   const [zendeskLabelInput, setZendeskLabelInput] = useState('');
+  const [zendeskLocales, setZendeskLocales] = useState<Record<ZendeskLocaleOption, boolean>>(DEFAULT_ZENDESK_LOCALES);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 🔍 Zoom 상태 관리
@@ -210,7 +237,8 @@ export function ManualTab({ endpoint }: ManualTabProps) {
 
     try {
       setIsFetchingZendesk(true);
-      const locale = normalizeZendeskLocale(envStatus.defaultLocale);
+      const locale = ZENDESK_LOCALE_OPTIONS.find((option) => zendeskLocales[option])
+        || normalizeZendeskLocale(envStatus.defaultLocale);
       const params = new URLSearchParams({ targetInput: targetUrl, locale });
       const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/article?${params}`);
       const payload = await response.json().catch(() => null);
@@ -267,6 +295,13 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       .replace(/'/g, '&#039;');
   };
 
+  const escapeCodeHtml = (unsafe: string): string => {
+    return String(unsafe)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  };
+
   const formatManualInputUri = (inputUri?: string): string => {
     const rawInputUri = String(inputUri || endpoint.path || '').trim();
     if (!rawInputUri) {
@@ -311,20 +346,28 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     }
   };
 
-  const formatPlainTextToZendeskHTML = (rawText: string): string => {
-    return escapeHtml(rawText)
+  const formatPlainTextToZendeskHTML = (rawText: string, compactCode = false): string => {
+    const escaped = escapeCodeHtml(rawText);
+    if (compactCode) {
+      return escaped;
+    }
+    return escaped
       .replace(/ /g, '&nbsp;')
-      .replace(/\n/g, '<br>\n');
+      .replace(/\n/g, '<br>');
   };
 
-  const highlightJsonTextForZendesk = (rawText: string): string => {
+  const highlightJsonTextForZendesk = (rawText: string, compactCode = false): string => {
+    if (compactCode) {
+      return formatPlainTextToZendeskHTML(rawText, true);
+    }
+
     const tokenRegex = /"(?:\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"(?=\s*:)|"(?:\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g;
 
     let result = '';
     let lastIndex = 0;
 
     rawText.replace(tokenRegex, (match, offset) => {
-      result += formatPlainTextToZendeskHTML(rawText.slice(lastIndex, offset));
+      result += formatPlainTextToZendeskHTML(rawText.slice(lastIndex, offset), false);
 
       let style = 'color: #111827;';
       if (/^"/.test(match)) {
@@ -339,21 +382,25 @@ export function ManualTab({ endpoint }: ManualTabProps) {
         style = 'color: #c31b1b;';
       }
 
-      result += `<span style="${style}">${formatPlainTextToZendeskHTML(match)}</span>`;
+      result += `<span style="${style}">${formatPlainTextToZendeskHTML(match, false)}</span>`;
       lastIndex = offset + match.length;
       return match;
     });
 
-    result += formatPlainTextToZendeskHTML(rawText.slice(lastIndex));
+    result += formatPlainTextToZendeskHTML(rawText.slice(lastIndex), false);
     return result;
   };
 
-  const formatCodeTextToZendeskHTML = (rawText: string): string => {
+  const formatCodeTextToZendeskHTML = (rawText: string, compactCode = false): string => {
+    if (compactCode) {
+      return formatPlainTextToZendeskHTML(rawText, true);
+    }
+
     try {
       JSON.parse(rawText);
-      return highlightJsonTextForZendesk(rawText);
+      return highlightJsonTextForZendesk(rawText, false);
     } catch {
-      return formatPlainTextToZendeskHTML(rawText);
+      return formatPlainTextToZendeskHTML(rawText, false);
     }
   };
 
@@ -394,32 +441,64 @@ export function ManualTab({ endpoint }: ManualTabProps) {
     );
   };
 
-  const createZendeskCodePayload = (value: string | object | null | undefined): { displayHtml: string; copyText: string } => {
+  const createZendeskCodePayload = (
+    value: string | object | null | undefined,
+    options: ZendeskHtmlOptions = {}
+  ): { displayHtml: string; copyText: string } => {
     if (isPreformattedZendeskCode(value)) {
+      const copyText = extractCopyTextFromPreformattedHtml(value);
       return {
-        displayHtml: value,
-        copyText: extractCopyTextFromPreformattedHtml(value),
+        displayHtml: options.compactCode ? formatCodeTextToZendeskHTML(copyText, true) : value,
+        copyText,
       };
     }
 
     const rawText = serializeJsonForZendesk(value);
     return {
-      displayHtml: formatCodeTextToZendeskHTML(rawText),
+      displayHtml: formatCodeTextToZendeskHTML(rawText, !!options.compactCode),
       copyText: rawText,
     };
   };
 
   // 🎨 HTML 생성 함수 (Zendesk 호환)
-  const generateZendeskHTML = (): string => {
+  const getZendeskCodeStyle = (compactCode = false): string => {
+    const baseStyle = "font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;";
+    return compactCode
+      ? `${baseStyle} white-space: pre-wrap;`
+      : baseStyle;
+  };
+
+  const renderZendeskCopyTextAttribute = (copyText: string, compactCode = false): string => {
+    if (compactCode) {
+      return '';
+    }
+    return ` data-copy-text="${encodeURIComponent(normalizeCopyText(copyText))}"`;
+  };
+
+  const compactZendeskCodeBlocks = (html: string): string => {
+    return String(html || '').replace(
+      /<div\s+id="(copy(?:Req|Res)\d+|copyTarget1)"([^>]*)>([\s\S]*?)<\/div>/g,
+      (match, id: string, attrs: string, innerHtml: string) => {
+        const copyText = extractCopyTextFromPreformattedHtml(`<div id="${id}"${attrs}>${innerHtml}</div>`);
+        if (!copyText) {
+          return match;
+        }
+        return `<div id="${id}" style="${getZendeskCodeStyle(true)}">${formatCodeTextToZendeskHTML(copyText, true)}</div>`;
+      }
+    );
+  };
+
+  const generateZendeskHTML = (options: ZendeskHtmlOptions = {}): string => {
     if (!manualData) {
       return '<p>No manual data available. Please send data from Spec, Builder, or Runner tabs.</p>';
     }
 
+    const compactCode = !!options.compactCode;
     const { inputUri, activeMethods, jsonSchema, requestExamples, specifications } = manualData;
-    const displayedActiveMethods = activeMethods?.trim() || endpoint.method || '-';
+    const displayedActiveMethods = endpoint.method?.trim() || activeMethods?.trim() || '-';
     const displayedInputUri = formatManualInputUri(inputUri);
 
-    const schemaPayload = createZendeskCodePayload(jsonSchema || manualData.jsonSchemaOriginal || '{}');
+    const schemaPayload = createZendeskCodePayload(jsonSchema || manualData.jsonSchemaOriginal || '{}', options);
     const currentSchema = schemaPayload.displayHtml;
 
     // 🎯 Request Examples 생성 (Zendesk 형식)
@@ -430,16 +509,14 @@ export function ManualTab({ endpoint }: ManualTabProps) {
       <strong>Request Examples</strong>
     </h3>
 ${requestExamples.map((ex, idx) => {
-        const examplePayload = createZendeskCodePayload(ex.code);
+        const examplePayload = createZendeskCodePayload(ex.code, options);
         return `    <div class="mgt32" style="margin: 10px;">
       <p class="btn_dropdown mgt4" style="font-size: 15px;">${escapeHtml(ex.title)}</p>
       <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
         <div style="background-color: #f5f7fa;" align="right">
           <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyReq${idx + 1}')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
         </div>
-        <div id="copyReq${idx + 1}" data-copy-text="${encodeURIComponent(normalizeCopyText(examplePayload.copyText))}" style="font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;">
-          ${examplePayload.displayHtml}
-        </div>
+        <div id="copyReq${idx + 1}"${renderZendeskCopyTextAttribute(examplePayload.copyText, compactCode)} style="${getZendeskCodeStyle(compactCode)}">${examplePayload.displayHtml}</div>
       </div>
     </div>`;
       }).join('\n')}`;
@@ -455,16 +532,14 @@ ${requestExamples.map((ex, idx) => {
       <strong>Response Examples</strong>
     </h3>
 ${responseExamples.map((ex, idx) => {
-        const examplePayload = createZendeskCodePayload(ex.code);
+        const examplePayload = createZendeskCodePayload(ex.code, options);
         return `    <div class="mgt32" style="margin: 10px;">
       <p class="btn_dropdown mgt4" style="font-size: 15px;">${escapeHtml(ex.title)}</p>
       <div style="background-color: #f5f7fa; color: black; padding: 10px 10px 10px 20px;">
         <div style="background-color: #f5f7fa;" align="right">
           <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyRes${idx + 1}')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
         </div>
-        <div id="copyRes${idx + 1}" data-copy-text="${encodeURIComponent(normalizeCopyText(examplePayload.copyText))}" style="font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;">
-          ${examplePayload.displayHtml}
-        </div>
+        <div id="copyRes${idx + 1}"${renderZendeskCopyTextAttribute(examplePayload.copyText, compactCode)} style="${getZendeskCodeStyle(compactCode)}">${examplePayload.displayHtml}</div>
       </div>
     </div>`;
       }).join('\n')}`;
@@ -594,9 +669,7 @@ ${specifications}`;
         <div style="background-color: #f5f7fa;" align="right">
           <button style="background-color: #1c7ed6; border: none; color: white; padding: 7px 10px 7px 10px; text-align: center; display: inline-block; font-size: 13px; margin: 1px 1px; cursor: pointer; border-radius: 5px;" onclick="copyText('copyTarget1')" onmousedown="this.style.backgroundColor='#1D70B5'" onmouseup="this.style.backgroundColor='#1C7ED6'">Copy</button>
         </div>
-        <div id="copyTarget1" data-copy-text="${encodeURIComponent(normalizeCopyText(schemaPayload.copyText))}" style="font-size: 15px; letter-spacing: 0.01em; font-family: Consolas, 'Courier New', monospace; line-height: 1.6; word-break: break-word;">
-          ${currentSchema}
-        </div>
+        <div id="copyTarget1"${renderZendeskCopyTextAttribute(schemaPayload.copyText, compactCode)} style="${getZendeskCodeStyle(compactCode)}">${currentSchema}</div>
       </div>
     </div>
     <br>
@@ -635,7 +708,7 @@ ${specificationSectionHTML}
     }
 
     const { inputUri, activeMethods, jsonSchema, requestExamples, responseExamples, specifications } = manualData;
-    const displayedActiveMethods = activeMethods?.trim() || endpoint.method || '-';
+    const displayedActiveMethods = endpoint.method?.trim() || activeMethods?.trim() || '-';
     const displayedInputUri = formatManualInputUri(inputUri);
     const schemaCode = formatJsonForPre(jsonSchema || manualData.jsonSchemaOriginal || '{}');
     const cleanedSpecifications = sanitizeZendeskSpecificMarkup(specifications || '');
@@ -703,7 +776,55 @@ ${specificationSectionHTML}
   const editableHTML = editableHTMLByPublisher[manualPublisher];
   const isHTMLModified = isHTMLModifiedByPublisher[manualPublisher];
 
-  // 📤 Export HTML
+  // Prepare Zendesk payload for the 1.0 MB per-locale translation limit.
+  const prepareZendeskHTMLForPublish = (): {
+    html: string;
+    byteSize: number;
+    compacted: boolean;
+    originalByteSize: number;
+  } => {
+    const originalHtml = isHTMLModified && editableHTML ? editableHTML : generateZendeskHTML();
+    const originalByteSize = getUtf8ByteSize(originalHtml);
+    if (originalByteSize <= ZENDESK_TRANSLATION_BODY_LIMIT_BYTES) {
+      return {
+        html: originalHtml,
+        byteSize: originalByteSize,
+        compacted: false,
+        originalByteSize,
+      };
+    }
+
+    const candidates = [
+      originalHtml,
+      compactZendeskCodeBlocks(originalHtml),
+      ...(isHTMLModified && editableHTML ? [] : [generateZendeskHTML({ compactCode: true })]),
+    ];
+    const best = candidates.reduce(
+      (current, html) => {
+        const byteSize = getUtf8ByteSize(html);
+        return byteSize < current.byteSize ? { html, byteSize } : current;
+      },
+      { html: originalHtml, byteSize: originalByteSize }
+    );
+
+    if (best.byteSize < originalByteSize) {
+      return {
+        html: best.html,
+        byteSize: best.byteSize,
+        compacted: true,
+        originalByteSize,
+      };
+    }
+
+    return {
+      html: originalHtml,
+      byteSize: originalByteSize,
+      compacted: false,
+      originalByteSize,
+    };
+  };
+
+  // Export HTML
   const handleExport = () => {
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
     const blob = new Blob([html], { type: 'text/html' });
@@ -720,7 +841,7 @@ ${specificationSectionHTML}
   // 🚀 Send to Zendesk
   const handleSendToZendesk = async () => {
     if (!manualData) {
-      toast.error('Manual 데이터가 없습니다. Spec/Builder/Runner에서 먼저 전송하세요.');
+      toast.error('Manual data is missing. Send content from Spec, Builder, or Runner first.');
       return;
     }
 
@@ -732,21 +853,47 @@ ${specificationSectionHTML}
       const missingMessage = envStatus?.missingFields?.length
         ? envStatus.missingFields.join(', ')
         : 'ZENDESK_SUBDOMAIN/ZENDESK_BASE_URL, ZENDESK_EMAIL, ZENDESK_API_TOKEN';
-      toast.error(`.env에 Zendesk 설정이 필요합니다: ${missingMessage}`);
+      toast.error(`.env Zendesk settings are required. ${missingMessage}`);
       return;
     }
 
-    const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
     const title = buildZendeskArticleTitle(endpoint, manualData.title);
-    const locale = normalizeZendeskLocale(envStatus.defaultLocale || DEFAULT_ZENDESK_LOCALE);
+    const selectedLocales = ZENDESK_LOCALE_OPTIONS.filter((option) => zendeskLocales[option]);
+    if (selectedLocales.length === 0) {
+      toast.error('Select at least one Zendesk locale.');
+      return;
+    }
+
+    const zendeskPayload = prepareZendeskHTMLForPublish();
+    if (zendeskPayload.byteSize > ZENDESK_TRANSLATION_BODY_LIMIT_BYTES) {
+      const compactNote = zendeskPayload.compacted ? ' after HTML compaction' : '';
+      toast.error(
+        `Zendesk content is ${formatByteSize(zendeskPayload.byteSize)}${compactNote}. ` +
+        `The per-locale translation limit is ${formatByteSize(ZENDESK_TRANSLATION_BODY_LIMIT_BYTES)}. ` +
+        'Zendesk cannot accept this as a single article body unless the schema/example HTML is reduced.'
+      );
+      return;
+    }
+
+    if (zendeskPayload.compacted) {
+      toast.info(
+        `Zendesk HTML compacted from ${formatByteSize(zendeskPayload.originalByteSize)} ` +
+        `to ${formatByteSize(zendeskPayload.byteSize)} without removing manual content.`
+      );
+    }
+    const html = zendeskPayload.html;
+
     const labelNames = parseZendeskLabelInput(zendeskLabelInput);
     const commentsDisabled = manualData.zendeskCommentsDisabled ?? true;
+    const targetBeforeSend = zendeskUrl.trim();
 
     updateManualData({ zendeskLabelNames: labelNames });
 
     try {
       setIsZendeskSending(true);
-      let result: {
+      const successfulLocales: string[] = [];
+      const failedLocales: string[] = [];
+      let firstResult: {
         success: boolean;
         data?: {
           mode: 'create' | 'update';
@@ -756,60 +903,87 @@ ${specificationSectionHTML}
           associatedAttachmentCount: number;
         };
         error?: string;
-      };
+      } | null = null;
 
-      if (useElectronPublisher) {
-        result = await zendeskAPI!.publishManualWithEnv(
-          zendeskUrl.trim(),
-          locale,
-          html,
-          title || undefined,
-          undefined,
-          {
-            labelNames,
-            commentsDisabled,
-          }
-        );
-      } else {
-        const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/publish`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            targetInput: zendeskUrl.trim(),
+      for (const locale of selectedLocales) {
+        let result: {
+          success: boolean;
+          data?: {
+            mode: 'create' | 'update';
+            articleId: string;
+            locale: string;
+            articleUrl: string;
+            associatedAttachmentCount: number;
+          };
+          error?: string;
+        };
+
+        if (useElectronPublisher) {
+          result = await zendeskAPI!.publishManualWithEnv(
+            targetBeforeSend,
             locale,
-            body: html,
-            title: title || undefined,
-            draft: undefined,
-            labelNames,
-            commentsDisabled,
-          }),
-        });
+            html,
+            title || undefined,
+            undefined,
+            {
+              labelNames,
+              commentsDisabled,
+            }
+          );
+        } else {
+          const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/publish`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              targetInput: targetBeforeSend,
+              locale,
+              body: html,
+              title: title || undefined,
+              draft: undefined,
+              labelNames,
+              commentsDisabled,
+            }),
+          });
 
-        const payload = await response.json().catch(() => null);
-        result = payload || { success: false, error: `HTTP ${response.status}` };
+          const payload = await response.json().catch(() => null);
+          result = payload || { success: false, error: `HTTP ${response.status}` };
+        }
+
+        if (!result.success) {
+          failedLocales.push(`${locale}: ${result.error || 'Unknown error'}`);
+          continue;
+        }
+
+        if (!firstResult) {
+          firstResult = result;
+        }
+        successfulLocales.push(result.data?.locale || locale);
       }
 
-      if (!result.success) {
-        toast.error(`Zendesk 전송 실패: ${result.error || 'Unknown error'}`);
+      if (!firstResult?.success) {
+        toast.error(`Zendesk send failed: ${failedLocales.join(' / ') || 'Unknown error'}`);
         return;
       }
 
-      const modeLabel = result.data?.mode === 'create' ? '생성' : '업데이트';
-      const articleId = result.data?.articleId || '(unknown)';
-      const articleLocale = result.data?.locale || locale;
-      const attachmentCount = result.data?.associatedAttachmentCount || 0;
-      const articleUrl = result.data?.articleUrl;
+      const modeLabel = firstResult.data?.mode === 'create' ? 'create' : 'update';
+      const articleId = firstResult.data?.articleId || '(unknown)';
+      const attachmentCount = firstResult.data?.associatedAttachmentCount || 0;
+      const articleUrl = targetBeforeSend || firstResult.data?.articleUrl;
       if (articleUrl) {
-        setZendeskUrl(articleUrl);
-        // 자동 저장: manualData.url에 생성된 Zendesk URL 기록
-        if (result.data?.mode === 'create' || !manualData?.url) {
-          updateManualData({ url: articleUrl, articleId: result.data?.articleId });
+        if (!targetBeforeSend && firstResult.data?.articleUrl) {
+          setZendeskUrl(firstResult.data.articleUrl);
+        }
+        if (firstResult.data?.mode === 'create' || !manualData?.url) {
+          updateManualData({ url: articleUrl, articleId: firstResult.data?.articleId });
         }
       }
 
-      toast.success(`Zendesk ${modeLabel} 완료 (Article ${articleId}, ${articleLocale}, Attachments ${attachmentCount})`);
+      if (failedLocales.length > 0) {
+        toast.error(`Zendesk partial locale failure: ${failedLocales.join(' / ')}`);
+      }
+      toast.success(`Zendesk ${modeLabel} complete (Article ${articleId}, ${successfulLocales.join(', ')}, Attachments ${attachmentCount})`);
     } catch (error) {
-      toast.error(`Zendesk 전송 실패: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(`Zendesk send failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsZendeskSending(false);
     }
@@ -927,6 +1101,8 @@ ${specificationSectionHTML}
       requestExamples: [],
       responseExamples: [],
       specifications: '',
+      url: manualData?.url || zendeskUrl.trim(),
+      articleId: manualData?.articleId,
       zendeskLabelNames: [],
       zendeskCommentsDisabled: true,
     });
@@ -1048,7 +1224,34 @@ ${specificationSectionHTML}
               </div>
 
               {manualPublisher === 'zendesk' && manualData && (
-                <div className="mt-2 grid gap-2 lg:grid-cols-[minmax(0,1fr)_220px]">
+                <div className="mt-2 grid gap-2 xl:grid-cols-[220px_minmax(0,1fr)_220px]">
+                  <div className="min-w-0">
+                    <Label className="text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-1 block">
+                      Locales
+                    </Label>
+                    <div className="flex h-8 items-center gap-1 rounded-md border border-zinc-700 bg-zinc-800 px-1.5">
+                      {ZENDESK_LOCALE_OPTIONS.map((locale) => (
+                        <button
+                          key={locale}
+                          type="button"
+                          onClick={() =>
+                            setZendeskLocales((prev) => ({
+                              ...prev,
+                              [locale]: !prev[locale],
+                            }))
+                          }
+                          className={`h-5 rounded px-2 text-[10px] font-medium ${
+                            zendeskLocales[locale]
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
+                          }`}
+                        >
+                          {locale}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div className="min-w-0">
                     <Label className="text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-1 block">
                       Zendesk Labels
@@ -1211,48 +1414,39 @@ ${specificationSectionHTML}
             )}
 
             <div
-              className="h-full w-full overflow-hidden"
+              className="h-full w-full overflow-hidden p-6 pt-6"
               onWheel={handleWheel}
             >
-              <ScrollArea className="h-full w-full">
-                <div
-                  className="p-6 pt-6"
-                  style={{ cursor: 'default' }}
-                >
-                  {!manualData ? (
-                    <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
-                      <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
-                        <FileDown className="w-8 h-8 text-zinc-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-zinc-300 mb-2">No Manual Data</h3>
-                      <p className="text-sm text-zinc-500 max-w-md">
-                        Click "Send to Manual" from Spec, Builder, or Runner tabs to automatically generate documentation.
-                      </p>
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        transform: `scale(${zoom})`,
-                        transformOrigin: 'top left',
-                        transition: 'transform 0.1s ease-out',
-                        width: `${100 / zoom}%`,
-                        minHeight: `${100 / zoom}vh`
-                      }}
-                    >
-                      <iframe
-                        srcDoc={htmlContent}
-                        className="w-full bg-white rounded-lg border border-zinc-700 pointer-events-auto"
-                        title="Manual Preview"
-                        sandbox="allow-scripts allow-same-origin"
-                        style={{
-                          height: '100vh',
-                          minHeight: '100vh'
-                        }}
-                      />
-                    </div>
-                  )}
+              {!manualData ? (
+                <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
+                  <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                    <FileDown className="w-8 h-8 text-zinc-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-zinc-300 mb-2">No Manual Data</h3>
+                  <p className="text-sm text-zinc-500 max-w-md">
+                    Click "Send to Manual" from Spec, Builder, or Runner tabs to automatically generate documentation.
+                  </p>
                 </div>
-              </ScrollArea>
+              ) : (
+                <div
+                  className="h-full"
+                  style={{
+                    cursor: 'default',
+                    transform: `scale(${zoom})`,
+                    transformOrigin: 'top left',
+                    transition: 'transform 0.1s ease-out',
+                    width: `${100 / zoom}%`,
+                    height: `${100 / zoom}%`
+                  }}
+                >
+                  <iframe
+                    srcDoc={htmlContent}
+                    className="h-full w-full bg-white rounded-lg border border-zinc-700 pointer-events-auto"
+                    title="Manual Preview"
+                    sandbox="allow-scripts allow-same-origin"
+                  />
+                </div>
+              )}
             </div>
           </div>
         ) : viewMode === 'diff' ? (

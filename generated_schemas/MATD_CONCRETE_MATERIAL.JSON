@@ -1,0 +1,3766 @@
+{
+  "title": "Concrete Material",
+  "description": "Detailed schema for concrete material settings used by GIRDER_MATL_PROP and SLAB_MATL_PROP in Modify Material.",
+  "x-parent-schema": "MATD",
+  "x-parent-title": "Modify Material",
+  "x-category": "material-type",
+  "type": "object",
+  "required": [
+    "CODE"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "CODE": {
+      "type": "string",
+      "description": "Concrete design code. If CODE is 'None', enter a custom material NAME instead of selecting GRADE.",
+      "oneOf": [
+        {
+          "const": "None",
+          "title": "None"
+        },
+        {
+          "const": "ASTM19(RC)",
+          "title": "ASTM19(RC)"
+        },
+        {
+          "const": "ASTM(RC)",
+          "title": "ASTM(RC)"
+        },
+        {
+          "const": "U.S.C(US)(RC)",
+          "title": "U.S.C(US)(RC)"
+        },
+        {
+          "const": "U.S.C(SI)(RC)",
+          "title": "U.S.C(SI)(RC)"
+        },
+        {
+          "const": "NMX2023(RC)",
+          "title": "NMX2023(RC)"
+        },
+        {
+          "const": "NMX2023(MKS)(RC)",
+          "title": "NMX2023(MKS)(RC)"
+        },
+        {
+          "const": "NMX NTC-2017(RC)",
+          "title": "NMX NTC-2017(RC)"
+        },
+        {
+          "const": "CSA(RC)",
+          "title": "CSA(RC)"
+        },
+        {
+          "const": "BS(RC)",
+          "title": "BS(RC)"
+        },
+        {
+          "const": "EN04(RC)",
+          "title": "EN04(RC)"
+        },
+        {
+          "const": "EN(RC)",
+          "title": "EN(RC)"
+        },
+        {
+          "const": "NTC08(RC)",
+          "title": "NTC08(RC)"
+        },
+        {
+          "const": "NTC12(RC)",
+          "title": "NTC12(RC)"
+        },
+        {
+          "const": "NTC18(RC)",
+          "title": "NTC18(RC)"
+        },
+        {
+          "const": "UNI(RC)",
+          "title": "UNI(RC)"
+        },
+        {
+          "const": "SS(RC)",
+          "title": "SS(RC)"
+        },
+        {
+          "const": "GOST-SP(RC)",
+          "title": "GOST-SP(RC)"
+        },
+        {
+          "const": "GOST-SNIP(RC)",
+          "title": "GOST-SNIP(RC)"
+        },
+        {
+          "const": "JIS(RC)",
+          "title": "JIS(RC)"
+        },
+        {
+          "const": "JIS-Civil(RC)",
+          "title": "JIS-Civil(RC)"
+        },
+        {
+          "const": "JTJ023-85(RC)",
+          "title": "JTJ023-85(RC)"
+        },
+        {
+          "const": "Q/CR 9300-18(RC)",
+          "title": "Q/CR 9300-18(RC)"
+        },
+        {
+          "const": "GB 50917-13(RC)",
+          "title": "GB 50917-13(RC)"
+        },
+        {
+          "const": "GB/T10(RC)",
+          "title": "GB/T10(RC)"
+        },
+        {
+          "const": "GB(RC)",
+          "title": "GB(RC)"
+        },
+        {
+          "const": "GB-Civil(RC)",
+          "title": "GB-Civil(RC)"
+        },
+        {
+          "const": "TB10092-17(RC)",
+          "title": "TB10092-17(RC)"
+        },
+        {
+          "const": "JTG3362-18(RC)",
+          "title": "JTG3362-18(RC)"
+        },
+        {
+          "const": "JTG04(RC)",
+          "title": "JTG04(RC)"
+        },
+        {
+          "const": "TB05(RC)",
+          "title": "TB05(RC)"
+        },
+        {
+          "const": "KS19(RC)",
+          "title": "KS19(RC)"
+        },
+        {
+          "const": "KS01(RC)",
+          "title": "KS01(RC)"
+        },
+        {
+          "const": "KS(RC)",
+          "title": "KS(RC)"
+        },
+        {
+          "const": "KSCE-LSD15(RC)",
+          "title": "KSCE-LSD15(RC)"
+        },
+        {
+          "const": "KS01-Civil(RC)",
+          "title": "KS01-Civil(RC)"
+        },
+        {
+          "const": "KS-Civil(RC)",
+          "title": "KS-Civil(RC)"
+        },
+        {
+          "const": "PNS49(RC)",
+          "title": "PNS49(RC)"
+        },
+        {
+          "const": "SNI(RC)",
+          "title": "SNI(RC)"
+        },
+        {
+          "const": "TIS(RC)",
+          "title": "TIS(RC)"
+        },
+        {
+          "const": "TIS(MKS)(RC)",
+          "title": "TIS(MKS)(RC)"
+        },
+        {
+          "const": "IRC(RC)",
+          "title": "IRC(RC)"
+        },
+        {
+          "const": "IRS(RC)",
+          "title": "IRS(RC)"
+        },
+        {
+          "const": "IS(RC)",
+          "title": "IS(RC)"
+        },
+        {
+          "const": "CNS560-18(RC)",
+          "title": "CNS560-18(RC)"
+        },
+        {
+          "const": "CNS560(RC)",
+          "title": "CNS560(RC)"
+        },
+        {
+          "const": "CNS(RC)",
+          "title": "CNS(RC)"
+        },
+        {
+          "const": "AS17(RC)",
+          "title": "AS17(RC)"
+        },
+        {
+          "const": "TMH7(RC)",
+          "title": "TMH7(RC)"
+        },
+        {
+          "const": "SP63.2018(RC)",
+          "title": "SP63.2018(RC)"
+        },
+        {
+          "const": "TS(RC)",
+          "title": "TS(RC)"
+        },
+        {
+          "const": "NBR 6118(RC)",
+          "title": "NBR 6118(RC)"
+        }
+      ],
+      "x-ui": {
+        "component": "Dropdown",
+        "label": "Code",
+        "order": 1
+      }
+    },
+    "NAME": {
+      "type": "string",
+      "description": "User-defined concrete material name. Used only when CODE is 'None'.",
+      "minLength": 1,
+      "x-ui": {
+        "label": "Name",
+        "order": 2
+      }
+    },
+    "GRADE": {
+      "type": "string",
+      "description": "Concrete material grade. Required when CODE is not 'None'.",
+      "x-ui": {
+        "component": "Dropdown",
+        "label": "Grade",
+        "order": 3,
+        "visibleWhenNot": {
+          "CODE": "None"
+        }
+      }
+    },
+    "COMP_STRENGTH": {
+      "type": "number",
+      "description": "Specified Compressive Strength (f'c). When CODE is 'None', user input is required. When CODE is a design code, this value can be auto-filled from the selected CODE and GRADE.",
+      "x-ui": {
+        "label": "Specified Compressive Strength (fc|fck)",
+        "order": 4
+      }
+    },
+    "LIGHT_WEIGHT_FACTOR": {
+      "type": "boolean",
+      "description": "Light Weight Concrete Factor option.",
+      "x-ui": {
+        "label": "Light Weight Concrete Factor",
+        "order": 5
+      }
+    },
+    "FACTOR_VALUE": {
+      "type": "number",
+      "description": "Light Weight Factor value. Required when CODE is 'None' and LIGHT_WEIGHT_FACTOR is true.",
+      "minimum": 0.75,
+      "maximum": 1,
+      "default": 1,
+      "x-ui": {
+        "label": "Light Weight Factor Value",
+        "order": 6
+      },
+      "visibleWhen": {
+        "LIGHT_WEIGHT_FACTOR": true
+      },
+      "x-required-when": [
+        {
+          "condition": {
+            "LIGHT_WEIGHT_FACTOR": true
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "None"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "NAME",
+          "COMP_STRENGTH"
+        ],
+        "not": {
+          "required": [
+            "GRADE"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "LIGHT_WEIGHT_FACTOR": {
+            "const": true
+          }
+        },
+        "required": [
+          "LIGHT_WEIGHT_FACTOR"
+        ]
+      },
+      "then": {
+        "required": [
+          "FACTOR_VALUE"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "ASTM19(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Grade C2500",
+              "Grade C3000",
+              "Grade C3500",
+              "Grade C4000",
+              "Grade C4500",
+              "Grade C5000",
+              "Grade C6000",
+              "Grade C7000",
+              "Grade C8000",
+              "Grade C9000",
+              "Grade C10000"
+            ],
+            "x-enum-labels": {
+              "Grade C2500": "Grade C2500",
+              "Grade C3000": "Grade C3000",
+              "Grade C3500": "Grade C3500",
+              "Grade C4000": "Grade C4000",
+              "Grade C4500": "Grade C4500",
+              "Grade C5000": "Grade C5000",
+              "Grade C6000": "Grade C6000",
+              "Grade C7000": "Grade C7000",
+              "Grade C8000": "Grade C8000",
+              "Grade C9000": "Grade C9000",
+              "Grade C10000": "Grade C10000"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "ASTM(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Grade C2500",
+              "Grade C3000",
+              "Grade C3500",
+              "Grade C4000",
+              "Grade C4500",
+              "Grade C5000",
+              "Grade C6000",
+              "Grade C7000",
+              "Grade C8000",
+              "Grade C9000",
+              "Grade C10000"
+            ],
+            "x-enum-labels": {
+              "Grade C2500": "Grade C2500",
+              "Grade C3000": "Grade C3000",
+              "Grade C3500": "Grade C3500",
+              "Grade C4000": "Grade C4000",
+              "Grade C4500": "Grade C4500",
+              "Grade C5000": "Grade C5000",
+              "Grade C6000": "Grade C6000",
+              "Grade C7000": "Grade C7000",
+              "Grade C8000": "Grade C8000",
+              "Grade C9000": "Grade C9000",
+              "Grade C10000": "Grade C10000"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "U.S.C(US)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Grade C2500",
+              "Grade C3000",
+              "Grade C3500",
+              "Grade C4000",
+              "Grade C4500",
+              "Grade C5000",
+              "Grade C6000",
+              "Grade C7000",
+              "Grade C8000",
+              "Grade C9000",
+              "Grade C10000"
+            ],
+            "x-enum-labels": {
+              "Grade C2500": "Grade C2500",
+              "Grade C3000": "Grade C3000",
+              "Grade C3500": "Grade C3500",
+              "Grade C4000": "Grade C4000",
+              "Grade C4500": "Grade C4500",
+              "Grade C5000": "Grade C5000",
+              "Grade C6000": "Grade C6000",
+              "Grade C7000": "Grade C7000",
+              "Grade C8000": "Grade C8000",
+              "Grade C9000": "Grade C9000",
+              "Grade C10000": "Grade C10000"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "U.S.C(SI)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Grade C18",
+              "Grade C21",
+              "Grade C25",
+              "Grade C28",
+              "Grade C32",
+              "Grade C35",
+              "Grade C42",
+              "Grade C49",
+              "Grade C56",
+              "Grade C63",
+              "Grade C69"
+            ],
+            "x-enum-labels": {
+              "Grade C18": "Grade C18",
+              "Grade C21": "Grade C21",
+              "Grade C25": "Grade C25",
+              "Grade C28": "Grade C28",
+              "Grade C32": "Grade C32",
+              "Grade C35": "Grade C35",
+              "Grade C42": "Grade C42",
+              "Grade C49": "Grade C49",
+              "Grade C56": "Grade C56",
+              "Grade C63": "Grade C63",
+              "Grade C69": "Grade C69"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NMX2023(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "250-C1A(C)",
+              "250-C1A(B)",
+              "300-C1A(C)",
+              "300-C1A(B)",
+              "350-C1A(C)",
+              "350-C1A(B)",
+              "400-C1B(C)",
+              "400-C1B(B)",
+              "450-C1B(C)",
+              "450-C1B(B)",
+              "500-C1B(C)",
+              "500-C1B(B)",
+              "550-C1B(C)",
+              "550-C1B(B)",
+              "600-C1B(C)",
+              "600-C1B(B)",
+              "650-C1B(C)",
+              "650-C1B(B)",
+              "700-C1B(C)",
+              "700-C1B(B)",
+              "200-C2",
+              "250-C2",
+              "300-C2",
+              "350-C2"
+            ],
+            "x-enum-labels": {
+              "250-C1A(C)": "250-C1A(C)",
+              "250-C1A(B)": "250-C1A(B)",
+              "300-C1A(C)": "300-C1A(C)",
+              "300-C1A(B)": "300-C1A(B)",
+              "350-C1A(C)": "350-C1A(C)",
+              "350-C1A(B)": "350-C1A(B)",
+              "400-C1B(C)": "400-C1B(C)",
+              "400-C1B(B)": "400-C1B(B)",
+              "450-C1B(C)": "450-C1B(C)",
+              "450-C1B(B)": "450-C1B(B)",
+              "500-C1B(C)": "500-C1B(C)",
+              "500-C1B(B)": "500-C1B(B)",
+              "550-C1B(C)": "550-C1B(C)",
+              "550-C1B(B)": "550-C1B(B)",
+              "600-C1B(C)": "600-C1B(C)",
+              "600-C1B(B)": "600-C1B(B)",
+              "650-C1B(C)": "650-C1B(C)",
+              "650-C1B(B)": "650-C1B(B)",
+              "700-C1B(C)": "700-C1B(C)",
+              "700-C1B(B)": "700-C1B(B)",
+              "200-C2": "200-C2",
+              "250-C2": "250-C2",
+              "300-C2": "300-C2",
+              "350-C2": "350-C2"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NMX2023(MKS)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "250-C1A(C)",
+              "250-C1A(B)",
+              "300-C1A(C)",
+              "300-C1A(B)",
+              "350-C1A(C)",
+              "350-C1A(B)",
+              "400-C1B(C)",
+              "400-C1B(B)",
+              "450-C1B(C)",
+              "450-C1B(B)",
+              "500-C1B(C)",
+              "500-C1B(B)",
+              "550-C1B(C)",
+              "550-C1B(B)",
+              "600-C1B(C)",
+              "600-C1B(B)",
+              "650-C1B(C)",
+              "650-C1B(B)",
+              "700-C1B(C)",
+              "700-C1B(B)",
+              "200-C2",
+              "250-C2",
+              "300-C2",
+              "350-C2"
+            ],
+            "x-enum-labels": {
+              "250-C1A(C)": "250-C1A(C)",
+              "250-C1A(B)": "250-C1A(B)",
+              "300-C1A(C)": "300-C1A(C)",
+              "300-C1A(B)": "300-C1A(B)",
+              "350-C1A(C)": "350-C1A(C)",
+              "350-C1A(B)": "350-C1A(B)",
+              "400-C1B(C)": "400-C1B(C)",
+              "400-C1B(B)": "400-C1B(B)",
+              "450-C1B(C)": "450-C1B(C)",
+              "450-C1B(B)": "450-C1B(B)",
+              "500-C1B(C)": "500-C1B(C)",
+              "500-C1B(B)": "500-C1B(B)",
+              "550-C1B(C)": "550-C1B(C)",
+              "550-C1B(B)": "550-C1B(B)",
+              "600-C1B(C)": "600-C1B(C)",
+              "600-C1B(B)": "600-C1B(B)",
+              "650-C1B(C)": "650-C1B(C)",
+              "650-C1B(B)": "650-C1B(B)",
+              "700-C1B(C)": "700-C1B(C)",
+              "700-C1B(B)": "700-C1B(B)",
+              "200-C2": "200-C2",
+              "250-C2": "250-C2",
+              "300-C2": "300-C2",
+              "350-C2": "350-C2"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NMX NTC-2017(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "200-C1C",
+              "250-C1C",
+              "300-C1C",
+              "350-C1C",
+              "400-C1C",
+              "450-C1C",
+              "500-C1C",
+              "550-C1C",
+              "600-C1C",
+              "650-C1C",
+              "700-C1C",
+              "750-C1C",
+              "800-C1C",
+              "200-C1B",
+              "250-C1B",
+              "300-C1B",
+              "350-C1B",
+              "400-C1B",
+              "450-C1B",
+              "500-C1B",
+              "550-C1B",
+              "600-C1B",
+              "650-C1B",
+              "700-C1B",
+              "750-C1B",
+              "800-C1B",
+              "150-C2",
+              "200-C2",
+              "250-C2",
+              "300-C2",
+              "400-C2"
+            ],
+            "x-enum-labels": {
+              "200-C1C": "200-C1C",
+              "250-C1C": "250-C1C",
+              "300-C1C": "300-C1C",
+              "350-C1C": "350-C1C",
+              "400-C1C": "400-C1C",
+              "450-C1C": "450-C1C",
+              "500-C1C": "500-C1C",
+              "550-C1C": "550-C1C",
+              "600-C1C": "600-C1C",
+              "650-C1C": "650-C1C",
+              "700-C1C": "700-C1C",
+              "750-C1C": "750-C1C",
+              "800-C1C": "800-C1C",
+              "200-C1B": "200-C1B",
+              "250-C1B": "250-C1B",
+              "300-C1B": "300-C1B",
+              "350-C1B": "350-C1B",
+              "400-C1B": "400-C1B",
+              "450-C1B": "450-C1B",
+              "500-C1B": "500-C1B",
+              "550-C1B": "550-C1B",
+              "600-C1B": "600-C1B",
+              "650-C1B": "650-C1B",
+              "700-C1B": "700-C1B",
+              "750-C1B": "750-C1B",
+              "800-C1B": "800-C1B",
+              "150-C2": "150-C2",
+              "200-C2": "200-C2",
+              "250-C2": "250-C2",
+              "300-C2": "300-C2",
+              "400-C2": "400-C2"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CSA(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50"
+            ],
+            "x-enum-labels": {
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "BS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C20",
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "EN04(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C12/15",
+              "C16/20",
+              "C20/25",
+              "C25/30",
+              "C30/37",
+              "C32/40",
+              "C35/45",
+              "C40/50",
+              "C45/55",
+              "C50/60",
+              "C55/67",
+              "C60/75",
+              "C70/85",
+              "C80/95",
+              "C90/105"
+            ],
+            "x-enum-labels": {
+              "C12/15": "C12/15",
+              "C16/20": "C16/20",
+              "C20/25": "C20/25",
+              "C25/30": "C25/30",
+              "C30/37": "C30/37",
+              "C32/40": "C32/40",
+              "C35/45": "C35/45",
+              "C40/50": "C40/50",
+              "C45/55": "C45/55",
+              "C50/60": "C50/60",
+              "C55/67": "C55/67",
+              "C60/75": "C60/75",
+              "C70/85": "C70/85",
+              "C80/95": "C80/95",
+              "C90/105": "C90/105"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "EN(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C12/15",
+              "C16/20",
+              "C20/25",
+              "C25/30",
+              "C30/37",
+              "C35/45",
+              "C40/50",
+              "C45/55",
+              "C50/60"
+            ],
+            "x-enum-labels": {
+              "C12/15": "C12/15",
+              "C16/20": "C16/20",
+              "C20/25": "C20/25",
+              "C25/30": "C25/30",
+              "C30/37": "C30/37",
+              "C35/45": "C35/45",
+              "C40/50": "C40/50",
+              "C45/55": "C45/55",
+              "C50/60": "C50/60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NTC08(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C8/10",
+              "C12/15",
+              "C16/20",
+              "C20/25",
+              "C25/30",
+              "C28/35",
+              "C30/37",
+              "C32/40",
+              "C35/45",
+              "C40/50",
+              "C45/55",
+              "C50/60",
+              "C55/67",
+              "C60/75",
+              "C70/85",
+              "C80/95",
+              "C90/105"
+            ],
+            "x-enum-labels": {
+              "C8/10": "C8/10",
+              "C12/15": "C12/15",
+              "C16/20": "C16/20",
+              "C20/25": "C20/25",
+              "C25/30": "C25/30",
+              "C28/35": "C28/35",
+              "C30/37": "C30/37",
+              "C32/40": "C32/40",
+              "C35/45": "C35/45",
+              "C40/50": "C40/50",
+              "C45/55": "C45/55",
+              "C50/60": "C50/60",
+              "C55/67": "C55/67",
+              "C60/75": "C60/75",
+              "C70/85": "C70/85",
+              "C80/95": "C80/95",
+              "C90/105": "C90/105"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NTC12(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C8/10",
+              "C12/15",
+              "C16/20",
+              "C20/25",
+              "C25/30",
+              "C28/35",
+              "C30/37",
+              "C32/40",
+              "C35/45",
+              "C40/50",
+              "C45/55",
+              "C50/60",
+              "C55/67",
+              "C60/75",
+              "C70/85",
+              "C80/95",
+              "C90/105"
+            ],
+            "x-enum-labels": {
+              "C8/10": "C8/10",
+              "C12/15": "C12/15",
+              "C16/20": "C16/20",
+              "C20/25": "C20/25",
+              "C25/30": "C25/30",
+              "C28/35": "C28/35",
+              "C30/37": "C30/37",
+              "C32/40": "C32/40",
+              "C35/45": "C35/45",
+              "C40/50": "C40/50",
+              "C45/55": "C45/55",
+              "C50/60": "C50/60",
+              "C55/67": "C55/67",
+              "C60/75": "C60/75",
+              "C70/85": "C70/85",
+              "C80/95": "C80/95",
+              "C90/105": "C90/105"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NTC18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C8/10",
+              "C12/15",
+              "C16/20",
+              "C20/25",
+              "C25/30",
+              "C28/35",
+              "C30/37",
+              "C32/40",
+              "C35/45",
+              "C40/50",
+              "C45/55",
+              "C50/60",
+              "C55/67",
+              "C60/75",
+              "C70/85",
+              "C80/95",
+              "C90/105"
+            ],
+            "x-enum-labels": {
+              "C8/10": "C8/10",
+              "C12/15": "C12/15",
+              "C16/20": "C16/20",
+              "C20/25": "C20/25",
+              "C25/30": "C25/30",
+              "C28/35": "C28/35",
+              "C30/37": "C30/37",
+              "C32/40": "C32/40",
+              "C35/45": "C35/45",
+              "C40/50": "C40/50",
+              "C45/55": "C45/55",
+              "C50/60": "C50/60",
+              "C55/67": "C55/67",
+              "C60/75": "C60/75",
+              "C70/85": "C70/85",
+              "C80/95": "C80/95",
+              "C90/105": "C90/105"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "UNI(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Rck10",
+              "Rck15",
+              "Rck20",
+              "Rck25",
+              "Rck30",
+              "Rck35",
+              "Rck40",
+              "Rck45",
+              "Rck50"
+            ],
+            "x-enum-labels": {
+              "Rck10": "Rck10",
+              "Rck15": "Rck15",
+              "Rck20": "Rck20",
+              "Rck25": "Rck25",
+              "Rck30": "Rck30",
+              "Rck35": "Rck35",
+              "Rck40": "Rck40",
+              "Rck45": "Rck45",
+              "Rck50": "Rck50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "SS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C12/15",
+              "C16/20",
+              "C20/25",
+              "C25/30",
+              "C30/37",
+              "C32/40",
+              "C35/45",
+              "C40/50",
+              "C45/55",
+              "C50/60",
+              "C55/67",
+              "C60/75",
+              "C70/85",
+              "C80/95",
+              "C90/105"
+            ],
+            "x-enum-labels": {
+              "C12/15": "C12/15",
+              "C16/20": "C16/20",
+              "C20/25": "C20/25",
+              "C25/30": "C25/30",
+              "C30/37": "C30/37",
+              "C32/40": "C32/40",
+              "C35/45": "C35/45",
+              "C40/50": "C40/50",
+              "C45/55": "C45/55",
+              "C50/60": "C50/60",
+              "C55/67": "C55/67",
+              "C60/75": "C60/75",
+              "C70/85": "C70/85",
+              "C80/95": "C80/95",
+              "C90/105": "C90/105"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GOST-SP(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "B20",
+              "B22.5",
+              "B25",
+              "B27.5",
+              "B30",
+              "B35",
+              "B40",
+              "B45",
+              "B50",
+              "B55",
+              "B60"
+            ],
+            "x-enum-labels": {
+              "B20": "B20",
+              "B22.5": "B22.5",
+              "B25": "B25",
+              "B27.5": "B27.5",
+              "B30": "B30",
+              "B35": "B35",
+              "B40": "B40",
+              "B45": "B45",
+              "B50": "B50",
+              "B55": "B55",
+              "B60": "B60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GOST-SNIP(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "B20",
+              "B22.5",
+              "B25",
+              "B27.5",
+              "B30",
+              "B35",
+              "B40",
+              "B45",
+              "B50",
+              "B55",
+              "B60"
+            ],
+            "x-enum-labels": {
+              "B20": "B20",
+              "B22.5": "B22.5",
+              "B25": "B25",
+              "B27.5": "B27.5",
+              "B30": "B30",
+              "B35": "B35",
+              "B40": "B40",
+              "B45": "B45",
+              "B50": "B50",
+              "B55": "B55",
+              "B60": "B60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JIS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Fc18",
+              "Fc21",
+              "Fc24",
+              "Fc27",
+              "Fc30",
+              "Fc33",
+              "Fc36",
+              "Fc39",
+              "Fc42",
+              "Fc45",
+              "Fc48",
+              "Fc51",
+              "Fc54",
+              "Fc57",
+              "Fc60",
+              "Fc18(LT1)",
+              "Fc21(LT1)",
+              "Fc24(LT1)",
+              "Fc27(LT1)",
+              "Fc30(LT1)",
+              "Fc33(LT1)",
+              "Fc36(LT1)",
+              "Fc18(LT2)",
+              "Fc21(LT2)",
+              "Fc24(LT2)",
+              "Fc27(LT2)"
+            ],
+            "x-enum-labels": {
+              "Fc18": "Fc18",
+              "Fc21": "Fc21",
+              "Fc24": "Fc24",
+              "Fc27": "Fc27",
+              "Fc30": "Fc30",
+              "Fc33": "Fc33",
+              "Fc36": "Fc36",
+              "Fc39": "Fc39",
+              "Fc42": "Fc42",
+              "Fc45": "Fc45",
+              "Fc48": "Fc48",
+              "Fc51": "Fc51",
+              "Fc54": "Fc54",
+              "Fc57": "Fc57",
+              "Fc60": "Fc60",
+              "Fc18(LT1)": "Fc18(LT1)",
+              "Fc21(LT1)": "Fc21(LT1)",
+              "Fc24(LT1)": "Fc24(LT1)",
+              "Fc27(LT1)": "Fc27(LT1)",
+              "Fc30(LT1)": "Fc30(LT1)",
+              "Fc33(LT1)": "Fc33(LT1)",
+              "Fc36(LT1)": "Fc36(LT1)",
+              "Fc18(LT2)": "Fc18(LT2)",
+              "Fc21(LT2)": "Fc21(LT2)",
+              "Fc24(LT2)": "Fc24(LT2)",
+              "Fc27(LT2)": "Fc27(LT2)"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JIS-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Fc21",
+              "Fc24",
+              "Fc27",
+              "Fc30",
+              "Fc36",
+              "Fc40",
+              "Fc50",
+              "Fc60",
+              "Fc70",
+              "Fc80"
+            ],
+            "x-enum-labels": {
+              "Fc21": "Fc21",
+              "Fc24": "Fc24",
+              "Fc27": "Fc27",
+              "Fc30": "Fc30",
+              "Fc36": "Fc36",
+              "Fc40": "Fc40",
+              "Fc50": "Fc50",
+              "Fc60": "Fc60",
+              "Fc70": "Fc70",
+              "Fc80": "Fc80"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JTJ023-85(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C20",
+              "C25",
+              "C30",
+              "C40",
+              "C50",
+              "C60"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C40": "C40",
+              "C50": "C50",
+              "C60": "C60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "Q/CR 9300-18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60"
+            ],
+            "x-enum-labels": {
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB 50917-13(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60"
+            ],
+            "x-enum-labels": {
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB/T10(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C20",
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C20",
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "15",
+              "20",
+              "25",
+              "30",
+              "40",
+              "50",
+              "60"
+            ],
+            "x-enum-labels": {
+              "15": "15",
+              "20": "20",
+              "25": "25",
+              "30": "30",
+              "40": "40",
+              "50": "50",
+              "60": "60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TB10092-17(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60"
+            ],
+            "x-enum-labels": {
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JTG3362-18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80"
+            ],
+            "x-enum-labels": {
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JTG04(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C20",
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TB05(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C20",
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60"
+            ],
+            "x-enum-labels": {
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS19(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C18",
+              "C21",
+              "C24",
+              "C27",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C49",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80",
+              "C85",
+              "C90",
+              "C95"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C18": "C18",
+              "C21": "C21",
+              "C24": "C24",
+              "C27": "C27",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C49": "C49",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80",
+              "C85": "C85",
+              "C90": "C90",
+              "C95": "C95"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS01(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C18",
+              "C21",
+              "C24",
+              "C27",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C49",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80",
+              "C85",
+              "C90",
+              "C95"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C18": "C18",
+              "C21": "C21",
+              "C24": "C24",
+              "C27": "C27",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C49": "C49",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80",
+              "C85": "C85",
+              "C90": "C90",
+              "C95": "C95"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C150",
+              "C180",
+              "C210",
+              "C240",
+              "C270",
+              "C300",
+              "C350",
+              "C400",
+              "C450",
+              "C500",
+              "C550",
+              "C600",
+              "C650",
+              "C700"
+            ],
+            "x-enum-labels": {
+              "C150": "C150",
+              "C180": "C180",
+              "C210": "C210",
+              "C240": "C240",
+              "C270": "C270",
+              "C300": "C300",
+              "C350": "C350",
+              "C400": "C400",
+              "C450": "C450",
+              "C500": "C500",
+              "C550": "C550",
+              "C600": "C600",
+              "C650": "C650",
+              "C700": "C700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KSCE-LSD15(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C18",
+              "C21",
+              "C24",
+              "C27",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80",
+              "C85",
+              "C90",
+              "C95"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C18": "C18",
+              "C21": "C21",
+              "C24": "C24",
+              "C27": "C27",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80",
+              "C85": "C85",
+              "C90": "C90",
+              "C95": "C95"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS01-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C15",
+              "C18",
+              "C21",
+              "C24",
+              "C27",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C49",
+              "C50",
+              "C55",
+              "C60",
+              "C65",
+              "C70",
+              "C75",
+              "C80",
+              "C85",
+              "C90",
+              "C95"
+            ],
+            "x-enum-labels": {
+              "C15": "C15",
+              "C18": "C18",
+              "C21": "C21",
+              "C24": "C24",
+              "C27": "C27",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C49": "C49",
+              "C50": "C50",
+              "C55": "C55",
+              "C60": "C60",
+              "C65": "C65",
+              "C70": "C70",
+              "C75": "C75",
+              "C80": "C80",
+              "C85": "C85",
+              "C90": "C90",
+              "C95": "C95"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C150",
+              "C180",
+              "C210",
+              "C240",
+              "C270",
+              "C300",
+              "C350",
+              "C400",
+              "C450",
+              "C500",
+              "C550",
+              "C600",
+              "C650",
+              "C700"
+            ],
+            "x-enum-labels": {
+              "C150": "C150",
+              "C180": "C180",
+              "C210": "C210",
+              "C240": "C240",
+              "C270": "C270",
+              "C300": "C300",
+              "C350": "C350",
+              "C400": "C400",
+              "C450": "C450",
+              "C500": "C500",
+              "C550": "C550",
+              "C600": "C600",
+              "C650": "C650",
+              "C700": "C700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "PNS49(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Grade C18",
+              "Grade C21",
+              "Grade C25",
+              "Grade C28",
+              "Grade C32",
+              "Grade C35",
+              "Grade C42",
+              "Grade C49",
+              "Grade C56",
+              "Grade C63",
+              "Grade C69"
+            ],
+            "x-enum-labels": {
+              "Grade C18": "Grade C18",
+              "Grade C21": "Grade C21",
+              "Grade C25": "Grade C25",
+              "Grade C28": "Grade C28",
+              "Grade C32": "Grade C32",
+              "Grade C35": "Grade C35",
+              "Grade C42": "Grade C42",
+              "Grade C49": "Grade C49",
+              "Grade C56": "Grade C56",
+              "Grade C63": "Grade C63",
+              "Grade C69": "Grade C69"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "SNI(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "fc17",
+              "fc21",
+              "fc25",
+              "fc30",
+              "fc35",
+              "fc40",
+              "fc45",
+              "fc50",
+              "fc55",
+              "fc60"
+            ],
+            "x-enum-labels": {
+              "fc17": "fc17",
+              "fc21": "fc21",
+              "fc25": "fc25",
+              "fc30": "fc30",
+              "fc35": "fc35",
+              "fc40": "fc40",
+              "fc45": "fc45",
+              "fc50": "fc50",
+              "fc55": "fc55",
+              "fc60": "fc60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TIS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C150",
+              "C180",
+              "C210",
+              "C240",
+              "C250",
+              "C280",
+              "C300",
+              "C320",
+              "C350",
+              "C380",
+              "C400",
+              "C450",
+              "C500",
+              "C550",
+              "C600",
+              "C650",
+              "C700"
+            ],
+            "x-enum-labels": {
+              "C150": "C150",
+              "C180": "C180",
+              "C210": "C210",
+              "C240": "C240",
+              "C250": "C250",
+              "C280": "C280",
+              "C300": "C300",
+              "C320": "C320",
+              "C350": "C350",
+              "C380": "C380",
+              "C400": "C400",
+              "C450": "C450",
+              "C500": "C500",
+              "C550": "C550",
+              "C600": "C600",
+              "C650": "C650",
+              "C700": "C700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TIS(MKS)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C150",
+              "C180",
+              "C210",
+              "C240",
+              "C250",
+              "C280",
+              "C300",
+              "C320",
+              "C350",
+              "C380",
+              "C400",
+              "C450",
+              "C500",
+              "C550",
+              "C600",
+              "C650",
+              "C700"
+            ],
+            "x-enum-labels": {
+              "C150": "C150",
+              "C180": "C180",
+              "C210": "C210",
+              "C240": "C240",
+              "C250": "C250",
+              "C280": "C280",
+              "C300": "C300",
+              "C320": "C320",
+              "C350": "C350",
+              "C380": "C380",
+              "C400": "C400",
+              "C450": "C450",
+              "C500": "C500",
+              "C550": "C550",
+              "C600": "C600",
+              "C650": "C650",
+              "C700": "C700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "IRC(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "M15",
+              "M20",
+              "M25",
+              "M30",
+              "M35",
+              "M40",
+              "M45",
+              "M50",
+              "M55",
+              "M60",
+              "M65",
+              "M70",
+              "M75",
+              "M80",
+              "M85",
+              "M90"
+            ],
+            "x-enum-labels": {
+              "M15": "M15",
+              "M20": "M20",
+              "M25": "M25",
+              "M30": "M30",
+              "M35": "M35",
+              "M40": "M40",
+              "M45": "M45",
+              "M50": "M50",
+              "M55": "M55",
+              "M60": "M60",
+              "M65": "M65",
+              "M70": "M70",
+              "M75": "M75",
+              "M80": "M80",
+              "M85": "M85",
+              "M90": "M90"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "IRS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "M20",
+              "M25",
+              "M30",
+              "M35",
+              "M40",
+              "M45",
+              "M50",
+              "M55",
+              "M60"
+            ],
+            "x-enum-labels": {
+              "M20": "M20",
+              "M25": "M25",
+              "M30": "M30",
+              "M35": "M35",
+              "M40": "M40",
+              "M45": "M45",
+              "M50": "M50",
+              "M55": "M55",
+              "M60": "M60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "IS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "M10",
+              "M15",
+              "M20",
+              "M25",
+              "M30",
+              "M35",
+              "M40",
+              "M45",
+              "M50",
+              "M55",
+              "M60",
+              "M65",
+              "M70",
+              "M75",
+              "M80"
+            ],
+            "x-enum-labels": {
+              "M10": "M10",
+              "M15": "M15",
+              "M20": "M20",
+              "M25": "M25",
+              "M30": "M30",
+              "M35": "M35",
+              "M40": "M40",
+              "M45": "M45",
+              "M50": "M50",
+              "M55": "M55",
+              "M60": "M60",
+              "M65": "M65",
+              "M70": "M70",
+              "M75": "M75",
+              "M80": "M80"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CNS560-18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C210",
+              "C245",
+              "C280",
+              "C315",
+              "C350",
+              "C420",
+              "C490",
+              "C560",
+              "C700"
+            ],
+            "x-enum-labels": {
+              "C210": "C210",
+              "C245": "C245",
+              "C280": "C280",
+              "C315": "C315",
+              "C350": "C350",
+              "C420": "C420",
+              "C490": "C490",
+              "C560": "C560",
+              "C700": "C700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CNS560(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C210",
+              "C245",
+              "C280",
+              "C315",
+              "C350",
+              "C420"
+            ],
+            "x-enum-labels": {
+              "C210": "C210",
+              "C245": "C245",
+              "C280": "C280",
+              "C315": "C315",
+              "C350": "C350",
+              "C420": "C420"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CNS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C210",
+              "C245",
+              "C280",
+              "C315",
+              "C350",
+              "C420"
+            ],
+            "x-enum-labels": {
+              "C210": "C210",
+              "C245": "C245",
+              "C280": "C280",
+              "C315": "C315",
+              "C350": "C350",
+              "C420": "C420"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "AS17(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C20",
+              "C25",
+              "C32",
+              "C40",
+              "C50",
+              "C65",
+              "C80",
+              "C100"
+            ],
+            "x-enum-labels": {
+              "C20": "C20",
+              "C25": "C25",
+              "C32": "C32",
+              "C40": "C40",
+              "C50": "C50",
+              "C65": "C65",
+              "C80": "C80",
+              "C100": "C100"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TMH7(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "Grade 20",
+              "Grade 25",
+              "Grade 30",
+              "Grade 40",
+              "Grade 50",
+              "Grade 60"
+            ],
+            "x-enum-labels": {
+              "Grade 20": "Grade 20",
+              "Grade 25": "Grade 25",
+              "Grade 30": "Grade 30",
+              "Grade 40": "Grade 40",
+              "Grade 50": "Grade 50",
+              "Grade 60": "Grade 60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "SP63.2018(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "B3.5",
+              "B5",
+              "B7.5",
+              "B10",
+              "B12.5",
+              "B15",
+              "B20",
+              "B25",
+              "B30",
+              "B35",
+              "B40",
+              "B45",
+              "B50",
+              "B55",
+              "B60",
+              "B70",
+              "B80",
+              "B90",
+              "B100",
+              "B3.5A",
+              "B5A",
+              "B7.5A",
+              "B10A",
+              "B12.5A",
+              "B15A",
+              "B20A",
+              "B25A",
+              "B30A",
+              "B35A",
+              "B40A",
+              "B15B",
+              "B20B",
+              "B25B",
+              "B30B",
+              "B35B",
+              "B40B",
+              "B45B",
+              "B50B",
+              "B55B",
+              "B60B",
+              "LB2.5D800",
+              "LB3.5D800",
+              "LB5D800",
+              "LB7.5D800",
+              "LB2.5D1000",
+              "LB3.5D1000",
+              "LB5D1000",
+              "LB7.5D1000",
+              "LB10D1000",
+              "LB12.5D1000",
+              "LB2.5D1200",
+              "LB3.5D1200",
+              "LB5D1200",
+              "LB7.5D1200",
+              "LB10D1200",
+              "LB12.5D1200",
+              "LB15D1200",
+              "LB2.5D1400",
+              "LB3.5D1400",
+              "LB5D1400",
+              "LB7.5D1400",
+              "LB10D1400",
+              "LB12.5D1400",
+              "LB15D1400",
+              "LB20D1400",
+              "LB25D1400",
+              "LB30D1400",
+              "LB3.5D1600",
+              "LB5D1600",
+              "LB7.5D1600",
+              "LB10D1600",
+              "LB12.5D1600",
+              "LB15D1600",
+              "LB20D1600",
+              "LB25D1600",
+              "LB30D1600",
+              "LB35D1600",
+              "LB5D1800",
+              "LB7.5D1800",
+              "LB10D1800",
+              "LB12.5D1800",
+              "LB15D1800",
+              "LB20D1800",
+              "LB25D1800",
+              "LB30D1800",
+              "LB35D1800",
+              "LB40D1800",
+              "LB7.5D2000",
+              "LB10D2000",
+              "LB12.5D2000",
+              "LB15D2000",
+              "LB20D2000",
+              "LB25D2000",
+              "LB30D2000",
+              "LB35D2000",
+              "LB40D2000",
+              "CB1.5D500",
+              "CB1.5D600",
+              "CB2D600",
+              "CB2.5D600",
+              "CB1.5D700",
+              "CB2D700",
+              "CB2.5D700",
+              "CB3.5D700",
+              "CB2.5D800",
+              "CB3.5D800",
+              "CB5D800",
+              "CB3.5D900",
+              "CB5D900",
+              "CB7.5D900",
+              "CB5D1000",
+              "CB7.5D1000",
+              "CB10D1000",
+              "CB7.5D1100",
+              "CB10D1100",
+              "CB12.5D1100",
+              "CB15D1100",
+              "CB10D1200",
+              "CB12.5D1200",
+              "CB15D1200"
+            ],
+            "x-enum-labels": {
+              "B3.5": "B3.5",
+              "B5": "B5",
+              "B7.5": "B7.5",
+              "B10": "B10",
+              "B12.5": "B12.5",
+              "B15": "B15",
+              "B20": "B20",
+              "B25": "B25",
+              "B30": "B30",
+              "B35": "B35",
+              "B40": "B40",
+              "B45": "B45",
+              "B50": "B50",
+              "B55": "B55",
+              "B60": "B60",
+              "B70": "B70",
+              "B80": "B80",
+              "B90": "B90",
+              "B100": "B100",
+              "B3.5A": "B3.5A",
+              "B5A": "B5A",
+              "B7.5A": "B7.5A",
+              "B10A": "B10A",
+              "B12.5A": "B12.5A",
+              "B15A": "B15A",
+              "B20A": "B20A",
+              "B25A": "B25A",
+              "B30A": "B30A",
+              "B35A": "B35A",
+              "B40A": "B40A",
+              "B15B": "B15B",
+              "B20B": "B20B",
+              "B25B": "B25B",
+              "B30B": "B30B",
+              "B35B": "B35B",
+              "B40B": "B40B",
+              "B45B": "B45B",
+              "B50B": "B50B",
+              "B55B": "B55B",
+              "B60B": "B60B",
+              "LB2.5D800": "LB2.5D800",
+              "LB3.5D800": "LB3.5D800",
+              "LB5D800": "LB5D800",
+              "LB7.5D800": "LB7.5D800",
+              "LB2.5D1000": "LB2.5D1000",
+              "LB3.5D1000": "LB3.5D1000",
+              "LB5D1000": "LB5D1000",
+              "LB7.5D1000": "LB7.5D1000",
+              "LB10D1000": "LB10D1000",
+              "LB12.5D1000": "LB12.5D1000",
+              "LB2.5D1200": "LB2.5D1200",
+              "LB3.5D1200": "LB3.5D1200",
+              "LB5D1200": "LB5D1200",
+              "LB7.5D1200": "LB7.5D1200",
+              "LB10D1200": "LB10D1200",
+              "LB12.5D1200": "LB12.5D1200",
+              "LB15D1200": "LB15D1200",
+              "LB2.5D1400": "LB2.5D1400",
+              "LB3.5D1400": "LB3.5D1400",
+              "LB5D1400": "LB5D1400",
+              "LB7.5D1400": "LB7.5D1400",
+              "LB10D1400": "LB10D1400",
+              "LB12.5D1400": "LB12.5D1400",
+              "LB15D1400": "LB15D1400",
+              "LB20D1400": "LB20D1400",
+              "LB25D1400": "LB25D1400",
+              "LB30D1400": "LB30D1400",
+              "LB3.5D1600": "LB3.5D1600",
+              "LB5D1600": "LB5D1600",
+              "LB7.5D1600": "LB7.5D1600",
+              "LB10D1600": "LB10D1600",
+              "LB12.5D1600": "LB12.5D1600",
+              "LB15D1600": "LB15D1600",
+              "LB20D1600": "LB20D1600",
+              "LB25D1600": "LB25D1600",
+              "LB30D1600": "LB30D1600",
+              "LB35D1600": "LB35D1600",
+              "LB5D1800": "LB5D1800",
+              "LB7.5D1800": "LB7.5D1800",
+              "LB10D1800": "LB10D1800",
+              "LB12.5D1800": "LB12.5D1800",
+              "LB15D1800": "LB15D1800",
+              "LB20D1800": "LB20D1800",
+              "LB25D1800": "LB25D1800",
+              "LB30D1800": "LB30D1800",
+              "LB35D1800": "LB35D1800",
+              "LB40D1800": "LB40D1800",
+              "LB7.5D2000": "LB7.5D2000",
+              "LB10D2000": "LB10D2000",
+              "LB12.5D2000": "LB12.5D2000",
+              "LB15D2000": "LB15D2000",
+              "LB20D2000": "LB20D2000",
+              "LB25D2000": "LB25D2000",
+              "LB30D2000": "LB30D2000",
+              "LB35D2000": "LB35D2000",
+              "LB40D2000": "LB40D2000",
+              "CB1.5D500": "CB1.5D500",
+              "CB1.5D600": "CB1.5D600",
+              "CB2D600": "CB2D600",
+              "CB2.5D600": "CB2.5D600",
+              "CB1.5D700": "CB1.5D700",
+              "CB2D700": "CB2D700",
+              "CB2.5D700": "CB2.5D700",
+              "CB3.5D700": "CB3.5D700",
+              "CB2.5D800": "CB2.5D800",
+              "CB3.5D800": "CB3.5D800",
+              "CB5D800": "CB5D800",
+              "CB3.5D900": "CB3.5D900",
+              "CB5D900": "CB5D900",
+              "CB7.5D900": "CB7.5D900",
+              "CB5D1000": "CB5D1000",
+              "CB7.5D1000": "CB7.5D1000",
+              "CB10D1000": "CB10D1000",
+              "CB7.5D1100": "CB7.5D1100",
+              "CB10D1100": "CB10D1100",
+              "CB12.5D1100": "CB12.5D1100",
+              "CB15D1100": "CB15D1100",
+              "CB10D1200": "CB10D1200",
+              "CB12.5D1200": "CB12.5D1200",
+              "CB15D1200": "CB15D1200"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C16",
+              "C18",
+              "C20",
+              "C25",
+              "C30",
+              "C35",
+              "C40",
+              "C45",
+              "C50"
+            ],
+            "x-enum-labels": {
+              "C16": "C16",
+              "C18": "C18",
+              "C20": "C20",
+              "C25": "C25",
+              "C30": "C30",
+              "C35": "C35",
+              "C40": "C40",
+              "C45": "C45",
+              "C50": "C50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NBR 6118(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE"
+        ],
+        "not": {
+          "required": [
+            "NAME"
+          ]
+        },
+        "properties": {
+          "GRADE": {
+            "type": "string",
+            "enum": [
+              "C20BD",
+              "C20GG",
+              "C20LS",
+              "C20SS",
+              "C25BD",
+              "C25GG",
+              "C25LS",
+              "C25SS",
+              "C30BD",
+              "C30GG",
+              "C30LS",
+              "C30SS",
+              "C35BD",
+              "C35GG",
+              "C35LS",
+              "C35SS",
+              "C40BD",
+              "C40GG",
+              "C40LS",
+              "C40SS",
+              "C45BD",
+              "C45GG",
+              "C45LS",
+              "C45SS",
+              "C50BD",
+              "C50GG",
+              "C50LS",
+              "C50SS",
+              "C55BD",
+              "C55GG",
+              "C55LS",
+              "C55SS",
+              "C60BD",
+              "C60GG",
+              "C60LS",
+              "C60SS",
+              "C65BD",
+              "C65GG",
+              "C65LS",
+              "C65SS",
+              "C70BD",
+              "C70GG",
+              "C70LS",
+              "C70SS",
+              "C75BD",
+              "C75GG",
+              "C75LS",
+              "C75SS",
+              "C80BD",
+              "C80GG",
+              "C80LS",
+              "C80SS",
+              "C85BD",
+              "C85GG",
+              "C85LS",
+              "C85SS",
+              "C90BD",
+              "C90GG",
+              "C90LS",
+              "C90SS"
+            ],
+            "x-enum-labels": {
+              "C20BD": "C20BD",
+              "C20GG": "C20GG",
+              "C20LS": "C20LS",
+              "C20SS": "C20SS",
+              "C25BD": "C25BD",
+              "C25GG": "C25GG",
+              "C25LS": "C25LS",
+              "C25SS": "C25SS",
+              "C30BD": "C30BD",
+              "C30GG": "C30GG",
+              "C30LS": "C30LS",
+              "C30SS": "C30SS",
+              "C35BD": "C35BD",
+              "C35GG": "C35GG",
+              "C35LS": "C35LS",
+              "C35SS": "C35SS",
+              "C40BD": "C40BD",
+              "C40GG": "C40GG",
+              "C40LS": "C40LS",
+              "C40SS": "C40SS",
+              "C45BD": "C45BD",
+              "C45GG": "C45GG",
+              "C45LS": "C45LS",
+              "C45SS": "C45SS",
+              "C50BD": "C50BD",
+              "C50GG": "C50GG",
+              "C50LS": "C50LS",
+              "C50SS": "C50SS",
+              "C55BD": "C55BD",
+              "C55GG": "C55GG",
+              "C55LS": "C55LS",
+              "C55SS": "C55SS",
+              "C60BD": "C60BD",
+              "C60GG": "C60GG",
+              "C60LS": "C60LS",
+              "C60SS": "C60SS",
+              "C65BD": "C65BD",
+              "C65GG": "C65GG",
+              "C65LS": "C65LS",
+              "C65SS": "C65SS",
+              "C70BD": "C70BD",
+              "C70GG": "C70GG",
+              "C70LS": "C70LS",
+              "C70SS": "C70SS",
+              "C75BD": "C75BD",
+              "C75GG": "C75GG",
+              "C75LS": "C75LS",
+              "C75SS": "C75SS",
+              "C80BD": "C80BD",
+              "C80GG": "C80GG",
+              "C80LS": "C80LS",
+              "C80SS": "C80SS",
+              "C85BD": "C85BD",
+              "C85GG": "C85GG",
+              "C85LS": "C85LS",
+              "C85SS": "C85SS",
+              "C90BD": "C90BD",
+              "C90GG": "C90GG",
+              "C90LS": "C90LS",
+              "C90SS": "C90SS"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "x-target-objects": [
+    "GIRDER_MATL_PROP",
+    "SLAB_MATL_PROP"
+  ]
+}

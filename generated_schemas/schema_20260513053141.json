@@ -1,0 +1,294 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object. Each property name is an ID string.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Load Test Measurements",
+          "type": "object",
+          "required": [
+            "ELEM_TYPE",
+            "POSITION",
+            "LTM_TYPE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ELEM_TYPE": {
+              "type": "integer",
+              "description": "Element Type",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Element",
+                  "const": 0
+                },
+                {
+                  "title": "Virtual Beam",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Element Type",
+                "order": 1
+              }
+            },
+            "POSITION": {
+              "type": "integer",
+              "description": "Position Type",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "I",
+                  "const": 0
+                },
+                {
+                  "title": "J",
+                  "const": 1
+                },
+                {
+                  "title": "I & J",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Position Type",
+                "order": 2
+              }
+            },
+            "LTM_TYPE": {
+              "type": "integer",
+              "description": "Load Test Measurement Type",
+              "default": 0,
+              "oneOf": [
+                {
+                  "title": "Auto Calculation",
+                  "const": 0
+                },
+                {
+                  "title": "User Input",
+                  "const": 1
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "label": "Load Test Measurement Type",
+                "order": 3
+              }
+            },
+            "STRAIN_I": {
+              "type": "number",
+              "description": "Strain at I-End. Required when LTM_TYPE is Auto Calculation(0) and POSITION is I(0) or I & J(2).",
+              "default": 0.00001,
+              "x-ui": {
+                "component": "NumberInput",
+                "label": "Strain(I)",
+                "order": 4
+              },
+              "x-required-when": {
+                "LTM_TYPE": 0,
+                "POSITION": [
+                  0,
+                  2
+                ]
+              }
+            },
+            "STRAIN_J": {
+              "type": "number",
+              "description": "Strain at J-End. Required when LTM_TYPE is Auto Calculation(0) and POSITION is J(1) or I & J(2).",
+              "default": 0.00001,
+              "x-ui": {
+                "component": "NumberInput",
+                "label": "Strain(J)",
+                "order": 5
+              },
+              "x-required-when": {
+                "LTM_TYPE": 0,
+                "POSITION": [
+                  1,
+                  2
+                ]
+              }
+            },
+            "KB": {
+              "type": "number",
+              "description": "Load Test Measurement Benefit Factor. Required when LTM_TYPE is Auto Calculation(0).",
+              "default": 1,
+              "x-ui": {
+                "component": "NumberInput",
+                "label": "Kb",
+                "order": 6
+              },
+              "x-required-when": {
+                "LTM_TYPE": 0
+              }
+            },
+            "K": {
+              "type": "number",
+              "description": "Adjustment Factor. Required when LTM_TYPE is User Input(1).",
+              "default": 1,
+              "x-ui": {
+                "component": "NumberInput",
+                "label": "K",
+                "order": 7
+              },
+              "x-required-when": {
+                "LTM_TYPE": 1
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "LTM_TYPE",
+                  "POSITION"
+                ],
+                "properties": {
+                  "LTM_TYPE": {
+                    "const": 0
+                  },
+                  "POSITION": {
+                    "const": 0
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STRAIN_I",
+                  "KB"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "STRAIN_J"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "K"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "LTM_TYPE",
+                  "POSITION"
+                ],
+                "properties": {
+                  "LTM_TYPE": {
+                    "const": 0
+                  },
+                  "POSITION": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STRAIN_J",
+                  "KB"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "STRAIN_I"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "K"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "LTM_TYPE",
+                  "POSITION"
+                ],
+                "properties": {
+                  "LTM_TYPE": {
+                    "const": 0
+                  },
+                  "POSITION": {
+                    "const": 2
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STRAIN_I",
+                  "STRAIN_J",
+                  "KB"
+                ],
+                "not": {
+                  "required": [
+                    "K"
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "LTM_TYPE"
+                ],
+                "properties": {
+                  "LTM_TYPE": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "K"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "STRAIN_I"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "STRAIN_J"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "KB"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "x-ui": {
+        "label": "Assign"
+      }
+    }
+  }
+}

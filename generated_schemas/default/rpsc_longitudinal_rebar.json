@@ -1,0 +1,505 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is an ID string (e.g., \"1\").",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "RPSC Longitudinal Rebar",
+          "type": "object",
+          "description": "Section Manager - Reinforcements. Longitudinal reinforcement data for /db/RPSC.",
+          "required": [
+            "OPT_MBAR_J",
+            "OPT_SBAR_J",
+            "OPT_CRACKED",
+            "SBAR_ITEMS",
+            "MBARS"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "OPT_MBAR_J": {
+              "type": "boolean",
+              "description": "Same rebar data at I-end and J-end for longitudinal reinforcement.",
+              "x-ui": {
+                "groupId": "GENERAL",
+                "label": "Same Longitudinal Rebar at I/J",
+                "order": 1
+              }
+            },
+            "OPT_SBAR_J": {
+              "type": "boolean",
+              "description": "Same shear rebar data at I-end and J-end.",
+              "x-ui": {
+                "groupId": "GENERAL",
+                "label": "Same Shear Rebar at I/J",
+                "order": 2
+              }
+            },
+            "OPT_CRACKED": {
+              "type": "boolean",
+              "description": "Cracked section option.",
+              "x-ui": {
+                "groupId": "GENERAL",
+                "label": "Cracked Section",
+                "order": 3
+              }
+            },
+            "SBAR_ITEMS": {
+              "type": "array",
+              "description": "Shear reinforcement data. Kept in this longitudinal schema because /db/RPSC requires the shear item list in the documented payload.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "OPT_DR": {
+                    "type": "boolean",
+                    "description": "Diagonal reinforcement.",
+                    "default": false,
+                    "x-ui": {
+                      "label": "Diagonal Reinforcement"
+                    }
+                  },
+                  "DR_PITCH": {
+                    "type": "number",
+                    "description": "[DR] Pitch.",
+                    "x-ui": {
+                      "label": "[DR] Pitch"
+                    },
+                    "x-optional-when": {
+                      "OPT_DR": true
+                    }
+                  },
+                  "DR_THETA": {
+                    "type": "number",
+                    "description": "[DR] Angle.",
+                    "x-ui": {
+                      "label": "[DR] Angle"
+                    },
+                    "x-optional-when": {
+                      "OPT_DR": true
+                    }
+                  },
+                  "DR_AW": {
+                    "type": "number",
+                    "description": "[DR] Area.",
+                    "x-ui": {
+                      "label": "[DR] Area"
+                    },
+                    "x-optional-when": {
+                      "OPT_DR": true
+                    }
+                  },
+                  "OPT_SBW": {
+                    "type": "boolean",
+                    "description": "Steel bar for web.",
+                    "default": false,
+                    "x-ui": {
+                      "label": "Steel Bar for Web"
+                    }
+                  },
+                  "SBW_PITCH": {
+                    "type": "number",
+                    "description": "[SBW] Pitch.",
+                    "x-ui": {
+                      "label": "[SBW] Pitch"
+                    },
+                    "x-optional-when": {
+                      "OPT_SBW": true
+                    }
+                  },
+                  "SBW_ANGLE": {
+                    "type": "number",
+                    "description": "[SBW] Angle.",
+                    "x-ui": {
+                      "label": "[SBW] Angle"
+                    },
+                    "x-optional-when": {
+                      "OPT_SBW": true
+                    }
+                  },
+                  "SBW_AP": {
+                    "type": "number",
+                    "description": "[SBW] Area.",
+                    "x-ui": {
+                      "label": "[SBW] Area"
+                    },
+                    "x-optional-when": {
+                      "OPT_SBW": true
+                    }
+                  },
+                  "SBW_PS": {
+                    "type": "number",
+                    "description": "[SBW] Pre-force.",
+                    "x-ui": {
+                      "label": "[SBW] Pre-force"
+                    },
+                    "x-optional-when": {
+                      "OPT_SBW": true
+                    }
+                  },
+                  "SBW_FACTOR": {
+                    "type": "number",
+                    "description": "[SBW] Shear reduction factor.",
+                    "x-ui": {
+                      "label": "[SBW] Shear Reduction Factor"
+                    },
+                    "x-optional-when": {
+                      "OPT_SBW": true
+                    }
+                  },
+                  "OPT_TR": {
+                    "type": "boolean",
+                    "description": "Torsional reinforcement.",
+                    "default": false,
+                    "x-ui": {
+                      "label": "Torsional Reinforcement"
+                    }
+                  },
+                  "TR_PITCH": {
+                    "type": "number",
+                    "description": "[TR] Pitch.",
+                    "x-ui": {
+                      "label": "[TR] Pitch"
+                    },
+                    "x-optional-when": {
+                      "OPT_TR": true
+                    }
+                  },
+                  "TR_AWT": {
+                    "type": "number",
+                    "description": "[TR] Area (web).",
+                    "x-ui": {
+                      "label": "[TR] Area (Web)"
+                    },
+                    "x-optional-when": {
+                      "OPT_TR": true
+                    }
+                  },
+                  "TR_ALT": {
+                    "type": "number",
+                    "description": "[TR] Area (longitudinal).",
+                    "x-ui": {
+                      "label": "[TR] Area (Long.)"
+                    },
+                    "x-optional-when": {
+                      "OPT_TR": true
+                    }
+                  },
+                  "OPT_SR": {
+                    "type": "boolean",
+                    "description": "Stirrup exists.",
+                    "default": false,
+                    "x-ui": {
+                      "label": "Stirrup Exists"
+                    }
+                  },
+                  "SR_PITCH": {
+                    "type": "number",
+                    "description": "[SR] Pitch.",
+                    "x-ui": {
+                      "label": "[SR] Pitch"
+                    },
+                    "x-optional-when": {
+                      "OPT_SR": true
+                    }
+                  },
+                  "SR_AW": {
+                    "type": "number",
+                    "description": "[SR] Area.",
+                    "x-ui": {
+                      "label": "[SR] Area"
+                    },
+                    "x-optional-when": {
+                      "OPT_SR": true
+                    }
+                  },
+                  "OPT_LBAR_FLG": {
+                    "type": "boolean",
+                    "description": "Enclosing stirrup.",
+                    "default": false,
+                    "x-ui": {
+                      "label": "Enclosing Stirrup"
+                    }
+                  },
+                  "LBAR_THICK": {
+                    "type": "number",
+                    "description": "Cover thickness for enclosed section area.",
+                    "x-ui": {
+                      "label": "Cover Thickness"
+                    },
+                    "x-optional-when": {
+                      "OPT_LBAR_FLG": true
+                    }
+                  },
+                  "LBAR_INC_FC": {
+                    "type": "integer",
+                    "description": "Include flange/cantilever. 0: check off, 1: check on.",
+                    "enum": [
+                      0,
+                      1
+                    ],
+                    "x-ui": {
+                      "label": "Include Flange/Cantilever"
+                    },
+                    "x-enum-labels": [
+                      "Check off",
+                      "Check on"
+                    ],
+                    "x-optional-when": {
+                      "OPT_LBAR_FLG": true
+                    }
+                  }
+                }
+              },
+              "minItems": 1,
+              "maxItems": 2,
+              "x-ui": {
+                "component": "Table",
+                "groupId": "SHEAR_MIN",
+                "label": "Shear Reinforcement Items",
+                "order": 4
+              }
+            },
+            "MBARS": {
+              "type": "array",
+              "description": "Longitudinal reinforcement properties. Index 0 is I-section, index 1 is J-section when OPT_MBAR_J is false.",
+              "items": {
+                "type": "object",
+                "required": [
+                  "MBAR_ITEMS"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "MBAR_ITEMS": {
+                    "type": "array",
+                    "description": "Longitudinal reinforcement property details.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "IJ",
+                        "NAME",
+                        "REF_Y",
+                        "REF_Z",
+                        "NUM",
+                        "PART"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "IJ": {
+                          "type": "string",
+                          "description": "Section position.",
+                          "enum": [
+                            "I",
+                            "J"
+                          ],
+                          "x-ui": {
+                            "label": "I/J",
+                            "order": 1
+                          }
+                        },
+                        "NAME": {
+                          "type": "string",
+                          "description": "Bar name.",
+                          "x-ui": {
+                            "label": "Bar Name",
+                            "order": 2
+                          }
+                        },
+                        "REF_Y": {
+                          "type": "integer",
+                          "description": "Reference Y. 0: centroid, 1: left.",
+                          "enum": [
+                            0,
+                            1
+                          ],
+                          "x-ui": {
+                            "label": "Reference Y",
+                            "order": 3
+                          },
+                          "x-enum-labels": [
+                            "Centroid",
+                            "Left"
+                          ]
+                        },
+                        "Y": {
+                          "type": "number",
+                          "description": "Distance from reference in Y direction.",
+                          "default": 0,
+                          "x-ui": {
+                            "label": "Y",
+                            "order": 4
+                          }
+                        },
+                        "REF_Z": {
+                          "type": "integer",
+                          "description": "Reference Z. 0: top, 1: bottom.",
+                          "enum": [
+                            0,
+                            1
+                          ],
+                          "x-ui": {
+                            "label": "Reference Z",
+                            "order": 5
+                          },
+                          "x-enum-labels": [
+                            "Top",
+                            "Bottom"
+                          ]
+                        },
+                        "Z": {
+                          "type": "number",
+                          "description": "Distance from reference in Z direction.",
+                          "default": 0,
+                          "x-ui": {
+                            "label": "Z",
+                            "order": 6
+                          }
+                        },
+                        "NUM": {
+                          "type": "integer",
+                          "description": "Number of rebars.",
+                          "minimum": 1,
+                          "x-ui": {
+                            "label": "Number of Rebar",
+                            "order": 7
+                          }
+                        },
+                        "SPACING": {
+                          "type": "number",
+                          "description": "Spacing between rebars.",
+                          "default": 0,
+                          "minimum": 0,
+                          "x-ui": {
+                            "label": "Spacing",
+                            "order": 8
+                          }
+                        },
+                        "PART": {
+                          "type": "integer",
+                          "description": "Part.",
+                          "x-ui": {
+                            "label": "Part",
+                            "order": 9
+                          }
+                        }
+                      },
+                      "x-ui": {
+                        "label": "Longitudinal Rebar Item"
+                      }
+                    },
+                    "minItems": 1,
+                    "x-ui": {
+                      "component": "Table",
+                      "label": "Longitudinal Rebar Items"
+                    }
+                  }
+                }
+              },
+              "minItems": 1,
+              "maxItems": 2,
+              "x-ui": {
+                "component": "Table",
+                "groupId": "LONGI",
+                "label": "Longitudinal Reinforcement",
+                "order": 5
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "OPT_MBAR_J": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "MBARS": {
+                    "minItems": 1,
+                    "maxItems": 1
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "OPT_MBAR_J": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "MBARS": {
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "OPT_SBAR_J": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "SBAR_ITEMS": {
+                    "minItems": 1,
+                    "maxItems": 1
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "OPT_SBAR_J": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "SBAR_ITEMS": {
+                    "minItems": 1,
+                    "maxItems": 2
+                  }
+                }
+              }
+            }
+          ],
+          "x-ui": {
+            "groups": [
+              {
+                "title": "General Options",
+                "id": "GENERAL"
+              },
+              {
+                "title": "Shear Reinforcement Flags",
+                "id": "SHEAR_MIN"
+              },
+              {
+                "title": "Longitudinal Rebar",
+                "id": "LONGI"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

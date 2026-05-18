@@ -1,0 +1,79 @@
+{
+  "type": "object",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Keyed object (dictionary). Each property name is a material ID string.",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "required": [
+            "GIRDER_MATL_PROP",
+            "GIRDER_REBAR_PROP"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "GIRDER_MATL_PROP": {
+              "type": "object",
+              "description": "Girder concrete material settings. For detailed field specifications, CODE options, and CODE-specific GRADE values, refer to the Concrete Material documentation.",
+              "x-reference": {
+                "article": "PLACEHOLDER_ARTICLE_ID_CONCRETE_MATERIAL",
+                "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID_CONCRETE_MATERIAL",
+                "title": "Concrete Material"
+              },
+              "x-ui": {
+                "label": "Girder Material Type",
+                "order": 1
+              }
+            },
+            "GIRDER_REBAR_PROP": {
+              "type": "object",
+              "description": "Girder rebar material settings. For detailed field specifications, CODE options, and CODE-specific rebar grade values, refer to the Rebar Material documentation.",
+              "x-reference": {
+                "article": "PLACEHOLDER_ARTICLE_ID_REBAR_MATERIAL",
+                "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID_REBAR_MATERIAL",
+                "title": "Rebar Material"
+              },
+              "x-ui": {
+                "label": "Girder Rebar Selection",
+                "order": 2
+              }
+            },
+            "SLAB_MATL_PROP": {
+              "type": "object",
+              "description": "Slab concrete material settings. For detailed field specifications, CODE options, and CODE-specific GRADE values, refer to the Concrete Material documentation.",
+              "x-reference": {
+                "article": "PLACEHOLDER_ARTICLE_ID_CONCRETE_MATERIAL",
+                "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID_CONCRETE_MATERIAL",
+                "title": "Concrete Material"
+              },
+              "x-ui": {
+                "label": "Slab Material Type",
+                "order": 3
+              }
+            },
+            "SLAB_REBAR_PROP": {
+              "type": "object",
+              "description": "Slab rebar material settings. For detailed field specifications, CODE options, and CODE-specific rebar grade values, refer to the Rebar Material documentation.",
+              "x-reference": {
+                "article": "PLACEHOLDER_ARTICLE_ID_REBAR_MATERIAL",
+                "url": "https://support.midasuser.com/hc/en-us/articles/PLACEHOLDER_ARTICLE_ID_REBAR_MATERIAL",
+                "title": "Rebar Material"
+              },
+              "x-ui": {
+                "label": "Slab Rebar Selection",
+                "order": 4
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

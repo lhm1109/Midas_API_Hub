@@ -488,6 +488,7 @@ ipcMain.handle('db:getTestStatistics', async () => {
 // ============================================
 
 const ZENDESK_DEFAULT_LOCALE = 'en-us';
+const ZENDESK_TRANSLATION_BODY_LIMIT_BYTES = 1_000_000;
 
 function asTrimmedString(value) {
   if (typeof value !== 'string') return '';
@@ -509,6 +510,35 @@ function normalizeZendeskLocale(locale = ZENDESK_DEFAULT_LOCALE) {
     .replace(/_/g, '-')
     .toLowerCase();
   return normalized || ZENDESK_DEFAULT_LOCALE;
+}
+
+function getUtf8ByteSize(value) {
+  return Buffer.byteLength(String(value ?? ''), 'utf8');
+}
+
+function formatByteSize(bytes) {
+  if (bytes >= 1_000_000) {
+    return `${(bytes / 1_000_000).toFixed(2)} MB`;
+  }
+  if (bytes >= 1_000) {
+    return `${(bytes / 1_000).toFixed(1)} KB`;
+  }
+  return `${bytes} bytes`;
+}
+
+function assertZendeskTranslationBodySize(body, locale) {
+  const byteSize = getUtf8ByteSize(body);
+  if (byteSize <= ZENDESK_TRANSLATION_BODY_LIMIT_BYTES) {
+    return;
+  }
+
+  const error = new Error(
+    `Zendesk translation body for ${normalizeZendeskLocale(locale)} is ${formatByteSize(byteSize)}. ` +
+    `The per-locale limit is ${formatByteSize(ZENDESK_TRANSLATION_BODY_LIMIT_BYTES)}. ` +
+    'Zendesk cannot accept this as a single article body unless the schema/example HTML is reduced.'
+  );
+  error.code = 'ZENDESK_TRANSLATION_BODY_TOO_LARGE';
+  throw error;
 }
 
 function toZendeskPathSegment(value, fieldName) {
@@ -858,11 +888,14 @@ function makeZendeskRequest(options, postData = null) {
 
 async function updateZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
   const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
-  const safeLocale = toZendeskPathSegment(normalizeZendeskLocale(locale), 'locale');
+  const normalizedLocale = normalizeZendeskLocale(locale);
+  const safeLocale = toZendeskPathSegment(normalizedLocale, 'locale');
+  const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+  assertZendeskTranslationBodySize(normalizedBody, normalizedLocale);
 
   const payload = {
     translation: {
-      body: typeof body === 'string' ? body : String(body ?? ''),
+      body: normalizedBody,
     },
   };
 
@@ -911,6 +944,8 @@ async function updateZendeskArticle(config, articleId, articlePayload, notifySub
 async function createZendeskArticle(config, sectionId, locale, title, body, envConfig, draftOverride, metadataOverrides = {}) {
   const safeSectionId = toZendeskPathSegment(sectionId, 'sectionId');
   const normalizedLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale || ZENDESK_DEFAULT_LOCALE);
+  const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+  assertZendeskTranslationBodySize(normalizedBody, normalizedLocale);
 
   const metadata = buildZendeskArticleMetadataFromEnv(envConfig, metadataOverrides);
   const articleDraft = draftOverride !== null && draftOverride !== undefined
@@ -924,7 +959,7 @@ async function createZendeskArticle(config, sectionId, locale, title, body, envC
   const articlePayload = {
     ...metadata,
     title: asTrimmedString(title) || 'API Manual',
-    body: typeof body === 'string' ? body : String(body ?? ''),
+    body: normalizedBody,
     locale: normalizedLocale,
     draft: articleDraft,
   };
@@ -1126,7 +1161,8 @@ ipcMain.handle('zendesk:publishManualWithEnv', async (event, targetInput, locale
       password: envConfig.password,
     };
 
-    const fallbackLocale = normalizeZendeskLocale(locale || envConfig.defaultLocale);
+    const requestedLocale = asTrimmedString(locale);
+    const fallbackLocale = normalizeZendeskLocale(requestedLocale || envConfig.defaultLocale);
     const directTarget = parseZendeskTarget(targetInput, fallbackLocale);
     if (asTrimmedString(targetInput) && !directTarget) {
       throw new Error('Zendesk URL 또는 Article ID 형식이 올바르지 않습니다.');
@@ -1154,7 +1190,9 @@ ipcMain.handle('zendesk:publishManualWithEnv', async (event, targetInput, locale
 
     if (resolvedTarget) {
       articleId = String(resolvedTarget.articleId);
-      effectiveLocale = normalizeZendeskLocale(resolvedTarget.locale || fallbackLocale);
+      effectiveLocale = requestedLocale
+        ? fallbackLocale
+        : normalizeZendeskLocale(resolvedTarget.locale || fallbackLocale);
 
       if (Object.keys(metadata).length > 0 || envConfig.defaultNotifySubscribers !== null) {
         await updateZendeskArticle(config, articleId, metadata, envConfig.defaultNotifySubscribers);

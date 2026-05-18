@@ -1,0 +1,283 @@
+{
+  "caption": "Define Rating Case",
+  "conditionals": [
+    {
+      "action": "disable",
+      "controlId": "IDC_DGN_DEFINE_RATING_EVALU_GRP",
+      "triggerVariable": "__unknown__"
+    }
+  ],
+  "controls": [
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 83,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_PRIMARY_COMBO",
+      "inferredType": "object",
+      "labelText": "Primary Vehicle",
+      "variable": "m_PrimaryCombo",
+      "w": 72,
+      "x": 73,
+      "y": 205
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_PRIMARY_FACTOR_EDIT",
+      "inferredType": "string",
+      "labelText": "Primary Vehicle",
+      "variable": "m_PrimaryFactor",
+      "w": 38,
+      "x": 147,
+      "y": 205
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 81,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_ADJACENT_COMBO",
+      "inferredType": "object",
+      "labelText": "Adjacent Vehicle",
+      "variable": "m_AdjacentCombo",
+      "w": 72,
+      "x": 73,
+      "y": 221
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_ADJACENT_FACTOR_EDIT",
+      "inferredType": "string",
+      "labelText": "Adjacent Vehicle",
+      "variable": "m_AdjacentFactor",
+      "w": 38,
+      "x": 147,
+      "y": 221
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_NAME_EDIT",
+      "inferredType": "string",
+      "labelText": "Name of Rating Case",
+      "variable": "m_strName",
+      "w": 116,
+      "x": 73,
+      "y": 274
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Text",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_DESCRIPTION_EDIT",
+      "inferredType": "string",
+      "labelText": "Description",
+      "variable": "m_strDescription",
+      "w": 116,
+      "x": 73,
+      "y": 290
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Add",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_ADD_BTN",
+      "w": 40,
+      "x": 150,
+      "y": 306
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Modify",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_MODIFY_BTN",
+      "w": 40,
+      "x": 150,
+      "y": 322
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Delete",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_DELETE_BTN",
+      "w": 40,
+      "x": 150,
+      "y": 338
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Close",
+      "h": 18,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_CLOSE",
+      "w": 52,
+      "x": 138,
+      "y": 390
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Cancel",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 216,
+      "y": 348
+    },
+    {
+      "type": "DEFPUSHBUTTON",
+      "caption": "OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 270,
+      "y": 348
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Static Load Combination",
+      "h": 166,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_STATIC_GRUP",
+      "w": 190,
+      "x": 0,
+      "y": 5
+    },
+    {
+      "type": "GXWND",
+      "caption": "Custom1",
+      "h": 131,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_MAIN_GRID",
+      "w": 100,
+      "x": 5,
+      "y": 33
+    },
+    {
+      "type": "GXWND",
+      "caption": "Custom1",
+      "h": 131,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_SUB_GRID",
+      "w": 75,
+      "x": 110,
+      "y": 33
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Live Load Combination",
+      "h": 95,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_LIVE_GRUP",
+      "w": 190,
+      "x": 0,
+      "y": 175
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Live Load Factors for Rating",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_LIVE_FACTORS_BTN",
+      "w": 180,
+      "x": 5,
+      "y": 187
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Primary Vehicle",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_STATIC",
+      "w": 66,
+      "x": 5,
+      "y": 205
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Adjacent Vehicle",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_STATIC2",
+      "w": 66,
+      "x": 5,
+      "y": 221
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Name of Rating Case",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_STATIC3",
+      "w": 75,
+      "x": 0,
+      "y": 274
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Description",
+      "h": 12,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_STATIC4",
+      "w": 47,
+      "x": 0,
+      "y": 290
+    },
+    {
+      "type": "SYSLISTVIEW32",
+      "caption": "List1",
+      "ddxFunction": "DDX_Control",
+      "h": 74,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_LIST",
+      "inferredType": "object",
+      "variable": "m_List",
+      "w": 145,
+      "x": 0,
+      "y": 306
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Evaluation Live Load Model",
+      "h": 28,
+      "id": "IDC_DGN_DEFINE_RATING_EVALU_GRP",
+      "w": 180,
+      "x": 5,
+      "y": 237
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Radio",
+      "h": 0,
+      "id": "IDC_DGN_DEFINE_RATING_CASE_SERVICE_RADIO",
+      "inferredType": "integer",
+      "variable": "m_iLimitState",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Radio",
+      "h": 0,
+      "id": "IDC_DGN_DEFINE_RATING_EVALU_DGN_RDO",
+      "inferredType": "integer",
+      "variable": "m_iEvaluation",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Radio",
+      "h": 0,
+      "id": "IDC_DGN_DEFINE_RATING19_EVALU_DGN_RDO",
+      "inferredType": "integer",
+      "variable": "m_iEvaluation",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CRatingCaseDlg",
+  "dialogId": "IDD_DGN_PSC_RATING_CASE",
+  "headerFile": "ui_src/wg_dgn/RatingCaseDlg.h",
+  "parsedAt": "2026-05-13T03:00:47.872Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CRatingCaseDlg)\r\n\tDDX_Control(pDX, IDC_DGN_DEFINE_RATING_CASE_LIST, m_List);\r\n\tDDX_Control(pDX, IDC_DGN_DEFINE_RATING_CASE_ADJACENT_COMBO, m_AdjacentCombo);\r\n\tDDX_Control(pDX, IDC_DGN_DEFINE_RATING_CASE_PRIMARY_COMBO, m_PrimaryCombo);\r\n\tDDX_Text(pDX, IDC_DGN_DEFINE_RATING_CASE_PRIMARY_FACTOR_EDIT, m_PrimaryFactor);\r\n\tDDX_Text(pDX, IDC_DGN_DEFINE_RATING_CASE_ADJACENT_FACTOR_EDIT, m_AdjacentFactor);\r\n\tDDX_Radio(pDX, IDC_DGN_DEFINE_RATING_CASE_SERVICE_RADIO, m_iLimitState);\r\n\tDDX_Radio(pDX, IDC_DGN_DEFINE_RATING_EVALU_DGN_RDO,      m_iEvaluation);\r\n\tDDX_Radio(pDX, IDC_DGN_DEFINE_RATING19_EVALU_DGN_RDO,      m_iEvaluation);\r\n\tDDX_Text(pDX, IDC_DGN_DEFINE_RATING_CASE_NAME_EDIT, m_strName);\r\n\tDDX_Text(pDX, IDC_DGN_DEFINE_RATING_CASE_DESCRIPTION_EDIT, m_strDescription);\r\n\tDDX_Control(pDX, IDC_DGN_DEFINE_RATING_CASE_SERVICE_RADIO, m_Ctrl_LimitState);\r\n\r\n\tDDX_Control(pDX, IDC_DGN_DEFINE_RATING_CASE_MAIN_GRID, *m_pMainGrid);\r\n\tDDX_Control(pDX, IDC_DGN_DEFINE_RATING_CASE_SUB_GRID, *m_pSubGrid);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nCDialogMove::OnInitDialog();\r\n\r\n\tCCheckDialogOpen::SetSoftwareRendering();\r\n\r\n\t// TODO: Add extra initialization here\r\n\t\t\r\n\t//m_pMainGrid->SetLcomType(m_nLcomType);\r\n\t//m_pSubGrid->SetLcomType(m_nLcomType);\r\n\t\r\n\tT_UNIT_SYSTEM UnitSystem;\r\n\r\n\tSetListCtrlHeader();\r\n\r\n\tInitBlrcKey();\r\n\r\n\tInitCurrentData();\r\n\t\r\n\t//m_pDoc->m_pUnitCtrl->GetUnitSystemLcom(UnitSystem);\r\n\tm_pMainGrid->Initialize(m_CurrentData.RateLoad, this);\r\n\tm_pSubGrid->Initialize(m_pDoc);\r\n\t\r\n\tm_pMainGrid->m_pSubGrid = m_pSubGrid;\r\n\t//m_pSubGrid->m_pMainGrid = m_pMainGrid;\r\n\r\n\t//InitLcomTypeCombo();\r\n\tm_pMainGrid->LoadDlgData();\r\n\tm_pSubGrid->SetData(m_CurrentData.RateLoad[0]);\r\n\t\r\n\tInitCtrl();\r\n\r\n\tInitMoveLoadCombo();\r\n\r\n\tLoadDlgMoveLoad();\r\n\tLoadDlgLimitState();\r\n\tLoadDlgEvaluation();\r\n\tLoadDlgNameDescription();\r\n\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// InitCurrentData:\nCArray<T_BLRC_K, T_BLRC_K> arBlrcKey;\r\n\r\n\tm_pDoc->m_pAttrCtrl->GetBlrcKeyList(arBlrcKey);\r\n\r\n\tif(arBlrcKey.GetSize() > 0)\r\n\t{\r\n\t\tfor(int i=0 ; i<arBlrcKey.GetSize() ; i++)\r\n\t\t{\r\n\t\t\tInsertListItem(arBlrcKey[i]);\r\n\t\t}\r\n\r\n\t\tm_pDoc->m_pAttrCtrl->GetBlrc(arBlrcKey[0], m_CurrentData);\r\n\t}\r\n\telse\r\n\t\tm_CurrentData.Initialize();\n\n// InitBlrcKey:\nCArray<T_BLRC_K, T_BLRC_K> arBlrcKey;\r\n\r\n\tm_pDoc->m_pAttrCtrl->GetBlrcKeyList(arBlrcKey);\r\n\r\n\tif(arBlrcKey.GetSize() > 0)\r\n\t{\r\n\t\tint temp = 0;\r\n\t\tfor(int i=0 ; i<arBlrcKey.GetSize() ; i++)\r\n\t\t{\r\n\t\t\tif(temp < arBlrcKey[i])\r\n\t\t\t\ttemp = arBlrcKey[i];\r\n\t\t}\r\n\t\tBlrckey = temp+1;\r\n\t}\r\n\telse\r\n\t{\r\n\t\tBlrckey = 1;\r\n\t}\n\n// InitCtrl:\nCRect rRef;\r\n\tCRect rToMove;\r\n\tint nDistX, nDistY;\r\n\tCArray<UINT, UINT> aControls, aControls19;\r\n\r\n\taControls.RemoveAll();\r\n\taControls.Add(IDC_DGN_DEFINE_RATING_EVALU_DGN_RDO);\r\n\taControls.Add(IDC_DGN_DEFINE_RATING_EVALU_LEGAL_RDO);\r\n\r\n\taControls19.RemoveAll();\r\n\taControls19.Add(IDC_DGN_DEFINE_RATING19_EVALU_DGN_RDO);\r\n\taControls19.Add(IDC_DGN_DEFINE_RATING19_EVALU_LEGAL_RDO);\r\n\taControls19.Add(IDC_DGN_DEFINE_RATING19_EVALU_PERMIT_RDO);\r\n\r\n\tT_RACD_D RacdD; RacdD.Initialize();\r\n\tm_pDoc->m_pAttrCtrl2->GetDgnRacd(RacdD);\r\n\tif(RacdD.nRatingCode !=AASHTO_LRFD12_PSC_RATING && RacdD.nRatingCode !=AASHTO_LRFD19_PSC_RATING)\r\n\t{\r\n\t\t//For LRFR12 Design Load / Legal Load / Permit Load\r\n\t\tGetDlgItem(IDC_DGN_DEFINE_RATING_EVALU_GRP)->EnableWindow(FALSE);\r\n// \t\tGetDlgItem(IDC_DGN_DEFINE_RATING_EVALU_DGN_RDO)->EnableWindow(FALSE);\r\n// \t\tGetDlgItem(IDC_DGN_DEFINE_RATING_EVALU_LEGAL_RDO)->EnableWindow(FALSE);\r\n\r\n\t\tCDlgUtil::CtrlEnableDisable(this, aControls, FALSE);\r\n\t\tCDlgUtil::CtrlEnableDisable(this, aControls19, FALSE);\r\n\t}\r\n\telse\r\n\t{\r\n\t\tif(RacdD.nRatingCode ==AASHTO_LRFD12_PSC_RATING)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlShowHide(this, aControls,   TRUE);\r\n\t\t\tCDlgUtil::CtrlShowHide(this, aControls19, FALSE);\r\n\t\t}\r\n\t\telse if(RacdD.nRatingCode ==AASHTO_LRFD19_PSC_RATING)\r\n\t\t{\r\n\t\t\tCDlgUtil::CtrlShowHide(this, aControls,   FALSE);\r\n\t\t\tCDlgUtil::CtrlShowHide(this, aControls19, TRUE);\r\n\r\n\t\t\tGetDlgItem(IDC_DGN_DEFINE_RATING_EVALU_DGN_RDO)->GetWindowRect(rRef);\r\n\t\t\tGetDlgItem(IDC_DGN_DEFINE_RATING19_EVALU_DGN_RDO)->GetWindowRect(rToMove);\r\n\t\t\tnDistX = rRef.left - rToMove.left;\r\n\t\t\tnDistY = rRef.top - rToMove.top;\r\n\t\t\tCDlgUtil::CtrlMoveDistXY(this, aControls19, nDistX, nDistY);\r\n\t\t}\r\n\t}\n\n// InitMoveLoadCombo:\nm_PrimaryCombo.ResetContent();\r\n\tm_AdjacentCombo.ResetContent();\r\n\tm_arMoveLoadKey.RemoveAll();\r\n\r\n\tCString item;\r\n\tint nRangeStart;\r\n\r\n\tint nNameLen = 0, nDescLen = 0;\r\n\tCSize nTempLen;\r\n\tCDC* pDC = GetDC();\r\n\tASSERT(pDC);  \r\n\r\n\t//D_LCOM_MOVING\t\t  4 : �̵� ���� ����\r\n\tT_MVCD_D DataMvcd;\r\n\tif(!m_pDoc->m_pAttrCtrl->GetMvcd(DataMvcd)) DataMvcd.Initialize();\r\n\tswitch (DataMvcd.nCodeType)\r\n\t{\r\n\tcase D_MOVE_CODE_NONE:\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_AASHTO_STAN:\r\n\tcase D_MOVE_CODE_AASHTO_LRFD:\r\n\tcase D_MOVE_CODE_TAIWAN:\r\n\tcase D_MOVE_CODE_KOREA:\r\n\tcase D_MOVE_CODE_CANADA:\r\n\tcase D_MOVE_CODE_PENDOT:\r\n\tcase D_MOVE_CODE_EURO_BS:\r\n\tcase D_MOVE_CODE_RUSSIA:\r\n\tcase D_MOVE_CODE_KOREA_LRFD_2011:\r\n\tcase D_MOVE_CODE_AUSTRALIA:\r\n\tcase D_MOVE_CODE_POLAND:\r\n\tcase D_MOVE_CODE_SOUTH_AFRICA:\r\n\tcase D_MOVE_CODE_NEWZEALAND:\r\n\tcase D_MOVE_CODE_BRAZIL:\r\n\t\t{\r\n\t\t\tT_MVLD_K MvldKey;\r\n\t\t\tT_MVLD_D MvldData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvld();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t      m_pDoc->m_pAttrCtrl->GetNextMvld(pos,MvldKey,MvldData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item);\r\n\t\t\t\tm_arMoveLoadKey.Add(MvldKey);\r\n\t\t\t}\r\n\t\t}\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_CHINA:\r\n\t\t{\r\n\t\t\tT_MVLDch_K MvldchKey;\r\n\t\t\tT_MVLDch_D MvldchData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvldch();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t      m_pDoc->m_pAttrCtrl->GetNextMvldch(pos,MvldchKey,MvldchData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldchData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item);\r\n\t\t\t\tm_arMoveLoadKey.Add(MvldchKey);\r\n\t\t\t}\r\n\t\t}\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_JAPAN:\r\n\t\t{\r\n\t\t\t// japan version\r\n\t\t\tT_MVLDjp_K MvldjpKey;\r\n\t\t\tT_MVLDjp_D MvldjpData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvldjp();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t      m_pDoc->m_pAttrCtrl->GetNextMvldjp(pos,MvldjpKey,MvldjpData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldjpData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item);\r\n\t\t\t\tm_arMoveLoadKey.Add(MvldjpKey);\r\n\t\t\t\tnTempLen = pDC->GetTextExtent(MvldjpData.LoadCaseName+_T(\"(MV)\"));\r\n\t\t\t\tif (nTempLen.cx > nNameLen) nNameLen = nTempLen.cx;\r\n\t\t\t\tnTempLen = pDC->GetTextExtent(MvldjpData.Description);\r\n\t\t\t\tif (nTempLen.cx > nDescLen) nDescLen = nTempLen.cx;    \r\n\t\t\t}      \r\n\t\t}\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_INDIA:\r\n\t\t{\r\n\t\t\tT_MVLDid_K MvldidKey;\r\n\t\t\tT_MVLDid_D MvldidData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvldid();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t      m_pDoc->m_pAttrCtrl->GetNextMvldid(pos,MvldidKey,MvldidData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldidData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item);\r\n\t\t\t\tm_arMoveLoadKey.Add(MvldidKey);\r\n\t\t\t}\r\n\t\t}\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_BS:\r\n\t\t{\r\n\t\t\tT_MVLDbs_K MvldbsKey;\r\n\t\t\tT_MVLDbs_D MvldbsData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvldbs();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t      m_pDoc->m_pAttrCtrl->GetNextMvldbs(pos,MvldbsKey,MvldbsData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldbsData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item); \r\n\t\t\t\tm_arMoveLoadKey.Add(MvldbsKey);\r\n\t\t\t}\r\n\t\t}\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_FRANCE:\r\n\t\t{\r\n\t\t\tT_MVLDfr_K MvldfrKey;\r\n\t\t\tT_MVLDfr_D MvldfrData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvldfr();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t\t\t\tm_pDoc->m_pAttrCtrl->GetNextMvldfr(pos, MvldfrKey, MvldfrData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldfrData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item); \r\n\t\t\t\tm_arMoveLoadKey.Add(MvldfrKey);\r\n\t\t\t}\r\n\t\t}\r\n\t\tbreak;\r\n\tcase D_MOVE_CODE_TRANS:\r\n\t\t{\r\n\t\t\tT_MVLDtr_K MvldKey;\r\n\t\t\tT_MVLDtr_D MvldData;\r\n\t\t\tnRangeStart = D_STLD_MAXNUM*D_LCOM_MOVING;\r\n\t\t\tPOSITION pos = m_pDoc->m_pAttrCtrl->GetStartMvldtr();\r\n\t\t\twhile(pos != NULL)\r\n\t\t\t{\r\n\t      m_pDoc->m_pAttrCtrl->GetNextMvldtr(pos,MvldKey,MvldData);\r\n\t\t\t\titem.Format(_T(\"%s(MV)\"), MvldData.LoadCaseName);\r\n\t\t\t\tm_PrimaryCombo.AddString(item);\r\n\t\t\t\tm_AdjacentCombo.AddString(item);\r\n\t\t\t\tm_arMoveLoadKey.Add(MvldKey);\r\n\t\t\t}\r\n\t\t}\r\n\t\tbreak;\r\n\tdefault:\r\n\t\tASSERT(0);\r\n\t\tbreak;\r\n\t} \r\n\r\n\t// Sort arMoveLoad Key.\r\n\t//qsort(m_arMoveLoadKey.GetData(), m_arMoveLoadKey.GetSize(), sizeof(UINT), CCompFunc::UINTAsc);\r\n\tm_PrimaryCombo.SetCurSel(0);\r\n\tm_AdjacentCombo.SetCurSel(0);\n\n// SetListCtrlHeader:\nCString aTitle[] = {_LS(IDS_DGN_RATING_FACTOR_NAME), _LS(IDS_DGN_RATING_LIMITE_STATE), _LS(IDS_DGN_RATING_DESCRIPTION)};  // _T(\"Index\"), _T(\"Element List\")\r\n\tint nColWidth[] = {70, 70, 120};\r\n\tint nAlign[] = {LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT};\r\n\tint nColNum = sizeof(nColWidth)/sizeof(int);\r\n\tCString title;  \r\n\tLV_COLUMN lvcolumn;\r\n\t\r\n\tDWORD dwStyle;\r\n\tdwStyle = ListView_GetExtendedListViewStyle(m_List.GetSafeHwnd());\r\n\tdwStyle |= LVS_EX_FULLROWSELECT; \r\n\tListView_SetExtendedListViewStyle(m_List.GetSafeHwnd(), dwStyle);\r\n\r\n\tfor(int i = 0; i < nColNum; i++)\r\n\t{\r\n\t\ttitle = aTitle[i];\r\n\t\tlvcolumn.mask = LVCF_FMT|LVCF_SUBITEM|LVCF_TEXT|LVCF_WIDTH;\r\n\t\tlvcolumn.fmt = nAlign[i];\r\n\r\n\t\tlvcolumn.iSubItem = i;\r\n\t\tlvcolumn.cx = globalUtils.ScaleByDPI(nColWidth[i]);\r\n\t\tlvcolumn.pszText = title.GetBuffer(0);\r\n\t\tm_List.InsertColumn(i,&lvcolumn);\r\n\t\tm_List.SetColumn(i, &lvcolumn);\r\n\t\ttitle.ReleaseBuffer();\r\n\t}",
+  "rcFile": "ui_src/wg_dgn/wgnx_dgn.rc",
+  "sourceFile": "ui_src/wg_dgn/RatingCaseDlg.cpp",
+  "warnings": []
+}

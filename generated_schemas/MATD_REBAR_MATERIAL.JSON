@@ -1,0 +1,4679 @@
+{
+  "title": "Rebar Material",
+  "description": "Detailed schema for rebar material settings used by GIRDER_REBAR_PROP and SLAB_REBAR_PROP in Modify Material.",
+  "x-parent-schema": "MATD",
+  "x-parent-title": "Modify Material",
+  "x-category": "rebar-selection",
+  "type": "object",
+  "required": [
+    "CODE"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "CODE": {
+      "type": "string",
+      "description": "Rebar design code. If CODE is 'None', input custom rebar names, Fy and Fys directly instead of selecting GRADE_MAIN_REBAR and GRADE_SUB_REBAR.",
+      "oneOf": [
+        {
+          "const": "None",
+          "title": "None"
+        },
+        {
+          "const": "ASTM19(RC)",
+          "title": "ASTM19(RC)"
+        },
+        {
+          "const": "ASTM(RC)",
+          "title": "ASTM(RC)"
+        },
+        {
+          "const": "U.S.C(US)(RC)",
+          "title": "U.S.C(US)(RC)"
+        },
+        {
+          "const": "U.S.C(SI)(RC)",
+          "title": "U.S.C(SI)(RC)"
+        },
+        {
+          "const": "NMX2023(RC)",
+          "title": "NMX2023(RC)"
+        },
+        {
+          "const": "NMX2023(MKS)(RC)",
+          "title": "NMX2023(MKS)(RC)"
+        },
+        {
+          "const": "NMX NTC-2017(RC)",
+          "title": "NMX NTC-2017(RC)"
+        },
+        {
+          "const": "CSA(RC)",
+          "title": "CSA(RC)"
+        },
+        {
+          "const": "BS(RC)",
+          "title": "BS(RC)"
+        },
+        {
+          "const": "EN04(RC)",
+          "title": "EN04(RC)"
+        },
+        {
+          "const": "EN(RC)",
+          "title": "EN(RC)"
+        },
+        {
+          "const": "NTC08(RC)",
+          "title": "NTC08(RC)"
+        },
+        {
+          "const": "NTC12(RC)",
+          "title": "NTC12(RC)"
+        },
+        {
+          "const": "NTC18(RC)",
+          "title": "NTC18(RC)"
+        },
+        {
+          "const": "UNI(RC)",
+          "title": "UNI(RC)"
+        },
+        {
+          "const": "SS(RC)",
+          "title": "SS(RC)"
+        },
+        {
+          "const": "GOST-SP(RC)",
+          "title": "GOST-SP(RC)"
+        },
+        {
+          "const": "GOST-SNIP(RC)",
+          "title": "GOST-SNIP(RC)"
+        },
+        {
+          "const": "JIS(RC)",
+          "title": "JIS(RC)"
+        },
+        {
+          "const": "JIS-Civil(RC)",
+          "title": "JIS-Civil(RC)"
+        },
+        {
+          "const": "JTJ023-85(RC)",
+          "title": "JTJ023-85(RC)"
+        },
+        {
+          "const": "Q/CR 9300-18(RC)",
+          "title": "Q/CR 9300-18(RC)"
+        },
+        {
+          "const": "GB 50917-13(RC)",
+          "title": "GB 50917-13(RC)"
+        },
+        {
+          "const": "GB/T10(RC)",
+          "title": "GB/T10(RC)"
+        },
+        {
+          "const": "GB(RC)",
+          "title": "GB(RC)"
+        },
+        {
+          "const": "GB-Civil(RC)",
+          "title": "GB-Civil(RC)"
+        },
+        {
+          "const": "TB10092-17(RC)",
+          "title": "TB10092-17(RC)"
+        },
+        {
+          "const": "JTG3362-18(RC)",
+          "title": "JTG3362-18(RC)"
+        },
+        {
+          "const": "JTG04(RC)",
+          "title": "JTG04(RC)"
+        },
+        {
+          "const": "TB05(RC)",
+          "title": "TB05(RC)"
+        },
+        {
+          "const": "KS19(RC)",
+          "title": "KS19(RC)"
+        },
+        {
+          "const": "KS01(RC)",
+          "title": "KS01(RC)"
+        },
+        {
+          "const": "KS(RC)",
+          "title": "KS(RC)"
+        },
+        {
+          "const": "KSCE-LSD15(RC)",
+          "title": "KSCE-LSD15(RC)"
+        },
+        {
+          "const": "KS01-Civil(RC)",
+          "title": "KS01-Civil(RC)"
+        },
+        {
+          "const": "KS-Civil(RC)",
+          "title": "KS-Civil(RC)"
+        },
+        {
+          "const": "PNS49(RC)",
+          "title": "PNS49(RC)"
+        },
+        {
+          "const": "SNI(RC)",
+          "title": "SNI(RC)"
+        },
+        {
+          "const": "TIS(RC)",
+          "title": "TIS(RC)"
+        },
+        {
+          "const": "TIS(MKS)(RC)",
+          "title": "TIS(MKS)(RC)"
+        },
+        {
+          "const": "IRC(RC)",
+          "title": "IRC(RC)"
+        },
+        {
+          "const": "IRS(RC)",
+          "title": "IRS(RC)"
+        },
+        {
+          "const": "IS(RC)",
+          "title": "IS(RC)"
+        },
+        {
+          "const": "CNS560-18(RC)",
+          "title": "CNS560-18(RC)"
+        },
+        {
+          "const": "CNS560(RC)",
+          "title": "CNS560(RC)"
+        },
+        {
+          "const": "CNS(RC)",
+          "title": "CNS(RC)"
+        },
+        {
+          "const": "AS17(RC)",
+          "title": "AS17(RC)"
+        },
+        {
+          "const": "TMH7(RC)",
+          "title": "TMH7(RC)"
+        },
+        {
+          "const": "SP63.2018(RC)",
+          "title": "SP63.2018(RC)"
+        },
+        {
+          "const": "TS(RC)",
+          "title": "TS(RC)"
+        },
+        {
+          "const": "NBR 6118(RC)",
+          "title": "NBR 6118(RC)"
+        }
+      ],
+      "x-ui": {
+        "component": "Dropdown",
+        "label": "Code",
+        "order": 1
+      }
+    },
+    "GRADE_MAIN_REBAR": {
+      "type": "string",
+      "description": "Grade of main rebar. Required when CODE is not 'None'.",
+      "x-ui": {
+        "component": "Dropdown",
+        "label": "Grade of Main Rebar",
+        "order": 2,
+        "visibleWhenNot": {
+          "CODE": "None"
+        }
+      }
+    },
+    "GRADE_SUB_REBAR": {
+      "type": "string",
+      "description": "Grade of sub-rebar. Required when CODE is not 'None'.",
+      "x-ui": {
+        "component": "Dropdown",
+        "label": "Grade of Sub-Rebar",
+        "order": 3,
+        "visibleWhenNot": {
+          "CODE": "None"
+        }
+      }
+    },
+    "NAME_MAIN_REBAR": {
+      "type": "string",
+      "description": "User-defined main rebar name. Required when CODE is 'None'.",
+      "minLength": 1,
+      "x-ui": {
+        "component": "Input",
+        "label": "Name of Main Rebar",
+        "order": 4,
+        "visibleWhen": {
+          "CODE": "None"
+        }
+      }
+    },
+    "NAME_SUB_REBAR": {
+      "type": "string",
+      "description": "User-defined sub-rebar name. Required when CODE is 'None'.",
+      "minLength": 1,
+      "x-ui": {
+        "component": "Input",
+        "label": "Name of Sub-Rebar",
+        "order": 5,
+        "visibleWhen": {
+          "CODE": "None"
+        }
+      }
+    },
+    "Fy": {
+      "type": "number",
+      "description": "Yield strength of main rebar. User input is available when CODE is 'None'.",
+      "minimum": 0,
+      "x-ui": {
+        "component": "Input",
+        "label": "Fy",
+        "order": 6,
+        "visibleWhen": {
+          "CODE": "None"
+        }
+      }
+    },
+    "Fys": {
+      "type": "number",
+      "description": "Yield strength of sub-rebar. User input is available when CODE is 'None'.",
+      "minimum": 0,
+      "x-ui": {
+        "component": "Input",
+        "label": "Fys",
+        "order": 7,
+        "visibleWhen": {
+          "CODE": "None"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "None"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "NAME_MAIN_REBAR",
+          "NAME_SUB_REBAR",
+          "Fy",
+          "Fys"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "GRADE_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "GRADE_SUB_REBAR"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "ASTM19(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 40",
+              "Grade 60",
+              "Grade 80",
+              "Grade 100"
+            ],
+            "x-enum-labels": {
+              "Grade 40": "Grade 40",
+              "Grade 60": "Grade 60",
+              "Grade 80": "Grade 80",
+              "Grade 100": "Grade 100"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 40",
+              "Grade 60",
+              "Grade 80",
+              "Grade 100"
+            ],
+            "x-enum-labels": {
+              "Grade 40": "Grade 40",
+              "Grade 60": "Grade 60",
+              "Grade 80": "Grade 80",
+              "Grade 100": "Grade 100"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "ASTM(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 40",
+              "Grade 50",
+              "Grade 60",
+              "Grade 75"
+            ],
+            "x-enum-labels": {
+              "Grade 40": "Grade 40",
+              "Grade 50": "Grade 50",
+              "Grade 60": "Grade 60",
+              "Grade 75": "Grade 75"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 40",
+              "Grade 50",
+              "Grade 60",
+              "Grade 75"
+            ],
+            "x-enum-labels": {
+              "Grade 40": "Grade 40",
+              "Grade 50": "Grade 50",
+              "Grade 60": "Grade 60",
+              "Grade 75": "Grade 75"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "U.S.C(US)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 40",
+              "Grade 60",
+              "Grade 75",
+              "Grade 80",
+              "Grade 100"
+            ],
+            "x-enum-labels": {
+              "Grade 40": "Grade 40",
+              "Grade 60": "Grade 60",
+              "Grade 75": "Grade 75",
+              "Grade 80": "Grade 80",
+              "Grade 100": "Grade 100"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 40",
+              "Grade 60",
+              "Grade 75",
+              "Grade 80",
+              "Grade 100"
+            ],
+            "x-enum-labels": {
+              "Grade 40": "Grade 40",
+              "Grade 60": "Grade 60",
+              "Grade 75": "Grade 75",
+              "Grade 80": "Grade 80",
+              "Grade 100": "Grade 100"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "U.S.C(SI)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 280",
+              "Grade 420",
+              "Grade 520",
+              "Grade 550",
+              "Grade 690"
+            ],
+            "x-enum-labels": {
+              "Grade 280": "Grade 280",
+              "Grade 420": "Grade 420",
+              "Grade 520": "Grade 520",
+              "Grade 550": "Grade 550",
+              "Grade 690": "Grade 690"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 280",
+              "Grade 420",
+              "Grade 520",
+              "Grade 550",
+              "Grade 690"
+            ],
+            "x-enum-labels": {
+              "Grade 280": "Grade 280",
+              "Grade 420": "Grade 420",
+              "Grade 520": "Grade 520",
+              "Grade 550": "Grade 550",
+              "Grade 690": "Grade 690"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NMX2023(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 42",
+              "Grade 56"
+            ],
+            "x-enum-labels": {
+              "Grade 42": "Grade 42",
+              "Grade 56": "Grade 56"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 42",
+              "Grade 56"
+            ],
+            "x-enum-labels": {
+              "Grade 42": "Grade 42",
+              "Grade 56": "Grade 56"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NMX2023(MKS)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 42",
+              "Grade 56"
+            ],
+            "x-enum-labels": {
+              "Grade 42": "Grade 42",
+              "Grade 56": "Grade 56"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 42",
+              "Grade 56"
+            ],
+            "x-enum-labels": {
+              "Grade 42": "Grade 42",
+              "Grade 56": "Grade 56"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NMX NTC-2017(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 42",
+              "Grade 56"
+            ],
+            "x-enum-labels": {
+              "Grade 42": "Grade 42",
+              "Grade 56": "Grade 56"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 42",
+              "Grade 56"
+            ],
+            "x-enum-labels": {
+              "Grade 42": "Grade 42",
+              "Grade 56": "Grade 56"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CSA(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "300R",
+              "400R",
+              "500R",
+              "400W",
+              "500W"
+            ],
+            "x-enum-labels": {
+              "300R": "300R",
+              "400R": "400R",
+              "500R": "500R",
+              "400W": "400W",
+              "500W": "500W"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "300R",
+              "400R",
+              "500R",
+              "400W",
+              "500W"
+            ],
+            "x-enum-labels": {
+              "300R": "300R",
+              "400R": "400R",
+              "500R": "500R",
+              "400W": "400W",
+              "500W": "500W"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "BS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "S250",
+              "S460"
+            ],
+            "x-enum-labels": {
+              "S250": "S250",
+              "S460": "S460"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "S250",
+              "S460"
+            ],
+            "x-enum-labels": {
+              "S250": "S250",
+              "S460": "S460"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "EN04(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Class A",
+              "Class B",
+              "Class C"
+            ],
+            "x-enum-labels": {
+              "Class A": "Class A",
+              "Class B": "Class B",
+              "Class C": "Class C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Class A",
+              "Class B",
+              "Class C"
+            ],
+            "x-enum-labels": {
+              "Class A": "Class A",
+              "Class B": "Class B",
+              "Class C": "Class C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "EN(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "S220",
+              "S250",
+              "S300",
+              "S400",
+              "S460",
+              "S500"
+            ],
+            "x-enum-labels": {
+              "S220": "S220",
+              "S250": "S250",
+              "S300": "S300",
+              "S400": "S400",
+              "S460": "S460",
+              "S500": "S500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "S220",
+              "S250",
+              "S300",
+              "S400",
+              "S460",
+              "S500"
+            ],
+            "x-enum-labels": {
+              "S220": "S220",
+              "S250": "S250",
+              "S300": "S300",
+              "S400": "S400",
+              "S460": "S460",
+              "S500": "S500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NTC08(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NTC12(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NTC18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "UNI(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "FeB22k",
+              "FeB32k",
+              "FeB38k",
+              "FeB44k",
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "FeB22k": "FeB22k",
+              "FeB32k": "FeB32k",
+              "FeB38k": "FeB38k",
+              "FeB44k": "FeB44k",
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "FeB22k",
+              "FeB32k",
+              "FeB38k",
+              "FeB44k",
+              "B450C"
+            ],
+            "x-enum-labels": {
+              "FeB22k": "FeB22k",
+              "FeB32k": "FeB32k",
+              "FeB38k": "FeB38k",
+              "FeB44k": "FeB44k",
+              "B450C": "B450C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "SS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Class A",
+              "Class B",
+              "Class C"
+            ],
+            "x-enum-labels": {
+              "Class A": "Class A",
+              "Class B": "Class B",
+              "Class C": "Class C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Class A",
+              "Class B",
+              "Class C"
+            ],
+            "x-enum-labels": {
+              "Class A": "Class A",
+              "Class B": "Class B",
+              "Class C": "Class C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GOST-SP(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "A240",
+              "A300",
+              "A400"
+            ],
+            "x-enum-labels": {
+              "A240": "A240",
+              "A300": "A300",
+              "A400": "A400"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "A240",
+              "A300",
+              "A400"
+            ],
+            "x-enum-labels": {
+              "A240": "A240",
+              "A300": "A300",
+              "A400": "A400"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GOST-SNIP(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "A-I",
+              "A-II",
+              "A-III"
+            ],
+            "x-enum-labels": {
+              "A-I": "A-I",
+              "A-II": "A-II",
+              "A-III": "A-III"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "A-I",
+              "A-II",
+              "A-III"
+            ],
+            "x-enum-labels": {
+              "A-I": "A-I",
+              "A-II": "A-II",
+              "A-III": "A-III"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JIS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR235",
+              "SR295",
+              "SD295A",
+              "SD295B",
+              "SD345",
+              "SD390",
+              "SD490"
+            ],
+            "x-enum-labels": {
+              "SR235": "SR235",
+              "SR295": "SR295",
+              "SD295A": "SD295A",
+              "SD295B": "SD295B",
+              "SD345": "SD345",
+              "SD390": "SD390",
+              "SD490": "SD490"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR235",
+              "SR295",
+              "SD295A",
+              "SD295B",
+              "SD345",
+              "SD390",
+              "SD490"
+            ],
+            "x-enum-labels": {
+              "SR235": "SR235",
+              "SR295": "SR295",
+              "SD295A": "SD295A",
+              "SD295B": "SD295B",
+              "SD345": "SD345",
+              "SD390": "SD390",
+              "SD490": "SD490"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JIS-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR235",
+              "SD295A",
+              "SD295B",
+              "SD345",
+              "SD390",
+              "SD490"
+            ],
+            "x-enum-labels": {
+              "SR235": "SR235",
+              "SD295A": "SD295A",
+              "SD295B": "SD295B",
+              "SD345": "SD345",
+              "SD390": "SD390",
+              "SD490": "SD490"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR235",
+              "SD295A",
+              "SD295B",
+              "SD345",
+              "SD390",
+              "SD490"
+            ],
+            "x-enum-labels": {
+              "SR235": "SR235",
+              "SD295A": "SD295A",
+              "SD295B": "SD295B",
+              "SD345": "SD345",
+              "SD390": "SD390",
+              "SD490": "SD490"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JTJ023-85(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 1",
+              "Grade 2",
+              "Grade 3",
+              "5 Hao"
+            ],
+            "x-enum-labels": {
+              "Grade 1": "Grade 1",
+              "Grade 2": "Grade 2",
+              "Grade 3": "Grade 3",
+              "5 Hao": "5 Hao"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 1",
+              "Grade 2",
+              "Grade 3",
+              "5 Hao"
+            ],
+            "x-enum-labels": {
+              "Grade 1": "Grade 1",
+              "Grade 2": "Grade 2",
+              "Grade 3": "Grade 3",
+              "5 Hao": "5 Hao"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "Q/CR 9300-18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRB500": "HRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRB500": "HRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB 50917-13(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRBF400",
+              "RRB400",
+              "HRB500",
+              "HRBF500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRBF400": "HRBF400",
+              "RRB400": "RRB400",
+              "HRB500": "HRB500",
+              "HRBF500": "HRBF500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRBF400",
+              "RRB400",
+              "HRB500",
+              "HRBF500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRBF400": "HRBF400",
+              "RRB400": "RRB400",
+              "HRB500": "HRB500",
+              "HRBF500": "HRBF500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB/T10(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRBF400",
+              "RRB400",
+              "HRB500",
+              "HRBF500",
+              "RRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRBF400": "HRBF400",
+              "RRB400": "RRB400",
+              "HRB500": "HRB500",
+              "HRBF500": "HRBF500",
+              "RRB500": "RRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRBF400",
+              "RRB400",
+              "HRB500",
+              "HRBF500",
+              "RRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRBF400": "HRBF400",
+              "RRB400": "RRB400",
+              "HRB500": "HRB500",
+              "HRBF500": "HRBF500",
+              "RRB500": "RRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB235",
+              "HRB335",
+              "HRB400",
+              "RRB400"
+            ],
+            "x-enum-labels": {
+              "HPB235": "HPB235",
+              "HRB335": "HRB335",
+              "HRB400": "HRB400",
+              "RRB400": "RRB400"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB235",
+              "HRB335",
+              "HRB400",
+              "RRB400"
+            ],
+            "x-enum-labels": {
+              "HPB235": "HPB235",
+              "HRB335": "HRB335",
+              "HRB400": "HRB400",
+              "RRB400": "RRB400"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "GB-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 1",
+              "Grade 2",
+              "Grade 3",
+              "5 Hao"
+            ],
+            "x-enum-labels": {
+              "Grade 1": "Grade 1",
+              "Grade 2": "Grade 2",
+              "Grade 3": "Grade 3",
+              "5 Hao": "5 Hao"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Grade 1",
+              "Grade 2",
+              "Grade 3",
+              "5 Hao"
+            ],
+            "x-enum-labels": {
+              "Grade 1": "Grade 1",
+              "Grade 2": "Grade 2",
+              "Grade 3": "Grade 3",
+              "5 Hao": "5 Hao"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TB10092-17(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRB500": "HRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRB500": "HRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JTG3362-18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRBF400",
+              "RRB400",
+              "HRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRBF400": "HRBF400",
+              "RRB400": "RRB400",
+              "HRB500": "HRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "HPB300",
+              "HRB400",
+              "HRBF400",
+              "RRB400",
+              "HRB500"
+            ],
+            "x-enum-labels": {
+              "HPB300": "HPB300",
+              "HRB400": "HRB400",
+              "HRBF400": "HRBF400",
+              "RRB400": "RRB400",
+              "HRB500": "HRB500"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "JTG04(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "R235",
+              "HRB335",
+              "HRB400",
+              "KL400"
+            ],
+            "x-enum-labels": {
+              "R235": "R235",
+              "HRB335": "HRB335",
+              "HRB400": "HRB400",
+              "KL400": "KL400"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "R235",
+              "HRB335",
+              "HRB400",
+              "KL400"
+            ],
+            "x-enum-labels": {
+              "R235": "R235",
+              "HRB335": "HRB335",
+              "HRB400": "HRB400",
+              "KL400": "KL400"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TB05(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Q235",
+              "HRB335"
+            ],
+            "x-enum-labels": {
+              "Q235": "Q235",
+              "HRB335": "HRB335"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Q235",
+              "HRB335"
+            ],
+            "x-enum-labels": {
+              "Q235": "Q235",
+              "HRB335": "HRB335"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS19(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD300",
+              "SD400",
+              "SD500",
+              "SD600",
+              "SD700",
+              "SD400S",
+              "SD500S",
+              "SD600S"
+            ],
+            "x-enum-labels": {
+              "SD300": "SD300",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600",
+              "SD700": "SD700",
+              "SD400S": "SD400S",
+              "SD500S": "SD500S",
+              "SD600S": "SD600S"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD300",
+              "SD400",
+              "SD500",
+              "SD600",
+              "SD700",
+              "SD400S",
+              "SD500S",
+              "SD600S"
+            ],
+            "x-enum-labels": {
+              "SD300": "SD300",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600",
+              "SD700": "SD700",
+              "SD400S": "SD400S",
+              "SD500S": "SD500S",
+              "SD600S": "SD600S"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS01(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD240",
+              "SD300",
+              "SD350",
+              "SD400",
+              "SD500",
+              "SD600"
+            ],
+            "x-enum-labels": {
+              "SD240": "SD240",
+              "SD300": "SD300",
+              "SD350": "SD350",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD240",
+              "SD300",
+              "SD350",
+              "SD400",
+              "SD500",
+              "SD600"
+            ],
+            "x-enum-labels": {
+              "SD240": "SD240",
+              "SD300": "SD300",
+              "SD350": "SD350",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD24",
+              "SD30",
+              "SD35",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SD24": "SD24",
+              "SD30": "SD30",
+              "SD35": "SD35",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD24",
+              "SD30",
+              "SD35",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SD24": "SD24",
+              "SD30": "SD30",
+              "SD35": "SD35",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KSCE-LSD15(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD240",
+              "SD300",
+              "SD350",
+              "SD400",
+              "SD500",
+              "SD600"
+            ],
+            "x-enum-labels": {
+              "SD240": "SD240",
+              "SD300": "SD300",
+              "SD350": "SD350",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD240",
+              "SD300",
+              "SD350",
+              "SD400",
+              "SD500",
+              "SD600"
+            ],
+            "x-enum-labels": {
+              "SD240": "SD240",
+              "SD300": "SD300",
+              "SD350": "SD350",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS01-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD240",
+              "SD300",
+              "SD350",
+              "SD400",
+              "SD500",
+              "SD600"
+            ],
+            "x-enum-labels": {
+              "SD240": "SD240",
+              "SD300": "SD300",
+              "SD350": "SD350",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD240",
+              "SD300",
+              "SD350",
+              "SD400",
+              "SD500",
+              "SD600"
+            ],
+            "x-enum-labels": {
+              "SD240": "SD240",
+              "SD300": "SD300",
+              "SD350": "SD350",
+              "SD400": "SD400",
+              "SD500": "SD500",
+              "SD600": "SD600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "KS-Civil(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD24",
+              "SD30",
+              "SD35",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SD24": "SD24",
+              "SD30": "SD30",
+              "SD35": "SD35",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD24",
+              "SD30",
+              "SD35",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SD24": "SD24",
+              "SD30": "SD30",
+              "SD35": "SD35",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "PNS49(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "230R",
+              "280R",
+              "420R",
+              "520R",
+              "550R"
+            ],
+            "x-enum-labels": {
+              "230R": "230R",
+              "280R": "280R",
+              "420R": "420R",
+              "520R": "520R",
+              "550R": "550R"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "230R",
+              "280R",
+              "420R",
+              "520R",
+              "550R"
+            ],
+            "x-enum-labels": {
+              "230R": "230R",
+              "280R": "280R",
+              "420R": "420R",
+              "520R": "520R",
+              "550R": "550R"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "SNI(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "BjTP 280",
+              "BjTS 280",
+              "BjTS 420A",
+              "BjTS 420B",
+              "BjTS 520",
+              "BjTS 550",
+              "BjTS 700"
+            ],
+            "x-enum-labels": {
+              "BjTP 280": "BjTP 280",
+              "BjTS 280": "BjTS 280",
+              "BjTS 420A": "BjTS 420A",
+              "BjTS 420B": "BjTS 420B",
+              "BjTS 520": "BjTS 520",
+              "BjTS 550": "BjTS 550",
+              "BjTS 700": "BjTS 700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "BjTP 280",
+              "BjTS 280",
+              "BjTS 420A",
+              "BjTS 420B",
+              "BjTS 520",
+              "BjTS 550",
+              "BjTS 700"
+            ],
+            "x-enum-labels": {
+              "BjTP 280": "BjTP 280",
+              "BjTS 280": "BjTS 280",
+              "BjTS 420A": "BjTS 420A",
+              "BjTS 420B": "BjTS 420B",
+              "BjTS 520": "BjTS 520",
+              "BjTS 550": "BjTS 550",
+              "BjTS 700": "BjTS 700"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TIS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR24",
+              "SD30",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SR24": "SR24",
+              "SD30": "SD30",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR24",
+              "SD30",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SR24": "SR24",
+              "SD30": "SD30",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TIS(MKS)(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR24",
+              "SD30",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SR24": "SR24",
+              "SD30": "SD30",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR24",
+              "SD30",
+              "SD40",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SR24": "SR24",
+              "SD30": "SD30",
+              "SD40": "SD40",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "IRC(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Fe415",
+              "Fe500",
+              "Fe550",
+              "Fe600"
+            ],
+            "x-enum-labels": {
+              "Fe415": "Fe415",
+              "Fe500": "Fe500",
+              "Fe550": "Fe550",
+              "Fe600": "Fe600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Fe415",
+              "Fe500",
+              "Fe550",
+              "Fe600"
+            ],
+            "x-enum-labels": {
+              "Fe415": "Fe415",
+              "Fe500": "Fe500",
+              "Fe550": "Fe550",
+              "Fe600": "Fe600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "IRS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Fe415",
+              "Fe500",
+              "Fe550",
+              "Fe600"
+            ],
+            "x-enum-labels": {
+              "Fe415": "Fe415",
+              "Fe500": "Fe500",
+              "Fe550": "Fe550",
+              "Fe600": "Fe600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Fe415",
+              "Fe500",
+              "Fe550",
+              "Fe600"
+            ],
+            "x-enum-labels": {
+              "Fe415": "Fe415",
+              "Fe500": "Fe500",
+              "Fe550": "Fe550",
+              "Fe600": "Fe600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "IS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Fe240",
+              "Fe250",
+              "Fe415",
+              "Fe500",
+              "Fe550",
+              "Fe600"
+            ],
+            "x-enum-labels": {
+              "Fe240": "Fe240",
+              "Fe250": "Fe250",
+              "Fe415": "Fe415",
+              "Fe500": "Fe500",
+              "Fe550": "Fe550",
+              "Fe600": "Fe600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Fe240",
+              "Fe250",
+              "Fe415",
+              "Fe500",
+              "Fe550",
+              "Fe600"
+            ],
+            "x-enum-labels": {
+              "Fe240": "Fe240",
+              "Fe250": "Fe250",
+              "Fe415": "Fe415",
+              "Fe500": "Fe500",
+              "Fe550": "Fe550",
+              "Fe600": "Fe600"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CNS560-18(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD280",
+              "SD280W",
+              "SD420",
+              "SD420W",
+              "SD490W",
+              "SD550W",
+              "SD690"
+            ],
+            "x-enum-labels": {
+              "SD280": "SD280",
+              "SD280W": "SD280W",
+              "SD420": "SD420",
+              "SD420W": "SD420W",
+              "SD490W": "SD490W",
+              "SD550W": "SD550W",
+              "SD690": "SD690"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD280",
+              "SD280W",
+              "SD420",
+              "SD420W",
+              "SD490W",
+              "SD550W",
+              "SD690"
+            ],
+            "x-enum-labels": {
+              "SD280": "SD280",
+              "SD280W": "SD280W",
+              "SD420": "SD420",
+              "SD420W": "SD420W",
+              "SD490W": "SD490W",
+              "SD550W": "SD550W",
+              "SD690": "SD690"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CNS560(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR240",
+              "SR300",
+              "SD280",
+              "SD280W",
+              "SD420",
+              "SD420W",
+              "SD490"
+            ],
+            "x-enum-labels": {
+              "SR240": "SR240",
+              "SR300": "SR300",
+              "SD280": "SD280",
+              "SD280W": "SD280W",
+              "SD420": "SD420",
+              "SD420W": "SD420W",
+              "SD490": "SD490"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SR240",
+              "SR300",
+              "SD280",
+              "SD280W",
+              "SD420",
+              "SD420W",
+              "SD490"
+            ],
+            "x-enum-labels": {
+              "SR240": "SR240",
+              "SR300": "SR300",
+              "SD280": "SD280",
+              "SD280W": "SD280W",
+              "SD420": "SD420",
+              "SD420W": "SD420W",
+              "SD490": "SD490"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "CNS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD24",
+              "SD28",
+              "SD30",
+              "SD35",
+              "SD42",
+              "SD42W",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SD24": "SD24",
+              "SD28": "SD28",
+              "SD30": "SD30",
+              "SD35": "SD35",
+              "SD42": "SD42",
+              "SD42W": "SD42W",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "SD24",
+              "SD28",
+              "SD30",
+              "SD35",
+              "SD42",
+              "SD42W",
+              "SD50"
+            ],
+            "x-enum-labels": {
+              "SD24": "SD24",
+              "SD28": "SD28",
+              "SD30": "SD30",
+              "SD35": "SD35",
+              "SD42": "SD42",
+              "SD42W": "SD42W",
+              "SD50": "SD50"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "AS17(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "D500L",
+              "D500N",
+              "D500E",
+              "D500LP",
+              "D600N"
+            ],
+            "x-enum-labels": {
+              "D500L": "D500L",
+              "D500N": "D500N",
+              "D500E": "D500E",
+              "D500LP": "D500LP",
+              "D600N": "D600N"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "D500L",
+              "D500N",
+              "D500E",
+              "D500LP",
+              "D600N"
+            ],
+            "x-enum-labels": {
+              "D500L": "D500L",
+              "D500N": "D500N",
+              "D500E": "D500E",
+              "D500LP": "D500LP",
+              "D600N": "D600N"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TMH7(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "Type A",
+              "Type B",
+              "Type C"
+            ],
+            "x-enum-labels": {
+              "Type A": "Type A",
+              "Type B": "Type B",
+              "Type C": "Type C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "Type A",
+              "Type B",
+              "Type C"
+            ],
+            "x-enum-labels": {
+              "Type A": "Type A",
+              "Type B": "Type B",
+              "Type C": "Type C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "SP63.2018(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "A240",
+              "A240_sw",
+              "A400",
+              "A400_sw",
+              "A500",
+              "A500_sw",
+              "A600",
+              "A800",
+              "A1000",
+              "B500",
+              "B500_sw",
+              "BP500",
+              "BP1200",
+              "BP1300",
+              "BP1400",
+              "BP1500",
+              "BP1600",
+              "K1400",
+              "K1450",
+              "K1500",
+              "K1550",
+              "K1650",
+              "K1750",
+              "K1850",
+              "K1900"
+            ],
+            "x-enum-labels": {
+              "A240": "A240",
+              "A240_sw": "A240_sw",
+              "A400": "A400",
+              "A400_sw": "A400_sw",
+              "A500": "A500",
+              "A500_sw": "A500_sw",
+              "A600": "A600",
+              "A800": "A800",
+              "A1000": "A1000",
+              "B500": "B500",
+              "B500_sw": "B500_sw",
+              "BP500": "BP500",
+              "BP1200": "BP1200",
+              "BP1300": "BP1300",
+              "BP1400": "BP1400",
+              "BP1500": "BP1500",
+              "BP1600": "BP1600",
+              "K1400": "K1400",
+              "K1450": "K1450",
+              "K1500": "K1500",
+              "K1550": "K1550",
+              "K1650": "K1650",
+              "K1750": "K1750",
+              "K1850": "K1850",
+              "K1900": "K1900"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "A240",
+              "A240_sw",
+              "A400",
+              "A400_sw",
+              "A500",
+              "A500_sw",
+              "A600",
+              "A800",
+              "A1000",
+              "B500",
+              "B500_sw",
+              "BP500",
+              "BP1200",
+              "BP1300",
+              "BP1400",
+              "BP1500",
+              "BP1600",
+              "K1400",
+              "K1450",
+              "K1500",
+              "K1550",
+              "K1650",
+              "K1750",
+              "K1850",
+              "K1900"
+            ],
+            "x-enum-labels": {
+              "A240": "A240",
+              "A240_sw": "A240_sw",
+              "A400": "A400",
+              "A400_sw": "A400_sw",
+              "A500": "A500",
+              "A500_sw": "A500_sw",
+              "A600": "A600",
+              "A800": "A800",
+              "A1000": "A1000",
+              "B500": "B500",
+              "B500_sw": "B500_sw",
+              "BP500": "BP500",
+              "BP1200": "BP1200",
+              "BP1300": "BP1300",
+              "BP1400": "BP1400",
+              "BP1500": "BP1500",
+              "BP1600": "BP1600",
+              "K1400": "K1400",
+              "K1450": "K1450",
+              "K1500": "K1500",
+              "K1550": "K1550",
+              "K1650": "K1650",
+              "K1750": "K1750",
+              "K1850": "K1850",
+              "K1900": "K1900"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "TS(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "B420C",
+              "B520C"
+            ],
+            "x-enum-labels": {
+              "B420C": "B420C",
+              "B520C": "B520C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "B420C",
+              "B520C"
+            ],
+            "x-enum-labels": {
+              "B420C": "B420C",
+              "B520C": "B520C"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "CODE": {
+            "const": "NBR 6118(RC)"
+          }
+        },
+        "required": [
+          "CODE"
+        ]
+      },
+      "then": {
+        "required": [
+          "GRADE_MAIN_REBAR",
+          "GRADE_SUB_REBAR"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "Fy"
+              ]
+            },
+            {
+              "required": [
+                "Fys"
+              ]
+            },
+            {
+              "required": [
+                "NAME_MAIN_REBAR"
+              ]
+            },
+            {
+              "required": [
+                "NAME_SUB_REBAR"
+              ]
+            }
+          ]
+        },
+        "properties": {
+          "GRADE_MAIN_REBAR": {
+            "type": "string",
+            "enum": [
+              "CA25",
+              "CA50",
+              "CA60"
+            ],
+            "x-enum-labels": {
+              "CA25": "CA25",
+              "CA50": "CA50",
+              "CA60": "CA60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Main Rebar"
+            }
+          },
+          "GRADE_SUB_REBAR": {
+            "type": "string",
+            "enum": [
+              "CA25",
+              "CA50",
+              "CA60"
+            ],
+            "x-enum-labels": {
+              "CA25": "CA25",
+              "CA50": "CA50",
+              "CA60": "CA60"
+            },
+            "x-ui": {
+              "component": "Dropdown",
+              "label": "Grade of Sub-Rebar"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "x-target-objects": [
+    "GIRDER_REBAR_PROP",
+    "SLAB_REBAR_PROP"
+  ]
+}
