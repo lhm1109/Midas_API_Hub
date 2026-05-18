@@ -919,6 +919,51 @@ async function updateZendeskArticleTranslation(config, articleId, locale, body, 
   return data.translation;
 }
 
+function isZendeskHttpStatus(error, statusCode) {
+  return error instanceof Error && error.message.startsWith(`HTTP ${statusCode}:`);
+}
+
+async function createZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
+  const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
+  const normalizedLocale = normalizeZendeskLocale(locale);
+  const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+  assertZendeskTranslationBodySize(normalizedBody, normalizedLocale);
+
+  const payload = {
+    translation: {
+      locale: normalizedLocale,
+      title: asTrimmedString(title) || 'API Manual',
+      body: normalizedBody,
+    },
+  };
+
+  if (draft !== undefined && draft !== null) {
+    payload.translation.draft = !!draft;
+  }
+
+  const postData = JSON.stringify(payload);
+  const options = buildZendeskRequestOptions(
+    config,
+    `/api/v2/help_center/articles/${safeArticleId}/translations.json`,
+    'POST',
+    postData
+  );
+
+  const data = await makeZendeskRequest(options, postData);
+  return data.translation;
+}
+
+async function upsertZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
+  try {
+    return await updateZendeskArticleTranslation(config, articleId, locale, body, title, draft);
+  } catch (error) {
+    if (isZendeskHttpStatus(error, 404)) {
+      return createZendeskArticleTranslation(config, articleId, locale, body, title, draft);
+    }
+    throw error;
+  }
+}
+
 async function updateZendeskArticle(config, articleId, articlePayload, notifySubscribers = null) {
   const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
   const payload = {
@@ -1198,7 +1243,7 @@ ipcMain.handle('zendesk:publishManualWithEnv', async (event, targetInput, locale
         await updateZendeskArticle(config, articleId, metadata, envConfig.defaultNotifySubscribers);
       }
 
-      await updateZendeskArticleTranslation(
+      await upsertZendeskArticleTranslation(
         config,
         articleId,
         effectiveLocale,
@@ -1231,7 +1276,7 @@ ipcMain.handle('zendesk:publishManualWithEnv', async (event, targetInput, locale
       effectiveLocale = normalizeZendeskLocale(created?.source_locale || fallbackLocale);
       articleUrl = asTrimmedString(created?.html_url);
 
-      await updateZendeskArticleTranslation(
+      await upsertZendeskArticleTranslation(
         config,
         articleId,
         effectiveLocale,

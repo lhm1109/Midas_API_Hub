@@ -385,6 +385,10 @@ async function makeZendeskRequest(config, requestPath, method = 'GET', payload =
   }
 }
 
+function isZendeskHttpStatus(error, statusCode) {
+  return error instanceof Error && error.message.startsWith(`HTTP ${statusCode}:`);
+}
+
 async function updateZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
   const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
   const normalizedLocale = normalizeZendeskLocale(locale);
@@ -413,6 +417,44 @@ async function updateZendeskArticleTranslation(config, articleId, locale, body, 
   );
 
   return data.translation;
+}
+
+async function createZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
+  const safeArticleId = toZendeskPathSegment(articleId, 'articleId');
+  const normalizedLocale = normalizeZendeskLocale(locale);
+  const normalizedBody = typeof body === 'string' ? body : String(body ?? '');
+  assertZendeskTranslationBodySize(normalizedBody, normalizedLocale);
+  const payload = {
+    translation: {
+      locale: normalizedLocale,
+      title: asTrimmedString(title) || 'API Manual',
+      body: normalizedBody,
+    },
+  };
+
+  if (draft !== undefined && draft !== null) {
+    payload.translation.draft = !!draft;
+  }
+
+  const data = await makeZendeskRequest(
+    config,
+    `/api/v2/help_center/articles/${safeArticleId}/translations.json`,
+    'POST',
+    payload
+  );
+
+  return data.translation;
+}
+
+async function upsertZendeskArticleTranslation(config, articleId, locale, body, title, draft) {
+  try {
+    return await updateZendeskArticleTranslation(config, articleId, locale, body, title, draft);
+  } catch (error) {
+    if (isZendeskHttpStatus(error, 404)) {
+      return createZendeskArticleTranslation(config, articleId, locale, body, title, draft);
+    }
+    throw error;
+  }
 }
 
 async function updateZendeskArticle(config, articleId, articlePayload, notifySubscribers = null) {
@@ -640,7 +682,7 @@ router.post('/publish', async (req, res) => {
         await updateZendeskArticle(config, articleId, metadata, envConfig.defaultNotifySubscribers);
       }
 
-      await updateZendeskArticleTranslation(
+      await upsertZendeskArticleTranslation(
         config,
         articleId,
         effectiveLocale,
@@ -676,7 +718,7 @@ router.post('/publish', async (req, res) => {
       effectiveLocale = normalizeZendeskLocale(created?.source_locale || fallbackLocale);
       articleUrl = asTrimmedString(created?.html_url);
 
-      await updateZendeskArticleTranslation(
+      await upsertZendeskArticleTranslation(
         config,
         articleId,
         effectiveLocale,

@@ -783,7 +783,9 @@ ${specificationSectionHTML}
     compacted: boolean;
     originalByteSize: number;
   } => {
-    const originalHtml = isHTMLModified && editableHTML ? editableHTML : generateZendeskHTML();
+    const originalHtml = isHTMLModified && editableHTML
+      ? editableHTML
+      : (manualData?.htmlContent || generateZendeskHTML());
     const originalByteSize = getUtf8ByteSize(originalHtml);
     if (originalByteSize <= ZENDESK_TRANSLATION_BODY_LIMIT_BYTES) {
       return {
@@ -826,7 +828,7 @@ ${specificationSectionHTML}
 
   // Export HTML
   const handleExport = () => {
-    const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
+    const html = isHTMLModified && editableHTML ? editableHTML : (manualData?.htmlContent || generateHTML());
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -858,7 +860,14 @@ ${specificationSectionHTML}
     }
 
     const title = buildZendeskArticleTitle(endpoint, manualData.title);
-    const selectedLocales = ZENDESK_LOCALE_OPTIONS.filter((option) => zendeskLocales[option]);
+    const defaultPublishLocale = normalizeZendeskLocale(envStatus.defaultLocale);
+    const selectedLocales = ZENDESK_LOCALE_OPTIONS
+      .filter((option) => zendeskLocales[option])
+      .sort((a, b) => {
+        if (a === defaultPublishLocale) return -1;
+        if (b === defaultPublishLocale) return 1;
+        return 0;
+      });
     if (selectedLocales.length === 0) {
       toast.error('Select at least one Zendesk locale.');
       return;
@@ -886,6 +895,7 @@ ${specificationSectionHTML}
     const labelNames = parseZendeskLabelInput(zendeskLabelInput);
     const commentsDisabled = manualData.zendeskCommentsDisabled ?? true;
     const targetBeforeSend = zendeskUrl.trim();
+    let publishTarget = targetBeforeSend;
 
     updateManualData({ zendeskLabelNames: labelNames });
 
@@ -920,7 +930,7 @@ ${specificationSectionHTML}
 
         if (useElectronPublisher) {
           result = await zendeskAPI!.publishManualWithEnv(
-            targetBeforeSend,
+            publishTarget,
             locale,
             html,
             title || undefined,
@@ -935,7 +945,7 @@ ${specificationSectionHTML}
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              targetInput: targetBeforeSend,
+              targetInput: publishTarget,
               locale,
               body: html,
               title: title || undefined,
@@ -956,6 +966,9 @@ ${specificationSectionHTML}
 
         if (!firstResult) {
           firstResult = result;
+        }
+        if (!publishTarget && result.data?.articleId) {
+          publishTarget = result.data.articleUrl || result.data.articleId;
         }
         successfulLocales.push(result.data?.locale || locale);
       }
@@ -1046,7 +1059,7 @@ ${specificationSectionHTML}
     if (!editableHTML) {
       setEditableHTMLByPublisher((prev) => ({
         ...prev,
-        [manualPublisher]: generateHTML(),
+        [manualPublisher]: htmlContent,
       }));
     }
     setViewMode('code');
@@ -1066,6 +1079,7 @@ ${specificationSectionHTML}
 
   // 🎯 Save HTML Changes
   const handleSaveHTML = () => {
+    updateManualData({ htmlContent: editableHTML || generateHTML() });
     setIsHTMLModifiedByPublisher((prev) => ({
       ...prev,
       [manualPublisher]: false,
@@ -1120,7 +1134,7 @@ ${specificationSectionHTML}
   };
 
   // 🎯 htmlContent: editableHTML이 있으면 그것을 사용, 없으면 generateHTML()
-  const htmlContent = editableHTML || generateHTML();
+  const htmlContent = editableHTML || manualData?.htmlContent || generateHTML();
   const hasElectronZendeskSender = typeof window !== 'undefined' && !!window.electronAPI?.zendesk?.publishManualWithEnv;
   const hasZendeskSender = typeof window !== 'undefined';
   const zendeskStatusText = zendeskEnvStatus
@@ -1179,6 +1193,11 @@ ${specificationSectionHTML}
                 <Input
                   value={currentTargetValue}
                   onChange={(e) => currentTargetSetter(e.target.value)}
+                  onBlur={(e) => {
+                    if (manualPublisher === 'zendesk' && manualData) {
+                      updateManualData({ url: e.target.value.trim() || undefined });
+                    }
+                  }}
                   placeholder={
                     manualPublisher === 'zendesk'
                       ? 'Article URL/ID (비우면 기본 Section에 신규 생성)'

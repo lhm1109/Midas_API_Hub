@@ -3,6 +3,26 @@ import apiClient from '@/lib/api-client';
 import type { Version, ManualData, SpecData, BuilderData, RunnerData, ApiEndpoint } from '@/types';
 
 let latestVersionsRequestId = 0;
+const MANUAL_AUTO_SAVE_DELAY_MS = 800;
+let manualAutoSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+function scheduleManualAutoSave(getState: () => AppState) {
+  if (manualAutoSaveTimer) {
+    clearTimeout(manualAutoSaveTimer);
+  }
+
+  manualAutoSaveTimer = setTimeout(() => {
+    manualAutoSaveTimer = null;
+    const state = getState();
+    if (!state.currentVersionId || !state.manualData) {
+      return;
+    }
+
+    void state.saveCurrentVersion().catch((error) => {
+      console.error('Manual auto-save failed:', error);
+    });
+  }, MANUAL_AUTO_SAVE_DELAY_MS);
+}
 
 export interface AppState {
   currentTab: 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split';
@@ -336,13 +356,21 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   // 🎯 **Manual 데이터 설정 및 업데이트**
-  setManualData: (data) => set({ manualData: data, hasUnsavedChanges: data !== null }),
+  setManualData: (data) => {
+    set({ manualData: data, hasUnsavedChanges: data !== null });
+    if (data !== null) {
+      scheduleManualAutoSave(get);
+    }
+  },
 
   updateManualData: (updates) => {
     set((state) => ({
       manualData: state.manualData ? { ...state.manualData, ...updates } : null,
       hasUnsavedChanges: true,
     }));
+    if (get().manualData) {
+      scheduleManualAutoSave(get);
+    }
   },
 
   // 🎯 **Spec 데이터 설정 및 업데이트**

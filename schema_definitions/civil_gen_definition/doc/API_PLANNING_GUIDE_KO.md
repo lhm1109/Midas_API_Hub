@@ -247,7 +247,6 @@ Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. �
 | Method | 실제 HTTP method | `GET`, `POST`, `PUT`, `DELETE` |
 | Body Root | request body wrapper | `Assign` |
 | Schema Field 범위 | wrapper 안의 단일 entity 또는 단일 argument | `"1"` 내부 field |
-| Transport 확장데이터 | schema 외부에서 실제 호출 형태를 만들기 위한 정보 | `x-transport.body-root = Assign` |
 
 ## 5. 스키마 작성
 
@@ -255,7 +254,7 @@ Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. �
 
 ### 5.1 스키마 작성 범위
 
-Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 argument를 정의한다. wrapper와 ID key는 transport 단계에서 처리한다.
+Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 argument를 정의한다. wrapper와 ID key는 전송 단계에서 처리한다.
 
 | 실제 request | schema에 정의하는 범위 | schema에 넣지 않는 것 |
 |---|---|---|
@@ -271,7 +270,7 @@ Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 ar
 |---|---|---|
 | 데이터 묶음 | payload가 하위 객체로 묶여야 한다. | `type: object` |
 | 반복 묶음 | 같은 구조가 여러 번 반복된다. | `type: array`, `items` 정의 |
-| 선택 방식 묶음 | 여러 입력 방식 중 하나만 선택한다. | `object` + `x-exclusive-keys` |
+| 선택 방식 묶음 | 여러 입력 방식 중 하나만 선택한다. | `object` + `oneOf` 또는 조건부 required |
 | 조건부 묶음 | 특정 선택값에서만 묶음 전체가 필요하다. | object field + 조건부 required/visible |
 | 표시용 묶음 | payload 구조와 무관한 화면 정리용 group이다. | schema object를 만들지 않고 Manual/Builder 표시용 section으로만 처리 |
 | 탭 구분 | 탭이 payload 구조를 의미하지 않는다. | 표시용 section으로만 처리 |
@@ -281,7 +280,7 @@ Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 ar
 | 화면 구조 | 잘못된 처리 | 올바른 처리 |
 |---|---|---|
 | Material Data group 안에 `ANAL`, `DESIGN` 하위 값이 있다. | 모든 field를 최상위에 나열 | `DATA1.ANAL`, `DATA1.DESIGN` object로 묶음 |
-| Target 선택에서 `KEYS`, `TO`, `STRUCTURE_GROUP_NAME` 중 하나만 쓴다. | 세 field를 독립 optional로만 둠 | `NODE_ELEMS` object + `x-exclusive-keys` |
+| Target 선택에서 `KEYS`, `TO`, `STRUCTURE_GROUP_NAME` 중 하나만 쓴다. | 세 field를 독립 optional로만 둠 | `NODE_ELEMS` object + 상호 배타 조건 |
 | 화면상 “General” 박스지만 payload는 최상위 field다. | 불필요한 `GENERAL` object 생성 | 최상위 field 유지, 표시용 group만 사용 |
 
 ### 5.3 Field 설계
@@ -310,7 +309,7 @@ Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 ar
 
 #### 기존/공통 key 목록
 
-아래 key는 기존 API에서 반복적으로 쓰는 이름이다. 같은 의미의 값을 기획할 때 새 key를 만들지 말고 기존 key를 우선 확인한다. 모든 API에 공통으로 넣으라는 뜻은 아니며, 해당 기능이 있을 때만 사용한다.
+아래 key는 기존 API에서 반복적으로 쓰는 대표 이름이다. 같은 의미의 값을 기획할 때 새 key를 만들지 말고 기존 key를 우선 확인한다. 모든 API에 공통으로 넣으라는 뜻은 아니며, 해당 기능이 있을 때만 사용한다. 이 표가 기존 key 전체 목록은 아니므로, 실제 기획 시에는 대상 endpoint의 OpenAPI 정의와 제품 API 문서를 다시 확인해야 한다.
 
 | 구분 | 기존 key | 쓰는 경우 | 기획 시 확인할 것 | OpenAPI 사용 endpoint 예시 |
 |---|---|---|---|---|
@@ -320,11 +319,32 @@ Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 ar
 | Entity 공통 | `NAME` | entity 이름 또는 표시 이름 | 필수 여부, 중복 허용 여부 | `/DB/MATD`, `/DB/MATL` |
 | Entity 공통 | `DATA1`, `DATA2` | 상세 데이터 하위 묶음 | 하위 object 구조, `TYPE`별 구조 차이 | `/DB/MATD`, `/DB/MATD/{id}` |
 | Entity 공통 | `CODE` | code 또는 기준값 선택 | enum인지 자유 입력인지, 제품 표기값 | `/DB/MATL`, `/DB/EPSE` |
+| Section/Property | `SECT`, `SECT_NAME`, `SECTTYPE`, `SHAPE`, `SHAPE_TYPE`, `DB_NAME` | section/property/shape 선택 또는 참조 | section key인지 이름인지, DB section 참조인지 사용자 정의인지 | `/DB/SECT`, `/DB/SECV`, `/DB/ELEM`, `/OPE/SECT_NAME` |
+| Material/물성 | `MATL`, `ELAST`, `POISSON`, `THERMAL`, `DENSITY` | material 참조와 물성값 | material key/name 구분, 단위, code material 여부 | `/DB/MATL`, `/DB/MATD`, `/DB/ELEM`, `/DB/BTMP` |
+| 식별/설명 | `ID`, `NO`, `DESC` | ID, 번호, 설명/비고 | ID가 path id인지 payload field인지, 자동 생성 여부 | `/DB/BMLD`, `/DB/BTMP`, `/DB/CNLD`, `/DB/FBLA` |
+| Group/Load | `GROUP_NAME`, `LCNAME` | group 이름, load case 이름 | 이름 목록 출처, 단일 string인지 array인지 | `/DB/ARPR`, `/DB/BMLD`, `/DB/BODF`, `/DB/BCCT` |
+| Load 기본 | `LOAD`, `LOAD_TYPE`, `LOAD_NAME`, `LCTYPE`, `LOADCASE`, `LCNAME_ITEM` | load 종류, load 이름, load case 항목 | load type enum, 이름 참조 방식, case/list 구조 | `/DB/BUCK`, `/DB/EPSE`, `/DB/MVHL`, `/DB/GALD`, `/DB/THIS` |
+| Load 방향/분포 | `LOAD_DIR`, `LOAD_DIST`, `UNIFORM_LOAD_DIST`, `UNIFORM_LOAD_W`, `LOAD_VALUE` | load 방향, 거리, 분포하중, 표시값 | 방향 enum, 거리/하중 단위, 값 object 구조 | `/DB/LLAN`, `/DB/MVHL`, `/DB/PNLA`, `/DB/MVLDJP`, `/VIEW/DISPLAY` |
+| Load 항목 | `LOAD_ITEMS`, `LOAD_ITEMS2`, `SUB_LOAD_ITEMS`, `SUB_LOAD_DATAS`, `LOAD_NUM_ITEMS` | load item 목록 또는 하위 load 데이터 | array item 구조, item 개수 field와의 관계 | `/DB/MVHL`, `/DB/MVLD`, `/DB/MVLDCH`, `/DB/MVLDID`, `/DB/MVLDJP` |
+| Load 조합 | `nLCOMTYPE`, `vCOMB`, `COMB_OPTION`, `COMB_LIST`, `bUSECOMB`, `OPT_COMB` | load combination type, combination list/option | 기존 prefix key 유지, 조합 type enum, list item 구조 | `/DB/LCOM-CONC`, `/DB/LCOM-GEN`, `/DB/EFCT`, `/DB/MVLD`, `/DB/MVLDEU` |
+| Moving Load | `VEHICLE_LOAD_NAME`, `VEHICLE_LOAD_NUM`, `VEHICLE_TYPE`, `VEHICLE_NAME`, `PERMIT_LOAD`, `NUM_LOADED_LANES` | vehicle/moving load 관련 입력 | 차량 이름 목록, lane 수, permit load 여부 | `/DB/MVHL`, `/DB/MVLD`, `/DB/MVLDPL`, `/DB/MVLDID` |
+| Load 표시 flag | `NODAL_LOAD`, `BEAM_LOAD`, `FLOOR_LOAD`, `PRESSURE_LOAD`, `PLANE_LOAD`, `PRESTRESS_LOAD`, `PRETENSION_LOAD`, `APPLIED_LOADS` | 화면 또는 graphic에서 load 표시 여부 | boolean flag인지 하위 object인지, 표시 layer 조건 | `/OPE/USLC`, `/VIEW/CAPTURE`, `/VIEW/DISPLAY`, `/VIEW/RESULTGRAPHIC` |
+| 대상 참조 | `NODE`, `ELEM`, `ELEMS`, `NODE_KEY`, `ELEM_KEY` | node/element 직접 참조 | 단일 key인지 array인지, node/element 모두 지원하는지 | `/DB/ELEM`, `/DB/LLAN`, `/DB/MLSR`, `/DB/EARE` |
+| 대상 list | `NODE_LIST`, `ELEM_LIST`, `ELEM_LISTS`, `N_LIST`, `E_LIST` | node/element 목록 또는 active 대상 목록 | integer array인지 object array인지, `KEYS`와 같은 의미인지 구분 | `/DB/EPSE`, `/DB/VSEC`, `/DB/GRUP`, `/VIEW/ACTIVE`, `/VIEW/SELECT` |
+| 대상 번호 list | `SPAN_START_NO_LIST`, `SPAN_LIST`, `SECTION_NUM`, `ELEMENT_NO`, `NODE_NUMBER`, `ELEM_NUMBER` | span/section/element/node 번호 목록 또는 표시 번호 | 번호인지 key인지, 화면 표시용인지 API 대상 선택인지 구분 | `/DB/LLAN`, `/DB/SPAN`, `/DB/IEHP`, `/VIEW/DISPLAY`, `/OPE/DIVIDEELEM` |
+| Member/Element 참조 | `MEMB`, `AELEM`, `ELEMENT`, `ELEMENT_TYPE`, `ELEM_TYPE`, `TYPE_ELEMENT` | member/element 타입 또는 참조 | civil/gen에서 member와 element 의미 차이, enum 목록 | `/DB/MEMB`, `/OPE/MEMB`, `/DB/EPSE`, `/OPE/AUTOMESH`, `/VIEW/DISPLAY` |
+| Group/List 선택 | `GROUP`, `GROUPS`, `GROUP_SELECTION`, `IDENTITY_LIST`, `IDENTITY_TYPE` | group 선택, identity 기반 active 선택 | group 이름 목록, identity type enum, list item type | `/DB/CJFG`, `/DB/CRGR`, `/VIEW/ACTIVE`, `/VIEW/CAPTURE`, `/VIEW/DISPLAY` |
+| 좌표/방향 | `X`, `Y`, `Z`, `DIR`, `DIRECTION`, `ANGLE`, `POSITION`, `LOCATION` | 좌표, 방향, 각도, 위치 | 좌표계 기준, 단위, enum/number 여부 | `/DB/NODE`, `/DB/BTMP`, `/DB/CLDR`, `/DB/SECT` |
+| 치수/간격 | `AREA`, `THICK`, `THICKNESS`, `SPACING`, `OFFSET`, `SPAN`, `SPAN_LENGTH` | 면적, 두께, 간격, offset, span 정보 | 단위, 기준 위치, array/object 여부 | `/DB/SECT`, `/DB/SECV`, `/DB/RPSC`, `/DB/SLAN` |
+| 값/상태 | `VALUE`, `FACTOR`, `ACTIVE` | 값, 계수, 활성화 여부 | number/boolean 여부, 기본값, 적용 조건 | `/DB/CCFC`, `/DB/BUCK`, `/DB/DYLA`, `/DB/LCOM-CONC` |
+| 입력 방식 | `METHOD`, `INPUT_TYPE`, `INPUT_METHOD` | 입력 방식 또는 계산 방식 선택 | enum 전체 목록, 방식별 required field | `/DB/MVCT`, `/DB/SPFC`, `/DB/FIMP`, `/DB/SDST` |
 | Table 공통 | `TABLE_TYPE` | 어떤 결과 table인지 구분 | 실제 payload value, 조건별 column 목록 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/REQUESTINFO/POST/TABLE/{TABLE_TYPE}` |
 | Table 공통 | `TABLE_NAME` | table 표시 이름 또는 출력 이름 | 자동 생성인지 사용자가 입력하는지 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/REQUESTINFO/POST/TABLE/{TABLE_TYPE}` |
 | Table 공통 | `COMPONENTS` | 표시할 column/component 선택 | 화면 column header 전체, enum value, 기본 표시 여부 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/VIEW/CAPTURE`, `/VIEW/RESULTGRAPHIC` |
 | Table 공통 | `UNIT` | table 또는 결과 단위 설정 | 단위 object 구조, 기본 단위 | `/DB/UNIT`, `/POST/TABLE`, `/REQUESTINFO/POST/TABLE` |
+| Unit 하위 | `FORCE`, `DIST`, `HEAT`, `TEMP` | 단위 object의 하위 단위 | 제품 단위 체계, 기본값, 허용 단위 값 | `/DB/UNIT`, `/POST/TABLE`, `/REQUESTINFO/POST/TABLE` |
 | Table 공통 | `STYLES` | 숫자 표시 형식, 자리수, format | 하위 field와 기본값 | `/POST/TABLE`, `/POST/TEXT`, `/REQUESTINFO/POST/TABLE` |
+| Format 하위 | `FORMAT`, `PLACE` | 숫자 표시 형식과 소수 자리수 | format enum, 자리수 범위, 기본값 | `/POST/TABLE`, `/POST/TEXT`, `/VIEW/CAPTURE`, `/VIEW/DISPLAY` |
 | Table 필터 | `AVERAGE_NODAL_RESULT` | nodal result 평균 처리 여부 | boolean인지, 기본값이 무엇인지 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/REQUESTINFO/POST/TABLE/{TABLE_TYPE}` |
 | Table 필터 | `SECT_POSITION`, `SECTION_POSITION` | section 위치 조건 | 단일 string인지 string array인지, 허용 값 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/REQUESTINFO/POST/TABLE_REQUEST/{TABLE_TYPE}` |
 | Table 필터 | `OUTPUT_STEP` | output step 조건 | step 값 목록, stage 조건과의 관계 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/REQUESTINFO/POST/TABLE_REQUEST/{TABLE_TYPE}` |
@@ -338,7 +358,8 @@ Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 ar
 | 대상 선택 | `TO` | 범위 또는 대상 조건 선택 | 시작/끝 범위인지, 단일 조건인지 | `/POST/TABLE`, `/POST/TEXT`, `/OPE/EDMP`, `/OPE/SSPS` |
 | 대상 선택 | `STRUCTURE_GROUP_NAME` | structure group 이름으로 선택 | group 이름 목록 또는 자유 입력 여부 | `/POST/TABLE`, `/POST/TEXT`, `/OPE/EDMP`, `/OPE/SSPS` |
 | Load/Stage | `LOAD_CASE_NAMES` | load case 선택 | string array인지 object array인지 | `/POST/TABLE`, `/REQUESTINFO/POST/TABLE`, `/REQUESTINFO/POST/TABLE_REQUEST/{TABLE_TYPE}` |
-| Load/Stage | `STAGE_NAME`, `STAGE_STEP`, `OPT_CS` | construction stage 조건 | stage 사용 여부, stage별 required 조건 | `/DB/HHCT`, `/DOC/STAGAS`, `/POST/TABLE`, `/REQUESTINFO/POST/TABLE/{TABLE_TYPE}` |
+| Load/Stage | `STAGE`, `STAGE_NAME`, `STAGE_STEP`, `FINAL_STAGE`, `ACT_LOAD`, `DACT_LOAD`, `OPT_CS` | construction stage 조건과 stage별 active/deactive load | stage 사용 여부, stage별 required 조건 | `/DB/HHCT`, `/DB/STAG`, `/DOC/STAGAS`, `/POST/TABLE`, `/REQUESTINFO/POST/TABLE/{TABLE_TYPE}` |
+| Load/Result 표시 | `CASE_SELECTION`, `MINMAX`, `STEP_INDEX`, `STEP_NAME`, `TH_OPTION` | load case 선택, min/max, step 정보, time history option | load case/combination 구조, step index/name 관계 | `/VIEW/CAPTURE`, `/VIEW/DISPLAY`, `/VIEW/RESULTGRAPHIC`, `/POST/CHART` |
 | Export/View | `EXPORT_PATH`, `FIGURE_NAME`, `URL_NAME`, `VIEW_TYPE` | 파일 출력, view capture, pre-capture 생성 | 경로/파일명/URL 이름, view type | `/DOC/STAGAS`, `/POST/TABLE`, `/VIEW/CAPTURE`, `/VIEW/PRECAPTURE` |
 | Figure 설정 | `WIDTH`, `HEIGHT`, `BGCOLOR_TOP`, `BGCOLOR_BOTTOM` | capture image 크기와 배경색 | pixel 크기, RGB object 구조 | `/VIEW/CAPTURE` |
 | View 상태 | `ACTIVE`, `ANGLE`, `DISPLAY`, `VIEW`, `ZOOM_LEVEL` | capture에 포함할 active 대상, 각도, 표시 상태 | 각 하위 object 구조, 기존 view 상태 사용 여부 | `/VIEW/CAPTURE`, `/VIEW/ACTIVE`, `/VIEW/ANGLE`, `/VIEW/DISPLAY` |
@@ -392,53 +413,40 @@ DATA1
 
 ### 5.4 Enum과 option
 
-선택형 field는 화면에 현재 보이는 값만 쓰면 안 된다. dropdown이 접힌 상태에서 하나의 값만 보이면 전체 option을 확인해야 한다.
+선택형 field는 사용자가 여러 값 중 하나를 고르는 항목이다. dropdown, radio, checkbox group, table component 선택이 여기에 해당한다. 화면에 현재 선택된 값 하나만 보이더라도, 기획서에는 선택 가능한 전체 값을 적어야 한다.
 
-| 항목 | 작성 내용 | 누락 시 문제 |
+| 확인 항목 | 기획서에 적을 내용 | 왜 필요한가 |
 |---|---|---|
-| Value | 실제 payload에 들어가는 값 | 화면 label과 payload value가 다를 때 스키마가 틀어진다. |
-| Label | 화면에 표시되는 이름 | Manual/Builder 표시명이 불명확해진다. |
-| Default | 기본 선택값 | 생략 가능한 값과 필수 값을 구분하기 어렵다. |
-| 조건 | 조건별 option 변화 여부 | code/type에 따라 다른 option을 표현할 수 없다. |
+| Value | API 요청 body에 실제로 들어가는 값 | 화면 이름과 실제 payload 값이 다를 수 있다. |
+| Label | 화면/Manual/Builder에 보여줄 이름 | 사용자가 어떤 선택지인지 읽을 수 있다. |
+| Default | 처음 열었을 때 기본으로 선택되는 값 | 생략 가능한 값인지 판단할 수 있다. |
+| 조건 | 특정 `TYPE`, code, option에서만 보이는지 | 조건별 선택지를 빠뜨리지 않는다. |
 
-| Value | Label | Default | 조건 |
-|---|---|---|---|
-| `AASHTO-LRFD24` | AASHTO-LRFD24 | Y | - |
-| `AASHTO-LRFD20` | AASHTO-LRFD20 | N | - |
+예시:
+
+| Field | Value | Label | Default | 조건 |
+|---|---|---|---|---|
+| `STRUCT_TYPE` | `0` | 3-D | Y | - |
+| `STRUCT_TYPE` | `1` | X-Z Plane | N | - |
+| `STRUCT_TYPE` | `2` | Y-Z Plane | N | - |
+| `EXP_TYPE` | `0` | Auto | Y | - |
+| `EXP_TYPE` | `2` | User Value | N | `EXP_USER` 입력 필요 |
+
+위 예시에서 `0`, `1`, `2`는 API 요청 body에 들어가는 값이고, `3-D`, `X-Z Plane`, `User Value`는 사용자에게 보여줄 이름이다.
 
 ### 5.5 확장데이터 설계
 
-확장데이터는 API payload 자체가 아니라 schema를 Builder, Manual, transport, table renderer가 해석하기 위한 `x-*` 메타데이터다. 확장데이터가 빠지면 schema는 맞아도 화면 순서, label, wrapper, enum label, 조건부 표시가 틀어질 수 있다.
+확장데이터는 API payload 자체가 아니라 schema를 Builder, Manual, table renderer가 해석하기 위한 `x-*` 메타데이터다. 확장데이터가 빠지면 schema는 맞아도 화면 순서, label, enum label, 조건부 표시가 틀어질 수 있다.
 
-| 확장데이터 | 용도 | 기획자가 결정할 내용 | payload 포함 여부 |
-|---|---|---|---|
-| `x-transport` | 실제 HTTP 요청으로 감쌀 wrapper와 uri/method 정보 | uri, methods, body-root, collection 여부 | 포함 안 됨 |
-| `x-ui` | Builder와 Manual에 표시할 UI 메타데이터 | label, order, 표시용 group/section, hint, component | 포함 안 됨 |
-| `x-enum-labels` | enum value의 표시 label | value별 label, 표시 순서 | 포함 안 됨 |
-| `x-enum-labels-by-type` | `TYPE` 또는 `TABLE_TYPE`별 enum label | 조건값별 label map | 포함 안 됨 |
-| `x-value-constraint` | 표준 JSON Schema로 표현하기 어려운 값 제약 설명 | 제약 조건, 검증 위치, 사용자 메시지 | 포함 안 됨 |
-| `x-exclusive-keys` | 여러 입력 방식 중 하나만 허용 | 상호 배타 field 목록 | 포함 안 됨 |
-| `x-node-count-by-type` | type별 node 개수 같은 제품 규칙 | 기준 field, type별 허용 개수 | 포함 안 됨 |
-| `x-section-header`, `x-section-by-type` | Manual/Builder section 표시 | section 제목, type별 section | 포함 안 됨 |
+아래 표는 현재 schema 데이터에서 실제로 쓰는 `x-*` 메타데이터를 정리한 것이다.
 
-#### `x-transport`
-
-| 항목 | 작성 기준 | 예시 |
-|---|---|---|
-| `uri` | 제품 Endpoint 또는 canonical uri를 기록한다. | `/DESIGN/PSC/AASHTO-LRFD24/MATD` |
-| `methods` | 실제 지원 method만 배열로 기록한다. | `["GET", "POST", "PUT", "DELETE"]` |
-| `body-root` | request wrapper를 기록한다. | `Assign`, `Argument` |
-| collection 여부 | ID key를 쓰는지 기록한다. | `Assign`이면 보통 collection |
-
-```json
-{
-  "x-transport": {
-    "uri": "/DESIGN/PSC/AASHTO-LRFD24/MATD",
-    "methods": ["GET", "POST", "PUT", "DELETE"],
-    "body-root": "Assign"
-  }
-}
-```
+| 확장데이터 | 현재 사용 상태 | 용도 | 기획자가 결정할 내용 | 요청 body 포함 여부 |
+|---|---|---|---|---|
+| `x-ui` | 실제 사용 중 | Builder와 Manual에 표시할 UI 메타데이터 | label, order, 표시용 group/section, hint, component | 포함 안 됨 |
+| `x-enum-labels` | 실제 사용 중 | enum value의 표시 label | value별 label, 표시 순서 | 포함 안 됨 |
+| `x-enum-labels-by-type` | 실제 사용 중 | `TYPE` 또는 `TABLE_TYPE`별 enum label | 조건값별 label map | 포함 안 됨 |
+| `x-required-when` | 실제 사용 중 | 조건을 만족할 때 field를 표시하고 필수로 처리 | 기준 field, 조건 value, 대상 field | 포함 안 됨 |
+| `x-optional-when` | 실제 사용 중 | 조건을 만족할 때 field를 표시하되 선택값으로 처리 | 기준 field, 조건 value, 대상 field | 포함 안 됨 |
 
 #### `x-ui`
 
@@ -456,6 +464,40 @@ DATA1
 | required 중복 금지 | `required: ["Assign"]`처럼 wrapper를 required에 넣지 않는다. |
 | 검증 로직 금지 | `x-ui` 안에 `required`, `minimum`, `maximum` 같은 validation keyword를 넣지 않는다. |
 | label과 key 분리 | key는 payload 기준, label은 사람이 읽는 이름 기준이다. |
+
+#### 조건부 표시/필수
+
+`x-required-when`과 `x-optional-when`은 payload가 아니라 Builder/Manual에서 조건부 표시와 필수 여부를 해석하기 위한 메타데이터다.
+
+| 확장데이터 | 의미 | 사용 기준 |
+|---|---|---|
+| `x-required-when` | 조건을 만족하면 field를 표시하고 필수 입력으로 본다. | 조건 만족 시 값이 없으면 API 사용이 불완전한 경우 |
+| `x-optional-when` | 조건을 만족하면 field를 표시하지만 선택 입력으로 본다. | 조건 만족 시 보여야 하지만 값이 없어도 되는 경우 |
+
+예시:
+
+```json
+{
+  "EXP_USER": {
+    "type": "number",
+    "description": "User-defined exposure value",
+    "x-required-when": { "EXP_TYPE": 2 },
+    "x-ui": {
+      "label": "User Value",
+      "order": 4
+    }
+  }
+}
+```
+
+주의:
+
+| 기준 | 설명 |
+|---|---|
+| 조건 field | 같은 object 안의 실제 field key를 쓴다. `Argument.EXP_TYPE`처럼 wrapper를 붙이지 않는다. |
+| value type | 조건 value는 실제 payload type과 맞춘다. 숫자 enum이면 `2`, string enum이면 `"USER"`를 쓴다. |
+| required와의 관계 | 항상 필수인 field는 JSON Schema `required`에 넣고, 조건부 필수는 `x-required-when`에 적는다. |
+| optional과의 관계 | 조건부로 보이기만 하고 필수가 아니면 `x-optional-when`을 쓴다. |
 
 ### 5.6 Table 기준 정리
 
@@ -494,10 +536,20 @@ Table API는 일반 Settings API와 다르게 `TABLE_TYPE`, `COMPONENTS`, column
 
 | 기준 | 설명 |
 |---|---|
-| value | 영문, 숫자, `-`만 사용한다. 사용자가 키보드로 쉽게 입력할 수 있어야 한다. |
+| value | 영문, 숫자, `-`, `/`만 사용한다. 사용자가 키보드로 쉽게 입력할 수 있어야 한다. |
 | label | 화면 header 원문을 보존한다. 그리스어와 기호는 label에 둔다. |
+| 이중 header | 상위 header와 하위 header를 `/`로 연결한다. |
 | 기존 OpenAPI value | 이미 운영 중인 value가 있으면 기존 value를 우선한다. |
 | Manual | Manual에는 value와 label을 둘 다 보여준다. |
+
+이중 header 예시:
+
+| 상위 Header | 하위 Header | `COMPONENTS` value | Label |
+|---|---|---|---|
+| Force | X | `Force/X` | Force / X |
+| Force | Y | `Force/Y` | Force / Y |
+| Moment | My | `Moment/My` | Moment / My |
+| Stress | σ max | `Stress/Sigma-max` | Stress / σ max |
 
 | Column Order | 화면 Header | `COMPONENTS` value | Label | Default 표시 | 조건 |
 |---:|---|---|---|---|---|
@@ -533,7 +585,7 @@ Manual은 schema를 설명하는 문서가 아니라 사용자가 API를 호출�
 |---|---|---|
 | 제품 기능 검증 | CIVIL NX / GEN NX 화면의 실제 기능과 API 목적이 맞는가 | 화면 기능과 다른 API 범위 |
 | Endpoint 검증 | 실제 제품 경로, Method, resource key가 맞는가 | 화면 이름으로 임의 endpoint 생성 |
-| Transport 검증 | wrapper가 `x-transport.body-root`에만 있는가 | `properties.Assign`과 `x-transport` 중복 |
+| 전송 구조 검증 | wrapper가 schema `properties` 안에 들어가지 않았는가 | `properties.Assign`, `properties.Argument` |
 | Single Entity 검증 | schema가 단일 entity만 정의하는가 | `"1"` ID key를 schema field로 정의 |
 | Required 검증 | required가 실제 field key만 참조하는가 | `required: ["Argument"]` |
 | 조건부 검증 | 조건부 required가 최상위 field 기준인가 | `Argument.TABLE_TYPE` 같은 점 표기 사용 |
