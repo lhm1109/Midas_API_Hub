@@ -6,7 +6,20 @@ const REQUEST_KEY_REGEX = /_REQUEST(_|$)/i;
 const RESPONSE_KEY_REGEX = /_RESPONSE(_|$)/i;
 const REQUEST_MAP_BODY_REGEX = /_REQUEST_MAP_BODY$/i;
 const RESPONSE_MAP_BODY_REGEX = /_RESPONSE_MAP_BODY$/i;
+const REQUEST_ARGUMENT_REGEX = /_ARGUMENT(_|$)/i;
 const RESERVED_WRAPPER_KEYS = new Set(['ASSIGN', 'ARGUMENT', 'MCD']);
+const SCHEMA_KEYWORDS = [
+  'type',
+  'properties',
+  '$ref',
+  'allOf',
+  'oneOf',
+  'anyOf',
+  'items',
+  'required',
+  'additionalProperties',
+  'patternProperties',
+];
 
 const deepClone = (value) => {
   try {
@@ -71,15 +84,46 @@ const pickMapBodyKey = (keys, kind) => {
   const tokenRegex = kind === 'request' ? REQUEST_KEY_REGEX : RESPONSE_KEY_REGEX;
   const mapBodyRegex = kind === 'request' ? REQUEST_MAP_BODY_REGEX : RESPONSE_MAP_BODY_REGEX;
   const tokenCandidates = keys.filter((key) => tokenRegex.test(key));
-  if (tokenCandidates.length === 0) return undefined;
-
   const mapBodyCandidates = tokenCandidates.filter((key) => mapBodyRegex.test(key));
   if (mapBodyCandidates.length === 1) return mapBodyCandidates[0];
   if (tokenCandidates.length === 1) return tokenCandidates[0];
 
+  if (kind === 'request') {
+    const argumentCandidates = keys.filter((key) => REQUEST_ARGUMENT_REGEX.test(key));
+    if (argumentCandidates.length === 1) return argumentCandidates[0];
+    if (argumentCandidates.length > 1) {
+      return [...argumentCandidates].sort((a, b) => a.localeCompare(b))[0];
+    }
+  }
+
+  if (tokenCandidates.length === 0) return undefined;
+
   return [...(mapBodyCandidates.length > 1 ? mapBodyCandidates : tokenCandidates)].sort((a, b) =>
     a.localeCompare(b)
   )[0];
+};
+
+const hasSchemaKeywords = (value) => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  return SCHEMA_KEYWORDS.some((key) => Object.prototype.hasOwnProperty.call(value, key));
+};
+
+const flattenComponentSchemas = (schemas, prefix = '') => {
+  if (!schemas || typeof schemas !== 'object' || Array.isArray(schemas)) return {};
+
+  const flattened = {};
+  for (const [key, value] of Object.entries(schemas)) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+
+    const nextKey = prefix ? `${prefix}/${key}` : key;
+    if (hasSchemaKeywords(value)) {
+      flattened[nextKey] = value;
+      continue;
+    }
+
+    Object.assign(flattened, flattenComponentSchemas(value, nextKey));
+  }
+  return flattened;
 };
 
 const extractComponents = (schema) => {
@@ -93,7 +137,7 @@ const extractComponents = (schema) => {
 
   return {
     schema: baseSchema,
-    components: components && typeof components === 'object' ? deepClone(components) : {},
+    components: components && typeof components === 'object' ? flattenComponentSchemas(components) : {},
   };
 };
 
@@ -348,10 +392,11 @@ const mergeRequestResponseSchemas = (requestSchema, responseSchema, options = {}
 };
 
 const splitCombinedSchema = (sourceSchema) => {
-  const schemas = sourceSchema?.components?.schemas;
-  if (!schemas || typeof schemas !== 'object') {
+  const rawSchemas = sourceSchema?.components?.schemas;
+  if (!rawSchemas || typeof rawSchemas !== 'object') {
     throw new Error('components.schemas not found in source schema');
   }
+  const schemas = flattenComponentSchemas(rawSchemas);
   const keys = Object.keys(schemas);
   const requestKey = pickMapBodyKey(keys, 'request');
   const responseKey = pickMapBodyKey(keys, 'response');
@@ -359,9 +404,10 @@ const splitCombinedSchema = (sourceSchema) => {
   if (!requestKey || !responseKey) {
     throw new Error(
       [
-        'Could not find unique request/response MAP_BODY schema.',
-        'Split expects *_REQUEST_MAP_BODY and *_RESPONSE_MAP_BODY as the top-level wrappers.',
+        'Could not find request/response schemas.',
+        'Split expects *_REQUEST_MAP_BODY, *_ARGUMENT, and *_RESPONSE_MAP_BODY/_RESPONSE schemas.',
         `Found REQUEST MAP_BODY: ${keys.filter((k) => REQUEST_MAP_BODY_REGEX.test(k)).join(', ') || 'none'}`,
+        `Found ARGUMENT: ${keys.filter((k) => REQUEST_ARGUMENT_REGEX.test(k)).join(', ') || 'none'}`,
         `Found RESPONSE MAP_BODY: ${keys.filter((k) => RESPONSE_MAP_BODY_REGEX.test(k)).join(', ') || 'none'}`,
       ].join('\n')
     );
@@ -389,7 +435,7 @@ const toCanonicalComponentsSchema = (schema) => {
   if (components && typeof components === 'object') {
     return {
       components: {
-        schemas: deepClone(components),
+        schemas: flattenComponentSchemas(components),
       },
     };
   }

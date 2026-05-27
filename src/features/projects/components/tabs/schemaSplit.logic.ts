@@ -24,7 +24,20 @@ const REQUEST_KEY_REGEX = /_REQUEST(_|$)/i;
 const RESPONSE_KEY_REGEX = /_RESPONSE(_|$)/i;
 const REQUEST_MAP_BODY_REGEX = /_REQUEST_MAP_BODY$/i;
 const RESPONSE_MAP_BODY_REGEX = /_RESPONSE_MAP_BODY$/i;
+const REQUEST_ARGUMENT_REGEX = /_ARGUMENT(_|$)/i;
 const COMPOSITION_KEYS = ['allOf', 'oneOf', 'anyOf'] as const;
+const SCHEMA_KEYWORDS = [
+  'type',
+  'properties',
+  '$ref',
+  'allOf',
+  'oneOf',
+  'anyOf',
+  'items',
+  'required',
+  'additionalProperties',
+  'patternProperties',
+];
 
 const deepClone = <T,>(value: T): T => {
   try {
@@ -48,9 +61,33 @@ const humanizeToken = (value: string): string => {
 };
 
 const formatRefLabel = (refName: string): string => {
-  const match = refName.match(/^DTO_[A-Z0-9]+_(.+)$/);
-  const token = match?.[1] || refName.replace(/^DTO_/, '');
+  const localName = refName.split('/').pop() || refName;
+  const match = localName.match(/^DTO_[A-Z0-9]+_(.+)$/);
+  const token = match?.[1] || localName.replace(/^DTO_/, '');
   return humanizeToken(token);
+};
+
+const hasSchemaKeywords = (value: any): boolean => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  return SCHEMA_KEYWORDS.some((key) => Object.prototype.hasOwnProperty.call(value, key));
+};
+
+const flattenComponentSchemas = (schemas: any, prefix = ''): Record<string, any> => {
+  if (!schemas || typeof schemas !== 'object' || Array.isArray(schemas)) return {};
+
+  const flattened: Record<string, any> = {};
+  for (const [key, value] of Object.entries(schemas)) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+
+    const nextKey = prefix ? `${prefix}/${key}` : key;
+    if (hasSchemaKeywords(value)) {
+      flattened[nextKey] = value;
+      continue;
+    }
+
+    Object.assign(flattened, flattenComponentSchemas(value, nextKey));
+  }
+  return flattened;
 };
 
 const formatInlineLabel = (
@@ -197,11 +234,19 @@ const pickMapBodyKey = (keys: string[], kind: 'request' | 'response') => {
   const tokenRegex = kind === 'request' ? REQUEST_KEY_REGEX : RESPONSE_KEY_REGEX;
   const mapBodyRegex = kind === 'request' ? REQUEST_MAP_BODY_REGEX : RESPONSE_MAP_BODY_REGEX;
   const tokenCandidates = keys.filter((key) => tokenRegex.test(key));
-  if (tokenCandidates.length === 0) return undefined;
-
   const mapBodyCandidates = tokenCandidates.filter((key) => mapBodyRegex.test(key));
   if (mapBodyCandidates.length === 1) return mapBodyCandidates[0];
   if (tokenCandidates.length === 1) return tokenCandidates[0];
+
+  if (kind === 'request') {
+    const argumentCandidates = keys.filter((key) => REQUEST_ARGUMENT_REGEX.test(key));
+    if (argumentCandidates.length === 1) return argumentCandidates[0];
+    if (argumentCandidates.length > 1) {
+      return [...argumentCandidates].sort((a, b) => a.localeCompare(b))[0];
+    }
+  }
+
+  if (tokenCandidates.length === 0) return undefined;
 
   return [...(mapBodyCandidates.length > 1 ? mapBodyCandidates : tokenCandidates)].sort((a, b) =>
     a.localeCompare(b)
@@ -327,10 +372,12 @@ const buildSlicesForMapBody = (rootKey: string, schemas: Record<string, any>): S
 };
 
 export const computeSplitFromParsed = (parsed: any): SplitResult => {
-  const schemas = parsed?.components?.schemas;
-  if (!schemas || typeof schemas !== 'object') {
+  const rawSchemas = parsed?.components?.schemas;
+  if (!rawSchemas || typeof rawSchemas !== 'object') {
     throw new Error('components.schemas not found. Please provide a schema with components.schemas.');
   }
+
+  const schemas = flattenComponentSchemas(rawSchemas);
 
   const keys = Object.keys(schemas);
   const requestKey = pickMapBodyKey(keys, 'request');
@@ -339,9 +386,10 @@ export const computeSplitFromParsed = (parsed: any): SplitResult => {
   if (!requestKey || !responseKey) {
     throw new Error(
       [
-        'Could not find unique request/response MAP_BODY schema.',
-        'Split tab only targets *_REQUEST_MAP_BODY and *_RESPONSE_MAP_BODY.',
+        'Could not find request/response schemas.',
+        'Split tab targets *_REQUEST_MAP_BODY, *_ARGUMENT, and *_RESPONSE_MAP_BODY/_RESPONSE schemas.',
         `Found REQUEST MAP_BODY: ${keys.filter((key) => REQUEST_MAP_BODY_REGEX.test(key)).join(', ') || 'none'}`,
+        `Found ARGUMENT: ${keys.filter((key) => REQUEST_ARGUMENT_REGEX.test(key)).join(', ') || 'none'}`,
         `Found RESPONSE MAP_BODY: ${keys.filter((key) => RESPONSE_MAP_BODY_REGEX.test(key)).join(', ') || 'none'}`,
       ].join('\n')
     );

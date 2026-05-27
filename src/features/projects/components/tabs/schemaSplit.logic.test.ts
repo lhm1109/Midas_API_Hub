@@ -241,4 +241,65 @@ describe('computeSplitFromParsed', () => {
 
     expect(result.responseSlices.some((slice) => slice.refName === 'DTO_STCT_M1_UI_NORM_ITEM')).toBe(true);
   });
+
+  it('splits namespaced argument and response schemas that share an item ref', () => {
+    const schema = {
+      components: {
+        schemas: {
+          AASHTO_LRFD24: {
+            DTO_LCOM_CONC_ARGUMENT: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['Argument'],
+              properties: {
+                Argument: {
+                  $ref: '#/components/schemas/AASHTO_LRFD24/DTO_LCOM_CONC_ITEM',
+                },
+              },
+            },
+            DTO_LCOM_CONC_RESPONSE: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['LCOM-CONC'],
+              properties: {
+                'LCOM-CONC': {
+                  $ref: '#/components/schemas/AASHTO_LRFD24/DTO_LCOM_CONC_ITEM',
+                },
+              },
+            },
+            DTO_LCOM_CONC_ITEM: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['DGNCODE', 'LOAD_CASE_TYPE'],
+              properties: {
+                DGNCODE: {
+                  type: 'string',
+                  enum: ['AASHTO_LRFD24'],
+                },
+                LOAD_CASE_TYPE: {
+                  type: 'string',
+                  enum: ['ST_ONLY', 'CS_ONLY', 'ST_CS'],
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const result = computeSplitFromParsed(schema);
+
+    expect(result.requestKey).toBe('AASHTO_LRFD24/DTO_LCOM_CONC_ARGUMENT');
+    expect(result.responseKey).toBe('AASHTO_LRFD24/DTO_LCOM_CONC_RESPONSE');
+    expect(collectRefs(result.requestSchema)).toEqual([]);
+    expect(collectRefs(result.responseSchema)).toEqual([]);
+    expect(result.requestSchema.properties.Argument.properties.DGNCODE.enum).toEqual(['AASHTO_LRFD24']);
+    expect(result.responseSchema.properties['LCOM-CONC'].properties.LOAD_CASE_TYPE.enum).toEqual([
+      'ST_ONLY',
+      'CS_ONLY',
+      'ST_CS',
+    ]);
+    expect(result.requestSlices.some((slice) => slice.refName === 'AASHTO_LRFD24/DTO_LCOM_CONC_ITEM')).toBe(true);
+    expect(result.responseSlices.some((slice) => slice.refName === 'AASHTO_LRFD24/DTO_LCOM_CONC_ITEM')).toBe(true);
+  });
 });

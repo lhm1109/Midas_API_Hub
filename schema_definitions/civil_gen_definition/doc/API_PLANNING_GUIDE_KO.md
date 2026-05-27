@@ -181,14 +181,15 @@ Code segment는 의미를 설명하는 이름이 아니라 실제 endpoint에 �
 
 ## 4. API 구조 설계
 
-Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. 대부분의 API는 `Assign collection` 또는 `Argument single` 중 하나다.
+Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. 대부분의 API는 `Assign collection` 또는 `Argument single` 중 하나지만, `STYP`처럼 `Assign` wrapper와 `"1"` key를 쓰면서도 실제로는 한 개 데이터만 지원하는 `Assign fixed single` 유형도 있다.
 
 ### 4.1 API 유형
 
 | API 유형 | 설명 | 주로 쓰는 wrapper | entity type |
 |---|---|---|---|
-| Entity DB | material, section, node, element처럼 ID를 가진 entity 저장 | `Assign` | collection |
-| Settings | 설계 기준, 계산 옵션, code option 같은 설정 | `Assign` 또는 `Argument` 확인 | collection 또는 single |
+| Entity DB | material, section, node, element처럼 여러 ID를 가진 entity 저장 | `Assign` | collection |
+| Settings | 설계 기준, 계산 옵션, code option 같은 설정 | `Assign` 또는 `Argument` 확인 | collection, single, fixed single 확인 |
+| Assign fixed single | `STYP`처럼 `Assign` 아래 숫자 key를 쓰지만 `"1"`만 허용하는 단일 설정 | `Assign` | single, fixed key `"1"` |
 | Table | 결과 table 표시 조건과 column 선택 | `Argument` | single |
 | OPE/OPT | 계산, 실행, export, validate, preview, story calc option 같은 제품 동작/옵션 기능 | `Argument` 우선, 문서 확인 | single 우선 |
 | Document | report/manual/doc 계열 실행 또는 조회 | `Argument` | single |
@@ -216,10 +217,34 @@ Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. �
 | wrapper | `Assign` |
 | entity type | collection |
 | ID key | `"1"`, `"2"` 같은 문자열 key |
-| schema field 범위 | `"1"` 내부의 단일 entity field만 정의 |
+| field 표 범위 | `"1"` 내부의 단일 entity field만 설명 |
 | 기획서에 쓰지 않는 것 | `Assign` 자체를 field 목록에 넣지 않는다. |
 
-### 4.3 Argument single 구조
+### 4.3 Assign fixed single 구조
+
+```json
+{
+  "Assign": {
+    "1": {
+      "STYP": 0,
+      "MASS": 0,
+      "GRAV": 0.0
+    }
+  }
+}
+```
+
+| 항목 | 기준 |
+|---|---|
+| 사용 위치 | `STYP` 같은 프로젝트/설계 설정, resource당 하나만 존재하는 입력 |
+| wrapper | `Assign` |
+| entity type | single, fixed key |
+| ID key | `"1"`만 사용한다. `"2"` 이상 지원 여부는 실제 API 문서, 샘플, 동작으로 확인한다. |
+| field 표 범위 | `"1"` 내부의 단일 설정 object field만 설명 |
+| 기획서에 명시할 것 | `Assign fixed single` 또는 `Assign, fixed key "1" only` |
+| 주의할 점 | `Assign` 아래 숫자 key가 있다고 해서 collection으로 확정하지 않는다. |
+
+### 4.4 Argument single 구조
 
 ```json
 {
@@ -236,17 +261,18 @@ Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. �
 | wrapper | `Argument` |
 | entity type | single |
 | ID key | 없음 |
-| schema field 범위 | `Argument` 내부 field만 정의 |
+| field 표 범위 | `Argument` 내부 field만 설명 |
 | 기획서에 쓰지 않는 것 | `Argument` 자체를 field 목록에 넣지 않는다. |
 
-### 4.4 Endpoint와 transport의 분리
+### 4.5 Endpoint와 transport의 분리
 
 | 구분 | 의미 | 예시 |
 |---|---|---|
 | 제품 Endpoint | 사용자가 보는 실제 API 경로 | `/DESIGN/PSC/AASHTO-LRFD24/MATD` |
 | Method | 실제 HTTP method | `GET`, `POST`, `PUT`, `DELETE` |
 | Body Root | request body wrapper | `Assign` |
-| Schema Field 범위 | wrapper 안의 단일 entity 또는 단일 argument | `"1"` 내부 field |
+| Field 표 범위 | 기획서에서 상세 field로 설명할 대상 | `"1"` 내부 field |
+| JSON Schema 범위 | 실제 request 검증 schema가 포함할 구조 | `Assign`, `"1"` key 패턴, 내부 field |
 
 ## 5. 스키마 작성
 
@@ -254,13 +280,42 @@ Endpoint를 결정한 뒤에는 request body가 어떤 구조인지 정한다. �
 
 ### 5.1 스키마 작성 범위
 
-Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 argument를 정의한다. wrapper와 ID key는 전송 단계에서 처리한다.
+스키마 작성 범위는 산출물별로 다르게 본다. 핵심은 `JSON Schema`에는 API body 전체를 쓰고, `기획 field 표`에는 사용자가 입력하거나 제품이 저장하는 업무 field만 쓴다는 점이다.
 
-| 실제 request | schema에 정의하는 범위 | schema에 넣지 않는 것 |
+#### 범위 구분
+
+| 산출물 | 작성 범위 | 작성하지 않는 것 |
 |---|---|---|
-| `{ "Assign": { "1": { ... } } }` | `"1"` 내부 object | `Assign`, `"1"` |
-| `{ "Argument": { ... } }` | `Argument` 내부 object | `Argument` |
-| `{ "FIELD_A": "value" }` | 최상위 object 전체 | 없음 |
+| JSON Schema 파일 | API가 실제 받는 body 전체 | 없음 |
+| 기획 field 표 | 실제 업무 field와 그 설명 | `Assign`, `Argument`, `"1"` 같은 전송 구조 |
+| Manual request 예제 | 사용자가 그대로 호출할 수 있는 body 전체 | 없음 |
+
+#### 구조별 작성 기준
+
+| API 구조 | JSON Schema 파일에 작성 | 기획 field 표에 작성 |
+|---|---|---|
+| `Assign collection` | `Assign` → 숫자 ID key → entity field | entity field만 |
+| `Assign fixed single` | `Assign` → `"1"` key만 허용 → 설정 field | 설정 field만 |
+| `Argument single` | `Argument` → argument field | argument field만 |
+
+#### 확인 기준
+
+| 확인할 것 | 확인 기준 |
+|---|---|
+| body가 `Assign`으로 시작하는가 | `Assign collection` 또는 `Assign fixed single`로 본다. |
+| `Assign` 아래 ID key가 여러 개 가능한가 | 여러 개 가능하면 collection, `"1"`만 가능하면 fixed single이다. |
+| body가 `Argument`로 시작하는가 | `Argument single`로 본다. |
+| 어떤 field가 필수인가 | `Assign`/`Argument` 안쪽의 실제 업무 field 기준으로 판단한다. |
+| wrapper도 schema에 넣는가 | JSON Schema에는 넣고, 기획 field 표에는 넣지 않는다. |
+
+#### 주의 기준
+
+| 주의할 점 | 기준 |
+|---|---|
+| wrapper 누락 금지 | 실제 request가 `Assign` 또는 `Argument`로 시작하면 JSON Schema에도 포함한다. |
+| wrapper field 오인 금지 | `Assign`, `Argument`, `"1"`은 기획 field 표에서 업무 field로 세지 않는다. |
+| fixed single 확인 | 하나만 받는 API인지, 반드시 `"1"`만 받는 API인지 구분한다. |
+| 필수값 구분 | wrapper가 필요한지와 내부 업무 field가 필요한지는 따로 판단한다. |
 
 ### 5.2 Group/Section 구조 설계
 
@@ -313,8 +368,8 @@ Schema는 실제 request body 전체가 아니라 단일 entity 또는 단일 ar
 
 | 구분 | 기존 key | 쓰는 경우 | 기획 시 확인할 것 | OpenAPI 사용 endpoint 예시 |
 |---|---|---|---|---|
-| Wrapper | `Assign` | ID 기반 entity를 생성/수정/조회하는 body root | schema `properties` 안에 넣지 않고 전송 구조에만 작성 | `/DB/MATD`, `/DB/MATL`, `/DB/NODE` |
-| Wrapper | `Argument` | 실행, 조회, Table, OPE/OPT처럼 단일 인자를 보내는 body root | schema `properties` 안에 넣지 않고 전송 구조에만 작성 | `/POST/TABLE`, `/POST/TEXT`, `/DOC/EXPORT`, `/OPE/AUTOMESH` |
+| Wrapper | `Assign` | ID 기반 entity를 생성/수정/조회하는 body root | 최종 JSON Schema에는 `properties.Assign`으로 포함하고, field 표에는 업무 field로 넣지 않는다. | `/DB/MATD`, `/DB/MATL`, `/DB/NODE` |
+| Wrapper | `Argument` | 실행, 조회, Table, OPE/OPT처럼 단일 인자를 보내는 body root | 최종 JSON Schema에는 `properties.Argument`로 포함하고, field 표에는 업무 field로 넣지 않는다. | `/POST/TABLE`, `/POST/TEXT`, `/DOC/EXPORT`, `/OPE/AUTOMESH` |
 | Entity 공통 | `TYPE` | entity 종류, 입력 방식, 조건 분기 | enum 전체 목록, `TYPE`별 required field | `/DB/MATD`, `/DB/MATL` |
 | Entity 공통 | `NAME` | entity 이름 또는 표시 이름 | 필수 여부, 중복 허용 여부 | `/DB/MATD`, `/DB/MATL` |
 | Entity 공통 | `DATA1`, `DATA2` | 상세 데이터 하위 묶음 | 하위 object 구조, `TYPE`별 구조 차이 | `/DB/MATD`, `/DB/MATD/{id}` |
@@ -460,8 +515,8 @@ DATA1
 
 | 주의 사항 | 기준 |
 |---|---|
-| wrapper 중복 금지 | `Assign` 또는 `Argument`를 schema `properties` 안에 넣지 않는다. |
-| required 중복 금지 | `required: ["Assign"]`처럼 wrapper를 required에 넣지 않는다. |
+| wrapper field 오인 금지 | `Assign` 또는 `Argument`는 전송 root다. 최종 JSON Schema의 `properties`에는 포함하지만, 기획 field 표나 `x-ui` 대상 field로 중복 작성하지 않는다. |
+| required 위치 구분 | full request schema에서는 `required: ["Assign"]` 또는 `required: ["Argument"]`를 사용할 수 있다. 내부 object의 `required`에는 실제 업무 field만 넣는다. |
 | 검증 로직 금지 | `x-ui` 안에 `required`, `minimum`, `maximum` 같은 validation keyword를 넣지 않는다. |
 | label과 key 분리 | key는 payload 기준, label은 사람이 읽는 이름 기준이다. |
 
@@ -585,9 +640,9 @@ Manual은 schema를 설명하는 문서가 아니라 사용자가 API를 호출�
 |---|---|---|
 | 제품 기능 검증 | CIVIL NX / GEN NX 화면의 실제 기능과 API 목적이 맞는가 | 화면 기능과 다른 API 범위 |
 | Endpoint 검증 | 실제 제품 경로, Method, resource key가 맞는가 | 화면 이름으로 임의 endpoint 생성 |
-| 전송 구조 검증 | wrapper가 schema `properties` 안에 들어가지 않았는가 | `properties.Assign`, `properties.Argument` |
-| Single Entity 검증 | schema가 단일 entity만 정의하는가 | `"1"` ID key를 schema field로 정의 |
-| Required 검증 | required가 실제 field key만 참조하는가 | `required: ["Argument"]` |
+| 전송 구조 검증 | wrapper와 ID key 구조가 실제 request와 맞는가 | `Assign` 누락, fixed single인데 `"2"` 같은 key가 통과됨 |
+| Field 범위 검증 | wrapper와 ID key를 업무 field처럼 설명하지 않았는가 | field 표에 `Assign`, `"1"`을 기능 field로 작성 |
+| Required 검증 | request root와 내부 object의 required 위치가 맞는가 | 내부 object required에 `Argument` 작성 |
 | 조건부 검증 | 조건부 required가 최상위 field 기준인가 | `Argument.TABLE_TYPE` 같은 점 표기 사용 |
 | Enum 검증 | enum value 전체가 있는가 | dropdown 현재값 하나만 enum으로 작성 |
 | 확장데이터 검증 | `x-ui`는 UI 정보만 포함하는가 | `x-ui.required`, `x-ui.minimum` |
