@@ -16,6 +16,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { saveSchema, saveSchemaTool, SaveSchemaInput } from './tools/save.js';
 import { parseDialog, parseDialogTool, ParseDialogInput } from './tools/parse-dialog.js';
+import { importZendeskDoc, importZendeskDocTool, ImportZendeskDocInput } from './tools/import-zendesk-doc.js';
 import { allPrompts, getSchemaRulesMessages } from './prompts/schema-rules.js';
 import { allResources, readResource } from './resources/rules.js';
 
@@ -40,7 +41,7 @@ const server = new Server(
 // 도구 목록 반환
 server.setRequestHandler(ListToolsRequestSchema, async () => {
     return {
-        tools: [saveSchemaTool, parseDialogTool],
+        tools: [saveSchemaTool, parseDialogTool, importZendeskDocTool],
     };
 });
 
@@ -65,6 +66,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     if (name === 'parse_dialog') {
         const input = args as unknown as ParseDialogInput;
         const result = await parseDialog(input);
+
+        return {
+            content: [
+                {
+                    type: 'text',
+                    text: JSON.stringify(result, null, 2),
+                },
+            ],
+        };
+    }
+
+    if (name === 'import_zendesk_doc') {
+        const input = args as unknown as ImportZendeskDocInput;
+        const result = await importZendeskDoc(input);
 
         return {
             content: [
@@ -140,7 +155,7 @@ async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
     console.error('MCP API Schema Server v2.0 running on stdio');
-    console.error('  - Tools: save_schema, parse_dialog');
+    console.error('  - Tools: save_schema, parse_dialog, import_zendesk_doc');
     console.error('  - Prompts: schema_rules');
     console.error('  - Resources: shared.yaml, mcp.yaml, ui.yaml, accuracyPolicy.yaml');
 }

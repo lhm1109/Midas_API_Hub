@@ -11,6 +11,18 @@
         "TABLE_TYPE"
       ],
       "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "ELEMS"
+          ]
+        },
+        {
+          "required": [
+            "SECTIONS"
+          ]
+        }
+      ],
       "properties": {
         "TABLE_TYPE": {
           "type": "string",
@@ -26,7 +38,7 @@
         },
         "ELEMS": {
           "type": "object",
-          "description": "Element No. Input. Optional when TABLE_TYPE is MEMB.",
+          "description": "Element No. Input",
           "additionalProperties": false,
           "properties": {
             "KEYS": {
@@ -58,26 +70,81 @@
               }
             }
           },
+          "oneOf": [
+            {
+              "required": [
+                "KEYS"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "TO"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "STRUCTURE_GROUP_NAME"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "required": [
+                "TO"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "KEYS"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "STRUCTURE_GROUP_NAME"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "required": [
+                "STRUCTURE_GROUP_NAME"
+              ],
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "KEYS"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "TO"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
           "x-ui": {
             "label": "Element Numbers",
+            "hint": "Use either ELEMS or SECTIONS, not both.",
             "order": 2
-          },
-          "x-optional-when": {
-            "TABLE_TYPE": "MEMB"
           }
         },
         "SECTIONS": {
           "type": "array",
-          "description": "List of section numbers to include in the table. Optional when TABLE_TYPE is PROP.",
+          "description": "List of section numbers to include in the table",
           "items": {
             "type": "integer"
           },
           "x-ui": {
             "label": "Section Numbers",
+            "hint": "Use either ELEMS or SECTIONS, not both.",
             "order": 2
-          },
-          "x-optional-when": {
-            "TABLE_TYPE": "PROP"
           }
         },
         "PRI_SORT": {
@@ -98,9 +165,6 @@
             "component": "RadioGroup",
             "label": "Primary Sorting Option",
             "order": 2
-          },
-          "x-optional-when": {
-            "TABLE_TYPE": "MEMB"
           }
         },
         "RESULT": {
@@ -210,12 +274,12 @@
               "fy",
               "fys",
               "LCB",
-              "φPn.max",
+              "phiPn.max",
               "Pu",
-              "φPn",
+              "phiPn",
               "Rat-P",
               "Mc",
-              "φMn",
+              "phiMn",
               "Rat-M",
               "Rat-My",
               "Rat-Mz",
@@ -245,13 +309,13 @@
               "fy": "Design Yield Strength of Main Rebars",
               "fys": "Design Yield Strength of Shear Rebars",
               "LCB": "Load Combination for P-M Interaction",
-              "φPn.max": "Maximum Design Axial Strength",
+              "phiPn.max": "Maximum Design Axial Strength",
               "Pu": "Factored Axial Force",
-              "φPn": "Design Axial Strength",
-              "Rat-P": "Axial Strength Ratio (Pu/φPn)",
+              "phiPn": "Design Axial Strength",
+              "Rat-P": "Axial Strength Ratio (Pu/phiPn)",
               "Mc": "Factored Moment",
-              "φMn": "Design Moment Strength",
-              "Rat-M": "Moment Strength Ratio (Mc/φMn)",
+              "phiMn": "Design Moment Strength",
+              "Rat-M": "Moment Strength Ratio (Mc/phiMn)",
               "Rat-My": "Y-axis Moment Strength Ratio",
               "Rat-Mz": "Z-axis Moment Strength Ratio",
               "Mc/Pu": "Eccentricity",
@@ -259,7 +323,7 @@
               "Ast": "Quantity of Main Rebars",
               "V-Rebar": "Vertical Rebar Configuration",
               "Vu": "Maximum Factored Shear Force",
-              "Rat-V": "Shear Strength Ratio (Vu/φVn)",
+              "Rat-V": "Shear Strength Ratio (Vu/phiVn)",
               "As-H": "Reinforcing Steel Area for Shear",
               "H-Rebar": "Shear Rebar Spacing",
               "CHK": "Status of Design Results"
@@ -275,13 +339,13 @@
               "fy": "Design Yield Strength of Main Rebars",
               "fys": "Design Yield Strength of Shear Rebars",
               "LCB": "Load Combination for P-M Interaction",
-              "φPn.max": "Maximum Design Axial Strength",
+              "phiPn.max": "Maximum Design Axial Strength",
               "Pu": "Factored Axial Force (Maximum for Property)",
-              "φPn": "Design Axial Strength",
-              "Rat-P": "Axial Strength Ratio (Pu/φPn, Maximum for Property)",
+              "phiPn": "Design Axial Strength",
+              "Rat-P": "Axial Strength Ratio (Pu/phiPn, Maximum for Property)",
               "Mc": "Factored Moment (Maximum for Property)",
-              "φMn": "Design Moment Strength",
-              "Rat-M": "Moment Strength Ratio (Mc/φMn, Maximum for Property)",
+              "phiMn": "Design Moment Strength",
+              "Rat-M": "Moment Strength Ratio (Mc/phiMn, Maximum for Property)",
               "Rat-My": "Y-axis Moment Strength Ratio",
               "Rat-Mz": "Z-axis Moment Strength Ratio",
               "Mc/Pu": "Eccentricity",
@@ -289,7 +353,7 @@
               "Ast": "Quantity of Main Rebars (Maximum for Property)",
               "V-Rebar": "Vertical Rebar Configuration",
               "Vu": "Maximum Factored Shear Force (Maximum for Property)",
-              "Rat-V": "Shear Strength Ratio (Vu/φVn, Maximum for Property)",
+              "Rat-V": "Shear Strength Ratio (Vu/phiVn, Maximum for Property)",
               "As-H": "Reinforcing Steel Area for Shear (Maximum for Property)",
               "H-Rebar": "Shear Rebar Spacing",
               "CHK": "Status of Design Results"

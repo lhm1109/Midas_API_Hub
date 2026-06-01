@@ -1,0 +1,168 @@
+{
+  "id": "com.batrack.api-schema-agent",
+  "name": "Bat Rack API Schema Agent",
+  "version": "0.1.0",
+  "description": "Sample Nimbalyst-compatible extension for Bat Rack schema and Pydantic workflows.",
+  "main": "index.mjs",
+  "permissions": {
+    "filesystem": true,
+    "ai": true
+  },
+  "contributions": {
+    "aiTools": [
+      "batrack.ping",
+      "batrack.write_artifact"
+    ],
+    "slashCommands": [
+      {
+        "id": "batrack.schema-note",
+        "title": "Schema Note",
+        "description": "Generate a short Bat Rack API schema note from slash command arguments.",
+        "icon": "schema",
+        "keywords": [
+          "api",
+          "schema",
+          "note"
+        ],
+        "handler": "schemaNote"
+      }
+    ],
+    "commands": [
+      {
+        "id": "com.batrack.api-schema-agent.schema-agent.toggle",
+        "title": "Toggle Schema Agent Panel"
+      },
+      {
+        "id": "com.batrack.api-schema-agent.describe-workspace",
+        "title": "Describe Workspace"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+a",
+        "command": "com.batrack.api-schema-agent.schema-agent.toggle"
+      }
+    ],
+    "hostComponents": [
+      "ApiSchemaAgentHostBadge"
+    ],
+    "themes": [
+      {
+        "id": "api-review-dark",
+        "name": "API Review Dark",
+        "isDark": true,
+        "colors": {
+          "bg": "#111318",
+          "bg-secondary": "#191c24",
+          "bg-tertiary": "#232838",
+          "bg-hover": "#2b3144",
+          "text": "#eef2ff",
+          "text-muted": "#aab2c8",
+          "border": "#343b52",
+          "border-focus": "#7c3aed",
+          "primary": "#7c3aed",
+          "primary-hover": "#8b5cf6",
+          "info": "#38bdf8"
+        }
+      }
+    ],
+    "backendModules": [
+      {
+        "id": "schema-indexer",
+        "entry": "backend/schema-indexer.mjs",
+        "runtime": "worker-thread",
+        "permissions": [
+          "workspace-files"
+        ],
+        "enablement": {
+          "default": "disabled",
+          "promptOn": "firstUse",
+          "purpose": "Index schema files in the current workspace for faster API review workflows."
+        }
+      }
+    ],
+    "agentWorkflows": {
+      "path": "workflows",
+      "displayName": "API Schema Workflows",
+      "description": "Sample Claude-compatible commands and skills for API schema work.",
+      "enabledByDefault": true
+    },
+    "claudePlugin": {
+      "path": "claude-plugin",
+      "displayName": "API Schema Claude Plugin",
+      "description": "Sample bundled Claude plugin metadata exposed in the Nimbalyst Agent tab.",
+      "enabledByDefault": false,
+      "commands": [
+        {
+          "name": "schema-review",
+          "description": "Review an API schema for wrapper and table compatibility."
+        }
+      ],
+      "agents": [
+        {
+          "name": "schema-author",
+          "description": "Draft JSON schema changes for Bat Rack endpoints."
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": "schema-agent",
+        "title": "Schema Agent",
+        "icon": "schema",
+        "placement": "fullscreen",
+        "order": 10,
+        "tooltip": "Bat Rack schema and Pydantic workflow panel."
+      }
+    ],
+    "customEditors": [
+      {
+        "filePatterns": [
+          "*.api.md"
+        ],
+        "displayName": "API Note Editor",
+        "component": "ApiNoteEditor",
+        "supportsSourceMode": true,
+        "supportsTranscriptEmbed": true
+      }
+    ],
+    "documentHeaders": [
+      {
+        "id": "api-note-header",
+        "filePatterns": [
+          "*.api.md"
+        ],
+        "displayName": "API Note Header",
+        "component": "ApiNoteHeader",
+        "priority": 60
+      }
+    ],
+    "fileIcons": {
+      "*.api.md": "description",
+      "*.json": "data_object"
+    },
+    "settingsPanel": {
+      "component": "ApiSchemaAgentSettings",
+      "title": "API Schema Agent",
+      "icon": "schema",
+      "order": 80
+    },
+    "newFileMenu": [
+      {
+        "extension": ".api.md",
+        "displayName": "API Note",
+        "icon": "description",
+        "defaultContent": "# API Note\n\n"
+      }
+    ],
+    "configuration": {
+      "properties": {
+        "artifactDir": {
+          "type": "string",
+          "default": ".bat-rack/nimbalyst-extension-output",
+          "description": "Directory where the sample extension writes generated files."
+        }
+      }
+    }
+  }
+}

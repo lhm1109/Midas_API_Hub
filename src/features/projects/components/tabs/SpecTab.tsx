@@ -7,7 +7,7 @@ import { CodeEditor } from '@/components/common';
 import { apiSpecs } from '@/data/apiSpecs';
 import { useAppStore } from '@/store/useAppStore';
 import { apiClient } from '@/lib/api-client';
-import type { ApiGroup, ApiProduct, ManualData, Settings } from '@/types';
+import type { ApiGroup, ApiProduct, ManualData, Settings, SpecData } from '@/types';
 import { toast } from 'sonner';
 import {
   resolveActiveSchema,
@@ -112,6 +112,26 @@ const deepClone = <T,>(value: T): T => {
   } catch {
     return value;
   }
+};
+
+const schemaUsesRefs = (node: any): boolean => {
+  if (!node || typeof node !== 'object') return false;
+  if (Array.isArray(node)) {
+    return node.some(schemaUsesRefs);
+  }
+  if (typeof node.$ref === 'string') {
+    return true;
+  }
+  return Object.values(node).some(schemaUsesRefs);
+};
+
+const preserveSchemaMetadata = (nextSchema: any, baseSchema: any) => {
+  if (!nextSchema || typeof nextSchema !== 'object') return nextSchema;
+  const result = deepClone(nextSchema);
+  if (!result.components && baseSchema?.components && schemaUsesRefs(result)) {
+    result.components = deepClone(baseSchema.components);
+  }
+  return result;
 };
 
 const stableStringify = (value: any): string => {
@@ -2782,18 +2802,6 @@ ${rows}`;
         return;
       }
 
-      const preserveComponents = (nextSchema: any, baseSchema: any) => {
-        if (!nextSchema || typeof nextSchema !== 'object') return nextSchema;
-        const result = deepClone(nextSchema);
-        if (!result.components && baseSchema?.components) {
-          result.components = deepClone(baseSchema.components);
-        }
-        if (!result['x-origin-name'] && baseSchema?.['x-origin-name']) {
-          result['x-origin-name'] = baseSchema['x-origin-name'];
-        }
-        return result;
-      };
-
       const updates: any = {};
       if (schemaView === 'original') {
         updates.jsonSchemaOriginal = JSON.stringify(parsedSchema);
@@ -2806,8 +2814,8 @@ ${rows}`;
         const baseResponse = enhancedBundle.response || {};
         const nextRequestRaw = enhancedSubView === 'request' ? parsedSchema : baseRequest;
         const nextResponseRaw = enhancedSubView === 'response' ? parsedSchema : baseResponse;
-        const nextRequest = preserveComponents(nextRequestRaw, baseRequest);
-        const nextResponse = preserveComponents(nextResponseRaw, baseResponse);
+        const nextRequest = preserveSchemaMetadata(nextRequestRaw, baseRequest);
+        const nextResponse = preserveSchemaMetadata(nextResponseRaw, baseResponse);
         const nextEnhancedBundle: Record<string, any> = {
           request: nextRequest,
           response: nextResponse,
@@ -2820,6 +2828,20 @@ ${rows}`;
       }
 
       console.log('💾 handleSaveSchema - updates:', updates);
+      const currentStoreSpecData = useAppStore.getState().specData;
+      const baseSpecData = currentStoreSpecData || specData || {
+        jsonSchema: '{}',
+        specifications: '',
+      };
+      const normalizedBaseSpecData = {
+        ...baseSpecData,
+        jsonSchema: baseSpecData.jsonSchema ?? '{}',
+        specifications: baseSpecData.specifications ?? '',
+      };
+      const nextSpecData = {
+        ...normalizedBaseSpecData,
+        ...updates,
+      } as SpecData;
 
       // 로컬 상태 업데이트
       updateSpecData(updates);
@@ -2837,7 +2859,7 @@ ${rows}`;
       if (currentVersionId) {
         try {
           console.log('💾 handleSaveSchema - Before saveCurrentVersion, specData:', specData);
-          await saveCurrentVersion();
+          await saveCurrentVersion({ specData: nextSpecData });
           console.log('💾 handleSaveSchema - After saveCurrentVersion, specData:', useAppStore.getState().specData);
           toast.success('✅ Schema saved to server!\n\nThe visual table has been updated with your changes.');
         } catch (error) {
@@ -3102,18 +3124,6 @@ ${rows}`;
 
     try {
       const parsedRequestSchema = JSON.parse(editableSchema);
-      const preserveComponents = (nextSchema: any, baseSchema: any) => {
-        if (!nextSchema || typeof nextSchema !== 'object') return nextSchema;
-        const result = deepClone(nextSchema);
-        if (!result.components && baseSchema?.components) {
-          result.components = deepClone(baseSchema.components);
-        }
-        if (!result['x-origin-name'] && baseSchema?.['x-origin-name']) {
-          result['x-origin-name'] = baseSchema['x-origin-name'];
-        }
-        return result;
-      };
-
       const requestKey = enhancedBundle.requestKey
         || mergeNameHints.requestKey
         || inferMapBodyComponentName(parsedRequestSchema, 'request');
@@ -3127,12 +3137,12 @@ ${rows}`;
         || {};
       const baseResponse = enhancedBundle.response || {};
 
-      const nextRequest = preserveComponents(parsedRequestSchema, baseRequest);
+      const nextRequest = preserveSchemaMetadata(parsedRequestSchema, baseRequest);
       const generatedResponseSchema = buildMirroredResponseSchema(nextRequest, {
         requestKey,
         responseKey,
       });
-      const nextResponse = preserveComponents(generatedResponseSchema, baseResponse);
+      const nextResponse = preserveSchemaMetadata(generatedResponseSchema, baseResponse);
       const hasExistingResponse = isNonEmptySchemaObject(baseResponse);
       const isResponseChanged = !hasExistingResponse
         || stableStringify(baseResponse) !== stableStringify(nextResponse);
@@ -3153,9 +3163,25 @@ ${rows}`;
       if (requestKey) nextEnhancedBundle.requestKey = requestKey;
       if (responseKey) nextEnhancedBundle.responseKey = responseKey;
 
-      updateSpecData({
+      const updates = {
         jsonSchemaEnhanced: JSON.stringify(nextEnhancedBundle),
-      });
+      };
+      const currentStoreSpecData = useAppStore.getState().specData;
+      const baseSpecData = currentStoreSpecData || specData || {
+        jsonSchema: '{}',
+        specifications: '',
+      };
+      const normalizedBaseSpecData = {
+        ...baseSpecData,
+        jsonSchema: baseSpecData.jsonSchema ?? '{}',
+        specifications: baseSpecData.specifications ?? '',
+      };
+      const nextSpecData = {
+        ...normalizedBaseSpecData,
+        ...updates,
+      } as SpecData;
+
+      updateSpecData(updates);
 
       schemaCompileCache.clear();
       setSavedSchema(nextResponse);
@@ -3165,7 +3191,7 @@ ${rows}`;
 
       if (currentVersionId) {
         try {
-          await saveCurrentVersion();
+          await saveCurrentVersion({ specData: nextSpecData });
           toast.success('✅ Response schema generated and saved to server.');
         } catch (error) {
           console.error('Failed to save generated response schema to server:', error);

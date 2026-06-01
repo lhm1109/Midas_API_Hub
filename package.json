@@ -89,12 +89,15 @@
     "react-dnd-html5-backend": "16.0.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "7.55.0",
+    "react-markdown": "^10.1.0",
     "react-popper": "2.3.0",
     "react-resizable-panels": "2.1.7",
     "react-responsive-masonry": "2.7.1",
     "react-slick": "0.31.0",
+    "react-syntax-highlighter": "^16.1.1",
     "reactflow": "^11.11.4",
     "recharts": "2.15.2",
+    "remark-gfm": "^4.0.1",
     "sonner": "2.0.3",
     "tailwind-merge": "3.2.0",
     "tw-animate-css": "1.3.8",
@@ -110,6 +113,7 @@
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "4.7.0",
     "autoprefixer": "^10.4.23",
     "concurrently": "^8.2.2",
@@ -139,6 +143,13 @@
       {
         "from": "server",
         "to": "server",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "generated_pydantic",
+        "to": "generated_pydantic",
         "filter": [
           "**/*"
         ]

@@ -3,7 +3,7 @@ import Editor from '@monaco-editor/react';
 interface CodeEditorProps {
   value: string;
   onChange: (value: string | undefined) => void;
-  language?: 'json' | 'typescript' | 'javascript' | 'html' | 'css' | 'markdown';
+  language?: 'json' | 'typescript' | 'javascript' | 'html' | 'css' | 'markdown' | 'python';
   readOnly?: boolean;
   height?: string;
   minimap?: boolean;

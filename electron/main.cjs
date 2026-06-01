@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
+const fsNative = require('fs');
 const https = require('https');
 const os = require('os');
 const dotenv = require('dotenv');
@@ -33,6 +34,7 @@ const terminals = new Map(); // id -> { pty, logs }
 let terminalIdCounter = 0;
 
 let mainWindow;
+const nimbalystWorkspaceWatchers = new Map();
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -278,6 +280,52 @@ ipcMain.handle('fs:stat', async (event, filePath) => {
   } catch (error) {
     return { success: false, error: error.message };
   }
+});
+
+function shouldEmitNimbalystWorkspaceChange(relativePath) {
+  const normalized = String(relativePath || '').replace(/\\/g, '/');
+  if (!normalized) return false;
+  if (normalized === '.nimbalyst-tracker.json') return true;
+  if (normalized === '.nimbalyst-shared-docs.json') return true;
+  if (normalized.startsWith('.nimbalyst/trackers/')) return /\.(ya?ml)$/i.test(normalized);
+  return /\.(md|mdx)$/i.test(normalized);
+}
+
+function stopNimbalystWorkspaceWatcher(webContentsId) {
+  const watcher = nimbalystWorkspaceWatchers.get(webContentsId);
+  if (watcher) {
+    watcher.close();
+    nimbalystWorkspaceWatchers.delete(webContentsId);
+  }
+}
+
+ipcMain.handle('nimbalyst:watchWorkspace', async (event, workspacePath) => {
+  stopNimbalystWorkspaceWatcher(event.sender.id);
+  if (!workspacePath) {
+    return { success: false, error: 'Workspace path is required.' };
+  }
+
+  try {
+    const watcher = fsNative.watch(workspacePath, { recursive: true }, (eventType, fileName) => {
+      if (!fileName || !shouldEmitNimbalystWorkspaceChange(fileName)) return;
+      if (event.sender.isDestroyed()) return;
+      event.sender.send('nimbalyst:workspace-changed', {
+        workspacePath,
+        eventType,
+        path: String(fileName).replace(/\\/g, '/'),
+      });
+    });
+    nimbalystWorkspaceWatchers.set(event.sender.id, watcher);
+    event.sender.once('destroyed', () => stopNimbalystWorkspaceWatcher(event.sender.id));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('nimbalyst:unwatchWorkspace', async (event) => {
+  stopNimbalystWorkspaceWatcher(event.sender.id);
+  return { success: true };
 });
 
 // Database IPC Handlers

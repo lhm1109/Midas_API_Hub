@@ -14,9 +14,13 @@ import schemaDefinitionsRouter from './routes/schema-definitions.js';
 import managerRouter from './routes/manager.js';
 import databaseRouter from './routes/database.js';
 import schemaToolsRouter from './routes/schema-tools.js';
+import pydanticRouter from './routes/pydantic.js';
+import aiChatRouter from './routes/ai-chat.js';
 import zendeskRouter from './routes/zendesk.js';
 import confluenceRouter from './routes/confluence.js';
 import workspaceRouter from './routes/workspace.js';
+import nimbalystExtensionsRouter from './routes/nimbalyst-extensions.js';
+import nimbalystReferenceRouter from './routes/nimbalyst-reference.js';
 import { syncRoutesToDatabase, printRouteMap } from './routeRegistry.js';
 import { initDb } from './database.js';
 
@@ -47,9 +51,13 @@ app.use('/api/locks', locksRouter);
 app.use('/api/manager', managerRouter);
 app.use('/api/database', databaseRouter);
 app.use('/api/schema-tools', schemaToolsRouter);
+app.use('/api/pydantic', pydanticRouter);
+app.use('/api/ai-chat', aiChatRouter);
 app.use('/api/zendesk', zendeskRouter);
 app.use('/api/confluence', confluenceRouter);
 app.use('/api/workspace', workspaceRouter);
+app.use('/api/nimbalyst', nimbalystExtensionsRouter);
+app.use('/api/nimbalyst', nimbalystReferenceRouter);
 
 // 실제 비즈니스 API (자동 문서화)
 app.use('/api/civil/db', apiRouter);
@@ -103,4 +111,3 @@ async function startServer() {
 startServer();
 
 export default app;
-

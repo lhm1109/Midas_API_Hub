@@ -568,7 +568,7 @@ Table API는 일반 Settings API와 다르게 `TABLE_TYPE`, `COMPONENTS`, column
 | 항목 | 의미 | 작성 기준 |
 |---|---|---|
 | `TABLE_TYPE` | 어떤 결과 table인지 구분하는 값 | 실제 payload value를 쓴다. |
-| `COMPONENTS` | 표시할 column 또는 component 목록 | table header 전체를 enum으로 쓰되, value는 사용자가 입력하기 쉬운 영어/ASCII key로 쓴다. |
+| `COMPONENTS` | 표시할 column 또는 component 목록 | table header 전체를 enum으로 쓰되, value는 제품 table header 표기를 기준으로 한다. 단, 공백은 허용하지 않고 그리스어는 사용자가 입력하기 쉬운 영어 이름으로 변환한다. |
 | Column Header | 화면에 보이는 column 이름 | 순서대로 모두 쓴다. |
 | Default Components | 기본 표시 column | 기본 체크/표시 여부를 쓴다. |
 | `UNIT` | 결과 단위 | FORCE, DIST, STRESS 등 하위 field를 쓴다. |
@@ -577,10 +577,12 @@ Table API는 일반 Settings API와 다르게 `TABLE_TYPE`, `COMPONENTS`, column
 
 #### COMPONENTS value 작성 규칙
 
-`COMPONENTS` value는 API 사용자가 직접 입력할 수 있는 값이다. 화면 header가 그리스어, 수학 기호, 위첨자/아래첨자, 특수문자이면 value에 그대로 쓰지 않고 영어 이름으로 바꾼다. 원래 화면 표기는 `Label`에 남긴다.
+`COMPONENTS` value는 API 사용자가 직접 입력할 수 있는 값이다. 기본 원칙은 제품 table header 표기와 동일하게 가는 것이다. 다만 value에는 공백을 넣지 않는다. 띄어쓰기가 있는 header는 공백을 제거해 UpperCamelCase로 정규화한다. 화면 header가 그리스어이면 사용자의 입력 편의성을 위해 value에는 영어 이름을 쓴다. 원래 화면 표기는 `Label`에 남긴다.
 
 | 화면 Header | 나쁜 `COMPONENTS` value | 좋은 `COMPONENTS` value | Label |
 |---|---|---|---|
+| Wall Mark | `Wall Mark` | `WallMark` | Wall Mark |
+| Bar Layer | `Bar Layer` | `BarLayer` | Bar Layer |
 | θ | `θ` | `Theta` | θ |
 | φ | `φ` | `Phi` | φ |
 | λ | `λ` | `Lambda` | λ |
@@ -591,8 +593,10 @@ Table API는 일반 Settings API와 다르게 `TABLE_TYPE`, `COMPONENTS`, column
 
 | 기준 | 설명 |
 |---|---|
-| value | 영문, 숫자, `-`, `/`만 사용한다. 사용자가 키보드로 쉽게 입력할 수 있어야 한다. |
-| label | 화면 header 원문을 보존한다. 그리스어와 기호는 label에 둔다. |
+| value | 제품 table header 표기를 기준으로 하되 공백은 금지한다. `_`, `-`, `/`, `.`, `(`, `)`, `%`처럼 제품 header에 실제로 쓰인 기호는 유지할 수 있다. |
+| 공백 처리 | 띄어쓰기가 있는 header는 공백을 제거하고 단어 경계를 UpperCamelCase로 표현한다. 예: `Wall Mark` → `WallMark`, `Bar Layer` → `BarLayer`. |
+| 그리스어 처리 | 그리스어 문자는 사용자가 키보드로 입력하기 쉽도록 영어 이름으로 변환한다. 예: `θ` → `Theta`, `φ` → `Phi`, `λ` → `Lambda`, `σ` → `Sigma`. |
+| label | 제품 화면 header 원문을 보존한다. 공백, 그리스어, 기호는 label에 둔다. |
 | 이중 header | 상위 header와 하위 header를 `/`로 연결한다. |
 | 기존 OpenAPI value | 이미 운영 중인 value가 있으면 기존 value를 우선한다. |
 | Manual | Manual에는 value와 label을 둘 다 보여준다. |
@@ -647,7 +651,7 @@ Manual은 schema를 설명하는 문서가 아니라 사용자가 API를 호출�
 | Enum 검증 | enum value 전체가 있는가 | dropdown 현재값 하나만 enum으로 작성 |
 | 확장데이터 검증 | `x-ui`는 UI 정보만 포함하는가 | `x-ui.required`, `x-ui.minimum` |
 | Table 검증 | `TABLE_TYPE`, `COMPONENTS`, column header가 완전한가 | `COMPONENTS` enum 누락 |
-| Table component 검증 | `COMPONENTS` value가 사용자가 입력하기 쉬운 영어/ASCII key인가 | `COMPONENTS: ["θ", "φ"]` |
+| Table component 검증 | `COMPONENTS` value가 제품 header 표기를 기준으로 하며 공백 없이 작성됐는가. 그리스어는 영어 이름으로 변환됐는가 | `COMPONENTS: ["Wall Mark", "θ", "φ"]` |
 | Builder 검증 | label, order, group, condition이 화면에서 맞는가 | 알파벳 순서로 field 표시 |
 | Manual 검증 | Manual 예제가 schema와 일치하는가 | Manual에는 `SHORTTERM`, schema에는 `dSHORTTERM` |
 | API 호출 검증 | 최소/일반 payload가 실제 API에서 의미가 있는가 | schema는 통과하지만 제품이 거부 |

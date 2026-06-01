@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import path from 'path';
 import tailwindcss from '@tailwindcss/vite';
@@ -23,5 +24,12 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
+  test: {
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/release/**',
+      '**/docs/REFERENCE/**',
+    ],
+  },
 });
-

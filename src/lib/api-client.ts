@@ -38,6 +38,223 @@ export interface SchemaRoundtripResponse {
   autoFixedMerged: any | null;
 }
 
+export interface PydanticResponse {
+  code: string;
+  rootClasses: string[];
+  filePath: string;
+  registryPath: string;
+  manifestPath?: string;
+  moduleName: string;
+  productId: string;
+  importPath?: string;
+  saved: boolean;
+}
+
+export interface PydanticValidationResult {
+  status: 'valid' | 'invalid' | 'skipped' | 'missing_model' | 'error';
+  valid: boolean;
+  modelName?: string;
+  message?: string;
+  errors?: any[];
+  payload?: any;
+}
+
+export interface PydanticRunResponse {
+  ok: boolean;
+  stage: 'request_validation' | 'complete';
+  requestValidation: PydanticValidationResult;
+  responseValidation: PydanticValidationResult | null;
+  http: {
+    ok: boolean;
+    status: number;
+    statusText: string;
+    time: number;
+  } | null;
+  responseBody: string;
+  responseIsJson: boolean;
+}
+
+export interface PydanticCodeRunResponse {
+  ok: boolean;
+  exitCode: number | null;
+  signal: string | null;
+  stdout: string;
+  stderr: string;
+  parsedStdout: any;
+  time: number;
+}
+
+export interface NimbalystExtensionSummary {
+  id: string;
+  name: string;
+  version: string;
+  description?: string;
+  extensionPath?: string;
+  main?: string;
+  active: boolean;
+  permissions?: Record<string, unknown>;
+  contributions?: Record<string, unknown>;
+  toolNames?: string[];
+  error?: string;
+}
+
+export interface NimbalystMarketplaceExtensionSummary {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  author: string;
+  categories: string[];
+  tags: string[];
+  icon: string;
+  tagline: string;
+  longDescription: string;
+  highlights: string[];
+  fileTypes: string[];
+  permissions: string[];
+  downloadUrl: string;
+  checksum: string;
+  availableLocal: boolean;
+  installed: boolean;
+  installedVersion: string;
+  installable: boolean;
+  buildable: boolean;
+  requiresBuild: boolean;
+}
+
+export interface NimbalystMarketplaceInstallAllResult {
+  installed: number;
+  failed: number;
+  results: Array<{
+    id: string;
+    name: string;
+    success: boolean;
+    error?: string;
+    extension?: NimbalystExtensionSummary;
+    build?: { skipped: boolean; stdout: string; stderr: string };
+  }>;
+}
+
+export interface NimbalystExtensionToolSummary {
+  name: string;
+  originalName: string;
+  description: string;
+  inputSchema: any;
+  scope: 'global' | 'editor';
+  extensionId: string;
+  extensionName: string;
+}
+
+export interface NimbalystExtensionToolResult {
+  success: boolean;
+  message?: string;
+  data?: unknown;
+  error?: string;
+  extensionId?: string;
+  toolName?: string;
+  stack?: string;
+  errorContext?: Record<string, unknown>;
+}
+
+export interface NimbalystExtensionContributionSummary {
+  type: string;
+  id: string;
+  title: string;
+  description: string;
+  extensionId: string;
+  extensionName: string;
+  main: string;
+  raw: unknown;
+}
+
+export interface NimbalystSlashCommandSummary {
+  id: string;
+  title: string;
+  description: string;
+  icon?: string;
+  keywords: string[];
+  handler: string;
+  executable: boolean;
+  extensionId: string;
+  extensionName: string;
+}
+
+export interface NimbalystCommandSummary {
+  id: string;
+  title: string;
+  executable: boolean;
+  extensionId: string;
+  extensionName: string;
+}
+
+export interface NimbalystConfigurationProperty {
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+  default?: unknown;
+  description?: string;
+  enum?: Array<string | number>;
+  enumDescriptions?: string[];
+  scope?: 'user' | 'workspace' | 'both';
+  order?: number;
+  minimum?: number;
+  maximum?: number;
+  pattern?: string;
+  placeholder?: string;
+}
+
+export interface NimbalystExtensionConfiguration {
+  extensionId: string;
+  extensionName: string;
+  title: string;
+  properties: Record<string, NimbalystConfigurationProperty>;
+  values: Record<string, unknown>;
+}
+
+export interface NimbalystBackendPermissionDescriptor {
+  id: string;
+  label: string;
+  description: string;
+  risk: 'low' | 'elevated' | 'high';
+}
+
+export interface NimbalystBackendModuleIssue {
+  moduleId?: string;
+  message: string;
+  severity?: 'error' | 'warning';
+}
+
+export interface NimbalystBackendModuleSummary {
+  id: string;
+  entry: string;
+  runtime: 'utility-process' | 'worker-thread';
+  permissions: string[];
+  declaredPermissions: string[];
+  enablement: {
+    default: 'disabled';
+    promptOn: 'firstUse';
+    purpose: string;
+  } | null;
+  entryExists: boolean;
+  globalEnabled: boolean;
+  workspaceEnabled: boolean;
+  issues: NimbalystBackendModuleIssue[];
+}
+
+export interface NimbalystExtensionBackendModules {
+  extensionId: string;
+  extensionName: string;
+  workspacePath: string;
+  permissions: NimbalystBackendPermissionDescriptor[];
+  modules: NimbalystBackendModuleSummary[];
+  issues: NimbalystBackendModuleIssue[];
+}
+
+export interface NimbalystBackendModuleExecutionResult {
+  success: boolean;
+  data?: unknown;
+  error?: string;
+  details?: unknown;
+}
+
 class ApiClient {
   private baseUrl: string;
 
@@ -331,6 +548,275 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+  }
+
+  async generatePydantic(payload: {
+    schema: any;
+    endpoint: {
+      id: string;
+      name: string;
+      method?: string;
+      path?: string;
+      productId?: string;
+    };
+  }) {
+    return this.request<PydanticResponse>('/pydantic/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async savePydantic(payload: {
+    schema: any;
+    endpoint: {
+      id: string;
+      name: string;
+      method?: string;
+      path?: string;
+      productId?: string;
+    };
+  }) {
+    return this.request<PydanticResponse>('/pydantic/save', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async runPydantic(payload: {
+    endpoint: {
+      id: string;
+      name: string;
+      method?: string;
+      path?: string;
+      productId?: string;
+    };
+    method: string;
+    url: string;
+    headers: Record<string, string>;
+    requestBody: string;
+  }) {
+    return this.request<PydanticRunResponse>('/pydantic/run', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async executePydanticCode(payload: {
+    code: string;
+    endpoint: {
+      id: string;
+      name: string;
+      method?: string;
+      path?: string;
+      productId?: string;
+    };
+    method: string;
+    url: string;
+    headers: Record<string, string>;
+  }) {
+    return this.request<PydanticCodeRunResponse>('/pydantic/execute', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async listNimbalystExtensions() {
+    return this.request<{ extensions: NimbalystExtensionSummary[] }>('/nimbalyst/extensions');
+  }
+
+  async listNimbalystMarketplaceExtensions() {
+    return this.request<{ extensions: NimbalystMarketplaceExtensionSummary[] }>(
+      '/nimbalyst/marketplace/extensions'
+    );
+  }
+
+  async installNimbalystMarketplaceExtension(id: string) {
+    return this.request<{ extension: NimbalystExtensionSummary }>(
+      `/nimbalyst/marketplace/extensions/${encodeURIComponent(id)}/install`,
+      { method: 'POST' }
+    );
+  }
+
+  async buildNimbalystMarketplaceExtension(id: string) {
+    return this.request<{
+      extension: NimbalystExtensionSummary;
+      build: { skipped: boolean; stdout: string; stderr: string };
+    }>(
+      `/nimbalyst/marketplace/extensions/${encodeURIComponent(id)}/build-install`,
+      { method: 'POST' }
+    );
+  }
+
+  async buildAllNimbalystMarketplaceExtensions() {
+    return this.request<NimbalystMarketplaceInstallAllResult>(
+      '/nimbalyst/marketplace/extensions/build-install-all',
+      { method: 'POST' }
+    );
+  }
+
+  async activateNimbalystExtension(id: string, payload: { workspacePath?: string } = {}) {
+    return this.request<{ extension: NimbalystExtensionSummary }>(
+      `/nimbalyst/extensions/${encodeURIComponent(id)}/activate`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }
+    );
+  }
+
+  async deactivateNimbalystExtension(id: string) {
+    return this.request<{ extension: { id: string; active: false } }>(
+      `/nimbalyst/extensions/${encodeURIComponent(id)}/deactivate`,
+      { method: 'POST' }
+    );
+  }
+
+  async reloadNimbalystExtension(id: string, payload: { workspacePath?: string } = {}) {
+    return this.request<{ extension: NimbalystExtensionSummary }>(
+      `/nimbalyst/extensions/${encodeURIComponent(id)}/reload`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }
+    );
+  }
+
+  async listNimbalystExtensionTools() {
+    return this.request<{ tools: NimbalystExtensionToolSummary[] }>('/nimbalyst/tools');
+  }
+
+  async listNimbalystSlashCommands() {
+    return this.request<{ commands: NimbalystSlashCommandSummary[] }>('/nimbalyst/slash-commands');
+  }
+
+  async listNimbalystCommands() {
+    return this.request<{ commands: NimbalystCommandSummary[] }>('/nimbalyst/commands');
+  }
+
+  async listNimbalystExtensionContributions() {
+    return this.request<{ contributions: NimbalystExtensionContributionSummary[] }>(
+      '/nimbalyst/contributions'
+    );
+  }
+
+  async getNimbalystExtensionConfiguration(id: string) {
+    return this.request<{ configuration: NimbalystExtensionConfiguration }>(
+      `/nimbalyst/extensions/${encodeURIComponent(id)}/configuration`
+    );
+  }
+
+  async updateNimbalystExtensionConfiguration(id: string, values: Record<string, unknown>) {
+    return this.request<{ configuration: NimbalystExtensionConfiguration }>(
+      `/nimbalyst/extensions/${encodeURIComponent(id)}/configuration`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ values }),
+      }
+    );
+  }
+
+  async getNimbalystExtensionBackendModules(id: string, workspacePath?: string) {
+    const query = workspacePath ? `?workspacePath=${encodeURIComponent(workspacePath)}` : '';
+    return this.request<{ backendModules: NimbalystExtensionBackendModules }>(
+      `/nimbalyst/extensions/${encodeURIComponent(id)}/backend-modules${query}`
+    );
+  }
+
+  async setNimbalystExtensionBackendModuleGrant(payload: {
+    extensionId: string;
+    moduleId: string;
+    scope: 'workspace' | 'global';
+    enabled: boolean;
+    workspacePath?: string;
+  }) {
+    return this.request<{ backendModules: NimbalystExtensionBackendModules }>(
+      `/nimbalyst/extensions/${encodeURIComponent(payload.extensionId)}/backend-modules/${encodeURIComponent(payload.moduleId)}/grant`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({
+          scope: payload.scope,
+          enabled: payload.enabled,
+          workspacePath: payload.workspacePath,
+        }),
+      }
+    );
+  }
+
+  async executeNimbalystBackendModule(payload: {
+    extensionId: string;
+    moduleId: string;
+    method: string;
+    params?: Record<string, unknown>;
+    workspacePath?: string;
+  }) {
+    return this.request<NimbalystBackendModuleExecutionResult>(
+      `/nimbalyst/extensions/${encodeURIComponent(payload.extensionId)}/backend-modules/${encodeURIComponent(payload.moduleId)}/execute`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          method: payload.method,
+          params: payload.params || {},
+          workspacePath: payload.workspacePath,
+        }),
+      }
+    );
+  }
+
+  async executeNimbalystCommand(payload: {
+    commandId: string;
+    args?: Record<string, unknown>;
+    workspacePath?: string;
+    activeFilePath?: string;
+  }) {
+    return this.request<NimbalystExtensionToolResult>(
+      `/nimbalyst/commands/${encodeURIComponent(payload.commandId)}/execute`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          args: payload.args || {},
+          workspacePath: payload.workspacePath,
+          activeFilePath: payload.activeFilePath,
+        }),
+      }
+    );
+  }
+
+  async executeNimbalystExtensionTool(payload: {
+    toolName: string;
+    args?: Record<string, unknown>;
+    workspacePath?: string;
+    activeFilePath?: string;
+  }) {
+    return this.request<NimbalystExtensionToolResult>(
+      `/nimbalyst/tools/${encodeURIComponent(payload.toolName)}/execute`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          args: payload.args || {},
+          workspacePath: payload.workspacePath,
+          activeFilePath: payload.activeFilePath,
+        }),
+      }
+    );
+  }
+
+  async executeNimbalystSlashCommand(payload: {
+    commandId: string;
+    args?: string;
+    workspacePath?: string;
+    activeFilePath?: string;
+  }) {
+    return this.request<NimbalystExtensionToolResult>(
+      `/nimbalyst/slash-commands/${encodeURIComponent(payload.commandId)}/execute`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          args: payload.args || '',
+          workspacePath: payload.workspacePath,
+          activeFilePath: payload.activeFilePath,
+        }),
+      }
+    );
   }
 
   // Health check

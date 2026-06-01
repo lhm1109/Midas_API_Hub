@@ -1,0 +1,545 @@
+{
+  "title": "Building Control",
+  "type": "object",
+  "description": "Building Control settings parsed from CBldcDlg and backed by T_BLDC_D.",
+  "required": [
+    "Assign"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Assign": {
+      "type": "object",
+      "description": "Building Control data keyed by ID string. CDB_BLDC stores this setting as singleton key \"1\".",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[0-9]+$": {
+          "title": "Building Control",
+          "type": "object",
+          "description": "Per-key Building Control settings.",
+          "required": [
+            "USE_BASE_LVL",
+            "USE_BDRK_LVL",
+            "BASE_MASS",
+            "STOR_SHEAR",
+            "WIND_SEIS_FLEX",
+            "ECC_RATIO",
+            "CENT_OPT",
+            "TH_RESP",
+            "STOR_CENT_MTHD"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "USE_BASE_LVL": {
+              "type": "boolean",
+              "description": "Use Ground Level option (T_BLDC_D.bUseBaseLevel).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "GROUND",
+                "label": "Use Ground Level",
+                "order": 1
+              }
+            },
+            "BASE_LVL": {
+              "type": "number",
+              "description": "Ground Level in the current base length unit (T_BLDC_D.dBaseLevel).",
+              "x-ui": {
+                "component": "Input",
+                "groupId": "GROUND",
+                "hint": "Uses the current project base length unit.",
+                "label": "Ground Level",
+                "order": 2
+              },
+              "x-required-when": {
+                "USE_BASE_LVL": true
+              },
+              "x-optional-when": {
+                "USE_BASE_LVL": true
+              }
+            },
+            "USE_BDRK_LVL": {
+              "type": "boolean",
+              "description": "Consider Underground Seismic Loads / use bedrock level (T_BLDC_D.bUseBedrockLevel).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "GROUND",
+                "label": "Consider Underground Seismic Loads",
+                "order": 3
+              },
+              "x-optional-when": {
+                "USE_BASE_LVL": true
+              }
+            },
+            "BDRK_LVL": {
+              "type": "number",
+              "description": "Bedrock Level in the current base length unit. Must be lower than BASE_LVL in the product validation (T_BLDC_D.dBedrockLevel).",
+              "x-ui": {
+                "component": "Input",
+                "groupId": "GROUND",
+                "hint": "Uses the current project base length unit. Product validation requires this value to be less than Ground Level.",
+                "label": "Bedrock Level",
+                "order": 4
+              },
+              "x-required-when": {
+                "USE_BDRK_LVL": true
+              },
+              "x-optional-when": {
+                "USE_BDRK_LVL": true
+              }
+            },
+            "BASE_MASS": {
+              "type": "boolean",
+              "description": "Consider mass below the active ground/bedrock reference level for eigenvalue analysis (T_BLDC_D.bBaseMass).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "GROUND",
+                "label": "Consider Mass below Ground Level for Eigenvalue Analysis",
+                "order": 5
+              },
+              "x-optional-when": {
+                "USE_BASE_LVL": true
+              }
+            },
+            "STOR_SHEAR": {
+              "type": "boolean",
+              "description": "Story Shear Force Ratio option (T_BLDC_D.bStorShearRatio).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "LOAD_EFFECTS",
+                "label": "Story Shear Force Ratio",
+                "order": 6
+              }
+            },
+            "WIND_SEIS_FLEX": {
+              "type": "boolean",
+              "description": "Consider Wind and Seismic Loads for Flexible Floors (T_BLDC_D.bConsiderWindSeisForFlex).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "LOAD_EFFECTS",
+                "label": "Consider Wind and Seismic Loads for Flexible Floors",
+                "order": 7
+              }
+            },
+            "ECC_RATIO": {
+              "type": "boolean",
+              "description": "Enable Eccentricity Ratio / Story Center settings (T_BLDC_D.bStoryCenter).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "ECC",
+                "label": "Eccentricity Ratio",
+                "order": 8
+              }
+            },
+            "CENT_OPT": {
+              "type": "integer",
+              "description": "Story Center mass/load option (T_BLDC_D.nUseOption).",
+              "oneOf": [
+                {
+                  "title": "Use Mass",
+                  "const": 0
+                },
+                {
+                  "title": "Use Axial Force",
+                  "const": 1
+                },
+                {
+                  "title": "Use Shear Force",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "ECC",
+                "label": "Story Center (Mass/Load)",
+                "order": 9
+              },
+              "x-required-when": {
+                "ECC_RATIO": true
+              },
+              "x-optional-when": {
+                "ECC_RATIO": true
+              }
+            },
+            "BLDC_CASES": {
+              "type": "array",
+              "description": "Load Case / Scale list for Use Axial Force. Up to 15 items (T_BLDC_D.BldcCase[D_BLDC_NUMBLDC]). Load case keys must be unique in product validation.",
+              "items": {
+                "type": "object",
+                "required": [
+                  "LOAD_CASE_KEY",
+                  "SCALE_FACTOR"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "LOAD_CASE_KEY": {
+                    "type": "integer",
+                    "description": "Static load case key (T_BLDC_BASE.LoadCaseKey).",
+                    "minimum": 1,
+                    "x-ui": {
+                      "component": "Select",
+                      "label": "Load Case",
+                      "order": 1
+                    }
+                  },
+                  "SCALE_FACTOR": {
+                    "type": "number",
+                    "description": "Positive load case scale factor (T_BLDC_BASE.dblFactor).",
+                    "default": 1,
+                    "exclusiveMinimum": 0,
+                    "x-ui": {
+                      "component": "Input",
+                      "label": "Scale",
+                      "order": 2
+                    }
+                  }
+                }
+              },
+              "maxItems": 15,
+              "x-ui": {
+                "component": "Table",
+                "groupId": "ECC",
+                "label": "Load Case Scale Factors",
+                "order": 10
+              },
+              "x-required-when": {
+                "CENT_OPT": 1,
+                "ECC_RATIO": true
+              },
+              "x-optional-when": {
+                "CENT_OPT": 1,
+                "ECC_RATIO": true
+              }
+            },
+            "LC_X": {
+              "type": "integer",
+              "description": "X-direction seismic/static load case key for Use Shear Force (T_BLDC_D.LoadCaseKeyX).",
+              "minimum": 0,
+              "x-ui": {
+                "component": "Select",
+                "groupId": "ECC",
+                "label": "X-Dir. Seismic Load Case",
+                "order": 11
+              },
+              "x-required-when": {
+                "CENT_OPT": 2,
+                "ECC_RATIO": true
+              },
+              "x-optional-when": {
+                "CENT_OPT": 2,
+                "ECC_RATIO": true
+              }
+            },
+            "LC_Y": {
+              "type": "integer",
+              "description": "Y-direction seismic/static load case key for Use Shear Force (T_BLDC_D.LoadCaseKeyY).",
+              "minimum": 0,
+              "x-ui": {
+                "component": "Select",
+                "groupId": "ECC",
+                "label": "Y-Dir. Seismic Load Case",
+                "order": 12
+              },
+              "x-required-when": {
+                "CENT_OPT": 2,
+                "ECC_RATIO": true
+              },
+              "x-optional-when": {
+                "CENT_OPT": 2,
+                "ECC_RATIO": true
+              }
+            },
+            "STIF_LC_X": {
+              "type": "integer",
+              "description": "X-direction load case key for Story Stiffness Center (T_BLDC_D.StsfStldKeyX).",
+              "minimum": 0,
+              "x-ui": {
+                "component": "Select",
+                "groupId": "STIFF",
+                "label": "X-Directional Load Case",
+                "order": 13
+              },
+              "x-required-when": {
+                "ECC_RATIO": true
+              },
+              "x-optional-when": {
+                "ECC_RATIO": true
+              }
+            },
+            "STIF_LC_Y": {
+              "type": "integer",
+              "description": "Y-direction load case key for Story Stiffness Center (T_BLDC_D.StsfStldKeyY).",
+              "minimum": 0,
+              "x-ui": {
+                "component": "Select",
+                "groupId": "STIFF",
+                "label": "Y-Directional Load Case",
+                "order": 14
+              },
+              "x-required-when": {
+                "ECC_RATIO": true
+              },
+              "x-optional-when": {
+                "ECC_RATIO": true
+              }
+            },
+            "TH_RESP": {
+              "type": "boolean",
+              "description": "Story Response of Time History Results (T_BLDC_D.bStorRespThrs).",
+              "x-ui": {
+                "component": "Checkbox",
+                "groupId": "TIME_HISTORY",
+                "label": "Story Response of Time History Results",
+                "order": 15
+              }
+            },
+            "STOR_CENT_MTHD": {
+              "type": "integer",
+              "description": "Story response center method (T_BLDC_D.nStorCenterMethod). Value 2 represents Story Average with Story Drift by Maximum of Vertical Elements selected.",
+              "oneOf": [
+                {
+                  "title": "Story Center",
+                  "const": 0
+                },
+                {
+                  "title": "Story Average",
+                  "const": 1
+                },
+                {
+                  "title": "Story Drift by Maximum of Vertical Elements",
+                  "const": 2
+                }
+              ],
+              "x-ui": {
+                "component": "RadioGroup",
+                "groupId": "TIME_HISTORY",
+                "label": "Story Response Method",
+                "order": 16
+              },
+              "x-required-when": {
+                "TH_RESP": true
+              },
+              "x-optional-when": {
+                "TH_RESP": true
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "USE_BASE_LVL"
+                ],
+                "properties": {
+                  "USE_BASE_LVL": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "BASE_LVL"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "USE_BDRK_LVL"
+                ],
+                "properties": {
+                  "USE_BDRK_LVL": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "BASE_LVL",
+                  "BDRK_LVL"
+                ],
+                "properties": {
+                  "USE_BASE_LVL": {
+                    "const": true
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "ECC_RATIO"
+                ],
+                "properties": {
+                  "ECC_RATIO": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "CENT_OPT",
+                  "STIF_LC_X",
+                  "STIF_LC_Y"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "ECC_RATIO",
+                  "CENT_OPT"
+                ],
+                "properties": {
+                  "ECC_RATIO": {
+                    "const": true
+                  },
+                  "CENT_OPT": {
+                    "const": 1
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "BLDC_CASES"
+                ],
+                "properties": {
+                  "BLDC_CASES": {
+                    "minItems": 1
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "ECC_RATIO",
+                  "CENT_OPT"
+                ],
+                "properties": {
+                  "ECC_RATIO": {
+                    "const": true
+                  },
+                  "CENT_OPT": {
+                    "const": 2
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "LC_X",
+                  "LC_Y"
+                ],
+                "properties": {
+                  "LC_X": {
+                    "minimum": 1
+                  },
+                  "LC_Y": {
+                    "minimum": 1
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "ECC_RATIO"
+                ],
+                "properties": {
+                  "ECC_RATIO": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "STIF_LC_X": {
+                    "minimum": 1
+                  },
+                  "STIF_LC_Y": {
+                    "minimum": 1
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TH_RESP"
+                ],
+                "properties": {
+                  "TH_RESP": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "STOR_CENT_MTHD"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "TH_RESP",
+                  "ECC_RATIO"
+                ],
+                "properties": {
+                  "TH_RESP": {
+                    "const": true
+                  },
+                  "ECC_RATIO": {
+                    "const": false
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "STOR_CENT_MTHD": {
+                    "oneOf": [
+                      {
+                        "title": "Story Average",
+                        "const": 1
+                      },
+                      {
+                        "title": "Story Drift by Maximum of Vertical Elements",
+                        "const": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "x-ui": {
+            "groups": [
+              {
+                "title": "Ground Level",
+                "id": "GROUND"
+              },
+              {
+                "title": "Load Effects",
+                "id": "LOAD_EFFECTS"
+              },
+              {
+                "title": "Story Center (Mass/Load)",
+                "id": "ECC"
+              },
+              {
+                "title": "Story Stiffness Center",
+                "id": "STIFF"
+              },
+              {
+                "title": "Time History Response",
+                "id": "TIME_HISTORY"
+              }
+            ]
+          }
+        }
+      },
+      "x-ui": {
+        "label": "Assign"
+      }
+    }
+  }
+}

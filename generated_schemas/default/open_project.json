@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "description": "Request body wrapper object for Open Project.",
+      "required": [
+        "FILE_PATH"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "FILE_PATH": {
+          "type": "string",
+          "description": "Opened File Path",
+          "x-ui": {
+            "label": "Opened File Path",
+            "order": 1,
+            "placeholder": "C:\\MIDAS\\FSM.mcb"
+          }
+        }
+      }
+    }
+  }
+}

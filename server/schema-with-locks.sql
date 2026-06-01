@@ -94,6 +94,9 @@ CREATE TABLE IF NOT EXISTS spec_data (
   json_schema_original TEXT,
   json_schema_enhanced TEXT,
   specifications TEXT,
+  -- Pydantic 코드 저장 (pydantic-migration.sql 로 컬럼 추가)
+  pydantic_code TEXT,
+  pydantic_generated_at TIMESTAMPTZ,
   FOREIGN KEY (version_id) REFERENCES versions(id) ON DELETE CASCADE
 );
 

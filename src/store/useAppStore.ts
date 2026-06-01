@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import apiClient from '@/lib/api-client';
 import type { Version, ManualData, SpecData, BuilderData, RunnerData, ApiEndpoint } from '@/types';
 
+type VersionSaveOverrides = Partial<Pick<Version, 'manualData' | 'specData' | 'builderData' | 'runnerData'>>;
+
 let latestVersionsRequestId = 0;
 const MANUAL_AUTO_SAVE_DELAY_MS = 800;
 let manualAutoSaveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -24,8 +26,10 @@ function scheduleManualAutoSave(getState: () => AppState) {
   }, MANUAL_AUTO_SAVE_DELAY_MS);
 }
 
+export type ProjectTab = 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split' | 'pydantic';
+
 export interface AppState {
-  currentTab: 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split';
+  currentTab: ProjectTab;
 
   // 🎯 **Version 관리** (최상위)
   versions: Version[];
@@ -54,7 +58,7 @@ export interface AppState {
   endpoint: ApiEndpoint | null; // 현재 선택된 엔드포인트
 
   // Tab actions
-  setCurrentTab: (tab: 'version' | 'manual' | 'spec' | 'builder' | 'runner' | 'split') => void;
+  setCurrentTab: (tab: ProjectTab) => void;
 
   // 🎯 **서버 연결 확인**
   checkServerConnection: () => Promise<boolean>;
@@ -63,7 +67,7 @@ export interface AppState {
   fetchVersions: (endpointId?: string) => Promise<void>;
   createVersion: (endpointId: string, version: string, changeLog?: string) => Promise<void>;
   loadVersion: (id: string) => Promise<void>;
-  saveCurrentVersion: () => Promise<void>;
+  saveCurrentVersion: (overrides?: VersionSaveOverrides) => Promise<void>;
   deleteVersion: (id: string) => Promise<void>;
   resetCurrentVersion: () => void; // 🔥 현재 버전 리셋
   getVersionsByEndpoint: (endpointId: string) => Version[];
@@ -252,7 +256,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   // 🎯 **현재 버전 저장** (서버에 업데이트)
-  saveCurrentVersion: async () => {
+  saveCurrentVersion: async (overrides = {}) => {
     const state = get();
     const currentVersionId = state.currentVersionId;
     if (!currentVersionId) {
@@ -277,10 +281,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     const updatedVersion: Version = {
       ...version,
       updatedAt: new Date().toISOString(),
-      manualData: state.manualData ?? version.manualData,
-      specData: state.specData ?? version.specData,
-      builderData: state.builderData ?? version.builderData,
-      runnerData: state.runnerData ?? version.runnerData,
+      manualData: overrides.manualData ?? state.manualData ?? version.manualData,
+      specData: overrides.specData ?? state.specData ?? version.specData,
+      builderData: overrides.builderData ?? state.builderData ?? version.builderData,
+      runnerData: overrides.runnerData ?? state.runnerData ?? version.runnerData,
     };
 
     console.log('📤 Sending updated version to server:', updatedVersion);
@@ -302,10 +306,10 @@ export const useAppStore = create<AppState>((set, get) => ({
         ),
         hasUnsavedChanges: false,
         // 🔥 중요: 저장 후에도 현재 편집 중인 데이터 유지
-        specData: state.specData,
-        manualData: state.manualData,
-        builderData: state.builderData,
-        runnerData: state.runnerData,
+        specData: overrides.specData ?? state.specData,
+        manualData: overrides.manualData ?? state.manualData,
+        builderData: overrides.builderData ?? state.builderData,
+        runnerData: overrides.runnerData ?? state.runnerData,
       }));
 
       console.log('✅ Version saved successfully, specData preserved:', get().specData);

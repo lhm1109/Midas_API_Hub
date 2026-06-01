@@ -1,383 +1,487 @@
 {
-  "components": {
-    "schemas": {
-      "AASHTO_LRFD24": {
-        "DTO_LCOM_CONC_ARGUMENT": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "Argument"
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "x-ui": {
+        "label": "Argument"
+      },
+      "additionalProperties": false,
+      "required": [
+        "DGNCODE",
+        "ADD_ENVELOPE",
+        "LOAD_CASE_TYPE",
+        "GAMMA_P",
+        "SEISMIC_LOAD_COMB",
+        "SETTLEMENT_FACTOR",
+        "STRUCTURAL_PLATE_BOX",
+        "LIVE_LOAD_FACTOR_SERVICE",
+        "TEMP_CONDITION"
+      ],
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "description": "Design Code",
+          "enum": [
+            "AASHTO-LRFD24"
           ],
-          "properties": {
-            "Argument": {
-              "$ref": "#/components/schemas/AASHTO_LRFD24/DTO_LCOM_CONC_ITEM"
-            }
+          "default": "AASHTO-LRFD24",
+          "x-ui": {
+            "label": "Design Code"
           }
         },
-        "DTO_LCOM_CONC_RESPONSE": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "LCOM-CONC"
-          ],
-          "properties": {
-            "LCOM-CONC": {
-              "$ref": "#/components/schemas/AASHTO_LRFD24/DTO_LCOM_CONC_ITEM"
-            }
+        "ADD_ENVELOPE": {
+          "type": "boolean",
+          "description": "Add envelope load combination",
+          "default": true,
+          "x-ui": {
+            "label": "Add Envelope"
           }
         },
-        "DTO_LCOM_CONC_ITEM": {
+        "LOAD_CASE_TYPE": {
+          "type": "string",
+          "description": "Load case type to use for auto-generated combinations",
+          "enum": [
+            "ST",
+            "CS",
+            "ST_CS"
+          ],
+          "default": "ST_CS",
+          "x-ui": {
+            "label": "Load Case Type"
+          }
+        },
+        "ETA_FACTOR": {
+          "type": "number",
+          "description": "Eta factor",
+          "default": 1,
+          "x-ui": {
+            "label": "Eta Factor"
+          }
+        },
+        "GAMMA_P": {
           "type": "object",
+          "description": "Permanent load factor options",
+          "x-ui": {
+            "label": "Gamma P"
+          },
           "additionalProperties": false,
           "required": [
-            "DGNCODE",
-            "LOAD_CASE_TYPE",
-            "GAMMA_P",
-            "SEISMIC_LOAD_COMB",
-            "SETTLEMENT_FACTOR",
-            "STRUCTURAL_PLATE_BOX",
-            "LIVE_LOAD_FACTOR_SERVICE",
-            "TEMP_CONDITION"
           ],
           "properties": {
-            "DGNCODE": {
-              "type": "string",
-              "enum": [
-                "AASHTO_LRFD24"
-              ]
-            },
-            "LOAD_CASE_TYPE": {
-              "type": "string",
-              "enum": [
-                "ST",
-                "CS",
-                "ST_CS"
-              ],
-              "default": "ST_CS"
-            },
-            "ETA_FACTOR": {
-              "type": "number",
-              "default": 1
-            },
-            "GAMMA_P": {
+            "COMPONENT_ATTACHMENTS": {
               "type": "object",
+              "x-ui": {
+                "label": "Component Attachments"
+              },
               "additionalProperties": false,
               "required": [
-                "COMPONENT_ATTACHMENTS",
-                "DOWNDRAG",
-                "WEARING_SURFACES_UTILITIES",
-                "HORIZONTAL_EARTH_PRESSURE",
-                "VERTICAL_EARTH_PRESSURE",
-                "SUPERIMPOSED_DEFORM"
+                "FACTOR_TYPE"
               ],
               "properties": {
-                "COMPONENT_ATTACHMENTS": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "FACTOR_TYPE"
+                "FACTOR_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "MAX",
+                    "MIN",
+                    "BOTH"
                   ],
-                  "properties": {
-                    "FACTOR_TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "MAX",
-                        "MIN",
-                        "BOTH"
-                      ],
-                      "default": "MAX"
-                    }
-                  }
-                },
-                "DOWNDRAG": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "TYPE",
-                    "FACTOR_TYPE"
-                  ],
-                  "properties": {
-                    "TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "PILES_ALPHA_TOMLINSON",
-                        "PILES_GAMMA",
-                        "DRILLED_SHAFT_ONEILL_REESE_2010"
-                      ],
-                      "default": "PILES_ALPHA_TOMLINSON"
-                    },
-                    "FACTOR_TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "MAX",
-                        "MIN",
-                        "BOTH"
-                      ],
-                      "default": "MAX"
-                    }
-                  }
-                },
-                "WEARING_SURFACES_UTILITIES": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "FACTOR_TYPE"
-                  ],
-                  "properties": {
-                    "FACTOR_TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "MAX",
-                        "MIN",
-                        "BOTH"
-                      ],
-                      "default": "MAX"
-                    }
-                  }
-                },
-                "HORIZONTAL_EARTH_PRESSURE": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "TYPE",
-                    "FACTOR_TYPE"
-                  ],
-                  "properties": {
-                    "TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "ACTIVE",
-                        "AT_REST",
-                        "AEP_ANCHORED_WALLS"
-                      ],
-                      "default": "ACTIVE"
-                    },
-                    "FACTOR_TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "MAX",
-                        "MIN",
-                        "BOTH"
-                      ],
-                      "default": "MAX"
-                    }
-                  }
-                },
-                "VERTICAL_EARTH_PRESSURE": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "TYPE"
-                  ],
-                  "properties": {
-                    "TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "OVERALL_STABILITY",
-                        "RETAINING_WALLS_ABUTMENTS",
-                        "RIGID_BURIED_STRUCTURE",
-                        "RIGID_FRAMES"
-                      ],
-                      "default": "OVERALL_STABILITY"
-                    },
-                    "FACTOR_TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "MAX",
-                        "MIN",
-                        "BOTH"
-                      ],
-                      "default": "MAX"
-                    }
-                  },
-                  "allOf": [
-                    {
-                      "if": {
-                        "properties": {
-                          "TYPE": {
-                            "enum": [
-                              "RETAINING_WALLS_ABUTMENTS",
-                              "RIGID_BURIED_STRUCTURE",
-                              "RIGID_FRAMES"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "TYPE"
-                        ]
-                      },
-                      "then": {
-                        "required": [
-                          "FACTOR_TYPE"
-                        ]
-                      }
-                    },
-                    {
-                      "if": {
-                        "properties": {
-                          "TYPE": {
-                            "const": "OVERALL_STABILITY"
-                          }
-                        },
-                        "required": [
-                          "TYPE"
-                        ]
-                      },
-                      "then": {
-                        "not": {
-                          "required": [
-                            "FACTOR_TYPE"
-                          ]
-                        }
-                      }
-                    }
-                  ]
-                },
-                "SUPERIMPOSED_DEFORM": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "TYPE"
-                  ],
-                  "properties": {
-                    "TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "A",
-                        "B"
-                      ],
-                      "default": "A"
-                    }
+                  "default": "MAX",
+                  "x-ui": {
+                    "label": "Factor Type"
                   }
                 }
               }
             },
-            "SEISMIC_LOAD_COMB": {
+            "DOWNDRAG": {
               "type": "object",
+              "x-ui": {
+                "label": "Downdrag"
+              },
               "additionalProperties": false,
               "required": [
-                "OPT_USE"
+                "TYPE",
+                "FACTOR_TYPE"
               ],
               "properties": {
-                "OPT_USE": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "LIVE_LOAD": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                      "LOAD_CASE",
-                      "FACTOR"
-                    ],
-                    "properties": {
-                      "LOAD_CASE": {
-                        "type": "string"
-                      },
-                      "FACTOR": {
-                        "type": "number",
-                        "default": 0.5
-                      }
-                    }
-                  },
-                  "default": []
-                },
-                "ORTHO_EFFECT": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": [
-                    "OPT_USE"
+                "TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "PILES_ALPHA_TOMLINSON",
+                    "PILES_GAMMA",
+                    "DRILLED_SHAFT_ONEILL_REESE_2010"
                   ],
-                  "properties": {
-                    "OPT_USE": {
-                      "type": "boolean",
-                      "default": false
-                    },
-                    "TYPE": {
-                      "type": "string",
-                      "enum": [
-                        "COMB_ONLY",
-                        "LOAD_CASE_ONLY",
-                        "COMB_AND_LOAD_CASE"
-                      ],
-                      "default": "COMB_ONLY"
-                    },
-                    "LONG": {
-                      "type": "string"
-                    },
-                    "TRANS": {
-                      "type": "string"
-                    },
-                    "VER": {
-                      "type": "string"
-                    }
-                  },
-                  "allOf": [
-                    {
-                      "if": {
-                        "properties": {
-                          "OPT_USE": {
-                            "const": true
-                          }
-                        },
-                        "required": [
-                          "OPT_USE"
-                        ]
-                      },
-                      "then": {
-                        "required": [
-                          "TYPE",
-                          "LONG",
-                          "TRANS"
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              "allOf": [
-                {
-                  "if": {
-                    "properties": {
-                      "OPT_USE": {
-                        "const": true
-                      }
-                    },
-                    "required": [
-                      "OPT_USE"
-                    ]
-                  },
-                  "then": {
-                    "required": [
-                      "LIVE_LOAD",
-                      "ORTHO_EFFECT"
-                    ]
+                  "default": "PILES_ALPHA_TOMLINSON",
+                  "x-ui": {
+                    "label": "Type"
+                  }
+                },
+                "FACTOR_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "MAX",
+                    "MIN",
+                    "BOTH"
+                  ],
+                  "default": "MAX",
+                  "x-ui": {
+                    "label": "Factor Type"
                   }
                 }
-              ]
+              }
             },
-            "SETTLEMENT_FACTOR": {
-              "type": "number",
-              "default": 1
-            },
-            "STRUCTURAL_PLATE_BOX": {
-              "type": "boolean",
-              "default": false
-            },
-            "LIVE_LOAD_FACTOR_SERVICE": {
-              "type": "number",
-              "default": 0.8
-            },
-            "TEMP_CONDITION": {
-              "type": "string",
-              "enum": [
-                "DEFORMATION_CHECK",
-                "ALL_OTHER"
+            "WEARING_SURFACES_UTILITIES": {
+              "type": "object",
+              "x-ui": {
+                "label": "Wearing Surfaces Utilities"
+              },
+              "additionalProperties": false,
+              "required": [
+                "FACTOR_TYPE"
               ],
-              "default": "ALL_OTHER"
+              "properties": {
+                "FACTOR_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "MAX",
+                    "MIN",
+                    "BOTH"
+                  ],
+                  "default": "MAX",
+                  "x-ui": {
+                    "label": "Factor Type"
+                  }
+                }
+              }
+            },
+            "HORIZONTAL_EARTH_PRESSURE": {
+              "type": "object",
+              "x-ui": {
+                "label": "Horizontal Earth Pressure"
+              },
+              "additionalProperties": false,
+              "required": [
+                "TYPE"
+              ],
+              "properties": {
+                "TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "ACTIVE",
+                    "AT_REST",
+                    "AEP_ANCHORED_WALLS"
+                  ],
+                  "default": "ACTIVE",
+                  "x-ui": {
+                    "label": "Type"
+                  }
+                },
+                "FACTOR_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "MAX",
+                    "MIN",
+                    "BOTH"
+                  ],
+                  "default": "MAX",
+                  "x-optional-when": [
+                    {
+                      "condition": {
+                        "TYPE": "ACTIVE"
+                      },
+                      "hint": "Shown for Active horizontal earth pressure."
+                    },
+                    {
+                      "condition": {
+                        "TYPE": "AT_REST"
+                      },
+                      "hint": "Shown for At-Rest horizontal earth pressure."
+                    }
+                  ],
+                  "x-ui": {
+                    "label": "Factor Type"
+                  }
+                }
+              }
+            },
+            "VERTICAL_EARTH_PRESSURE": {
+              "type": "object",
+              "x-ui": {
+                "label": "Vertical Earth Pressure"
+              },
+              "additionalProperties": false,
+              "required": [
+                "TYPE"
+              ],
+              "properties": {
+                "TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "OVERALL_STABILITY",
+                    "RETAINING_WALLS_ABUTMENTS",
+                    "RIGID_BURIED_STRUCTURE",
+                    "RIGID_FRAMES",
+                    "METAL_BOX_CULVERTS_STRUCTURAL_CULVERTS_DEEP_CORRUGATIONS",
+                    "THERMOPLASTIC_CULVERTS",
+                    "ALL_OTHERS"
+                  ],
+                  "default": "OVERALL_STABILITY",
+                  "x-ui": {
+                    "label": "Type"
+                  }
+                },
+                "FACTOR_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "MAX",
+                    "MIN",
+                    "BOTH"
+                  ],
+                  "default": "MAX",
+                  "x-optional-when": [
+                    {
+                      "condition": {
+                        "TYPE": "RETAINING_WALLS_ABUTMENTS"
+                      },
+                      "hint": "Shown for Retaining Walls, Abutments."
+                    },
+                    {
+                      "condition": {
+                        "TYPE": "RIGID_BURIED_STRUCTURE"
+                      },
+                      "hint": "Shown for Rigid Buried Structure."
+                    },
+                    {
+                      "condition": {
+                        "TYPE": "RIGID_FRAMES"
+                      },
+                      "hint": "Shown for Rigid Frames."
+                    },
+                    {
+                      "condition": {
+                        "TYPE": "METAL_BOX_CULVERTS_STRUCTURAL_CULVERTS_DEEP_CORRUGATIONS"
+                      },
+                      "hint": "Shown for Metal Box Culverts and Structural Culverts with Deep Corrugations."
+                    },
+                    {
+                      "condition": {
+                        "TYPE": "THERMOPLASTIC_CULVERTS"
+                      },
+                      "hint": "Shown for Thermoplastic culverts."
+                    },
+                    {
+                      "condition": {
+                        "TYPE": "ALL_OTHERS"
+                      },
+                      "hint": "Shown for All others."
+                    }
+                  ],
+                  "x-ui": {
+                    "label": "Factor Type"
+                  }
+                }
+              }
+            },
+            "EARTH_SURCHARGE": {
+              "type": "object",
+              "x-ui": {
+                "label": "Earth Surcharge"
+              },
+              "additionalProperties": false,
+              "required": [
+                "FACTOR_TYPE"
+              ],
+              "properties": {
+                "FACTOR_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "MAX",
+                    "MIN",
+                    "BOTH"
+                  ],
+                  "default": "MAX",
+                  "x-ui": {
+                    "label": "Factor Type"
+                  }
+                }
+              }
+            },
+            "BRIDGE_COMPONENT_TYPE": {
+              "type": "object",
+              "x-ui": {
+                "label": "Bridge Component Type"
+              },
+              "additionalProperties": false,
+              "required": [
+                "TYPE"
+              ],
+              "properties": {
+                "TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E"
+                  ],
+                  "default": "A",
+                  "x-ui": {
+                    "label": "Type"
+                  }
+                }
+              }
             }
+          }
+        },
+        "SEISMIC_LOAD_COMB": {
+          "type": "object",
+          "description": "Seismic load combination options",
+          "x-ui": {
+            "label": "Seismic Load Combination"
+          },
+          "additionalProperties": false,
+          "properties": {
+            "SEISMIC_OPTION": {
+              "type": "boolean",
+              "default": true,
+              "x-ui": {
+                "label": "Seismic Load Combination Option"
+              }
+            },
+            "LIVE_LOAD": {
+              "type": "array",
+              "x-ui": {
+                "label": "Live Load"
+              },
+              "x-required-when": {
+                "SEISMIC_OPTION": true
+              },
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LOAD_CASE",
+                  "FACTOR"
+                ],
+                "properties": {
+                  "LOAD_CASE": {
+                    "type": "string",
+                    "x-ui": {
+                      "label": "Load Case"
+                    }
+                  },
+                  "FACTOR": {
+                    "type": "number",
+                    "default": 0.5,
+                    "x-ui": {
+                      "label": "Factor"
+                    }
+                  }
+                }
+              },
+              "default": []
+            },
+            "ORTHO_EFFECT": {
+              "type": "object",
+              "x-ui": {
+                "label": "Orthogonal Effect"
+              },
+              "x-required-when": {
+                "SEISMIC_OPTION": true
+              },
+              "additionalProperties": false,
+              "required": [
+                "ORTHO_EFFECT_OPTION"
+              ],
+              "properties": {
+                "ORTHO_EFFECT_OPTION": {
+                  "type": "boolean",
+                  "default": false,
+                  "x-ui": {
+                    "label": "Enable Orthogonal Effect"
+                  }
+                },
+                "TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "COMB_ONLY",
+                    "LOAD_CASE_ONLY",
+                    "COMB_AND_LOAD_CASE"
+                  ],
+                  "default": "COMB_ONLY",
+                  "x-required-when": {
+                    "ORTHO_EFFECT_OPTION": true
+                  },
+                  "x-ui": {
+                    "label": "Type"
+                  }
+                },
+                "LONG": {
+                  "type": "string",
+                  "x-required-when": {
+                    "ORTHO_EFFECT_OPTION": true
+                  },
+                  "x-ui": {
+                    "label": "Longitudinal"
+                  }
+                },
+                "TRANS": {
+                  "type": "string",
+                  "x-required-when": {
+                    "ORTHO_EFFECT_OPTION": true
+                  },
+                  "x-ui": {
+                    "label": "Transverse"
+                  }
+                },
+                "VER": {
+                  "type": "string",
+                  "x-optional-when": {
+                    "ORTHO_EFFECT_OPTION": true
+                  },
+                  "x-ui": {
+                    "label": "Vertical"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SETTLEMENT_FACTOR": {
+          "type": "number",
+          "default": 1,
+          "x-ui": {
+            "label": "Settlement Factor"
+          }
+        },
+        "STRUCTURAL_PLATE_BOX": {
+          "type": "boolean",
+          "default": false,
+          "x-ui": {
+            "label": "Structural Plate Box"
+          }
+        },
+        "LIVE_LOAD_FACTOR_SERVICE": {
+          "type": "number",
+          "default": 0.8,
+          "x-ui": {
+            "label": "Live Load Factor for Service"
+          }
+        },
+        "TEMP_CONDITION": {
+          "type": "string",
+          "enum": [
+            "DEFORMATION_CHECK",
+            "ALL_OTHER"
+          ],
+          "default": "ALL_OTHER",
+          "x-ui": {
+            "label": "Temperature Condition"
           }
         }
       }

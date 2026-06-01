@@ -1,0 +1,2 @@
+export { NimbalystWorkspaceView } from './NimbalystWorkspaceView';
+

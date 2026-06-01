@@ -12,6 +12,7 @@ import { ManagerView } from '@/features/manager/components';
 import { useManagerData } from '@/features/manager/hooks/useManagerData';
 import { TerminalTab } from '@/components/terminal';
 import { DatabaseTab } from '@/features/database/DatabaseTab';
+import { NimbalystWorkspaceView } from '@/features/nimbalyst';
 import { useAppStore } from '@/store/useAppStore';
 import { useEndpoints } from '@/hooks';
 import type { ApiEndpoint, Settings } from '@/types';
@@ -29,8 +30,8 @@ export default function App() {
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
   const { tasks: managerTasks } = useManagerData();  // Manager 작업 데이터
   const [activeView, setActiveView] = useState<
-    'terminal' | 'manager' | 'projects' | 'manualHub' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'
-  >('manager');
+    'ai' | 'terminal' | 'manager' | 'projects' | 'manualHub' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'
+  >('ai');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
   const [panelWidth, setPanelWidth] = useState(256); // 기본 너비 256px (w-64)
@@ -375,7 +376,9 @@ export default function App() {
       )}
 
       {/* 3. Main Content Area */}
-      {activeView === 'terminal' ? (
+      {activeView === 'ai' ? (
+        <NimbalystWorkspaceView />
+      ) : activeView === 'terminal' ? (
         <TerminalTab />
       ) : activeView === 'manager' ? (
         <ManagerView

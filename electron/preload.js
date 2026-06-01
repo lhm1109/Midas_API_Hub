@@ -16,6 +16,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readDirectory: (dirPath) => ipcRenderer.invoke('fs:readDirectory', dirPath),
   exists: (filePath) => ipcRenderer.invoke('fs:exists', filePath),
   stat: (filePath) => ipcRenderer.invoke('fs:stat', filePath),
+  watchNimbalystWorkspace: (workspacePath) => ipcRenderer.invoke('nimbalyst:watchWorkspace', workspacePath),
+  unwatchNimbalystWorkspace: () => ipcRenderer.invoke('nimbalyst:unwatchWorkspace'),
+  onNimbalystWorkspaceChanged: (callback) => {
+    const listener = (event, payload) => callback(payload);
+    ipcRenderer.on('nimbalyst:workspace-changed', listener);
+    return () => ipcRenderer.removeListener('nimbalyst:workspace-changed', listener);
+  },
 
   // Zendesk API operations
   zendesk: {

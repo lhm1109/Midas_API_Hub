@@ -1,0 +1,483 @@
+{
+  "caption": "Building Control",
+  "conditionals": [
+    {
+      "action": "hide",
+      "controlId": "IDC_CMD_STOR_MAX_VERT_ELEM_CHK",
+      "triggerVariable": "__unknown__",
+      "variable": "m_bStorDriftByMaxVertElem"
+    },
+    {
+      "action": "enable",
+      "condition": "m_bResponse && m_bStoryCenter",
+      "controlId": "IDC_CMD_STOR_CENTER_RDO",
+      "triggerVariable": "m_bResponse",
+      "variable": "m_nStorCenterMethod"
+    },
+    {
+      "action": "enable",
+      "condition": "m_bResponse",
+      "controlId": "IDC_CMD_STOR_AVERAGE_RDO",
+      "triggerVariable": "m_bResponse"
+    },
+    {
+      "action": "enable",
+      "condition": "m_bResponse && m_nStorCenterMethod==1",
+      "controlId": "IDC_CMD_STOR_MAX_VERT_ELEM_CHK",
+      "triggerVariable": "m_bResponse",
+      "variable": "m_bStorDriftByMaxVertElem"
+    }
+  ],
+  "controls": [
+    {
+      "type": "CHECKBOX",
+      "caption": "Use Ground Level",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_BLDC_USE_FLAG",
+      "inferredType": "object",
+      "variable": "m_wndUseFlag",
+      "w": 214,
+      "x": 0,
+      "y": 4
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Ground Level  ",
+      "h": 12,
+      "id": "IDC_WG_CMD_STATIC0",
+      "w": 130,
+      "x": 4,
+      "y": 20
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_BLDC_BLEVEL_EDIT",
+      "inferredType": "object",
+      "labelText": "Ground Level  ",
+      "variable": "m_wndBLevelEdit",
+      "w": 40,
+      "x": 138,
+      "y": 20
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_BLDC_BLEVEL_UNIT",
+      "inferredType": "object",
+      "variable": "m_wndBLevelUnit",
+      "w": 13,
+      "x": 180,
+      "y": 20
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Bedrock Level ",
+      "h": 12,
+      "id": "IDC_WG_CMD_UNDER_SEIS_LOADS_STC",
+      "w": 129,
+      "x": 4,
+      "y": 52
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_BLDC_UNDER_SEIS_LOADS_EDIT",
+      "inferredType": "object",
+      "labelText": "Bedrock Level ",
+      "variable": "m_wndBedRockLevelEdit",
+      "w": 40,
+      "x": 138,
+      "y": 52
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Unit",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_BLDC_BLEVEL_UNIT2",
+      "inferredType": "object",
+      "variable": "m_wndBLevelUnit2",
+      "w": 13,
+      "x": 180,
+      "y": 52
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Story Shear Force Ratio",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_ETC_BLDC_SHEAR_FLAG",
+      "inferredType": "object",
+      "variable": "m_wndShearFlag",
+      "w": 223,
+      "x": 0,
+      "y": 84
+    },
+    {
+      "type": "GROUPBOX",
+      "h": 178,
+      "id": "IDC_CMD_STORY_FRM",
+      "w": 235,
+      "x": 0,
+      "y": 118
+    },
+    {
+      "type": "CHECKBOX",
+      "caption": "Eccentricity Ratio",
+      "ddxFunction": "DDX_Check",
+      "h": 12,
+      "id": "IDC_CMD_STOR_CENT_CHECK",
+      "inferredType": "boolean",
+      "variable": "m_bStoryCenter",
+      "w": 87,
+      "x": 4,
+      "y": 116
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Story Center (Mass/Load)",
+      "h": 112,
+      "id": "IDC_CMD_STOR_CENTER_FRM",
+      "w": 227,
+      "x": 4,
+      "y": 132
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Use Mass",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_CMD_USE_MASS_RADIO",
+      "inferredType": "integer",
+      "variable": "m_nCentOpt",
+      "w": 72,
+      "x": 8,
+      "y": 144
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Use Axial Force",
+      "h": 12,
+      "id": "IDC_CMD_USE_AXIAL_RADIO",
+      "w": 73,
+      "x": 81,
+      "y": 144
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Use Shear Force",
+      "h": 12,
+      "id": "IDC_CMD_USE_SHEAR_RADIO",
+      "w": 75,
+      "x": 155,
+      "y": 144
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Load Case    ",
+      "h": 12,
+      "id": "IDC_CMD_STATIC1",
+      "w": 116,
+      "x": 8,
+      "y": 160
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 96,
+      "id": "IDC_CMD_LC_COMBO",
+      "inferredType": "object",
+      "labelText": "Load Case    ",
+      "variable": "m_wndLcCombo",
+      "w": 76,
+      "x": 138,
+      "y": 160
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_CMD_LC_BUTTON",
+      "w": 13,
+      "x": 216,
+      "y": 160
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Scale Factor  ",
+      "h": 12,
+      "id": "IDC_CMD_STATIC2",
+      "w": 116,
+      "x": 8,
+      "y": 174
+    },
+    {
+      "type": "EDITTEXT",
+      "ddxFunction": "DDX_Control",
+      "h": 12,
+      "id": "IDC_CMD_SCALE_EDIT",
+      "inferredType": "object",
+      "labelText": "Scale Factor  ",
+      "variable": "m_wndScaleFactor",
+      "w": 76,
+      "x": 138,
+      "y": 174
+    },
+    {
+      "type": "SYSLISTVIEW32",
+      "caption": "List1",
+      "ddxFunction": "DDX_Control",
+      "h": 50,
+      "id": "IDC_CMD_LIST",
+      "inferredType": "object",
+      "variable": "m_List",
+      "w": 169,
+      "x": 8,
+      "y": 190
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Add",
+      "h": 12,
+      "id": "IDC_CMD_BTN_ADD",
+      "w": 50,
+      "x": 179,
+      "y": 190
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Modify",
+      "h": 12,
+      "id": "IDC_CMD_BTN_MODIFY",
+      "w": 50,
+      "x": 179,
+      "y": 206
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "Delete",
+      "h": 12,
+      "id": "IDC_CMD_BTN_DELETE",
+      "w": 50,
+      "x": 179,
+      "y": 222
+    },
+    {
+      "type": "GROUPBOX",
+      "caption": "Story Stiffness Center",
+      "h": 44,
+      "id": "IDC_CMD_STIF_CENTER_FRM",
+      "w": 227,
+      "x": 4,
+      "y": 248
+    },
+    {
+      "type": "LTEXT",
+      "caption": "X-Directional Load Case ",
+      "h": 12,
+      "id": "IDC_CMD_STIF_X_STATIC",
+      "w": 90,
+      "x": 8,
+      "y": 260
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 96,
+      "id": "IDC_CMD_STIF_X_LC_COMBO",
+      "inferredType": "object",
+      "labelText": "X-Directional Load Case ",
+      "variable": "m_wndXStifCombo",
+      "w": 76,
+      "x": 138,
+      "y": 260
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_CMD_STIF_X_LC_BTN",
+      "w": 13,
+      "x": 216,
+      "y": 260
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Y-Directional Load Case ",
+      "h": 12,
+      "id": "IDC_CMD_STIF_Y_STATIC",
+      "w": 90,
+      "x": 8,
+      "y": 276
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 96,
+      "id": "IDC_CMD_STIF_Y_LC_COMBO",
+      "inferredType": "object",
+      "labelText": "Y-Directional Load Case ",
+      "variable": "m_wndYStifCombo",
+      "w": 76,
+      "x": 138,
+      "y": 276
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_CMD_STIF_Y_LC_BTN",
+      "w": 13,
+      "x": 216,
+      "y": 276
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Story Center",
+      "ddxFunction": "DDX_Radio",
+      "h": 12,
+      "id": "IDC_CMD_STOR_CENTER_RDO",
+      "inferredType": "integer",
+      "variable": "m_nStorCenterMethod",
+      "w": 212,
+      "x": 4,
+      "y": 314
+    },
+    {
+      "type": "RADIOBUTTON",
+      "caption": "Story Average",
+      "h": 12,
+      "id": "IDC_CMD_STOR_AVERAGE_RDO",
+      "w": 212,
+      "x": 4,
+      "y": 330
+    },
+    {
+      "type": "LTEXT",
+      "caption": "X-Dir. Seismic Load Case ",
+      "h": 12,
+      "id": "IDC_CMD_STATIC3",
+      "w": 90,
+      "x": 8,
+      "y": 412
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 96,
+      "id": "IDC_CMD_X_LC_COMBO",
+      "inferredType": "object",
+      "labelText": "X-Dir. Seismic Load Case ",
+      "variable": "m_wndXLcCombo",
+      "w": 76,
+      "x": 139,
+      "y": 412
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_CMD_X_LC_BUTTON",
+      "w": 13,
+      "x": 216,
+      "y": 412
+    },
+    {
+      "type": "LTEXT",
+      "caption": "Y-Dir. Seismic Load Case ",
+      "h": 12,
+      "id": "IDC_CMD_STATIC4",
+      "w": 90,
+      "x": 8,
+      "y": 428
+    },
+    {
+      "type": "COMBOBOX",
+      "ddxFunction": "DDX_Control",
+      "h": 96,
+      "id": "IDC_CMD_Y_LC_COMBO",
+      "inferredType": "object",
+      "labelText": "Y-Dir. Seismic Load Case ",
+      "variable": "m_wndYLcCombo",
+      "w": 76,
+      "x": 139,
+      "y": 428
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "...",
+      "h": 12,
+      "id": "IDC_CMD_Y_LC_BUTTON",
+      "w": 13,
+      "x": 216,
+      "y": 428
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "&OK",
+      "h": 18,
+      "id": "IDOK",
+      "w": 52,
+      "x": 129,
+      "y": 368
+    },
+    {
+      "type": "PUSHBUTTON",
+      "caption": "&Cancel",
+      "h": 18,
+      "id": "IDCANCEL",
+      "w": 52,
+      "x": 183,
+      "y": 368
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_CMD_RESPONSE_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bResponse",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_CMD_STOR_MAX_VERT_ELEM_CHK",
+      "inferredType": "boolean",
+      "variable": "m_bStorDriftByMaxVertElem",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "type": "UNKNOWN",
+      "ddxFunction": "DDX_Check",
+      "h": 0,
+      "id": "IDC_ETC_BLDC_STOR_MDUL",
+      "inferredType": "boolean",
+      "variable": "m_bConsiderStorMdul",
+      "w": 0,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "dialogClass": "CBldcDlg",
+  "dialogId": "IDD_ETC_BLDC_DLG",
+  "headerFile": "ui_src/wg_cmd/BldcDlg.h",
+  "parsedAt": "2026-05-28T05:56:05.151Z",
+  "rawDoDataExchange": "CDialogMove::DoDataExchange(pDX);\r\n\t//{{AFX_DATA_MAP(CBldcDlg)  \r\n\tDDX_Control(pDX, IDC_CMD_STIF_X_LC_COMBO, m_wndXStifCombo);\r\n\tDDX_Control(pDX, IDC_CMD_STIF_Y_LC_COMBO, m_wndYStifCombo);\r\n\tDDX_Control(pDX, IDC_CMD_Y_LC_COMBO, m_wndYLcCombo);\r\n\tDDX_Control(pDX, IDC_CMD_X_LC_COMBO, m_wndXLcCombo);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_SHEAR_FLAG, m_wndShearFlag);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_WIND_SEIS_ON_FLEXIBLE_CHK, m_chkWindSeisOnFlexible);\r\n\tDDX_Control(pDX, IDC_CMD_SCALE_EDIT, m_wndScaleFactor);\r\n\tDDX_Control(pDX, IDC_CMD_LIST, m_List);\r\n\tDDX_Control(pDX, IDC_CMD_LC_COMBO, m_wndLcCombo);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_USE_FLAG, m_wndUseFlag);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_USE_UNDER_SEIS_LOADS_CHK, m_wndUseBedRockFlag);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_MASS_FLAG, m_wndMassFlag);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_BLEVEL_UNIT, m_wndBLevelUnit);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_BLEVEL_UNIT2, m_wndBLevelUnit2);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_BLEVEL_EDIT, m_wndBLevelEdit);\r\n\tDDX_Control(pDX, IDC_ETC_BLDC_UNDER_SEIS_LOADS_EDIT, m_wndBedRockLevelEdit);\r\n\tDDX_Check  (pDX, IDC_CMD_STOR_CENT_CHECK, m_bStoryCenter);\r\n\tDDX_Radio  (pDX, IDC_CMD_USE_MASS_RADIO, m_nCentOpt);\r\n\tDDX_Check  (pDX, IDC_CMD_RESPONSE_CHK, m_bResponse);\r\n\tDDX_Radio  (pDX, IDC_CMD_STOR_CENTER_RDO, m_nStorCenterMethod);\r\n\tDDX_Check  (pDX, IDC_CMD_STOR_MAX_VERT_ELEM_CHK, m_bStorDriftByMaxVertElem);\r\n\t//DDX_Control(pDX, IDC_ETC_BLDC_STOR_MDUL, m_wndConsiderStorMdul);\r\n\t//DDX_Check(pDX, IDC_ETC_BLDC_STOR_MDUL, m_bConsiderStorMdul);\r\n\t//}}AFX_DATA_MAP",
+  "rawOnChangeHandlers": [],
+  "rawUpdateLogic": "// OnInitDialog:\nm_pDoc = CDBDoc::GetDocPoint();\r\n\tCDialogMove::OnInitDialog();\r\n\t\r\n\t// TODO: Add extra initialization here\r\n\tAlignControls();\r\n\r\n\tm_wndBLevelEdit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_wndBLevelUnit.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_wndBLevelUnit2.SetUnitType(D_UNITSYS_BASE_LENGTH);\r\n\tm_wndLcCombo.SetLoadType(D_LOADCASE_STATIC,FALSE,TRUE);\r\n\tm_wndYLcCombo.SetLoadType(D_LOADCASE_STATIC,FALSE,TRUE);\r\n\tm_wndXLcCombo.SetLoadType(D_LOADCASE_STATIC,FALSE,TRUE);\r\n\tm_wndXStifCombo.SetLoadType(D_LOADCASE_STATIC,FALSE,TRUE);\r\n\tm_wndYStifCombo.SetLoadType(D_LOADCASE_STATIC,FALSE,TRUE);\r\n\r\n\tif (!m_pDoc->m_pAttrCtrl->GetBldc(m_Data)) m_Data.Initialize();  \r\n\tData2DlgVar();\r\n\tUpdateData(FALSE);\r\n\r\n\tStoryCentMan();\r\n\tControlStoryCenterMethod();\r\n\r\n\tm_wndScaleFactor.SetWindowText(_T(\"1\"));\r\n\r\n\tSetListCtrlHeader();\r\n\tMakeItemEx();\r\n\tOnEtcBldcUseFlag();\r\n\tOnEtcBldcShearFlag();  \r\n\tOnEtcBldcUnderSeisLoad();\r\n\tBOOL bJUDEnable = CDBDoc::EnableJUD();  \r\n\t//if(bJUDEnable) JUDCtrlGroupDisable();\r\n\t//GetDlgItem(IDC_CMD_MAIN_FRM_JUD)->ShowWindow(SW_HIDE);\r\n\r\n\t// iGen�� ���� ����� ���� �Ҽ� ���� ������ ���� ���ó�� ����. JWKWON 2015-05-13\r\n\tif(bJUDEnable) GetDlgItem(IDC_CMD_STOR_MAX_VERT_ELEM_CHK)->ShowWindow(SW_HIDE);\r\n\t\r\n\treturn TRUE;  // return TRUE unless you set the focus to a control\r\n\t              // EXCEPTION: OCX Property Pages should return FALSE\n\n// EnableJUD:\nm_Data.nStorCenterMethod = 2;\n\n// UpdateBuffer:\nCViewBuff* pViewBuff = m_pDoc->m_pViewBuff;\r\n\tint nCount = pViewBuff->GetCount();\r\n\tif (nCount == 0) return; \r\n\tASSERT(nCount == 1);\r\n\r\n\tT_UDRD_BUFFER buffer_ur;\r\n\tPOSITION pos = pViewBuff->GetStartBuffer();\r\n\r\n\tT_STLD_K Key, KeyBak;\r\n\tT_STLD_D Data, DataBak;\r\n\r\n\tint i;\r\n\r\n\tBOOL bMFD = FALSE;\r\n\twhile(pos != NULL)\r\n\t{\r\n\t\tbuffer_ur = pViewBuff->GetNextBuffer(pos);\r\n\r\n\t\tint nCmd = buffer_ur.nCmd;\r\n\t\tint nKey = buffer_ur.nKey;\r\n\t\t\r\n\t\tswitch(nCmd)\r\n\t\t{\r\n\t\tcase(UR_STLD_ADD):\r\n\t\t\t\t// do nothing\r\n\t\t\t\tbreak;\r\n\t\tcase(UR_STLD_DEL):\r\n\t\t\t\t// ���� loadcase list���� ������ �� �����Ѵ�.\r\n\t\t\t\tpViewBuff->GetStld(nKey, Key, Data);\r\n\t\t\t\tfor (i = m_Data.nNumBldcCase-1; i >= 0; i--)\r\n\t\t\t\t{\r\n\t\t\t\t\tif (m_Data.BldcCase[i].LoadCaseKey == Key)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tm_List.DeleteItem(i);\r\n\t\t\t\t\t\tfor (int j = i; j < m_Data.nNumBldcCase-1; j++)\r\n\t\t\t\t\t\t\tm_Data.BldcCase[j] = m_Data.BldcCase[j+1];\r\n\t\t\t\t\t\tm_Data.nNumBldcCase--;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\tbreak;\r\n\t\tcase(UR_STLD_MFD):\r\n\t\t\t\t// ���⼭�� ���常 �ϰ� UR_STLD_MFS���� ó���Ѵ�.\r\n\t\t\t\tpViewBuff->GetStld(nKey, Key, Data);\r\n\t\t\t\tKeyBak = Key;\r\n\t\t\t\tDataBak = Data;\r\n\t\t\t\tbMFD = TRUE;\r\n\t\t\t\tbreak;\r\n\t\tcase(UR_STLD_MFS):\r\n\t\t\t\t// MFD�� �������� MFS�� �´�. �׻� �� ������� �� ¦�� �Ǿ� �´�.\r\n\t\t\t\tASSERT(bMFD);\r\n\t\t\t\tpViewBuff->GetStld(nKey, Key, Data);\r\n\t\t\t\tfor (i = 0; i < m_Data.nNumBldcCase; i++)\r\n\t\t\t\t{\r\n\t\t\t\t\tif (m_Data.BldcCase[i].LoadCaseKey == Key)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tm_Data.BldcCase[i].LoadCaseKey = KeyBak;\r\n\t\t\t\t\t\tSetItem(i, m_Data.BldcCase[i]);\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\t// �÷��� ����\r\n\t\t\t\tbMFD = FALSE;\r\n\t\t\t\tbreak;\r\n\t\tdefault:\r\n\t\t\tbreak;\r\n\t\t}\r\n\t} // end of while\r\n/*\r\n\tBOOL bUpdate = FALSE;\r\n\t\r\n\tpos = pViewBuff->GetStartBuffer();\r\n\twhile(pos != NULL)\r\n\t{\r\n\t\tbuffer_ur = pViewBuff->GetNextBuffer(pos);\r\n\t\tint nCmd = buffer_ur.nCmd;\r\n\t\tint nKey = buffer_ur.nKey;\r\n\r\n\t\tswitch(nCmd)\r\n\t\t{\r\n\t\tcase(UR_BLDC_ADD):\r\n\t\t\tpViewBuff->GetBldc(nKey, m_Data);\r\n\t\t\tbUpdate = TRUE;\r\n\t\t\tbreak;\r\n\t\tcase(UR_BLDC_DEL):\r\n\t\t\tbreak;  // do nothing\r\n\t\tcase(UR_BLDC_MFD):\r\n\t\t\tpViewBuff->GetBldc(nKey, m_Data);\r\n\t\t\tbUpdate = TRUE;\r\n\t\t\tbreak;\r\n\t\tcase(UR_BLDC_MFS):\r\n\t\t\tbreak;  // do nothing\r\n\t\t}\r\n\t}\r\n\tif (bUpdate)  MakeItemEx();\r\n*/\n\n// SetListCtrlHeader:\nCString aTitle[] = { _LS(IDS_WG_CMD__ADDD__Load_Case), _LS(IDS_WG_CMD__ADDD__ScaleFactor) };\r\n//18japan  CString aTitle[] = {_LS(IDS_WG_CMD__ADDD__LoadCase), _LS(IDS_WG_CMD__ADDD__ScaleFactor)};\r\n\tint nColWidth[] = {134, 80};\r\n\tint nColNum = 2;\r\n\tCString title;\r\n\tint i;\r\n\tLV_COLUMN lvcolumn;\r\n\r\n\t// set full row select mode\r\n\tDWORD dwStyle;\r\n\tdwStyle = ListView_GetExtendedListViewStyle(m_List.GetSafeHwnd());\r\n\tdwStyle |= LVS_EX_FULLROWSELECT; \r\n\tListView_SetExtendedListViewStyle(m_List.GetSafeHwnd(), dwStyle);\r\n\r\n\t// Set Title\r\n\tfor(i = 0; i < nColNum; i++)\r\n\t{\r\n\t\ttitle = aTitle[i];\r\n\t\tlvcolumn.mask = LVCF_FMT|LVCF_SUBITEM|LVCF_TEXT|LVCF_WIDTH;\r\n\t\tlvcolumn.fmt = LVCFMT_CENTER;\r\n\r\n\t\tlvcolumn.iSubItem = i;\r\n\t\tlvcolumn.cx = globalUtils.ScaleByDPI(nColWidth[i]);\r\n\t\tlvcolumn.pszText = title.GetBuffer(0);\r\n\t\tm_List.InsertColumn(i,&lvcolumn);\r\n\t\tm_List.SetColumn(i, &lvcolumn);\r\n\t\ttitle.ReleaseBuffer();\r\n\t}\n\n// ControlStoryCenterMethod:\nBOOL bNeedUpdateData = FALSE;\r\n\tif(m_bResponse && !m_bStoryCenter && m_nStorCenterMethod==0)\r\n\t{\r\n\t\tm_nStorCenterMethod=1;\r\n\r\n\t\t// 2014-07-14. by hsshim\r\n\t\t// MQC 4836-49 Response of Time History Results �ɼ��� �߹� Default ����, Story Average�� �ɼ��� üũ�� ������ �ݿ�\r\n\t\t// ���� m_nStorCenterMethod�� �ٲ���� �ϳ�, ��ȭ������ üũ �ɼ����� ���鼭 m_bStorDriftByMaxVertElem�� ������ �ΰ� DB�� ����� �ٲ���.\r\n\t\tm_bStorDriftByMaxVertElem = TRUE;\r\n\r\n\t\tbNeedUpdateData = TRUE;\r\n\t}\r\n\r\n\tGetDlgItem(IDC_CMD_STOR_CENTER_RDO) ->EnableWindow(m_bResponse && m_bStoryCenter);\r\n\tGetDlgItem(IDC_CMD_STOR_AVERAGE_RDO)->EnableWindow(m_bResponse);\r\n\r\n\tGetDlgItem(IDC_CMD_STOR_MAX_VERT_ELEM_CHK)->EnableWindow(m_bResponse && m_nStorCenterMethod==1);\r\n\r\n\tif (m_nStorCenterMethod!=1 && m_bStorDriftByMaxVertElem)  \r\n\t{ \r\n\t\tm_bStorDriftByMaxVertElem = FALSE;\r\n\t\tbNeedUpdateData = TRUE;\r\n\t}\r\n\r\n\tif (bNeedUpdateData) UpdateData(FALSE);",
+  "rcFile": "ui_src/wg_cmd/wgnx_cmd.rc",
+  "sourceFile": "ui_src/wg_cmd/BldcDlg.cpp",
+  "warnings": []
+}

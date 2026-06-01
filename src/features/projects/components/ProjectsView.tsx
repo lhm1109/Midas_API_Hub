@@ -1,6 +1,6 @@
-import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2, SplitSquareHorizontal } from 'lucide-react';
+import { FileText, Wrench, Rocket, BookOpen, GitBranch, Save, AlertCircle, Loader2, SplitSquareHorizontal, Braces } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab, SchemaSplitTab } from './tabs';
+import { VersionTab, ManualTab, SpecTab, BuilderTab, RunnerTab, SchemaSplitTab, PydanticTab } from './tabs';
 import type { ApiEndpoint, ApiProduct } from '@/types';
 import { useAppStore } from '@/store/useAppStore';
 import { Button } from '@/components/ui/button';
@@ -103,6 +103,7 @@ export function ProjectsView({ endpoint, products, settings }: MainWorkspaceProp
   const currentVersion = getCurrentVersion();
   const isVersionsLoading =
     isFetchingVersions && versionsLoadingEndpointId === endpoint.id;
+  const productId = findProductIdForEndpoint(products, endpoint.id);
   
   // 다른 사용자가 잠금한 경우 읽기 전용 모드
   const isReadOnly = endpointLock?.locked && endpointLock?.lockedBy !== useAppStore.getState().currentUserId;
@@ -251,6 +252,14 @@ export function ProjectsView({ endpoint, products, settings }: MainWorkspaceProp
               <SplitSquareHorizontal className="w-4 h-4 mr-2" />
               Split
             </TabsTrigger>
+            <TabsTrigger
+              value="pydantic"
+              disabled={isLocked}
+              className="px-4 py-2 rounded-md text-sm font-medium transition-colors data-[state=active]:bg-zinc-700 data-[state=active]:text-white text-zinc-400 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <Braces className="w-4 h-4 mr-2" />
+              Pydantic
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -339,7 +348,36 @@ export function ProjectsView({ endpoint, products, settings }: MainWorkspaceProp
             />
           )}
         </TabsContent>
+        <TabsContent value="pydantic" className="flex-1 m-0 overflow-hidden data-[state=active]:flex">
+          {isLocked ? (
+            <div className="flex-1 flex items-center justify-center text-zinc-600">
+              <div className="text-center">
+                <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p className="text-sm">Please create or load a version to access Pydantic tab</p>
+              </div>
+            </div>
+          ) : (
+            <PydanticTab
+              key={`pydantic-${endpoint.id}-${currentVersionId || 'none'}`}
+              endpoint={endpoint}
+              settings={settings}
+              productId={productId}
+            />
+          )}
+        </TabsContent>
       </Tabs>
     </div>
   );
+}
+
+function findProductIdForEndpoint(products: ApiProduct[], endpointId: string): string | undefined {
+  const searchGroups = (groups: ApiProduct['groups']): boolean => {
+    for (const group of groups || []) {
+      if ((group.endpoints || []).some((item) => item.id === endpointId)) return true;
+      if (searchGroups(group.subgroups || [])) return true;
+    }
+    return false;
+  };
+
+  return products.find((product) => searchGroups(product.groups || []))?.id;
 }
