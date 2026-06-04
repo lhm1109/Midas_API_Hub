@@ -1,0 +1,149 @@
+{
+  "endpoint": "/api/db/STRPSSM",
+  "methods": [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE"
+  ],
+  "description": "Stress Point settings for Section Manager (DB/STRPSSM).",
+  "examples": {
+    "POST": {
+      "description": "Create stress point coordinates",
+      "request": {
+        "Assign": {
+          "9003": {
+            "OPT_SAME_J": true,
+            "POINT_SIZE_1": 2,
+            "POINT_SIZE_2": 2,
+            "POINT1": [
+              {
+                "PY": 0.00583,
+                "PZ": 0.00476
+              },
+              {
+                "PY": -0.00506,
+                "PZ": 0.00097
+              }
+            ],
+            "POINT2": [
+              {
+                "PY": 0.007067356048348719,
+                "PZ": 0.005572125828318985
+              },
+              {
+                "PY": -0.0059233102292634635,
+                "PZ": 0.0011354962297204655
+              }
+            ]
+          }
+        }
+      }
+    },
+    "PUT": {
+      "description": "Update stress point coordinates",
+      "request": {
+        "Assign": {
+          "9003": {
+            "OPT_SAME_J": true,
+            "POINT_SIZE_1": 2,
+            "POINT_SIZE_2": 2,
+            "POINT1": [
+              {
+                "PY": 0.00583,
+                "PZ": 0.00476
+              }
+            ],
+            "POINT2": [
+              {
+                "PY": 0.007067356048348719,
+                "PZ": 0.005572125828318985
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GET": {
+      "description": "Response example",
+      "response": {
+        "STRPSSM": {
+          "9003": {
+            "OPT_SAME_J": true,
+            "POINT_SIZE_1": 2,
+            "POINT_SIZE_2": 2,
+            "POINT1": [
+              {
+                "PY": 0.00583,
+                "PZ": 0.00476
+              }
+            ],
+            "POINT2": [
+              {
+                "PY": 0.007067356048348719,
+                "PZ": 0.005572125828318985
+              }
+            ]
+          }
+        }
+      }
+    },
+    "DELETE": {
+      "description": "Delete response example",
+      "response": {
+        "STRPSSM": {
+          "9003": {
+            "OPT_SAME_J": true,
+            "POINT_SIZE_1": 2,
+            "POINT_SIZE_2": 2,
+            "POINT1": [
+              {
+                "PY": 0.00583,
+                "PZ": 0.00476
+              }
+            ],
+            "POINT2": [
+              {
+                "PY": 0.007067356048348719,
+                "PZ": 0.005572125828318985
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "parameters": [
+    {
+      "name": "OPT_SAME_J",
+      "description": "Same Additional Stress Points Data at i & j-end",
+      "type": "Boolean",
+      "default": true,
+      "required": "Optional"
+    },
+    {
+      "name": "POINT_SIZE_1",
+      "description": "Point Size 1",
+      "type": "Integer",
+      "required": "Required"
+    },
+    {
+      "name": "POINT_SIZE_2",
+      "description": "Point Size 2",
+      "type": "Integer",
+      "required": "Required"
+    },
+    {
+      "name": "POINT1",
+      "description": "PointData1",
+      "type": "Array[Object]",
+      "required": "Required"
+    },
+    {
+      "name": "POINT2",
+      "description": "PointData2",
+      "type": "Array[Object]",
+      "required": "Required"
+    }
+  ]
+}

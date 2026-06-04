@@ -1,0 +1,180 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "PSC Rating Result Table Type",
+          "enum": [
+            "PSC_RATING_STR_SUM_SHEAR",
+            "PSC_RATING_STR_SUM_SHEAR_VBEM"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          },
+          "x-enum-labels": {
+            "PSC_RATING_STR_SUM_SHEAR": "Strength Limit State Summary (Shear)",
+            "PSC_RATING_STR_SUM_SHEAR_VBEM": "Strength Limit State Summary (Shear) - Virtual Beam"
+          }
+        },
+        "RATING_CASE": {
+          "type": "array",
+          "description": "Rating Case",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "label": "Rating Case"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "default": "System",
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "default": "System",
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Index",
+              "RatingCase",
+              "RatingLevel",
+              "Min.RatingFactor",
+              "Location",
+              "RelativeLocation",
+              "LRFDFactor",
+              "Capacity",
+              "Demand",
+              "DC/Factor",
+              "DC/Force",
+              "DW/Factor",
+              "DW/Force",
+              "Temperature/Factor",
+              "Temperature/Force",
+              "T.Gradient/Factor",
+              "T.Gradient/Force",
+              "Permanent/Factor",
+              "Permanent/Force",
+              "Secondary/Factor",
+              "Secondary/Force",
+              "UserDefined/Factor",
+              "UserDefined/Force",
+              "Pri.LL/Factor",
+              "Pri.LL/Force",
+              "Adj.LL/Factor",
+              "Adj.LL/Force"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels": {
+            "Adj.LL/Factor": "Adj.LL/Factor",
+            "Adj.LL/Force": "Adj.LL/Force",
+            "Capacity": "Capacity",
+            "DC/Factor": "DC/Factor",
+            "DC/Force": "DC/Force",
+            "Demand": "Demand",
+            "DW/Factor": "DW/Factor",
+            "DW/Force": "DW/Force",
+            "Index": "Index",
+            "Location": "Location",
+            "LRFDFactor": "LRFDFactor",
+            "Min.RatingFactor": "Min.RatingFactor",
+            "Permanent/Factor": "Permanent/Factor",
+            "Permanent/Force": "Permanent/Force",
+            "Pri.LL/Factor": "Pri.LL/Factor",
+            "Pri.LL/Force": "Pri.LL/Force",
+            "RatingCase": "RatingCase",
+            "RatingLevel": "RatingLevel",
+            "RelativeLocation": "RelativeLocation",
+            "Secondary/Factor": "Secondary/Factor",
+            "Secondary/Force": "Secondary/Force",
+            "T.Gradient/Factor": "T.Gradient/Factor",
+            "T.Gradient/Force": "T.Gradient/Force",
+            "Temperature/Factor": "Temperature/Factor",
+            "Temperature/Force": "Temperature/Force",
+            "UserDefined/Factor": "UserDefined/Factor",
+            "UserDefined/Force": "UserDefined/Force"
+          }
+        }
+      }
+    }
+  }
+}
