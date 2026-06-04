@@ -16,9 +16,11 @@ interface ManualTabProps {
 }
 
 type ManualPublisher = 'zendesk' | 'confluence';
+type ZendeskLocaleOption = 'ko' | 'en-us';
 
 const DEFAULT_ZENDESK_LOCALE = 'en-us';
 const MANUAL_SERVER_BASE_URL = 'http://localhost:9527';
+const ZENDESK_LOCALE_OPTIONS: ZendeskLocaleOption[] = ['ko', 'en-us'];
 
 interface ZendeskEnvStatus {
   baseUrl?: string;
@@ -53,12 +55,52 @@ interface ConfluenceEnvStatus {
   missingFields: string[];
 }
 
+type ZendeskPublishResult = {
+  success: boolean;
+  data?: {
+    mode: 'create' | 'update';
+    articleId: string;
+    locale: string;
+    articleUrl: string;
+    associatedAttachmentCount: number;
+  };
+  error?: string;
+};
+
 function normalizeZendeskLocale(locale?: string): string {
   const normalized = String(locale || '')
     .trim()
     .replace(/_/g, '-')
     .toLowerCase();
   return normalized || DEFAULT_ZENDESK_LOCALE;
+}
+
+function parseZendeskLocaleFromTarget(targetInput?: string): ZendeskLocaleOption | null {
+  const raw = String(targetInput || '').trim();
+  if (!raw || /^\d+$/.test(raw)) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(raw);
+    const pathSegments = parsedUrl.pathname.split('/').filter(Boolean);
+    let locale =
+      parsedUrl.searchParams.get('locale') ||
+      parsedUrl.searchParams.get('lang') ||
+      '';
+
+    const articleIndex = pathSegments.indexOf('articles');
+    if (!locale && articleIndex >= 2 && pathSegments[0] === 'hc') {
+      locale = pathSegments[1];
+    }
+
+    const normalized = normalizeZendeskLocale(locale);
+    return ZENDESK_LOCALE_OPTIONS.includes(normalized as ZendeskLocaleOption)
+      ? (normalized as ZendeskLocaleOption)
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 function parseZendeskLabelInput(value: string): string[] {
@@ -197,7 +239,8 @@ export function ManualTab({ endpoint }: ManualTabProps) {
 
     try {
       setIsFetchingZendesk(true);
-      const locale = normalizeZendeskLocale(envStatus.defaultLocale);
+      const locale = parseZendeskLocaleFromTarget(targetUrl)
+        || normalizeZendeskLocale(envStatus.defaultLocale);
       const params = new URLSearchParams({ targetInput: targetUrl, locale });
       const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/article?${params}`);
       const payload = await response.json().catch(() => null);
@@ -710,29 +753,31 @@ ${specificationSectionHTML}
 
     const html = isHTMLModified && editableHTML ? editableHTML : generateHTML();
     const title = (manualData.title || endpoint.name || '').trim();
-    const locale = normalizeZendeskLocale(envStatus.defaultLocale || DEFAULT_ZENDESK_LOCALE);
+    const defaultPublishLocale = normalizeZendeskLocale(envStatus.defaultLocale || DEFAULT_ZENDESK_LOCALE);
+    const selectedLocales = [...ZENDESK_LOCALE_OPTIONS].sort((a, b) => {
+      if (a === defaultPublishLocale) return -1;
+      if (b === defaultPublishLocale) return 1;
+      return 0;
+    });
     const labelNames = parseZendeskLabelInput(zendeskLabelInput);
     const commentsDisabled = manualData.zendeskCommentsDisabled ?? true;
+    const targetBeforeSend = zendeskUrl.trim();
+    let publishTarget = targetBeforeSend;
 
     updateManualData({ zendeskLabelNames: labelNames });
 
     try {
       setIsZendeskSending(true);
-      let result: {
-        success: boolean;
-        data?: {
-          mode: 'create' | 'update';
-          articleId: string;
-          locale: string;
-          articleUrl: string;
-          associatedAttachmentCount: number;
-        };
-        error?: string;
-      };
+      const successfulLocales: string[] = [];
+      const failedLocales: string[] = [];
+      let firstResult: ZendeskPublishResult | null = null;
 
-      if (useElectronPublisher) {
+      for (const locale of selectedLocales) {
+        let result: ZendeskPublishResult;
+
+        if (useElectronPublisher) {
         result = await zendeskAPI!.publishManualWithEnv(
-          zendeskUrl.trim(),
+          publishTarget,
           locale,
           html,
           title || undefined,
@@ -747,7 +792,7 @@ ${specificationSectionHTML}
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            targetInput: zendeskUrl.trim(),
+            targetInput: publishTarget,
             locale,
             body: html,
             title: title || undefined,
@@ -761,21 +806,42 @@ ${specificationSectionHTML}
         result = payload || { success: false, error: `HTTP ${response.status}` };
       }
 
-      if (!result.success) {
+        if (!result.success) {
+          failedLocales.push(`${locale}: ${result.error || 'Unknown error'}`);
+          continue;
         toast.error(`Zendesk 전송 실패: ${result.error || 'Unknown error'}`);
         return;
       }
 
       const modeLabel = result.data?.mode === 'create' ? '생성' : '업데이트';
-      const articleId = result.data?.articleId || '(unknown)';
-      const articleLocale = result.data?.locale || locale;
-      const attachmentCount = result.data?.associatedAttachmentCount || 0;
-      const articleUrl = result.data?.articleUrl;
+        void modeLabel;
+        if (!firstResult) {
+          firstResult = result;
+        }
+        if (!publishTarget && result.data?.articleId) {
+          publishTarget = result.data.articleUrl || result.data.articleId;
+        }
+        successfulLocales.push(result.data?.locale || locale);
+      }
+
+      if (!firstResult?.success) {
+        toast.error(`Zendesk send failed: ${failedLocales.join(' / ') || 'Unknown error'}`);
+        return;
+      }
+
+      const modeLabel = firstResult.data?.mode === 'create' ? 'create' : 'update';
+      const articleId = firstResult.data?.articleId || '(unknown)';
+      const attachmentCount = firstResult.data?.associatedAttachmentCount || 0;
+      const articleUrl = targetBeforeSend || firstResult.data?.articleUrl;
+      const articleLocale = successfulLocales.join(', ');
+      if (failedLocales.length > 0) {
+        toast.error(`Zendesk partial locale failure: ${failedLocales.join(' / ')}`);
+      }
       if (articleUrl) {
         setZendeskUrl(articleUrl);
         // 자동 저장: manualData.url에 생성된 Zendesk URL 기록
-        if (result.data?.mode === 'create' || !manualData?.url) {
-          updateManualData({ url: articleUrl, articleId: result.data?.articleId });
+        if (firstResult.data?.mode === 'create' || !manualData?.url) {
+          updateManualData({ url: articleUrl, articleId: firstResult.data?.articleId });
         }
       }
 
