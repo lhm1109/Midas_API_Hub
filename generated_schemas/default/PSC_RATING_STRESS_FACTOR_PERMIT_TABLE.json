@@ -1,0 +1,186 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "PSC Rating Result Table Type",
+          "enum": [
+            "PSC_RATING_STRESS_PER",
+            "PSC_RATING_STRESS_PER_VBEM"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          },
+          "x-enum-labels": {
+            "PSC_RATING_STRESS_PER": "Stress Rating Factor (Permit)",
+            "PSC_RATING_STRESS_PER_VBEM": "Stress Rating Factor (Permit) - Virtual Beam"
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Node/Element No. Input",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to5')"
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            }
+          },
+          "x-ui": {
+            "hint": "Use KEYS, TO, or STRUCTURE_GROUP_NAME",
+            "label": "Node/Element Selection"
+          }
+        },
+        "PARTS": {
+          "type": "array",
+          "description": "Element Part Number",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Part I",
+              "Part J"
+            ]
+          },
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Element Parts"
+          }
+        },
+        "GIRDER_SLAB": {
+          "type": "string",
+          "description": "Girder or Slab",
+          "enum": [
+            "Girder",
+            "Slab"
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Girder/Slab"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "default": "System",
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "default": "System",
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Index",
+              "Group",
+              "Elem.",
+              "Part",
+              "Girder/Slab",
+              "RelativeLocation",
+              "RatingCase",
+              "RatingFactor",
+              "Check"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels": {
+            "Check": "Check",
+            "Elem.": "Elem.",
+            "Girder/Slab": "Girder/Slab",
+            "Group": "Group",
+            "Index": "Index",
+            "Part": "Part",
+            "RatingCase": "RatingCase",
+            "RatingFactor": "RatingFactor",
+            "RelativeLocation": "RelativeLocation"
+          }
+        }
+      }
+    }
+  }
+}

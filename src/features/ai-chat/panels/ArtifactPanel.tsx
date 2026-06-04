@@ -11,7 +11,7 @@ const LANG_ICONS: Record<string, ReactNode> = {
 const emptyFiles = [
   'generated_pydantic/verification',
   'generated_schemas/default',
-  'docs/REFERENCE/nimbalyst',
+  'nimbalyst',
 ];
 
 export function ArtifactPanel() {

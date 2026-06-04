@@ -1,0 +1,298 @@
+{
+  "type": "object",
+  "required": [
+    "Argument"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "Argument": {
+      "type": "object",
+      "required": [
+        "TABLE_TYPE"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "TABLE_NAME": {
+          "type": "string",
+          "description": "Response Table Title",
+          "default": "",
+          "x-ui": {
+            "hint": "Output table title in response",
+            "label": "Table Name"
+          }
+        },
+        "TABLE_TYPE": {
+          "type": "string",
+          "description": "PSC Rating Result Table Type",
+          "enum": [
+            "PSC_RATING_STRESS_DETAIL_DGN",
+            "PSC_RATING_STRESS_DETAIL_LEG",
+            "PSC_RATING_STRESS_DETAIL_PER",
+            "PSC_RATING_STRESS_DETAIL_DGN_VBEM",
+            "PSC_RATING_STRESS_DETAIL_LEG_VBEM",
+            "PSC_RATING_STRESS_DETAIL_PER_VBEM"
+          ],
+          "x-ui": {
+            "label": "Table Type"
+          },
+          "x-enum-labels": {
+            "PSC_RATING_STRESS_DETAIL_DGN": "Stress Rating Detail (Design Live)",
+            "PSC_RATING_STRESS_DETAIL_DGN_VBEM": "Stress Rating Detail (Design Live) - Virtual Beam",
+            "PSC_RATING_STRESS_DETAIL_LEG": "Stress Rating Detail (Legal)",
+            "PSC_RATING_STRESS_DETAIL_LEG_VBEM": "Stress Rating Detail (Legal) - Virtual Beam",
+            "PSC_RATING_STRESS_DETAIL_PER": "Stress Rating Detail (Permit)",
+            "PSC_RATING_STRESS_DETAIL_PER_VBEM": "Stress Rating Detail (Permit) - Virtual Beam"
+          }
+        },
+        "NODE_ELEMS": {
+          "type": "object",
+          "description": "Node/Element No. Input",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range (e.g., '1to5')"
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Specify Structure Group Name"
+            }
+          },
+          "x-ui": {
+            "hint": "Use KEYS, TO, or STRUCTURE_GROUP_NAME",
+            "label": "Node/Element Selection"
+          }
+        },
+        "PARTS": {
+          "type": "array",
+          "description": "Element Part Number",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Part I",
+              "Part J"
+            ]
+          },
+          "x-ui": {
+            "component": "CheckboxGroup",
+            "label": "Element Parts"
+          }
+        },
+        "RATING_CASE": {
+          "type": "array",
+          "description": "Rating Case",
+          "items": {
+            "type": "string"
+          },
+          "x-ui": {
+            "label": "Rating Case"
+          }
+        },
+        "GIRDER_SLAB": {
+          "type": "string",
+          "description": "Girder or Slab",
+          "enum": [
+            "Girder",
+            "Slab"
+          ],
+          "x-ui": {
+            "component": "RadioGroup",
+            "label": "Girder/Slab"
+          }
+        },
+        "EXPORT_PATH": {
+          "type": "string",
+          "description": "Result Table Save Path",
+          "x-ui": {
+            "hint": "Optional: Save results to file path",
+            "label": "Export Path"
+          }
+        },
+        "UNIT": {
+          "type": "object",
+          "description": "Response Unit Setting",
+          "properties": {
+            "FORCE": {
+              "type": "string",
+              "description": "Force unit"
+            },
+            "DIST": {
+              "type": "string",
+              "description": "Length/Distance unit"
+            },
+            "HEAT": {
+              "type": "string",
+              "description": "Heat unit"
+            },
+            "TEMP": {
+              "type": "string",
+              "description": "Temperature unit"
+            }
+          },
+          "default": "System",
+          "x-ui": {
+            "label": "Unit Settings"
+          }
+        },
+        "STYLES": {
+          "type": "object",
+          "description": "Response Number Format",
+          "properties": {
+            "FORMAT": {
+              "type": "string",
+              "description": "Number format",
+              "enum": [
+                "Default",
+                "Fixed",
+                "Scientific",
+                "General"
+              ]
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Digit place",
+              "minimum": 0,
+              "maximum": 15
+            }
+          },
+          "default": "System",
+          "x-ui": {
+            "label": "Number Format"
+          }
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "description": "Components of Result Table",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Index",
+              "Group",
+              "Elem.",
+              "Part",
+              "Girder/Slab",
+              "RelativeLocation",
+              "RatingCase",
+              "RatingFactor/C",
+              "RatingFactor/T",
+              "Capacity/CStress",
+              "Capacity/TStress",
+              "DC/Factor",
+              "DC/LT",
+              "DC/RT",
+              "DC/RB",
+              "DC/LB",
+              "DW/Factor",
+              "DW/LT",
+              "DW/RT",
+              "DW/RB",
+              "DW/LB",
+              "Temperature/Factor",
+              "Temperature/LT",
+              "Temperature/RT",
+              "Temperature/RB",
+              "Temperature/LB",
+              "T.Gradient/Factor",
+              "T.Gradient/LT",
+              "T.Gradient/RT",
+              "T.Gradient/RB",
+              "T.Gradient/LB",
+              "Permanent/Factor",
+              "Permanent/LT",
+              "Permanent/RT",
+              "Permanent/RB",
+              "Permanent/LB",
+              "Secondary/Factor",
+              "Secondary/LT",
+              "Secondary/RT",
+              "Secondary/RB",
+              "Secondary/LB",
+              "UserDefined/Factor",
+              "UserDefined/LT",
+              "UserDefined/RT",
+              "UserDefined/RB",
+              "UserDefined/LB",
+              "Pri.LL/Factor",
+              "Pri.LL/LT",
+              "Pri.LL/RT",
+              "Pri.LL/RB",
+              "Pri.LL/LB",
+              "Adj.LL/Factor",
+              "Adj.LL/LT",
+              "Adj.LL/RT",
+              "Adj.LL/RB",
+              "Adj.LL/LB"
+            ]
+          },
+          "x-ui": {
+            "label": "Components"
+          },
+          "x-enum-labels": {
+            "Adj.LL/Factor": "Adj.LL/Factor",
+            "Adj.LL/LB": "Adj.LL/LB",
+            "Adj.LL/LT": "Adj.LL/LT",
+            "Adj.LL/RB": "Adj.LL/RB",
+            "Adj.LL/RT": "Adj.LL/RT",
+            "Capacity/CStress": "Capacity/CStress",
+            "Capacity/TStress": "Capacity/TStress",
+            "DC/Factor": "DC/Factor",
+            "DC/LB": "DC/LB",
+            "DC/LT": "DC/LT",
+            "DC/RB": "DC/RB",
+            "DC/RT": "DC/RT",
+            "DW/Factor": "DW/Factor",
+            "DW/LB": "DW/LB",
+            "DW/LT": "DW/LT",
+            "DW/RB": "DW/RB",
+            "DW/RT": "DW/RT",
+            "Elem.": "Elem.",
+            "Girder/Slab": "Girder/Slab",
+            "Group": "Group",
+            "Index": "Index",
+            "Part": "Part",
+            "Permanent/Factor": "Permanent/Factor",
+            "Permanent/LB": "Permanent/LB",
+            "Permanent/LT": "Permanent/LT",
+            "Permanent/RB": "Permanent/RB",
+            "Permanent/RT": "Permanent/RT",
+            "Pri.LL/Factor": "Pri.LL/Factor",
+            "Pri.LL/LB": "Pri.LL/LB",
+            "Pri.LL/LT": "Pri.LL/LT",
+            "Pri.LL/RB": "Pri.LL/RB",
+            "Pri.LL/RT": "Pri.LL/RT",
+            "RatingCase": "RatingCase",
+            "RatingFactor/C": "RatingFactor/C",
+            "RatingFactor/T": "RatingFactor/T",
+            "RelativeLocation": "RelativeLocation",
+            "Secondary/Factor": "Secondary/Factor",
+            "Secondary/LB": "Secondary/LB",
+            "Secondary/LT": "Secondary/LT",
+            "Secondary/RB": "Secondary/RB",
+            "Secondary/RT": "Secondary/RT",
+            "T.Gradient/Factor": "T.Gradient/Factor",
+            "T.Gradient/LB": "T.Gradient/LB",
+            "T.Gradient/LT": "T.Gradient/LT",
+            "T.Gradient/RB": "T.Gradient/RB",
+            "T.Gradient/RT": "T.Gradient/RT",
+            "Temperature/Factor": "Temperature/Factor",
+            "Temperature/LB": "Temperature/LB",
+            "Temperature/LT": "Temperature/LT",
+            "Temperature/RB": "Temperature/RB",
+            "Temperature/RT": "Temperature/RT",
+            "UserDefined/Factor": "UserDefined/Factor",
+            "UserDefined/LB": "UserDefined/LB",
+            "UserDefined/LT": "UserDefined/LT",
+            "UserDefined/RB": "UserDefined/RB",
+            "UserDefined/RT": "UserDefined/RT"
+          }
+        }
+      }
+    }
+  }
+}

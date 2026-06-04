@@ -22,6 +22,7 @@ const DEFAULT_ZENDESK_LOCALE = 'en-us';
 const MANUAL_SERVER_BASE_URL = 'http://localhost:9527';
 const ZENDESK_TRANSLATION_BODY_LIMIT_BYTES = 1_000_000;
 const ZENDESK_LOCALE_OPTIONS: ZendeskLocaleOption[] = ['ko', 'en-us', 'jp'];
+const REQUIRED_ZENDESK_LOCALES: ZendeskLocaleOption[] = ['ko', 'en-us'];
 const DEFAULT_ZENDESK_LOCALES: Record<ZendeskLocaleOption, boolean> = {
   ko: true,
   'en-us': true,
@@ -85,6 +86,38 @@ function normalizeZendeskLocale(locale?: string): string {
     .replace(/_/g, '-')
     .toLowerCase();
   return normalized || DEFAULT_ZENDESK_LOCALE;
+}
+
+function isRequiredZendeskLocale(locale: ZendeskLocaleOption): boolean {
+  return REQUIRED_ZENDESK_LOCALES.includes(locale);
+}
+
+function parseZendeskLocaleFromTarget(targetInput?: string): ZendeskLocaleOption | null {
+  const raw = String(targetInput || '').trim();
+  if (!raw || /^\d+$/.test(raw)) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(raw);
+    const pathSegments = parsedUrl.pathname.split('/').filter(Boolean);
+    let locale =
+      parsedUrl.searchParams.get('locale') ||
+      parsedUrl.searchParams.get('lang') ||
+      '';
+
+    const articleIndex = pathSegments.indexOf('articles');
+    if (!locale && articleIndex >= 2 && pathSegments[0] === 'hc') {
+      locale = pathSegments[1];
+    }
+
+    const normalized = normalizeZendeskLocale(locale);
+    return ZENDESK_LOCALE_OPTIONS.includes(normalized as ZendeskLocaleOption)
+      ? (normalized as ZendeskLocaleOption)
+      : null;
+  } catch {
+    return null;
+  }
 }
 
 function parseZendeskLabelInput(value: string): string[] {
@@ -237,7 +270,8 @@ export function ManualTab({ endpoint }: ManualTabProps) {
 
     try {
       setIsFetchingZendesk(true);
-      const locale = ZENDESK_LOCALE_OPTIONS.find((option) => zendeskLocales[option])
+      const locale = parseZendeskLocaleFromTarget(targetUrl)
+        || ZENDESK_LOCALE_OPTIONS.find((option) => zendeskLocales[option])
         || normalizeZendeskLocale(envStatus.defaultLocale);
       const params = new URLSearchParams({ targetInput: targetUrl, locale });
       const response = await fetch(`${MANUAL_SERVER_BASE_URL}/api/zendesk/article?${params}`);
@@ -861,8 +895,14 @@ ${specificationSectionHTML}
 
     const title = buildZendeskArticleTitle(endpoint, manualData.title);
     const defaultPublishLocale = normalizeZendeskLocale(envStatus.defaultLocale);
+    const selectedLocaleSet = new Set<ZendeskLocaleOption>(REQUIRED_ZENDESK_LOCALES);
+    for (const option of ZENDESK_LOCALE_OPTIONS) {
+      if (zendeskLocales[option]) {
+        selectedLocaleSet.add(option);
+      }
+    }
     const selectedLocales = ZENDESK_LOCALE_OPTIONS
-      .filter((option) => zendeskLocales[option])
+      .filter((option) => selectedLocaleSet.has(option))
       .sort((a, b) => {
         if (a === defaultPublishLocale) return -1;
         if (b === defaultPublishLocale) return 1;
@@ -1249,25 +1289,31 @@ ${specificationSectionHTML}
                       Locales
                     </Label>
                     <div className="flex h-8 items-center gap-1 rounded-md border border-zinc-700 bg-zinc-800 px-1.5">
-                      {ZENDESK_LOCALE_OPTIONS.map((locale) => (
-                        <button
-                          key={locale}
-                          type="button"
-                          onClick={() =>
-                            setZendeskLocales((prev) => ({
-                              ...prev,
-                              [locale]: !prev[locale],
-                            }))
-                          }
-                          className={`h-5 rounded px-2 text-[10px] font-medium ${
-                            zendeskLocales[locale]
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
-                          }`}
-                        >
-                          {locale}
-                        </button>
-                      ))}
+                      {ZENDESK_LOCALE_OPTIONS.map((locale) => {
+                        const isRequired = isRequiredZendeskLocale(locale);
+                        const isActive = isRequired || zendeskLocales[locale];
+                        return (
+                          <button
+                            key={locale}
+                            type="button"
+                            onClick={() => {
+                              if (isRequired) return;
+                              setZendeskLocales((prev) => ({
+                                ...prev,
+                                [locale]: !prev[locale],
+                              }));
+                            }}
+                            title={isRequired ? 'Required locale' : undefined}
+                            className={`h-5 rounded px-2 text-[10px] font-medium ${
+                              isActive
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
+                            }`}
+                          >
+                            {locale}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 

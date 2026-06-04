@@ -211,9 +211,13 @@ const modes: Array<{ id: NimbalystMode; label: string; icon: typeof FileText }> 
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
+const DEFAULT_WORKSPACE_PATH = '';
+
 export function NimbalystWorkspaceView() {
   const [mode, setMode] = useState<NimbalystMode>('files');
-  const [workspacePath, setWorkspacePath] = useState(() => localStorage.getItem('nimbalyst-workspace-path') || '');
+  const [workspacePath, setWorkspacePath] = useState(
+    () => localStorage.getItem('nimbalyst-workspace-path') || DEFAULT_WORKSPACE_PATH
+  );
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [activeFile, setActiveFile] = useState<ActiveFile | null>(null);
   const [status, setStatus] = useState<ReferenceStatus | null>(null);
@@ -1221,7 +1225,7 @@ function FilesMode({
         <h2 className="text-lg font-semibold">Nimbalyst Files Mode</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-[#a7a7a7]">
           This tab now owns the Nimbalyst workspace surface instead of the previous AI-only chat panel.
-          The reference source is detected at <span className="font-mono text-[#d5d5d5]">{status?.referencePath || 'docs/REFERENCE/nimbalyst'}</span>.
+          The reference source is detected at <span className="font-mono text-[#d5d5d5]">{status?.referencePath || 'nimbalyst'}</span>.
         </p>
       </div>
     );

@@ -90,6 +90,22 @@ type ZendeskDocSnapshot = {
 };
 
 type FlatEndpointRow = Record<string, unknown>;
+const ZENDESK_PUBLISH_LOCALES = ['ko', 'en-us'] as const;
+type ZendeskPublishLocale = (typeof ZENDESK_PUBLISH_LOCALES)[number];
+
+function manualHubLocaleToZendeskLocale(locale: ManualHubLocale): ZendeskPublishLocale {
+  return locale === 'ko' ? 'ko' : 'en-us';
+}
+
+function orderZendeskPublishLocales(primaryLocale?: string): ZendeskPublishLocale[] {
+  const normalizedPrimary = normalizeZendeskLocale(primaryLocale);
+  const locales = [...ZENDESK_PUBLISH_LOCALES];
+  const primaryIndex = locales.indexOf(normalizedPrimary as ZendeskPublishLocale);
+  if (primaryIndex <= 0) {
+    return locales;
+  }
+  return [locales[primaryIndex], ...locales.filter((_, index) => index !== primaryIndex)];
+}
 
 function mapFlatRowToEndpoint(row: FlatEndpointRow): ApiEndpoint {
   return {
@@ -550,26 +566,84 @@ export function ManualHubView({ products, settings, onNavigateToProjectEndpoint 
       toast.error('.env에 Zendesk 설정이 필요합니다.');
       return;
     }
-    const locale = normalizeZendeskLocale(env.defaultLocale);
-    const html = currentDoc.htmlContent || '<p></p>';
-    const title = currentDoc.title.trim() || 'Untitled';
+    const primaryLocale = selection.kind === 'index'
+      ? manualHubLocaleToZendeskLocale(selection.locale)
+      : normalizeZendeskLocale(env.defaultLocale);
+    const publishLocales = orderZendeskPublishLocales(primaryLocale);
+    const targetBeforeSend = selection.kind === 'index'
+      ? currentDoc.zendeskUrl.trim() || hub.indexKo.zendeskUrl.trim() || hub.indexEn.zendeskUrl.trim()
+      : currentDoc.zendeskUrl.trim();
+    let publishTarget = targetBeforeSend;
+    let nextHub = hub;
+    const successfulLocales: string[] = [];
+    const failedLocales: string[] = [];
+    let firstSuccess: {
+      articleUrl?: string;
+      articleId?: string;
+      mode?: 'create' | 'update';
+    } | null = null;
+
     setIsSendingZendesk(true);
     try {
-      const result = await publishZendeskHtml({
-        targetInput: currentDoc.zendeskUrl.trim(),
-        locale,
-        html,
-        title,
-      });
-      if (!result.success) {
-        toast.error(`Zendesk 전송 실패: ${result.error}`);
+      for (const locale of publishLocales) {
+        const docForLocale = selection.kind === 'index'
+          ? (locale === 'ko' ? hub.indexKo : hub.indexEn)
+          : currentDoc;
+        const result = await publishZendeskHtml({
+          targetInput: publishTarget,
+          locale,
+          html: docForLocale.htmlContent || '<p></p>',
+          title: docForLocale.title.trim() || 'Untitled',
+        });
+
+        if (!result.success) {
+          failedLocales.push(`${locale}: ${result.error}`);
+          continue;
+        }
+
+        if (!firstSuccess) {
+          firstSuccess = result;
+        }
+        if (!publishTarget && (result.articleUrl || result.articleId)) {
+          publishTarget = result.articleUrl || result.articleId || '';
+        }
+        const articleUrl = result.articleUrl;
+        if (articleUrl) {
+          if (selection.kind === 'index') {
+            const docKey: 'indexKo' | 'indexEn' = locale === 'ko' ? 'indexKo' : 'indexEn';
+            nextHub = {
+              ...nextHub,
+              [docKey]: {
+                ...nextHub[docKey],
+                zendeskUrl: articleUrl,
+              },
+            };
+          } else if (selection.kind === 'static') {
+            nextHub = {
+              ...nextHub,
+              staticPages: nextHub.staticPages.map((page) =>
+                page.id === selection.id ? { ...page, zendeskUrl: articleUrl } : page
+              ),
+            };
+          }
+        }
+        successfulLocales.push(locale);
+      }
+
+      if (!firstSuccess) {
+        toast.error(`Zendesk 전송 실패: ${failedLocales.join(' / ') || 'Unknown error'}`);
         return;
       }
-      if (result.articleUrl) {
-        updateCurrentDoc({ zendeskUrl: result.articleUrl });
+
+      if (nextHub !== hub) {
+        persist(nextHub);
+      }
+      if (failedLocales.length > 0) {
+        toast.error(`Zendesk partial locale failure: ${failedLocales.join(' / ')}`);
       }
       toast.success(
-        `Zendesk ${result.mode === 'create' ? '생성' : '업데이트'} 완료 (${result.articleId ?? ''})`
+        `Zendesk ${firstSuccess.mode === 'create' ? '생성' : '업데이트'} 완료 ` +
+        `(${firstSuccess.articleId ?? ''}, ${successfulLocales.join(', ')})`
       );
     } finally {
       setIsSendingZendesk(false);

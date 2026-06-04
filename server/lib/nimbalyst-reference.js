@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { spawn } from 'child_process';
 
-const DEFAULT_REFERENCE_PATH = path.resolve(process.cwd(), 'docs/REFERENCE/nimbalyst');
+const DEFAULT_REFERENCE_PATH = path.resolve(process.cwd(), 'nimbalyst');
 
 let launchedProcess = null;
 let launchedAt = null;

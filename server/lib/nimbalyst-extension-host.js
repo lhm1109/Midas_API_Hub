@@ -542,7 +542,7 @@ export function createNimbalystExtensionHost(options = {}) {
   const referenceRoot = path.resolve(
     options.referenceRoot ||
       process.env.NIMBALYST_REFERENCE_DIR ||
-      path.join(process.cwd(), 'docs', 'REFERENCE', 'nimbalyst')
+      path.join(process.cwd(), 'nimbalyst')
   );
   const fetchImpl = options.fetchImpl || globalThis.fetch;
 

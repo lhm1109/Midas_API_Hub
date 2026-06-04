@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 interface GlobalSidebarProps {
   activeView:
     | 'ai'
+    | 'batrack'
     | 'terminal'
     | 'manager'
     | 'projects'
@@ -30,25 +31,25 @@ export function GlobalSidebar({ activeView, onViewChange, onSettingsClick }: Glo
 
         {/* Navigation Items */}
         <div className="flex-1 flex flex-col gap-2">
-          {/* Nimbalyst - First tab */}
+          {/* BATRACK (Nimbalyst) - First tab */}
           <Tooltip>
             <TooltipTrigger asChild>
               <div>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={`w-10 h-10 ${activeView === 'ai'
+                  className={`w-10 h-10 ${activeView === 'ai' || activeView === 'batrack'
                     ? 'bg-blue-900/50 text-blue-400 ring-1 ring-blue-500/50'
                     : 'text-zinc-400 hover:text-blue-400 hover:bg-zinc-800'
                     }`}
-                  onClick={() => onViewChange('ai')}
+                  onClick={() => onViewChange('batrack')}
                 >
                   <Bot className="w-5 h-5" />
                 </Button>
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Nimbalyst</p>
+              <p>BATRACK</p>
             </TooltipContent>
           </Tooltip>
 

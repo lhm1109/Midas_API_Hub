@@ -30,7 +30,18 @@ export default function App() {
   const { endpoints: apiData, loading: endpointsLoading, refetch: refetchEndpoints } = useEndpoints();
   const { tasks: managerTasks } = useManagerData();  // Manager 작업 데이터
   const [activeView, setActiveView] = useState<
-    'ai' | 'terminal' | 'manager' | 'projects' | 'manualHub' | 'history' | 'docs' | 'debug' | 'schema' | 'builder' | 'database'
+    | 'ai'
+    | 'batrack'
+    | 'terminal'
+    | 'manager'
+    | 'projects'
+    | 'manualHub'
+    | 'history'
+    | 'docs'
+    | 'debug'
+    | 'schema'
+    | 'builder'
+    | 'database'
   >('ai');
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedEndpoint, setSelectedEndpoint] = useState<ApiEndpoint | null>(null);
@@ -376,7 +387,7 @@ export default function App() {
       )}
 
       {/* 3. Main Content Area */}
-      {activeView === 'ai' ? (
+      {activeView === 'ai' || activeView === 'batrack' ? (
         <NimbalystWorkspaceView />
       ) : activeView === 'terminal' ? (
         <TerminalTab />
